@@ -24,6 +24,7 @@
     "karma-firefox-launcher": "^0.1.6",
     "karma-mocha": "^0.1.10",
     "karma-opera-launcher": "^0.1.0",
+    "karma-safari-launcher": "^0.1.1",
     "karma-sinon-chai": "^0.3.0",
     "load-grunt-config": "^0.17.1",
     "mocha": "^2.2.5"

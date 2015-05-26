@@ -158,7 +158,7 @@ describe('AudioContext', function () {
         it('should return an instance of the AudioBuffer interface', function () {
             var audioBuffer = audioContext.createBuffer(2, 10, 44100);
 
-            expect(audioBuffer.duration).to.equal(10 / 44100);
+            expect(audioBuffer.duration).to.be.closeTo(10 / 44100, 0.001);
             expect(audioBuffer.length).to.equal(10);
             expect(audioBuffer.numberOfChannels).to.equal(2);
             expect(audioBuffer.sampleRate).to.equal(44100);
@@ -221,7 +221,7 @@ describe('AudioContext', function () {
                 audioContext
                     .decodeAudioData(arrayBuffer)
                     .then(function (audioBuffer) {
-                        expect(audioBuffer.duration).to.equal(1000 / 44100);
+                        expect(audioBuffer.duration).to.be.closeTo(1000 / 44100, 0.001);
                         expect(audioBuffer.length).to.equal(1000);
                         expect(audioBuffer.numberOfChannels).to.equal(2);
                         expect(audioBuffer.sampleRate).to.equal(44100);

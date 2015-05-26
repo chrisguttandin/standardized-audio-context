@@ -74,6 +74,9 @@ function provider (UnpatchedAudioContext) {
                         if (this._onStateChangeListener !== null) {
                             this._onStateChangeListener();
                         }
+
+                        // Kick of the AudioContext.
+                        unpatchedAudioContext.createBufferSource();
                     }
                 }, 100);
             }
