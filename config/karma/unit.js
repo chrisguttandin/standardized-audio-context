@@ -10,7 +10,8 @@ module.exports = function (config) {
             'Chrome',
             'ChromeCanary',
             'Firefox',
-            'FirefoxAurora'
+            'FirefoxAurora',
+            'Opera'
         ],
 
         files: [

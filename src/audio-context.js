@@ -1,6 +1,7 @@
 'use strict';
 
 var di = require('di'),
+    pool = [],
     unpatchedAudioContextProvider = require('./unpatched-audio-context.js').provider;
 
 function createInvalidStateError () {
@@ -20,12 +21,43 @@ function testForPromiseSupport (audioContext) {
     return false;
 }
 
+function wrapChannelMergerNode (channelMergerNode) {
+    return Object.create(channelMergerNode, {
+        channelCount: {
+            get: function () {
+                return 1;
+            }
+        },
+        channelCountMode: {
+            get: function () {
+                return 'explicit';
+            }
+        },
+        channelInterpretation: {
+            get: function () {
+                return channelMergerNode.channelInterpretation;
+            }
+        },
+        numberOfInputs: {
+            get: function () {
+                return channelMergerNode.numberOfInputs;
+            }
+        },
+        numberOfOutputs: {
+            get: function () {
+                return channelMergerNode.numberOfOutputs;
+            }
+        }
+    });
+}
+
 function provider (UnpatchedAudioContext) {
 
     return class AudioContext {
 
         constructor () {
-            var unpatchedAudioContext = new UnpatchedAudioContext();
+            var unpatchedAudioContext = (pool.length > 0) ?
+                    pool.shift() : new UnpatchedAudioContext();
 
             this._isSupportingPromises = testForPromiseSupport(unpatchedAudioContext);
             this._onStateChangeListener = null;
@@ -104,6 +136,8 @@ function provider (UnpatchedAudioContext) {
 
             // If the unpatched AudioContext does not provide a close method it should be imitated.
             if (this._unpatchedAudioContext.close === undefined) {
+                pool.push(this._unpatchedAudioContext);
+
                 this._unpatchedAudioContext = null;
                 this._state = 'closed';
 
@@ -139,12 +173,9 @@ function provider (UnpatchedAudioContext) {
         createChannelMerger (numberOfInputs) {
             var channelMergerNode = this._unpatchedAudioContext.createChannelMerger(numberOfInputs);
 
-            if (channelMergerNode.channelCount === 2) {
-                channelMergerNode.channelCount = 1;
-            }
-
-            if (channelMergerNode.channelCountMode === 'max') {
-                channelMergerNode.channelCountMode = 'explicit';
+            if (channelMergerNode.channelCount === 2 &&
+                    channelMergerNode.channelCountMode === 'max') {
+                channelMergerNode = wrapChannelMergerNode(channelMergerNode);
             }
 
             return channelMergerNode;

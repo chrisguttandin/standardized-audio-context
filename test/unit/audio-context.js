@@ -30,11 +30,15 @@ describe('AudioContext', function () {
         it('should advance over time', function (done) {
             var now = audioContext.currentTime;
 
-            setTimeout(function () {
-                expect(audioContext.currentTime).to.above(now);
+            audioContext.onstatechange = function () {
+                audioContext.onstatechange = null; // to prevent consecutive calls
 
-                done();
-            }, 100);
+                setTimeout(function () {
+                    expect(audioContext.currentTime).to.above(now);
+
+                    done();
+                }, 100);
+            };
         });
 
     });
