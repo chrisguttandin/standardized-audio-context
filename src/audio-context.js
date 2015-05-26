@@ -187,6 +187,10 @@ function provider (UnpatchedAudioContext) {
             return this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
         }
 
+        createBufferSource () {
+            return this._unpatchedAudioContext.createBufferSource();
+        }
+
         createChannelMerger (numberOfInputs) {
             var channelMergerNode;
 

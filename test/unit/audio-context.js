@@ -235,6 +235,42 @@ describe('AudioContext', function () {
 
     });
 
+    describe('createBufferSource()', function () {
+
+        it('should return an instance of the AudioBufferSourceNode interface', function () {
+            var audioBufferSourceNode = audioContext.createBufferSource();
+
+            expect(audioBufferSourceNode.buffer).to.be.null;
+
+            // expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a.function;
+            // expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
+            // expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a.function;
+            // expect(audioBufferSourceNode.detune.linearRampToValueAtTime).to.be.a.function;
+            // expect(audioBufferSourceNode.detune.setTargetAtTime).to.be.a.function;
+            // expect(audioBufferSourceNode.detune.setValueCurveAtTime).to.be.a.function;
+            // expect(audioBufferSourceNode.detune.value).to.equal(0);
+
+            expect(audioBufferSourceNode.loop).to.be.false;
+            expect(audioBufferSourceNode.loopEnd).to.equal(0);
+            expect(audioBufferSourceNode.loopStart).to.equal(0);
+            expect(audioBufferSourceNode.numberOfInputs).to.equal(0);
+            expect(audioBufferSourceNode.numberOfOutputs).to.equal(1);
+            expect(audioBufferSourceNode.onended).to.be.null;
+
+            expect(audioBufferSourceNode.playbackRate.cancelScheduledValues).to.be.a.function;
+            expect(audioBufferSourceNode.playbackRate.defaultValue).to.equal(1);
+            expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime).to.be.a.function;
+            expect(audioBufferSourceNode.playbackRate.linearRampToValueAtTime).to.be.a.function;
+            expect(audioBufferSourceNode.playbackRate.setTargetAtTime).to.be.a.function;
+            expect(audioBufferSourceNode.playbackRate.setValueCurveAtTime).to.be.a.function;
+            expect(audioBufferSourceNode.playbackRate.value).to.equal(1);
+
+            expect(audioBufferSourceNode.start).to.be.a.function;
+            expect(audioBufferSourceNode.stop).to.be.a.function;
+        });
+
+    });
+
     describe('createChannelMerger()', function () {
 
         it('should return an instance of the ChannelMergerNode interface', function () {
