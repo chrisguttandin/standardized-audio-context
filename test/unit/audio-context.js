@@ -153,6 +153,71 @@ describe('AudioContext', function () {
 
     });
 
+    describe('createBiquadFilter()', function () {
+
+        it('should return an instance of the BiquadFilterNode interface', function () {
+            var biquadFilterNode = audioContext.createBiquadFilter();
+
+            expect(biquadFilterNode.channelCountMode).to.equal('max');
+            expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
+
+            expect(biquadFilterNode.detune.cancelScheduledValues).to.be.a.function;
+            expect(biquadFilterNode.detune.defaultValue).to.equal(0);
+            expect(biquadFilterNode.detune.exponentialRampToValueAtTime).to.be.a.function;
+            expect(biquadFilterNode.detune.linearRampToValueAtTime).to.be.a.function;
+            expect(biquadFilterNode.detune.setTargetAtTime).to.be.a.function;
+            expect(biquadFilterNode.detune.setValueCurveAtTime).to.be.a.function;
+            expect(biquadFilterNode.detune.value).to.equal(0);
+
+            expect(biquadFilterNode.frequency.cancelScheduledValues).to.be.a.function;
+            expect(biquadFilterNode.frequency.defaultValue).to.equal(350);
+            expect(biquadFilterNode.frequency.exponentialRampToValueAtTime).to.be.a.function;
+            expect(biquadFilterNode.frequency.linearRampToValueAtTime).to.be.a.function;
+            expect(biquadFilterNode.frequency.setTargetAtTime).to.be.a.function;
+            expect(biquadFilterNode.frequency.setValueCurveAtTime).to.be.a.function;
+            expect(biquadFilterNode.frequency.value).to.equal(350);
+
+            expect(biquadFilterNode.gain.cancelScheduledValues).to.be.a.function;
+            expect(biquadFilterNode.gain.defaultValue).to.equal(0);
+            expect(biquadFilterNode.gain.exponentialRampToValueAtTime).to.be.a.function;
+            expect(biquadFilterNode.gain.linearRampToValueAtTime).to.be.a.function;
+            expect(biquadFilterNode.gain.setTargetAtTime).to.be.a.function;
+            expect(biquadFilterNode.gain.setValueCurveAtTime).to.be.a.function;
+            expect(biquadFilterNode.gain.value).to.equal(0);
+
+            expect(biquadFilterNode.getFrequencyResponse).to.be.a.function;
+            expect(biquadFilterNode.numberOfInputs).to.equal(1);
+            expect(biquadFilterNode.numberOfOutputs).to.equal(1);
+
+            expect(biquadFilterNode.Q.cancelScheduledValues).to.be.a.function;
+            expect(biquadFilterNode.Q.defaultValue).to.equal(1);
+            expect(biquadFilterNode.Q.exponentialRampToValueAtTime).to.be.a.function;
+            expect(biquadFilterNode.Q.linearRampToValueAtTime).to.be.a.function;
+            expect(biquadFilterNode.Q.setTargetAtTime).to.be.a.function;
+            expect(biquadFilterNode.Q.setValueCurveAtTime).to.be.a.function;
+            expect(biquadFilterNode.Q.value).to.equal(1);
+
+            expect(biquadFilterNode.type).to.be.a.string;
+        });
+
+        it('should throw an error if the AudioContext is closed', function (done) {
+            audioContext
+                .close()
+                .then(function () {
+                    audioContext.createBiquadFilter();
+                })
+                .catch(function (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    audioContext = new AudioContext();
+
+                    done();
+                });
+        });
+
+    });
+
     describe('createBuffer()', function () {
 
         it('should return an instance of the AudioBuffer interface', function () {
