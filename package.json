@@ -31,6 +31,7 @@
   "main": "src/module.js",
   "name": "standardized-audio-context",
   "scripts": {
+    "postinstall": "grunt githooks",
     "test": "grunt test"
   },
   "version": "0.0.0"
