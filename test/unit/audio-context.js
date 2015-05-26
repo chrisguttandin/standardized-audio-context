@@ -115,6 +115,20 @@ describe('AudioContext', function () {
 
     });
 
+    describe('sampleRate', function () {
+
+        it('should be a number', function () {
+            expect(audioContext.sampleRate).to.be.a.number;
+        });
+
+        it('should be readonly', function () {
+            expect(function () {
+                audioContext.sampleRate = 22050;
+            }).to.throw(TypeError);
+        });
+
+    });
+
     describe('close()', function () {
 
         afterEach(function () {

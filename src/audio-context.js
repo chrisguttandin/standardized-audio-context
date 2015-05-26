@@ -126,6 +126,17 @@ function provider (UnpatchedAudioContext) {
             return listener;
         }
 
+        get sampleRate () {
+            return this._unpatchedAudioContext.sampleRate;
+        }
+
+        set sampleRate (value) {
+            this._unpatchedAudioContext.sampleRate = value;
+
+            // If the unpatched AudioContext does not throw an error by itself, it has to be faked.
+            throw new TypeError();
+        }
+
         get state () {
             return (this._state !== null) ? this._state : this._unpatchedAudioContext.state;
         }
