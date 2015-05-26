@@ -294,6 +294,44 @@ describe('AudioContext', function () {
 
     });
 
+    describe('createGain()', function () {
+
+        it('should return an instance of the GainNode interface', function () {
+            var gainNode = audioContext.createGain();
+
+            expect(gainNode.channelCountMode).to.equal('max');
+            expect(gainNode.channelInterpretation).to.equal('speakers');
+
+            expect(gainNode.gain.cancelScheduledValues).to.be.a.function;
+            expect(gainNode.gain.defaultValue).to.equal(1);
+            expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a.function;
+            expect(gainNode.gain.linearRampToValueAtTime).to.be.a.function;
+            expect(gainNode.gain.setTargetAtTime).to.be.a.function;
+            expect(gainNode.gain.setValueCurveAtTime).to.be.a.function;
+            expect(gainNode.gain.value).to.equal(1);
+
+            expect(gainNode.numberOfInputs).to.equal(1);
+            expect(gainNode.numberOfOutputs).to.equal(1);
+        });
+
+        it('should throw an error if the AudioContext is closed', function (done) {
+            audioContext
+                .close()
+                .then(function () {
+                    audioContext.createGain();
+                })
+                .catch(function (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    audioContext = new AudioContext();
+
+                    done();
+                });
+        });
+
+    });
+
     describe('decodeAudioData()', function () {
 
         it('should return a promise', function () {
