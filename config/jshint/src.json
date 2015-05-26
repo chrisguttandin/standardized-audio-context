@@ -1,0 +1,25 @@
+{
+    "bitwise": true,
+    "browser": true,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": true,
+    "esnext": true,
+    "globals": {
+        "module": false,
+        "require": false
+    },
+    "globalstrict": true,
+    "immed": true,
+    "indent": 4,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "onevar": true,
+    "quotmark": "single",
+    "strict": true,
+    "trailing": true,
+    "undef": true,
+    "unused": "vars",
+    "white": true
+}
