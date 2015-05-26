@@ -104,8 +104,22 @@ function provider (UnpatchedAudioContext) {
             return this._unpatchedAudioContext.currentTime;
         }
 
+        set currentTime (value) {
+            this._unpatchedAudioContext.currentTime = value;
+
+            // If the unpatched AudioContext does not throw an error by itself, it has to be faked.
+            throw new TypeError();
+        }
+
         get destination () {
             return this._unpatchedAudioContext.destination;
+        }
+
+        set destination (value) {
+            this._unpatchedAudioContext.destination = value;
+
+            // If the unpatched AudioContext does not throw an error by itself, it has to be faked.
+            throw new TypeError();
         }
 
         get onstatechange () {
@@ -139,6 +153,16 @@ function provider (UnpatchedAudioContext) {
 
         get state () {
             return (this._state !== null) ? this._state : this._unpatchedAudioContext.state;
+        }
+
+        set state (value) {
+            if (this._unpatchedAudioContext.state !== undefined) {
+                this._unpatchedAudioContext.state = value;
+            }
+
+            // If the unpatched AudioContext does not have a property called state or does not throw
+            // an error by itself, it has to be faked.
+            throw new TypeError();
         }
 
         close () {

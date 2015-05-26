@@ -27,6 +27,12 @@ describe('AudioContext', function () {
             expect(audioContext.currentTime).to.be.a.number;
         });
 
+        it('should be readonly', function () {
+            expect(function () {
+                audioContext.currentTime = 0;
+            }).to.throw(TypeError);
+        });
+
         it('should advance over time', function (done) {
             var now = audioContext.currentTime;
 
@@ -54,6 +60,12 @@ describe('AudioContext', function () {
             expect(destination.maxChannelCount).to.be.a.number;
             expect(destination.numberOfInputs).to.equal(1);
             expect(destination.numberOfOutputs).to.equal(0);
+        });
+
+        it('should be readonly', function () {
+            expect(function () {
+                audioContext.destination = 'a fake AudioDestinationNode';
+            }).to.throw(TypeError);
         });
 
     });
@@ -99,6 +111,12 @@ describe('AudioContext', function () {
 
         it('should be suspended at the beginning', function () {
             expect(audioContext.state).to.equal('suspended');
+        });
+
+        it('should be readonly', function () {
+            expect(function () {
+                audioContext.state = 'closed';
+            }).to.throw(TypeError);
         });
 
         it('should be transitioned to running', function (done) {
