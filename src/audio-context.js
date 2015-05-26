@@ -166,7 +166,21 @@ function provider (UnpatchedAudioContext) {
         }
 
         createBiquadFilter () {
-            return this._unpatchedAudioContext.createBiquadFilter();
+            var biquadFilterNode;
+
+            if (this._unpatchedAudioContext === null) {
+                throw createInvalidStateError();
+            }
+
+            biquadFilterNode = this._unpatchedAudioContext.createBiquadFilter();
+
+            // If the unpatched AudioContext throws an error by itself, this code will never get
+            // executed. If it does it will imitate the behaviour of throwing an error.
+            if (this.state === 'closed') {
+                throw createInvalidStateError();
+            }
+
+            return biquadFilterNode;
         }
 
         createBuffer (numberOfChannels, length, sampleRate) {
@@ -174,7 +188,19 @@ function provider (UnpatchedAudioContext) {
         }
 
         createChannelMerger (numberOfInputs) {
-            var channelMergerNode = this._unpatchedAudioContext.createChannelMerger(numberOfInputs);
+            var channelMergerNode;
+
+            if (this._unpatchedAudioContext === null) {
+                throw createInvalidStateError();
+            }
+
+            channelMergerNode = this._unpatchedAudioContext.createChannelMerger(numberOfInputs);
+
+            // If the unpatched AudioContext throws an error by itself, this code will never get
+            // executed. If it does it will imitate the behaviour of throwing an error.
+            if (this.state === 'closed') {
+                throw createInvalidStateError();
+            }
 
             if (channelMergerNode.channelCount === 2 &&
                     channelMergerNode.channelCountMode === 'max') {
@@ -185,11 +211,39 @@ function provider (UnpatchedAudioContext) {
         }
 
         createChannelSplitter (numberOfOutputs) {
-            return this._unpatchedAudioContext.createChannelSplitter(numberOfOutputs);
+            var channelSplitterNode;
+
+            if (this._unpatchedAudioContext === null) {
+                throw createInvalidStateError();
+            }
+
+            channelSplitterNode = this._unpatchedAudioContext.createChannelSplitter(numberOfOutputs);
+
+            // If the unpatched AudioContext throws an error by itself, this code will never get
+            // executed. If it does it will imitate the behaviour of throwing an error.
+            if (this.state === 'closed') {
+                throw createInvalidStateError();
+            }
+
+            return channelSplitterNode;
         }
 
         createGain () {
-            return this._unpatchedAudioContext.createGain();
+            var gainNode;
+
+            if (this._unpatchedAudioContext === null) {
+                throw createInvalidStateError();
+            }
+
+            gainNode = this._unpatchedAudioContext.createGain();
+
+            // If the unpatched AudioContext throws an error by itself, this code will never get
+            // executed. If it does it will imitate the behaviour of throwing an error.
+            if (this.state === 'closed') {
+                throw createInvalidStateError();
+            }
+
+            return gainNode;
         }
 
         decodeAudioData (audioData) {

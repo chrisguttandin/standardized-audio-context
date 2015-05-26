@@ -182,6 +182,22 @@ describe('AudioContext', function () {
             expect(channelMergerNode.numberOfOutputs).to.equal(1);
         });
 
+        it('should throw an error if the AudioContext is closed', function (done) {
+            audioContext
+                .close()
+                .then(function () {
+                    audioContext.createChannelMerger(2);
+                })
+                .catch(function (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    audioContext = new AudioContext();
+
+                    done();
+                });
+        });
+
     });
 
     describe('createChannelSplitter()', function () {
@@ -193,6 +209,22 @@ describe('AudioContext', function () {
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
             expect(channelSplitterNode.numberOfInputs).to.equal(1);
             expect(channelSplitterNode.numberOfOutputs).to.equal(2);
+        });
+
+        it('should throw an error if the AudioContext is closed', function (done) {
+            audioContext
+                .close()
+                .then(function () {
+                    audioContext.createChannelSplitter(2);
+                })
+                .catch(function (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    audioContext = new AudioContext();
+
+                    done();
+                });
         });
 
     });
