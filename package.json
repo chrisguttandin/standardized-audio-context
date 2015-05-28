@@ -18,7 +18,7 @@
     "grunt-githooks": "^0.3.1",
     "grunt-karma": "^0.10.1",
     "grunt-modernizr": "git://github.com/Modernizr/grunt-modernizr.git#feature/modernizr-3.0-standalone",
-    "karma": "^0.12.32",
+    "karma": "^0.12.33",
     "karma-browserify": "^4.2.1",
     "karma-chrome-launcher": "^0.1.12",
     "karma-firefox-launcher": "^0.1.6",
