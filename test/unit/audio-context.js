@@ -417,6 +417,24 @@ describe('AudioContext', function () {
                 .catch(done);
         });
 
+        it('should throw an error when asked to decode an unsupported file', function (done) {
+            this.timeout(5000);
+
+            // AIFF files are not supported by any browser
+            loadFixture('The Silent Ballet.aif', function (err, arrayBuffer) {
+                expect(err).to.be.null;
+
+                audioContext
+                    .decodeAudioData(arrayBuffer)
+                    .catch(function (err) {
+                        expect(err.code).to.equal(0);
+                        expect(err.name).to.equal('EncodingError');
+
+                        done();
+                    });
+            });
+        });
+
         it('should decode an arrayBuffer and return an instance of the AudioBuffer interface', function (done) {
             loadFixture('1000-frames-of-noise.wav', function (err, arrayBuffer) {
                 expect(err).to.be.null;

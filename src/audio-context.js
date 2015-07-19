@@ -4,6 +4,15 @@ var di = require('di'),
     pool = [],
     unpatchedAudioContextProvider = require('./unpatched-audio-context.js').provider;
 
+function createEncodingError () {
+    var err = new Error();
+
+    err.code = 0;
+    err.name = 'EncodingError';
+
+    return err;
+}
+
 function createInvalidStateError () {
     var err = new Error();
 
@@ -300,6 +309,19 @@ function provider (UnpatchedAudioContext) {
         decodeAudioData (audioData) {
             if (this._isSupportingPromises) {
                 return this._unpatchedAudioContext.decodeAudioData(audioData);
+            }
+
+            // Chrome crashes when asked to decode an AIFF file.
+            if (audioData) {
+                let array,
+                    chunkId;
+
+                array = new Uint8Array(audioData);
+                chunkId = String.fromCharCode(array[0]) + String.fromCharCode(array[1]) + String.fromCharCode(array[2]) + String.fromCharCode(array[3]);
+
+                if (chunkId === 'FORM') {
+                    return Promise.reject(createEncodingError());
+                }
             }
 
             return new Promise ((resolve, reject) => {
