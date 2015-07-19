@@ -33,6 +33,7 @@
   "license": "MIT",
   "main": "src/module.js",
   "name": "standardized-audio-context",
+  "readme": "README.md",
   "scripts": {
     "postinstall": "grunt githooks",
     "test": "grunt test"
