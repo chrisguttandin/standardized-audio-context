@@ -325,9 +325,14 @@ function provider (UnpatchedAudioContext) {
             }
 
             return new Promise ((resolve, reject) => {
-                this._unpatchedAudioContext.decodeAudioData(audioData, function (audioBuffer) {
-                    resolve(audioBuffer);
-                }, reject);
+                this._unpatchedAudioContext.decodeAudioData(audioData, resolve, function (err) {
+                    // Opera returns null when asked to decode an MP3 file.
+                    if (err === null) {
+                        reject(createEncodingError());
+                    } else {
+                        reject(err);
+                    }
+                });
             });
         }
 
