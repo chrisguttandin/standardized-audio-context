@@ -421,7 +421,7 @@ describe('AudioContext', function () {
             this.timeout(5000);
 
             // AIFF files are not supported by any browser
-            loadFixture('The Silent Ballet.aif', function (err, arrayBuffer) {
+            loadFixture('a-second-of-silence.aif', function (err, arrayBuffer) {
                 expect(err).to.be.null;
 
                 audioContext
