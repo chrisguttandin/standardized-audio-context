@@ -315,6 +315,24 @@ function provider (UnpatchedAudioContext) {
             return gainNode;
         }
 
+        createOscillator () {
+            var oscillatorNode;
+
+            if (this._unpatchedAudioContext === null) {
+                throw createInvalidStateError();
+            }
+
+            oscillatorNode = this._unpatchedAudioContext.createOscillator();
+
+            // If the unpatched AudioContext throws an error by itself, this code will never get
+            // executed. If it does it will imitate the behaviour of throwing an error.
+            if (this.state === 'closed') {
+                throw createInvalidStateError();
+            }
+
+            return oscillatorNode;
+        }
+
         decodeAudioData (audioData) {
             if (this._isSupportingPromises) {
                 return this._unpatchedAudioContext

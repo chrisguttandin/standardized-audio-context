@@ -400,6 +400,57 @@ describe('AudioContext', function () {
 
     });
 
+    describe('createOscillator()', function () {
+
+        it('should return an instance of the OscillatorNode interface', function () {
+            var oscillatorNode = audioContext.createOscillator();
+
+            expect(oscillatorNode.channelCount).to.equal(2);
+            // channelCountMode is not specified
+            // channelInterpretation is not specified
+
+            expect(oscillatorNode.detune.cancelScheduledValues).to.be.a.function;
+            expect(oscillatorNode.detune.defaultValue).to.equal(0);
+            expect(oscillatorNode.detune.exponentialRampToValueAtTime).to.be.a.function;
+            expect(oscillatorNode.detune.linearRampToValueAtTime).to.be.a.function;
+            expect(oscillatorNode.detune.setTargetAtTime).to.be.a.function;
+            expect(oscillatorNode.detune.setValueCurveAtTime).to.be.a.function;
+            expect(oscillatorNode.detune.value).to.equal(0);
+
+            expect(oscillatorNode.frequency.cancelScheduledValues).to.be.a.function;
+            expect(oscillatorNode.frequency.defaultValue).to.equal(440);
+            expect(oscillatorNode.frequency.exponentialRampToValueAtTime).to.be.a.function;
+            expect(oscillatorNode.frequency.linearRampToValueAtTime).to.be.a.function;
+            expect(oscillatorNode.frequency.setTargetAtTime).to.be.a.function;
+            expect(oscillatorNode.frequency.setValueCurveAtTime).to.be.a.function;
+            expect(oscillatorNode.frequency.value).to.equal(440);
+
+            expect(oscillatorNode.numberOfInputs).to.equal(0);
+            expect(oscillatorNode.numberOfOutputs).to.equal(1);
+            expect(oscillatorNode.type).to.equal('sine');
+            expect(oscillatorNode.setPeriodicWave).to.be.a.function;
+            expect(oscillatorNode.start).to.be.a.function;
+            expect(oscillatorNode.stop).to.be.a.function;
+        });
+
+        it('should throw an error if the AudioContext is closed', function (done) {
+            audioContext
+                .close()
+                .then(function () {
+                    audioContext.createOscillator();
+                })
+                .catch(function (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    audioContext = new AudioContext();
+
+                    done();
+                });
+        });
+
+    });
+
     describe('decodeAudioData()', function () {
 
         it('should return a promise', function () {
