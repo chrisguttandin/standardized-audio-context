@@ -406,15 +406,15 @@ describe('AudioContext', function () {
             expect(audioContext.decodeAudioData()).to.be.an.instanceOf(Promise);
         });
 
-        it('should throw an error', function (done) {
+        it('should throw an error when called without a valid arrayBuffer', function (done) {
             audioContext
-                .decodeAudioData()
+                .decodeAudioData(null)
                 .catch(function (err) {
-                    expect(err).to.not.be.null;
+                    expect(err.code).to.equal(9);
+                    expect(err.name).to.equal('NotSupportedError');
 
                     done();
-                })
-                .catch(done);
+                });
         });
 
         it('should throw an error when asked to decode an unsupported file', function (done) {

@@ -22,6 +22,15 @@ function createInvalidStateError () {
     return err;
 }
 
+function createNotSupportedError () {
+    var err = new Error();
+
+    err.code = 9;
+    err.name = 'NotSupportedError';
+
+    return err;
+}
+
 function testForPromiseSupport (audioContext) {
     try {
         let promise = audioContext.decodeAudioData(new ArrayBuffer(0), function () {});
@@ -308,7 +317,16 @@ function provider (UnpatchedAudioContext) {
 
         decodeAudioData (audioData) {
             if (this._isSupportingPromises) {
-                return this._unpatchedAudioContext.decodeAudioData(audioData);
+                return this._unpatchedAudioContext
+                    .decodeAudioData(audioData)
+                    // Firefox throws a TypeError instead of a NotSupportedError.
+                    .catch(function (err) {
+                        if (err.name === 'TypeError') {
+                            throw createNotSupportedError();
+                        }
+
+                        throw err;
+                    });
             }
 
             // Chrome crashes when asked to decode an AIFF file.
@@ -325,14 +343,19 @@ function provider (UnpatchedAudioContext) {
             }
 
             return new Promise ((resolve, reject) => {
-                this._unpatchedAudioContext.decodeAudioData(audioData, resolve, function (err) {
-                    // Opera returns null when asked to decode an MP3 file.
-                    if (err === null) {
-                        reject(createEncodingError());
-                    } else {
-                        reject(err);
-                    }
-                });
+                try {
+                    this._unpatchedAudioContext.decodeAudioData(audioData, resolve, function (err) {
+                        // Opera returns null when asked to decode an MP3 file.
+                        if (err === null) {
+                            reject(createEncodingError());
+                        } else {
+                            reject(err);
+                        }
+                    });
+                } catch (err) {
+                    // Chrome, Opera and Safari do throw a SyntaxError instead of calling the errorCallback.
+                    reject(createNotSupportedError());
+                }
             });
         }
 
