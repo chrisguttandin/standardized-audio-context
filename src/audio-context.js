@@ -15,8 +15,20 @@ function createInvalidStateError () {
 
 function testForPromiseSupport (audioContext) {
     try {
-        return (audioContext.decodeAudioData(new ArrayBuffer(0), function () {}) !== undefined);
-    } catch (err) {}
+        let promise = audioContext.decodeAudioData(new ArrayBuffer(0), function () {});
+
+        if (promise === undefined) {
+            return false;
+        }
+
+        promise.catch(function () {
+            // ignore rejected errors
+        });
+
+        return true;
+    } catch (err) {
+        // ignore thrown errors
+    }
 
     return false;
 }
