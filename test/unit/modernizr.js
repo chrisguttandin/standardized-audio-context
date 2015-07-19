@@ -1,7 +1,7 @@
 'use strict';
 
 var di = require('di'),
-    Modernizr = require('../../lib/modernizr.js'),
+    Modernizr = require('browsernizr'),
     modernizrProvider = require('../../src/modernizr.js').provider;
 
 describe('modernizr', function () {

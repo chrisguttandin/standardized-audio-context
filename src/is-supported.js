@@ -1,18 +1,14 @@
 'use strict';
 
-require('browsernizr/test/es6/promises');
-require('browsernizr/test/audio/webaudio');
-require('browsernizr/test/typed-arrays');
-
 var di = require('di'),
-    Modernizr = require('browsernizr');
+    modernizrProvider = require('./modernizr.js').provider;
 
-function provider () {
+function provider (Modernizr) {
 
     return Modernizr.promises && Modernizr.typedarrays && Modernizr.webaudio;
 
 }
 
-di.annotate(provider);
+di.annotate(provider, new di.Inject(modernizrProvider));
 
 module.exports.provider = provider;
