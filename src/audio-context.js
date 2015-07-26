@@ -263,7 +263,7 @@ function provider (UnpatchedAudioContext) {
                 throw createInvalidStateError();
             }
 
-            channelMergerNode = this._unpatchedAudioContext.createChannelMerger(numberOfInputs);
+            channelMergerNode = this._unpatchedAudioContext.createChannelMerger.apply(this._unpatchedAudioContext, arguments);
 
             // If the unpatched AudioContext throws an error by itself, this code will never get
             // executed. If it does it will imitate the behaviour of throwing an error.
@@ -286,7 +286,7 @@ function provider (UnpatchedAudioContext) {
                 throw createInvalidStateError();
             }
 
-            channelSplitterNode = this._unpatchedAudioContext.createChannelSplitter(numberOfOutputs);
+            channelSplitterNode = this._unpatchedAudioContext.createChannelSplitter.apply(this._unpatchedAudioContext, arguments);
 
             // If the unpatched AudioContext throws an error by itself, this code will never get
             // executed. If it does it will imitate the behaviour of throwing an error.
