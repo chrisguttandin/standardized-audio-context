@@ -264,6 +264,45 @@ describe('AudioContext', function () {
             expect(audioBuffer.copyToChannel).to.be.a('function');
         });
 
+        it('should implement the copyFromChannel()/copyToChannel() methods', function () {
+            var audioBuffer,
+                destination,
+                i,
+                source;
+
+            audioBuffer = audioContext.createBuffer(2, 10, 44100);
+            destination = new Float32Array(10);
+            source = new Float32Array(10);
+
+            for (i = 0; i < 10; i += 1) {
+                destination[i] = Math.random();
+                source[i] = Math.random();
+            }
+
+            audioBuffer.copyToChannel(source, 0);
+            audioBuffer.copyFromChannel(destination, 0);
+
+            for (i = 0; i < 10; i += 1) {
+                expect(destination[i]).to.equal(source[i]);
+            }
+
+            audioBuffer = audioContext.createBuffer(2, 100, 44100);
+            destination = new Float32Array(10);
+            source = new Float32Array(10);
+
+            for (i = 0; i < 10; i += 1) {
+                destination[i] = Math.random();
+                source[i] = Math.random();
+            }
+
+            audioBuffer.copyToChannel(source, 0, 50);
+            audioBuffer.copyFromChannel(destination, 0, 50);
+
+            for (i = 0; i < 10; i += 1) {
+                expect(destination[i]).to.equal(source[i]);
+            }
+        });
+
     });
 
     describe('createBufferSource()', function () {

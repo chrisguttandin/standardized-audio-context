@@ -51,6 +51,49 @@ function testForPromiseSupport (audioContext) {
     return false;
 }
 
+function wrapAudioBuffer (audioBuffer) {
+    // @todo throw errors
+    audioBuffer.copyFromChannel = function (destination, channelNumber, startInChannel) {
+        var channelData,
+            channelLength,
+            destinationLength,
+            i;
+
+        if (arguments.length < 3) {
+            startInChannel = 0;
+        }
+
+        channelData = audioBuffer.getChannelData(channelNumber);
+        channelLength = channelData.length;
+        destinationLength = destination.length;
+
+        for (i = 0; i + startInChannel < channelLength && i < destinationLength; i += 1) {
+            destination[i] = channelData[i + startInChannel];
+        }
+    };
+
+    audioBuffer.copyToChannel = function (source, channelNumber, startInChannel) {
+        var channelData,
+            channelLength,
+            i,
+            sourceLength;
+
+        if (arguments.length < 3) {
+            startInChannel = 0;
+        }
+
+        channelData = audioBuffer.getChannelData(channelNumber);
+        channelLength = channelData.length;
+        sourceLength = source.length;
+
+        for (i = 0; i + startInChannel < channelLength && i < sourceLength; i += 1) {
+            channelData[i + startInChannel] = source[i];
+        }
+    };
+
+    return audioBuffer;
+}
+
 function wrapChannelMergerNode (channelMergerNode) {
     return Object.create(channelMergerNode, {
         channelCount: {
@@ -249,7 +292,14 @@ function provider (UnpatchedAudioContext) {
         }
 
         createBuffer (numberOfChannels, length, sampleRate) {
-            return this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+            var audioBuffer = this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+
+            // Safari does not support copyFromChannel() and copyToChannel().
+            if (typeof audioBuffer.copyFromChannel !== 'function') {
+                audioBuffer = wrapAudioBuffer(audioBuffer);
+            }
+
+            return audioBuffer;
         }
 
         createBufferSource () {
@@ -362,7 +412,14 @@ function provider (UnpatchedAudioContext) {
 
             return new Promise ((resolve, reject) => {
                 try {
-                    this._unpatchedAudioContext.decodeAudioData(audioData, resolve, function (err) {
+                    this._unpatchedAudioContext.decodeAudioData(audioData, function (audioBuffer) {
+                        // Safari does not support copyFromChannel() and copyToChannel().
+                        if (typeof audioBuffer.copyFromChannel !== 'function') {
+                            audioBuffer = wrapAudioBuffer(audioBuffer);
+                        }
+
+                        resolve(audioBuffer);
+                    }, function (err) {
                         // Opera returns null when asked to decode an MP3 file.
                         if (err === null) {
                             reject(createEncodingError());
