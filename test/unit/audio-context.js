@@ -306,20 +306,26 @@ describe('AudioContext', function () {
     describe('createChannelMerger()', function () {
 
         it('should return an instance of the ChannelMergerNode interface', function () {
-            var channelMergerNode = audioContext.createChannelMerger(2);
+            var channelMergerNode = audioContext.createChannelMerger();
 
             expect(channelMergerNode.channelCount).to.equal(1);
             expect(channelMergerNode.channelCountMode).to.equal('explicit');
             expect(channelMergerNode.channelInterpretation).to.equal('speakers');
-            expect(channelMergerNode.numberOfInputs).to.equal(2);
+            expect(channelMergerNode.numberOfInputs).to.equal(6);
             expect(channelMergerNode.numberOfOutputs).to.equal(1);
+        });
+
+        it('should return a channelMergerNode with the given parameters', function () {
+            var channelMergerNode = audioContext.createChannelMerger(2);
+
+            expect(channelMergerNode.numberOfInputs).to.equal(2);
         });
 
         it('should throw an error if the AudioContext is closed', function (done) {
             audioContext
                 .close()
                 .then(function () {
-                    audioContext.createChannelMerger(2);
+                    audioContext.createChannelMerger();
                 })
                 .catch(function (err) {
                     expect(err.code).to.equal(11);
@@ -336,11 +342,17 @@ describe('AudioContext', function () {
     describe('createChannelSplitter()', function () {
 
         it('should return an instance of the ChannelSplitterNode interface', function () {
-            var channelSplitterNode = audioContext.createChannelSplitter(2);
+            var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
             expect(channelSplitterNode.numberOfInputs).to.equal(1);
+            expect(channelSplitterNode.numberOfOutputs).to.equal(6);
+        });
+
+        it('should return a channelSplitterNode with the given parameters', function () {
+            var channelSplitterNode = audioContext.createChannelSplitter(2);
+
             expect(channelSplitterNode.numberOfOutputs).to.equal(2);
         });
 
@@ -348,7 +360,7 @@ describe('AudioContext', function () {
             audioContext
                 .close()
                 .then(function () {
-                    audioContext.createChannelSplitter(2);
+                    audioContext.createChannelSplitter();
                 })
                 .catch(function (err) {
                     expect(err.code).to.equal(11);
