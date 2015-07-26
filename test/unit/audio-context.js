@@ -193,40 +193,40 @@ describe('AudioContext', function () {
             expect(biquadFilterNode.channelCountMode).to.equal('max');
             expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
 
-            expect(biquadFilterNode.detune.cancelScheduledValues).to.be.a.function;
+            expect(biquadFilterNode.detune.cancelScheduledValues).to.be.a('function');
             expect(biquadFilterNode.detune.defaultValue).to.equal(0);
-            expect(biquadFilterNode.detune.exponentialRampToValueAtTime).to.be.a.function;
-            expect(biquadFilterNode.detune.linearRampToValueAtTime).to.be.a.function;
-            expect(biquadFilterNode.detune.setTargetAtTime).to.be.a.function;
-            expect(biquadFilterNode.detune.setValueCurveAtTime).to.be.a.function;
+            expect(biquadFilterNode.detune.exponentialRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.detune.linearRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.detune.setTargetAtTime).to.be.a('function');
+            expect(biquadFilterNode.detune.setValueCurveAtTime).to.be.a('function');
             expect(biquadFilterNode.detune.value).to.equal(0);
 
-            expect(biquadFilterNode.frequency.cancelScheduledValues).to.be.a.function;
+            expect(biquadFilterNode.frequency.cancelScheduledValues).to.be.a('function');
             expect(biquadFilterNode.frequency.defaultValue).to.equal(350);
-            expect(biquadFilterNode.frequency.exponentialRampToValueAtTime).to.be.a.function;
-            expect(biquadFilterNode.frequency.linearRampToValueAtTime).to.be.a.function;
-            expect(biquadFilterNode.frequency.setTargetAtTime).to.be.a.function;
-            expect(biquadFilterNode.frequency.setValueCurveAtTime).to.be.a.function;
+            expect(biquadFilterNode.frequency.exponentialRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.frequency.linearRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.frequency.setTargetAtTime).to.be.a('function');
+            expect(biquadFilterNode.frequency.setValueCurveAtTime).to.be.a('function');
             expect(biquadFilterNode.frequency.value).to.equal(350);
 
-            expect(biquadFilterNode.gain.cancelScheduledValues).to.be.a.function;
+            expect(biquadFilterNode.gain.cancelScheduledValues).to.be.a('function');
             expect(biquadFilterNode.gain.defaultValue).to.equal(0);
-            expect(biquadFilterNode.gain.exponentialRampToValueAtTime).to.be.a.function;
-            expect(biquadFilterNode.gain.linearRampToValueAtTime).to.be.a.function;
-            expect(biquadFilterNode.gain.setTargetAtTime).to.be.a.function;
-            expect(biquadFilterNode.gain.setValueCurveAtTime).to.be.a.function;
+            expect(biquadFilterNode.gain.exponentialRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.gain.linearRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.gain.setTargetAtTime).to.be.a('function');
+            expect(biquadFilterNode.gain.setValueCurveAtTime).to.be.a('function');
             expect(biquadFilterNode.gain.value).to.equal(0);
 
-            expect(biquadFilterNode.getFrequencyResponse).to.be.a.function;
+            expect(biquadFilterNode.getFrequencyResponse).to.be.a('function');
             expect(biquadFilterNode.numberOfInputs).to.equal(1);
             expect(biquadFilterNode.numberOfOutputs).to.equal(1);
 
-            expect(biquadFilterNode.Q.cancelScheduledValues).to.be.a.function;
+            expect(biquadFilterNode.Q.cancelScheduledValues).to.be.a('function');
             expect(biquadFilterNode.Q.defaultValue).to.equal(1);
-            expect(biquadFilterNode.Q.exponentialRampToValueAtTime).to.be.a.function;
-            expect(biquadFilterNode.Q.linearRampToValueAtTime).to.be.a.function;
-            expect(biquadFilterNode.Q.setTargetAtTime).to.be.a.function;
-            expect(biquadFilterNode.Q.setValueCurveAtTime).to.be.a.function;
+            expect(biquadFilterNode.Q.exponentialRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.Q.linearRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.Q.setTargetAtTime).to.be.a('function');
+            expect(biquadFilterNode.Q.setValueCurveAtTime).to.be.a('function');
             expect(biquadFilterNode.Q.value).to.equal(1);
 
             expect(biquadFilterNode.type).to.be.a.string;
@@ -259,10 +259,9 @@ describe('AudioContext', function () {
             expect(audioBuffer.length).to.equal(10);
             expect(audioBuffer.numberOfChannels).to.equal(2);
             expect(audioBuffer.sampleRate).to.equal(44100);
-
-            expect(audioBuffer.getChannelData).to.be.a.function;
-            expect(audioBuffer.copyFromChannel).to.be.a.function;
-            expect(audioBuffer.copyToChannel).to.be.a.function;
+            expect(audioBuffer.getChannelData).to.be.a('function');
+            expect(audioBuffer.copyFromChannel).to.be.a('function');
+            expect(audioBuffer.copyToChannel).to.be.a('function');
         });
 
     });
@@ -274,12 +273,12 @@ describe('AudioContext', function () {
 
             expect(audioBufferSourceNode.buffer).to.be.null;
 
-            // expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a.function;
+            // expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
             // expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
-            // expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a.function;
-            // expect(audioBufferSourceNode.detune.linearRampToValueAtTime).to.be.a.function;
-            // expect(audioBufferSourceNode.detune.setTargetAtTime).to.be.a.function;
-            // expect(audioBufferSourceNode.detune.setValueCurveAtTime).to.be.a.function;
+            // expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a('function');
+            // expect(audioBufferSourceNode.detune.linearRampToValueAtTime).to.be.a('function');
+            // expect(audioBufferSourceNode.detune.setTargetAtTime).to.be.a('function');
+            // expect(audioBufferSourceNode.detune.setValueCurveAtTime).to.be.a('function');
             // expect(audioBufferSourceNode.detune.value).to.equal(0);
 
             expect(audioBufferSourceNode.loop).to.be.false;
@@ -289,16 +288,16 @@ describe('AudioContext', function () {
             expect(audioBufferSourceNode.numberOfOutputs).to.equal(1);
             expect(audioBufferSourceNode.onended).to.be.null;
 
-            expect(audioBufferSourceNode.playbackRate.cancelScheduledValues).to.be.a.function;
+            expect(audioBufferSourceNode.playbackRate.cancelScheduledValues).to.be.a('function');
             expect(audioBufferSourceNode.playbackRate.defaultValue).to.equal(1);
-            expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime).to.be.a.function;
-            expect(audioBufferSourceNode.playbackRate.linearRampToValueAtTime).to.be.a.function;
-            expect(audioBufferSourceNode.playbackRate.setTargetAtTime).to.be.a.function;
-            expect(audioBufferSourceNode.playbackRate.setValueCurveAtTime).to.be.a.function;
+            expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime).to.be.a('function');
+            expect(audioBufferSourceNode.playbackRate.linearRampToValueAtTime).to.be.a('function');
+            expect(audioBufferSourceNode.playbackRate.setTargetAtTime).to.be.a('function');
+            expect(audioBufferSourceNode.playbackRate.setValueCurveAtTime).to.be.a('function');
             expect(audioBufferSourceNode.playbackRate.value).to.equal(1);
 
-            expect(audioBufferSourceNode.start).to.be.a.function;
-            expect(audioBufferSourceNode.stop).to.be.a.function;
+            expect(audioBufferSourceNode.start).to.be.a('function');
+            expect(audioBufferSourceNode.stop).to.be.a('function');
         });
 
     });
@@ -382,12 +381,12 @@ describe('AudioContext', function () {
             expect(gainNode.channelCountMode).to.equal('max');
             expect(gainNode.channelInterpretation).to.equal('speakers');
 
-            expect(gainNode.gain.cancelScheduledValues).to.be.a.function;
+            expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
             expect(gainNode.gain.defaultValue).to.equal(1);
-            expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a.function;
-            expect(gainNode.gain.linearRampToValueAtTime).to.be.a.function;
-            expect(gainNode.gain.setTargetAtTime).to.be.a.function;
-            expect(gainNode.gain.setValueCurveAtTime).to.be.a.function;
+            expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
+            expect(gainNode.gain.linearRampToValueAtTime).to.be.a('function');
+            expect(gainNode.gain.setTargetAtTime).to.be.a('function');
+            expect(gainNode.gain.setValueCurveAtTime).to.be.a('function');
             expect(gainNode.gain.value).to.equal(1);
 
             expect(gainNode.numberOfInputs).to.equal(1);
@@ -421,28 +420,28 @@ describe('AudioContext', function () {
             // channelCountMode is not specified
             // channelInterpretation is not specified
 
-            expect(oscillatorNode.detune.cancelScheduledValues).to.be.a.function;
+            expect(oscillatorNode.detune.cancelScheduledValues).to.be.a('function');
             expect(oscillatorNode.detune.defaultValue).to.equal(0);
-            expect(oscillatorNode.detune.exponentialRampToValueAtTime).to.be.a.function;
-            expect(oscillatorNode.detune.linearRampToValueAtTime).to.be.a.function;
-            expect(oscillatorNode.detune.setTargetAtTime).to.be.a.function;
-            expect(oscillatorNode.detune.setValueCurveAtTime).to.be.a.function;
+            expect(oscillatorNode.detune.exponentialRampToValueAtTime).to.be.a('function');
+            expect(oscillatorNode.detune.linearRampToValueAtTime).to.be.a('function');
+            expect(oscillatorNode.detune.setTargetAtTime).to.be.a('function');
+            expect(oscillatorNode.detune.setValueCurveAtTime).to.be.a('function');
             expect(oscillatorNode.detune.value).to.equal(0);
 
-            expect(oscillatorNode.frequency.cancelScheduledValues).to.be.a.function;
+            expect(oscillatorNode.frequency.cancelScheduledValues).to.be.a('function');
             expect(oscillatorNode.frequency.defaultValue).to.equal(440);
-            expect(oscillatorNode.frequency.exponentialRampToValueAtTime).to.be.a.function;
-            expect(oscillatorNode.frequency.linearRampToValueAtTime).to.be.a.function;
-            expect(oscillatorNode.frequency.setTargetAtTime).to.be.a.function;
-            expect(oscillatorNode.frequency.setValueCurveAtTime).to.be.a.function;
+            expect(oscillatorNode.frequency.exponentialRampToValueAtTime).to.be.a('function');
+            expect(oscillatorNode.frequency.linearRampToValueAtTime).to.be.a('function');
+            expect(oscillatorNode.frequency.setTargetAtTime).to.be.a('function');
+            expect(oscillatorNode.frequency.setValueCurveAtTime).to.be.a('function');
             expect(oscillatorNode.frequency.value).to.equal(440);
 
             expect(oscillatorNode.numberOfInputs).to.equal(0);
             expect(oscillatorNode.numberOfOutputs).to.equal(1);
             expect(oscillatorNode.type).to.equal('sine');
-            expect(oscillatorNode.setPeriodicWave).to.be.a.function;
-            expect(oscillatorNode.start).to.be.a.function;
-            expect(oscillatorNode.stop).to.be.a.function;
+            expect(oscillatorNode.setPeriodicWave).to.be.a('function');
+            expect(oscillatorNode.start).to.be.a('function');
+            expect(oscillatorNode.stop).to.be.a('function');
         });
 
         it('should throw an error if the AudioContext is closed', function (done) {
@@ -510,9 +509,9 @@ describe('AudioContext', function () {
                         expect(audioBuffer.numberOfChannels).to.equal(2);
                         expect(audioBuffer.sampleRate).to.equal(44100);
 
-                        expect(audioBuffer.getChannelData).to.be.a.function;
-                        expect(audioBuffer.copyFromChannel).to.be.a.function;
-                        expect(audioBuffer.copyToChannel).to.be.a.function;
+                        expect(audioBuffer.getChannelData).to.be.a('function');
+                        expect(audioBuffer.copyFromChannel).to.be.a('function');
+                        expect(audioBuffer.copyToChannel).to.be.a('function');
 
                         done();
                     })
