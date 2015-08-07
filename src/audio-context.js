@@ -99,11 +99,17 @@ function wrapChannelMergerNode (channelMergerNode) {
         channelCount: {
             get: function () {
                 return 1;
+            },
+            set: function () {
+                throw createInvalidStateError();
             }
         },
         channelCountMode: {
             get: function () {
                 return 'explicit';
+            },
+            set: function () {
+                throw createInvalidStateError();
             }
         },
         channelInterpretation: {
@@ -321,6 +327,7 @@ function provider (UnpatchedAudioContext) {
                 throw createInvalidStateError();
             }
 
+            // Firefox and Safari do not return the default properties.
             if (channelMergerNode.channelCount === 2 &&
                     channelMergerNode.channelCountMode === 'max') {
                 channelMergerNode = wrapChannelMergerNode(channelMergerNode);

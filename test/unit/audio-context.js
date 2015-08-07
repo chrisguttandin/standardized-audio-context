@@ -359,6 +359,32 @@ describe('AudioContext', function () {
             expect(channelMergerNode.numberOfInputs).to.equal(2);
         });
 
+        it('should not allow to change the value of the channelCount property', function (done) {
+            var channelMergerNode = audioContext.createChannelMerger(2);
+
+            try {
+                channelMergerNode.channelCount = 2;
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
+        });
+
+        it('should not allow to change the value of the channelCountMode property', function (done) {
+            var channelMergerNode = audioContext.createChannelMerger(2);
+
+            try {
+                channelMergerNode.channelCountMode = 'max';
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
+        });
+
         it('should throw an error if the AudioContext is closed', function (done) {
             audioContext
                 .close()
