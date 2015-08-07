@@ -37,5 +37,5 @@
     "postinstall": "grunt githooks",
     "test": "grunt test"
   },
-  "version": "0.0.1"
+  "version": "0.1.0"
 }
