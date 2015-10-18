@@ -160,8 +160,8 @@ function provider (UnpatchedAudioContext) {
                 }, 100);
             }
 
-            // If the unpatched AudioContext does pretend to be running right away, it gets
-            // prevented from doing so.
+            // Chrome and Opera pretend to be running right away, but fire a onstatechange event
+            // when their state actually changes to 'running'.
             if (unpatchedAudioContext.state === 'running') {
                 let revokeState;
 
