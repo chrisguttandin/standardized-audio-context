@@ -282,6 +282,14 @@ function provider (UnpatchedAudioContext) {
         createBiquadFilter () {
             var biquadFilterNode;
 
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
+
             if (this._unpatchedAudioContext === null) {
                 throw createInvalidStateError();
             }
@@ -298,7 +306,17 @@ function provider (UnpatchedAudioContext) {
         }
 
         createBuffer (numberOfChannels, length, sampleRate) {
-            var audioBuffer = this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+            var audioBuffer;
+
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
+
+            audioBuffer = this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
             // Safari does not support copyFromChannel() and copyToChannel().
             if (typeof audioBuffer.copyFromChannel !== 'function') {
@@ -309,11 +327,27 @@ function provider (UnpatchedAudioContext) {
         }
 
         createBufferSource () {
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
+
             return this._unpatchedAudioContext.createBufferSource();
         }
 
         createChannelMerger (numberOfInputs) {
             var channelMergerNode;
+
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
 
             if (this._unpatchedAudioContext === null) {
                 throw createInvalidStateError();
@@ -339,6 +373,14 @@ function provider (UnpatchedAudioContext) {
         createChannelSplitter (numberOfOutputs) {
             var channelSplitterNode;
 
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
+
             if (this._unpatchedAudioContext === null) {
                 throw createInvalidStateError();
             }
@@ -356,6 +398,14 @@ function provider (UnpatchedAudioContext) {
 
         createGain () {
             var gainNode;
+
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
 
             if (this._unpatchedAudioContext === null) {
                 throw createInvalidStateError();
@@ -375,6 +425,14 @@ function provider (UnpatchedAudioContext) {
         createOscillator () {
             var oscillatorNode;
 
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
+
             if (this._unpatchedAudioContext === null) {
                 throw createInvalidStateError();
             }
@@ -391,6 +449,14 @@ function provider (UnpatchedAudioContext) {
         }
 
         decodeAudioData (audioData) {
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
+
             if (this._isSupportingPromises) {
                 return this._unpatchedAudioContext
                     .decodeAudioData(audioData)

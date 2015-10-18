@@ -43,8 +43,10 @@ describe('AudioContext', function () {
                     expect(audioContext.currentTime).to.above(now);
 
                     done();
-                }, 100);
+                }, 1000);
             };
+
+            audioContext.createGain(); // kick off the audio context
         });
 
     });
@@ -127,6 +129,8 @@ describe('AudioContext', function () {
 
                 done();
             };
+
+            audioContext.createGain(); // kick off the audio context
         });
 
         // closed is tested below
