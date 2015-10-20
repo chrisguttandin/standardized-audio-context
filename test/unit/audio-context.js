@@ -405,6 +405,13 @@ describe('AudioContext', function () {
                 });
         });
 
+        it('should be connectable', function () {
+            var channelMerger = audioContext.createChannelMerger(),
+                gainNode = audioContext.createGain();
+
+            channelMerger.connect(gainNode);
+        });
+
     });
 
     describe('createChannelSplitter()', function () {

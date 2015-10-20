@@ -115,39 +115,25 @@ function wrapAudioBuffer (audioBuffer) {
 }
 
 function wrapChannelMergerNode (channelMergerNode) {
-    return Object.create(channelMergerNode, {
-        channelCount: {
-            get: function () {
-                return 1;
-            },
-            set: function () {
-                throw createInvalidStateError();
-            }
+    Object.defineProperty(channelMergerNode, 'channelCount', {
+        get: function () {
+            return 1;
         },
-        channelCountMode: {
-            get: function () {
-                return 'explicit';
-            },
-            set: function () {
-                throw createInvalidStateError();
-            }
-        },
-        channelInterpretation: {
-            get: function () {
-                return channelMergerNode.channelInterpretation;
-            }
-        },
-        numberOfInputs: {
-            get: function () {
-                return channelMergerNode.numberOfInputs;
-            }
-        },
-        numberOfOutputs: {
-            get: function () {
-                return channelMergerNode.numberOfOutputs;
-            }
+        set: function () {
+            throw createInvalidStateError();
         }
     });
+
+    Object.defineProperty(channelMergerNode, 'channelCountMode', {
+        get: function () {
+            return 'explicit';
+        },
+        set: function () {
+            throw createInvalidStateError();
+        }
+    });
+
+    return channelMergerNode;
 }
 
 function provider (UnpatchedAudioContext) {
