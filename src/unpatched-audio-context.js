@@ -1,7 +1,7 @@
 'use strict';
 
-var di = require('di'),
-    Window = require('./window.js').Window;
+import { annotate, Inject } from 'di';
+import { Window } from './window.js';
 
 function unpatchedAudioContext (window) {
 
@@ -13,6 +13,6 @@ function unpatchedAudioContext (window) {
 
 }
 
-di.annotate(unpatchedAudioContext, new di.Inject(Window));
+annotate(unpatchedAudioContext, new Inject(Window));
 
-module.exports.UnpatchedAudioContext = unpatchedAudioContext;
+export { unpatchedAudioContext as UnpatchedAudioContext };

@@ -1,8 +1,9 @@
 'use strict';
 
-var di = require('di'),
-    pool = [],
-    UnpatchedAudioContext = require('./unpatched-audio-context.js').UnpatchedAudioContext;
+import { annotate, Inject } from 'di';
+import { UnpatchedAudioContext } from './unpatched-audio-context';
+
+var pool = [];
 
 function createEncodingError () {
     var err = new Error();
@@ -33,6 +34,7 @@ function createNotSupportedError () {
 
 function testForPromiseSupport (audioContext) {
     // This 12 numbers represent the 48 bytes of an empty WAVE file with a single sample.
+    /* eslint-disable indent */
     var uint32Array = new Uint32Array([
             1179011410,
             40,
@@ -47,6 +49,7 @@ function testForPromiseSupport (audioContext) {
             4,
             0
         ]);
+    /* eslint-enable indent */
 
     try {
         let promise = audioContext.decodeAudioData(uint32Array.buffer, function () {
@@ -136,7 +139,7 @@ function wrapChannelMergerNode (channelMergerNode) {
     return channelMergerNode;
 }
 
-function provider (UnpatchedAudioContext) {
+export function provider (UnpatchedAudioContext) {
 
     return class AudioContext {
 
@@ -344,7 +347,7 @@ function provider (UnpatchedAudioContext) {
             return this._unpatchedAudioContext.createBufferSource();
         }
 
-        createChannelMerger (numberOfInputs) {
+        createChannelMerger (/* numberOfInputs */) {
             var channelMergerNode;
 
             if (this._state === 'suspended') {
@@ -376,7 +379,7 @@ function provider (UnpatchedAudioContext) {
             return channelMergerNode;
         }
 
-        createChannelSplitter (numberOfOutputs) {
+        createChannelSplitter (/* numberOfOutputs */) {
             var channelSplitterNode;
 
             if (this._state === 'suspended') {
@@ -517,6 +520,4 @@ function provider (UnpatchedAudioContext) {
 
 }
 
-di.annotate(provider, new di.Inject(UnpatchedAudioContext));
-
-module.exports.provider = provider;
+annotate(provider, new Inject(UnpatchedAudioContext));

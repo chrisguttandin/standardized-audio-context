@@ -8,4 +8,6 @@ module.exports = function (grunt) {
         configPath: process.cwd() + '/config/grunt'
     });
 
+    grunt.loadNpmTasks('gruntify-eslint');
+
 };

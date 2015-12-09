@@ -1,0 +1,7 @@
+{
+    "env": {
+        "node": true
+    },
+    "extends": "eslint-config-holy-grail",
+    "parser": "babel-eslint"
+}

@@ -1,16 +1,11 @@
 'use strict';
 
-var audioContextProvider = require('./audio-context.js').provider,
-    di = require('di'),
-    injector,
-    isSupportedProvider = require('./is-supported.js').provider;
+import { provider as audioContextProvider } from './audio-context';
+import { Injector } from 'di';
+import { provider as isSupportedProvider } from './is-supported';
 
-injector = new di.Injector();
+var injector = new Injector();
 
-module.exports = {
+export const AudioContext = injector.get(audioContextProvider);
 
-    AudioContext: injector.get(audioContextProvider),
-
-    isSupported: injector.get(isSupportedProvider)
-
-};
+export const isSupported = injector.get(isSupportedProvider);

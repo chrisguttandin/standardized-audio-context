@@ -1,13 +1,13 @@
 'use strict';
 
-var di = require('di');
+import { annotate } from 'di';
 
-function Window () {
+export function Window () {
 
+    /* eslint-disable no-undef */
     return window;
+    /* eslint-enable no-undef */
 
 }
 
-di.annotate(Window);
-
-module.exports.Window = Window;
+annotate(Window);

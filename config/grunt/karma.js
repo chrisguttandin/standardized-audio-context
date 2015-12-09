@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-    'continuous': {
+    continuous: {
         configFile: 'config/karma/unit.js'
     },
-    'test': {
+    test: {
         configFile: 'config/karma/unit.js',
         singleRun: true
     }

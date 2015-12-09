@@ -1,18 +1,19 @@
 'use strict';
 
-require('browsernizr/test/es6/promises');
-require('browsernizr/test/audio/webaudio');
-require('browsernizr/test/typed-arrays');
+import { annotate } from 'di';
+/* eslint-disable no-unused-vars */
+import promises from 'browsernizr/test/es6/promises';
+import typedArrays from 'browsernizr/test/typed-arrays';
+import webaudio from 'browsernizr/test/audio/webaudio';
+/* eslint-enable no-unused-vars */
 
-var di = require('di'),
-    modernizr = require('browsernizr');
+// browsernizr needs to be imported after the individual tests
+import modernizr from 'browsernizr';
 
-function Modernizr () {
+export function Modernizr () {
 
     return modernizr;
 
 }
 
-di.annotate(Modernizr);
-
-module.exports.Modernizr = Modernizr;
+annotate(Modernizr);
