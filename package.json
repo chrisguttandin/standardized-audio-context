@@ -42,7 +42,6 @@
   "name": "standardized-audio-context",
   "readme": "README.md",
   "scripts": {
-    "postinstall": "grunt githooks",
     "test": "grunt test"
   },
   "version": "0.2.3"
