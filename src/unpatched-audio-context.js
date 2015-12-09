@@ -1,9 +1,9 @@
 'use strict';
 
 var di = require('di'),
-    windowProvider = require('./window.js').provider;
+    Window = require('./window.js').Window;
 
-function provider (window) {
+function unpatchedAudioContext (window) {
 
     return (window.hasOwnProperty('AudioContext')) ?
         window.AudioContext :
@@ -13,6 +13,6 @@ function provider (window) {
 
 }
 
-di.annotate(provider, new di.Inject(windowProvider));
+di.annotate(unpatchedAudioContext, new di.Inject(Window));
 
-module.exports.provider = provider;
+module.exports.UnpatchedAudioContext = unpatchedAudioContext;

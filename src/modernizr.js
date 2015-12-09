@@ -4,10 +4,15 @@ require('browsernizr/test/es6/promises');
 require('browsernizr/test/audio/webaudio');
 require('browsernizr/test/typed-arrays');
 
-var Modernizr = require('browsernizr');
+var di = require('di'),
+    modernizr = require('browsernizr');
 
-module.exports.provider = function provider () {
+function Modernizr () {
 
-    return Modernizr;
+    return modernizr;
 
-};
+}
+
+di.annotate(Modernizr);
+
+module.exports.Modernizr = Modernizr;

@@ -2,7 +2,7 @@
 
 var di = require('di'),
     pool = [],
-    unpatchedAudioContextProvider = require('./unpatched-audio-context.js').provider;
+    UnpatchedAudioContext = require('./unpatched-audio-context.js').UnpatchedAudioContext;
 
 function createEncodingError () {
     var err = new Error();
@@ -517,6 +517,6 @@ function provider (UnpatchedAudioContext) {
 
 }
 
-di.annotate(provider, new di.Inject(unpatchedAudioContextProvider));
+di.annotate(provider, new di.Inject(UnpatchedAudioContext));
 
 module.exports.provider = provider;

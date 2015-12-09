@@ -1,7 +1,13 @@
 'use strict';
 
-module.exports.provider = function provider () {
+var di = require('di');
+
+function Window () {
 
     return window;
 
-};
+}
+
+di.annotate(Window);
+
+module.exports.Window = Window;

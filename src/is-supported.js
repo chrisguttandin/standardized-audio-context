@@ -1,14 +1,14 @@
 'use strict';
 
 var di = require('di'),
-    modernizrProvider = require('./modernizr.js').provider;
+    Modernizr = require('./modernizr.js').Modernizr;
 
-function provider (Modernizr) {
+function provider (modernizr) {
 
-    return Modernizr.promises && Modernizr.typedarrays && Modernizr.webaudio;
+    return modernizr.promises && modernizr.typedarrays && modernizr.webaudio;
 
 }
 
-di.annotate(provider, new di.Inject(modernizrProvider));
+di.annotate(provider, new di.Inject(Modernizr));
 
 module.exports.provider = provider;

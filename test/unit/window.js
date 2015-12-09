@@ -1,22 +1,18 @@
 'use strict';
 
 var di = require('di'),
-    windowProvider = require('../../src/window.js').provider;
+    Window = require('../../src/window.js').Window;
 
-describe('window', function () {
+describe('Window', function () {
 
-    describe('provider', function () {
+    var injector;
 
-        var injector;
+    beforeEach(function () {
+        injector = new di.Injector();
+    });
 
-        beforeEach(function () {
-            injector = new di.Injector();
-        });
-
-        it('should return the global window', function () {
-            expect(injector.get(windowProvider)).to.equal(window);
-        });
-
+    it('should return the global window', function () {
+        expect(injector.get(Window)).to.equal(window);
     });
 
 });
