@@ -1,19 +1,12 @@
 'use strict';
 
-var di = require('di'),
-    modernizr = require('browsernizr'),
-    Modernizr = require('../../src/modernizr.js').Modernizr;
+var browsernizr = require('browsernizr'),
+    modernizr = require('../../src/modernizr.js').modernizr;
 
-describe('Modernizr', function () {
+describe('modernizr', function () {
 
-    var injector;
-
-    beforeEach(function () {
-        injector = new di.Injector();
-    });
-
-    it('should return the Modernizr singleton', function () {
-        expect(injector.get(Modernizr)).to.equal(modernizr);
+    it('should return the browsernizr singleton', function () {
+        expect(modernizr).to.equal(browsernizr);
     });
 
 });

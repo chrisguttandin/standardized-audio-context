@@ -1,10 +1,14 @@
 'use strict';
 
-var audioContextProvider = require('../../src/audio-context.js').provider,
-    di = require('di'),
-    loadFixture = require('../helper/load-fixture.js');
+require('reflect-metadata');
 
-describe('AudioContext', function () {
+var angular = require('angular2/angular2'),
+    audioContextConstructor = require('../../src/audio-context-constructor.js').audioContextConstructor,
+    loadFixture = require('../helper/load-fixture.js'),
+    unpatchedAudioContextConstructor = require('../../src/unpatched-audio-context-constructor.js').unpatchedAudioContextConstructor,
+    wndw = require('../../src/window.js').window;
+
+describe('audioContextConstructor', function () {
 
     var audioContext,
         AudioContext;
@@ -14,9 +18,13 @@ describe('AudioContext', function () {
     });
 
     beforeEach(function () {
-        var injector = new di.Injector();
+        var injector = new angular.Injector.resolveAndCreate([
+                angular.provide(audioContextConstructor, { useFactory: audioContextConstructor }),
+                angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
+                angular.provide(wndw, { useValue: window })
+            ]);
 
-        AudioContext = injector.get(audioContextProvider);
+        AudioContext = injector.get(audioContextConstructor);
 
         audioContext = new AudioContext();
     });

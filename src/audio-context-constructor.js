@@ -1,7 +1,7 @@
 'use strict';
 
-import { annotate, Inject } from 'di';
-import { UnpatchedAudioContext } from './unpatched-audio-context';
+import { Inject } from 'angular2/angular2';
+import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
 var pool = [];
 
@@ -139,13 +139,15 @@ function wrapChannelMergerNode (channelMergerNode) {
     return channelMergerNode;
 }
 
-export function provider (UnpatchedAudioContext) {
+export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
     return class AudioContext {
 
         constructor () {
+            /* eslint-disable new-cap */
             var unpatchedAudioContext = (pool.length > 0) ?
-                    pool.shift() : new UnpatchedAudioContext();
+                    pool.shift() : new unpatchedAudioContextConstructor();
+            /* eslint-enable new-cap */
 
             this._isSupportingPromises = testForPromiseSupport(unpatchedAudioContext);
             this._onStateChangeListener = null;
@@ -520,4 +522,4 @@ export function provider (UnpatchedAudioContext) {
 
 }
 
-annotate(provider, new Inject(UnpatchedAudioContext));
+audioContextConstructor.parameters = [ [ new Inject(unpatchedAudioContextConstructor) ] ];

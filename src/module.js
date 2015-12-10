@@ -1,11 +1,23 @@
 'use strict';
 
-import { provider as audioContextProvider } from './audio-context';
-import { Injector } from 'di';
-import { provider as isSupportedProvider } from './is-supported';
+import 'reflect-metadata';
+import { Injector, provide } from 'angular2/angular2';
+import { audioContextConstructor } from './audio-context-constructor';
+import { isSupportedFlag } from './is-supported-flag';
+import { modernizr } from './modernizr';
+import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
+import { window } from './window.js';
 
-var injector = new Injector();
+/* eslint-disable indent, new-cap */
+var injector = new Injector.resolveAndCreate([
+        provide(audioContextConstructor, { useFactory: audioContextConstructor }),
+        provide(isSupportedFlag, { useFactory: isSupportedFlag }),
+        provide(modernizr, { useValue: modernizr }),
+        provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
+        provide(window, { useValue: window })
+    ]);
+/* eslint-enable indent, new-cap */
 
-export const AudioContext = injector.get(audioContextProvider);
+export const AudioContext = injector.get(audioContextConstructor);
 
-export const isSupported = injector.get(isSupportedProvider);
+export const isSupported = injector.get(isSupportedFlag);

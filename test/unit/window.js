@@ -1,18 +1,11 @@
 'use strict';
 
-var di = require('di'),
-    Window = require('../../src/window.js').Window;
+var wndw = require('../../src/window.js').window;
 
-describe('Window', function () {
-
-    var injector;
-
-    beforeEach(function () {
-        injector = new di.Injector();
-    });
+describe('window', function () {
 
     it('should return the global window', function () {
-        expect(injector.get(Window)).to.equal(window);
+        expect(wndw).to.equal(window);
     });
 
 });

@@ -1,15 +1,8 @@
 'use strict';
 
-var di = require('di'),
-    mdl = require('../../src/module.js');
+var mdl = require('../../src/module.js');
 
 describe('module', function () {
-
-    var injector;
-
-    beforeEach(function () {
-        injector = new di.Injector();
-    });
 
     it('should export the AudioContext constructor', function () {
         expect(mdl.AudioContext).to.be.a.function;
