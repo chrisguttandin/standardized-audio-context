@@ -351,6 +351,13 @@ describe('audioContextConstructor', function () {
             expect(audioBufferSourceNode.stop).to.be.a('function');
         });
 
+        it('should be chainable', function () {
+            var audioBufferSourceNode = audioContext.createBufferSource(),
+                gainNode = audioContext.createGain();
+
+            expect(audioBufferSourceNode.connect(gainNode)).to.equal(gainNode);
+        });
+
     });
 
     describe('createChannelMerger()', function () {
@@ -420,6 +427,13 @@ describe('audioContextConstructor', function () {
             channelMerger.connect(gainNode);
         });
 
+        it('should be chainable', function () {
+            var channelMerger = audioContext.createChannelMerger(),
+                gainNode = audioContext.createGain();
+
+            expect(channelMerger.connect(gainNode)).to.equal(gainNode);
+        });
+
     });
 
     describe('createChannelSplitter()', function () {
@@ -453,6 +467,13 @@ describe('audioContextConstructor', function () {
 
                     done();
                 });
+        });
+
+        it('should be chainable', function () {
+            var channelSplitterNode = audioContext.createChannelSplitter(),
+                gainNode = audioContext.createGain();
+
+            expect(channelSplitterNode.connect(gainNode)).to.equal(gainNode);
         });
 
     });
@@ -491,6 +512,13 @@ describe('audioContextConstructor', function () {
 
                     done();
                 });
+        });
+
+        it('should be chainable', function () {
+            var channelSplitterNode = audioContext.createChannelSplitter(),
+                gainNode = audioContext.createGain();
+
+            expect(gainNode.connect(channelSplitterNode)).to.equal(channelSplitterNode);
         });
 
     });
@@ -542,6 +570,13 @@ describe('audioContextConstructor', function () {
 
                     done();
                 });
+        });
+
+        it('should be chainable', function () {
+            var gainNode = audioContext.createGain(),
+                oscillatorNode = audioContext.createOscillator();
+
+            expect(oscillatorNode.connect(gainNode)).to.equal(gainNode);
         });
 
     });

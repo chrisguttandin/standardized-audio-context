@@ -32,6 +32,13 @@ function createNotSupportedError () {
     return err;
 }
 
+function testForChainingSupport (audioContext) {
+    var destination = audioContext.createGain(),
+        target = audioContext.createGain();
+
+    return (target.connect(destination) === destination);
+}
+
 function testForPromiseSupport (audioContext) {
     // This 12 numbers represent the 48 bytes of an empty WAVE file with a single sample.
     /* eslint-disable indent */
@@ -117,6 +124,18 @@ function wrapAudioBuffer (audioBuffer) {
     return audioBuffer;
 }
 
+function wrapAudioNode (audioNode) {
+    audioNode.connect = (function (connect) {
+        return function (destination) {
+            connect.apply(audioNode, arguments);
+
+            return destination;
+        };
+    }(audioNode.connect));
+
+    return audioNode;
+}
+
 function wrapChannelMergerNode (channelMergerNode) {
     Object.defineProperty(channelMergerNode, 'channelCount', {
         get: function () {
@@ -149,6 +168,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                     pool.shift() : new unpatchedAudioContextConstructor();
             /* eslint-enable new-cap */
 
+            this._isSupportingChaining = testForChainingSupport(unpatchedAudioContext);
             this._isSupportingPromises = testForPromiseSupport(unpatchedAudioContext);
             this._onStateChangeListener = null;
             this._unpatchedAudioContext = unpatchedAudioContext;
@@ -338,6 +358,8 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
         }
 
         createBufferSource () {
+            var audioBufferSourceNode;
+
             if (this._state === 'suspended') {
                 this._state = 'running';
 
@@ -346,7 +368,14 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                 }
             }
 
-            return this._unpatchedAudioContext.createBufferSource();
+            audioBufferSourceNode = this._unpatchedAudioContext.createBufferSource();
+
+            // Only Chrome and Firefox support chaining in their dev versions yet.
+            if (!this._isSupportingChaining) {
+                audioBufferSourceNode = wrapAudioNode(audioBufferSourceNode);
+            }
+
+            return audioBufferSourceNode;
         }
 
         createChannelMerger (/* numberOfInputs */) {
@@ -370,6 +399,11 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
             // executed. If it does it will imitate the behaviour of throwing an error.
             if (this.state === 'closed') {
                 throw createInvalidStateError();
+            }
+
+            // Only Chrome and Firefox support chaining in their dev versions yet.
+            if (!this._isSupportingChaining) {
+                channelMergerNode = wrapAudioNode(channelMergerNode);
             }
 
             // Firefox and Safari do not return the default properties.
@@ -404,6 +438,11 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                 throw createInvalidStateError();
             }
 
+            // Only Chrome and Firefox support chaining in their dev versions yet.
+            if (!this._isSupportingChaining) {
+                channelSplitterNode = wrapAudioNode(channelSplitterNode);
+            }
+
             return channelSplitterNode;
         }
 
@@ -430,6 +469,11 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                 throw createInvalidStateError();
             }
 
+            // Only Chrome and Firefox support chaining in their dev versions yet.
+            if (!this._isSupportingChaining) {
+                gainNode = wrapAudioNode(gainNode);
+            }
+
             return gainNode;
         }
 
@@ -454,6 +498,11 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
             // executed. If it does it will imitate the behaviour of throwing an error.
             if (this.state === 'closed') {
                 throw createInvalidStateError();
+            }
+
+            // Only Chrome and Firefox support chaining in their dev versions yet.
+            if (!this._isSupportingChaining) {
+                oscillatorNode = wrapAudioNode(oscillatorNode);
             }
 
             return oscillatorNode;
