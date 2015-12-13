@@ -42,7 +42,7 @@ module.exports = function (config) {
             'ChromeSauceLabs',
             // 'FirefoxDeveloperSauceLabs',
             // 'FirefoxSauceLabs',
-            'SafariSauceLabs'
+            // 'SafariSauceLabs'
         ];
 
         configuration.captureTimeout = 120000;
