@@ -39,7 +39,10 @@ module.exports = function (config) {
     if (process.env.TRAVIS) {
         configuration.browsers = [
             'ChromeCanarySauceLabs',
-            // 'FirefoxDeveloperSauceLabs'
+            'ChromeSauceLabs',
+            // 'FirefoxDeveloperSauceLabs',
+            // 'FirefoxSauceLabs',
+            'SafariSauceLabs'
         ];
 
         configuration.captureTimeout = 120000;
@@ -51,11 +54,27 @@ module.exports = function (config) {
                 platform: 'OS X 10.11',
                 version: 'dev'
             },
+            ChromeSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'chrome',
+                platform: 'OS X 10.11'
+            },
             FirefoxDeveloperSauceLabs: {
                 base: 'SauceLabs',
                 browserName: 'firefox',
                 platform: 'OS X 10.11',
                 version: 'dev'
+            },
+            FirefoxSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'firefox',
+                platform: 'OS X 10.11'
+            },
+            SafariSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'safari',
+                platform: 'OS X 10.11',
+                version: '9.0'
             }
         };
 
