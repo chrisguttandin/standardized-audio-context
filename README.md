@@ -19,3 +19,25 @@ reason besides a lack of time: `createAnalyser()`, `createAudioWorker()`, `creat
 `createMediaStreamDestination()`, `createMediaStreamSource()`, `createPanner()`,
 `createPeriodicWave()`, `createScriptProcessor()`, `createStereoPanner()`, `createWaveShaper()`,
 `resume()` and `suspend()`. The `listener` property is also missing for now.
+
+## Usage
+
+The `standardized-audio-context` is available on
+[npm](https://www.npmjs.com/package/standardized-audio-context) and can be installed as usual.
+
+```shell
+npm install standardized-audio-context
+```
+
+You can then import the `AudioContext` into your module like this:
+
+```js
+import { AudioContext } from 'standardized-audio-context';
+```
+
+In addition to that the `standardized-audio-context` also exports a flag named `isSupported` to
+indicate support from the currently used browser.
+
+```js
+import { isSupported } from 'standardized-audio-context';
+```
