@@ -1,6 +1,6 @@
 'use strict';
 
-import { Inject } from 'angular2/angular2';
+import { Inject } from 'angular2/core';
 import { window } from './window.js';
 
 export function unpatchedAudioContextConstructor (window) {

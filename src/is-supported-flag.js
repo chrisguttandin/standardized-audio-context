@@ -1,6 +1,6 @@
 'use strict';
 
-import { Inject } from 'angular2/angular2';
+import { Inject } from 'angular2/core';
 import { modernizr } from './modernizr';
 
 export function isSupportedFlag (modernizr) {
