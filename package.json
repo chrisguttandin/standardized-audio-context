@@ -44,6 +44,8 @@
   },
   "homepage": "https://github.com/chrisguttandin/standardized-audio-context",
   "keywords": [
+    "audio",
+    "browser",
     "Web Audio API"
   ],
   "license": "MIT",
