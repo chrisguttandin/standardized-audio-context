@@ -6,30 +6,48 @@ import { unpatchedAudioContextConstructor } from './unpatched-audio-context-cons
 var pool = [];
 
 function createEncodingError () {
-    var err = new Error();
+    var exception;
 
-    err.code = 0;
-    err.name = 'EncodingError';
+    try {
+        exception = new DOMException('', 'EncodingError');
+    } catch (err) {
+        exception = new Error();
 
-    return err;
+        exception.code = 0;
+        exception.name = 'EncodingError';
+    }
+
+    return exception;
 }
 
 function createInvalidStateError () {
-    var err = new Error();
+    var exception;
 
-    err.code = 11;
-    err.name = 'InvalidStateError';
+    try {
+        exception = new DOMException('', 'InvalidStateError');
+    } catch (err) {
+        exception = new Error();
 
-    return err;
+        exception.code = 11;
+        exception.name = 'InvalidStateError';
+    }
+
+    return exception;
 }
 
 function createNotSupportedError () {
-    var err = new Error();
+    var exception;
 
-    err.code = 9;
-    err.name = 'NotSupportedError';
+    try {
+        exception = new DOMException('', 'NotSupportedError');
+    } catch (err) {
+        exception = new Error();
 
-    return err;
+        exception.code = 9;
+        exception.name = 'NotSupportedError';
+    }
+
+    return exception;
 }
 
 function testForChainingSupport (audioContext) {

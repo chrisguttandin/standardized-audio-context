@@ -3,5 +3,8 @@
         "node": true
     },
     "extends": "eslint-config-holy-grail",
+    "globals": {
+        "DOMException": false
+    },
     "parser": "babel-eslint"
 }
