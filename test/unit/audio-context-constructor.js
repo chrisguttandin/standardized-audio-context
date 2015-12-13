@@ -14,6 +14,8 @@ describe('audioContextConstructor', function () {
         AudioContext;
 
     afterEach(function () {
+        this.timeout(3000);
+
         return audioContext.close();
     });
 
