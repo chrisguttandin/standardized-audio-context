@@ -39,7 +39,7 @@ module.exports = function (config) {
     if (process.env.TRAVIS) {
         configuration.browsers = [
             'ChromeCanarySauceLabs',
-            'FirefoxDeveloperSauceLabs'
+            // 'FirefoxDeveloperSauceLabs'
         ];
 
         configuration.captureTimeout = 120000;
