@@ -1,0 +1,8 @@
+env:
+  global:
+    - secure: DN1FEt593lxQIXL6+UL54ZEC31iD5CdwWau4tTQeVpoxSEQBzRLr4Rd8RzPbRtkaFeA8tDr+URvgXtvDR+hJwvgMI4rT+fKVrF/bo8hSXNTjfNgoTmn1ZA0qShq2LU9mNxGJGZeuvyJzvUHhvtvA4YQUyGoYG5nn7ursyzsum/o=
+    - secure: Npcr5YysMwN3n0qdq0PgqZYbrr6synPaLdCNZH60ig/027qFeVFGTg397C+Uzs6NPx+BTVdD8rMVzXbTouhgzuL4HBfG9Z+/e8n2J5czQaBZKNdYUKyJiMZ57JEOfbquMOsuNZSBFCRuNdmTOYm91d047DCvX7ycKnJ4d2rMjBQ=
+language: node_js
+node_js:
+    - "4.1"
+sudo: false
