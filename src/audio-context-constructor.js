@@ -194,7 +194,8 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
             // Chrome and Opera pretend to be running right away, but fire a onstatechange event
             // when their state actually changes to 'running'.
             if (unpatchedAudioContext.state === 'running') {
-                let revokeState;
+                let onchange,
+                    revokeState;
 
                 this._state = 'suspended';
 
@@ -203,10 +204,29 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                         this._state = null;
                     }
 
-                    unpatchedAudioContext.removeEventListener('statechange', revokeState);
+                    // Safari's AudioContext does not implement the EventTarget interface
+                    if (unpatchedAudioContext.removeEventListener) {
+                        unpatchedAudioContext.removeEventListener('statechange', revokeState);
+                    } else {
+                        unpatchedAudioContext.onchange = onchange;
+                    }
                 };
 
-                unpatchedAudioContext.addEventListener('statechange', revokeState);
+                // Safari's AudioContext does not implement the EventTarget interface
+                if (unpatchedAudioContext.addEventListener) {
+                    unpatchedAudioContext.addEventListener('statechange', revokeState);
+                } else {
+                    onchange = unpatchedAudioContext.onchange;
+
+                    if (onchange === null) {
+                        unpatchedAudioContext.onchange = revokeState;
+                    } else {
+                        unpatchedAudioContext.onchange = function (event) {
+                            revokeState();
+                            onchange(event);
+                        };
+                    }
+                }
             }
         }
 
