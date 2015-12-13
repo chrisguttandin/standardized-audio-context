@@ -2,6 +2,10 @@
 
 **A patched AudioContext which imitates the current API in current browsers.**
 
+[![tests](https://img.shields.io/travis/chrisguttandin/standardized-audio-context.svg?style=flat-square)](https://travis-ci.org/chrisguttandin/standardized-audio-context)
+[![dependencies](https://img.shields.io/david/chrisguttandin/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
+[![version](https://img.shields.io/npm/v/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
+
 This is a hopelessly naive attempt to patch the current implementation of the Web Audio API's
 [`AudioContext`](http://webaudio.github.io/web-audio-api/#the-audiocontext-interface) in current
 browsers. The goal is to make them all behave as promised by the
