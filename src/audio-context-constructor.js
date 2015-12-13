@@ -1,6 +1,6 @@
 'use strict';
 
-import { Inject } from 'angular2/angular2';
+import { Inject } from 'angular2/core';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
 var pool = [];
