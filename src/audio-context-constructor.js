@@ -62,6 +62,51 @@ function testForChainingSupport (audioContext) {
     return isSupportingChaining;
 }
 
+function testForDisconnectingSupport (audioContext, callback) {
+    var analyzer,
+        dummy,
+        channelData,
+        ones,
+        source;
+
+    analyzer = audioContext.createScriptProcessor(256, 1, 1);
+    dummy = audioContext.createGain();
+
+    // Safari does not loop buffers which contain just one frame.
+    ones = audioContext.createBuffer(1, 2, 44100);
+    channelData = ones.getChannelData(0);
+    channelData[0] = 1;
+    channelData[1] = 1;
+
+    source = audioContext.createBufferSource();
+    source.buffer = ones;
+    source.loop = true;
+
+    source.connect(analyzer);
+    analyzer.connect(audioContext.destination);
+    source.connect(dummy);
+    source.disconnect(dummy);
+
+    analyzer.onaudioprocess = function (event) {
+        var channelData = event.inputBuffer.getChannelData(0);
+
+        if (Array.prototype.some.call(channelData, (sample) => sample === 1)) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+
+        source.stop();
+
+        analyzer.onaudioprocess = null;
+
+        source.disconnect(analyzer);
+        analyzer.disconnect(audioContext.destination);
+    };
+
+    source.start();
+}
+
 function testForPromiseSupport (audioContext) {
     // This 12 numbers represent the 48 bytes of an empty WAVE file with a single sample.
     /* eslint-disable indent */
@@ -147,7 +192,7 @@ function wrapAudioBuffer (audioBuffer) {
     return audioBuffer;
 }
 
-function wrapAudioNode (audioNode) {
+function wrapAudioNodesConnectMethod (audioNode) {
     audioNode.connect = (function (connect) {
         return function (destination) {
             connect.apply(audioNode, arguments);
@@ -155,6 +200,37 @@ function wrapAudioNode (audioNode) {
             return destination;
         };
     }(audioNode.connect));
+
+    return audioNode;
+}
+
+function wrapAudioNodesDisconnectMethod (audioNode) {
+    var destinations = new Map();
+
+    audioNode.connect = (function (connect) {
+        return function (destination, output = 0, input = 0) {
+            destinations.set(destination, {
+                input,
+                output
+            });
+
+            return connect.call(audioNode, destination, output, input);
+        };
+    }(audioNode.connect));
+
+    audioNode.disconnect = (function (disconnect) {
+        return function (destination) {
+            disconnect.apply(audioNode);
+
+            if (arguments.length > 0 && destinations.has(destination)) {
+                destinations.delete(destination);
+
+                destinations.forEach(function (value, destination) {
+                    audioNode.connect(destination, value.input, value.output);
+                });
+            }
+        };
+    }(audioNode.disconnect));
 
     return audioNode;
 }
@@ -192,6 +268,8 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
             /* eslint-enable new-cap */
 
             this._isSupportingChaining = testForChainingSupport(unpatchedAudioContext);
+            this._isSupportingDisconnecting = false;
+            testForDisconnectingSupport(unpatchedAudioContext, (isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
             this._isSupportingPromises = testForPromiseSupport(unpatchedAudioContext);
             this._onStateChangeListener = null;
             this._unpatchedAudioContext = unpatchedAudioContext;
@@ -378,7 +456,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                biquadFilterNode = wrapAudioNode(biquadFilterNode);
+                biquadFilterNode = wrapAudioNodesConnectMethod(biquadFilterNode);
             }
 
             return biquadFilterNode;
@@ -420,7 +498,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                audioBufferSourceNode = wrapAudioNode(audioBufferSourceNode);
+                audioBufferSourceNode = wrapAudioNodesConnectMethod(audioBufferSourceNode);
             }
 
             return audioBufferSourceNode;
@@ -451,7 +529,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                channelMergerNode = wrapAudioNode(channelMergerNode);
+                channelMergerNode = wrapAudioNodesConnectMethod(channelMergerNode);
             }
 
             // Firefox and Safari do not return the default properties.
@@ -488,7 +566,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                channelSplitterNode = wrapAudioNode(channelSplitterNode);
+                channelSplitterNode = wrapAudioNodesConnectMethod(channelSplitterNode);
             }
 
             return channelSplitterNode;
@@ -519,7 +597,12 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                gainNode = wrapAudioNode(gainNode);
+                gainNode = wrapAudioNodesConnectMethod(gainNode);
+            }
+
+            // Only Chrome and Opera support disconnecting of a specific destination.
+            if (!this._isSupportingDisconnecting) {
+                gainNode = wrapAudioNodesDisconnectMethod(gainNode);
             }
 
             return gainNode;
@@ -550,7 +633,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                oscillatorNode = wrapAudioNode(oscillatorNode);
+                oscillatorNode = wrapAudioNodesConnectMethod(oscillatorNode);
             }
 
             return oscillatorNode;
