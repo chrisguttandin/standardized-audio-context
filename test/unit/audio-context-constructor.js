@@ -260,6 +260,13 @@ describe('audioContextConstructor', function () {
                 });
         });
 
+        it('should be chainable', function () {
+            var biquadFilterNode = audioContext.createBiquadFilter(),
+                gainNode = audioContext.createGain();
+
+            expect(biquadFilterNode.connect(gainNode)).to.equal(gainNode);
+        });
+
     });
 
     describe('createBuffer()', function () {

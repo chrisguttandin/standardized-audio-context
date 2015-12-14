@@ -376,6 +376,11 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                 throw createInvalidStateError();
             }
 
+            // Only Chrome and Firefox support chaining in their dev versions yet.
+            if (!this._isSupportingChaining) {
+                biquadFilterNode = wrapAudioNode(biquadFilterNode);
+            }
+
             return biquadFilterNode;
         }
 
