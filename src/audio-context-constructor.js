@@ -52,9 +52,14 @@ function createNotSupportedError () {
 
 function testForChainingSupport (audioContext) {
     var destination = audioContext.createGain(),
+        isSupportingChaining,
         target = audioContext.createGain();
 
-    return (target.connect(destination) === destination);
+    isSupportingChaining = (target.connect(destination) === destination);
+
+    target.disconnect(destination);
+
+    return isSupportingChaining;
 }
 
 function testForPromiseSupport (audioContext) {
