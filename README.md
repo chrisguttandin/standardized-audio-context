@@ -18,7 +18,7 @@ which is currently not implemented by any browser. Therefore the corresponding
 tests.
 
 That said, there are a lot of other functions which are currently not implemented for no specific
-reason besides a lack of time: `createAnalyser()`, `createAudioWorker()`, `createConvolver()`,
+reason besides a lack of time: `createAudioWorker()`, `createConvolver()`,
 `createDelay()`, `createDynamicsCompressor()`, `createMediaElementSource()`,
 `createMediaStreamDestination()`, `createMediaStreamSource()`, `createPanner()`,
 `createPeriodicWave()`, `createScriptProcessor()`, `createStereoPanner()`, `createWaveShaper()`,
