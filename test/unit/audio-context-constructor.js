@@ -197,7 +197,7 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe.only('createAnalyser()', function () {
+    describe('createAnalyser()', function () {
 
         it('should return an instance of the AnalyserNode interface', function () {
             var analyserNode = audioContext.createAnalyser();
