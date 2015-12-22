@@ -247,6 +247,52 @@ describe('audioContextConstructor', function () {
             expect(analyserNode.connect(gainNode)).to.equal(gainNode);
         });
 
+        it('should be disconnectable', function (done) {
+            var analyzer,
+                candidate,
+                dummy,
+                ones,
+                source;
+
+            candidate = audioContext.createAnalyser();
+            dummy = audioContext.createGain();
+
+            // @todo remove this ugly hack
+            analyzer = candidate.context.createScriptProcessor(256, 1, 1);
+
+            ones = audioContext.createBuffer(1, 2, 44100);
+            ones.getChannelData(0)[0] = 1;
+            ones.getChannelData(0)[1] = 1;
+
+            source = audioContext.createBufferSource();
+            source.buffer = ones;
+            source.loop = true;
+
+            source.connect(candidate);
+            candidate.connect(analyzer);
+            analyzer.connect(audioContext.destination);
+            candidate.connect(dummy);
+            candidate.disconnect(dummy);
+
+            analyzer.onaudioprocess = function (event) {
+                var channelData = event.inputBuffer.getChannelData(0);
+
+                if (Array.from(channelData).indexOf(1) > -1) {
+                    source.stop();
+
+                    analyzer.onaudioprocess = null;
+
+                    source.disconnect(candidate);
+                    candidate.disconnect(analyzer);
+                    analyzer.disconnect(audioContext.destination);
+
+                    done();
+                }
+            };
+
+            source.start();
+        });
+
     });
 
     describe('createBiquadFilter()', function () {

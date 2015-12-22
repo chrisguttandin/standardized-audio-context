@@ -485,6 +485,11 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                 analyserNode = wrapAudioNodesConnectMethod(analyserNode);
             }
 
+            // Only Chrome and Opera support disconnecting of a specific destination.
+            if (!this._isSupportingDisconnecting) {
+                analyserNode = wrapAudioNodesDisconnectMethod(analyserNode);
+            }
+
             return analyserNode;
         }
 
@@ -593,6 +598,15 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
             if (channelMergerNode.channelCount === 2 &&
                     channelMergerNode.channelCountMode === 'max') {
                 channelMergerNode = wrapChannelMergerNode(channelMergerNode);
+            }
+
+            try {
+                channelMergerNode.channelCount = 2;
+
+                channelMergerNode = wrapChannelMergerNode(channelMergerNode);
+            } catch (err) {
+                // The dev version of Firefox does not throw an error when setting a different
+                // channelCount or channelCountMode.
             }
 
             return channelMergerNode;
