@@ -64,8 +64,8 @@ function testForChainingSupport (audioContext) {
 
 function testForDisconnectingSupport (audioContext, callback) {
     var analyzer,
-        dummy,
         channelData,
+        dummy,
         ones,
         source;
 
