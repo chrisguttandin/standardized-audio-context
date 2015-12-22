@@ -197,6 +197,58 @@ describe('audioContextConstructor', function () {
 
     });
 
+    describe.only('createAnalyser()', function () {
+
+        it('should return an instance of the AnalyserNode interface', function () {
+            var analyserNode = audioContext.createAnalyser();
+
+            expect(analyserNode.channelCount).to.equal(1);
+            expect(analyserNode.channelCountMode).to.equal('max');
+            expect(analyserNode.channelInterpretation).to.equal('speakers');
+
+            expect(analyserNode.fftSize).to.equal(2048);
+            expect(analyserNode.frequencyBinCount).to.equal(1024);
+
+            expect(analyserNode.getByteFrequencyData).to.be.a('function');
+            expect(analyserNode.getByteTimeDomainData).to.be.a('function');
+
+            expect(analyserNode.getFloatFrequencyData).to.be.a('function');
+            expect(analyserNode.getFloatTimeDomainData).to.be.a('function');
+
+            expect(analyserNode.maxDecibels).to.equal(-30);
+            expect(analyserNode.minDecibels).to.equal(-100);
+
+            expect(analyserNode.numberOfInputs).to.equal(1);
+            expect(analyserNode.numberOfOutputs).to.equal(1);
+
+            expect(analyserNode.smoothingTimeConstant).to.equal(0.8);
+        });
+
+        it('should throw an error if the AudioContext is closed', function (done) {
+            audioContext
+                .close()
+                .then(function () {
+                    audioContext.createAnalyser();
+                })
+                .catch(function (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    audioContext = new AudioContext();
+
+                    done();
+                });
+        });
+
+        it('should be chainable', function () {
+            var analyserNode = audioContext.createAnalyser(),
+                gainNode = audioContext.createGain();
+
+            expect(analyserNode.connect(gainNode)).to.equal(gainNode);
+        });
+
+    });
+
     describe('createBiquadFilter()', function () {
 
         it('should return an instance of the BiquadFilterNode interface', function () {

@@ -192,6 +192,22 @@ function wrapAudioBuffer (audioBuffer) {
     return audioBuffer;
 }
 
+function wrapAnalyserNode (analyserNode) {
+    analyserNode.getFloatTimeDomainData = function (array) {
+        var byteTimeDomainData = new Uint8Array(array.length);
+
+        analyserNode.getByteTimeDomainData(byteTimeDomainData);
+
+        for (let i = 0, length = Math.max(byteTimeDomainData.length, analyserNode.fftSize); i < length; i += 1) {
+            array[i] = (byteTimeDomainData[i] - 128) * 0.0078125;
+        }
+
+        return array;
+    };
+
+    return analyserNode;
+}
+
 function wrapAudioNodesConnectMethod (audioNode) {
     audioNode.connect = (function (connect) {
         return function (destination) {
@@ -429,6 +445,47 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
             }
 
             return this._unpatchedAudioContext.close();
+        }
+
+        createAnalyser () {
+            var analyserNode;
+
+            if (this._state === 'suspended') {
+                this._state = 'running';
+
+                if (this._onStateChangeListener !== null) {
+                    this._onStateChangeListener();
+                }
+            }
+
+            if (this._unpatchedAudioContext === null) {
+                throw createInvalidStateError();
+            }
+
+            analyserNode = this._unpatchedAudioContext.createAnalyser();
+
+            // If the unpatched AudioContext throws an error by itself, this code will never get
+            // executed. If it does it will imitate the behaviour of throwing an error.
+            if (this.state === 'closed') {
+                throw createInvalidStateError();
+            }
+
+            // Only Firefox creates an AnalyserNode with default properties.
+            if (analyserNode.channelCount === 2) {
+                analyserNode.channelCount = 1;
+            }
+
+            // Safari does not support getFloatTimeDomainData() yet.
+            if (typeof analyserNode.getFloatTimeDomainData !== 'function') {
+                analyserNode = wrapAnalyserNode(analyserNode);
+            }
+
+            // Only Chrome and Firefox support chaining in their dev versions yet.
+            if (!this._isSupportingChaining) {
+                analyserNode = wrapAudioNodesConnectMethod(analyserNode);
+            }
+
+            return analyserNode;
         }
 
         createBiquadFilter () {
