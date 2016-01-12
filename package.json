@@ -16,7 +16,7 @@
     "angular2": "^2.0.0-beta.0",
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
-    "browserify": "^12.0.1",
+    "browserify": "^13.0.0",
     "browsernizr": "^2.0.1",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3",
