@@ -44,7 +44,8 @@
     "karma-sauce-launcher": "^0.3.0",
     "karma-sinon-chai": "^1.1.0",
     "load-grunt-config": "^0.19.1",
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.3",
+    "watchify": "^3.7.0"
   },
   "homepage": "https://github.com/chrisguttandin/standardized-audio-context",
   "keywords": [
