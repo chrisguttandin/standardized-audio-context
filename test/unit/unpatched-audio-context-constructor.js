@@ -21,7 +21,7 @@ describe('unpatchedAudioContextConstructor', function () {
     it('should return null if there is no AudioContext', function () {
         var fakeWindow = {};
 
-        injector = new angular.Injector.resolveAndCreate([
+        injector = angular.Injector.resolveAndCreate([
             angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
             angular.provide(wndw, { useValue: fakeWindow })
         ]);
@@ -34,7 +34,7 @@ describe('unpatchedAudioContextConstructor', function () {
                 webkitAudioContext: webkitAudioContext
             };
 
-        injector = new angular.Injector.resolveAndCreate([
+        injector = angular.Injector.resolveAndCreate([
             angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
             angular.provide(window, { useValue: fakeWindow })
         ]);
@@ -47,7 +47,7 @@ describe('unpatchedAudioContextConstructor', function () {
                 AudioContext: AudioContext
             };
 
-        injector = new angular.Injector.resolveAndCreate([
+        injector = angular.Injector.resolveAndCreate([
             angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
             angular.provide(window, { useValue: fakeWindow })
         ]);
@@ -61,7 +61,7 @@ describe('unpatchedAudioContextConstructor', function () {
                 webkitAudioContext: webkitAudioContext
             };
 
-        injector = new angular.Injector.resolveAndCreate([
+        injector = angular.Injector.resolveAndCreate([
             angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
             angular.provide(window, { useValue: fakeWindow })
         ]);

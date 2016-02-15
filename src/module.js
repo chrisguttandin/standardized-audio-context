@@ -9,7 +9,7 @@ import { unpatchedAudioContextConstructor } from './unpatched-audio-context-cons
 import { window } from './window.js';
 
 /* eslint-disable indent, new-cap */
-var injector = new Injector.resolveAndCreate([
+var injector = Injector.resolveAndCreate([
         provide(audioContextConstructor, { useFactory: audioContextConstructor }),
         provide(isSupportedFlag, { useFactory: isSupportedFlag }),
         provide(modernizr, { useValue: modernizr }),
