@@ -1,5 +1,3 @@
-'use strict';
-
 import { Inject } from 'angular2/core';
 import { modernizr } from './modernizr';
 

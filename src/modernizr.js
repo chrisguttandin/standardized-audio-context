@@ -1,5 +1,3 @@
-'use strict';
-
 import 'browsernizr/test/audio/webaudio';
 import 'browsernizr/test/es6/promises';
 import 'browsernizr/test/typed-arrays';

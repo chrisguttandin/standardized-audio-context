@@ -1,5 +1,3 @@
-'use strict';
-
 import { Inject } from 'angular2/core';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 

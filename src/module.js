@@ -1,5 +1,3 @@
-'use strict';
-
 import 'reflect-metadata';
 import { Injector, provide } from 'angular2/core';
 import { audioContextConstructor } from './audio-context-constructor';
