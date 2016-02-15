@@ -1,12 +1,19 @@
 'use strict';
 
-var browsernizr = require('browsernizr'),
-    modernizr = require('../../src/modernizr.js').modernizr;
+var modernizr = require('../../src/modernizr.js').modernizr;
 
 describe('modernizr', function () {
 
-    it('should return the browsernizr singleton', function () {
-        expect(modernizr).to.equal(browsernizr);
+    it('should contain the result of the promises test', function () {
+        expect(modernizr.promises).to.be.a.boolean;
+    });
+
+    it('should contain the result of the typedarrays test', function () {
+        expect(modernizr.typedarrays).to.be.a.boolean;
+    });
+
+    it('should contain the result of the webaudio test', function () {
+        expect(modernizr.webaudio).to.be.a.boolean;
     });
 
 });
