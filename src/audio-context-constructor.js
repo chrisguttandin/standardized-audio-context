@@ -1,22 +1,11 @@
+import { AudioBufferWrapper } from './wrapper/audio-buffer';
+import { EncodingErrorFactory } from './factories/encoding-error';
 import { Inject } from 'angular2/core';
+import { NotSupportedErrorFactory } from './factories/not-supported-error';
+import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
 var pool = [];
-
-function createEncodingError () {
-    var exception;
-
-    try {
-        exception = new DOMException('', 'EncodingError');
-    } catch (err) {
-        exception = new Error();
-
-        exception.code = 0;
-        exception.name = 'EncodingError';
-    }
-
-    return exception;
-}
 
 function createInvalidStateError () {
     var exception;
@@ -28,21 +17,6 @@ function createInvalidStateError () {
 
         exception.code = 11;
         exception.name = 'InvalidStateError';
-    }
-
-    return exception;
-}
-
-function createNotSupportedError () {
-    var exception;
-
-    try {
-        exception = new DOMException('', 'NotSupportedError');
-    } catch (err) {
-        exception = new Error();
-
-        exception.code = 9;
-        exception.name = 'NotSupportedError';
     }
 
     return exception;
@@ -103,91 +77,6 @@ function testForDisconnectingSupport (audioContext, callback) {
     };
 
     source.start();
-}
-
-function testForPromiseSupport (audioContext) {
-    // This 12 numbers represent the 48 bytes of an empty WAVE file with a single sample.
-    /* eslint-disable indent */
-    var uint32Array = new Uint32Array([
-            1179011410,
-            40,
-            1163280727,
-            544501094,
-            16,
-            131073,
-            44100,
-            176400,
-            1048580,
-            1635017060,
-            4,
-            0
-        ]);
-    /* eslint-enable indent */
-
-    try {
-        let promise = audioContext.decodeAudioData(uint32Array.buffer, function () {
-            // ignore success callback
-        }, function () {
-            // ignore error callback
-        });
-
-        if (promise === undefined) {
-            return false;
-        }
-
-        promise.catch(function () {
-            // ignore rejected errors
-        });
-
-        return true;
-    } catch (err) {
-        // ignore thrown errors
-    }
-
-    return false;
-}
-
-function wrapAudioBuffer (audioBuffer) {
-    // @todo throw errors
-    audioBuffer.copyFromChannel = function (destination, channelNumber, startInChannel) {
-        var channelData,
-            channelLength,
-            destinationLength,
-            i;
-
-        if (arguments.length < 3) {
-            startInChannel = 0;
-        }
-
-        channelData = audioBuffer.getChannelData(channelNumber);
-        channelLength = channelData.length;
-        destinationLength = destination.length;
-
-        for (i = 0; i + startInChannel < channelLength && i < destinationLength; i += 1) {
-            destination[i] = channelData[i + startInChannel];
-        }
-    };
-
-    audioBuffer.copyToChannel = function (source, channelNumber, startInChannel) {
-        var channelData,
-            channelLength,
-            i,
-            sourceLength;
-
-        if (arguments.length < 3) {
-            startInChannel = 0;
-        }
-
-        channelData = audioBuffer.getChannelData(channelNumber);
-        channelLength = channelData.length;
-        sourceLength = source.length;
-
-        for (i = 0; i + startInChannel < channelLength && i < sourceLength; i += 1) {
-            channelData[i + startInChannel] = source[i];
-        }
-    };
-
-    return audioBuffer;
 }
 
 function wrapAnalyserNode (analyserNode) {
@@ -271,7 +160,7 @@ function wrapChannelMergerNode (channelMergerNode) {
     return channelMergerNode;
 }
 
-export function audioContextConstructor (unpatchedAudioContextConstructor) {
+export function audioContextConstructor (audioBufferWrapper, encodingErrorFactory, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
 
     return class AudioContext {
 
@@ -284,7 +173,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
             this._isSupportingChaining = testForChainingSupport(unpatchedAudioContext);
             this._isSupportingDisconnecting = false;
             testForDisconnectingSupport(unpatchedAudioContext, (isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
-            this._isSupportingPromises = testForPromiseSupport(unpatchedAudioContext);
+            this._isSupportingPromises = promiseSupportTester.test(unpatchedAudioContext);
             this._onStateChangeListener = null;
             this._unpatchedAudioContext = unpatchedAudioContext;
             this._state = (unpatchedAudioContext.state === undefined) ? 'suspended' : null;
@@ -537,7 +426,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
             // Safari does not support copyFromChannel() and copyToChannel().
             if (typeof audioBuffer.copyFromChannel !== 'function') {
-                audioBuffer = wrapAudioBuffer(audioBuffer);
+                audioBuffer = audioBufferWrapper.wrap(audioBuffer);
             }
 
             return audioBuffer;
@@ -723,7 +612,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                     // Firefox throws a TypeError instead of a NotSupportedError.
                     .catch(function (err) {
                         if (err.name === 'TypeError') {
-                            throw createNotSupportedError();
+                            throw notSupportedErrorFactory.create();
                         }
 
                         throw err;
@@ -739,7 +628,7 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                 chunkId = String.fromCharCode(array[0]) + String.fromCharCode(array[1]) + String.fromCharCode(array[2]) + String.fromCharCode(array[3]);
 
                 if (chunkId === 'FORM') {
-                    return Promise.reject(createEncodingError());
+                    return Promise.reject(encodingErrorFactory.create());
                 }
             }
 
@@ -748,21 +637,21 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
                     this._unpatchedAudioContext.decodeAudioData(audioData, function (audioBuffer) {
                         // Safari does not support copyFromChannel() and copyToChannel().
                         if (typeof audioBuffer.copyFromChannel !== 'function') {
-                            audioBuffer = wrapAudioBuffer(audioBuffer);
+                            audioBuffer = audioBufferWrapper.wrap(audioBuffer);
                         }
 
                         resolve(audioBuffer);
                     }, function (err) {
                         // Opera returns null when asked to decode an MP3 file.
                         if (err === null) {
-                            reject(createEncodingError());
+                            reject(encodingErrorFactory.create());
                         } else {
                             reject(err);
                         }
                     });
                 } catch (err) {
                     // Chrome, Opera and Safari do throw a SyntaxError instead of calling the errorCallback.
-                    reject(createNotSupportedError());
+                    reject(notSupportedErrorFactory.create());
                 }
             });
         }
@@ -771,4 +660,4 @@ export function audioContextConstructor (unpatchedAudioContextConstructor) {
 
 }
 
-audioContextConstructor.parameters = [ [ new Inject(unpatchedAudioContextConstructor) ] ];
+audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];

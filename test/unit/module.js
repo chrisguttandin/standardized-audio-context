@@ -12,4 +12,8 @@ describe('module', function () {
         expect(mdl.isSupported).to.be.a.boolean;
     });
 
+    it('should export the OfflineAudioContext constructor', function () {
+        expect(mdl.OfflineAudioContext).to.be.a.function;
+    });
+
 });

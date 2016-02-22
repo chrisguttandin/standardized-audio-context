@@ -3,8 +3,12 @@
 require('reflect-metadata');
 
 var angular = require('angular2/core'),
+    AudioBufferWrapper = require('../../src/wrapper/audio-buffer.js').AudioBufferWrapper,
     audioContextConstructor = require('../../src/audio-context-constructor.js').audioContextConstructor,
+    EncodingErrorFactory = require('../../src/factories/encoding-error').EncodingErrorFactory,
     loadFixture = require('../helper/load-fixture.js'),
+    NotSupportedErrorFactory = require( '../../src/factories/not-supported-error').NotSupportedErrorFactory,
+    PromiseSupportTester = require('../../src/tester/promise-support').PromiseSupportTester,
     unpatchedAudioContextConstructor = require('../../src/unpatched-audio-context-constructor.js').unpatchedAudioContextConstructor,
     wndw = require('../../src/window.js').window;
 
@@ -19,6 +23,10 @@ describe('audioContextConstructor', function () {
 
     beforeEach(function () {
         var injector = angular.Injector.resolveAndCreate([
+                AudioBufferWrapper,
+                EncodingErrorFactory,
+                NotSupportedErrorFactory,
+                PromiseSupportTester,
                 angular.provide(audioContextConstructor, { useFactory: audioContextConstructor }),
                 angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
                 angular.provide(wndw, { useValue: window })
@@ -752,8 +760,8 @@ describe('audioContextConstructor', function () {
         it('should throw an error when asked to decode an unsupported file', function (done) {
             this.timeout(5000);
 
-            // AIFF files are not supported by any browser
-            loadFixture('a-second-of-silence.aif', function (err, arrayBuffer) {
+            // PNG files are not supported by any browser :-)
+            loadFixture('one-pixel-of-transparency.png', function (err, arrayBuffer) {
                 expect(err).to.be.null;
 
                 audioContext
