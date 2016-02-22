@@ -8,10 +8,6 @@ module.exports = function (config) {
 
     config.set({
 
-        browsers: [
-            'ChromeCanary'
-        ],
-
         files: [
             'test/expectation/any/**/*.js',
             'test/expectation/chrome/any/**/*.js',
@@ -30,5 +26,39 @@ module.exports = function (config) {
         }
 
     });
+
+    if (process.env.TRAVIS) {
+
+        config.set({
+
+            browsers: [
+                'ChromeCanarySauceLabs'
+            ],
+
+            captureTimeout: 120000,
+
+            customLaunchers: {
+                ChromeCanarySauceLabs: {
+                    base: 'SauceLabs',
+                    browserName: 'chrome',
+                    platform: 'OS X 10.11',
+                    version: 'dev'
+                }
+            },
+
+            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+        });
+
+    } else {
+
+        config.set({
+
+            browsers: [
+                'ChromeCanary'
+            ]
+
+        });
+
+    }
 
 };
