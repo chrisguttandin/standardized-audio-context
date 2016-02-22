@@ -7,12 +7,12 @@
 [![version](https://img.shields.io/npm/v/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
 
 This is a hopelessly naive attempt to patch the current implementation of the Web Audio API's
-[`AudioContext`](http://webaudio.github.io/web-audio-api/#the-audiocontext-interface) in current
-browsers. The goal is to make them all behave as promised by the
+[`AudioContext`](http://webaudio.github.io/web-audio-api/#AudioContext) in current browsers. The
+goal is to make them all behave as promised by the
 [Specification](http://webaudio.github.io/web-audio-api/).
 
 There are of course some things which cannot be faked in a reasonable way. The most obvious amongst
-those is the [`AudioWorkerNode`](http://webaudio.github.io/web-audio-api/#the-audioworker-interface)
+those is the [`AudioWorkerNode`](http://webaudio.github.io/web-audio-api/#AudioWorker)
 which is currently not implemented by any browser. Therefore the corresponding
 `createAudioWorker()` method is missing here, too. All implemented methods are covered by unit
 tests.
@@ -24,6 +24,10 @@ reason besides a lack of time: `createAudioWorker()`, `createConvolver()`,
 `createPeriodicWave()`, `createScriptProcessor()`, `createStereoPanner()`, `createWaveShaper()`,
 `resume()` and `suspend()`. The `listener` property is also missing for now.
 
+This module also provides an
+[`OfflineAudioContext`](http://webaudio.github.io/web-audio-api/#OfflineAudioContext) which does
+only expose the `decodeAudioData()` method up to now.
+
 ## Usage
 
 The `standardized-audio-context` is available on
@@ -33,10 +37,10 @@ The `standardized-audio-context` is available on
 npm install standardized-audio-context
 ```
 
-You can then import the `AudioContext` into your module like this:
+You can then import the `AudioContext` and `OfflineAudioContext` into your module like this:
 
 ```js
-import { AudioContext } from 'standardized-audio-context';
+import { AudioContext, OfflineAudioContext } from 'standardized-audio-context';
 ```
 
 In addition to that the `standardized-audio-context` also exports a flag named `isSupported` to
