@@ -40,7 +40,7 @@ describe('audioContextConstructor', function () {
     describe('currentTime', function () {
 
         it('should be a number', function () {
-            expect(audioContext.currentTime).to.be.a.number;
+            expect(audioContext.currentTime).to.be.a('number');
         });
 
         it('should be readonly', function () {
@@ -75,7 +75,7 @@ describe('audioContextConstructor', function () {
             expect(destination.channelCount).to.equal(2);
             expect(destination.channelCountMode).to.equal('explicit');
             expect(destination.channelInterpretation).to.equal('speakers');
-            expect(destination.maxChannelCount).to.be.a.number;
+            expect(destination.maxChannelCount).to.be.a('number');
             expect(destination.numberOfInputs).to.equal(1);
             expect(destination.numberOfOutputs).to.equal(0);
         });
@@ -156,7 +156,7 @@ describe('audioContextConstructor', function () {
     describe('sampleRate', function () {
 
         it('should be a number', function () {
-            expect(audioContext.sampleRate).to.be.a.number;
+            expect(audioContext.sampleRate).to.be.a('number');
         });
 
         it('should be readonly', function () {
@@ -347,7 +347,7 @@ describe('audioContextConstructor', function () {
             expect(biquadFilterNode.Q.setValueCurveAtTime).to.be.a('function');
             expect(biquadFilterNode.Q.value).to.equal(1);
 
-            expect(biquadFilterNode.type).to.be.a.string;
+            expect(biquadFilterNode.type).to.be.a('string');
         });
 
         it('should throw an error if the AudioContext is closed', function (done) {
