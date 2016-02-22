@@ -23,7 +23,7 @@
     "noarg": true,
     "onevar": true,
     "quotmark": "single",
-    "strict": true,
+    "strict": false,
     "trailing": true,
     "undef": true,
     "unused": "vars",
