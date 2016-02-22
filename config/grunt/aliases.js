@@ -7,8 +7,8 @@ module.exports = {
         'replace:modernizr'
     ],
     continuous: [
-        'build',
-        'karma:continuous'
+        'test',
+        'watch:continuous'
     ],
     lint: [
         'eslint',
@@ -16,6 +16,12 @@ module.exports = {
     ],
     test: [
         'build',
-        'karma:test'
+        'karma:test',
+        'karma:test-chrome',
+        'karma:test-chrome-canary',
+        'karma:test-firefox',
+        'karma:test-firefox-developer',
+        'karma:test-opera',
+        'karma:test-safari'
     ]
 };

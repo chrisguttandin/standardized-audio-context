@@ -17,8 +17,7 @@ module.exports = function (config) {
                 {
                     included: false,
                     pattern: 'test/fixtures/**',
-                    served: true,
-                    watched: true,
+                    served: true
                 },
                 'test/unit/**/*.js'
             ],
@@ -31,7 +30,9 @@ module.exports = function (config) {
 
             preprocessors: {
                 'test/unit/**/*.js': 'browserify'
-            }
+            },
+
+            singleRun: true
 
         };
     /* eslint-enable indent */
