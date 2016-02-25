@@ -4,92 +4,101 @@ var browserify = require('../../package.json').browserify;
 
 module.exports = function (config) {
 
-    /* eslint-disable indent */
-    var configuration = {
+    config.set({
 
-            basePath: '../../',
+        basePath: '../../',
 
-            browserify: {
-                transform: browserify.transform
+        browserify: {
+            transform: browserify.transform
+        },
+
+        files: [
+            {
+                included: false,
+                pattern: 'test/fixtures/**',
+                served: true
             },
+            'test/unit/**/*.js'
+        ],
 
-            files: [
-                {
-                    included: false,
-                    pattern: 'test/fixtures/**',
-                    served: true
-                },
-                'test/unit/**/*.js'
-            ],
+        frameworks: [
+            'browserify',
+            'mocha',
+            'sinon-chai' // implicitly uses chai too
+        ],
 
-            frameworks: [
-                'browserify',
-                'mocha',
-                'sinon-chai' // implicitly uses chai too
-            ],
+        preprocessors: {
+            'test/unit/**/*.js': 'browserify'
+        },
 
-            preprocessors: {
-                'test/unit/**/*.js': 'browserify'
-            },
+        singleRun: true
 
-            singleRun: true
-
-        };
-    /* eslint-enable indent */
+    });
 
     if (process.env.TRAVIS) {
-        configuration.browsers = [
-            'ChromeCanarySauceLabs',
-            'ChromeSauceLabs',
-            // 'FirefoxDeveloperSauceLabs',
-            // 'FirefoxSauceLabs',
-            // 'SafariSauceLabs'
-        ];
 
-        configuration.captureTimeout = 120000;
+        config.set({
 
-        configuration.customLaunchers = {
-            ChromeCanarySauceLabs: {
-                base: 'SauceLabs',
-                browserName: 'chrome',
-                platform: 'OS X 10.11',
-                version: 'dev'
-            },
-            ChromeSauceLabs: {
-                base: 'SauceLabs',
-                browserName: 'chrome',
-                platform: 'OS X 10.11'
-            },
-            FirefoxDeveloperSauceLabs: {
-                base: 'SauceLabs',
-                browserName: 'firefox',
-                platform: 'OS X 10.11',
-                version: 'dev'
-            },
-            FirefoxSauceLabs: {
-                base: 'SauceLabs',
-                browserName: 'firefox',
-                platform: 'OS X 10.11'
-            },
-            SafariSauceLabs: {
-                base: 'SauceLabs',
-                browserName: 'safari',
-                platform: 'OS X 10.11'
-            }
-        };
+            browsers: [
+                'ChromeBrowserStack',
+                'EdgeBrowserStack',
+                'FirefoxBrowserStack',
+                'SafariBrowserStack'
+            ],
 
-        configuration.tunnelIdentifier = process.env.TRAVIS_JOB_NUMBER;
+            browserStack: {
+                accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
+                username: process.env.BROWSER_STACK_USERNAME
+            },
+
+            captureTimeout: 120000,
+
+            customLaunchers: {
+                ChromeBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'chrome',
+                    os: 'OS X',
+                    os_version: 'El Capitan' // eslint-disable-line camelcase
+                },
+                EdgeBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'edge',
+                    os: 'Windows',
+                    os_version: '10' // eslint-disable-line camelcase
+                },
+                FirefoxBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'firefox',
+                    os: 'OS X',
+                    os_version: 'El Capitan' // eslint-disable-line camelcase
+                },
+                SafariBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'safari',
+                    os: 'OS X',
+                    os_version: 'El Capitan' // eslint-disable-line camelcase
+                }
+            },
+
+            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+
+        });
+
     } else {
-        configuration.browsers = [
-            'Chrome',
-            'ChromeCanary',
-            'Firefox',
-            'FirefoxDeveloper',
-            'Opera',
-            'Safari'
-        ];
-    }
 
-    config.set(configuration);
+        config.set({
+
+            browsers: [
+                'Chrome',
+                'ChromeCanary',
+                'Firefox',
+                'FirefoxDeveloper',
+                'Opera',
+                'Safari'
+            ]
+
+        });
+
+    }
 
 };
