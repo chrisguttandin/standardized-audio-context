@@ -7,7 +7,7 @@ var angular = require('angular2/core'),
     unpatchedOfflineAudioContextConstructor = require('../../../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
     wndw = require('../../../../src/window.js').window;
 
-describe.only('offlineAudioContextConstructor', function () {
+describe('offlineAudioContextConstructor', function () {
 
     var offlineAudioContext,
         OfflineAudioContext;
