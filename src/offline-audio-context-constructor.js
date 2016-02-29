@@ -34,15 +34,14 @@ export function offlineAudioContextConstructor (audioBufferWrapper, encodingErro
                     // bug #3: Chrome and Firefox reject a TypeError.
                     .catch(function (err) {
                         if (err.name === 'TypeError') {
-                            throw notSupportedErrorFactory.create();
-                        }
+                            err = notSupportedErrorFactory.create();
 
-                        throw err;
-                    })
-                    // bug #6: Chrome and Firefox do not call the errorCallback in case of an invalid buffer.
-                    .catch(function (err) {
-                        if (err.name === 'NotSupportedError' && typeof errorCallback === 'function') {
-                            errorCallback(err);
+                            // bug #6: Chrome and Firefox do not call the errorCallback in case of an invalid buffer.
+                            if (typeof errorCallback === 'function') {
+                                errorCallback(err);
+                            }
+
+                            throw err;
                         }
 
                         throw err;
