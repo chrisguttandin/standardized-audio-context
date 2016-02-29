@@ -52,4 +52,4 @@ import { isSupported } from 'standardized-audio-context';
 
 ## Tests
 
-Many thanks to [`BrowserStack`](https://www.browserstack.com) and [`Sauce Labs`](https://saucelabs.com) for allowing this module to be tested with their services.
+Many thanks to [BrowserStack](https://www.browserstack.com) and [Sauce Labs](https://saucelabs.com) for allowing this module to be tested with their services.
