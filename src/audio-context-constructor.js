@@ -597,7 +597,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             return oscillatorNode;
         }
 
-        decodeAudioData (audioData) {
+        decodeAudioData (audioData, successCallback, errorCallback) {
             if (this._state === 'suspended') {
                 this._state = 'running';
 
@@ -608,50 +608,72 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
 
             if (this._isSupportingPromises) {
                 return this._unpatchedAudioContext
-                    .decodeAudioData(audioData)
-                    // Firefox throws a TypeError instead of a NotSupportedError.
+                    .decodeAudioData(audioData, successCallback, function (err) {
+                        if (typeof errorCallback === 'function') {
+                            // bug #7: Firefox calls the callback with undefined.
+                            if (err === undefined) {
+                                errorCallback(encodingErrorFactory.create());
+                            } else {
+                                errorCallback(err);
+                            }
+                        }
+                    })
+                    // bug #3: Chrome and Firefox reject a TypeError.
                     .catch(function (err) {
                         if (err.name === 'TypeError') {
                             throw notSupportedErrorFactory.create();
                         }
 
                         throw err;
+                    })
+                    // bug #6: Chrome and Firefox do not call the errorCallback in case of an invalid buffer.
+                    .catch(function (err) {
+                        if (err.name === 'NotSupportedError' && typeof errorCallback === 'function') {
+                            errorCallback(err);
+                        }
+
+                        throw err;
                     });
             }
 
-            // Chrome crashes when asked to decode an AIFF file.
-            if (audioData) {
-                let array,
-                    chunkId;
-
-                array = new Uint8Array(audioData);
-                chunkId = String.fromCharCode(array[0]) + String.fromCharCode(array[1]) + String.fromCharCode(array[2]) + String.fromCharCode(array[3]);
-
-                if (chunkId === 'FORM') {
-                    return Promise.reject(encodingErrorFactory.create());
-                }
-            }
-
+            // bug #1: Chrome, Opera and Safari do not return a Promise yet.
             return new Promise ((resolve, reject) => {
+
+                function fail (err) {
+                    reject(err);
+
+                    if (typeof errorCallback === 'function') {
+                        errorCallback(err);
+                    }
+                }
+
+                function succeed (audioBufferWrapper) {
+                    resolve(audioBufferWrapper);
+
+                    if (typeof successCallback === 'function') {
+                        successCallback(audioBufferWrapper);
+                    }
+                }
+
+                // bug #2: Chrome, Opera and Safari throw a wrong DOMException.
                 try {
                     this._unpatchedAudioContext.decodeAudioData(audioData, function (audioBuffer) {
-                        // Safari does not support copyFromChannel() and copyToChannel().
+                        // bug #5: Safari does not support copyFromChannel() and copyToChannel().
                         if (typeof audioBuffer.copyFromChannel !== 'function') {
-                            audioBuffer = audioBufferWrapper.wrap(audioBuffer);
-                        }
-
-                        resolve(audioBuffer);
-                    }, function (err) {
-                        // Opera returns null when asked to decode an MP3 file.
-                        if (err === null) {
-                            reject(encodingErrorFactory.create());
+                            succeed(audioBufferWrapper.wrap(audioBuffer));
                         } else {
-                            reject(err);
+                            succeed(audioBuffer);
+                        }
+                    }, function (err) {
+                        // bug #4: Chrome and Opera return null instead of an error.
+                        if (err === null) {
+                            fail(encodingErrorFactory.create());
+                        } else {
+                            fail(err);
                         }
                     });
                 } catch (err) {
-                    // Chrome, Opera and Safari do throw a SyntaxError instead of calling the errorCallback.
-                    reject(notSupportedErrorFactory.create());
+                    fail(notSupportedErrorFactory.create());
                 }
             });
         }
