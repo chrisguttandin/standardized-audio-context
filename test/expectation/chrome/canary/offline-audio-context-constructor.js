@@ -3,6 +3,7 @@
 require('reflect-metadata');
 
 var angular = require('angular2/core'),
+    sinon = require('sinon'),
     unpatchedOfflineAudioContextConstructor = require('../../../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
     wndw = require('../../../../src/window.js').window;
 
@@ -36,6 +37,20 @@ describe.only('offlineAudioContextConstructor', function () {
 
                     done();
                 });
+        });
+
+        // bug #6
+
+        it('should not call the errorCallback at all', function (done) {
+            var errorCallback = sinon.spy();
+
+            offlineAudioContext.decodeAudioData(null, function () {}, errorCallback);
+
+            setTimeout(function () {
+                expect(errorCallback).to.have.not.been.called;
+
+                done();
+            }, 1000);
         });
 
     });

@@ -18,14 +18,31 @@ export function offlineAudioContextConstructor (audioBufferWrapper, encodingErro
             this._unpatchedOfflineAudioContext = unpatchedOfflineAudioContext;
         }
 
-        decodeAudioData (audioData) {
+        decodeAudioData (audioData, successCallback, errorCallback) {
             if (this._isSupportingPromises) {
                 return this._unpatchedOfflineAudioContext
-                    .decodeAudioData(audioData)
+                    .decodeAudioData(audioData, successCallback, function (err) {
+                        if (typeof errorCallback === 'function') {
+                            // bug #7: Firefox calls the callback with undefined.
+                            if (err === undefined) {
+                                errorCallback(encodingErrorFactory.create());
+                            } else {
+                                errorCallback(err);
+                            }
+                        }
+                    })
                     // bug #3: Chrome and Firefox reject a TypeError.
                     .catch(function (err) {
                         if (err.name === 'TypeError') {
                             throw notSupportedErrorFactory.create();
+                        }
+
+                        throw err;
+                    })
+                    // bug #6: Chrome and Firefox do not call the errorCallback in case of an invalid buffer.
+                    .catch(function (err) {
+                        if (err.name === 'NotSupportedError' && typeof errorCallback === 'function') {
+                            errorCallback(err);
                         }
 
                         throw err;
@@ -34,25 +51,42 @@ export function offlineAudioContextConstructor (audioBufferWrapper, encodingErro
 
             // bug #1: Chrome, Opera and Safari do not return a Promise yet.
             return new Promise ((resolve, reject) => {
+
+                function fail (err) {
+                    reject(err);
+
+                    if (typeof errorCallback === 'function') {
+                        errorCallback(err);
+                    }
+                }
+
+                function succeed (audioBufferWrapper) {
+                    resolve(audioBufferWrapper);
+
+                    if (typeof successCallback === 'function') {
+                        successCallback(audioBufferWrapper);
+                    }
+                }
+
                 // bug #2: Chrome, Opera and Safari throw a wrong DOMException.
                 try {
                     this._unpatchedOfflineAudioContext.decodeAudioData(audioData, function (audioBuffer) {
                         // bug #5: Safari does not support copyFromChannel() and copyToChannel().
                         if (typeof audioBuffer.copyFromChannel !== 'function') {
-                            resolve(audioBufferWrapper.wrap(audioBuffer));
+                            succeed(audioBufferWrapper.wrap(audioBuffer));
                         } else {
-                            resolve(audioBuffer);
+                            succeed(audioBuffer);
                         }
                     }, function (err) {
                         // bug #4: Chrome and Opera return null instead of an error.
                         if (err === null) {
-                            reject(encodingErrorFactory.create());
+                            fail(encodingErrorFactory.create());
                         } else {
-                            reject(err);
+                            fail(err);
                         }
                     });
                 } catch (err) {
-                    reject(notSupportedErrorFactory.create());
+                    fail(notSupportedErrorFactory.create());
                 }
             });
         }

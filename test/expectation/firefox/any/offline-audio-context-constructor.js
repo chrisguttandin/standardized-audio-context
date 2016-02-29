@@ -3,6 +3,8 @@
 require('reflect-metadata');
 
 var angular = require('angular2/core'),
+    loadFixture = require('../../../helper/load-fixture.js'),
+    sinon = require('sinon'),
     unpatchedOfflineAudioContextConstructor = require('../../../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
     wndw = require('../../../../src/window.js').window;
 
@@ -36,6 +38,34 @@ describe.only('offlineAudioContextConstructor', function () {
 
                     done();
                 });
+        });
+
+        // bug #6
+
+        it('should not call the errorCallback at all', function (done) {
+            var errorCallback = sinon.spy();
+
+            offlineAudioContext.decodeAudioData(null, function () {}, errorCallback);
+
+            setTimeout(function () {
+                expect(errorCallback).to.have.not.been.called;
+
+                done();
+            }, 1000);
+        });
+
+        // bug #7
+
+        it('should call the errorCallback with undefined', function (done) {
+            loadFixture('one-pixel-of-transparency.png', function (err, arrayBuffer) {
+                expect(err).to.be.null;
+
+                offlineAudioContext.decodeAudioData(arrayBuffer, function () {}, function (err) {
+                    expect(err).to.be.undefined;
+
+                    done();
+                });
+            });
         });
 
     });
