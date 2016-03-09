@@ -32,16 +32,17 @@ module.exports = function (config) {
         config.set({
 
             browsers: [
-                'ChromeSauceLabs'
+                'ChromeBrowserStack'
             ],
 
             captureTimeout: 120000,
 
             customLaunchers: {
-                ChromeSauceLabs: {
-                    base: 'SauceLabs',
-                    browserName: 'chrome',
-                    platform: 'OS X 10.11'
+                ChromeBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'chrome',
+                    os: 'OS X',
+                    os_version: 'El Capitan' // eslint-disable-line camelcase
                 }
             },
 
