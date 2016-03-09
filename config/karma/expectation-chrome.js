@@ -35,6 +35,11 @@ module.exports = function (config) {
                 'ChromeBrowserStack'
             ],
 
+            browserStack: {
+                accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
+                username: process.env.BROWSER_STACK_USERNAME
+            },
+
             captureTimeout: 120000,
 
             customLaunchers: {
