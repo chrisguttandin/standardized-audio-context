@@ -25,49 +25,32 @@ describe('offlineAudioContextConstructor', function () {
 
     describe('decodeAudioData()', function () {
 
-        // bug #1
+        // bug #3
 
-        it('should require the success callback function as a parameter', function (done) {
-            loadFixture('1000-frames-of-noise.wav', function (err, arrayBuffer) {
-                expect(err).to.be.null;
+        it('should reject the promise with a TypeError', function (done) {
+            offlineAudioContext
+                .decodeAudioData(null)
+                .catch(function (err) {
+                    expect(err).to.be.an.instanceOf(TypeError);
 
-                expect(function () {
-                    offlineAudioContext.decodeAudioData(arrayBuffer);
-                }).to.throw(TypeError, "Failed to execute 'decodeAudioData' on 'AudioContext': 2 arguments required, but only 1 present."); // jshint ignore:line
-
-                done();
-            });
-        });
-
-        // bug #2
-
-        it('should throw a DOMException', function (done) {
-            try {
-                offlineAudioContext.decodeAudioData(null, function () {});
-            } catch (err) {
-                expect(err).to.be.an.instanceOf(DOMException); // jshint ignore:line
-
-                expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'AudioContext': invalid ArrayBuffer for audioData."); // jshint ignore:line
-
-                done();
-            }
-        });
-
-        // bug #4
-
-        it('should throw null when asked to decode an unsupported file', function (done) {
-            this.timeout(5000);
-
-            // PNG files are not supported by any browser :-)
-            loadFixture('one-pixel-of-transparency.png', function (err, arrayBuffer) {
-                expect(err).to.be.null;
-
-                offlineAudioContext.decodeAudioData(arrayBuffer, function () {}, function (err) {
-                    expect(err).to.be.null;
+                    expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'AudioContext': parameter 1 is not of type 'ArrayBuffer'."); // jshint ignore:line
 
                     done();
                 });
-            });
+        });
+
+        // bug #6
+
+        it('should not call the errorCallback at all', function (done) {
+            var errorCallback = sinon.spy();
+
+            offlineAudioContext.decodeAudioData(null, function () {}, errorCallback);
+
+            setTimeout(function () {
+                expect(errorCallback).to.have.not.been.called;
+
+                done();
+            }, 1000);
         });
 
     });

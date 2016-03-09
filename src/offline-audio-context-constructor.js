@@ -48,7 +48,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, encodingErro
                     });
             }
 
-            // bug #1: Chrome, Opera and Safari do not return a Promise yet.
+            // bug #1: Opera and Safari do not return a Promise yet.
             return new Promise ((resolve, reject) => {
 
                 function fail (err) {
@@ -67,7 +67,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, encodingErro
                     }
                 }
 
-                // bug #2: Chrome, Opera and Safari throw a wrong DOMException.
+                // bug #2: Opera and Safari throw a wrong DOMException.
                 try {
                     this._unpatchedOfflineAudioContext.decodeAudioData(audioData, function (audioBuffer) {
                         // bug #5: Safari does not support copyFromChannel() and copyToChannel().
@@ -77,7 +77,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, encodingErro
                             succeed(audioBuffer);
                         }
                     }, function (err) {
-                        // bug #4: Chrome and Opera return null instead of an error.
+                        // bug #4: Opera returns null instead of an error.
                         if (err === null) {
                             fail(encodingErrorFactory.create());
                         } else {
