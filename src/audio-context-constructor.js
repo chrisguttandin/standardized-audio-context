@@ -161,7 +161,6 @@ function wrapChannelMergerNode (channelMergerNode) {
 }
 
 export function audioContextConstructor (audioBufferWrapper, encodingErrorFactory, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
-
     return class AudioContext {
 
         constructor () {
@@ -678,7 +677,6 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
         }
 
     };
-
 }
 
 audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];

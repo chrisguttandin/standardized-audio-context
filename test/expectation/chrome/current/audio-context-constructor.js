@@ -3,7 +3,7 @@
 require('reflect-metadata');
 
 var angular = require('angular2/core'),
-    loadFixture = require('../../../helper/load-fixture.js'),
+    sinon = require('sinon'),
     unpatchedAudioContextConstructor = require('../../../../src/unpatched-audio-context-constructor.js').unpatchedAudioContextConstructor,
     wndw = require('../../../../src/window.js').window;
 

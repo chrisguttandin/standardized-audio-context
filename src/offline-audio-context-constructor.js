@@ -6,7 +6,6 @@ import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 
 export function offlineAudioContextConstructor (audioBufferWrapper, encodingErrorFactory, notSupportedErrorFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
-
     return class OfflineAudioContext {
 
         constructor (numberOfChannels, length, sampleRate) {
@@ -91,7 +90,6 @@ export function offlineAudioContextConstructor (audioBufferWrapper, encodingErro
         }
 
     };
-
 }
 
 offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];
