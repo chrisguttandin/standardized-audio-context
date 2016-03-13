@@ -24,6 +24,16 @@ describe('offlineAudioContextConstructor', function () {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('createIIRFilter()', function () {
+
+        // bug #9
+
+        it('should not be implemented', function () {
+            expect(offlineAudioContext.createIIRFilter).to.be.undefined;
+        });
+
+    });
+
     describe('createScriptProcessor()', function () {
 
         // bug #8
