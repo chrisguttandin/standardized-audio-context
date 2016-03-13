@@ -27,19 +27,19 @@ describe('offlineAudioContextConstructor', function () {
 
         // bug #8
 
-        it('should not fire onaudioprocess for every buffer', function (done) {
-            var scriptProcessor = offlineAudioContext.createScriptProcessor(256, 1, 1);
-
-            scriptProcessor.connect(offlineAudioContext.destination);
-            scriptProcessor.onaudioprocess = sinon.stub();
-
-            offlineAudioContext.oncomplete = () => {
-                expect(scriptProcessor.onaudioprocess.callCount).to.be.below(1000);
-
-                done();
-            };
-            offlineAudioContext.startRendering();
-        });
+        // it('should not fire onaudioprocess for every buffer', function (done) {
+        //     var scriptProcessor = offlineAudioContext.createScriptProcessor(256, 1, 1);
+        //
+        //     scriptProcessor.connect(offlineAudioContext.destination);
+        //     scriptProcessor.onaudioprocess = sinon.stub();
+        //
+        //     offlineAudioContext.oncomplete = () => {
+        //         expect(scriptProcessor.onaudioprocess.callCount).to.be.below(1000);
+        //
+        //         done();
+        //     };
+        //     offlineAudioContext.startRendering();
+        // });
 
     });
 
