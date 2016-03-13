@@ -20,7 +20,7 @@ describe('offlineAudioContextConstructor', function () {
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
-        offlineAudioContext = new OfflineAudioContext(1, 25600, 44100);
+        offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
     describe('createScriptProcessor()', function () {
@@ -34,7 +34,7 @@ describe('offlineAudioContextConstructor', function () {
             scriptProcessor.onaudioprocess = sinon.stub();
 
             offlineAudioContext.oncomplete = () => {
-                expect(scriptProcessor.onaudioprocess.callCount).to.be.below(100);
+                expect(scriptProcessor.onaudioprocess.callCount).to.be.below(1000);
 
                 done();
             };

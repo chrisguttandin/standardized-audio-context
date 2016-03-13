@@ -21,7 +21,7 @@ describe('offlineAudioContextConstructor', function () {
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
-        offlineAudioContext = new OfflineAudioContext(1, 25600, 44100);
+        offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
     describe('decodeAudioData()', function () {
