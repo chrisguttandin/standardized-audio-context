@@ -270,7 +270,7 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
                 return Promise.reject(invalidStateErrorFactory.create());
             }
 
-            // If the unpatched AudioContext does not provide a close method it should be imitated.
+            // bug #10: Edge does not provide a close method.
             if (this._unpatchedAudioContext.close === undefined) {
                 pool.push(this._unpatchedAudioContext);
 
@@ -531,8 +531,10 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
         }
 
         createIIRFilter (feedforward, feedback) {
-            // @todo Safari seems to support close() now too. So it does not need to be faked here.
-            // It can also be removed from all other methods.
+            // bug #10: Edge does not throw an error when the context is closed.
+            if (this._unpatchedAudioContext === null && this.state === 'closed') {
+                throw invalidStateErrorFactory.create();
+            }
 
             // bug #9: Only Chrome currently implements the createIIRFilter() method.
             if (this._unpatchedAudioContext.createIIRFilter === undefined) {
