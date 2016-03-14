@@ -1,6 +1,7 @@
 import { AudioBufferWrapper } from './wrapper/audio-buffer';
 import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
+import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { Inject } from 'angular2/core';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
@@ -125,7 +126,7 @@ function wrapAudioNodesDisconnectMethod (audioNode) {
     return audioNode;
 }
 
-export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
+export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
     return class AudioContext {
 
         constructor () {
@@ -538,147 +539,7 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
 
             // bug #9: Only Chrome currently implements the createIIRFilter() method.
             if (this._unpatchedAudioContext.createIIRFilter === undefined) {
-                let bufferIndex = 0,
-                    bufferLength = 32,
-                    bufferSize,
-                    feedbackLength = feedback.length,
-                    feedforwardLength = feedforward.length,
-                    gainNode,
-                    minLength,
-                    nyquist,
-                    scriptProcessorNode,
-                    xBuffer,
-                    yBuffer;
-
-                if (feedforward.length === 0 || feedforward.length > 20 || feedback.length === 0 || feedback.length > 20) {
-                    throw notSupportedErrorFactory.create();
-                }
-
-                if (feedforward[0] === 0 || feedback[0] === 0) {
-                    throw invalidStateErrorFactory.create();
-                }
-
-                if (feedback[0] !== 1) {
-                    for (let i = 0, length = feedforward.length; i < length; i += 1) {
-                        feedforward[i] /= feedback[0];
-                    }
-
-                    for (let i = 1, length = feedback.length; i < length; i += 1) {
-                        feedback[i] /= feedback[0];
-                    }
-                }
-
-                gainNode = this.createGain();
-                nyquist = this.sampleRate / 2;
-                scriptProcessorNode = this._unpatchedAudioContext.createScriptProcessor(256, gainNode.channelCount, gainNode.channelCount);
-                bufferSize = scriptProcessorNode.bufferSize;
-
-                xBuffer = new Float32Array(bufferLength);
-                yBuffer = new Float32Array(bufferLength);
-
-                minLength = Math.min(feedbackLength, feedforwardLength);
-
-                // @todo Use TypedArray.prototype.fill() once it lands in Safari.
-                for (let i = 0; i < bufferLength; i += 1) {
-                    xBuffer[i] = 0;
-                    yBuffer[i] = 0;
-                }
-
-                // This implementation as shamelessly inspired by source code of
-                // {@link https://chromium.googlesource.com/chromium/src.git/+/master/third_party/WebKit/Source/platform/audio/IIRFilter.cpp|Chromium's IIRFilter}.
-                scriptProcessorNode.onaudioprocess = function (event) {
-                    var inputBuffer = event.inputBuffer,
-                        outputBuffer = event.outputBuffer;
-
-                    for (let i = 0, numberOfChannels = inputBuffer.numberOfChannels; i < numberOfChannels; i += 1) {
-                        let input = inputBuffer.getChannelData(i),
-                            output = outputBuffer.getChannelData(i);
-
-                        for (let j = 0; j < bufferSize; j += 1) {
-                            let y = feedforward[0] * input[j];
-
-                            for (let k = 1; k < minLength; k += 1) {
-                                let x = (bufferIndex - k) & (bufferLength - 1); // eslint-disable-line no-bitwise
-
-                                y += feedforward[k] * xBuffer[x];
-                                y -= feedback[k] * yBuffer[x];
-                            }
-
-                            for (let k = minLength; k < feedforwardLength; k += 1) {
-                                y += feedforward[k] * xBuffer[(bufferIndex - k) & (bufferLength - 1)]; // eslint-disable-line no-bitwise
-                            }
-
-                            for (let k = minLength; k < feedbackLength; k += 1) {
-                                y -= feedback[k] * yBuffer[(bufferIndex - k) & (bufferLength - 1)]; // eslint-disable-line no-bitwise
-                            }
-
-                            xBuffer[bufferIndex] = input[j];
-                            yBuffer[bufferIndex] = y;
-
-                            bufferIndex = (bufferIndex + 1) & (bufferLength - 1); // eslint-disable-line no-bitwise
-
-                            output[j] = y;
-                        }
-                    }
-                };
-
-                function divide (a, b) {
-                    var denominator = b[0] * b[0] + b[1] * b[1];
-
-                    return [ ((a[0] * b[0] + a[1] * b[1]) / denominator), ((a[1] * b[0] - a[0] * b[1]) / denominator) ];
-                }
-
-                function multiply (a, b) {
-                    return [ (a[0] * b[0] - a[1] * b[1]), (a[0] * b[1] + a[1] * b[0]) ];
-                }
-
-                function evaluatePolynomial (coefficient, z) {
-                    var result = [ 0, 0 ];
-
-                    for (let i = coefficient.length - 1; i >= 0; i -= 1) {
-                        result = multiply(result, z);
-
-                        result[0] += coefficient[i];
-                    }
-
-                    return result;
-                }
-
-                gainNode.getFrequencyResponse = function (frequencyHz, magResponse, phaseResponse) {
-                    if (magResponse.length === 0 || phaseResponse.length === 0) {
-                        throw notSupportedErrorFactory.create();
-                    }
-
-                    for (let i = 0, length = frequencyHz.length; i < length; i += 1) {
-                        let denominator,
-                            numerator,
-                            omega,
-                            response,
-                            z;
-
-                        omega = -Math.PI * (frequencyHz[i] / nyquist);
-                        z = [ Math.cos(omega), Math.sin(omega) ];
-                        numerator = evaluatePolynomial(feedforward, z);
-                        denominator = evaluatePolynomial(feedback, z);
-                        response = divide(numerator, denominator);
-
-                        magResponse[i] = Math.sqrt(response[0] * response[0] + response[1] * response[1]);
-                        phaseResponse[i] = Math.atan2(response[1], response[0]);
-                    }
-                };
-
-                gainNode.connect(scriptProcessorNode);
-
-                gainNode.connect = function (destination) {
-                    // @todo Directly return the scriptProcessorNodeNode once it supports chaining.
-                    scriptProcessorNode.connect.apply(scriptProcessorNode, arguments);
-
-                    // @todo Test this expectation.
-                    // Only Chrome and Firefox support chaining in their dev versions yet.
-                    return destination;
-                };
-
-                return gainNode;
+                return iIRFilterNodeFaker.fake(feedforward, feedback, this, this._unpatchedAudioContext);
             }
 
             return this._unpatchedAudioContext.createIIRFilter(feedforward, feedback);
@@ -798,4 +659,4 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
     };
 }
 
-audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
+audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];

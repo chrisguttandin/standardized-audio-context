@@ -3,6 +3,7 @@ import { Injector, provide } from 'angular2/core';
 import { AudioBufferWrapper } from './wrapper/audio-buffer';
 import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
+import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
@@ -20,6 +21,7 @@ var injector = Injector.resolveAndCreate([
         ChannelMergerNodeWrapper,
         EncodingErrorFactory,
         InvalidStateErrorFactory,
+        IIRFilterNodeFaker,
         NotSupportedErrorFactory,
         PromiseSupportTester,
         provide(audioContextConstructor, { useFactory: audioContextConstructor }),
