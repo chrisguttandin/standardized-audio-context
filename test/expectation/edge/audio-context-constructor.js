@@ -32,4 +32,14 @@ describe('audioContextConstructor', function () {
 
     });
 
+    describe('createIIRFilter()', function () {
+
+        // bug #9
+
+        it('should not be implemented', function () {
+            expect(audioContext.createIIRFilter).to.be.undefined;
+        });
+
+    });
+
 });
