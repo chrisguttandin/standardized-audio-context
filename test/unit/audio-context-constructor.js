@@ -817,7 +817,7 @@ describe('audioContextConstructor', function () {
                 leftChannelData = event.inputBuffer.getChannelData(0);
 
                 for (i = 0; i < scriptProcessorNode.bufferSize; i += 1) {
-                    if (leftChannelData[i] !== 0 && tested === false) {
+                    if (leftChannelData[i] === 1 && tested === false) {
                         expect(leftChannelData[ i ]).to.equal(1);
                         expect(leftChannelData[ i + 1 ]).to.equal(-0.5);
                         expect(leftChannelData[ i + 2 ]).to.equal(-0.25);
@@ -844,7 +844,7 @@ describe('audioContextConstructor', function () {
             gainNode
                 .connect(audioContext.destination);
 
-            audioBufferSourceNode.start(audioContext.currentTime);
+            audioBufferSourceNode.start(audioContext.currentTime + 0.1);
         });
 
         it('should be chainable', function () {
