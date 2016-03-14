@@ -683,6 +683,227 @@ describe('audioContextConstructor', function () {
 
     });
 
+    describe('createIIRFilter()', function () {
+
+        it('should return an instance of the IIRFilterNode interface', function () {
+            var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+
+            expect(iIRFilterNode.channelCountMode).to.equal('max');
+            expect(iIRFilterNode.channelInterpretation).to.equal('speakers');
+
+            expect(iIRFilterNode.getFrequencyResponse).to.be.a('function');
+
+            expect(iIRFilterNode.numberOfInputs).to.equal(1);
+            expect(iIRFilterNode.numberOfOutputs).to.equal(1);
+        });
+
+        it('should throw an InvalidStateError', function (done) {
+            try {
+                audioContext.createIIRFilter([ 0 ], [ 1 ]);
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
+        });
+
+        it('should throw an NotSupportedError', function (done) {
+            try {
+                audioContext.createIIRFilter([], [ 1 ]);
+            } catch (err) {
+                expect(err.code).to.equal(9);
+                expect(err.name).to.equal('NotSupportedError');
+
+                done();
+            }
+        });
+
+        it('should throw an NotSupportedError', function (done) {
+            try {
+                audioContext.createIIRFilter([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ], [ 1 ]);
+            } catch (err) {
+                expect(err.code).to.equal(9);
+                expect(err.name).to.equal('NotSupportedError');
+
+                done();
+            }
+        });
+
+        it('should throw an InvalidStateError', function (done) {
+            try {
+                audioContext.createIIRFilter([ 1 ], [ 0, 1 ]);
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
+        });
+
+        it('should throw an NotSupportedError', function (done) {
+            try {
+                audioContext.createIIRFilter([ 1 ], []);
+            } catch (err) {
+                expect(err.code).to.equal(9);
+                expect(err.name).to.equal('NotSupportedError');
+
+                done();
+            }
+        });
+
+        it('should throw an NotSupportedError', function (done) {
+            try {
+                audioContext.createIIRFilter([ 1 ], [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]);
+            } catch (err) {
+                expect(err.code).to.equal(9);
+                expect(err.name).to.equal('NotSupportedError');
+
+                done();
+            }
+        });
+
+        it('should throw an error if the AudioContext is closed', function (done) {
+            audioContext
+                .close()
+                .then(function () {
+                    audioContext.createIIRFilter([ 1 ], [ 1 ]);
+                })
+                .catch(function (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    audioContext = new AudioContext();
+
+                    done();
+                });
+        });
+
+        it('should filter the given input', function (done) {
+            var audioBufferSourceNode,
+                buffer,
+                gainNode,
+                iIRFilterNode,
+                leftChannelData,
+                rightChannelData,
+                scriptProcessorNode,
+                tested;
+
+            this.timeout(10000);
+
+            audioBufferSourceNode = audioContext.createBufferSource();
+            buffer = audioContext.createBuffer(2, 3, 44100);
+            gainNode = audioContext.createGain();
+            iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+            // @todo remove this ugly hack
+            scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
+
+            tested = false;
+
+            buffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
+            buffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
+
+            audioBufferSourceNode.buffer = buffer;
+
+            gainNode.gain.value = 0;
+
+            scriptProcessorNode.onaudioprocess = function (event) {
+                var i;
+
+                leftChannelData = event.inputBuffer.getChannelData(0);
+
+                for (i = 0; i < scriptProcessorNode.bufferSize; i += 1) {
+                    if (leftChannelData[i] !== 0 && tested === false) {
+                        expect(leftChannelData[ i ]).to.equal(1);
+                        expect(leftChannelData[ i + 1 ]).to.equal(-0.5);
+                        expect(leftChannelData[ i + 2 ]).to.equal(-0.25);
+
+                        rightChannelData = event.inputBuffer.getChannelData(1);
+
+                        expect(rightChannelData[ i ]).to.equal(0);
+                        expect(rightChannelData[ i + 1 ]).to.equal(1);
+                        expect(rightChannelData[ i + 2 ]).to.equal(0.5);
+
+                        scriptProcessorNode.onaudioprocess = null;
+                        tested = true;
+
+                        done();
+                    }
+                }
+            };
+
+            audioBufferSourceNode
+                .connect(iIRFilterNode)
+                .connect(scriptProcessorNode)
+                .connect(gainNode);
+            // @todo Chain the scriptProcessorNodeNode too once it supports chaining.
+            gainNode
+                .connect(audioContext.destination);
+
+            audioBufferSourceNode.start(audioContext.currentTime);
+        });
+
+        it('should be chainable', function () {
+            var gainNode = audioContext.createGain(),
+                iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+
+            expect(iIRFilterNode.connect(gainNode)).to.equal(gainNode);
+        });
+
+        describe('getFrequencyResponse()', function () {
+
+            it('should throw an NotSupportedError', function (done) {
+                var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+
+                try {
+                    iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
+                } catch (err) {
+                    expect(err.code).to.equal(9);
+                    expect(err.name).to.equal('NotSupportedError');
+
+                    done();
+                }
+            });
+
+            it('should throw an NotSupportedError', function (done) {
+                var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+
+                try {
+                    iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
+                } catch (err) {
+                    expect(err.code).to.equal(9);
+                    expect(err.name).to.equal('NotSupportedError');
+
+                    done();
+                }
+            });
+
+            it('should fill the magResponse and phaseResponse arrays', function () {
+                var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]),
+                    magResponse = new Float32Array(5),
+                    phaseResponse = new Float32Array(5);
+
+                iIRFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+
+                expect(Array.from(magResponse)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
+                expect(Array.from(phaseResponse)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+            });
+
+            it('should fill the magResponse and phaseResponse arrays ... for some other values', function () {
+                var iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]),
+                    magResponse = new Float32Array(5),
+                    phaseResponse = new Float32Array(5);
+
+                iIRFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+
+                expect(Array.from(magResponse)).to.deep.equal([ 0.056942202150821686, 0.11359700560569763, 0.2249375581741333, 0.43307945132255554, 0.7616625428199768 ]);
+                expect(Array.from(phaseResponse)).to.deep.equal([ 1.5280766487121582, 1.4854952096939087, 1.401282548904419, 1.2399859428405762, 0.9627721309661865 ]);
+            });
+
+        });
+
+    });
+
     describe('createOscillator()', function () {
 
         it('should return an instance of the OscillatorNode interface', function () {
