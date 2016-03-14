@@ -4,6 +4,8 @@ var browserify = require('../../package.json').browserify;
 
 module.exports = function (config) {
 
+    var environment;
+
     config.set({
 
         basePath: '../../',
@@ -86,16 +88,30 @@ module.exports = function (config) {
 
     } else {
 
+        environment = require('../environment/local.json');
+
         config.set({
 
             browsers: [
                 'Chrome',
                 'ChromeCanary',
+                'EdgeBrowserStack',
                 'Firefox',
                 'FirefoxDeveloper',
                 'Opera',
                 'Safari'
-            ]
+            ],
+
+            browserStack: environment.browserStack,
+
+            customLaunchers: {
+                EdgeBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'edge',
+                    os: 'Windows',
+                    os_version: '10' // eslint-disable-line camelcase
+                }
+            }
 
         });
 

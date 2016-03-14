@@ -10,6 +10,9 @@ module.exports = {
     'test-chrome-canary': {
         configFile: 'config/karma/expectation-chrome-canary.js'
     },
+    'test-edge': {
+        configFile: 'config/karma/expectation-edge.js'
+    },
     'test-firefox': {
         configFile: 'config/karma/expectation-firefox.js'
     },
