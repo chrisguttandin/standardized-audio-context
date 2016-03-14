@@ -1,5 +1,4 @@
 *.DS_Store
 build/modernizr.js
 config/environment/*
-!config/environment/local.json
 node_modules
