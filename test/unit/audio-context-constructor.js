@@ -5,7 +5,9 @@ require('reflect-metadata');
 var angular = require('angular2/core'),
     AudioBufferWrapper = require('../../src/wrapper/audio-buffer.js').AudioBufferWrapper,
     audioContextConstructor = require('../../src/audio-context-constructor.js').audioContextConstructor,
+    ChannelMergerNodeWrapper = require('../../src/wrapper/channel-merger-node.js').ChannelMergerNodeWrapper,
     EncodingErrorFactory = require('../../src/factories/encoding-error').EncodingErrorFactory,
+    InvalidStateErrorFactory = require( '../../src/factories/invalid-state-error').InvalidStateErrorFactory,
     loadFixture = require('../helper/load-fixture.js'),
     NotSupportedErrorFactory = require( '../../src/factories/not-supported-error').NotSupportedErrorFactory,
     PromiseSupportTester = require('../../src/tester/promise-support').PromiseSupportTester,
@@ -25,7 +27,9 @@ describe('audioContextConstructor', function () {
     beforeEach(function () {
         var injector = angular.Injector.resolveAndCreate([
                 AudioBufferWrapper,
+                ChannelMergerNodeWrapper,
                 EncodingErrorFactory,
+                InvalidStateErrorFactory,
                 NotSupportedErrorFactory,
                 PromiseSupportTester,
                 angular.provide(audioContextConstructor, { useFactory: audioContextConstructor }),

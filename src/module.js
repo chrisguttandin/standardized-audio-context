@@ -1,7 +1,9 @@
 import 'reflect-metadata';
 import { Injector, provide } from 'angular2/core';
 import { AudioBufferWrapper } from './wrapper/audio-buffer';
+import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
+import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
 import { audioContextConstructor } from './audio-context-constructor';
@@ -15,7 +17,9 @@ import { window } from './window.js';
 /* eslint-disable indent, new-cap */
 var injector = Injector.resolveAndCreate([
         AudioBufferWrapper,
+        ChannelMergerNodeWrapper,
         EncodingErrorFactory,
+        InvalidStateErrorFactory,
         NotSupportedErrorFactory,
         PromiseSupportTester,
         provide(audioContextConstructor, { useFactory: audioContextConstructor }),

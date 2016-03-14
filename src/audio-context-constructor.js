@@ -1,26 +1,13 @@
 import { AudioBufferWrapper } from './wrapper/audio-buffer';
+import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { Inject } from 'angular2/core';
+import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
 var pool = [];
-
-function createInvalidStateError () {
-    var exception;
-
-    try {
-        exception = new DOMException('', 'InvalidStateError');
-    } catch (err) {
-        exception = new Error();
-
-        exception.code = 11;
-        exception.name = 'InvalidStateError';
-    }
-
-    return exception;
-}
 
 function testForChainingSupport (audioContext) {
     var destination = audioContext.createGain(),
@@ -138,29 +125,7 @@ function wrapAudioNodesDisconnectMethod (audioNode) {
     return audioNode;
 }
 
-function wrapChannelMergerNode (channelMergerNode) {
-    Object.defineProperty(channelMergerNode, 'channelCount', {
-        get: function () {
-            return 1;
-        },
-        set: function () {
-            throw createInvalidStateError();
-        }
-    });
-
-    Object.defineProperty(channelMergerNode, 'channelCountMode', {
-        get: function () {
-            return 'explicit';
-        },
-        set: function () {
-            throw createInvalidStateError();
-        }
-    });
-
-    return channelMergerNode;
-}
-
-export function audioContextConstructor (audioBufferWrapper, encodingErrorFactory, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
+export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
     return class AudioContext {
 
         constructor () {
@@ -302,7 +267,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             // If the unpatched AudioContext does not provide a close method and was closed before
             // it should throw an error.
             if (this._unpatchedAudioContext === null && this.state === 'closed') {
-                return Promise.reject(createInvalidStateError());
+                return Promise.reject(invalidStateErrorFactory.create());
             }
 
             // If the unpatched AudioContext does not provide a close method it should be imitated.
@@ -321,7 +286,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
                 return this._unpatchedAudioContext
                     .close()
                     .then(() => {
-                        throw createInvalidStateError();
+                        throw invalidStateErrorFactory.create();
                     });
             }
 
@@ -345,7 +310,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             }
 
             if (this._unpatchedAudioContext === null) {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             analyserNode = this._unpatchedAudioContext.createAnalyser();
@@ -353,7 +318,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             // If the unpatched AudioContext throws an error by itself, this code will never get
             // executed. If it does it will imitate the behaviour of throwing an error.
             if (this.state === 'closed') {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             // Only Firefox creates an AnalyserNode with default properties.
@@ -391,7 +356,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             }
 
             if (this._unpatchedAudioContext === null) {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             biquadFilterNode = this._unpatchedAudioContext.createBiquadFilter();
@@ -399,7 +364,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             // If the unpatched AudioContext throws an error by itself, this code will never get
             // executed. If it does it will imitate the behaviour of throwing an error.
             if (this.state === 'closed') {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
@@ -464,7 +429,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             }
 
             if (this._unpatchedAudioContext === null) {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             channelMergerNode = this._unpatchedAudioContext.createChannelMerger.apply(this._unpatchedAudioContext, arguments);
@@ -472,7 +437,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             // If the unpatched AudioContext throws an error by itself, this code will never get
             // executed. If it does it will imitate the behaviour of throwing an error.
             if (this.state === 'closed') {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
@@ -483,13 +448,13 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             // Firefox and Safari do not return the default properties.
             if (channelMergerNode.channelCount === 2 &&
                     channelMergerNode.channelCountMode === 'max') {
-                channelMergerNode = wrapChannelMergerNode(channelMergerNode);
+                channelMergerNode = channelMergerNodeWrapper.wrap(channelMergerNode);
             }
 
             try {
                 channelMergerNode.channelCount = 2;
 
-                channelMergerNode = wrapChannelMergerNode(channelMergerNode);
+                channelMergerNode = channelMergerNodeWrapper.wrap(channelMergerNode);
             } catch (err) {
                 // The dev version of Firefox does not throw an error when setting a different
                 // channelCount or channelCountMode.
@@ -510,7 +475,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             }
 
             if (this._unpatchedAudioContext === null) {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             channelSplitterNode = this._unpatchedAudioContext.createChannelSplitter.apply(this._unpatchedAudioContext, arguments);
@@ -518,7 +483,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             // If the unpatched AudioContext throws an error by itself, this code will never get
             // executed. If it does it will imitate the behaviour of throwing an error.
             if (this.state === 'closed') {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
@@ -541,7 +506,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             }
 
             if (this._unpatchedAudioContext === null) {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             gainNode = this._unpatchedAudioContext.createGain();
@@ -549,7 +514,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             // If the unpatched AudioContext throws an error by itself, this code will never get
             // executed. If it does it will imitate the behaviour of throwing an error.
             if (this.state === 'closed') {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
@@ -588,7 +553,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
                 }
 
                 if (feedforward[0] === 0 || feedback[0] === 0) {
-                    throw createInvalidStateError();
+                    throw invalidStateErrorFactory.create();
                 }
 
                 if (feedback[0] !== 1) {
@@ -729,7 +694,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             }
 
             if (this._unpatchedAudioContext === null) {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             oscillatorNode = this._unpatchedAudioContext.createOscillator();
@@ -737,7 +702,7 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
             // If the unpatched AudioContext throws an error by itself, this code will never get
             // executed. If it does it will imitate the behaviour of throwing an error.
             if (this.state === 'closed') {
-                throw createInvalidStateError();
+                throw invalidStateErrorFactory.create();
             }
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
@@ -831,4 +796,4 @@ export function audioContextConstructor (audioBufferWrapper, encodingErrorFactor
     };
 }
 
-audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
+audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
