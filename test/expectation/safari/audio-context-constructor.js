@@ -129,6 +129,23 @@ describe('audioContextConstructor', function () {
             }
         });
 
+        // bug #4
+
+        it('should throw null when asked to decode an unsupported file', function (done) {
+            this.timeout(5000);
+
+            // PNG files are not supported by any browser :-)
+            loadFixture('one-pixel-of-transparency.png', function (err, arrayBuffer) {
+                expect(err).to.be.null;
+
+                audioContext.decodeAudioData(arrayBuffer, function () {}, function (err) {
+                    expect(err).to.be.null;
+
+                    done();
+                });
+            });
+        });
+
         // bug #5
 
         it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {

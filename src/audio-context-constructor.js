@@ -485,7 +485,7 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
                 throw invalidStateErrorFactory.create();
             }
 
-            // bug #9: Only Chrome currently implements the createIIRFilter() method.
+            // bug #9: Only Chrome and Opera currently implement the createIIRFilter() method.
             if (this._unpatchedAudioContext.createIIRFilter === undefined) {
                 return iIRFilterNodeFaker.fake(feedforward, feedback, this, this._unpatchedAudioContext);
             }
@@ -562,7 +562,7 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
                     });
             }
 
-            // bug #1: Opera and Safari do not return a Promise yet.
+            // bug #1: Safari does not return a Promise yet.
             return new Promise ((resolve, reject) => {
 
                 function fail (err) {
@@ -581,7 +581,7 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
                     }
                 }
 
-                // bug #2: Opera and Safari throw a wrong DOMException.
+                // bug #2: Safari throws a wrong DOMException.
                 try {
                     this._unpatchedAudioContext.decodeAudioData(audioData, function (audioBuffer) {
                         // bug #5: Safari does not support copyFromChannel() and copyToChannel().
@@ -591,7 +591,7 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
                             succeed(audioBuffer);
                         }
                     }, function (err) {
-                        // bug #4: Opera returns null instead of an error.
+                        // bug #4: Safari returns null instead of an error.
                         if (err === null) {
                             fail(encodingErrorFactory.create());
                         } else {
