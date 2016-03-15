@@ -104,6 +104,36 @@ describe('offlineAudioContextConstructor', function () {
             offlineAudioContext.startRendering();
         });
 
+        // bug #13
+
+        it('should not have any output', function (done) {
+            var channelData,
+                scriptProcessor = offlineAudioContext.createScriptProcessor(256, 1, 1);
+
+            channelData = new Float32Array(scriptProcessor.bufferSize);
+
+            scriptProcessor.connect(offlineAudioContext.destination);
+            scriptProcessor.onaudioprocess = function (event) {
+                // @todo Use AudioBuffer.prototype.copyToChannel() and TypedArray.prototype.fill()
+                // once they land in Safari.
+                var channelData = event.outputBuffer.getChannelData(0);
+
+                Array.prototype.forEach.call(channelData, function (element, index) {
+                    channelData[index] = 1;
+                });
+            };
+
+            offlineAudioContext.oncomplete = function (event) {
+                // @todo Use AudioBuffer.prototype.copyFromChannel() once it land in Safari.
+                var channelData = event.renderedBuffer.getChannelData(0);
+
+                expect(Array.from(channelData).slice(scriptProcessor.bufferSize * 100)).to.not.contain(1);
+
+                done();
+            };
+            offlineAudioContext.startRendering();
+        });
+
     });
 
     describe('decodeAudioData()', function () {

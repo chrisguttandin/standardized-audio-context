@@ -2,51 +2,15 @@ import { AudioBufferWrapper } from './wrapper/audio-buffer';
 import { AudioNodeConnectMethodWrapper } from './wrapper/audio-node-connect-method';
 import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconnect-method';
 import { ChainingSupportTester } from './tester/chaining-support';
+import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { Inject } from 'angular2/core';
+import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 
-function testForDisconnectingSupport (offlineAudioContext, callback) {
-    var channelData,
-        dummy,
-        ones,
-        source;
-
-    dummy = offlineAudioContext.createGain();
-
-    // Safari does not play buffers which contain just one frame.
-    ones = offlineAudioContext.createBuffer(1, 2, 44100);
-    channelData = ones.getChannelData(0);
-    channelData[0] = 1;
-    channelData[1] = 1;
-
-    source = offlineAudioContext.createBufferSource();
-    source.buffer = ones;
-    source.loop = true;
-
-    source.connect(offlineAudioContext.destination);
-    source.connect(dummy);
-    source.disconnect(dummy);
-
-    source.start();
-
-    offlineAudioContext.oncomplete = (event) => {
-        var channelData = event.renderedBuffer.getChannelData(0);
-
-        if (channelData[0] === 1) {
-            callback(true);
-        } else {
-            callback(false);
-        }
-
-        source.disconnect(offlineAudioContext.destination);
-    };
-    offlineAudioContext.startRendering();
-}
-
-export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, encodingErrorFactory, notSupportedErrorFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
+export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, disconnectingSupportTester, encodingErrorFactory, iIRFilterNodeFaker, notSupportedErrorFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
     return class OfflineAudioContext {
 
         constructor (numberOfChannels, length, sampleRate) {
@@ -56,7 +20,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
 
             this._isSupportingChaining = chainingSupportTester.test(unpatchedOfflineAudioContext);
             this._isSupportingDisconnecting = false;
-            testForDisconnectingSupport(unpatchedOfflineAudioContext, (isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
+            disconnectingSupportTester.test((isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
             this._isSupportingPromises = promiseSupportTester.test(unpatchedOfflineAudioContext);
             this._unpatchedOfflineAudioContext = unpatchedOfflineAudioContext;
         }
@@ -83,6 +47,15 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             }
 
             return gainNode;
+        }
+
+        createIIRFilter (feedforward, feedback) {
+            // bug #9: Only Chrome currently implements the createIIRFilter() method.
+            if (this._unpatchedOfflineAudioContext.createIIRFilter === undefined) {
+                return iIRFilterNodeFaker.fake(feedforward, feedback, this, this._unpatchedOfflineAudioContext);
+            }
+
+            return this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
         }
 
         decodeAudioData (audioData, successCallback, errorCallback) {
@@ -160,4 +133,4 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
     };
 }
 
-offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];
+offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(DisconnectingSupportTester) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];

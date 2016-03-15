@@ -5,6 +5,7 @@ import { AudioNodeConnectMethodWrapper } from './wrapper/audio-node-connect-met
 import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconnect-method';
 import { ChainingSupportTester } from './tester/chaining-support';
 import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
+import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
@@ -25,6 +26,7 @@ var injector = Injector.resolveAndCreate([
         AudioNodeDisconnectMethodWrapper,
         ChainingSupportTester,
         ChannelMergerNodeWrapper,
+        DisconnectingSupportTester,
         EncodingErrorFactory,
         InvalidStateErrorFactory,
         IIRFilterNodeFaker,

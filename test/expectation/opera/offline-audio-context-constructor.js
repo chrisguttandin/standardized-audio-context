@@ -52,6 +52,32 @@ describe('offlineAudioContextConstructor', function () {
             offlineAudioContext.startRendering();
         });
 
+        // bug #13
+
+        it('should not have any output', function () {
+            var channelData,
+                scriptProcessor = offlineAudioContext.createScriptProcessor(256, 1, 1);
+
+            channelData = new Float32Array(scriptProcessor.bufferSize);
+
+            scriptProcessor.connect(offlineAudioContext.destination);
+            scriptProcessor.onaudioprocess = function (event) {
+                channelData.fill(1);
+
+                event.outputBuffer.copyToChannel(channelData, 0);
+            };
+
+            return offlineAudioContext
+                .startRendering()
+                .then((buffer) => {
+                    var channelData = new Float32Array(scriptProcessor.bufferSize * 100);
+
+                    buffer.copyFromChannel(channelData, 0, 256);
+
+                    expect(Array.from(channelData)).to.not.contain(1);
+                });
+        });
+
     });
 
     describe('decodeAudioData()', function () {
