@@ -4,8 +4,8 @@ import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconne
 import { ChainingSupportTester } from './tester/chaining-support';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
-import { Inject } from 'angular2/core';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
+import { Inject } from 'angular2/core';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
