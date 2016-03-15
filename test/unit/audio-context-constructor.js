@@ -10,8 +10,8 @@ var angular = require('angular2/core'),
     ChainingSupportTester = require('../../src/tester/chaining-support.js').ChainingSupportTester,
     ChannelMergerNodeWrapper = require('../../src/wrapper/channel-merger-node.js').ChannelMergerNodeWrapper,
     EncodingErrorFactory = require('../../src/factories/encoding-error').EncodingErrorFactory,
-    InvalidStateErrorFactory = require( '../../src/factories/invalid-state-error').InvalidStateErrorFactory,
     IIRFilterNodeFaker = require('../../src/fakers/iir-filter-node').IIRFilterNodeFaker,
+    InvalidStateErrorFactory = require( '../../src/factories/invalid-state-error').InvalidStateErrorFactory,
     loadFixture = require('../helper/load-fixture.js'),
     NotSupportedErrorFactory = require( '../../src/factories/not-supported-error').NotSupportedErrorFactory,
     PromiseSupportTester = require('../../src/tester/promise-support').PromiseSupportTester,
@@ -36,8 +36,8 @@ describe('audioContextConstructor', function () {
                 ChainingSupportTester,
                 ChannelMergerNodeWrapper,
                 EncodingErrorFactory,
-                InvalidStateErrorFactory,
                 IIRFilterNodeFaker,
+                InvalidStateErrorFactory,
                 NotSupportedErrorFactory,
                 PromiseSupportTester,
                 angular.provide(audioContextConstructor, { useFactory: audioContextConstructor }),
@@ -797,8 +797,6 @@ describe('audioContextConstructor', function () {
                 buffer,
                 gainNode,
                 iIRFilterNode,
-                leftChannelData,
-                rightChannelData,
                 scriptProcessorNode,
                 tested;
 
@@ -821,9 +819,9 @@ describe('audioContextConstructor', function () {
             gainNode.gain.value = 0;
 
             scriptProcessorNode.onaudioprocess = function (event) {
-                var i;
-
-                leftChannelData = event.inputBuffer.getChannelData(0);
+                var i,
+                    leftChannelData = event.inputBuffer.getChannelData(0),
+                    rightChannelData;
 
                 for (i = 0; i < scriptProcessorNode.bufferSize; i += 1) {
                     if (leftChannelData[i] === 1 && tested === false) {
