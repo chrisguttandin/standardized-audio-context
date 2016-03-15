@@ -23,6 +23,72 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
+    describe('createGain()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var gainNodeA = audioContext.createGain(),
+                gainNodeB = audioContext.createGain();
+
+            expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
+        });
+
+        // bug #12
+
+        it('should not allow to disconnect a specific destination', function (done) {
+            var analyzer,
+                candidate,
+                channelData,
+                dummy,
+                ones,
+                source;
+
+            analyzer = audioContext.createScriptProcessor(256, 1, 1);
+            candidate = audioContext.createGain();
+            dummy = audioContext.createGain();
+
+            // Safari does not play buffers which contain just one frame.
+            ones = audioContext.createBuffer(1, 2, 44100);
+            channelData = ones.getChannelData(0);
+            channelData[0] = 1;
+            channelData[1] = 1;
+
+            source = audioContext.createBufferSource();
+            source.buffer = ones;
+            source.loop = true;
+
+            source.connect(candidate);
+            candidate.connect(analyzer);
+            analyzer.connect(audioContext.destination);
+            candidate.connect(dummy);
+            candidate.disconnect(dummy);
+
+            analyzer.onaudioprocess = function (event) {
+                var channelData = event.inputBuffer.getChannelData(0);
+
+                if (Array.prototype.some.call(channelData, (sample) => sample === 1)) {
+                    done('should never happen');
+                }
+            };
+
+            source.start();
+
+            setTimeout(function () {
+                source.stop();
+
+                analyzer.onaudioprocess = null;
+
+                source.disconnect(candidate);
+                candidate.disconnect(analyzer);
+                analyzer.disconnect(audioContext.destination);
+
+                done();
+            }, 500);
+        });
+
+    });
+
     describe('createIIRFilter()', function () {
 
         // bug #9

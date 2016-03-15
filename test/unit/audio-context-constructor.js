@@ -5,6 +5,9 @@ require('reflect-metadata');
 var angular = require('angular2/core'),
     AudioBufferWrapper = require('../../src/wrapper/audio-buffer.js').AudioBufferWrapper,
     audioContextConstructor = require('../../src/audio-context-constructor.js').audioContextConstructor,
+    AudioNodeConnectMethodWrapper = require('../../src/wrapper/audio-node-connect-method.js').AudioNodeConnectMethodWrapper,
+    AudioNodeDisconnectMethodWrapper = require('../../src/wrapper/audio-node-disconnect-method.js').AudioNodeDisconnectMethodWrapper,
+    ChainingSupportTester = require('../../src/tester/chaining-support.js').ChainingSupportTester,
     ChannelMergerNodeWrapper = require('../../src/wrapper/channel-merger-node.js').ChannelMergerNodeWrapper,
     EncodingErrorFactory = require('../../src/factories/encoding-error').EncodingErrorFactory,
     InvalidStateErrorFactory = require( '../../src/factories/invalid-state-error').InvalidStateErrorFactory,
@@ -28,6 +31,9 @@ describe('audioContextConstructor', function () {
     beforeEach(function () {
         var injector = angular.Injector.resolveAndCreate([
                 AudioBufferWrapper,
+                AudioNodeConnectMethodWrapper,
+                AudioNodeDisconnectMethodWrapper,
+                ChainingSupportTester,
                 ChannelMergerNodeWrapper,
                 EncodingErrorFactory,
                 InvalidStateErrorFactory,
@@ -275,6 +281,7 @@ describe('audioContextConstructor', function () {
             // @todo remove this ugly hack
             analyzer = candidate.context.createScriptProcessor(256, 1, 1);
 
+            // Safari does not play buffers which contain just one frame.
             ones = audioContext.createBuffer(1, 2, 44100);
             ones.getChannelData(0)[0] = 1;
             ones.getChannelData(0)[1] = 1;

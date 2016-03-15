@@ -4,6 +4,9 @@ require('reflect-metadata');
 
 var angular = require('angular2/core'),
     AudioBufferWrapper = require('../../src/wrapper/audio-buffer.js').AudioBufferWrapper,
+    AudioNodeConnectMethodWrapper = require('../../src/wrapper/audio-node-connect-method').AudioNodeConnectMethodWrapper,
+    AudioNodeDisconnectMethodWrapper = require('../../src/wrapper/audio-node-disconnect-method').AudioNodeDisconnectMethodWrapper,
+    ChainingSupportTester = require('../../src/tester/chaining-support.js').ChainingSupportTester,
     EncodingErrorFactory = require('../../src/factories/encoding-error').EncodingErrorFactory,
     loadFixture = require('../helper/load-fixture.js'),
     NotSupportedErrorFactory = require( '../../src/factories/not-supported-error').NotSupportedErrorFactory,
@@ -21,6 +24,9 @@ describe('offlineAudioContextConstructor', function () {
     beforeEach(function () {
         var injector = angular.Injector.resolveAndCreate([
                 AudioBufferWrapper,
+                AudioNodeConnectMethodWrapper,
+                AudioNodeDisconnectMethodWrapper,
+                ChainingSupportTester,
                 EncodingErrorFactory,
                 NotSupportedErrorFactory,
                 PromiseSupportTester,
@@ -32,6 +38,112 @@ describe('offlineAudioContextConstructor', function () {
         OfflineAudioContext = injector.get(offlineAudioContextConstructor);
 
         offlineAudioContext = new OfflineAudioContext(1, 1, 44100);
+    });
+
+    describe('destination', function () {
+
+        it('should be an instance of the AudioDestinationNode interface', function () {
+            var destination = offlineAudioContext.destination;
+
+            // @todo expect(destination.channelCount).to.equal(2);
+            // @todo expect(destination.channelCountMode).to.equal('explicit');
+            expect(destination.channelInterpretation).to.equal('speakers');
+            expect(destination.maxChannelCount).to.be.a('number');
+            // @todo expect(destination.maxChannelCount).to.equal( number of channels );
+            expect(destination.numberOfInputs).to.equal(1);
+            expect(destination.numberOfOutputs).to.equal(0);
+        });
+
+        it('should be readonly', function () {
+            expect(function () {
+                offlineAudioContext.destination = 'a fake AudioDestinationNode';
+            }).to.throw(TypeError);
+        });
+
+    });
+
+    describe('sampleRate', function () {
+
+        it('should be a number', function () {
+            expect(offlineAudioContext.sampleRate).to.equal(44100);
+        });
+
+        it('should be readonly', function () {
+            expect(function () {
+                offlineAudioContext.sampleRate = 22050;
+            }).to.throw(TypeError);
+        });
+
+    });
+
+    describe('createGain()', function () {
+
+        it('should return an instance of the GainNode interface', function () {
+            var gainNode = offlineAudioContext.createGain();
+
+            expect(gainNode.channelCountMode).to.equal('max');
+            expect(gainNode.channelInterpretation).to.equal('speakers');
+
+            expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
+            expect(gainNode.gain.defaultValue).to.equal(1);
+            expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
+            expect(gainNode.gain.linearRampToValueAtTime).to.be.a('function');
+            expect(gainNode.gain.setTargetAtTime).to.be.a('function');
+            expect(gainNode.gain.setValueCurveAtTime).to.be.a('function');
+            expect(gainNode.gain.value).to.equal(1);
+
+            expect(gainNode.numberOfInputs).to.equal(1);
+            expect(gainNode.numberOfOutputs).to.equal(1);
+        });
+
+        it('should be chainable', function () {
+            var gainNodeA = offlineAudioContext.createGain(),
+                gainNodeB = offlineAudioContext.createGain();
+
+            expect(gainNodeA.connect(gainNodeB)).to.equal(gainNodeB);
+        });
+
+        it('should be disconnectable', function (done) {
+            var candidate,
+                dummy,
+                ones,
+                source;
+
+            candidate = offlineAudioContext.createGain();
+            dummy = offlineAudioContext.createGain();
+
+            // @todo remove this ugly hack
+            // Safari does not play buffers which contain just one frame.
+            ones = candidate.context.createBuffer(1, 2, 44100);
+            ones.getChannelData(0)[0] = 1;
+            ones.getChannelData(0)[1] = 1;
+
+            // @todo remove this ugly hack
+            source = candidate.context.createBufferSource();
+            source.buffer = ones;
+
+            source.connect(candidate);
+            candidate.connect(offlineAudioContext.destination);
+            candidate.connect(dummy);
+            candidate.disconnect(dummy);
+
+            source.start(0);
+
+            // @todo remove this ugly hack
+            candidate.context.oncomplete = (event) => {
+                var channelData = event.renderedBuffer.getChannelData(0);
+
+                expect(channelData[0]).to.equal(1);
+
+                source.disconnect(candidate);
+                candidate.disconnect(offlineAudioContext.destination);
+
+                done();
+            };
+            // @todo remove this ugly hack
+            candidate.context.startRendering();
+        });
+
     });
 
     describe('decodeAudioData()', function () {

@@ -22,6 +22,19 @@ describe('offlineAudioContextConstructor', function () {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('createGain()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var gainNodeA = offlineAudioContext.createGain(),
+                gainNodeB = offlineAudioContext.createGain();
+
+            expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
+        });
+
+    });
+
     describe('createIIRFilter()', function () {
 
         // bug #9

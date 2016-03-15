@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 import { Injector, provide } from 'angular2/core';
 import { AudioBufferWrapper } from './wrapper/audio-buffer';
+import { AudioNodeConnectMethodWrapper } from './wrapper/audio-node-connect-method';
+import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconnect-method';
+import { ChainingSupportTester } from './tester/chaining-support';
 import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
@@ -18,6 +21,9 @@ import { window } from './window.js';
 /* eslint-disable indent, new-cap */
 var injector = Injector.resolveAndCreate([
         AudioBufferWrapper,
+        AudioNodeConnectMethodWrapper,
+        AudioNodeDisconnectMethodWrapper,
+        ChainingSupportTester,
         ChannelMergerNodeWrapper,
         EncodingErrorFactory,
         InvalidStateErrorFactory,

@@ -1,4 +1,7 @@
 import { AudioBufferWrapper } from './wrapper/audio-buffer';
+import { AudioNodeConnectMethodWrapper } from './wrapper/audio-node-connect-method';
+import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconnect-method';
+import { ChainingSupportTester } from './tester/chaining-support';
 import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
@@ -10,18 +13,6 @@ import { unpatchedAudioContextConstructor } from './unpatched-audio-context-cons
 
 var pool = [];
 
-function testForChainingSupport (audioContext) {
-    var destination = audioContext.createGain(),
-        isSupportingChaining,
-        target = audioContext.createGain();
-
-    isSupportingChaining = (target.connect(destination) === destination);
-
-    target.disconnect(destination);
-
-    return isSupportingChaining;
-}
-
 function testForDisconnectingSupport (audioContext, callback) {
     var analyzer,
         channelData,
@@ -32,7 +23,7 @@ function testForDisconnectingSupport (audioContext, callback) {
     analyzer = audioContext.createScriptProcessor(256, 1, 1);
     dummy = audioContext.createGain();
 
-    // Safari does not loop buffers which contain just one frame.
+    // Safari does not play buffers which contain just one frame.
     ones = audioContext.createBuffer(1, 2, 44100);
     channelData = ones.getChannelData(0);
     channelData[0] = 1;
@@ -83,50 +74,7 @@ function wrapAnalyserNode (analyserNode) {
     return analyserNode;
 }
 
-function wrapAudioNodesConnectMethod (audioNode) {
-    audioNode.connect = (function (connect) {
-        return function (destination) {
-            connect.apply(audioNode, arguments);
-
-            return destination;
-        };
-    }(audioNode.connect));
-
-    return audioNode;
-}
-
-function wrapAudioNodesDisconnectMethod (audioNode) {
-    var destinations = new Map();
-
-    audioNode.connect = (function (connect) {
-        return function (destination, output = 0, input = 0) {
-            destinations.set(destination, {
-                input,
-                output
-            });
-
-            return connect.call(audioNode, destination, output, input);
-        };
-    }(audioNode.connect));
-
-    audioNode.disconnect = (function (disconnect) {
-        return function (destination) {
-            disconnect.apply(audioNode);
-
-            if (arguments.length > 0 && destinations.has(destination)) {
-                destinations.delete(destination);
-
-                destinations.forEach(function (value, destination) {
-                    audioNode.connect(destination, value.input, value.output);
-                });
-            }
-        };
-    }(audioNode.disconnect));
-
-    return audioNode;
-}
-
-export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
+export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
     return class AudioContext {
 
         constructor () {
@@ -135,7 +83,7 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
                     pool.shift() : new unpatchedAudioContextConstructor();
             /* eslint-enable new-cap */
 
-            this._isSupportingChaining = testForChainingSupport(unpatchedAudioContext);
+            this._isSupportingChaining = chainingSupportTester.test(unpatchedAudioContext);
             this._isSupportingDisconnecting = false;
             testForDisconnectingSupport(unpatchedAudioContext, (isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
             this._isSupportingPromises = promiseSupportTester.test(unpatchedAudioContext);
@@ -334,12 +282,12 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                analyserNode = wrapAudioNodesConnectMethod(analyserNode);
+                analyserNode = audioNodeConnectMethodWrapper.wrap(analyserNode);
             }
 
             // Only Chrome and Opera support disconnecting of a specific destination.
             if (!this._isSupportingDisconnecting) {
-                analyserNode = wrapAudioNodesDisconnectMethod(analyserNode);
+                analyserNode = audioNodeDisconnectMethodWrapper.wrap(analyserNode);
             }
 
             return analyserNode;
@@ -370,7 +318,7 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                biquadFilterNode = wrapAudioNodesConnectMethod(biquadFilterNode);
+                biquadFilterNode = audioNodeConnectMethodWrapper.wrap(biquadFilterNode);
             }
 
             return biquadFilterNode;
@@ -412,7 +360,7 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                audioBufferSourceNode = wrapAudioNodesConnectMethod(audioBufferSourceNode);
+                audioBufferSourceNode = audioNodeConnectMethodWrapper.wrap(audioBufferSourceNode);
             }
 
             return audioBufferSourceNode;
@@ -443,7 +391,7 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                channelMergerNode = wrapAudioNodesConnectMethod(channelMergerNode);
+                channelMergerNode = audioNodeConnectMethodWrapper.wrap(channelMergerNode);
             }
 
             // Firefox and Safari do not return the default properties.
@@ -489,7 +437,7 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                channelSplitterNode = wrapAudioNodesConnectMethod(channelSplitterNode);
+                channelSplitterNode = audioNodeConnectMethodWrapper.wrap(channelSplitterNode);
             }
 
             return channelSplitterNode;
@@ -518,14 +466,14 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
                 throw invalidStateErrorFactory.create();
             }
 
-            // Only Chrome and Firefox support chaining in their dev versions yet.
+            // bug #11: Edge and Safari do not support chaining yet.
             if (!this._isSupportingChaining) {
-                gainNode = wrapAudioNodesConnectMethod(gainNode);
+                gainNode = audioNodeConnectMethodWrapper.wrap(gainNode);
             }
 
-            // Only Chrome and Opera support disconnecting of a specific destination.
+            // bug #12: Firefox and Safari do not support to disconnect a specific destination.
             if (!this._isSupportingDisconnecting) {
-                gainNode = wrapAudioNodesDisconnectMethod(gainNode);
+                gainNode = audioNodeDisconnectMethodWrapper.wrap(gainNode);
             }
 
             return gainNode;
@@ -570,7 +518,7 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
 
             // Only Chrome and Firefox support chaining in their dev versions yet.
             if (!this._isSupportingChaining) {
-                oscillatorNode = wrapAudioNodesConnectMethod(oscillatorNode);
+                oscillatorNode = audioNodeConnectMethodWrapper.wrap(oscillatorNode);
             }
 
             return oscillatorNode;
@@ -659,4 +607,4 @@ export function audioContextConstructor (audioBufferWrapper, channelMergerNodeWr
     };
 }
 
-audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
+audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];

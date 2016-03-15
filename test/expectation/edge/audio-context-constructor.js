@@ -32,6 +32,19 @@ describe('audioContextConstructor', function () {
 
     });
 
+    describe('createGain()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var gainNodeA = audioContext.createGain(),
+                gainNodeB = audioContext.createGain();
+
+            expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
+        });
+
+    });
+
     describe('createIIRFilter()', function () {
 
         // bug #9
