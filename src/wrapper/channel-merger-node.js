@@ -1,4 +1,4 @@
-import { Inject } from 'angular2/core';
+import { Inject } from 'angular2/src/core/di/decorators';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 
 export class ChannelMergerNodeWrapper {

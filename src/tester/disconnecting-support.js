@@ -1,4 +1,4 @@
-import { Inject } from 'angular2/core';
+import { Inject } from 'angular2/src/core/di/decorators';
 import { unpatchedOfflineAudioContextConstructor } from '../unpatched-offline-audio-context-constructor';
 
 export class DisconnectingSupportTester {
