@@ -21,7 +21,7 @@ describe('offlineAudioContextConstructor', function () {
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
-        offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
+        offlineAudioContext = new OfflineAudioContext(1, 25600, 44100);
     });
 
     describe('createGain()', function () {
@@ -127,7 +127,7 @@ describe('offlineAudioContextConstructor', function () {
                 // @todo Use AudioBuffer.prototype.copyFromChannel() once it land in Safari.
                 var channelData = event.renderedBuffer.getChannelData(0);
 
-                expect(Array.from(channelData).slice(scriptProcessor.bufferSize * 100)).to.not.contain(1);
+                expect(Array.from(channelData)).to.not.contain(1);
 
                 done();
             };
