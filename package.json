@@ -13,15 +13,14 @@
     ]
   },
   "dependencies": {
-    "angular2": "2.0.0-beta.11",
+    "angular2": "2.0.0-beta.12",
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
-    "es6-promise": "^3.0.2",
     "es6-shim": "^0.35.0",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.2",
-    "zone.js": "^0.6.4"
+    "zone.js": "^0.6.6"
   },
   "description": "A patched AudioContext which imitates the current API in current browsers.",
   "devDependencies": {
@@ -29,7 +28,7 @@
     "chai": "^3.5.0",
     "eslint-config-holy-grail": "^2.0.0",
     "grunt": "^0.4.5",
-    "grunt-cli": "^1.0.1",
+    "grunt-cli": "^1.1.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
