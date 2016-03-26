@@ -24,7 +24,7 @@
   },
   "description": "A patched AudioContext which imitates the current API in current browsers.",
   "devDependencies": {
-    "babel-eslint": "^5.0.0",
+    "babel-eslint": "^5.0.1",
     "chai": "^3.5.0",
     "eslint-config-holy-grail": "^2.0.0",
     "grunt": "^0.4.5",
