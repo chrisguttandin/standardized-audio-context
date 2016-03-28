@@ -35,28 +35,27 @@ describe('offlineAudioContextConstructor', function () {
 
             for (let i = 0; i < 8; i += 1) {
                 eightRandomValues[i] = (Math.random() * 2) - 1;
-            }
 
-            audioBuffer.copyToChannel(new Float32Array(eightRandomValues), 0);
+                // @todo Use AudioBuffer.prototype.copyToChannel() once it lands in Safari.
+                audioBuffer.getChannelData(0)[i] = eightRandomValues[i];
+            }
 
             bufferSourceNode.buffer = audioBuffer;
             bufferSourceNode.start(0);
             bufferSourceNode.connect(offlineAudioContext.destination);
 
-            offlineAudioContext
-                .startRendering()
-                .then((buffer) => {
-                    var channelData = new Float32Array(4);
+            offlineAudioContext.oncomplete = (event) => {
+                // @todo Use AudioBuffer.prototype.copyFromChannel() once it lands in Safari.
+                var channelData = event.renderedBuffer.getChannelData(0);
 
-                    buffer.copyFromChannel(channelData, 0);
+                expect(channelData[0]).to.closeTo(eightRandomValues[0], 0.0000001);
+                expect(channelData[1]).to.closeTo(eightRandomValues[2], 0.0000001);
+                expect(channelData[2]).to.closeTo(eightRandomValues[4], 0.0000001);
+                expect(channelData[3]).to.closeTo(eightRandomValues[6], 0.0000001);
 
-                    expect(channelData[0]).to.closeTo(eightRandomValues[0], 0.0000001);
-                    expect(channelData[1]).to.closeTo(eightRandomValues[2], 0.0000001);
-                    expect(channelData[2]).to.closeTo(eightRandomValues[4], 0.0000001);
-                    expect(channelData[3]).to.closeTo(eightRandomValues[6], 0.0000001);
-
-                    done();
-                });
+                done();
+            };
+            offlineAudioContext.startRendering();
         });
 
     });
@@ -161,7 +160,7 @@ describe('offlineAudioContextConstructor', function () {
             };
 
             offlineAudioContext.oncomplete = function (event) {
-                // @todo Use AudioBuffer.prototype.copyFromChannel() once it land in Safari.
+                // @todo Use AudioBuffer.prototype.copyFromChannel() once it lands in Safari.
                 var channelData = event.renderedBuffer.getChannelData(0);
 
                 expect(Array.from(channelData)).to.not.contain(1);
