@@ -90,6 +90,8 @@ describe('offlineAudioContextConstructor', function () {
             var channelData,
                 scriptProcessor = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
+            this.timeout(5000);
+
             channelData = new Float32Array(scriptProcessor.bufferSize);
 
             scriptProcessor.connect(offlineAudioContext.destination);
