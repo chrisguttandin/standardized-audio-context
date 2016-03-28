@@ -920,7 +920,7 @@ describe('audioContextConstructor', function () {
         it('should return an instance of the OscillatorNode interface', function () {
             var oscillatorNode = audioContext.createOscillator();
 
-            expect(oscillatorNode.channelCount).to.equal(2);
+            // channelCount is not specified
             // channelCountMode is not specified
             // channelInterpretation is not specified
 
