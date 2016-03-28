@@ -22,6 +22,43 @@ describe('offlineAudioContextConstructor', function () {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('createBufferSource()', function () {
+
+        // bug #14
+
+        it('should not resample an oversampled AudioBuffer', function (done) {
+            var audioBuffer = offlineAudioContext.createBuffer(1, 8, 88200),
+                bufferSourceNode = offlineAudioContext.createBufferSource(),
+                eightRandomValues = [];
+
+            for (let i = 0; i < 8; i += 1) {
+                eightRandomValues[i] = (Math.random() * 2) - 1;
+            }
+
+            audioBuffer.copyToChannel(new Float32Array(eightRandomValues), 0);
+
+            bufferSourceNode.buffer = audioBuffer;
+            bufferSourceNode.start(0);
+            bufferSourceNode.connect(offlineAudioContext.destination);
+
+            offlineAudioContext
+                .startRendering()
+                .then((buffer) => {
+                    var channelData = new Float32Array(4);
+
+                    buffer.copyFromChannel(channelData, 0);
+
+                    expect(channelData[0]).to.closeTo(eightRandomValues[0], 0.0000001);
+                    expect(channelData[1]).to.closeTo(eightRandomValues[2], 0.0000001);
+                    expect(channelData[2]).to.closeTo(eightRandomValues[4], 0.0000001);
+                    expect(channelData[3]).to.closeTo(eightRandomValues[6], 0.0000001);
+
+                    done();
+                });
+        });
+
+    });
+
     describe('createGain()', function () {
 
         // bug #11
