@@ -409,7 +409,7 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
                 // channelCount or channelCountMode.
             }
 
-            return channelMergerNode;
+            return channelMergerNode; // eslint-disable-line newline-before-return
         }
 
         createChannelSplitter (/* numberOfOutputs */) {

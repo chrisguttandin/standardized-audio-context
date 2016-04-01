@@ -34,12 +34,12 @@ export class PromiseSupportTester {
                 // ignore rejected errors
             });
 
-            return true;
+            return true; // eslint-disable-line newline-before-return
         } catch (err) {
             // ignore thrown errors
         }
 
-        return false;
+        return false; // eslint-disable-line newline-before-return
     }
 
 }
