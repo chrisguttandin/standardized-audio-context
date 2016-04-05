@@ -27,7 +27,7 @@
     "babel-eslint": "^6.0.2",
     "chai": "^3.5.0",
     "eslint-config-holy-grail": "^2.4.0",
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.0",
     "grunt-cli": "^1.1.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
