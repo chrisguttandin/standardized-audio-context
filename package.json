@@ -70,5 +70,5 @@
   "scripts": {
     "test": "grunt test"
   },
-  "version": "0.7.4"
+  "version": "0.7.5"
 }
