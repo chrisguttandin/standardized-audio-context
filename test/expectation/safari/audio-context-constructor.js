@@ -23,6 +23,10 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
+    it('should not provide an unprefixed constructor', function () {
+        expect(window.AudioContext).to.be.undefined;
+    });
+
     describe('createGain()', function () {
 
         // bug #11

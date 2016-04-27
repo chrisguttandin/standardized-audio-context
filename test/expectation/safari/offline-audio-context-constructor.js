@@ -24,6 +24,10 @@ describe('offlineAudioContextConstructor', function () {
         offlineAudioContext = new OfflineAudioContext(1, 25600, 44100);
     });
 
+    it('should not provide an unprefixed constructor', function () {
+        expect(window.OfflineAudioContext).to.be.undefined;
+    });
+
     describe('createBufferSource()', function () {
 
         // bug #14
