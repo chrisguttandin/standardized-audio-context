@@ -14,7 +14,7 @@ describe('offlineAudioContextConstructor', function () {
         OfflineAudioContext;
 
     beforeEach(function () {
-        var injector = angular.Injector.resolveAndCreate([
+        var injector = angular.ReflectiveInjector.resolveAndCreate([
                 angular.provide(unpatchedOfflineAudioContextConstructor, { useFactory: unpatchedOfflineAudioContextConstructor }),
                 angular.provide(wndw, { useValue: window })
             ]);

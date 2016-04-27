@@ -29,7 +29,7 @@ describe('audioContextConstructor', function () {
     });
 
     beforeEach(function () {
-        var injector = angular.Injector.resolveAndCreate([
+        var injector = angular.ReflectiveInjector.resolveAndCreate([
                 AudioBufferWrapper,
                 AudioNodeConnectMethodWrapper,
                 AudioNodeDisconnectMethodWrapper,

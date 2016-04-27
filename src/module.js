@@ -7,7 +7,7 @@ import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
-import { Injector } from 'angular2/src/core/di/injector';
+import { ReflectiveInjector } from 'angular2/src/core/di/reflective_injector';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
@@ -21,7 +21,7 @@ import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-au
 import { window } from './window.js';
 
 /* eslint-disable indent, new-cap */
-var injector = Injector.resolveAndCreate([
+var injector = ReflectiveInjector.resolveAndCreate([
         AudioBufferWrapper,
         AudioNodeConnectMethodWrapper,
         AudioNodeDisconnectMethodWrapper,

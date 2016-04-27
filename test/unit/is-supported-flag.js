@@ -18,7 +18,7 @@ describe('isSupportedFlag', function () {
             webaudio: true
         };
 
-        injector = angular.Injector.resolveAndCreate([
+        injector = angular.ReflectiveInjector.resolveAndCreate([
             angular.provide(isSupportedFlag, { useFactory: isSupportedFlag }),
             angular.provide(modernizr, { useValue: fakeModernizr })
         ]);

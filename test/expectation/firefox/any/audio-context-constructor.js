@@ -14,7 +14,7 @@ describe('audioContextConstructor', function () {
         AudioContext;
 
     beforeEach(function () {
-        var injector = angular.Injector.resolveAndCreate([
+        var injector = angular.ReflectiveInjector.resolveAndCreate([
                 angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
                 angular.provide(wndw, { useValue: window })
             ]);
