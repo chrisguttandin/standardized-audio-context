@@ -33,7 +33,7 @@
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-githooks": "^0.6.0",
-    "grunt-karma": "^0.12.2",
+    "grunt-karma": "^1.0.0",
     "grunt-modernizr": "^1.0.2",
     "grunt-replace": "^1.0.1",
     "gruntify-eslint": "^2.0.0",
