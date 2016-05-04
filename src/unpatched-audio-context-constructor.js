@@ -1,4 +1,4 @@
-import { Inject } from 'angular2/src/core/di/decorators';
+import { Inject } from '@angular/core/src/di/decorators';
 import { window } from './window.js';
 
 export function unpatchedAudioContextConstructor (window) {

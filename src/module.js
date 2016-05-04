@@ -7,15 +7,14 @@ import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
-import { ReflectiveInjector } from 'angular2/src/core/di/reflective_injector';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
+import { ReflectiveInjector } from '@angular/core/src/di/reflective_injector';
 import { audioContextConstructor } from './audio-context-constructor';
 import { isSupportedFlag } from './is-supported-flag';
 import { modernizr } from './modernizr';
 import { offlineAudioContextConstructor } from './offline-audio-context-constructor';
-import { provide } from 'angular2/src/core/di/provider';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 import { window } from './window.js';
@@ -33,13 +32,13 @@ var injector = ReflectiveInjector.resolveAndCreate([
         IIRFilterNodeFaker,
         NotSupportedErrorFactory,
         PromiseSupportTester,
-        provide(audioContextConstructor, { useFactory: audioContextConstructor }),
-        provide(isSupportedFlag, { useFactory: isSupportedFlag }),
-        provide(modernizr, { useValue: modernizr }),
-        provide(offlineAudioContextConstructor, { useFactory: offlineAudioContextConstructor }),
-        provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
-        provide(unpatchedOfflineAudioContextConstructor, { useFactory: unpatchedOfflineAudioContextConstructor }),
-        provide(window, { useValue: window })
+        { provide: audioContextConstructor, useFactory: audioContextConstructor },
+        { provide: isSupportedFlag, useFactory: isSupportedFlag },
+        { provide: modernizr, useValue: modernizr },
+        { provide: offlineAudioContextConstructor, useFactory: offlineAudioContextConstructor },
+        { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
+        { provide: unpatchedOfflineAudioContextConstructor, useFactory: unpatchedOfflineAudioContextConstructor },
+        { provide: window, useValue: window }
     ]);
 /* eslint-enable indent, new-cap */
 

@@ -1,4 +1,4 @@
-import { Inject } from 'angular2/src/core/di/decorators';
+import { Inject } from '@angular/core/src/di/decorators';
 import { modernizr } from './modernizr';
 
 export function isSupportedFlag (modernizr) {

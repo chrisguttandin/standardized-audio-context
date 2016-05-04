@@ -2,7 +2,7 @@
 
 require('reflect-metadata');
 
-var angular = require('angular2/core'),
+var angular = require('@angular/core'),
     AudioBufferWrapper = require('../../src/wrapper/audio-buffer.js').AudioBufferWrapper,
     audioContextConstructor = require('../../src/audio-context-constructor.js').audioContextConstructor,
     AudioNodeConnectMethodWrapper = require('../../src/wrapper/audio-node-connect-method.js').AudioNodeConnectMethodWrapper,

@@ -2,7 +2,7 @@
 
 require('reflect-metadata');
 
-var angular = require('angular2/core'),
+var angular = require('@angular/core'),
     sinon = require('sinon'),
     unpatchedOfflineAudioContextConstructor = require('../../../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
     wndw = require('../../../../src/window.js').window;

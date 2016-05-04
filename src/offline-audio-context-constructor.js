@@ -5,7 +5,7 @@ import { ChainingSupportTester } from './tester/chaining-support';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
-import { Inject } from 'angular2/src/core/di/decorators';
+import { Inject } from '@angular/core/src/di/decorators';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';

@@ -2,7 +2,7 @@
 
 require('reflect-metadata');
 
-var angular = require('angular2/core'),
+var angular = require('@angular/core'),
     unpatchedAudioContextConstructor = require('../../../src/unpatched-audio-context-constructor.js').unpatchedAudioContextConstructor,
     wndw = require('../../../src/window.js').window;
 

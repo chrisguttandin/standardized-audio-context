@@ -2,7 +2,7 @@
 
 require('reflect-metadata');
 
-var angular = require('angular2/core'),
+var angular = require('@angular/core'),
     isSupportedFlag = require('../../src/is-supported-flag.js').isSupportedFlag,
     modernizr = require('../../src/modernizr.js').modernizr;
 
