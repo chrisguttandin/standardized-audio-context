@@ -41,7 +41,7 @@
     "karma-browserify": "^5.0.4",
     "karma-browserstack-launcher": "^0.1.11",
     "karma-chrome-launcher": "^1.0.1",
-    "karma-firefox-launcher": "^0.1.6",
+    "karma-firefox-launcher": "^1.0.0",
     "karma-mocha": "^1.0.1",
     "karma-opera-launcher": "^0.3.0",
     "karma-safari-launcher": "^0.1.1",
