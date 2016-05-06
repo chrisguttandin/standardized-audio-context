@@ -26,7 +26,8 @@ reason besides a lack of time: `createAudioWorker()`, `createConvolver()`,
 
 This module also provides an
 [`OfflineAudioContext`](http://webaudio.github.io/web-audio-api/#OfflineAudioContext) which does
-only expose the `length` attribute and the `decodeAudioData()` method up to now.
+only expose the `destination`, `length` and `sampleRate` attributes as well as the `createGain()`
+and `decodeAudioData()` methods up to now.
 
 ## Usage
 
