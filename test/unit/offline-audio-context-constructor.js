@@ -70,6 +70,20 @@ describe('offlineAudioContextConstructor', function () {
 
     });
 
+    describe('length', function () {
+
+        it('should expose its length', function () {
+            expect(offlineAudioContext.length).to.equal(129);
+        });
+
+        it('should be readonly', function () {
+            expect(function () {
+                offlineAudioContext.length = 128;
+            }).to.throw(TypeError);
+        });
+
+    });
+
     describe('sampleRate', function () {
 
         it('should be a number', function () {

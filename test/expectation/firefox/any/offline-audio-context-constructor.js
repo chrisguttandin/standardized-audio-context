@@ -24,6 +24,16 @@ describe('offlineAudioContextConstructor', function () {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('length', function () {
+
+        // bug #17
+
+        it('should not expose its length', function () {
+            expect(offlineAudioContext.length).to.be.undefined;
+        });
+
+    });
+
     describe('createChannelMerger()', function () {
 
         // bug #16

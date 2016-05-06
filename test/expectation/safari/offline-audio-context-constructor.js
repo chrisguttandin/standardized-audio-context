@@ -28,6 +28,16 @@ describe('offlineAudioContextConstructor', function () {
         expect(window.OfflineAudioContext).to.be.undefined;
     });
 
+    describe('length', function () {
+
+        // bug #17
+
+        it('should not expose its length', function () {
+            expect(offlineAudioContext.length).to.be.undefined;
+        });
+
+    });
+
     describe('createBufferSource()', function () {
 
         // bug #14

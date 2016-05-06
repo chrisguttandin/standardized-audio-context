@@ -18,6 +18,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             var unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
             /* eslint-enable new-cap */
 
+            this._length = length;
             this._isSupportingChaining = chainingSupportTester.test(unpatchedOfflineAudioContext);
             this._isSupportingDisconnecting = false;
             disconnectingSupportTester.test((isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
@@ -27,6 +28,15 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
 
         get destination () {
             return this._unpatchedOfflineAudioContext.destination;
+        }
+
+        get length () {
+            // bug #17: Only Chrome Canary does expose the length up to now.
+            if (this._unpatchedOfflineAudioContext.length === undefined) {
+                return this._length;
+            }
+
+            return this._unpatchedOfflineAudioContext.length;
         }
 
         get sampleRate () {
