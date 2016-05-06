@@ -1,14 +1,13 @@
 import { Inject } from '@angular/core/src/di/decorators';
+import { MergingSupportTester } from './tester/merging-support';
 import { modernizr } from './modernizr';
 
-export function isSupportedPromise (modernizr) {
-    return Promise
-        .all([
-            modernizr.promises,
-            modernizr.typedarrays,
-            modernizr.webaudio
-        ])
-        .then((results) => results.every((result) => result));
+export function isSupportedPromise (mergingSupportTester, modernizr) {
+    if (modernizr.promises && modernizr.typedarrays && modernizr.webaudio) {
+        return mergingSupportTester.test();
+    }
+
+    return Promise.resolve(false);
 }
 
-isSupportedPromise.parameters = [ [ new Inject(modernizr) ] ];
+isSupportedPromise.parameters = [ [ new Inject(MergingSupportTester) ], [ new Inject(modernizr) ] ];

@@ -4,14 +4,20 @@ require('reflect-metadata');
 
 var angular = require('@angular/core'),
     isSupportedPromise = require('../../src/is-supported-promise.js').isSupportedPromise,
+    MergingSupportTester = require('../../src/tester/merging-support.js').MergingSupportTester,
     modernizr = require('../../src/modernizr.js').modernizr;
 
 describe('isSupportedPromise', function () {
 
-    var fakeModernizr,
+    var fakeMergingSupportTester,
+        fakeModernizr,
         injector;
 
     beforeEach(function () {
+        fakeMergingSupportTester = {
+            test: () => Promise.resolve(true)
+        };
+
         fakeModernizr = {
             promises: true,
             typedarrays: true,
@@ -19,6 +25,7 @@ describe('isSupportedPromise', function () {
         };
 
         injector = angular.ReflectiveInjector.resolveAndCreate([
+            angular.provide(MergingSupportTester, { useValue: fakeMergingSupportTester }),
             angular.provide(isSupportedPromise, { useFactory: isSupportedPromise }),
             angular.provide(modernizr, { useValue: fakeModernizr })
         ]);
@@ -28,6 +35,14 @@ describe('isSupportedPromise', function () {
         return injector
             .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.true);
+    });
+
+    it('should resolve to false if the test for merging support fails', function () {
+        fakeMergingSupportTester.test = () => Promise.resolve(false);
+
+        return injector
+            .get(isSupportedPromise)
+            .then((isSupported) => expect(isSupported).to.be.false);
     });
 
     it('should resolve to false if the test for promises fails', function () {

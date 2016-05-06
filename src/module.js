@@ -8,6 +8,7 @@ import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
+import { MergingSupportTester } from './tester/merging-support';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
 import { ReflectiveInjector } from '@angular/core/src/di/reflective_injector';
@@ -28,8 +29,9 @@ var injector = ReflectiveInjector.resolveAndCreate([
         ChannelMergerNodeWrapper,
         DisconnectingSupportTester,
         EncodingErrorFactory,
-        InvalidStateErrorFactory,
         IIRFilterNodeFaker,
+        InvalidStateErrorFactory,
+        MergingSupportTester,
         NotSupportedErrorFactory,
         PromiseSupportTester,
         { provide: audioContextConstructor, useFactory: audioContextConstructor },
