@@ -27,6 +27,19 @@ describe('audioContextConstructor', function () {
         expect(window.AudioContext).to.be.undefined;
     });
 
+    describe('createChannelMerger()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var channelMergerNode = audioContext.createChannelMerger(),
+                gainNode = audioContext.createGain();
+
+            expect(channelMergerNode.connect(gainNode)).to.be.undefined;
+        });
+
+    });
+
     describe('createGain()', function () {
 
         // bug #11

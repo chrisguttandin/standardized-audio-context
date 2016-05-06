@@ -59,6 +59,19 @@ describe('offlineAudioContextConstructor', function () {
 
     });
 
+    describe('createChannelMerger()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var channelMergerNode = offlineAudioContext.createChannelMerger(),
+                gainNode = offlineAudioContext.createGain();
+
+            expect(channelMergerNode.connect(gainNode)).to.be.undefined;
+        });
+
+    });
+
     describe('createGain()', function () {
 
         // bug #11

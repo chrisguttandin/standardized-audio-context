@@ -389,7 +389,7 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
                 throw invalidStateErrorFactory.create();
             }
 
-            // Only Chrome and Firefox support chaining in their dev versions yet.
+            // bug #11: Edge and Safari do not support chaining yet.
             if (!this._isSupportingChaining) {
                 channelMergerNode = audioNodeConnectMethodWrapper.wrap(channelMergerNode);
             }
