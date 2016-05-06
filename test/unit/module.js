@@ -8,8 +8,8 @@ describe('module', function () {
         expect(mdl.AudioContext).to.be.a('function');
     });
 
-    it('should export the isSupported flag', function () {
-        expect(mdl.isSupported).to.be.a('boolean');
+    it('should export the isSupported promise', function () {
+        expect(mdl.isSupported).to.be.an.instanceof(Promise);
     });
 
     it('should export the OfflineAudioContext constructor', function () {

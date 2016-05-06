@@ -12,7 +12,7 @@ import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
 import { ReflectiveInjector } from '@angular/core/src/di/reflective_injector';
 import { audioContextConstructor } from './audio-context-constructor';
-import { isSupportedFlag } from './is-supported-flag';
+import { isSupportedPromise } from './is-supported-promise';
 import { modernizr } from './modernizr';
 import { offlineAudioContextConstructor } from './offline-audio-context-constructor';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
@@ -33,7 +33,7 @@ var injector = ReflectiveInjector.resolveAndCreate([
         NotSupportedErrorFactory,
         PromiseSupportTester,
         { provide: audioContextConstructor, useFactory: audioContextConstructor },
-        { provide: isSupportedFlag, useFactory: isSupportedFlag },
+        { provide: isSupportedPromise, useFactory: isSupportedPromise },
         { provide: modernizr, useValue: modernizr },
         { provide: offlineAudioContextConstructor, useFactory: offlineAudioContextConstructor },
         { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
@@ -44,6 +44,6 @@ var injector = ReflectiveInjector.resolveAndCreate([
 
 export const AudioContext = injector.get(audioContextConstructor);
 
-export const isSupported = injector.get(isSupportedFlag);
+export const isSupported = injector.get(isSupportedPromise);
 
 export const OfflineAudioContext = injector.get(offlineAudioContextConstructor);

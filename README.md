@@ -43,11 +43,20 @@ You can then import the `AudioContext` and `OfflineAudioContext` into your modul
 import { AudioContext, OfflineAudioContext } from 'standardized-audio-context';
 ```
 
-In addition to that the `standardized-audio-context` also exports a flag named `isSupported` to
-indicate support from the currently used browser.
+In addition to that the `standardized-audio-context` also exports a promise named `isSupported`
+which resolves to a boolean which indicates support within the currently used browser.
 
 ```js
 import { isSupported } from 'standardized-audio-context';
+
+isSupported
+    .then((isSupported) => {
+        if (isSupported) {
+            // yeah everything should work
+        } else {
+            // oh no this browser seems to be outdated
+        }
+    });
 ```
 
 ## Tests
