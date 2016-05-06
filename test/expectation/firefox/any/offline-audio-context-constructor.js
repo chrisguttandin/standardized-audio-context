@@ -24,6 +24,24 @@ describe('offlineAudioContextConstructor', function () {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('createChannelMerger()', function () {
+
+        // bug #16
+
+        it('should allow to set the channelCount', function () {
+            var channelMergerNode = offlineAudioContext.createChannelMerger();
+
+            channelMergerNode.channelCountMode = '2';
+        });
+
+        it('should allow to set the channelCountMode', function () {
+            var channelMergerNode = offlineAudioContext.createChannelMerger();
+
+            channelMergerNode.channelCountMode = 'max';
+        });
+
+    });
+
     describe('createGain()', function () {
 
         // bug #12

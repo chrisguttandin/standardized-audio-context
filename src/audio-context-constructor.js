@@ -394,20 +394,19 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
                 channelMergerNode = audioNodeConnectMethodWrapper.wrap(channelMergerNode);
             }
 
-            // Firefox and Safari do not return the default properties.
-            if (channelMergerNode.channelCount === 2 &&
-                    channelMergerNode.channelCountMode === 'max') {
+            // bug #15: Safari does not return the default properties.
+            if (channelMergerNode.channelCount !== 1 &&
+                    channelMergerNode.channelCountMode !== 'explicit') {
                 channelMergerNode = channelMergerNodeWrapper.wrap(channelMergerNode);
             }
 
+            // bug #16: Firefox does not throw an error when setting a different channelCount or
+            // channelCountMode.
             try {
                 channelMergerNode.channelCount = 2;
 
                 channelMergerNode = channelMergerNodeWrapper.wrap(channelMergerNode);
-            } catch (err) {
-                // The dev version of Firefox does not throw an error when setting a different
-                // channelCount or channelCountMode.
-            }
+            } catch (err) {}
 
             return channelMergerNode; // eslint-disable-line newline-before-return
         }

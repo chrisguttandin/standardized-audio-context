@@ -75,6 +75,20 @@ describe('offlineAudioContextConstructor', function () {
             expect(channelMergerNode.connect(gainNode)).to.be.undefined;
         });
 
+        // bug #15
+
+        it('should have a wrong channelCount', function () {
+            var channelMergerNode = offlineAudioContext.createChannelMerger();
+
+            expect(channelMergerNode.channelCount).to.not.equal(1);
+        });
+
+        it('should have a wrong channelCountMode', function () {
+            var channelMergerNode = offlineAudioContext.createChannelMerger();
+
+            expect(channelMergerNode.channelCountMode).to.not.equal('explicit');
+        });
+
     });
 
     describe('createGain()', function () {

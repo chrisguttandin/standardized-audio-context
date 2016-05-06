@@ -24,6 +24,24 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
+    describe('createChannelMerger()', function () {
+
+        // bug #16
+
+        it('should allow to set the channelCount', function () {
+            var channelMergerNode = audioContext.createChannelMerger();
+
+            channelMergerNode.channelCountMode = '2';
+        });
+
+        it('should allow to set the channelCountMode', function () {
+            var channelMergerNode = audioContext.createChannelMerger();
+
+            channelMergerNode.channelCountMode = 'max';
+        });
+
+    });
+
     describe('createGain()', function () {
 
         // bug #12

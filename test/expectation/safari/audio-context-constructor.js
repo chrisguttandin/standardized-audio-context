@@ -12,6 +12,10 @@ describe('audioContextConstructor', function () {
     var audioContext,
         AudioContext;
 
+    afterEach(function () {
+        return audioContext.close();
+    });
+
     beforeEach(function () {
         var injector = angular.ReflectiveInjector.resolveAndCreate([
                 angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
@@ -36,6 +40,20 @@ describe('audioContextConstructor', function () {
                 gainNode = audioContext.createGain();
 
             expect(channelMergerNode.connect(gainNode)).to.be.undefined;
+        });
+
+        // bug #15
+
+        it('should have a wrong channelCount', function () {
+            var channelMergerNode = audioContext.createChannelMerger();
+
+            expect(channelMergerNode.channelCount).to.not.equal(1);
+        });
+
+        it('should have a wrong channelCountMode', function () {
+            var channelMergerNode = audioContext.createChannelMerger();
+
+            expect(channelMergerNode.channelCountMode).to.not.equal('explicit');
         });
 
     });
