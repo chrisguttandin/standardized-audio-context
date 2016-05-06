@@ -30,7 +30,8 @@ export class MergingSupportTester {
             bufferSource = audioContext.createBufferSource();
             buffer = audioContext.createBuffer(2, 1, audioContext.sampleRate);
             channelMerger = audioContext.createChannelMerger(2);
-            scriptProcessor = audioContext.createScriptProcessor(256);
+            // @todo remove this ugly hack
+            scriptProcessor = audioContext._unpatchedAudioContext.createScriptProcessor(256);
 
             buffer.getChannelData(0)[0] = 1;
             buffer.getChannelData(1)[0] = 1;
