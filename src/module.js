@@ -10,6 +10,10 @@ import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { MergingSupportTester } from './tester/merging-support';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
+import { OfflineAudioBufferSourceNodeFakerFactory } from './factories/offline-audio-buffer-source-node';
+import { OfflineAudioDestinationNodeFakerFactory } from './factories/offline-audio-destination-node';
+import { OfflineGainNodeFakerFactory } from './factories/offline-gain-node';
+import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter-node';
 import { PromiseSupportTester } from './tester/promise-support';
 import { ReflectiveInjector } from '@angular/core/src/di/reflective_injector';
 import { audioContextConstructor } from './audio-context-constructor';
@@ -33,6 +37,10 @@ var injector = ReflectiveInjector.resolveAndCreate([
         InvalidStateErrorFactory,
         MergingSupportTester,
         NotSupportedErrorFactory,
+        OfflineAudioBufferSourceNodeFakerFactory,
+        OfflineAudioDestinationNodeFakerFactory,
+        OfflineGainNodeFakerFactory,
+        OfflineIIRFilterNodeFakerFactory,
         PromiseSupportTester,
         { provide: audioContextConstructor, useFactory: audioContextConstructor },
         { provide: isSupportedPromise, useFactory: isSupportedPromise },

@@ -9,11 +9,14 @@ var angular = require('@angular/core'),
     ChainingSupportTester = require('../../src/tester/chaining-support.js').ChainingSupportTester,
     DisconnectingSupportTester = require('../../src/tester/disconnecting-support.js').DisconnectingSupportTester,
     EncodingErrorFactory = require('../../src/factories/encoding-error').EncodingErrorFactory,
-    IIRFilterNodeFaker = require('../../src/fakers/iir-filter-node').IIRFilterNodeFaker,
     InvalidStateErrorFactory = require( '../../src/factories/invalid-state-error').InvalidStateErrorFactory,
     loadFixture = require('../helper/load-fixture.js'),
     NotSupportedErrorFactory = require( '../../src/factories/not-supported-error').NotSupportedErrorFactory,
+    OfflineAudioBufferSourceNodeFakerFactory = require('../../src/factories/offline-audio-buffer-source-node').OfflineAudioBufferSourceNodeFakerFactory,
     offlineAudioContextConstructor = require('../../src/offline-audio-context-constructor.js').offlineAudioContextConstructor,
+    OfflineAudioDestinationNodeFakerFactory = require('../../src/factories/offline-audio-destination-node').OfflineAudioDestinationNodeFakerFactory,
+    OfflineGainNodeFakerFactory = require('../../src/factories/offline-gain-node').OfflineGainNodeFakerFactory,
+    OfflineIIRFilterNodeFakerFactory = require('../../src/factories/offline-iir-filter-node').OfflineIIRFilterNodeFakerFactory,
     PromiseSupportTester = require('../../src/tester/promise-support').PromiseSupportTester,
     sinon = require('sinon'),
     unpatchedOfflineAudioContextConstructor = require('../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
@@ -32,9 +35,12 @@ describe('offlineAudioContextConstructor', function () {
                 ChainingSupportTester,
                 DisconnectingSupportTester,
                 EncodingErrorFactory,
-                IIRFilterNodeFaker,
                 InvalidStateErrorFactory,
                 NotSupportedErrorFactory,
+                OfflineAudioBufferSourceNodeFakerFactory,
+                OfflineAudioDestinationNodeFakerFactory,
+                OfflineGainNodeFakerFactory,
+                OfflineIIRFilterNodeFakerFactory,
                 PromiseSupportTester,
                 angular.provide(offlineAudioContextConstructor, { useFactory: offlineAudioContextConstructor }),
                 angular.provide(unpatchedOfflineAudioContextConstructor, { useFactory: unpatchedOfflineAudioContextConstructor }),
@@ -134,14 +140,12 @@ describe('offlineAudioContextConstructor', function () {
             candidate = offlineAudioContext.createGain();
             dummy = offlineAudioContext.createGain();
 
-            // @todo remove this ugly hack
             // Safari does not play buffers which contain just one frame.
-            ones = candidate.context.createBuffer(1, 2, 44100);
+            ones = offlineAudioContext.createBuffer(1, 2, 44100);
             ones.getChannelData(0)[0] = 1;
             ones.getChannelData(0)[1] = 1;
 
-            // @todo remove this ugly hack
-            source = candidate.context.createBufferSource();
+            source = offlineAudioContext.createBufferSource();
             source.buffer = ones;
 
             source.connect(candidate);
@@ -151,19 +155,15 @@ describe('offlineAudioContextConstructor', function () {
 
             source.start(0);
 
-            // @todo remove this ugly hack
-            candidate.context.oncomplete = (event) => {
-                var channelData = event.renderedBuffer.getChannelData(0);
+            offlineAudioContext
+                .startRendering()
+                .then((renderedBuffer) => {
+                    var channelData = renderedBuffer.getChannelData(0);
 
-                expect(channelData[0]).to.equal(1);
+                    expect(channelData[0]).to.equal(1);
 
-                source.disconnect(candidate);
-                candidate.disconnect(offlineAudioContext.destination);
-
-                done();
-            };
-            // @todo remove this ugly hack
-            candidate.context.startRendering();
+                    done();
+                });
         });
 
     });
@@ -248,54 +248,52 @@ describe('offlineAudioContextConstructor', function () {
             }
         });
 
-        // @todo The ScriptProcessorNode has to be patched before this will work.
-        // it('should filter the given input', function (done) {
-        //     var audioBufferSourceNode,
-        //         buffer,
-        //         iIRFilterNode;
-        //
-        //     this.timeout(10000);
-        //
-        //     // @todo remove these ugly hacks
-        //     audioBufferSourceNode = offlineAudioContext._unpatchedOfflineAudioContext.createBufferSource();
-        //     buffer = offlineAudioContext._unpatchedOfflineAudioContext.createBuffer(2, 3, 44100);
-        //     iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
-        //
-        //     // @todo Use copyToChannel() once it becomes available.
-        //     // buffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
-        //     // buffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
-        //     buffer.getChannelData(0)[0] = 1;
-        //     buffer.getChannelData(0)[1] = 0;
-        //     buffer.getChannelData(0)[2] = 0;
-        //     buffer.getChannelData(1)[0] = 0;
-        //     buffer.getChannelData(1)[1] = 1;
-        //     buffer.getChannelData(1)[2] = 1;
-        //
-        //     audioBufferSourceNode.buffer = buffer;
-        //
-        //     audioBufferSourceNode.start(0);
-        //
-        //     audioBufferSourceNode.connect(iIRFilterNode);
-        //     iIRFilterNode.connect(offlineAudioContext.destination);
-        //
-        //     // @todo remove this ugly hack
-        //     offlineAudioContext._unpatchedOfflineAudioContext.oncomplete = function (event) {
-        //         var leftChannelData = event.renderedBuffer.getChannelData(0),
-        //             rightChannelData = event.renderedBuffer.getChannelData(1);
-        //
-        //         expect(leftChannelData[0]).to.equal(1);
-        //         expect(leftChannelData[1]).to.equal(-0.5);
-        //         expect(leftChannelData[2]).to.equal(-0.25);
-        //
-        //         expect(rightChannelData[0]).to.equal(0);
-        //         expect(rightChannelData[1]).to.equal(1);
-        //         expect(rightChannelData[2]).to.equal(0.5);
-        //
-        //         done();
-        //     };
-        //     // @todo remove this ugly hack
-        //     offlineAudioContext._unpatchedOfflineAudioContext.startRendering();
-        // });
+        it('should filter the given input', function (done) {
+            var audioBufferSourceNode,
+                buffer,
+                iIRFilterNode;
+
+            this.timeout(10000);
+
+            audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            buffer = offlineAudioContext.createBuffer(2, 3, 44100);
+            iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+
+            // @todo Use copyToChannel() once it becomes available.
+            // buffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
+            // buffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
+            buffer.getChannelData(0)[0] = 1;
+            buffer.getChannelData(0)[1] = 0;
+            buffer.getChannelData(0)[2] = 0;
+            buffer.getChannelData(1)[0] = 0;
+            buffer.getChannelData(1)[1] = 1;
+            buffer.getChannelData(1)[2] = 1;
+
+            audioBufferSourceNode.buffer = buffer;
+
+            audioBufferSourceNode.start(0);
+
+            audioBufferSourceNode
+                .connect(iIRFilterNode)
+                .connect(offlineAudioContext.destination);
+
+            offlineAudioContext
+                .startRendering()
+                .then((renderedBuffer) => {
+                    var leftChannelData = renderedBuffer.getChannelData(0),
+                        rightChannelData = renderedBuffer.getChannelData(1);
+
+                    expect(leftChannelData[0]).to.equal(1);
+                    expect(leftChannelData[1]).to.equal(-0.5);
+                    expect(leftChannelData[2]).to.equal(-0.25);
+
+                    expect(rightChannelData[0]).to.be.closeTo(0, 1e-37);
+                    expect(rightChannelData[1]).to.equal(1);
+                    expect(rightChannelData[2]).to.equal(0.5);
+
+                    done();
+                });
+        });
 
         it('should be chainable', function () {
             var gainNode = offlineAudioContext.createGain(),

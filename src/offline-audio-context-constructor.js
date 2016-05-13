@@ -4,20 +4,26 @@ import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconne
 import { ChainingSupportTester } from './tester/chaining-support';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
-import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { Inject } from '@angular/core/src/di/decorators';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
+import { OfflineAudioBufferSourceNodeFakerFactory } from './factories/offline-audio-buffer-source-node';
+import { OfflineAudioDestinationNodeFakerFactory } from './factories/offline-audio-destination-node';
+import { OfflineGainNodeFakerFactory } from './factories/offline-gain-node';
+import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter-node';
 import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 
-export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, disconnectingSupportTester, encodingErrorFactory, iIRFilterNodeFaker, notSupportedErrorFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
+export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, disconnectingSupportTester, encodingErrorFactory, notSupportedErrorFactory, offlineAudioBufferSourceNodeFakerFactory, offlineAudioDestinationNodeFakerFactory, offlineGainNodeFakerFactory, offlineIIRFilterNodeFakerFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
     return class OfflineAudioContext {
 
         constructor (numberOfChannels, length, sampleRate) {
-            /* eslint-disable new-cap */
-            var unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
-            /* eslint-enable new-cap */
+            var fakeNodeStore = new WeakMap(),
+                /* eslint-disable new-cap */
+                unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
+                /* eslint-enable new-cap */
 
+            this._destination = offlineAudioDestinationNodeFakerFactory.create({ fakeNodeStore });
+            this._fakeNodeStore = fakeNodeStore;
             this._length = length;
             this._isSupportingChaining = chainingSupportTester.test(unpatchedOfflineAudioContext);
             this._isSupportingDisconnecting = false;
@@ -27,7 +33,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
         }
 
         get destination () {
-            return this._unpatchedOfflineAudioContext.destination;
+            return this._destination.proxy;
         }
 
         get length () {
@@ -43,29 +49,36 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             return this._unpatchedOfflineAudioContext.sampleRate;
         }
 
+        createBuffer (numberOfChannels, length, sampleRate) {
+            // @todo Consider browsers which do not fully support this method yet.
+            return this._unpatchedOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+        }
+
+        createBufferSource () {
+            return offlineAudioBufferSourceNodeFakerFactory.create({
+                fakeNodeStore: this._fakeNodeStore
+            }).proxy;
+        }
+
         createGain () {
-            var gainNode = this._unpatchedOfflineAudioContext.createGain();
-
-            // bug #11: Edge and Safari do not support chaining yet.
-            if (!this._isSupportingChaining) {
-                gainNode = audioNodeConnectMethodWrapper.wrap(gainNode);
-            }
-
-            // bug #12: Firefox and Safari do not support to disconnect a specific destination.
-            if (!this._isSupportingDisconnecting) {
-                gainNode = audioNodeDisconnectMethodWrapper.wrap(gainNode);
-            }
-
-            return gainNode;
+            return offlineGainNodeFakerFactory.create({
+                fakeNodeStore: this._fakeNodeStore
+            }).proxy;
         }
 
         createIIRFilter (feedforward, feedback) {
             // bug #9: Only Chrome and Opera currently implement the createIIRFilter() method.
-            if (this._unpatchedOfflineAudioContext.createIIRFilter === undefined) {
-                return iIRFilterNodeFaker.fake(feedforward, feedback, this, this._unpatchedOfflineAudioContext);
+            if (this._unpatchedOfflineAudioContext.createIIRFilter !== undefined) {
+                this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
             }
 
-            return this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
+            return offlineIIRFilterNodeFakerFactory.create({
+                fakeNodeStore: this._fakeNodeStore,
+                feedforward: feedforward,
+                feedback: feedback,
+                length: this.length,
+                sampleRate: this._unpatchedOfflineAudioContext.sampleRate
+            }).proxy;
         }
 
         decodeAudioData (audioData, successCallback, errorCallback) {
@@ -140,7 +153,18 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             });
         }
 
+        startRendering () {
+            return this._destination
+                .render(this._unpatchedOfflineAudioContext)
+                // @todo Do not patch startRendering() if it already returns a promise.
+                .then(() => new Promise((resolve) => {
+                    this._unpatchedOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
+
+                    this._unpatchedOfflineAudioContext.startRendering();
+                }));
+        }
+
     };
 }
 
-offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(DisconnectingSupportTester) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];
+offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(DisconnectingSupportTester) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(OfflineAudioBufferSourceNodeFakerFactory) ], [ new Inject(OfflineAudioDestinationNodeFakerFactory) ], [ new Inject(OfflineGainNodeFakerFactory) ], [ new Inject(OfflineIIRFilterNodeFakerFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];
