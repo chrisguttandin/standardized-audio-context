@@ -30,20 +30,27 @@ module.exports = function (config) {
         config.set({
 
             browsers: [
-                'SafariSauceLabs'
+                'SafariBrowserStack'
             ],
+
+            browserStack: {
+                accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
+                username: process.env.BROWSER_STACK_USERNAME
+            },
 
             captureTimeout: 120000,
 
             customLaunchers: {
-                SafariSauceLabs: {
-                    base: 'SauceLabs',
-                    browserName: 'safari',
-                    platform: 'OS X 10.11'
+                SafariBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'safari',
+                    os: 'OS X',
+                    os_version: 'El Capitan' // eslint-disable-line camelcase
                 }
             },
 
             tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+
         });
 
     } else {
