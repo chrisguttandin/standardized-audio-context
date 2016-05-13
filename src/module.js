@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { AudioBufferSourceNodeStopMethodWrapper } from './wrapper/audio-buffer-source-node-stop-method';
 import { AudioBufferWrapper } from './wrapper/audio-buffer';
 import { AudioNodeConnectMethodWrapper } from './wrapper/audio-node-connect-method';
 import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconnect-method';
@@ -16,6 +17,7 @@ import { OfflineGainNodeFakerFactory } from './factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter-node';
 import { PromiseSupportTester } from './tester/promise-support';
 import { ReflectiveInjector } from '@angular/core/src/di/reflective_injector';
+import { StopStoppedSupportTester } from './tester/stop-stopped-support';
 import { audioContextConstructor } from './audio-context-constructor';
 import { isSupportedPromise } from './is-supported-promise';
 import { modernizr } from './modernizr';
@@ -26,6 +28,7 @@ import { window } from './window.js';
 
 /* eslint-disable indent, new-cap */
 var injector = ReflectiveInjector.resolveAndCreate([
+        AudioBufferSourceNodeStopMethodWrapper,
         AudioBufferWrapper,
         AudioNodeConnectMethodWrapper,
         AudioNodeDisconnectMethodWrapper,
@@ -42,6 +45,7 @@ var injector = ReflectiveInjector.resolveAndCreate([
         OfflineGainNodeFakerFactory,
         OfflineIIRFilterNodeFakerFactory,
         PromiseSupportTester,
+        StopStoppedSupportTester,
         { provide: audioContextConstructor, useFactory: audioContextConstructor },
         { provide: isSupportedPromise, useFactory: isSupportedPromise },
         { provide: modernizr, useValue: modernizr },

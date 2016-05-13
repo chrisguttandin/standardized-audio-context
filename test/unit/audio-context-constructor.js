@@ -3,6 +3,7 @@
 require('reflect-metadata');
 
 var angular = require('@angular/core'),
+    AudioBufferSourceNodeStopMethodWrapper = require('../../src/wrapper/audio-buffer-source-node-stop-method.js').AudioBufferSourceNodeStopMethodWrapper,
     AudioBufferWrapper = require('../../src/wrapper/audio-buffer.js').AudioBufferWrapper,
     audioContextConstructor = require('../../src/audio-context-constructor.js').audioContextConstructor,
     AudioNodeConnectMethodWrapper = require('../../src/wrapper/audio-node-connect-method.js').AudioNodeConnectMethodWrapper,
@@ -15,6 +16,7 @@ var angular = require('@angular/core'),
     loadFixture = require('../helper/load-fixture.js'),
     NotSupportedErrorFactory = require( '../../src/factories/not-supported-error').NotSupportedErrorFactory,
     PromiseSupportTester = require('../../src/tester/promise-support').PromiseSupportTester,
+    StopStoppedSupportTester = require('../../src/tester/stop-stopped-support').StopStoppedSupportTester,
     sinon = require('sinon'),
     unpatchedAudioContextConstructor = require('../../src/unpatched-audio-context-constructor.js').unpatchedAudioContextConstructor,
     wndw = require('../../src/window.js').window;
@@ -30,6 +32,7 @@ describe('audioContextConstructor', function () {
 
     beforeEach(function () {
         var injector = angular.ReflectiveInjector.resolveAndCreate([
+                AudioBufferSourceNodeStopMethodWrapper,
                 AudioBufferWrapper,
                 AudioNodeConnectMethodWrapper,
                 AudioNodeDisconnectMethodWrapper,
@@ -40,6 +43,7 @@ describe('audioContextConstructor', function () {
                 InvalidStateErrorFactory,
                 NotSupportedErrorFactory,
                 PromiseSupportTester,
+                StopStoppedSupportTester,
                 angular.provide(audioContextConstructor, { useFactory: audioContextConstructor }),
                 angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
                 angular.provide(wndw, { useValue: window })
@@ -483,6 +487,65 @@ describe('audioContextConstructor', function () {
                 gainNode = audioContext.createGain();
 
             expect(audioBufferSourceNode.connect(gainNode)).to.equal(gainNode);
+        });
+
+        it('should stop an AudioBufferSourceNode scheduled for stopping in the future', function (done) {
+            var audioBuffer = audioContext.createBuffer(1, 44100, 44100),
+                buffer = new Float32Array(44100),
+                bufferSourceNode = audioContext.createBufferSource(),
+                currentTime,
+                scriptProcessorNode;
+
+            // @todo remove this ugly hack
+            scriptProcessorNode = bufferSourceNode.context.createScriptProcessor(256, 1, 1);
+
+            // @todo Use TypedArray.prototype.fill() once it lands in Safari.
+            for (let i = 0; i < 44100; i += 1) {
+                buffer[i] = 1;
+            }
+
+            audioBuffer.copyToChannel(buffer, 0, 0);
+
+            bufferSourceNode.buffer = audioBuffer;
+
+            bufferSourceNode
+                .connect(scriptProcessorNode)
+                .connect(audioContext.destination);
+
+            currentTime = audioContext.currentTime;
+
+            bufferSourceNode.start();
+            bufferSourceNode.stop(currentTime + 1);
+            bufferSourceNode.stop(currentTime);
+
+            scriptProcessorNode.onaudioprocess = function (event) {
+                var channelData = event.inputBuffer.getChannelData(0);
+
+                expect(Array.from(channelData)).to.not.contain(1);
+
+                if (event.playbackTime > currentTime + 1) {
+                    scriptProcessorNode.disconnect(audioContext.destination);
+                    bufferSourceNode.disconnect(scriptProcessorNode);
+
+                    done();
+                }
+            };
+        });
+
+        it('should ignore calls to stop() of an already stopped AudioBufferSourceNode', function (done) {
+            var audioBuffer = audioContext.createBuffer(1, 100, 44100),
+                bufferSourceNode = audioContext.createBufferSource();
+
+            bufferSourceNode.onended = function () {
+                bufferSourceNode.stop();
+
+                done();
+            };
+
+            bufferSourceNode.buffer = audioBuffer;
+            bufferSourceNode.connect(audioContext.destination);
+            bufferSourceNode.start();
+            bufferSourceNode.stop();
         });
 
     });

@@ -40,6 +40,15 @@ describe('offlineAudioContextConstructor', function () {
 
     describe('createBufferSource()', function () {
 
+        // bug #11
+
+        it('should not be chainable', function () {
+            var bufferSourceNode = offlineAudioContext.createBufferSource(),
+                gainNode = offlineAudioContext.createGain();
+
+            expect(bufferSourceNode.connect(gainNode)).to.be.undefined;
+        });
+
         // bug #14
 
         it('should not resample an oversampled AudioBuffer', function (done) {
@@ -69,6 +78,43 @@ describe('offlineAudioContextConstructor', function () {
 
                 done();
             };
+            offlineAudioContext.startRendering();
+        });
+
+        // bug #18
+
+        it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', function () {
+            var audioBuffer = offlineAudioContext.createBuffer(1, 100, 44100),
+                bufferSourceNode = offlineAudioContext.createBufferSource();
+
+            bufferSourceNode.buffer = audioBuffer;
+            bufferSourceNode.connect(offlineAudioContext.destination);
+            bufferSourceNode.start();
+            bufferSourceNode.stop(1);
+            expect(function () {
+                bufferSourceNode.stop();
+            }).to.throw(Error);
+        });
+
+        // bug #19
+
+        it('should not ignore calls to stop() of an already stopped AudioBufferSourceNode', function (done) {
+            var audioBuffer = offlineAudioContext.createBuffer(1, 100, 44100),
+                bufferSourceNode = offlineAudioContext.createBufferSource();
+
+            bufferSourceNode.onended = function () {
+                expect(function () {
+                    bufferSourceNode.stop();
+                }).to.throw(Error);
+
+                done();
+            };
+
+            bufferSourceNode.buffer = audioBuffer;
+            bufferSourceNode.connect(offlineAudioContext.destination);
+            bufferSourceNode.start();
+            bufferSourceNode.stop();
+
             offlineAudioContext.startRendering();
         });
 

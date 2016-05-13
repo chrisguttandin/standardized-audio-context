@@ -32,6 +32,19 @@ describe('audioContextConstructor', function () {
 
     });
 
+    describe('createBufferSource()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var bufferSourceNode = audioContext.createBufferSource(),
+                gainNode = audioContext.createGain();
+
+            expect(bufferSourceNode.connect(gainNode)).to.be.undefined;
+        });
+
+    });
+
     describe('createChannelMerger()', function () {
 
         // bug #11

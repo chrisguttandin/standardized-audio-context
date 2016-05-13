@@ -31,6 +31,54 @@ describe('audioContextConstructor', function () {
         expect(window.AudioContext).to.be.undefined;
     });
 
+    describe('createBufferSource()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var bufferSourceNode = audioContext.createBufferSource(),
+                gainNode = audioContext.createGain();
+
+            expect(bufferSourceNode.connect(gainNode)).to.be.undefined;
+        });
+
+        // bug #18
+
+        it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', function () {
+            var audioBuffer = audioContext.createBuffer(1, 100, 44100),
+                bufferSourceNode = audioContext.createBufferSource();
+
+            bufferSourceNode.buffer = audioBuffer;
+            bufferSourceNode.connect(audioContext.destination);
+            bufferSourceNode.start();
+            bufferSourceNode.stop(audioContext.currentTime + 1);
+            expect(function () {
+                bufferSourceNode.stop();
+            }).to.throw(Error);
+        });
+
+        // bug #19
+
+        it('should not ignore calls to stop() of an already stopped AudioBufferSourceNode', function (done) {
+            var audioBuffer = audioContext.createBuffer(1, 100, 44100),
+                bufferSourceNode = audioContext.createBufferSource();
+
+            bufferSourceNode.onended = function () {
+                expect(function () {
+                    bufferSourceNode.stop();
+                }).to.throw(Error);
+
+                done();
+            };
+
+            bufferSourceNode.buffer = audioBuffer;
+            bufferSourceNode.connect(audioContext.destination);
+            bufferSourceNode.start();
+            bufferSourceNode.stop();
+        });
+
+    });
+
     describe('createChannelMerger()', function () {
 
         // bug #11

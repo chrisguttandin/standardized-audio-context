@@ -34,6 +34,15 @@ describe('offlineAudioContextConstructor', function () {
 
     describe('createBufferSource()', function () {
 
+        // bug #11
+
+        it('should not be chainable', function () {
+            var bufferSourceNode = offlineAudioContext.createBufferSource(),
+                gainNode = offlineAudioContext.createGain();
+
+            expect(bufferSourceNode.connect(gainNode)).to.be.undefined;
+        });
+
         // bug #14
 
         it('should not resample an oversampled AudioBuffer', function (done) {

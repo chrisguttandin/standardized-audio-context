@@ -1,3 +1,4 @@
+import { AudioBufferSourceNodeStopMethodWrapper } from './wrapper/audio-buffer-source-node-stop-method';
 import { AudioBufferWrapper } from './wrapper/audio-buffer';
 import { AudioNodeConnectMethodWrapper } from './wrapper/audio-node-connect-method';
 import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconnect-method';
@@ -9,6 +10,7 @@ import { Inject } from '@angular/core/src/di/decorators';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';
+import { StopStoppedSupportTester } from './tester/stop-stopped-support';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
 var pool = [];
@@ -74,7 +76,7 @@ function wrapAnalyserNode (analyserNode) {
     return analyserNode;
 }
 
-export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, notSupportedErrorFactory, promiseSupportTester, unpatchedAudioContextConstructor) {
+export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper, audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, notSupportedErrorFactory, promiseSupportTester, stopStoppedSupportTester, unpatchedAudioContextConstructor) {
     return class AudioContext {
 
         constructor () {
@@ -87,6 +89,7 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
             this._isSupportingDisconnecting = false;
             testForDisconnectingSupport(unpatchedAudioContext, (isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
             this._isSupportingPromises = promiseSupportTester.test(unpatchedAudioContext);
+            this._isSupportingStoppingOfStoppedNodes = stopStoppedSupportTester.test(unpatchedAudioContext);
             this._onStateChangeListener = null;
             this._unpatchedAudioContext = unpatchedAudioContext;
             this._state = (unpatchedAudioContext.state === undefined) ? 'suspended' : null;
@@ -358,9 +361,16 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
 
             audioBufferSourceNode = this._unpatchedAudioContext.createBufferSource();
 
-            // Only Chrome and Firefox support chaining in their dev versions yet.
+            // bug #19: Safari does not ignore calls to stop() of an already stopped
+            // AudioBufferSourceNode.
+            if (!this._isSupportingStoppingOfStoppedNodes) {
+                return audioBufferSourceNodeStopMethodWrapper.wrap(audioBufferSourceNode);
+            }
+
+            // bug #11: Edge and Safari do not support chaining yet. But Safari is already patched
+            // above.
             if (!this._isSupportingChaining) {
-                audioBufferSourceNode = audioNodeConnectMethodWrapper.wrap(audioBufferSourceNode);
+                return audioNodeConnectMethodWrapper.wrap(audioBufferSourceNode);
             }
 
             return audioBufferSourceNode;
@@ -606,4 +616,4 @@ export function audioContextConstructor (audioBufferWrapper, audioNodeConnectMet
     };
 }
 
-audioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
+audioContextConstructor.parameters = [ [ new Inject(AudioBufferSourceNodeStopMethodWrapper) ], [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(StopStoppedSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
