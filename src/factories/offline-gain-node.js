@@ -6,7 +6,7 @@ class OfflineGainNodeFakerProxy extends OfflineAudioNodeProxy {
         super({
             channelCountMode: 'max',
             channelInterpretation: 'speakers',
-            fakeNodeStore: fakeNodeStore,
+            fakeNodeStore,
             numberOfInputs: 1,
             numberOfOutputs: 1
         });

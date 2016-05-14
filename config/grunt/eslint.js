@@ -3,7 +3,10 @@
 module.exports = {
     src: {
         options: {
-            configFile: 'config/eslint/src.json'
+            configFile: 'config/eslint/src.json',
+            parserOptions: {
+                sourceType: 'module'
+            }
         },
         src: [
             'src/**/*.js'

@@ -74,8 +74,8 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
 
             return offlineIIRFilterNodeFakerFactory.create({
                 fakeNodeStore: this._fakeNodeStore,
-                feedforward: feedforward,
-                feedback: feedback,
+                feedforward,
+                feedback,
                 length: this.length,
                 sampleRate: this._unpatchedOfflineAudioContext.sampleRate
             }).proxy;
