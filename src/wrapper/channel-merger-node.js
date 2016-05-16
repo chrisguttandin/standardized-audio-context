@@ -8,6 +8,9 @@ export class ChannelMergerNodeWrapper {
     }
 
     wrap (channelMergerNode) {
+        channelMergerNode.channelCount = 1;
+        channelMergerNode.channelCountMode = 'explicit';
+
         Object.defineProperty(channelMergerNode, 'channelCount', {
             get: () => 1,
             set: () => {
