@@ -28,15 +28,19 @@ export class MergingSupportTester {
 
             audioContext = new this._audioContextConstructor();
             bufferSource = audioContext.createBufferSource();
-            buffer = audioContext.createBuffer(2, 1, audioContext.sampleRate);
+            buffer = audioContext.createBuffer(2, 2, audioContext.sampleRate);
             channelMerger = audioContext.createChannelMerger(2);
             // @todo remove this ugly hack
             scriptProcessor = audioContext._unpatchedAudioContext.createScriptProcessor(256);
 
+            // @todo Safari does not play/loop 1 sample buffers. This should be patched.
             buffer.getChannelData(0)[0] = 1;
+            buffer.getChannelData(0)[1] = 1;
             buffer.getChannelData(1)[0] = 1;
+            buffer.getChannelData(1)[1] = 1;
 
             bufferSource.buffer = buffer;
+            bufferSource.loop = true;
 
             scriptProcessor.onaudioprocess = (event) => {
                 var channelData = event.inputBuffer.getChannelData(1);
