@@ -407,7 +407,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
             // bug #15: Safari does not return the default properties.
             if (channelMergerNode.channelCount !== 1 &&
                     channelMergerNode.channelCountMode !== 'explicit') {
-                channelMergerNode = channelMergerNodeWrapper.wrap(channelMergerNode);
+                channelMergerNode = channelMergerNodeWrapper.wrap(this._unpatchedAudioContext, channelMergerNode);
             }
 
             // bug #16: Firefox does not throw an error when setting a different channelCount or
@@ -415,7 +415,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
             try {
                 channelMergerNode.channelCount = 2;
 
-                channelMergerNode = channelMergerNodeWrapper.wrap(channelMergerNode);
+                channelMergerNode = channelMergerNodeWrapper.wrap(this._unpatchedAudioContext, channelMergerNode);
             } catch (err) {}
 
             return channelMergerNode; // eslint-disable-line newline-before-return
