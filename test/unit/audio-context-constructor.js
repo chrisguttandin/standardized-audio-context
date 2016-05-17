@@ -624,6 +624,53 @@ describe('audioContextConstructor', function () {
             expect(channelMerger.connect(gainNode)).to.equal(gainNode);
         });
 
+        it('should handle unconnected channels as silence', function (done) {
+            var audioBuffer,
+                audioBufferSourceNode = audioContext.createBufferSource(),
+                channelMerger = audioContext.createChannelMerger(),
+                sampleRate,
+                scriptProcessorNode,
+                startTime;
+
+            sampleRate = audioContext.sampleRate;
+            audioBuffer = audioContext.createBuffer(1, 2, sampleRate),
+
+            // @todo remove this ugly hack
+            scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
+
+            // @todo Safari does not play/loop 1 sample buffers. This should be patched.
+            audioBuffer.getChannelData(0)[0] = 1;
+            audioBuffer.getChannelData(0)[1] = 1;
+
+            audioBufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.loop = true;
+
+            startTime = audioContext.currentTime;
+
+            scriptProcessorNode.onaudioprocess = (event) => {
+                var channelData = event.inputBuffer.getChannelData(1);
+
+                for (let i = 0, length = channelData.length; i < length; i += 1) {
+                    if (channelData[i] === 1) {
+                        done(new Error('This channel should be silent.'));
+
+                        return;
+                    }
+                }
+
+                if (startTime + 1 / sampleRate < event.playbackTime) {
+                    done();
+                }
+            };
+
+            audioBufferSourceNode
+                .connect(channelMerger, 0, 0)
+                .connect(scriptProcessorNode)
+                .connect(audioContext.destination);
+
+            audioBufferSourceNode.start(startTime);
+        });
+
     });
 
     describe('createChannelSplitter()', function () {
