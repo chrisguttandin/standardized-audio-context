@@ -104,6 +104,52 @@ describe('audioContextConstructor', function () {
             expect(channelMergerNode.channelCountMode).to.not.equal('explicit');
         });
 
+        // bug #20
+
+        it('should not handle unconnected channels as silence', function (done) {
+            var audioBufferSourceNode = audioContext.createBufferSource(),
+                buffer,
+                channelMerger = audioContext.createChannelMerger(),
+                sampleRate,
+                scriptProcessorNode = audioContext.createScriptProcessor(256, 2, 2),
+                startTime;
+
+            sampleRate = audioContext.sampleRate;
+            // @todo Safari does not play 1 sample buffers.
+            buffer = audioContext.createBuffer(1, 2, sampleRate);
+
+            // @todo Safari does not support copyToChannel().
+            buffer.getChannelData(0)[0] = 1;
+            buffer.getChannelData(0)[1] = 1;
+
+            audioBufferSourceNode.buffer = buffer;
+            audioBufferSourceNode.loop = true;
+
+            startTime = audioContext.currentTime;
+
+            scriptProcessorNode.onaudioprocess = (event) => {
+                var channelData = event.inputBuffer.getChannelData(1);
+
+                for (let i = 0, length = channelData.length; i < length; i += 1) {
+                    if (channelData[i] === 1) {
+                        done();
+
+                        return;
+                    }
+                }
+
+                if (startTime + 1 / sampleRate < event.playbackTime) {
+                    done(new Error('It should process a buffer containing a wrong sample within one second.'));
+                }
+            };
+
+            audioBufferSourceNode.connect(channelMerger, 0, 0);
+            channelMerger.connect(scriptProcessorNode);
+            scriptProcessorNode.connect(audioContext.destination);
+
+            audioBufferSourceNode.start(startTime);
+        });
+
     });
 
     describe('createGain()', function () {
