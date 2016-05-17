@@ -8,14 +8,14 @@ export class ChannelMergerNodeWrapper {
     }
 
     wrap (audioContext, channelMergerNode) {
-        var bufferSourceNode = audioContext.createBufferSource();
+        var audioBufferSourceNode = audioContext.createBufferSource();
 
         channelMergerNode.channelCount = 1;
         channelMergerNode.channelCountMode = 'explicit';
 
         // bug #20: Safari requires a connection of any kind to treat the input signal correctly.
         for (let i = 0, length = channelMergerNode.numberOfInputs; i < length; i += 1) {
-            bufferSourceNode.connect(channelMergerNode, 0, i);
+            audioBufferSourceNode.connect(channelMergerNode, 0, i);
         }
 
         Object.defineProperty(channelMergerNode, 'channelCount', {

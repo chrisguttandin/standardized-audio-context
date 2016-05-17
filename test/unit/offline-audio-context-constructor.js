@@ -249,27 +249,27 @@ describe('offlineAudioContextConstructor', function () {
         });
 
         it('should filter the given input', function (done) {
-            var audioBufferSourceNode,
-                buffer,
+            var audioBuffer,
+                audioBufferSourceNode,
                 iIRFilterNode;
 
             this.timeout(10000);
 
+            audioBuffer = offlineAudioContext.createBuffer(2, 3, 44100);
             audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            buffer = offlineAudioContext.createBuffer(2, 3, 44100);
             iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
 
             // @todo Use copyToChannel() once it becomes available.
             // buffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
             // buffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
-            buffer.getChannelData(0)[0] = 1;
-            buffer.getChannelData(0)[1] = 0;
-            buffer.getChannelData(0)[2] = 0;
-            buffer.getChannelData(1)[0] = 0;
-            buffer.getChannelData(1)[1] = 1;
-            buffer.getChannelData(1)[2] = 1;
+            audioBuffer.getChannelData(0)[0] = 1;
+            audioBuffer.getChannelData(0)[1] = 0;
+            audioBuffer.getChannelData(0)[2] = 0;
+            audioBuffer.getChannelData(1)[0] = 0;
+            audioBuffer.getChannelData(1)[1] = 1;
+            audioBuffer.getChannelData(1)[2] = 1;
 
-            audioBufferSourceNode.buffer = buffer;
+            audioBufferSourceNode.buffer = audioBuffer;
 
             audioBufferSourceNode.start(0);
 

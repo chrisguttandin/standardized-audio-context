@@ -109,12 +109,12 @@ describe('offlineAudioContextConstructor', function () {
 
         it('should not have any output', function () {
             var channelData,
-                scriptProcessor = offlineAudioContext.createScriptProcessor(256, 1, 1);
+                scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
-            channelData = new Float32Array(scriptProcessor.bufferSize);
+            channelData = new Float32Array(scriptProcessorNode.bufferSize);
 
-            scriptProcessor.connect(offlineAudioContext.destination);
-            scriptProcessor.onaudioprocess = function (event) {
+            scriptProcessorNode.connect(offlineAudioContext.destination);
+            scriptProcessorNode.onaudioprocess = function (event) {
                 channelData.fill(1);
 
                 event.outputBuffer.copyToChannel(channelData, 0);
@@ -123,7 +123,7 @@ describe('offlineAudioContextConstructor', function () {
             return offlineAudioContext
                 .startRendering()
                 .then((buffer) => {
-                    var channelData = new Float32Array(scriptProcessor.bufferSize * 100);
+                    var channelData = new Float32Array(scriptProcessorNode.bufferSize * 100);
 
                     buffer.copyFromChannel(channelData, 0, 256);
 

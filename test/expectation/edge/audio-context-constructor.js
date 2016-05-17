@@ -37,10 +37,10 @@ describe('audioContextConstructor', function () {
         // bug #11
 
         it('should not be chainable', function () {
-            var bufferSourceNode = audioContext.createBufferSource(),
+            var audioBufferSourceNode = audioContext.createBufferSource(),
                 gainNode = audioContext.createGain();
 
-            expect(bufferSourceNode.connect(gainNode)).to.be.undefined;
+            expect(audioBufferSourceNode.connect(gainNode)).to.be.undefined;
         });
 
     });

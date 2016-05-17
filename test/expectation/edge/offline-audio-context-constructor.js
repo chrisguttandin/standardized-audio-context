@@ -37,17 +37,17 @@ describe('offlineAudioContextConstructor', function () {
         // bug #11
 
         it('should not be chainable', function () {
-            var bufferSourceNode = offlineAudioContext.createBufferSource(),
+            var audioBufferSourceNode = offlineAudioContext.createBufferSource(),
                 gainNode = offlineAudioContext.createGain();
 
-            expect(bufferSourceNode.connect(gainNode)).to.be.undefined;
+            expect(audioBufferSourceNode.connect(gainNode)).to.be.undefined;
         });
 
         // bug #14
 
         it('should not resample an oversampled AudioBuffer', function (done) {
             var audioBuffer = offlineAudioContext.createBuffer(1, 8, 88200),
-                bufferSourceNode = offlineAudioContext.createBufferSource(),
+                audioBufferSourceNode = offlineAudioContext.createBufferSource(),
                 eightRandomValues = [];
 
             for (let i = 0; i < 8; i += 1) {
@@ -56,9 +56,9 @@ describe('offlineAudioContextConstructor', function () {
 
             audioBuffer.copyToChannel(new Float32Array(eightRandomValues), 0);
 
-            bufferSourceNode.buffer = audioBuffer;
-            bufferSourceNode.start(0);
-            bufferSourceNode.connect(offlineAudioContext.destination);
+            audioBufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.start(0);
+            audioBufferSourceNode.connect(offlineAudioContext.destination);
 
             offlineAudioContext
                 .startRendering()

@@ -36,24 +36,24 @@ describe('audioContextConstructor', function () {
         // bug #11
 
         it('should not be chainable', function () {
-            var bufferSourceNode = audioContext.createBufferSource(),
+            var audioBufferSourceNode = audioContext.createBufferSource(),
                 gainNode = audioContext.createGain();
 
-            expect(bufferSourceNode.connect(gainNode)).to.be.undefined;
+            expect(audioBufferSourceNode.connect(gainNode)).to.be.undefined;
         });
 
         // bug #18
 
         it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', function () {
             var audioBuffer = audioContext.createBuffer(1, 100, 44100),
-                bufferSourceNode = audioContext.createBufferSource();
+                audioBufferSourceNode = audioContext.createBufferSource();
 
-            bufferSourceNode.buffer = audioBuffer;
-            bufferSourceNode.connect(audioContext.destination);
-            bufferSourceNode.start();
-            bufferSourceNode.stop(audioContext.currentTime + 1);
+            audioBufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.connect(audioContext.destination);
+            audioBufferSourceNode.start();
+            audioBufferSourceNode.stop(audioContext.currentTime + 1);
             expect(function () {
-                bufferSourceNode.stop();
+                audioBufferSourceNode.stop();
             }).to.throw(Error);
         });
 
@@ -61,20 +61,20 @@ describe('audioContextConstructor', function () {
 
         it('should not ignore calls to stop() of an already stopped AudioBufferSourceNode', function (done) {
             var audioBuffer = audioContext.createBuffer(1, 100, 44100),
-                bufferSourceNode = audioContext.createBufferSource();
+                audioBufferSourceNode = audioContext.createBufferSource();
 
-            bufferSourceNode.onended = function () {
+            audioBufferSourceNode.onended = function () {
                 expect(function () {
-                    bufferSourceNode.stop();
+                    audioBufferSourceNode.stop();
                 }).to.throw(Error);
 
                 done();
             };
 
-            bufferSourceNode.buffer = audioBuffer;
-            bufferSourceNode.connect(audioContext.destination);
-            bufferSourceNode.start();
-            bufferSourceNode.stop();
+            audioBufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.connect(audioContext.destination);
+            audioBufferSourceNode.start();
+            audioBufferSourceNode.stop();
         });
 
     });
@@ -107,22 +107,22 @@ describe('audioContextConstructor', function () {
         // bug #20
 
         it('should not handle unconnected channels as silence', function (done) {
-            var audioBufferSourceNode = audioContext.createBufferSource(),
-                buffer,
-                channelMerger = audioContext.createChannelMerger(),
+            var audioBuffer,
+                audioBufferSourceNode = audioContext.createBufferSource(),
+                channelMergerNode = audioContext.createChannelMerger(),
                 sampleRate,
                 scriptProcessorNode = audioContext.createScriptProcessor(256, 2, 2),
                 startTime;
 
             sampleRate = audioContext.sampleRate;
             // @todo Safari does not play 1 sample buffers.
-            buffer = audioContext.createBuffer(1, 2, sampleRate);
+            audioBuffer = audioContext.createBuffer(1, 2, sampleRate);
 
             // @todo Safari does not support copyToChannel().
-            buffer.getChannelData(0)[0] = 1;
-            buffer.getChannelData(0)[1] = 1;
+            audioBuffer.getChannelData(0)[0] = 1;
+            audioBuffer.getChannelData(0)[1] = 1;
 
-            audioBufferSourceNode.buffer = buffer;
+            audioBufferSourceNode.buffer = audioBuffer;
             audioBufferSourceNode.loop = true;
 
             startTime = audioContext.currentTime;
@@ -143,8 +143,8 @@ describe('audioContextConstructor', function () {
                 }
             };
 
-            audioBufferSourceNode.connect(channelMerger, 0, 0);
-            channelMerger.connect(scriptProcessorNode);
+            audioBufferSourceNode.connect(channelMergerNode, 0, 0);
+            channelMergerNode.connect(scriptProcessorNode);
             scriptProcessorNode.connect(audioContext.destination);
 
             audioBufferSourceNode.start(startTime);

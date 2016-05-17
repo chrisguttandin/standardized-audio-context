@@ -2,14 +2,14 @@ export class StopStoppedSupportTester {
 
     test (audioContext) {
         var audioBuffer = audioContext.createBuffer(1, 1, 44100),
-            bufferSourceNode = audioContext.createBufferSource();
+            audioBufferSourceNode = audioContext.createBufferSource();
 
-        bufferSourceNode.buffer = audioBuffer;
-        bufferSourceNode.start();
-        bufferSourceNode.stop();
+        audioBufferSourceNode.buffer = audioBuffer;
+        audioBufferSourceNode.start();
+        audioBufferSourceNode.stop();
 
         try {
-            bufferSourceNode.stop();
+            audioBufferSourceNode.stop();
 
             return true;
         } catch (err) {

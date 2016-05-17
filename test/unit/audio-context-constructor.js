@@ -491,13 +491,13 @@ describe('audioContextConstructor', function () {
 
         it('should stop an AudioBufferSourceNode scheduled for stopping in the future', function (done) {
             var audioBuffer = audioContext.createBuffer(1, 44100, 44100),
+                audioBufferSourceNode = audioContext.createBufferSource(),
                 buffer = new Float32Array(44100),
-                bufferSourceNode = audioContext.createBufferSource(),
                 currentTime,
                 scriptProcessorNode;
 
             // @todo remove this ugly hack
-            scriptProcessorNode = bufferSourceNode.context.createScriptProcessor(256, 1, 1);
+            scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 1, 1);
 
             // @todo Use TypedArray.prototype.fill() once it lands in Safari.
             for (let i = 0; i < 44100; i += 1) {
@@ -506,17 +506,17 @@ describe('audioContextConstructor', function () {
 
             audioBuffer.copyToChannel(buffer, 0, 0);
 
-            bufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.buffer = audioBuffer;
 
-            bufferSourceNode
+            audioBufferSourceNode
                 .connect(scriptProcessorNode)
                 .connect(audioContext.destination);
 
             currentTime = audioContext.currentTime;
 
-            bufferSourceNode.start();
-            bufferSourceNode.stop(currentTime + 1);
-            bufferSourceNode.stop(currentTime);
+            audioBufferSourceNode.start();
+            audioBufferSourceNode.stop(currentTime + 1);
+            audioBufferSourceNode.stop(currentTime);
 
             scriptProcessorNode.onaudioprocess = function (event) {
                 var channelData = event.inputBuffer.getChannelData(0);
@@ -525,7 +525,7 @@ describe('audioContextConstructor', function () {
 
                 if (event.playbackTime > currentTime + 1) {
                     scriptProcessorNode.disconnect(audioContext.destination);
-                    bufferSourceNode.disconnect(scriptProcessorNode);
+                    audioBufferSourceNode.disconnect(scriptProcessorNode);
 
                     done();
                 }
@@ -534,18 +534,18 @@ describe('audioContextConstructor', function () {
 
         it('should ignore calls to stop() of an already stopped AudioBufferSourceNode', function (done) {
             var audioBuffer = audioContext.createBuffer(1, 100, 44100),
-                bufferSourceNode = audioContext.createBufferSource();
+                audioBufferSourceNode = audioContext.createBufferSource();
 
-            bufferSourceNode.onended = function () {
-                bufferSourceNode.stop();
+            audioBufferSourceNode.onended = function () {
+                audioBufferSourceNode.stop();
 
                 done();
             };
 
-            bufferSourceNode.buffer = audioBuffer;
-            bufferSourceNode.connect(audioContext.destination);
-            bufferSourceNode.start();
-            bufferSourceNode.stop();
+            audioBufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.connect(audioContext.destination);
+            audioBufferSourceNode.start();
+            audioBufferSourceNode.stop();
         });
 
     });
@@ -611,23 +611,23 @@ describe('audioContextConstructor', function () {
         });
 
         it('should be connectable', function () {
-            var channelMerger = audioContext.createChannelMerger(),
+            var channelMergerNode = audioContext.createChannelMerger(),
                 gainNode = audioContext.createGain();
 
-            channelMerger.connect(gainNode);
+            channelMergerNode.connect(gainNode);
         });
 
         it('should be chainable', function () {
-            var channelMerger = audioContext.createChannelMerger(),
+            var channelMergerNode = audioContext.createChannelMerger(),
                 gainNode = audioContext.createGain();
 
-            expect(channelMerger.connect(gainNode)).to.equal(gainNode);
+            expect(channelMergerNode.connect(gainNode)).to.equal(gainNode);
         });
 
         it('should handle unconnected channels as silence', function (done) {
             var audioBuffer,
                 audioBufferSourceNode = audioContext.createBufferSource(),
-                channelMerger = audioContext.createChannelMerger(),
+                channelMergerNode = audioContext.createChannelMerger(),
                 sampleRate,
                 scriptProcessorNode,
                 startTime;
@@ -664,7 +664,7 @@ describe('audioContextConstructor', function () {
             };
 
             audioBufferSourceNode
-                .connect(channelMerger, 0, 0)
+                .connect(channelMergerNode, 0, 0)
                 .connect(scriptProcessorNode)
                 .connect(audioContext.destination);
 
@@ -903,8 +903,8 @@ describe('audioContextConstructor', function () {
         });
 
         it('should filter the given input', function (done) {
-            var audioBufferSourceNode,
-                buffer,
+            var audioBuffer,
+                audioBufferSourceNode,
                 gainNode,
                 iIRFilterNode,
                 scriptProcessorNode,
@@ -912,8 +912,8 @@ describe('audioContextConstructor', function () {
 
             this.timeout(10000);
 
+            audioBuffer = audioContext.createBuffer(2, 3, 44100);
             audioBufferSourceNode = audioContext.createBufferSource();
-            buffer = audioContext.createBuffer(2, 3, 44100);
             gainNode = audioContext.createGain();
             iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
             // @todo remove this ugly hack
@@ -921,10 +921,10 @@ describe('audioContextConstructor', function () {
 
             tested = false;
 
-            buffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
-            buffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
+            audioBuffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
+            audioBuffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
 
-            audioBufferSourceNode.buffer = buffer;
+            audioBufferSourceNode.buffer = audioBuffer;
 
             gainNode.gain.value = 0;
 

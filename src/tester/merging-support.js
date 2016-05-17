@@ -13,36 +13,36 @@ export class MergingSupportTester {
     }
 
     test () {
-        var audioContext,
-            bufferSource,
-            channelMerger,
-            scriptProcessor;
+        var audioBufferSourceNode,
+            audioContext,
+            channelMergerNode,
+            scriptProcessorNode;
 
         if (this._audioContextConstructor === null) {
             return Promise.resolve(false);
         }
 
         return new Promise((resolve) => {
-            var buffer,
+            var audioBuffer,
                 startTime;
 
             audioContext = new this._audioContextConstructor();
-            bufferSource = audioContext.createBufferSource();
-            buffer = audioContext.createBuffer(2, 2, audioContext.sampleRate);
-            channelMerger = audioContext.createChannelMerger(2);
+            audioBufferSourceNode = audioContext.createBufferSource();
+            audioBuffer = audioContext.createBuffer(2, 2, audioContext.sampleRate);
+            channelMergerNode = audioContext.createChannelMerger(2);
             // @todo remove this ugly hack
-            scriptProcessor = audioContext._unpatchedAudioContext.createScriptProcessor(256);
+            scriptProcessorNode = audioContext._unpatchedAudioContext.createScriptProcessor(256);
 
             // @todo Safari does not play/loop 1 sample buffers. This should be patched.
-            buffer.getChannelData(0)[0] = 1;
-            buffer.getChannelData(0)[1] = 1;
-            buffer.getChannelData(1)[0] = 1;
-            buffer.getChannelData(1)[1] = 1;
+            audioBuffer.getChannelData(0)[0] = 1;
+            audioBuffer.getChannelData(0)[1] = 1;
+            audioBuffer.getChannelData(1)[0] = 1;
+            audioBuffer.getChannelData(1)[1] = 1;
 
-            bufferSource.buffer = buffer;
-            bufferSource.loop = true;
+            audioBufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.loop = true;
 
-            scriptProcessor.onaudioprocess = (event) => {
+            scriptProcessorNode.onaudioprocess = (event) => {
                 var channelData = event.inputBuffer.getChannelData(1);
 
                 for (let i = 0, length = channelData.length; i < length; i += 1) {
@@ -58,20 +58,20 @@ export class MergingSupportTester {
                 }
             };
 
-            bufferSource.connect(channelMerger, 0, 0);
-            channelMerger.connect(scriptProcessor);
-            scriptProcessor.connect(audioContext.destination);
+            audioBufferSourceNode.connect(channelMergerNode, 0, 0);
+            channelMergerNode.connect(scriptProcessorNode);
+            scriptProcessorNode.connect(audioContext.destination);
 
             startTime = audioContext.currentTime;
 
-            bufferSource.start(startTime);
+            audioBufferSourceNode.start(startTime);
         })
             .then((result) => {
-                bufferSource.stop();
+                audioBufferSourceNode.stop();
 
-                bufferSource.disconnect();
-                channelMerger.disconnect();
-                scriptProcessor.disconnect();
+                audioBufferSourceNode.disconnect();
+                channelMergerNode.disconnect();
+                scriptProcessorNode.disconnect();
 
                 audioContext.close();
 
