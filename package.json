@@ -48,7 +48,7 @@
     "karma-sinon-chai": "^1.1.0",
     "load-grunt-config": "^0.19.2",
     "lolex": "^1.5.0",
-    "mocha": "^2.5.1",
+    "mocha": "^2.5.2",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0",
     "watchify": "^3.7.0"
