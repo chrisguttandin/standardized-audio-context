@@ -37,7 +37,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
         }
 
         get length () {
-            // bug #17: Only Chrome Canary does expose the length up to now.
+            // bug #17: Only Chrome and Opera do expose the length up to now.
             if (this._unpatchedOfflineAudioContext.length === undefined) {
                 return this._length;
             }
