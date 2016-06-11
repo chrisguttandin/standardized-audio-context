@@ -4,13 +4,13 @@ import { NotSupportedErrorFactory } from './not-supported-error';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
 
 function divide (a, b) {
-    var denominator = b[0] * b[0] + b[1] * b[1];
+    var denominator = (b[0] * b[0]) + (b[1] * b[1]);
 
-    return [ ((a[0] * b[0] + a[1] * b[1]) / denominator), ((a[1] * b[0] - a[0] * b[1]) / denominator) ];
+    return [ (((a[0] * b[0]) + (a[1] * b[1])) / denominator), (((a[1] * b[0]) - (a[0] * b[1])) / denominator) ];
 }
 
 function multiply (a, b) {
-    return [ (a[0] * b[0] - a[1] * b[1]), (a[0] * b[1] + a[1] * b[0]) ];
+    return [ ((a[0] * b[0]) - (a[1] * b[1])), ((a[0] * b[1]) + (a[1] * b[0])) ];
 }
 
 function evaluatePolynomial (coefficient, z) {
@@ -60,7 +60,7 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
             denominator = evaluatePolynomial(this._feedback, z);
             response = divide(numerator, denominator);
 
-            magResponse[i] = Math.sqrt(response[0] * response[0] + response[1] * response[1]);
+            magResponse[i] = Math.sqrt((response[0] * response[0]) + (response[1] * response[1]));
             phaseResponse[i] = Math.atan2(response[1], response[0]);
         }
     };

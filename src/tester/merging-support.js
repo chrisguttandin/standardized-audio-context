@@ -53,7 +53,7 @@ export class MergingSupportTester {
                     }
                 }
 
-                if (startTime + 1 / audioContext.sampleRate < event.playbackTime) {
+                if (startTime + (1 / audioContext.sampleRate) < event.playbackTime) {
                     resolve(true);
                 }
             };
