@@ -15,6 +15,7 @@ var angular = require('@angular/core'),
     OfflineAudioBufferSourceNodeFakerFactory = require('../../src/factories/offline-audio-buffer-source-node').OfflineAudioBufferSourceNodeFakerFactory,
     offlineAudioContextConstructor = require('../../src/offline-audio-context-constructor.js').offlineAudioContextConstructor,
     OfflineAudioDestinationNodeFakerFactory = require('../../src/factories/offline-audio-destination-node').OfflineAudioDestinationNodeFakerFactory,
+    OfflineBiquadFilterNodeFakerFactory = require('../../src/factories/offline-biquad-filter-node').OfflineBiquadFilterNodeFakerFactory,
     OfflineGainNodeFakerFactory = require('../../src/factories/offline-gain-node').OfflineGainNodeFakerFactory,
     OfflineIIRFilterNodeFakerFactory = require('../../src/factories/offline-iir-filter-node').OfflineIIRFilterNodeFakerFactory,
     PromiseSupportTester = require('../../src/tester/promise-support').PromiseSupportTester,
@@ -39,6 +40,7 @@ describe('offlineAudioContextConstructor', function () {
                 NotSupportedErrorFactory,
                 OfflineAudioBufferSourceNodeFakerFactory,
                 OfflineAudioDestinationNodeFakerFactory,
+                OfflineBiquadFilterNodeFakerFactory,
                 OfflineGainNodeFakerFactory,
                 OfflineIIRFilterNodeFakerFactory,
                 PromiseSupportTester,
@@ -100,6 +102,77 @@ describe('offlineAudioContextConstructor', function () {
             expect(function () {
                 offlineAudioContext.sampleRate = 22050;
             }).to.throw(TypeError);
+        });
+
+    });
+
+    describe('createBiquadFilter()', function () {
+
+        it('should return an instance of the BiquadFilterNode interface', function () {
+            var biquadFilterNode = offlineAudioContext.createBiquadFilter();
+
+            expect(biquadFilterNode.channelCountMode).to.equal('max');
+            expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
+
+            expect(biquadFilterNode.detune.cancelScheduledValues).to.be.a('function');
+            expect(biquadFilterNode.detune.defaultValue).to.equal(0);
+            expect(biquadFilterNode.detune.exponentialRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.detune.linearRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.detune.setTargetAtTime).to.be.a('function');
+            expect(biquadFilterNode.detune.setValueCurveAtTime).to.be.a('function');
+            expect(biquadFilterNode.detune.value).to.equal(0);
+
+            expect(biquadFilterNode.frequency.cancelScheduledValues).to.be.a('function');
+            expect(biquadFilterNode.frequency.defaultValue).to.equal(350);
+            expect(biquadFilterNode.frequency.exponentialRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.frequency.linearRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.frequency.setTargetAtTime).to.be.a('function');
+            expect(biquadFilterNode.frequency.setValueCurveAtTime).to.be.a('function');
+            expect(biquadFilterNode.frequency.value).to.equal(350);
+
+            expect(biquadFilterNode.gain.cancelScheduledValues).to.be.a('function');
+            expect(biquadFilterNode.gain.defaultValue).to.equal(0);
+            expect(biquadFilterNode.gain.exponentialRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.gain.linearRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.gain.setTargetAtTime).to.be.a('function');
+            expect(biquadFilterNode.gain.setValueCurveAtTime).to.be.a('function');
+            expect(biquadFilterNode.gain.value).to.equal(0);
+
+            expect(biquadFilterNode.getFrequencyResponse).to.be.a('function');
+            expect(biquadFilterNode.numberOfInputs).to.equal(1);
+            expect(biquadFilterNode.numberOfOutputs).to.equal(1);
+
+            expect(biquadFilterNode.Q.cancelScheduledValues).to.be.a('function');
+            expect(biquadFilterNode.Q.defaultValue).to.equal(1);
+            expect(biquadFilterNode.Q.exponentialRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.Q.linearRampToValueAtTime).to.be.a('function');
+            expect(biquadFilterNode.Q.setTargetAtTime).to.be.a('function');
+            expect(biquadFilterNode.Q.setValueCurveAtTime).to.be.a('function');
+            expect(biquadFilterNode.Q.value).to.equal(1);
+
+            expect(biquadFilterNode.type).to.be.a('string');
+        });
+
+        it('should be chainable', function () {
+            var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
+                gainNode = offlineAudioContext.createGain();
+
+            expect(biquadFilterNode.connect(gainNode)).to.equal(gainNode);
+        });
+
+        describe('getFrequencyResponse()', function () {
+
+            it('should fill the magResponse and phaseResponse arrays', function () {
+                var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
+                    magResponse = new Float32Array(5),
+                    phaseResponse = new Float32Array(5);
+
+                biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+
+                expect(Array.from(magResponse)).to.deep.equal([ 1.1107852458953857, 0.8106917142868042, 0.20565471053123474, 0.04845593497157097, 0.011615658178925514 ]);
+                expect(Array.from(phaseResponse)).to.deep.equal([ -0.7254799008369446, -1.8217267990112305, -2.6273605823516846, -2.906902313232422, -3.0283825397491455 ]);
+            });
+
         });
 
     });

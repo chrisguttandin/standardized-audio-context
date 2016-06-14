@@ -13,6 +13,7 @@ import { MergingSupportTester } from './tester/merging-support';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from './factories/offline-audio-buffer-source-node';
 import { OfflineAudioDestinationNodeFakerFactory } from './factories/offline-audio-destination-node';
+import { OfflineBiquadFilterNodeFakerFactory } from './factories/offline-biquad-filter-node';
 import { OfflineGainNodeFakerFactory } from './factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter-node';
 import { PromiseSupportTester } from './tester/promise-support';
@@ -42,6 +43,7 @@ var injector = ReflectiveInjector.resolveAndCreate([
         NotSupportedErrorFactory,
         OfflineAudioBufferSourceNodeFakerFactory,
         OfflineAudioDestinationNodeFakerFactory,
+        OfflineBiquadFilterNodeFakerFactory,
         OfflineGainNodeFakerFactory,
         OfflineIIRFilterNodeFakerFactory,
         PromiseSupportTester,

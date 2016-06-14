@@ -8,12 +8,13 @@ import { Inject } from '@angular/core/src/di/decorators';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from './factories/offline-audio-buffer-source-node';
 import { OfflineAudioDestinationNodeFakerFactory } from './factories/offline-audio-destination-node';
+import { OfflineBiquadFilterNodeFakerFactory } from './factories/offline-biquad-filter-node';
 import { OfflineGainNodeFakerFactory } from './factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter-node';
 import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 
-export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, disconnectingSupportTester, encodingErrorFactory, notSupportedErrorFactory, offlineAudioBufferSourceNodeFakerFactory, offlineAudioDestinationNodeFakerFactory, offlineGainNodeFakerFactory, offlineIIRFilterNodeFakerFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
+export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, disconnectingSupportTester, encodingErrorFactory, notSupportedErrorFactory, offlineAudioBufferSourceNodeFakerFactory, offlineAudioDestinationNodeFakerFactory, offlineBiquadFilterNodeFakerFactory, offlineGainNodeFakerFactory, offlineIIRFilterNodeFakerFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
     return class OfflineAudioContext {
 
         constructor (numberOfChannels, length, sampleRate) {
@@ -47,6 +48,13 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
 
         get sampleRate () {
             return this._unpatchedOfflineAudioContext.sampleRate;
+        }
+
+        createBiquadFilter () {
+            return offlineBiquadFilterNodeFakerFactory.create({
+                fakeNodeStore: this._fakeNodeStore,
+                nativeNode: this._unpatchedOfflineAudioContext.createBiquadFilter()
+            }).proxy;
         }
 
         createBuffer (numberOfChannels, length, sampleRate) {
@@ -170,4 +178,4 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
     };
 }
 
-offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(DisconnectingSupportTester) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(OfflineAudioBufferSourceNodeFakerFactory) ], [ new Inject(OfflineAudioDestinationNodeFakerFactory) ], [ new Inject(OfflineGainNodeFakerFactory) ], [ new Inject(OfflineIIRFilterNodeFakerFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];
+offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(DisconnectingSupportTester) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(OfflineAudioBufferSourceNodeFakerFactory) ], [ new Inject(OfflineAudioDestinationNodeFakerFactory) ], [ new Inject(OfflineBiquadFilterNodeFakerFactory) ], [ new Inject(OfflineGainNodeFakerFactory) ], [ new Inject(OfflineIIRFilterNodeFakerFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];
