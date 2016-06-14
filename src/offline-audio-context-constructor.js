@@ -67,9 +67,11 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
         }
 
         createIIRFilter (feedforward, feedback) {
+            var nativeNode = null;
+
             // bug #9: Only Chrome and Opera currently implement the createIIRFilter() method.
             if (this._unpatchedOfflineAudioContext.createIIRFilter !== undefined) {
-                this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
+                nativeNode = this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
             }
 
             return offlineIIRFilterNodeFakerFactory.create({
@@ -77,6 +79,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
                 feedforward,
                 feedback,
                 length: this.length,
+                nativeNode,
                 sampleRate: this._unpatchedOfflineAudioContext.sampleRate
             }).proxy;
         }

@@ -27,7 +27,7 @@ function evaluatePolynomial (coefficient, z) {
 
 class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
 
-    constructor ({ fakeNodeStore, feedback, feedforward, notSupportedErrorFactory, sampleRate }) {
+    constructor ({ fakeNodeStore, feedback, feedforward, nativeNode, notSupportedErrorFactory, sampleRate }) {
         super({
             channelCountMode: 'max',
             channelInterpretation: 'speakers',
@@ -38,11 +38,17 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
 
         this._feedback = feedback;
         this._feedforward = feedforward;
+        this._nativeNode = nativeNode;
         this._notSupportedErrorFactory = notSupportedErrorFactory;
         this._nyquist = sampleRate / 2;
     }
 
     getFrequencyResponse (frequencyHz, magResponse, phaseResponse) {
+        // bug #9: Only Chrome and Opera currently support IIRFilterNodes.
+        if (this._nativeNode) {
+            return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+        }
+
         if (magResponse.length === 0 || phaseResponse.length === 0) {
             throw this._notSupportedErrorFactory.create();
         }
@@ -69,7 +75,7 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
 
 class OfflineIIRFilterNodeFaker {
 
-    constructor ({ fakeNodeStore, feedback, feedforward, invalidStateErrorFactory, length, notSupportedErrorFactory, sampleRate }) {
+    constructor ({ fakeNodeStore, feedback, feedforward, invalidStateErrorFactory, length, nativeNode, notSupportedErrorFactory, sampleRate }) {
         if (feedback.length === 0 || feedback.length > 20) {
             throw notSupportedErrorFactory.create();
         }
@@ -89,8 +95,9 @@ class OfflineIIRFilterNodeFaker {
         this._feedback = feedback;
         this._feedforward = feedforward;
         this._length = length;
+        this._nativeNode = nativeNode;
         this._node = null;
-        this._proxy = new OfflineIIRFilterNodeProxy({ fakeNodeStore, feedback, feedforward, notSupportedErrorFactory, sampleRate });
+        this._proxy = new OfflineIIRFilterNodeProxy({ fakeNodeStore, feedback, feedforward, nativeNode, notSupportedErrorFactory, sampleRate });
         this._sampleRate = sampleRate;
         this._sources = new Map();
 
@@ -202,7 +209,7 @@ class OfflineIIRFilterNodeFaker {
                 promises.push(source
                     .render(offlineAudioContext)
                     .then((node) => node.connect(this._node, output, input)));
-                }
+            }
 
             return Promise
                 .all(promises)
@@ -213,7 +220,6 @@ class OfflineIIRFilterNodeFaker {
             // @todo Somehow retrieve the number of channels.
             new OfflineAudioContext(2, this._length, this._sampleRate) : // eslint-disable-line no-undef
             new webkitOfflineAudioContext(2, this._length, this._sampleRate); // eslint-disable-line new-cap, no-undef
-        promises = [];
 
         for (let [ source, { input, output } ] of this._sources) {
             promises.push(source
@@ -257,13 +263,14 @@ export class OfflineIIRFilterNodeFakerFactory {
         this._notSupportedErrorFactory = notSupportedErrorFactory;
     }
 
-    create ({ fakeNodeStore, feedforward, feedback, length, sampleRate }) {
+    create ({ fakeNodeStore, feedforward, feedback, length, nativeNode, sampleRate }) {
         return new OfflineIIRFilterNodeFaker({
             fakeNodeStore,
             feedforward,
             feedback,
             invalidStateErrorFactory: this._invalidStateErrorFactory,
             length,
+            nativeNode,
             notSupportedErrorFactory: this._notSupportedErrorFactory,
             sampleRate
         });
