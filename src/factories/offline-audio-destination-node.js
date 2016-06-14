@@ -43,7 +43,7 @@ class OfflineAudioDestinationNodeFaker {
         promises = [];
         this._node = offlineAudioContext.destination;
 
-        for (let [ source, { input, output }] of this._sources) {
+        for (let [ source, { input, output } ] of this._sources) {
             promises.push(source
                 .render(offlineAudioContext)
                 .then((node) => node.connect(this._node, output, input)));

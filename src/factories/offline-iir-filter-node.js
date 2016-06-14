@@ -192,13 +192,30 @@ class OfflineIIRFilterNodeFaker {
             return Promise.resolve(this._node);
         }
 
+        promises = [];
+
+        // bug #9: Only Chrome and Opera currently support IIRFilterNodes.
+        if (this._nativeNode) {
+            this._node = this._nativeNode;
+
+            for (let [ source, { input, output } ] of this._sources) {
+                promises.push(source
+                    .render(offlineAudioContext)
+                    .then((node) => node.connect(this._node, output, input)));
+                }
+
+            return Promise
+                .all(promises)
+                .then(() => this._node);
+        }
+
         partialOfflineAudioContext = ('OfflineAudioContext' in window) ? // eslint-disable-line no-undef
             // @todo Somehow retrieve the number of channels.
             new OfflineAudioContext(2, this._length, this._sampleRate) : // eslint-disable-line no-undef
             new webkitOfflineAudioContext(2, this._length, this._sampleRate); // eslint-disable-line new-cap, no-undef
         promises = [];
 
-        for (let [ source, { input, output }] of this._sources) {
+        for (let [ source, { input, output } ] of this._sources) {
             promises.push(source
                 .render(partialOfflineAudioContext)
                 .then((node) => node.connect(partialOfflineAudioContext.destination, output, input)));
