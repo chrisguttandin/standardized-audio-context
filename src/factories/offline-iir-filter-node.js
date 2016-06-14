@@ -2,6 +2,7 @@ import { Inject } from '@angular/core/src/di/decorators';
 import { InvalidStateErrorFactory } from './invalid-state-error';
 import { NotSupportedErrorFactory } from './not-supported-error';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
+import { PromiseSupportTester } from '../tester/promise-support';
 
 function divide (a, b) {
     var denominator = (b[0] * b[0]) + (b[1] * b[1]);
@@ -75,7 +76,7 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
 
 class OfflineIIRFilterNodeFaker {
 
-    constructor ({ fakeNodeStore, feedback, feedforward, invalidStateErrorFactory, length, nativeNode, notSupportedErrorFactory, sampleRate }) {
+    constructor ({ fakeNodeStore, feedback, feedforward, invalidStateErrorFactory, length, nativeNode, notSupportedErrorFactory, promiseSupportTester, sampleRate }) {
         if (feedback.length === 0 || feedback.length > 20) {
             throw notSupportedErrorFactory.create();
         }
@@ -97,6 +98,7 @@ class OfflineIIRFilterNodeFaker {
         this._length = length;
         this._nativeNode = nativeNode;
         this._node = null;
+        this._promiseSupportTester = promiseSupportTester;
         this._proxy = new OfflineIIRFilterNodeProxy({ fakeNodeStore, feedback, feedforward, nativeNode, notSupportedErrorFactory, sampleRate });
         this._sampleRate = sampleRate;
         this._sources = new Map();
@@ -229,12 +231,18 @@ class OfflineIIRFilterNodeFaker {
 
         return Promise
             .all(promises)
-            // @todo Do not patch startRendering() if it already returns a promise.
-            .then(() => new Promise((resolve) => {
-                partialOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
+            .then(() => {
+                // bug #21 Safari does not support promises yet.
+                if (this._promiseSupportTester.test(partialOfflineAudioContext)) {
+                    return partialOfflineAudioContext.startRendering();
+                }
 
-                partialOfflineAudioContext.startRendering();
-            }))
+                return new Promise((resolve) => {
+                    partialOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
+
+                    partialOfflineAudioContext.startRendering();
+                });
+            })
             .then((renderedBuffer) => {
                 this._node = offlineAudioContext.createBufferSource();
                 this._node.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
@@ -258,9 +266,10 @@ class OfflineIIRFilterNodeFaker {
 
 export class OfflineIIRFilterNodeFakerFactory {
 
-    constructor (invalidStateErrorFactory, notSupportedErrorFactory) {
+    constructor (invalidStateErrorFactory, notSupportedErrorFactory, promiseSupportTester) {
         this._invalidStateErrorFactory = invalidStateErrorFactory;
         this._notSupportedErrorFactory = notSupportedErrorFactory;
+        this._promiseSupportTester = promiseSupportTester;
     }
 
     create ({ fakeNodeStore, feedforward, feedback, length, nativeNode, sampleRate }) {
@@ -272,10 +281,11 @@ export class OfflineIIRFilterNodeFakerFactory {
             length,
             nativeNode,
             notSupportedErrorFactory: this._notSupportedErrorFactory,
+            promiseSupportTester: this._promiseSupportTester,
             sampleRate
         });
     }
 
 }
 
-OfflineIIRFilterNodeFakerFactory.parameters = [ [ new Inject(InvalidStateErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ] ];
+OfflineIIRFilterNodeFakerFactory.parameters = [ [ new Inject(InvalidStateErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ] ];

@@ -290,6 +290,18 @@ describe('audioContextConstructor', function () {
             });
         });
 
+        // bug #21
+
+        it('should not return a promise', function (done) {
+            loadFixture('1000-frames-of-noise.wav', function (err, arrayBuffer) {
+                expect(err).to.be.null;
+
+                expect(audioContext.decodeAudioData(arrayBuffer, function () {})).to.be.undefined;
+
+                done();
+            });
+        });
+
     });
 
 });

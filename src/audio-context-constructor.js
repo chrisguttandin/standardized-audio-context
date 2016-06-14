@@ -542,6 +542,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                 }
             }
 
+            // bug #21 Safari does not support promises yet.
             if (this._isSupportingPromises) {
                 return this._unpatchedAudioContext
                     .decodeAudioData(audioData, successCallback, function (err) {

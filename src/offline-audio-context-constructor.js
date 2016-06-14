@@ -93,6 +93,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
         }
 
         decodeAudioData (audioData, successCallback, errorCallback) {
+            // bug #21 Safari does not support promises yet.
             if (this._isSupportingPromises) {
                 return this._unpatchedOfflineAudioContext
                     .decodeAudioData(audioData, successCallback, function (err) {
@@ -167,12 +168,18 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
         startRendering () {
             return this._destination
                 .render(this._unpatchedOfflineAudioContext)
-                // @todo Do not patch startRendering() if it already returns a promise.
-                .then(() => new Promise((resolve) => {
-                    this._unpatchedOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
+                .then(() => {
+                    // bug #21 Safari does not support promises yet.
+                    if (this._isSupportingPromises) {
+                        return this._unpatchedOfflineAudioContext.startRendering();
+                    }
 
-                    this._unpatchedOfflineAudioContext.startRendering();
-                }));
+                    return new Promise((resolve) => {
+                        this._unpatchedOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
+
+                        this._unpatchedOfflineAudioContext.startRendering();
+                    });
+                });
         }
 
     };

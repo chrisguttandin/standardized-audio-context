@@ -585,4 +585,12 @@ describe('offlineAudioContextConstructor', function () {
 
     });
 
+    describe('startRendering()', function () {
+
+        it('should return a promise', function () {
+            expect(offlineAudioContext.startRendering()).to.be.an.instanceOf(Promise);
+        });
+
+    });
+
 });
