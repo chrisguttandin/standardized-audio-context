@@ -205,7 +205,7 @@ class OfflineIIRFilterNodeFaker {
 
         // bug #9: Only Chrome and Opera currently support IIRFilterNodes.
         if (this._nativeNode) {
-            this._node = this._nativeNode;
+            this._node = offlineAudioContext.createIIRFilter(this._feedforward, this._feedback);
 
             for (let [ source, { input, output } ] of this._sources) {
                 promises.push(source

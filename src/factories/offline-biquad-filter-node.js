@@ -12,26 +12,66 @@ class OfflineBiquadFilterNodeFakerProxy extends OfflineAudioNodeProxy {
         });
 
         this._nativeNode = nativeNode;
+        this._type = nativeNode.type;
     }
 
     get detune () {
-        return this._nativeNode.detune;
+        // @todo Fake a proper AudioParam.
+        return {
+            cancelScheduledValues: () => {},
+            defaultValue: 0,
+            exponentialRampToValueAtTime: () => {},
+            linearRampToValueAtTime: () => {},
+            setTargetAtTime: () => {},
+            setValueCurveAtTime: () => {},
+            value: 0
+        };
+    }
+    get frequency () {
+        // @todo Fake a proper AudioParam.
+        return {
+            cancelScheduledValues: () => {},
+            defaultValue: 350,
+            exponentialRampToValueAtTime: () => {},
+            linearRampToValueAtTime: () => {},
+            setTargetAtTime: () => {},
+            setValueCurveAtTime: () => {},
+            value: 350
+        };
     }
 
     get gain () {
-        return this._nativeNode.gain;
-    }
-
-    get frequency () {
-        return this._nativeNode.frequency;
+        // @todo Fake a proper AudioParam.
+        return {
+            cancelScheduledValues: () => {},
+            defaultValue: 0,
+            exponentialRampToValueAtTime: () => {},
+            linearRampToValueAtTime: () => {},
+            setTargetAtTime: () => {},
+            setValueCurveAtTime: () => {},
+            value: 0
+        };
     }
 
     get Q () {
-        return this._nativeNode.Q;
+        // @todo Fake a proper AudioParam.
+        return {
+            cancelScheduledValues: () => {},
+            defaultValue: 1,
+            exponentialRampToValueAtTime: () => {},
+            linearRampToValueAtTime: () => {},
+            setTargetAtTime: () => {},
+            setValueCurveAtTime: () => {},
+            value: 1
+        };
     }
 
     get type () {
-        return this._nativeNode.type;
+        return this._type;
+    }
+
+    set type (value) {
+        this._type = value;
     }
 
     getFrequencyResponse (frequencyHz, magResponse, phaseResponse) {
@@ -62,7 +102,9 @@ class OfflineBiquadFilterNodeFaker {
         }
 
         promises = [];
-        this._node = this._nativeNode;
+        this._node = offlineAudioContext.createBiquadFilter();
+
+        this._node.type = this._proxy.type;
 
         for (let [ source, { input, output } ] of this._sources) {
             promises.push(source
