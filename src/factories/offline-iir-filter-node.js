@@ -3,6 +3,7 @@ import { InvalidStateErrorFactory } from './invalid-state-error';
 import { NotSupportedErrorFactory } from './not-supported-error';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
 import { PromiseSupportTester } from '../tester/promise-support';
+import { unpatchedOfflineAudioContextConstructor } from '../unpatched-offline-audio-context-constructor';
 
 function divide (a, b) {
     var denominator = (b[0] * b[0]) + (b[1] * b[1]);
@@ -76,7 +77,7 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
 
 class OfflineIIRFilterNodeFaker {
 
-    constructor ({ fakeNodeStore, feedback, feedforward, invalidStateErrorFactory, length, nativeNode, notSupportedErrorFactory, promiseSupportTester, sampleRate }) {
+    constructor ({ fakeNodeStore, feedback, feedforward, invalidStateErrorFactory, length, nativeNode, notSupportedErrorFactory, promiseSupportTester, sampleRate, unpatchedOfflineAudioContextConstructor }) {
         if (feedback.length === 0 || feedback.length > 20) {
             throw notSupportedErrorFactory.create();
         }
@@ -102,6 +103,7 @@ class OfflineIIRFilterNodeFaker {
         this._proxy = new OfflineIIRFilterNodeProxy({ fakeNodeStore, feedback, feedforward, nativeNode, notSupportedErrorFactory, sampleRate });
         this._sampleRate = sampleRate;
         this._sources = new Map();
+        this._unpatchedOfflineAudioContextConstructor = unpatchedOfflineAudioContextConstructor;
 
         fakeNodeStore.set(this._proxy, this);
     }
@@ -218,10 +220,10 @@ class OfflineIIRFilterNodeFaker {
                 .then(() => this._node);
         }
 
-        partialOfflineAudioContext = ('OfflineAudioContext' in window) ? // eslint-disable-line no-undef
-            // @todo Somehow retrieve the number of channels.
-            new OfflineAudioContext(2, this._length, this._sampleRate) : // eslint-disable-line no-undef
-            new webkitOfflineAudioContext(2, this._length, this._sampleRate); // eslint-disable-line new-cap, no-undef
+        // @todo Somehow retrieve the number of channels.
+        /* eslint-disable new-cap */
+        partialOfflineAudioContext = new this._unpatchedOfflineAudioContextConstructor(2, this._length, this._sampleRate);
+        /* eslint-enable new-cap */
 
         for (let [ source, { input, output } ] of this._sources) {
             promises.push(source
@@ -266,10 +268,11 @@ class OfflineIIRFilterNodeFaker {
 
 export class OfflineIIRFilterNodeFakerFactory {
 
-    constructor (invalidStateErrorFactory, notSupportedErrorFactory, promiseSupportTester) {
+    constructor (invalidStateErrorFactory, notSupportedErrorFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
         this._invalidStateErrorFactory = invalidStateErrorFactory;
         this._notSupportedErrorFactory = notSupportedErrorFactory;
         this._promiseSupportTester = promiseSupportTester;
+        this._unpatchedOfflineAudioContextConstructor = unpatchedOfflineAudioContextConstructor;
     }
 
     create ({ fakeNodeStore, feedforward, feedback, length, nativeNode, sampleRate }) {
@@ -282,10 +285,11 @@ export class OfflineIIRFilterNodeFakerFactory {
             nativeNode,
             notSupportedErrorFactory: this._notSupportedErrorFactory,
             promiseSupportTester: this._promiseSupportTester,
-            sampleRate
+            sampleRate,
+            unpatchedOfflineAudioContextConstructor: this._unpatchedOfflineAudioContextConstructor
         });
     }
 
 }
 
-OfflineIIRFilterNodeFakerFactory.parameters = [ [ new Inject(InvalidStateErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ] ];
+OfflineIIRFilterNodeFakerFactory.parameters = [ [ new Inject(InvalidStateErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];
