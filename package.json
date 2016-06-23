@@ -36,7 +36,7 @@
     "grunt-modernizr": "^1.0.2",
     "grunt-replace": "^1.0.1",
     "gruntify-eslint": "^2.0.0",
-    "karma": "^0.13.22",
+    "karma": "^1.0.0",
     "karma-browserify": "^5.0.5",
     "karma-browserstack-launcher": "^1.0.1",
     "karma-chrome-launcher": "^1.0.1",
