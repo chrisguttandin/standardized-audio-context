@@ -1,6 +1,4 @@
-'use strict';
-
-var wndw = require('../../src/window.js').window;
+import { window as wndw } from '../../src/window';
 
 describe('window', function () {
 

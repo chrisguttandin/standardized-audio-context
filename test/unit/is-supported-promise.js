@@ -1,11 +1,8 @@
-'use strict';
-
-require('reflect-metadata');
-
-var angular = require('@angular/core'),
-    isSupportedPromise = require('../../src/is-supported-promise.js').isSupportedPromise,
-    MergingSupportTester = require('../../src/tester/merging-support.js').MergingSupportTester,
-    modernizr = require('../../src/modernizr.js').modernizr;
+import 'reflect-metadata';
+import { MergingSupportTester } from '../../src/tester/merging-support';
+import { ReflectiveInjector } from '@angular/core';
+import { isSupportedPromise } from '../../src/is-supported-promise';
+import { modernizr } from '../../src/modernizr';
 
 describe('isSupportedPromise', function () {
 
@@ -24,10 +21,10 @@ describe('isSupportedPromise', function () {
             webaudio: true
         };
 
-        injector = angular.ReflectiveInjector.resolveAndCreate([
-            angular.provide(MergingSupportTester, { useValue: fakeMergingSupportTester }),
-            angular.provide(isSupportedPromise, { useFactory: isSupportedPromise }),
-            angular.provide(modernizr, { useValue: fakeModernizr })
+        injector = ReflectiveInjector.resolveAndCreate([
+            { provide: MergingSupportTester, useValue: fakeMergingSupportTester },
+            { provide: isSupportedPromise, useFactory: isSupportedPromise },
+            { provide: modernizr, useValue: fakeModernizr }
         ]);
     });
 

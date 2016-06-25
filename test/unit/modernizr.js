@@ -1,6 +1,4 @@
-'use strict';
-
-var modernizr = require('../../src/modernizr.js').modernizr;
+import { modernizr } from '../../src/modernizr';
 
 describe('modernizr', function () {
 
