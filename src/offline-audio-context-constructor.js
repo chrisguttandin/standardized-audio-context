@@ -33,6 +33,10 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             this._unpatchedOfflineAudioContext = unpatchedOfflineAudioContext;
         }
 
+        // get currentTime () {
+        //     return this._unpatchedOfflineAudioContext.currentTime;
+        // }
+
         get destination () {
             return this._destination.proxy;
         }
@@ -165,6 +169,10 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             });
         }
 
+        // resume () {
+        //     return this._unpatchedOfflineAudioContext.resume();
+        // }
+
         startRendering () {
             return this._destination
                 .render(this._unpatchedOfflineAudioContext)
@@ -181,6 +189,10 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
                     });
                 });
         }
+
+        // suspend (suspendTime) {
+        //     return this._unpatchedOfflineAudioContext.suspend(suspendTime);
+        // }
 
     };
 }

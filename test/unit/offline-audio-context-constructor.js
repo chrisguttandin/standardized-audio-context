@@ -592,4 +592,39 @@ describe('offlineAudioContextConstructor', function () {
 
     });
 
+    // describe('suspend()', function () {
+    //
+    //     it('should suspend the render process at the render quantum', function (done) {
+    //         offlineAudioContext
+    //             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
+    //             .then(() => {
+    //                 expect(offlineAudioContext.currentTime).to.equal(0);
+    //
+    //                 offlineAudioContext.resume();
+    //
+    //                 done();
+    //             });
+    //
+    //         offlineAudioContext.startRendering();
+    //     });
+    //
+    //     it('should not allow to suspend the render process more than once at the render quantum', function (done) {
+    //         offlineAudioContext
+    //             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
+    //             .then(() => offlineAudioContext.resume());
+    //
+    //         offlineAudioContext
+    //             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
+    //             .catch((err) => {
+    //                 expect(err.code).to.equal(11);
+    //                 expect(err.name).to.equal('InvalidStateError');
+    //
+    //                 done();
+    //             });
+    //
+    //         offlineAudioContext.startRendering();
+    //     });
+    //
+    // });
+
 });
