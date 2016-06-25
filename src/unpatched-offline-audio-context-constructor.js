@@ -1,5 +1,5 @@
 import { Inject } from '@angular/core/src/di/decorators';
-import { window } from './window.js';
+import { window } from './window';
 
 export function unpatchedOfflineAudioContextConstructor (window) {
     return (window.hasOwnProperty('OfflineAudioContext')) ?
