@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { ReflectiveInjector } from '@angular/core';
-import { loadFixture } from '../../helper/load-fixture';
+import { loadFixture } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 import { unpatchedAudioContextConstructor } from '../../../../src/unpatched-audio-context-constructor';
 import { window as wndw } from '../../../../src/window';

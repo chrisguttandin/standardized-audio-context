@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { ReflectiveInjector } from '@angular/core';
-import { unpatchedAudioContextConstructor } from '../../../../src/unpatched-audio-context-constructor';
-import { window as wndw } from '../../../../src/window';
+import { unpatchedAudioContextConstructor } from '../../../src/unpatched-audio-context-constructor';
+import { window as wndw } from '../../../src/window';
 
 describe('audioContextConstructor', function () {
 
