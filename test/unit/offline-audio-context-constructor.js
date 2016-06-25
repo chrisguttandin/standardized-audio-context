@@ -1,27 +1,24 @@
-'use strict';
-
-require('reflect-metadata');
-
-var angular = require('@angular/core'),
-    AudioBufferWrapper = require('../../src/wrapper/audio-buffer.js').AudioBufferWrapper,
-    AudioNodeConnectMethodWrapper = require('../../src/wrapper/audio-node-connect-method').AudioNodeConnectMethodWrapper,
-    AudioNodeDisconnectMethodWrapper = require('../../src/wrapper/audio-node-disconnect-method').AudioNodeDisconnectMethodWrapper,
-    ChainingSupportTester = require('../../src/tester/chaining-support.js').ChainingSupportTester,
-    DisconnectingSupportTester = require('../../src/tester/disconnecting-support.js').DisconnectingSupportTester,
-    EncodingErrorFactory = require('../../src/factories/encoding-error').EncodingErrorFactory,
-    InvalidStateErrorFactory = require( '../../src/factories/invalid-state-error').InvalidStateErrorFactory,
-    loadFixture = require('../helper/load-fixture.js'),
-    NotSupportedErrorFactory = require( '../../src/factories/not-supported-error').NotSupportedErrorFactory,
-    OfflineAudioBufferSourceNodeFakerFactory = require('../../src/factories/offline-audio-buffer-source-node').OfflineAudioBufferSourceNodeFakerFactory,
-    offlineAudioContextConstructor = require('../../src/offline-audio-context-constructor.js').offlineAudioContextConstructor,
-    OfflineAudioDestinationNodeFakerFactory = require('../../src/factories/offline-audio-destination-node').OfflineAudioDestinationNodeFakerFactory,
-    OfflineBiquadFilterNodeFakerFactory = require('../../src/factories/offline-biquad-filter-node').OfflineBiquadFilterNodeFakerFactory,
-    OfflineGainNodeFakerFactory = require('../../src/factories/offline-gain-node').OfflineGainNodeFakerFactory,
-    OfflineIIRFilterNodeFakerFactory = require('../../src/factories/offline-iir-filter-node').OfflineIIRFilterNodeFakerFactory,
-    PromiseSupportTester = require('../../src/tester/promise-support').PromiseSupportTester,
-    sinon = require('sinon'),
-    unpatchedOfflineAudioContextConstructor = require('../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
-    wndw = require('../../src/window.js').window;
+import 'reflect-metadata';
+import { AudioBufferWrapper } from '../../src/wrapper/audio-buffer';
+import { AudioNodeConnectMethodWrapper } from '../../src/wrapper/audio-node-connect-method';
+import { AudioNodeDisconnectMethodWrapper } from '../../src/wrapper/audio-node-disconnect-method';
+import { ChainingSupportTester } from '../../src/tester/chaining-support';
+import { DisconnectingSupportTester } from '../../src/tester/disconnecting-support';
+import { EncodingErrorFactory } from '../../src/factories/encoding-error';
+import { InvalidStateErrorFactory } from  '../../src/factories/invalid-state-error';
+import { NotSupportedErrorFactory } from  '../../src/factories/not-supported-error';
+import { OfflineAudioBufferSourceNodeFakerFactory } from '../../src/factories/offline-audio-buffer-source-node';
+import { OfflineAudioDestinationNodeFakerFactory } from '../../src/factories/offline-audio-destination-node';
+import { OfflineBiquadFilterNodeFakerFactory } from '../../src/factories/offline-biquad-filter-node';
+import { OfflineGainNodeFakerFactory } from '../../src/factories/offline-gain-node';
+import { OfflineIIRFilterNodeFakerFactory } from '../../src/factories/offline-iir-filter-node';
+import { PromiseSupportTester } from '../../src/tester/promise-support';
+import { ReflectiveInjector } from '@angular/core';
+import { loadFixture } from '../helper/load-fixture';
+import { offlineAudioContextConstructor } from '../../src/offline-audio-context-constructor';
+import { spy } from 'sinon';
+import { unpatchedOfflineAudioContextConstructor } from '../../src/unpatched-offline-audio-context-constructor';
+import { window as wndw } from '../../src/window';
 
 describe('offlineAudioContextConstructor', function () {
 
@@ -29,7 +26,8 @@ describe('offlineAudioContextConstructor', function () {
         OfflineAudioContext;
 
     beforeEach(function () {
-        var injector = angular.ReflectiveInjector.resolveAndCreate([
+        /* eslint-disable indent */
+        var injector = ReflectiveInjector.resolveAndCreate([
                 AudioBufferWrapper,
                 AudioNodeConnectMethodWrapper,
                 AudioNodeDisconnectMethodWrapper,
@@ -44,10 +42,11 @@ describe('offlineAudioContextConstructor', function () {
                 OfflineGainNodeFakerFactory,
                 OfflineIIRFilterNodeFakerFactory,
                 PromiseSupportTester,
-                angular.provide(offlineAudioContextConstructor, { useFactory: offlineAudioContextConstructor }),
-                angular.provide(unpatchedOfflineAudioContextConstructor, { useFactory: unpatchedOfflineAudioContextConstructor }),
-                angular.provide(wndw, { useValue: window })
+                { provide: offlineAudioContextConstructor, useFactory: offlineAudioContextConstructor },
+                { provide: unpatchedOfflineAudioContextConstructor, useFactory: unpatchedOfflineAudioContextConstructor },
+                { provide: wndw, useValue: window }
             ]);
+        /* eslint-enable indent */
 
         OfflineAudioContext = injector.get(offlineAudioContextConstructor);
 
@@ -459,7 +458,7 @@ describe('offlineAudioContextConstructor', function () {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', function (done) {
-                var errorCallback = sinon.spy();
+                var errorCallback = spy();
 
                 offlineAudioContext
                     .decodeAudioData(null, function () {}, errorCallback)
@@ -511,7 +510,7 @@ describe('offlineAudioContextConstructor', function () {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', function (done) {
-                var errorCallback = sinon.spy();
+                var errorCallback = spy();
 
                 offlineAudioContext
                     .decodeAudioData(arrayBuffer, function () {}, errorCallback)
@@ -572,7 +571,7 @@ describe('offlineAudioContextConstructor', function () {
 
             // The promise is resolved before but the successCallback gets called synchronously.
             it('should call the successCallback before the promise gets resolved', function () {
-                var successCallback = sinon.spy();
+                var successCallback = spy();
 
                 return offlineAudioContext
                     .decodeAudioData(arrayBuffer, successCallback)

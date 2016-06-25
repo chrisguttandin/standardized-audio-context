@@ -1,10 +1,7 @@
-'use strict';
-
-require('reflect-metadata');
-
-var angular = require('@angular/core'),
-    unpatchedOfflineAudioContextConstructor = require('../../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
-    wndw = require('../../../src/window.js').window;
+import 'reflect-metadata';
+import { ReflectiveInjector } from '@angular/core';
+import { unpatchedOfflineAudioContextConstructor } from '../../../src/unpatched-offline-audio-context-constructor';
+import { window as wndw } from '../../../src/window';
 
 describe('offlineAudioContextConstructor', function () {
 
@@ -12,10 +9,12 @@ describe('offlineAudioContextConstructor', function () {
         OfflineAudioContext;
 
     beforeEach(function () {
-        var injector = angular.ReflectiveInjector.resolveAndCreate([
-                angular.provide(unpatchedOfflineAudioContextConstructor, { useFactory: unpatchedOfflineAudioContextConstructor }),
-                angular.provide(wndw, { useValue: window })
+        /* eslint-disable indent */
+        var injector = ReflectiveInjector.resolveAndCreate([
+                { provide: unpatchedOfflineAudioContextConstructor, useFactory: unpatchedOfflineAudioContextConstructor },
+                { provide: wndw, useValue: window }
             ]);
+        /* eslint-enable indent */
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 

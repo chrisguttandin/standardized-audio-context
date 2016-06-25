@@ -1,25 +1,22 @@
-'use strict';
-
-require('reflect-metadata');
-
-var angular = require('@angular/core'),
-    AudioBufferSourceNodeStopMethodWrapper = require('../../src/wrapper/audio-buffer-source-node-stop-method.js').AudioBufferSourceNodeStopMethodWrapper,
-    AudioBufferWrapper = require('../../src/wrapper/audio-buffer.js').AudioBufferWrapper,
-    audioContextConstructor = require('../../src/audio-context-constructor.js').audioContextConstructor,
-    AudioNodeConnectMethodWrapper = require('../../src/wrapper/audio-node-connect-method.js').AudioNodeConnectMethodWrapper,
-    AudioNodeDisconnectMethodWrapper = require('../../src/wrapper/audio-node-disconnect-method.js').AudioNodeDisconnectMethodWrapper,
-    ChainingSupportTester = require('../../src/tester/chaining-support.js').ChainingSupportTester,
-    ChannelMergerNodeWrapper = require('../../src/wrapper/channel-merger-node.js').ChannelMergerNodeWrapper,
-    EncodingErrorFactory = require('../../src/factories/encoding-error').EncodingErrorFactory,
-    IIRFilterNodeFaker = require('../../src/fakers/iir-filter-node').IIRFilterNodeFaker,
-    InvalidStateErrorFactory = require( '../../src/factories/invalid-state-error').InvalidStateErrorFactory,
-    loadFixture = require('../helper/load-fixture.js'),
-    NotSupportedErrorFactory = require( '../../src/factories/not-supported-error').NotSupportedErrorFactory,
-    PromiseSupportTester = require('../../src/tester/promise-support').PromiseSupportTester,
-    StopStoppedSupportTester = require('../../src/tester/stop-stopped-support').StopStoppedSupportTester,
-    sinon = require('sinon'),
-    unpatchedAudioContextConstructor = require('../../src/unpatched-audio-context-constructor.js').unpatchedAudioContextConstructor,
-    wndw = require('../../src/window.js').window;
+import 'reflect-metadata';
+import { AudioBufferSourceNodeStopMethodWrapper } from '../../src/wrapper/audio-buffer-source-node-stop-method';
+import { AudioBufferWrapper } from '../../src/wrapper/audio-buffer';
+import { AudioNodeConnectMethodWrapper } from '../../src/wrapper/audio-node-connect-method';
+import { AudioNodeDisconnectMethodWrapper } from '../../src/wrapper/audio-node-disconnect-method';
+import { ChainingSupportTester } from '../../src/tester/chaining-support';
+import { ChannelMergerNodeWrapper } from '../../src/wrapper/channel-merger-node';
+import { EncodingErrorFactory } from '../../src/factories/encoding-error';
+import { IIRFilterNodeFaker } from '../../src/fakers/iir-filter-node';
+import { InvalidStateErrorFactory } from '../../src/factories/invalid-state-error';
+import { NotSupportedErrorFactory } from '../../src/factories/not-supported-error';
+import { PromiseSupportTester } from '../../src/tester/promise-support';
+import { ReflectiveInjector } from '@angular/core';
+import { StopStoppedSupportTester } from '../../src/tester/stop-stopped-support';
+import { audioContextConstructor } from '../../src/audio-context-constructor';
+import { loadFixture } from '../helper/load-fixture';
+import { spy } from 'sinon';
+import { unpatchedAudioContextConstructor } from '../../src/unpatched-audio-context-constructor';
+import { window as wndw } from '../../src/window';
 
 describe('audioContextConstructor', function () {
 
@@ -31,7 +28,8 @@ describe('audioContextConstructor', function () {
     });
 
     beforeEach(function () {
-        var injector = angular.ReflectiveInjector.resolveAndCreate([
+        /* eslint-disable indent */
+        var injector = ReflectiveInjector.resolveAndCreate([
                 AudioBufferSourceNodeStopMethodWrapper,
                 AudioBufferWrapper,
                 AudioNodeConnectMethodWrapper,
@@ -44,10 +42,11 @@ describe('audioContextConstructor', function () {
                 NotSupportedErrorFactory,
                 PromiseSupportTester,
                 StopStoppedSupportTester,
-                angular.provide(audioContextConstructor, { useFactory: audioContextConstructor }),
-                angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
-                angular.provide(wndw, { useValue: window })
+                { provide: audioContextConstructor, useFactory: audioContextConstructor },
+                { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
+                { provide: wndw, useValue: window }
             ]);
+        /* eslint-enable indent */
 
         AudioContext = injector.get(audioContextConstructor);
 
@@ -658,7 +657,7 @@ describe('audioContextConstructor', function () {
                     }
                 }
 
-                if (startTime + 1 / sampleRate < event.playbackTime) {
+                if (startTime + (1 / sampleRate) < event.playbackTime) {
                     done();
                 }
             };
@@ -1113,7 +1112,7 @@ describe('audioContextConstructor', function () {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', function (done) {
-                var errorCallback = sinon.spy();
+                var errorCallback = spy();
 
                 audioContext
                     .decodeAudioData(null, function () {}, errorCallback)
@@ -1165,7 +1164,7 @@ describe('audioContextConstructor', function () {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', function (done) {
-                var errorCallback = sinon.spy();
+                var errorCallback = spy();
 
                 audioContext
                     .decodeAudioData(arrayBuffer, function () {}, errorCallback)
@@ -1226,7 +1225,7 @@ describe('audioContextConstructor', function () {
 
             // The promise is resolved before but the successCallback gets called synchronously.
             it('should call the successCallback before the promise gets resolved', function () {
-                var successCallback = sinon.spy();
+                var successCallback = spy();
 
                 return audioContext
                     .decodeAudioData(arrayBuffer, successCallback)

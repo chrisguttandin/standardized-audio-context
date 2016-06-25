@@ -1,10 +1,7 @@
-'use strict';
-
-require('reflect-metadata');
-
-var angular = require('@angular/core'),
-    unpatchedAudioContextConstructor = require('../../../src/unpatched-audio-context-constructor.js').unpatchedAudioContextConstructor,
-    wndw = require('../../../src/window.js').window;
+import 'reflect-metadata';
+import { ReflectiveInjector } from '@angular/core';
+import { unpatchedAudioContextConstructor } from '../../../../src/unpatched-audio-context-constructor';
+import { window as wndw } from '../../../../src/window';
 
 describe('audioContextConstructor', function () {
 
@@ -12,10 +9,12 @@ describe('audioContextConstructor', function () {
         AudioContext;
 
     beforeEach(function () {
-        var injector = angular.ReflectiveInjector.resolveAndCreate([
-                angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
-                angular.provide(wndw, { useValue: window })
+        /* eslint-disable indent */
+        var injector = ReflectiveInjector.resolveAndCreate([
+                { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
+                { provide: wndw, useValue: window }
             ]);
+        /* eslint-enable indent */
 
         AudioContext = injector.get(unpatchedAudioContextConstructor);
 

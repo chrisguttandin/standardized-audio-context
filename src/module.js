@@ -25,7 +25,7 @@ import { modernizr } from './modernizr';
 import { offlineAudioContextConstructor } from './offline-audio-context-constructor';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
-import { window } from './window.js';
+import { window } from './window';
 
 /* eslint-disable indent, new-cap */
 var injector = ReflectiveInjector.resolveAndCreate([

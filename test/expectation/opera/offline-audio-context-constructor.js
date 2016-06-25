@@ -1,11 +1,8 @@
-'use strict';
-
-require('reflect-metadata');
-
-var angular = require('@angular/core'),
-    sinon = require('sinon'),
-    unpatchedOfflineAudioContextConstructor = require('../../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
-    wndw = require('../../../src/window.js').window;
+import 'reflect-metadata';
+import { spy, stub } from 'sinon';
+import { ReflectiveInjector } from '@angular/core';
+import { unpatchedOfflineAudioContextConstructor } from '../../../src/unpatched-offline-audio-context-constructor';
+import { window as wndw } from '../../../src/window';
 
 describe('offlineAudioContextConstructor', function () {
 
@@ -13,10 +10,12 @@ describe('offlineAudioContextConstructor', function () {
         OfflineAudioContext;
 
     beforeEach(function () {
-        var injector = angular.ReflectiveInjector.resolveAndCreate([
-                angular.provide(unpatchedOfflineAudioContextConstructor, { useFactory: unpatchedOfflineAudioContextConstructor }),
-                angular.provide(wndw, { useValue: window })
+        /* eslint-disable indent */
+        var injector = ReflectiveInjector.resolveAndCreate([
+                { provide: unpatchedOfflineAudioContextConstructor, useFactory: unpatchedOfflineAudioContextConstructor },
+                { provide: wndw, useValue: window }
             ]);
+        /* eslint-enable indent */
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
@@ -68,7 +67,7 @@ describe('offlineAudioContextConstructor', function () {
             var scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
-            scriptProcessorNode.onaudioprocess = sinon.stub();
+            scriptProcessorNode.onaudioprocess = stub();
 
             offlineAudioContext.oncomplete = () => {
                 expect(scriptProcessorNode.onaudioprocess.callCount).to.be.below(1000);
@@ -116,7 +115,7 @@ describe('offlineAudioContextConstructor', function () {
                 .catch(function (err) {
                     expect(err).to.be.an.instanceOf(TypeError);
 
-                    expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'AudioContext': parameter 1 is not of type 'ArrayBuffer'."); // jshint ignore:line
+                    expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'AudioContext': parameter 1 is not of type 'ArrayBuffer'.");
 
                     done();
                 });
@@ -125,7 +124,7 @@ describe('offlineAudioContextConstructor', function () {
         // bug #6
 
         it('should not call the errorCallback at all', function (done) {
-            var errorCallback = sinon.spy();
+            var errorCallback = spy();
 
             offlineAudioContext.decodeAudioData(null, function () {}, errorCallback);
 

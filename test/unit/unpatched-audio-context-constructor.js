@@ -1,10 +1,7 @@
-'use strict';
-
-require('reflect-metadata');
-
-var angular = require('@angular/core'),
-    unpatchedAudioContextConstructor = require('../../src/unpatched-audio-context-constructor.js').unpatchedAudioContextConstructor,
-    wndw = require('../../src/window.js').window;
+import 'reflect-metadata';
+import { ReflectiveInjector } from '@angular/core';
+import { unpatchedAudioContextConstructor } from '../../src/unpatched-audio-context-constructor';
+import { window as wndw } from '../../src/window';
 
 describe('unpatchedAudioContextConstructor', function () {
 
@@ -21,49 +18,55 @@ describe('unpatchedAudioContextConstructor', function () {
     it('should return null if there is no AudioContext', function () {
         var fakeWindow = {};
 
-        injector = angular.ReflectiveInjector.resolveAndCreate([
-            angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
-            angular.provide(wndw, { useValue: fakeWindow })
+        injector = ReflectiveInjector.resolveAndCreate([
+            { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
+            { provide: wndw, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedAudioContextConstructor)).to.equal(null);
     });
 
     it('should return the prefixed AudioContext', function () {
+        /* eslint-disable indent */
         var fakeWindow = {
-                webkitAudioContext: webkitAudioContext
+                webkitAudioContext
             };
+        /* eslint-enable indent */
 
-        injector = angular.ReflectiveInjector.resolveAndCreate([
-            angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
-            angular.provide(window, { useValue: fakeWindow })
+        injector = ReflectiveInjector.resolveAndCreate([
+            { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
+            { provide: wndw, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedAudioContextConstructor)).to.equal(webkitAudioContext);
     });
 
     it('should return the unprefixed AudioContext', function () {
+        /* eslint-disable indent */
         var fakeWindow = {
-                AudioContext: AudioContext
+                AudioContext
             };
+        /* eslint-enable indent */
 
-        injector = angular.ReflectiveInjector.resolveAndCreate([
-            angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
-            angular.provide(window, { useValue: fakeWindow })
+        injector = ReflectiveInjector.resolveAndCreate([
+            { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
+            { provide: wndw, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedAudioContextConstructor)).to.equal(AudioContext);
     });
 
     it('should return the unprefixed AudioContext even if there is a prefixed version as well', function () {
+        /* eslint-disable indent */
         var fakeWindow = {
-                AudioContext: AudioContext,
-                webkitAudioContext: webkitAudioContext
+                AudioContext,
+                webkitAudioContext
             };
+        /* eslint-enable indent */
 
-        injector = angular.ReflectiveInjector.resolveAndCreate([
-            angular.provide(unpatchedAudioContextConstructor, { useFactory: unpatchedAudioContextConstructor }),
-            angular.provide(window, { useValue: fakeWindow })
+        injector = ReflectiveInjector.resolveAndCreate([
+            { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
+            { provide: wndw, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedAudioContextConstructor)).to.equal(AudioContext);

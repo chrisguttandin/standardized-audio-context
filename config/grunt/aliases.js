@@ -11,8 +11,7 @@ module.exports = {
         'watch:continuous'
     ],
     lint: [
-        'eslint',
-        'jshint'
+        'eslint'
     ],
     test: [
         'build',

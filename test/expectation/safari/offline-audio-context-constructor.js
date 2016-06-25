@@ -1,12 +1,9 @@
-'use strict';
-
-require('reflect-metadata');
-
-var angular = require('@angular/core'),
-    loadFixture = require('../../helper/load-fixture.js'),
-    sinon = require('sinon'),
-    unpatchedOfflineAudioContextConstructor = require('../../../src/unpatched-offline-audio-context-constructor.js').unpatchedOfflineAudioContextConstructor,
-    wndw = require('../../../src/window.js').window;
+import 'reflect-metadata';
+import { ReflectiveInjector } from '@angular/core';
+import { loadFixture } from '../../helper/load-fixture';
+import { stub } from 'sinon';
+import { unpatchedOfflineAudioContextConstructor } from '../../../src/unpatched-offline-audio-context-constructor';
+import { window as wndw } from '../../../src/window';
 
 describe('offlineAudioContextConstructor', function () {
 
@@ -14,10 +11,12 @@ describe('offlineAudioContextConstructor', function () {
         OfflineAudioContext;
 
     beforeEach(function () {
-        var injector = angular.ReflectiveInjector.resolveAndCreate([
-                angular.provide(unpatchedOfflineAudioContextConstructor, { useFactory: unpatchedOfflineAudioContextConstructor }),
-                angular.provide(wndw, { useValue: window })
+        /* eslint-disable indent */
+        var injector = ReflectiveInjector.resolveAndCreate([
+                { provide: unpatchedOfflineAudioContextConstructor, useFactory: unpatchedOfflineAudioContextConstructor },
+                { provide: wndw, useValue: window }
             ]);
+        /* eslint-enable indent */
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
@@ -217,7 +216,7 @@ describe('offlineAudioContextConstructor', function () {
             var scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
-            scriptProcessorNode.onaudioprocess = sinon.stub();
+            scriptProcessorNode.onaudioprocess = stub();
 
             offlineAudioContext.oncomplete = () => {
                 expect(scriptProcessorNode.onaudioprocess.callCount).to.be.below(1000);
@@ -230,10 +229,7 @@ describe('offlineAudioContextConstructor', function () {
         // bug #13
 
         it('should not have any output', function (done) {
-            var channelData,
-                scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
-
-            channelData = new Float32Array(scriptProcessorNode.bufferSize);
+            var scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
             scriptProcessorNode.onaudioprocess = function (event) {
@@ -281,7 +277,7 @@ describe('offlineAudioContextConstructor', function () {
             try {
                 offlineAudioContext.decodeAudioData(null, function () {});
             } catch (err) {
-                expect(err).to.be.an.instanceOf(DOMException); // jshint ignore:line
+                expect(err).to.be.an.instanceOf(DOMException);
 
                 expect(err.message).to.equal('SyntaxError: DOM Exception 12');
 

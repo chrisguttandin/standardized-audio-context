@@ -1,9 +1,7 @@
-'use strict';
-
-module.exports = function loadFixture(fixture, callback) {
+export const loadFixture = (fixture, callback) => {
     var request = new XMLHttpRequest();
 
-    request.onerror = function (event) {
+    request.onerror = function () {
         callback('request-failed');
     };
     request.onload = function (event) {
