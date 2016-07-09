@@ -25,11 +25,12 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
 
             this._destination = offlineAudioDestinationNodeFakerFactory.create({ fakeNodeStore });
             this._fakeNodeStore = fakeNodeStore;
-            this._length = length;
             this._isSupportingChaining = chainingSupportTester.test(unpatchedOfflineAudioContext);
             this._isSupportingDisconnecting = false;
             disconnectingSupportTester.test((isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
             this._isSupportingPromises = promiseSupportTester.test(unpatchedOfflineAudioContext);
+            this._length = length;
+            this._numberOfChannels = numberOfChannels;
             this._unpatchedOfflineAudioContext = unpatchedOfflineAudioContext;
         }
 
@@ -92,6 +93,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
                 feedback,
                 length: this.length,
                 nativeNode,
+                numberOfChannels: this._numberOfChannels,
                 sampleRate: this._unpatchedOfflineAudioContext.sampleRate
             }).proxy;
         }

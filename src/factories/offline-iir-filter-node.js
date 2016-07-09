@@ -77,7 +77,7 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
 
 class OfflineIIRFilterNodeFaker {
 
-    constructor ({ fakeNodeStore, feedback, feedforward, invalidStateErrorFactory, length, nativeNode, notSupportedErrorFactory, promiseSupportTester, sampleRate, unpatchedOfflineAudioContextConstructor }) {
+    constructor ({ fakeNodeStore, feedback, feedforward, invalidStateErrorFactory, length, nativeNode, notSupportedErrorFactory, numberOfChannels, promiseSupportTester, sampleRate, unpatchedOfflineAudioContextConstructor }) {
         if (feedback.length === 0 || feedback.length > 20) {
             throw notSupportedErrorFactory.create();
         }
@@ -99,9 +99,9 @@ class OfflineIIRFilterNodeFaker {
         this._length = length;
         this._nativeNode = nativeNode;
         this._node = null;
+        this._numberOfChannels = numberOfChannels;
         this._promiseSupportTester = promiseSupportTester;
         this._proxy = new OfflineIIRFilterNodeProxy({ fakeNodeStore, feedback, feedforward, nativeNode, notSupportedErrorFactory, sampleRate });
-        this._sampleRate = sampleRate;
         this._sources = new Map();
         this._unpatchedOfflineAudioContextConstructor = unpatchedOfflineAudioContextConstructor;
 
@@ -147,12 +147,6 @@ class OfflineIIRFilterNodeFaker {
 
         minLength = Math.min(feedbackLength, feedforwardLength);
 
-        // @todo Use TypedArray.prototype.fill() once it lands in Safari.
-        for (let i = 0; i < bufferLength; i += 1) {
-            xBuffer[i] = 0;
-            yBuffer[i] = 0;
-        }
-
         filteredBuffer = offlineAudioContext.createBuffer(
             renderedBuffer.numberOfChannels,
             renderedBuffer.length,
@@ -164,6 +158,12 @@ class OfflineIIRFilterNodeFaker {
         for (let i = 0, numberOfChannels = renderedBuffer.numberOfChannels; i < numberOfChannels; i += 1) {
             let input = renderedBuffer.getChannelData(i),
                 output = filteredBuffer.getChannelData(i);
+
+            // @todo Use TypedArray.prototype.fill() once it lands in Safari.
+            for (let i = 0; i < bufferLength; i += 1) {
+                xBuffer[i] = 0;
+                yBuffer[i] = 0;
+            }
 
             for (let inputLength = input.length, j = 0; j < inputLength; j += 1) {
                 let y = feedforward[0] * input[j];
@@ -222,7 +222,7 @@ class OfflineIIRFilterNodeFaker {
 
         // @todo Somehow retrieve the number of channels.
         /* eslint-disable new-cap */
-        partialOfflineAudioContext = new this._unpatchedOfflineAudioContextConstructor(2, this._length, this._sampleRate);
+        partialOfflineAudioContext = new this._unpatchedOfflineAudioContextConstructor(this._numberOfChannels, this._length, offlineAudioContext.sampleRate);
         /* eslint-enable new-cap */
 
         for (let [ source, { input, output } ] of this._sources) {
@@ -275,7 +275,7 @@ export class OfflineIIRFilterNodeFakerFactory {
         this._unpatchedOfflineAudioContextConstructor = unpatchedOfflineAudioContextConstructor;
     }
 
-    create ({ fakeNodeStore, feedforward, feedback, length, nativeNode, sampleRate }) {
+    create ({ fakeNodeStore, feedforward, feedback, length, nativeNode, numberOfChannels, sampleRate }) {
         return new OfflineIIRFilterNodeFaker({
             fakeNodeStore,
             feedforward,
@@ -285,6 +285,7 @@ export class OfflineIIRFilterNodeFakerFactory {
             nativeNode,
             notSupportedErrorFactory: this._notSupportedErrorFactory,
             promiseSupportTester: this._promiseSupportTester,
+            numberOfChannels,
             sampleRate,
             unpatchedOfflineAudioContextConstructor: this._unpatchedOfflineAudioContextConstructor
         });

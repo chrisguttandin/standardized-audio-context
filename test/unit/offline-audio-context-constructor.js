@@ -367,6 +367,67 @@ describe('offlineAudioContextConstructor', function () {
                 });
         });
 
+        it('should filter another given input', function (done) {
+            var audioBuffer,
+                audioBufferSourceNode,
+                iIRFilterNode;
+
+            this.timeout(10000);
+
+            // Recreate an OfflineAudioContext with 3 channels.
+            offlineAudioContext = new OfflineAudioContext(3, offlineAudioContext.length, offlineAudioContext.sampleRate);
+
+            audioBuffer = offlineAudioContext.createBuffer(3, 3, 44100);
+            audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            iIRFilterNode = offlineAudioContext.createIIRFilter([ 0.5, -1 ], [ 1, -1 ]);
+
+            // @todo Use copyToChannel() once it becomes available.
+            // buffer.copyToChannel(new Float32Array([1, 1, 1]), 0);
+            // buffer.copyToChannel(new Float32Array([1, 0, 0]), 1);
+            // buffer.copyToChannel(new Float32Array([0, 1, 1]), 2);
+            audioBuffer.getChannelData(0)[0] = 1;
+            audioBuffer.getChannelData(0)[1] = 1;
+            audioBuffer.getChannelData(0)[2] = 1;
+
+            audioBuffer.getChannelData(1)[0] = 1;
+            audioBuffer.getChannelData(1)[1] = 0;
+            audioBuffer.getChannelData(1)[2] = 0;
+
+            audioBuffer.getChannelData(2)[0] = 0;
+            audioBuffer.getChannelData(2)[1] = 1;
+            audioBuffer.getChannelData(2)[2] = 1;
+
+            audioBufferSourceNode.buffer = audioBuffer;
+
+            audioBufferSourceNode.start(0);
+
+            audioBufferSourceNode
+                .connect(iIRFilterNode)
+                .connect(offlineAudioContext.destination);
+
+            offlineAudioContext
+                .startRendering()
+                .then((renderedBuffer) => {
+                    var firstChannelData = renderedBuffer.getChannelData(0),
+                        secondChannelData = renderedBuffer.getChannelData(1),
+                        thirdChannelData = renderedBuffer.getChannelData(2);
+
+                    expect(firstChannelData[0]).to.equal(0.5);
+                    expect(firstChannelData[1]).to.equal(0);
+                    expect(firstChannelData[2]).to.equal(-0.5);
+
+                    expect(secondChannelData[0]).to.equal(0.5);
+                    expect(secondChannelData[1]).to.equal(-0.5);
+                    expect(secondChannelData[2]).to.equal(-0.5);
+
+                    expect(thirdChannelData[0]).to.equal(0);
+                    expect(thirdChannelData[1]).to.equal(0.5);
+                    expect(thirdChannelData[2]).to.equal(0);
+
+                    done();
+                });
+        });
+
         it('should be chainable', function () {
             var gainNode = offlineAudioContext.createGain(),
                 iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
