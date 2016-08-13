@@ -41,17 +41,17 @@ module.exports = function (config) {
 
         config.set({
 
+            browserStack: {
+                accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
+                username: process.env.BROWSER_STACK_USERNAME
+            },
+
             browsers: [
                 'ChromeBrowserStack',
                 'EdgeBrowserStack',
                 'FirefoxBrowserStack',
                 'SafariBrowserStack'
             ],
-
-            browserStack: {
-                accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
-                username: process.env.BROWSER_STACK_USERNAME
-            },
 
             captureTimeout: 120000,
 
@@ -92,6 +92,8 @@ module.exports = function (config) {
 
         config.set({
 
+            browserStack: environment.browserStack,
+
             browsers: [
                 'Chrome',
                 'ChromeCanary',
@@ -101,8 +103,6 @@ module.exports = function (config) {
                 'Opera',
                 'Safari'
             ],
-
-            browserStack: environment.browserStack,
 
             customLaunchers: {
                 EdgeBrowserStack: {
