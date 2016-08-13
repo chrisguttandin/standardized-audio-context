@@ -31,14 +31,14 @@ module.exports = function (config) {
 
         config.set({
 
-            browsers: [
-                'ChromeBrowserStack'
-            ],
-
             browserStack: {
                 accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
                 username: process.env.BROWSER_STACK_USERNAME
             },
+
+            browsers: [
+                'ChromeBrowserStack'
+            ],
 
             captureTimeout: 120000,
 
