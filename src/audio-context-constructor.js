@@ -573,7 +573,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
             }
 
             // bug #1: Safari does not return a Promise yet.
-            return new Promise ((resolve, reject) => {
+            return new Promise((resolve, reject) => {
 
                 function fail (err) {
                     reject(err);

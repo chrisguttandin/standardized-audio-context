@@ -275,17 +275,17 @@ export class OfflineIIRFilterNodeFakerFactory {
         this._unpatchedOfflineAudioContextConstructor = unpatchedOfflineAudioContextConstructor;
     }
 
-    create ({ fakeNodeStore, feedforward, feedback, length, nativeNode, numberOfChannels, sampleRate }) {
+    create ({ fakeNodeStore, feedback, feedforward, length, nativeNode, numberOfChannels, sampleRate }) {
         return new OfflineIIRFilterNodeFaker({
             fakeNodeStore,
-            feedforward,
             feedback,
+            feedforward,
             invalidStateErrorFactory: this._invalidStateErrorFactory,
             length,
             nativeNode,
             notSupportedErrorFactory: this._notSupportedErrorFactory,
-            promiseSupportTester: this._promiseSupportTester,
             numberOfChannels,
+            promiseSupportTester: this._promiseSupportTester,
             sampleRate,
             unpatchedOfflineAudioContextConstructor: this._unpatchedOfflineAudioContextConstructor
         });
