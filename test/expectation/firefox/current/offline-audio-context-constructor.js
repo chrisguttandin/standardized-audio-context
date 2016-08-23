@@ -31,4 +31,55 @@ describe('offlineAudioContextConstructor', function () {
 
     });
 
+    describe('createGain()', function () {
+
+        // bug #12
+
+        it('should not allow to disconnect a specific destination', function (done) {
+            var candidate,
+                dummy,
+                ones,
+                source;
+
+            candidate = offlineAudioContext.createGain();
+            dummy = offlineAudioContext.createGain();
+
+            ones = offlineAudioContext.createBuffer(1, 1, 44100);
+            ones.getChannelData(0)[0] = 1;
+
+            source = offlineAudioContext.createBufferSource();
+            source.buffer = ones;
+
+            source.connect(candidate);
+            candidate.connect(offlineAudioContext.destination);
+            candidate.connect(dummy);
+            candidate.disconnect(dummy);
+
+            source.start();
+
+            offlineAudioContext.oncomplete = (event) => {
+                var channelData = event.renderedBuffer.getChannelData(0);
+
+                expect(channelData[0]).to.equal(0);
+
+                source.disconnect(candidate);
+                candidate.disconnect(offlineAudioContext.destination);
+
+                done();
+            };
+            offlineAudioContext.startRendering();
+        });
+
+    });
+
+    describe('createIIRFilter()', function () {
+
+        // bug #9
+
+        it('should not be implemented', function () {
+            expect(offlineAudioContext.createIIRFilter).to.be.undefined;
+        });
+
+    });
+
 });
