@@ -88,7 +88,7 @@ class OfflineAudioBufferSourceNodeFaker {
 
 export class OfflineAudioBufferSourceNodeFakerFactory {
 
-    create ({ fakeNodeStore }) {
+    create ({ fakeNodeStore }) { // eslint-disable-line class-methods-use-this
         return new OfflineAudioBufferSourceNodeFaker({ fakeNodeStore });
     }
 

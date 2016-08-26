@@ -1,6 +1,6 @@
 export class StopStoppedSupportTester {
 
-    test (audioContext) {
+    test (audioContext) { // eslint-disable-line class-methods-use-this
         var audioBuffer = audioContext.createBuffer(1, 1, 44100),
             audioBufferSourceNode = audioContext.createBufferSource();
 

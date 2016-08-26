@@ -1,6 +1,6 @@
 export class AudioBufferWrapper {
 
-    wrap (audioBuffer) {
+    wrap (audioBuffer) { // eslint-disable-line class-methods-use-this
         // @todo throw errors
         audioBuffer.copyFromChannel = function (destination, channelNumber, startInChannel) {
             var channelData,

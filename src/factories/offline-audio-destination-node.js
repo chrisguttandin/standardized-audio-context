@@ -12,7 +12,7 @@ class OfflineAudioDestinationNodeFakerProxy extends OfflineAudioNodeProxy {
         });
     }
 
-    get maxChannelCount () {
+    get maxChannelCount () { // eslint-disable-line class-methods-use-this
         // @todo
         return 2;
     }
@@ -64,7 +64,7 @@ class OfflineAudioDestinationNodeFaker {
 
 export class OfflineAudioDestinationNodeFakerFactory {
 
-    create ({ fakeNodeStore }) {
+    create ({ fakeNodeStore }) { // eslint-disable-line class-methods-use-this
         return new OfflineAudioDestinationNodeFaker({ fakeNodeStore });
     }
 

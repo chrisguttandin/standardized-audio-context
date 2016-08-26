@@ -1,6 +1,6 @@
 export class AudioNodeDisconnectMethodWrapper {
 
-    wrap (audioNode) {
+    wrap (audioNode) { // eslint-disable-line class-methods-use-this
         var destinations = new Map();
 
         audioNode.connect = (function (connect) {

@@ -15,7 +15,7 @@ class OfflineBiquadFilterNodeFakerProxy extends OfflineAudioNodeProxy {
         this._type = nativeNode.type;
     }
 
-    get detune () {
+    get detune () { // eslint-disable-line class-methods-use-this
         // @todo Fake a proper AudioParam.
         return {
             cancelScheduledValues: () => {},
@@ -27,7 +27,7 @@ class OfflineBiquadFilterNodeFakerProxy extends OfflineAudioNodeProxy {
             value: 0
         };
     }
-    get frequency () {
+    get frequency () { // eslint-disable-line class-methods-use-this
         // @todo Fake a proper AudioParam.
         return {
             cancelScheduledValues: () => {},
@@ -40,7 +40,7 @@ class OfflineBiquadFilterNodeFakerProxy extends OfflineAudioNodeProxy {
         };
     }
 
-    get gain () {
+    get gain () { // eslint-disable-line class-methods-use-this
         // @todo Fake a proper AudioParam.
         return {
             cancelScheduledValues: () => {},
@@ -53,7 +53,7 @@ class OfflineBiquadFilterNodeFakerProxy extends OfflineAudioNodeProxy {
         };
     }
 
-    get Q () {
+    get Q () { // eslint-disable-line class-methods-use-this
         // @todo Fake a proper AudioParam.
         return {
             cancelScheduledValues: () => {},
@@ -131,7 +131,7 @@ class OfflineBiquadFilterNodeFaker {
 
 export class OfflineBiquadFilterNodeFakerFactory {
 
-    create ({ fakeNodeStore, nativeNode }) {
+    create ({ fakeNodeStore, nativeNode }) { // eslint-disable-line class-methods-use-this
         return new OfflineBiquadFilterNodeFaker({
             fakeNodeStore,
             nativeNode

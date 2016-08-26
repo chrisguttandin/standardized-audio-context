@@ -1,6 +1,6 @@
 export class PromiseSupportTester {
 
-    test (audioContext) {
+    test (audioContext) { // eslint-disable-line class-methods-use-this
         // This 12 numbers represent the 48 bytes of an empty WAVE file with a single sample.
         /* eslint-disable indent */
         var uint32Array = new Uint32Array([

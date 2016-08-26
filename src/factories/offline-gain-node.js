@@ -12,7 +12,7 @@ class OfflineGainNodeFakerProxy extends OfflineAudioNodeProxy {
         });
     }
 
-    get gain () {
+    get gain () { // eslint-disable-line class-methods-use-this
         // @todo Fake a proper AudioParam.
         return {
             cancelScheduledValues: () => {},
@@ -76,7 +76,7 @@ class OfflineGainNodeFaker {
 
 export class OfflineGainNodeFakerFactory {
 
-    create ({ fakeNodeStore }) {
+    create ({ fakeNodeStore }) { // eslint-disable-line class-methods-use-this
         return new OfflineGainNodeFaker({ fakeNodeStore });
     }
 

@@ -1,6 +1,6 @@
 export class NotSupportedErrorFactory {
 
-    create () {
+    create () { // eslint-disable-line class-methods-use-this
         var exception;
 
         try {

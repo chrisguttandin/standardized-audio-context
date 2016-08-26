@@ -1,6 +1,6 @@
 export class EncodingErrorFactory {
 
-    create () {
+    create () { // eslint-disable-line class-methods-use-this
         var exception;
 
         try {

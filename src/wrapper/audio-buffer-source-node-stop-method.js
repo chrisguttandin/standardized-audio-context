@@ -1,6 +1,6 @@
 export class AudioBufferSourceNodeStopMethodWrapper {
 
-    wrap (audioBufferSourceNode) {
+    wrap (audioBufferSourceNode) { // eslint-disable-line class-methods-use-this
         var gainNode = audioBufferSourceNode.context.createGain();
 
         audioBufferSourceNode.connect(gainNode);
