@@ -69,7 +69,8 @@ describe('audioContextConstructor', function () {
             var now = audioContext.currentTime;
 
             audioContext.onstatechange = function () {
-                audioContext.onstatechange = null; // to prevent consecutive calls
+                // Prevent consecutive calls.
+                audioContext.onstatechange = null;
 
                 setTimeout(function () {
                     expect(audioContext.currentTime).to.above(now);
@@ -78,7 +79,8 @@ describe('audioContextConstructor', function () {
                 }, 1000);
             };
 
-            audioContext.createGain(); // kick off the audio context
+            // Kick off the audioContext.
+            audioContext.createGain();
         });
 
     });
@@ -157,12 +159,14 @@ describe('audioContextConstructor', function () {
             audioContext.onstatechange = function () {
                 expect(audioContext.state).to.equal('running');
 
-                audioContext.onstatechange = null; // to prevent consecutive calls
+                // Prevent consecutive calls.
+                audioContext.onstatechange = null;
 
                 done();
             };
 
-            audioContext.createGain(); // kick off the audio context
+            // Kick off the audioContext.
+            audioContext.createGain();
         });
 
         // closed is tested below

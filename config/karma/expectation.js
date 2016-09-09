@@ -15,7 +15,7 @@ module.exports = function (config) {
         frameworks: [
             'browserify',
             'mocha',
-            'sinon-chai' // implicitly uses chai too
+            'sinon-chai'
         ],
 
         singleRun: true
