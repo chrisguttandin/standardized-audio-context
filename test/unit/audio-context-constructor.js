@@ -396,6 +396,23 @@ describe('audioContextConstructor', function () {
             expect(biquadFilterNode.connect(gainNode)).to.equal(gainNode);
         });
 
+        describe('getFrequencyResponse()', function () {
+
+            // bug #22 This is not implemented in FirefoxDeveloper, Opera and Safari.
+
+            xit('should fill the magResponse and phaseResponse arrays', function () {
+                var biquadFilterNode = audioContext.createBiquadFilter(),
+                    magResponse = new Float32Array(5),
+                    phaseResponse = new Float32Array(5);
+
+                biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+
+                expect(Array.from(magResponse)).to.deep.equal([ 1.184295654296875, 0.9401244521141052, 0.2128090262413025, 0.048817940056324005, 0.011635963805019855 ]);
+                expect(Array.from(phaseResponse)).to.deep.equal([ -0.6473332643508911, -1.862880825996399, -2.692772388458252, -2.9405176639556885, -3.044968605041504 ]);
+            });
+
+        });
+
     });
 
     describe('createBuffer()', function () {
