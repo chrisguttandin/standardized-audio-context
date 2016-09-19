@@ -4,6 +4,7 @@ import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconne
 import { ChainingSupportTester } from './tester/chaining-support';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
+import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrapper/iir-filter-node-get-frequency-response-method';
 import { Inject } from '@angular/core/src/di/decorators';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from './factories/offline-audio-buffer-source-node';
@@ -14,7 +15,7 @@ import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter
 import { PromiseSupportTester } from './tester/promise-support';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 
-export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, disconnectingSupportTester, encodingErrorFactory, notSupportedErrorFactory, offlineAudioBufferSourceNodeFakerFactory, offlineAudioDestinationNodeFakerFactory, offlineBiquadFilterNodeFakerFactory, offlineGainNodeFakerFactory, offlineIIRFilterNodeFakerFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
+export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, disconnectingSupportTester, encodingErrorFactory, iIRFilterNodeGetFrequencyResponseMethodWrapper, notSupportedErrorFactory, offlineAudioBufferSourceNodeFakerFactory, offlineAudioDestinationNodeFakerFactory, offlineBiquadFilterNodeFakerFactory, offlineGainNodeFakerFactory, offlineIIRFilterNodeFakerFactory, promiseSupportTester, unpatchedOfflineAudioContextConstructor) {
     return class OfflineAudioContext {
 
         constructor (numberOfChannels, length, sampleRate) {
@@ -28,6 +29,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             this._isSupportingChaining = chainingSupportTester.test(unpatchedOfflineAudioContext);
             this._isSupportingDisconnecting = false;
             disconnectingSupportTester.test((isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
+            this._isSupportingGetFrequencyResponseErrors = false;
             this._isSupportingPromises = promiseSupportTester.test(unpatchedOfflineAudioContext);
             this._length = length;
             this._numberOfChannels = numberOfChannels;
@@ -85,6 +87,11 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             // bug #9: Only Chrome and Opera currently implement the createIIRFilter() method.
             if (this._unpatchedOfflineAudioContext.createIIRFilter !== undefined) {
                 nativeNode = this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
+
+                // bug 23 & 24: FirefoxDeveloper does not throw NotSupportedErrors anymore.
+                if (!this._isSupportingGetFrequencyResponseErrors) {
+                    iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(nativeNode);
+                }
             }
 
             return offlineIIRFilterNodeFakerFactory.create({
@@ -199,4 +206,4 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
     };
 }
 
-offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(DisconnectingSupportTester) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(OfflineAudioBufferSourceNodeFakerFactory) ], [ new Inject(OfflineAudioDestinationNodeFakerFactory) ], [ new Inject(OfflineBiquadFilterNodeFakerFactory) ], [ new Inject(OfflineGainNodeFakerFactory) ], [ new Inject(OfflineIIRFilterNodeFakerFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];
+offlineAudioContextConstructor.parameters = [ [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(DisconnectingSupportTester) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(IIRFilterNodeGetFrequencyResponseMethodWrapper) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(OfflineAudioBufferSourceNodeFakerFactory) ], [ new Inject(OfflineAudioDestinationNodeFakerFactory) ], [ new Inject(OfflineBiquadFilterNodeFakerFactory) ], [ new Inject(OfflineGainNodeFakerFactory) ], [ new Inject(OfflineIIRFilterNodeFakerFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(unpatchedOfflineAudioContextConstructor) ] ];

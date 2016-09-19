@@ -6,6 +6,7 @@ import { ChainingSupportTester } from './tester/chaining-support';
 import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
+import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrapper/iir-filter-node-get-frequency-response-method';
 import { Inject } from '@angular/core/src/di/decorators';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
@@ -76,7 +77,7 @@ function wrapAnalyserNode (analyserNode) {
     return analyserNode;
 }
 
-export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper, audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, notSupportedErrorFactory, promiseSupportTester, stopStoppedSupportTester, unpatchedAudioContextConstructor) {
+export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper, audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, iIRFilterNodeGetFrequencyResponseMethodWrapper, notSupportedErrorFactory, promiseSupportTester, stopStoppedSupportTester, unpatchedAudioContextConstructor) {
     return class AudioContext {
 
         constructor () {
@@ -88,6 +89,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
             this._isSupportingChaining = chainingSupportTester.test(unpatchedAudioContext);
             this._isSupportingDisconnecting = false;
             testForDisconnectingSupport(unpatchedAudioContext, (isSupportingDisconnecting) => this._isSupportingDisconnecting = isSupportingDisconnecting);
+            this._isSupportingGetFrequencyResponseErrors = false;
             this._isSupportingPromises = promiseSupportTester.test(unpatchedAudioContext);
             this._isSupportingStoppingOfStoppedNodes = stopStoppedSupportTester.test(unpatchedAudioContext);
             this._onStateChangeListener = null;
@@ -489,6 +491,8 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
         }
 
         createIIRFilter (feedforward, feedback) {
+            var iIRFilterNode;
+
             // bug #10: Edge does not throw an error when the context is closed.
             if (this._unpatchedAudioContext === null && this.state === 'closed') {
                 throw invalidStateErrorFactory.create();
@@ -499,7 +503,14 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                 return iIRFilterNodeFaker.fake(feedforward, feedback, this, this._unpatchedAudioContext);
             }
 
-            return this._unpatchedAudioContext.createIIRFilter(feedforward, feedback);
+            iIRFilterNode = this._unpatchedAudioContext.createIIRFilter(feedforward, feedback);
+
+            // bug 23 & 24: FirefoxDeveloper does not throw NotSupportedErrors anymore.
+            if (!this._isSupportingGetFrequencyResponseErrors) {
+                iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(iIRFilterNode);
+            }
+
+            return iIRFilterNode;
         }
 
         createOscillator () {
@@ -617,4 +628,4 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
     };
 }
 
-audioContextConstructor.parameters = [ [ new Inject(AudioBufferSourceNodeStopMethodWrapper) ], [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(StopStoppedSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
+audioContextConstructor.parameters = [ [ new Inject(AudioBufferSourceNodeStopMethodWrapper) ], [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(IIRFilterNodeGetFrequencyResponseMethodWrapper) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(StopStoppedSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];

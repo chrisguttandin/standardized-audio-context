@@ -5,6 +5,7 @@ import { AudioNodeDisconnectMethodWrapper } from '../../src/wrapper/audio-node-d
 import { ChainingSupportTester } from '../../src/tester/chaining-support';
 import { DisconnectingSupportTester } from '../../src/tester/disconnecting-support';
 import { EncodingErrorFactory } from '../../src/factories/encoding-error';
+import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../src/wrapper/iir-filter-node-get-frequency-response-method';
 import { InvalidStateErrorFactory } from  '../../src/factories/invalid-state-error';
 import { NotSupportedErrorFactory } from  '../../src/factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from '../../src/factories/offline-audio-buffer-source-node';
@@ -34,6 +35,7 @@ describe('offlineAudioContextConstructor', function () {
                 ChainingSupportTester,
                 DisconnectingSupportTester,
                 EncodingErrorFactory,
+                IIRFilterNodeGetFrequencyResponseMethodWrapper,
                 InvalidStateErrorFactory,
                 NotSupportedErrorFactory,
                 OfflineAudioBufferSourceNodeFakerFactory,

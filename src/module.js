@@ -8,6 +8,7 @@ import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
+import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrapper/iir-filter-node-get-frequency-response-method';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { MergingSupportTester } from './tester/merging-support';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
@@ -38,6 +39,7 @@ var injector = ReflectiveInjector.resolveAndCreate([
         DisconnectingSupportTester,
         EncodingErrorFactory,
         IIRFilterNodeFaker,
+        IIRFilterNodeGetFrequencyResponseMethodWrapper,
         InvalidStateErrorFactory,
         MergingSupportTester,
         NotSupportedErrorFactory,

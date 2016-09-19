@@ -7,6 +7,7 @@ import { ChainingSupportTester } from '../../src/tester/chaining-support';
 import { ChannelMergerNodeWrapper } from '../../src/wrapper/channel-merger-node';
 import { EncodingErrorFactory } from '../../src/factories/encoding-error';
 import { IIRFilterNodeFaker } from '../../src/fakers/iir-filter-node';
+import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../src/wrapper/iir-filter-node-get-frequency-response-method';
 import { InvalidStateErrorFactory } from '../../src/factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../../src/factories/not-supported-error';
 import { PromiseSupportTester } from '../../src/tester/promise-support';
@@ -38,6 +39,7 @@ describe('audioContextConstructor', function () {
                 ChannelMergerNodeWrapper,
                 EncodingErrorFactory,
                 IIRFilterNodeFaker,
+                IIRFilterNodeGetFrequencyResponseMethodWrapper,
                 InvalidStateErrorFactory,
                 NotSupportedErrorFactory,
                 PromiseSupportTester,
