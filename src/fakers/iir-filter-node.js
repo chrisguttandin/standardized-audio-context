@@ -1,4 +1,4 @@
-import { Inject } from '@angular/core/src/di/decorators';
+import { Inject } from '@angular/core';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../factories/not-supported-error';
 

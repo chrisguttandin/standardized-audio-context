@@ -5,7 +5,7 @@ import { ChainingSupportTester } from './tester/chaining-support';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrapper/iir-filter-node-get-frequency-response-method';
-import { Inject } from '@angular/core/src/di/decorators';
+import { Inject } from '@angular/core';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from './factories/offline-audio-buffer-source-node';
 import { OfflineAudioDestinationNodeFakerFactory } from './factories/offline-audio-destination-node';

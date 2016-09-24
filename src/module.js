@@ -18,7 +18,7 @@ import { OfflineBiquadFilterNodeFakerFactory } from './factories/offline-biquad
 import { OfflineGainNodeFakerFactory } from './factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter-node';
 import { PromiseSupportTester } from './tester/promise-support';
-import { ReflectiveInjector } from '@angular/core/src/di/reflective_injector';
+import { ReflectiveInjector } from '@angular/core';
 import { StopStoppedSupportTester } from './tester/stop-stopped-support';
 import { audioContextConstructor } from './audio-context-constructor';
 import { isSupportedPromise } from './is-supported-promise';

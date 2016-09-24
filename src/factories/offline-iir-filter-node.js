@@ -1,4 +1,4 @@
-import { Inject } from '@angular/core/src/di/decorators';
+import { Inject } from '@angular/core';
 import { InvalidStateErrorFactory } from './invalid-state-error';
 import { NotSupportedErrorFactory } from './not-supported-error';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';

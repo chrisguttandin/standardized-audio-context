@@ -1,4 +1,4 @@
-import { Inject } from '@angular/core/src/di/decorators';
+import { Inject } from '@angular/core';
 import { MergingSupportTester } from './tester/merging-support';
 import { modernizr } from './modernizr';
 

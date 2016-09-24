@@ -7,7 +7,7 @@ import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrapper/iir-filter-node-get-frequency-response-method';
-import { Inject } from '@angular/core/src/di/decorators';
+import { Inject } from '@angular/core';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { PromiseSupportTester } from './tester/promise-support';

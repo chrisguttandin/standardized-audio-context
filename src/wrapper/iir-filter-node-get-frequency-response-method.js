@@ -1,4 +1,4 @@
-import { Inject } from '@angular/core/src/di/decorators';
+import { Inject } from '@angular/core';
 import { NotSupportedErrorFactory } from '../factories/not-supported-error';
 
 export class IIRFilterNodeGetFrequencyResponseMethodWrapper {
