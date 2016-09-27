@@ -32,7 +32,7 @@ describe('audioContextConstructor', function () {
                 .catch(function (err) {
                     expect(err).to.be.an.instanceOf(TypeError);
 
-                    expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'AudioContext': parameter 1 is not of type 'ArrayBuffer'.");
+                    expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'BaseAudioContext': parameter 1 is not of type 'ArrayBuffer'.");
 
                     done();
                 });
