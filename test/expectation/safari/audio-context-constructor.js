@@ -176,7 +176,7 @@ describe('audioContextConstructor', function () {
 
         // bug #29
 
-        it('should have a channelCountMode of max', function () {
+        it('should have a wrong channelCountMode', function () {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
@@ -184,7 +184,7 @@ describe('audioContextConstructor', function () {
 
         // bug #30
 
-        it('should allow to reassign the channelCountMode', function () {
+        it('should allow to set the channelCountMode', function () {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
@@ -192,7 +192,7 @@ describe('audioContextConstructor', function () {
 
         // bug #31
 
-        it('should have a channelInterpretation of max', function () {
+        it('should have a wrong channelInterpretation', function () {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
@@ -200,7 +200,7 @@ describe('audioContextConstructor', function () {
 
         // bug #32
 
-        it('should allow to reassign the channelInterpretation', function () {
+        it('should allow to set the channelInterpretation', function () {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';

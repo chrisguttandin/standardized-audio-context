@@ -714,7 +714,7 @@ describe('audioContextConstructor', function () {
             expect(channelSplitterNode.numberOfOutputs).to.equal(2);
         });
 
-        it('should throw an error when the channelCountMode is reassigned', function (done) {
+        it('should not allow to change the value of the channelCountMode property', function (done) {
             var channelSplitterNode = audioContext.createChannelSplitter(2);
 
             try {
@@ -727,7 +727,7 @@ describe('audioContextConstructor', function () {
             }
         });
 
-        it('should throw an error when the channelInterpretation is reassigned', function (done) {
+        it('should not allow to change the value of the channelInterpretation property', function (done) {
             var channelSplitterNode = audioContext.createChannelSplitter(2);
 
             try {

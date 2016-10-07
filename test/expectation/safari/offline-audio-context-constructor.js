@@ -179,7 +179,7 @@ describe('offlineAudioContextConstructor', function () {
 
         // bug #30
 
-        it('should allow to reassign the channelCountMode', function () {
+        it('should allow to set the channelCountMode', function () {
             var channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
@@ -195,7 +195,7 @@ describe('offlineAudioContextConstructor', function () {
 
         // bug #32
 
-        it('should allow to reassign the channelInterpretation', function () {
+        it('should allow to set the channelInterpretation', function () {
             var channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';

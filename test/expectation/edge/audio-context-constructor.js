@@ -91,7 +91,7 @@ describe('audioContextConstructor', function () {
 
         // bug #30
 
-        it('should allow to reassign the channelCountMode', function () {
+        it('should allow to set the channelCountMode', function () {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
@@ -107,7 +107,7 @@ describe('audioContextConstructor', function () {
 
         // bug #32
 
-        it('should allow to reassign the channelInterpretation', function () {
+        it('should allow to set the channelInterpretation', function () {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
