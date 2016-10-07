@@ -20,10 +20,9 @@ export class PromiseSupportTester {
         /* eslint-enable indent */
 
         try {
+            // bug #1: Safari requires a successCallback.
             let promise = audioContext.decodeAudioData(uint32Array.buffer, function () {
                 // ignore success callback
-            }, function () {
-                // ignore error callback
             });
 
             if (promise === undefined) {
