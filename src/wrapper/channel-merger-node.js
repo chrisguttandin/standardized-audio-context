@@ -21,14 +21,14 @@ export class ChannelMergerNodeWrapper {
         Object.defineProperty(channelMergerNode, 'channelCount', {
             get: () => 1,
             set: () => {
-                throw this._invalidStateErrorFactory.create()
+                throw this._invalidStateErrorFactory.create();
             }
         });
 
         Object.defineProperty(channelMergerNode, 'channelCountMode', {
             get: () => 'explicit',
             set: () => {
-                throw this._invalidStateErrorFactory.create()
+                throw this._invalidStateErrorFactory.create();
             }
         });
 
