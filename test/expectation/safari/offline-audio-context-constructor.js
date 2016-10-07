@@ -217,6 +217,22 @@ describe('offlineAudioContextConstructor', function () {
             offlineAudioContext.startRendering();
         });
 
+        describe('cancelAndHoldAtTime()', function () {
+
+            var gainNode;
+
+            beforeEach(function () {
+                gainNode = offlineAudioContext.createGain();
+            });
+
+            // bug #28
+
+            it('should not be implemented', function () {
+                expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
+            });
+
+        });
+
     });
 
     describe('createIIRFilter()', function () {

@@ -22,6 +22,26 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
+    describe('createGain()', function () {
+
+        var gainNode;
+
+        beforeEach(function () {
+            gainNode = audioContext.createGain();
+        });
+
+        describe('cancelAndHoldAtTime()', function () {
+
+            // bug #28
+
+            it('should not be implemented', function () {
+                expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
+            });
+
+        });
+
+    });
+
     describe('decodeAudioData()', function () {
 
         // bug #6

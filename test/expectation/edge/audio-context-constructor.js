@@ -89,6 +89,22 @@ describe('audioContextConstructor', function () {
             expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
         });
 
+        describe('cancelAndHoldAtTime()', function () {
+
+            var gainNode;
+
+            beforeEach(function () {
+                gainNode = audioContext.createGain();
+            });
+
+            // bug #28
+
+            it('should not be implemented', function () {
+                expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
+            });
+
+        });
+
     });
 
     describe('createIIRFilter()', function () {
