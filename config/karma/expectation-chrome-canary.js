@@ -41,7 +41,7 @@ module.exports = function (config) {
                 ChromeCanarySauceLabs: {
                     base: 'SauceLabs',
                     browserName: 'chrome',
-                    platform: 'OS X 10.11',
+                    platform: 'OS X 10.12',
                     version: 'dev'
                 }
             },
