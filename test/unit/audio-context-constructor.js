@@ -5,6 +5,7 @@ import { AudioNodeConnectMethodWrapper } from '../../src/wrapper/audio-node-con
 import { AudioNodeDisconnectMethodWrapper } from '../../src/wrapper/audio-node-disconnect-method';
 import { ChainingSupportTester } from '../../src/tester/chaining-support';
 import { ChannelMergerNodeWrapper } from '../../src/wrapper/channel-merger-node';
+import { ChannelSplitterNodeWrapper } from '../../src/wrapper/channel-splitter-node';
 import { EncodingErrorFactory } from '../../src/factories/encoding-error';
 import { IIRFilterNodeFaker } from '../../src/fakers/iir-filter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../src/wrapper/iir-filter-node-get-frequency-response-method';
@@ -37,6 +38,7 @@ describe('audioContextConstructor', function () {
                 AudioNodeDisconnectMethodWrapper,
                 ChainingSupportTester,
                 ChannelMergerNodeWrapper,
+                ChannelSplitterNodeWrapper,
                 EncodingErrorFactory,
                 IIRFilterNodeFaker,
                 IIRFilterNodeGetFrequencyResponseMethodWrapper,
@@ -700,8 +702,8 @@ describe('audioContextConstructor', function () {
         it('should return an instance of the ChannelSplitterNode interface', function () {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
-            expect(channelSplitterNode.channelCountMode).to.equal('max');
-            expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
+            expect(channelSplitterNode.channelCountMode).to.equal('explicit');
+            expect(channelSplitterNode.channelInterpretation).to.equal('discrete');
             expect(channelSplitterNode.numberOfInputs).to.equal(1);
             expect(channelSplitterNode.numberOfOutputs).to.equal(6);
         });
@@ -710,6 +712,32 @@ describe('audioContextConstructor', function () {
             var channelSplitterNode = audioContext.createChannelSplitter(2);
 
             expect(channelSplitterNode.numberOfOutputs).to.equal(2);
+        });
+
+        it('should throw an error when the channelCountMode is reassigned', function (done) {
+            var channelSplitterNode = audioContext.createChannelSplitter(2);
+
+            try {
+                channelSplitterNode.channelCountMode = 'speakers';
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
+        });
+
+        it('should throw an error when the channelInterpretation is reassigned', function (done) {
+            var channelSplitterNode = audioContext.createChannelSplitter(2);
+
+            try {
+                channelSplitterNode.channelCountMode = 'speakers';
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
         });
 
         it('should throw an error if the AudioContext is closed', function (done) {

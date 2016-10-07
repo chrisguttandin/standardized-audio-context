@@ -5,6 +5,7 @@ import { AudioNodeConnectMethodWrapper } from './wrapper/audio-node-connect-met
 import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconnect-method';
 import { ChainingSupportTester } from './tester/chaining-support';
 import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
+import { ChannelSplitterNodeWrapper } from './wrapper/channel-splitter-node';
 import { DecodeAudioDataTypeErrorSupportTester } from './tester/decode-audio-data-type-error-support';
 import { DisconnectingSupportTester } from './tester/disconnecting-support';
 import { EncodingErrorFactory } from './factories/encoding-error';
@@ -37,6 +38,7 @@ var injector = ReflectiveInjector.resolveAndCreate([
         AudioNodeDisconnectMethodWrapper,
         ChainingSupportTester,
         ChannelMergerNodeWrapper,
+        ChannelSplitterNodeWrapper,
         DecodeAudioDataTypeErrorSupportTester,
         DisconnectingSupportTester,
         EncodingErrorFactory,

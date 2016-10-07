@@ -22,6 +22,42 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
+    describe('createChannelSplitter()', function () {
+
+        // bug #29
+
+        it('should have a channelCountMode of max', function () {
+            var channelSplitterNode = audioContext.createChannelSplitter();
+
+            expect(channelSplitterNode.channelCountMode).to.equal('max');
+        });
+
+        // bug #30
+
+        it('should allow to reassign the channelCountMode', function () {
+            var channelSplitterNode = audioContext.createChannelSplitter();
+
+            channelSplitterNode.channelCountMode = 'explicit';
+        });
+
+        // bug #31
+
+        it('should have a channelInterpretation of max', function () {
+            var channelSplitterNode = audioContext.createChannelSplitter();
+
+            expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
+        });
+
+        // bug #32
+
+        it('should allow to reassign the channelInterpretation', function () {
+            var channelSplitterNode = audioContext.createChannelSplitter();
+
+            channelSplitterNode.channelInterpretation = 'discrete';
+        });
+
+    });
+
     describe('createGain()', function () {
 
         var gainNode;

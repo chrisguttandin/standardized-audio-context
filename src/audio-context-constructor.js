@@ -4,6 +4,7 @@ import { AudioNodeConnectMethodWrapper } from './wrapper/audio-node-connect-met
 import { AudioNodeDisconnectMethodWrapper } from './wrapper/audio-node-disconnect-method';
 import { ChainingSupportTester } from './tester/chaining-support';
 import { ChannelMergerNodeWrapper } from './wrapper/channel-merger-node';
+import { ChannelSplitterNodeWrapper } from './wrapper/channel-splitter-node';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrapper/iir-filter-node-get-frequency-response-method';
@@ -77,7 +78,7 @@ function wrapAnalyserNode (analyserNode) {
     return analyserNode;
 }
 
-export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper, audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, channelMergerNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, iIRFilterNodeGetFrequencyResponseMethodWrapper, notSupportedErrorFactory, promiseSupportTester, stopStoppedSupportTester, unpatchedAudioContextConstructor) {
+export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper, audioBufferWrapper, audioNodeConnectMethodWrapper, audioNodeDisconnectMethodWrapper, chainingSupportTester, channelMergerNodeWrapper, channelSplitterNodeWrapper, encodingErrorFactory, invalidStateErrorFactory, iIRFilterNodeFaker, iIRFilterNodeGetFrequencyResponseMethodWrapper, notSupportedErrorFactory, promiseSupportTester, stopStoppedSupportTester, unpatchedAudioContextConstructor) {
     return class AudioContext {
 
         constructor () {
@@ -451,7 +452,8 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                 channelSplitterNode = audioNodeConnectMethodWrapper.wrap(channelSplitterNode);
             }
 
-            return channelSplitterNode;
+            // bug #29 - #32: No browser supports the spec yet.
+            return channelSplitterNodeWrapper.wrap(channelSplitterNode);
         }
 
         createGain () {
@@ -631,4 +633,4 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
     };
 }
 
-audioContextConstructor.parameters = [ [ new Inject(AudioBufferSourceNodeStopMethodWrapper) ], [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(IIRFilterNodeGetFrequencyResponseMethodWrapper) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(StopStoppedSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
+audioContextConstructor.parameters = [ [ new Inject(AudioBufferSourceNodeStopMethodWrapper) ], [ new Inject(AudioBufferWrapper) ], [ new Inject(AudioNodeConnectMethodWrapper) ], [ new Inject(AudioNodeDisconnectMethodWrapper) ], [ new Inject(ChainingSupportTester) ], [ new Inject(ChannelMergerNodeWrapper) ], [ new Inject(ChannelSplitterNodeWrapper) ], [ new Inject(EncodingErrorFactory) ], [ new Inject(InvalidStateErrorFactory) ], [ new Inject(IIRFilterNodeFaker) ], [ new Inject(IIRFilterNodeGetFrequencyResponseMethodWrapper) ], [ new Inject(NotSupportedErrorFactory) ], [ new Inject(PromiseSupportTester) ], [ new Inject(StopStoppedSupportTester) ], [ new Inject(unpatchedAudioContextConstructor) ] ];
