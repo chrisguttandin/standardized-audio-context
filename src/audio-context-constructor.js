@@ -583,7 +583,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                     });
             }
 
-            // bug #1: Safari does not return a Promise yet.
+            // bug #21: Safari does not return a Promise yet.
             return new Promise((resolve, reject) => {
 
                 function fail (err) {
@@ -602,8 +602,9 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                     }
                 }
 
-                // bug #2: Safari throws a wrong DOMException.
+                // bug #2: Safari throws a TypeError.
                 try {
+                    // bug #1: Safari requires a successCallback.
                     this._unpatchedAudioContext.decodeAudioData(audioData, function (audioBuffer) {
                         // bug #5: Safari does not support copyFromChannel() and copyToChannel().
                         if (typeof audioBuffer.copyFromChannel !== 'function') {
