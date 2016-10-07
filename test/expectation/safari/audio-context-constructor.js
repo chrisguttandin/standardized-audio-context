@@ -266,13 +266,13 @@ describe('audioContextConstructor', function () {
 
         // bug #2
 
-        it('should throw a DOMException', function (done) {
+        it('should throw a TypeError', function (done) {
             try {
                 audioContext.decodeAudioData(null, function () {});
             } catch (err) {
-                expect(err).to.be.an.instanceOf(DOMException);
+                expect(err).to.be.an.instanceOf(TypeError);
 
-                expect(err.message).to.equal('SyntaxError: DOM Exception 12');
+                expect(err.message).to.equal("Argument 1 ('audioData') to AudioContext.decodeAudioData must be an instance of ArrayBuffer");
 
                 done();
             }
