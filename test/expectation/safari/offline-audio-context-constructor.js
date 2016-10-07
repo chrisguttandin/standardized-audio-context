@@ -292,20 +292,6 @@ describe('offlineAudioContextConstructor', function () {
             });
         });
 
-        // bug #2
-
-        it('should throw a TypeError', function (done) {
-            try {
-                offlineAudioContext.decodeAudioData(null, function () {});
-            } catch (err) {
-                expect(err).to.be.an.instanceOf(TypeError);
-
-                expect(err.message).to.equal("Argument 1 ('audioData') to AudioContext.decodeAudioData must be an instance of ArrayBuffer");
-
-                done();
-            }
-        });
-
         // bug #4
 
         it('should throw null when asked to decode an unsupported file', function (done) {
@@ -348,6 +334,16 @@ describe('offlineAudioContextConstructor', function () {
 
                 done();
             });
+        });
+
+        // bug #26
+
+        it('should throw a synchronous error', function (done) {
+            try {
+                offlineAudioContext.decodeAudioData(null, function () {});
+            } catch (err) {
+                done();
+            }
         });
 
     });

@@ -59,20 +59,6 @@ describe('audioContextConstructor', function () {
 
     describe('decodeAudioData()', function () {
 
-        // bug #3
-
-        it('should reject the promise with a TypeError', function (done) {
-            audioContext
-                .decodeAudioData(null)
-                .catch(function (err) {
-                    expect(err).to.be.an.instanceOf(TypeError);
-
-                    expect(err.message).to.equal('Argument 1 of AudioContext.decodeAudioData is not an object.');
-
-                    done();
-                });
-        });
-
         // bug #6
 
         it('should not call the errorCallback at all', function (done) {

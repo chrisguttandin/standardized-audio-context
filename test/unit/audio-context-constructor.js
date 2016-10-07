@@ -1117,17 +1117,15 @@ describe('audioContextConstructor', function () {
                 audioContext
                     .decodeAudioData(null)
                     .catch(function (err) {
-                        expect(err.code).to.equal(9);
-                        expect(err.name).to.equal('NotSupportedError');
+                        expect(err).to.be.an.instanceOf(TypeError);
 
                         done();
                     });
             });
 
-            it('should call the errorCallback with an error', function (done) {
+            it('should call the errorCallback with a TypeError', function (done) {
                 audioContext.decodeAudioData(null, function () {}, function (err) {
-                    expect(err.code).to.equal(9);
-                    expect(err.name).to.equal('NotSupportedError');
+                    expect(err).to.be.an.instanceOf(TypeError);
 
                     done();
                 });

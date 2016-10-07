@@ -101,4 +101,20 @@ describe('audioContextConstructor', function () {
 
     });
 
+    describe('decodeAudioData()', function () {
+
+        // bug #27
+
+        it('should reject the promise with a DOMException', function (done) {
+            audioContext
+                .decodeAudioData(null)
+                .catch(function (err) {
+                    expect(err).to.be.an.instanceOf(DOMException);
+
+                    done();
+                });
+        });
+
+    });
+
 });

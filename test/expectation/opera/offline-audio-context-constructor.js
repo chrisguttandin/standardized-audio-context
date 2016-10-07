@@ -107,20 +107,6 @@ describe('offlineAudioContextConstructor', function () {
 
     describe('decodeAudioData()', function () {
 
-        // bug #3
-
-        it('should reject the promise with a TypeError', function (done) {
-            offlineAudioContext
-                .decodeAudioData(null)
-                .catch(function (err) {
-                    expect(err).to.be.an.instanceOf(TypeError);
-
-                    expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'AudioContext': parameter 1 is not of type 'ArrayBuffer'.");
-
-                    done();
-                });
-        });
-
         // bug #6
 
         it('should not call the errorCallback at all', function (done) {

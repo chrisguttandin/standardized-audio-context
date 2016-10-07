@@ -114,22 +114,24 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
                             // bug #7: Firefox calls the callback with undefined.
                             if (err === undefined) {
                                 errorCallback(encodingErrorFactory.create());
+                            // bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
+                            } else if (err instanceof DOMException && err.name === 'NotSupportedError') {
+                                errorCallback(new TypeError());
                             } else {
                                 errorCallback(err);
                             }
                         }
                     })
-                    // bug #3: Chrome and Firefox reject a TypeError.
                     .catch(function (err) {
-                        if (err.name === 'TypeError') {
-                            err = notSupportedErrorFactory.create();
+                        // bug #6: Chrome, Firefox and Opera do not call the errorCallback in case
+                        // of an invalid buffer.
+                        if (typeof errorCallback === 'function' && err instanceof TypeError) {
+                            errorCallback(err);
+                        }
 
-                            // bug #6: Chrome and Firefox do not call the errorCallback in case of an invalid buffer.
-                            if (typeof errorCallback === 'function') {
-                                errorCallback(err);
-                            }
-
-                            throw err;
+                        // bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
+                        if (err instanceof DOMException && err.name === 'NotSupportedError') {
+                            throw new TypeError();
                         }
 
                         throw err;
@@ -140,11 +142,11 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
             return new Promise((resolve, reject) => {
 
                 function fail (err) {
-                    reject(err);
-
                     if (typeof errorCallback === 'function') {
                         errorCallback(err);
                     }
+
+                    reject(err);
                 }
 
                 function succeed (audioBufferWrapper) {
@@ -155,7 +157,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
                     }
                 }
 
-                // bug #2: Safari throws a TypeError.
+                // bug #26: Safari throws a synchronous error.
                 try {
                     // bug #1: Safari requires a successCallback.
                     this._unpatchedOfflineAudioContext.decodeAudioData(audioData, function (audioBuffer) {
@@ -174,7 +176,7 @@ export function offlineAudioContextConstructor (audioBufferWrapper, audioNodeCon
                         }
                     });
                 } catch (err) {
-                    fail(notSupportedErrorFactory.create());
+                    fail(err);
                 }
             });
         }
