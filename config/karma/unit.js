@@ -59,8 +59,8 @@ module.exports = function (config) {
                 ChromeBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'chrome',
-                    os: 'OS X',
-                    os_version: 'El Capitan' // eslint-disable-line camelcase
+                    os: 'macOS',
+                    os_version: 'Sierra' // eslint-disable-line camelcase
                 },
                 EdgeBrowserStack: {
                     base: 'BrowserStack',
@@ -71,14 +71,14 @@ module.exports = function (config) {
                 FirefoxBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'firefox',
-                    os: 'OS X',
-                    os_version: 'El Capitan' // eslint-disable-line camelcase
+                    os: 'macOS',
+                    os_version: 'Sierra' // eslint-disable-line camelcase
                 },
                 SafariBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'safari',
-                    os: 'OS X',
-                    os_version: 'El Capitan' // eslint-disable-line camelcase
+                    os: 'macOS',
+                    os_version: 'Sierra' // eslint-disable-line camelcase
                 }
             },
 
