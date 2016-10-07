@@ -37,7 +37,29 @@ describe('offlineAudioContextConstructor', function () {
 
     });
 
+    describe('createAnalyser()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var analyserNode = offlineAudioContext.createAnalyser(),
+                gainNode = offlineAudioContext.createGain();
+
+            expect(analyserNode.connect(gainNode)).to.be.undefined;
+        });
+
+    });
+
     describe('createBiquadFilter()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
+                gainNode = offlineAudioContext.createGain();
+
+            expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
+        });
 
         describe('getFrequencyResponse()', function () {
 
@@ -169,6 +191,15 @@ describe('offlineAudioContextConstructor', function () {
 
     describe('createChannelSplitter()', function () {
 
+        // bug #11
+
+        it('should not be chainable', function () {
+            var channelSplitterNode = offlineAudioContext.createChannelSplitter(),
+                gainNode = offlineAudioContext.createGain();
+
+            expect(channelSplitterNode.connect(gainNode)).to.be.undefined;
+        });
+
         // bug #29
 
         it('should have a channelCountMode of max', function () {
@@ -277,6 +308,19 @@ describe('offlineAudioContextConstructor', function () {
 
         it('should not be implemented', function () {
             expect(offlineAudioContext.createIIRFilter).to.be.undefined;
+        });
+
+    });
+
+    describe('createOscillator()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var gainNode = offlineAudioContext.createGain(),
+                oscillatorNode = offlineAudioContext.createOscillator();
+
+            expect(oscillatorNode.connect(gainNode)).to.be.undefined;
         });
 
     });

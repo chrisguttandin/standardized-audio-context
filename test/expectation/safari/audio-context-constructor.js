@@ -30,7 +30,29 @@ describe('audioContextConstructor', function () {
         expect(window.AudioContext).to.be.undefined;
     });
 
+    describe('createAnalyser()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var analyserNode = audioContext.createAnalyser(),
+                gainNode = audioContext.createGain();
+
+            expect(analyserNode.connect(gainNode)).to.be.undefined;
+        });
+
+    });
+
     describe('createBiquadFilter()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var biquadFilterNode = audioContext.createBiquadFilter(),
+                gainNode = audioContext.createGain();
+
+            expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
+        });
 
         describe('getFrequencyResponse()', function () {
 
@@ -174,6 +196,15 @@ describe('audioContextConstructor', function () {
 
     describe('createChannelSplitter()', function () {
 
+        // bug #11
+
+        it('should not be chainable', function () {
+            var channelSplitterNode = audioContext.createChannelSplitter(),
+                gainNode = audioContext.createGain();
+
+            expect(channelSplitterNode.connect(gainNode)).to.be.undefined;
+        });
+
         // bug #29
 
         it('should have a wrong channelCountMode', function () {
@@ -296,6 +327,19 @@ describe('audioContextConstructor', function () {
 
         it('should not be implemented', function () {
             expect(audioContext.createIIRFilter).to.be.undefined;
+        });
+
+    });
+
+    describe('createOscillator()', function () {
+
+        // bug #11
+
+        it('should not be chainable', function () {
+            var gainNode = audioContext.createGain(),
+                oscillatorNode = audioContext.createOscillator();
+
+            expect(oscillatorNode.connect(gainNode)).to.be.undefined;
         });
 
     });

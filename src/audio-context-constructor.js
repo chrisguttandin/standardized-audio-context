@@ -286,7 +286,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                 analyserNode = wrapAnalyserNode(analyserNode);
             }
 
-            // Only Chrome and Firefox support chaining in their dev versions yet.
+            // bug #11: Edge and Safari do not support chaining yet.
             if (!this._isSupportingChaining) {
                 analyserNode = audioNodeConnectMethodWrapper.wrap(analyserNode);
             }
@@ -322,7 +322,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                 throw invalidStateErrorFactory.create();
             }
 
-            // Only Chrome and Firefox support chaining in their dev versions yet.
+            // bug #11: Edge and Safari do not support chaining yet.
             if (!this._isSupportingChaining) {
                 biquadFilterNode = audioNodeConnectMethodWrapper.wrap(biquadFilterNode);
             }
@@ -447,7 +447,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                 throw invalidStateErrorFactory.create();
             }
 
-            // Only Chrome and Firefox support chaining in their dev versions yet.
+            // bug #11: Edge and Safari do not support chaining yet.
             if (!this._isSupportingChaining) {
                 channelSplitterNode = audioNodeConnectMethodWrapper.wrap(channelSplitterNode);
             }
@@ -538,7 +538,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                 throw invalidStateErrorFactory.create();
             }
 
-            // Only Chrome and Firefox support chaining in their dev versions yet.
+            // bug #11: Edge and Safari do not support chaining yet.
             if (!this._isSupportingChaining) {
                 oscillatorNode = audioNodeConnectMethodWrapper.wrap(oscillatorNode);
             }
