@@ -59,7 +59,7 @@ module.exports = function (config) {
                 ChromeBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'chrome',
-                    os: 'macOS',
+                    os: 'OS X',
                     os_version: 'Sierra' // eslint-disable-line camelcase
                 },
                 EdgeBrowserStack: {
@@ -71,13 +71,13 @@ module.exports = function (config) {
                 FirefoxBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'firefox',
-                    os: 'macOS',
+                    os: 'OS X',
                     os_version: 'Sierra' // eslint-disable-line camelcase
                 },
                 SafariBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'safari',
-                    os: 'macOS',
+                    os: 'OS X',
                     os_version: 'Sierra' // eslint-disable-line camelcase
                 }
             },
