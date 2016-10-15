@@ -119,7 +119,7 @@ describe('audioContextConstructor', function () {
         it('should be assignable to a function', function () {
             var onstatechange;
 
-            function fn() {}
+            function fn () {}
 
             onstatechange = audioContext.onstatechange = fn;
 
