@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { spy, stub } from 'sinon';
 import { ReflectiveInjector } from '@angular/core';
+import { spy } from 'sinon';
 import { unpatchedOfflineAudioContextConstructor } from '../../../../src/unpatched-offline-audio-context-constructor';
 import { window as wndw } from '../../../../src/window';
 
@@ -111,52 +111,6 @@ describe('offlineAudioContextConstructor', function () {
                 expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
             });
 
-        });
-
-    });
-
-    describe('createScriptProcessor()', function () {
-
-        // bug #8
-
-        it('should not fire onaudioprocess for every buffer', function (done) {
-            var scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
-
-            scriptProcessorNode.connect(offlineAudioContext.destination);
-            scriptProcessorNode.onaudioprocess = stub();
-
-            offlineAudioContext.oncomplete = () => {
-                expect(scriptProcessorNode.onaudioprocess.callCount).to.be.below(1000);
-
-                done();
-            };
-            offlineAudioContext.startRendering();
-        });
-
-        // bug #13
-
-        it('should not have any output', function () {
-            var channelData,
-                scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
-
-            channelData = new Float32Array(scriptProcessorNode.bufferSize);
-
-            scriptProcessorNode.connect(offlineAudioContext.destination);
-            scriptProcessorNode.onaudioprocess = function (event) {
-                channelData.fill(1);
-
-                event.outputBuffer.copyToChannel(channelData, 0);
-            };
-
-            return offlineAudioContext
-                .startRendering()
-                .then((buffer) => {
-                    var channelData = new Float32Array(scriptProcessorNode.bufferSize * 100);
-
-                    buffer.copyFromChannel(channelData, 0, 256);
-
-                    expect(Array.from(channelData)).to.not.contain(1);
-                });
         });
 
     });
