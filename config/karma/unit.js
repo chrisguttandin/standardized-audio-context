@@ -10,6 +10,8 @@ module.exports = function (config) {
 
         basePath: '../../',
 
+        browserNoActivityTimeout: 20000,
+
         browserify: {
             transform: browserify.transform
         },
