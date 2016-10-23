@@ -49,8 +49,9 @@ module.exports = function (config) {
             browsers: [
                 'ChromeBrowserStack',
                 'EdgeBrowserStack',
-                'FirefoxBrowserStack',
-                'SafariBrowserStack'
+                'FirefoxBrowserStack'
+                // @todo Enable Safari tests again.
+                // 'SafariBrowserStack'
             ],
 
             captureTimeout: 120000,
