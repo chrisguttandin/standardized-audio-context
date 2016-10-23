@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { spy, stub } from 'sinon';
 import { ReflectiveInjector } from '@angular/core';
+import { spy } from 'sinon';
 import { unpatchedOfflineAudioContextConstructor } from '../../../../src/unpatched-offline-audio-context-constructor';
 import { window as wndw } from '../../../../src/window';
 
