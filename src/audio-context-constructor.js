@@ -452,7 +452,7 @@ export function audioContextConstructor (audioBufferSourceNodeStopMethodWrapper,
                 channelSplitterNode = audioNodeConnectMethodWrapper.wrap(channelSplitterNode);
             }
 
-            // bug #29 - #32: No browser supports the spec yet.
+            // bug #29 - #32: Only Chrome Canary partially supports the spec yet.
             return channelSplitterNodeWrapper.wrap(channelSplitterNode);
         }
 
