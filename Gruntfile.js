@@ -1,6 +1,4 @@
-'use strict';
-
-var loadGruntConfig = require('load-grunt-config');
+const loadGruntConfig = require('load-grunt-config');
 
 module.exports = function (grunt) {
 

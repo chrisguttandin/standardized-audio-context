@@ -1,5 +1,3 @@
-'use strict';
-
 var common = require('./expectation.js');
 
 module.exports = function (config) {
@@ -20,9 +18,9 @@ module.exports = function (config) {
         ],
 
         preprocessors: {
-            'test/expectation/any/**/*.js': 'browserify',
-            'test/expectation/chrome/any/**/*.js': 'browserify',
-            'test/expectation/chrome/canary/**/*.js': 'browserify'
+            'test/expectation/any/**/*.js': 'webpack',
+            'test/expectation/chrome/any/**/*.js': 'webpack',
+            'test/expectation/chrome/canary/**/*.js': 'webpack'
         }
 
     });

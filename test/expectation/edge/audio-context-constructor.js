@@ -1,19 +1,19 @@
-import 'reflect-metadata';
+import 'core-js/es7/reflect';
+import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextConstructor } from '../../../src/providers/unpatched-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
-import { unpatchedAudioContextConstructor } from '../../../src/unpatched-audio-context-constructor';
-import { window as wndw } from '../../../src/window';
+import { WINDOW_PROVIDER } from '../../../src/providers/window';
 
-describe('audioContextConstructor', function () {
+describe('audioContextConstructor', () => {
 
     var audioContext,
         AudioContext;
 
     // @todo Use beforeEach() again when the AudioContext can be closed.
-    before(function () {
+    before(() => {
         /* eslint-disable indent */
         var injector = ReflectiveInjector.resolveAndCreate([
-                { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
-                { provide: wndw, useValue: window }
+                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+                WINDOW_PROVIDER
             ]);
         /* eslint-enable indent */
 
@@ -22,21 +22,21 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
-    describe('close()', function () {
+    describe('close()', () => {
 
         // bug #10
 
-        it('should not be implemented', function () {
+        it('should not be implemented', () => {
             expect(audioContext.close).to.be.undefined;
         });
 
     });
 
-    describe('createAnalyser()', function () {
+    describe('createAnalyser()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var analyserNode = audioContext.createAnalyser(),
                 gainNode = audioContext.createGain();
 
@@ -45,22 +45,22 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createBiquadFilter()', function () {
+    describe('createBiquadFilter()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var biquadFilterNode = audioContext.createBiquadFilter(),
                 gainNode = audioContext.createGain();
 
             expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
         });
 
-        describe('getFrequencyResponse()', function () {
+        describe('getFrequencyResponse()', () => {
 
             // bug #22
 
-            it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', function () {
+            it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
                 var biquadFilterNode = audioContext.createBiquadFilter(),
                     magResponse = new Float32Array(5),
                     phaseResponse = new Float32Array(5);
@@ -75,11 +75,11 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createBufferSource()', function () {
+    describe('createBufferSource()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var audioBufferSourceNode = audioContext.createBufferSource(),
                 gainNode = audioContext.createGain();
 
@@ -88,11 +88,11 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createChannelMerger()', function () {
+    describe('createChannelMerger()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var channelMergerNode = audioContext.createChannelMerger(),
                 gainNode = audioContext.createGain();
 
@@ -101,11 +101,11 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createChannelSplitter()', function () {
+    describe('createChannelSplitter()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var channelSplitterNode = audioContext.createChannelSplitter(),
                 gainNode = audioContext.createGain();
 
@@ -114,7 +114,7 @@ describe('audioContextConstructor', function () {
 
         // bug #29
 
-        it('should have a channelCountMode of max', function () {
+        it('should have a channelCountMode of max', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
@@ -122,7 +122,7 @@ describe('audioContextConstructor', function () {
 
         // bug #30
 
-        it('should allow to set the channelCountMode', function () {
+        it('should allow to set the channelCountMode', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
@@ -130,7 +130,7 @@ describe('audioContextConstructor', function () {
 
         // bug #31
 
-        it('should have a channelInterpretation of max', function () {
+        it('should have a channelInterpretation of max', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
@@ -138,7 +138,7 @@ describe('audioContextConstructor', function () {
 
         // bug #32
 
-        it('should allow to set the channelInterpretation', function () {
+        it('should allow to set the channelInterpretation', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
@@ -146,28 +146,28 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createGain()', function () {
+    describe('createGain()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var gainNodeA = audioContext.createGain(),
                 gainNodeB = audioContext.createGain();
 
             expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
         });
 
-        describe('cancelAndHoldAtTime()', function () {
+        describe('cancelAndHoldAtTime()', () => {
 
             var gainNode;
 
-            beforeEach(function () {
+            beforeEach(() => {
                 gainNode = audioContext.createGain();
             });
 
             // bug #28
 
-            it('should not be implemented', function () {
+            it('should not be implemented', () => {
                 expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
             });
 
@@ -175,21 +175,21 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createIIRFilter()', function () {
+    describe('createIIRFilter()', () => {
 
         // bug #9
 
-        it('should not be implemented', function () {
+        it('should not be implemented', () => {
             expect(audioContext.createIIRFilter).to.be.undefined;
         });
 
     });
 
-    describe('createOscillator()', function () {
+    describe('createOscillator()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var gainNode = audioContext.createGain(),
                 oscillatorNode = audioContext.createOscillator();
 
@@ -198,14 +198,14 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('decodeAudioData()', function () {
+    describe('decodeAudioData()', () => {
 
         // bug #27
 
-        it('should reject the promise with a DOMException', function (done) {
+        it('should reject the promise with a DOMException', (done) => {
             audioContext
                 .decodeAudioData(null)
-                .catch(function (err) {
+                .catch((err) => {
                     expect(err).to.be.an.instanceOf(DOMException);
 
                     done();

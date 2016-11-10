@@ -1,0 +1,16 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "declaration": true,
+    "experimentalDecorators": true,
+    "lib": [ "dom", "es2015" ],
+    "module": "es2015",
+    "moduleResolution": "node",
+    "outDir": "../build/es2015",
+    "sourceMap": true,
+    "target": "es2015",
+    "typeRoots": [
+      "../node_modules/@types"
+    ]
+  }
+}

@@ -1,18 +1,18 @@
-import 'reflect-metadata';
+import 'core-js/es7/reflect';
+import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor } from '../../../../src/providers/unpatched-offline-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
-import { unpatchedOfflineAudioContextConstructor } from '../../../../src/unpatched-offline-audio-context-constructor';
-import { window as wndw } from '../../../../src/window';
+import { WINDOW_PROVIDER } from '../../../../src/providers/window';
 
-describe('offlineAudioContextConstructor', function () {
+describe('offlineAudioContextConstructor', () => {
 
     var offlineAudioContext,
         OfflineAudioContext;
 
-    beforeEach(function () {
+    beforeEach(() => {
         /* eslint-disable indent */
         var injector = ReflectiveInjector.resolveAndCreate([
-                { provide: unpatchedOfflineAudioContextConstructor, useFactory: unpatchedOfflineAudioContextConstructor },
-                { provide: wndw, useValue: window }
+                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+                WINDOW_PROVIDER
             ]);
         /* eslint-enable indent */
 
@@ -21,13 +21,13 @@ describe('offlineAudioContextConstructor', function () {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
-    describe('createIIRFilter()', function () {
+    describe('createIIRFilter()', () => {
 
-        describe('getFrequencyResponse()', function () {
+        describe('getFrequencyResponse()', () => {
 
             // bug #23
 
-            it('should not throw an NotSupportedError', function () {
+            it('should not throw an NotSupportedError', () => {
                 var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
@@ -35,7 +35,7 @@ describe('offlineAudioContextConstructor', function () {
 
             // bug #24
 
-            it('should not throw an NotSupportedError', function () {
+            it('should not throw an NotSupportedError', () => {
                 var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));

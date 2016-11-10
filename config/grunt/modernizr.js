@@ -1,10 +1,8 @@
-'use strict';
-
 module.exports = {
     default: {
         crawl: false,
         customTests: [],
-        dest: 'build/modernizr.js',
+        dest: 'src/modernizr.js',
         options: [],
         tests: [
             'promises',

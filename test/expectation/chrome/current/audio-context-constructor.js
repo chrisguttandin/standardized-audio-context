@@ -1,19 +1,18 @@
-import 'reflect-metadata';
+import 'core-js/es7/reflect';
+import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextConstructor } from '../../../../src/providers/unpatched-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
-import { spy } from 'sinon';
-import { unpatchedAudioContextConstructor } from '../../../../src/unpatched-audio-context-constructor';
-import { window as wndw } from '../../../../src/window';
+import { WINDOW_PROVIDER } from '../../../../src/providers/window';
 
-describe('audioContextConstructor', function () {
+describe('audioContextConstructor', () => {
 
     var audioContext,
         AudioContext;
 
-    beforeEach(function () {
+    beforeEach(() => {
         /* eslint-disable indent */
         var injector = ReflectiveInjector.resolveAndCreate([
-                { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
-                { provide: wndw, useValue: window }
+                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+                WINDOW_PROVIDER
             ]);
         /* eslint-enable indent */
 
@@ -22,11 +21,11 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
-    describe('createChannelSplitter()', function () {
+    describe('createChannelSplitter()', () => {
 
         // bug #29
 
-        it('should have a channelCountMode of max', function () {
+        it('should have a channelCountMode of max', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
@@ -34,7 +33,7 @@ describe('audioContextConstructor', function () {
 
         // bug #30
 
-        it('should allow to set the channelCountMode', function () {
+        it('should allow to set the channelCountMode', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
@@ -42,7 +41,7 @@ describe('audioContextConstructor', function () {
 
         // bug #31
 
-        it('should have a channelInterpretation of max', function () {
+        it('should have a channelInterpretation of max', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
@@ -50,7 +49,7 @@ describe('audioContextConstructor', function () {
 
         // bug #32
 
-        it('should allow to set the channelInterpretation', function () {
+        it('should allow to set the channelInterpretation', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
@@ -58,19 +57,19 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createGain()', function () {
+    describe('createGain()', () => {
 
         var gainNode;
 
-        beforeEach(function () {
+        beforeEach(() => {
             gainNode = audioContext.createGain();
         });
 
-        describe('cancelAndHoldAtTime()', function () {
+        describe('cancelAndHoldAtTime()', () => {
 
             // bug #28
 
-            it('should not be implemented', function () {
+            it('should not be implemented', () => {
                 expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
             });
 
@@ -78,16 +77,16 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('decodeAudioData()', function () {
+    describe('decodeAudioData()', () => {
 
         // bug #6
 
-        it('should not call the errorCallback at all', function (done) {
-            var errorCallback = spy();
+        it('should not call the errorCallback at all', (done) => {
+            var errorCallback = sinon.spy(); // eslint-disable-line no-undef
 
-            audioContext.decodeAudioData(null, function () {}, errorCallback);
+            audioContext.decodeAudioData(null, () => {}, errorCallback);
 
-            setTimeout(function () {
+            setTimeout(() => {
                 expect(errorCallback).to.have.not.been.called;
 
                 done();

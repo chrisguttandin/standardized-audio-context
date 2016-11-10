@@ -1,8 +1,6 @@
-'use strict';
-
 module.exports = {
     'test': {
-        configFile: 'config/karma/unit.js'
+        configFile: 'config/karma/config.js'
     },
     'test-chrome': {
         configFile: 'config/karma/expectation-chrome.js'

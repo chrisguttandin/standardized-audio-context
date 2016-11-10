@@ -7,7 +7,9 @@
     "globals": {
         "expect": false
     },
-    "parser": "babel-eslint",
+    "parserOptions": {
+        "sourceType": "module"
+    },
     "rules": {
         "no-unused-expressions": 0
     }

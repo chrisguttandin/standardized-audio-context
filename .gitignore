@@ -1,4 +1,5 @@
 *.DS_Store
-build/modernizr.js
+build/
 config/environment/*
-node_modules
+node_modules/
+src/browsernizr.ts

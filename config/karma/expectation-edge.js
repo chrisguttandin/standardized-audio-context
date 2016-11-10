@@ -1,10 +1,6 @@
-'use strict';
-
 var common = require('./expectation.js');
 
 module.exports = function (config) {
-
-    var environment;
 
     common(config);
 
@@ -36,8 +32,8 @@ module.exports = function (config) {
         ],
 
         preprocessors: {
-            'test/expectation/any/**/*.js': 'browserify',
-            'test/expectation/edge/**/*.js': 'browserify'
+            'test/expectation/any/**/*.js': 'webpack',
+            'test/expectation/edge/**/*.js': 'webpack'
         }
 
     });
@@ -54,7 +50,7 @@ module.exports = function (config) {
 
     } else {
 
-        environment = require('../environment/local.json');
+        const environment = require('../environment/local.json');
 
         config.set({
 

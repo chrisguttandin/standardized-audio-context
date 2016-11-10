@@ -1,18 +1,18 @@
-import 'reflect-metadata';
+import 'core-js/es7/reflect';
+import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor } from '../../../../src/providers/unpatched-offline-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
-import { unpatchedOfflineAudioContextConstructor } from '../../../../src/unpatched-offline-audio-context-constructor';
-import { window as wndw } from '../../../../src/window';
+import { WINDOW_PROVIDER } from '../../../../src/providers/window';
 
-describe('offlineAudioContextConstructor', function () {
+describe('offlineAudioContextConstructor', () => {
 
     var offlineAudioContext,
         OfflineAudioContext;
 
-    beforeEach(function () {
+    beforeEach(() => {
         /* eslint-disable indent */
         var injector = ReflectiveInjector.resolveAndCreate([
-                { provide: unpatchedOfflineAudioContextConstructor, useFactory: unpatchedOfflineAudioContextConstructor },
-                { provide: wndw, useValue: window }
+                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+                WINDOW_PROVIDER
             ]);
         /* eslint-enable indent */
 
@@ -21,13 +21,13 @@ describe('offlineAudioContextConstructor', function () {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
-    describe('createBiquadFilter()', function () {
+    describe('createBiquadFilter()', () => {
 
-        describe('getFrequencyResponse()', function () {
+        describe('getFrequencyResponse()', () => {
 
             // bug #22
 
-            it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', function () {
+            it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
                 var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
                     magResponse = new Float32Array(5),
                     phaseResponse = new Float32Array(5);
@@ -42,11 +42,11 @@ describe('offlineAudioContextConstructor', function () {
 
     });
 
-    describe('createGain()', function () {
+    describe('createGain()', () => {
 
         // bug #12
 
-        it('should not allow to disconnect a specific destination', function (done) {
+        it('should not allow to disconnect a specific destination', (done) => {
             var candidate,
                 dummy,
                 ones,
@@ -83,11 +83,11 @@ describe('offlineAudioContextConstructor', function () {
 
     });
 
-    describe('createIIRFilter()', function () {
+    describe('createIIRFilter()', () => {
 
         // bug #9
 
-        it('should not be implemented', function () {
+        it('should not be implemented', () => {
             expect(offlineAudioContext.createIIRFilter).to.be.undefined;
         });
 

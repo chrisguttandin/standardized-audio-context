@@ -1,17 +1,19 @@
-'use strict';
-
 module.exports = {
     build: [
         'clean:build',
         'modernizr',
-        'replace:modernizr'
+        'replace:modernizr',
+        'clean:modernizr',
+        'sh:build',
+        'uglify'
     ],
     continuous: [
         'test',
         'watch:continuous'
     ],
     lint: [
-        'eslint'
+        'eslint',
+        'tslint'
     ],
     test: [
         'build',

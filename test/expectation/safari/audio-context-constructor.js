@@ -1,23 +1,23 @@
-import 'reflect-metadata';
+import 'core-js/es7/reflect';
+import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextConstructor } from '../../../src/providers/unpatched-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
+import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
-import { unpatchedAudioContextConstructor } from '../../../src/unpatched-audio-context-constructor';
-import { window as wndw } from '../../../src/window';
 
-describe('audioContextConstructor', function () {
+describe('audioContextConstructor', () => {
 
     var audioContext,
         AudioContext;
 
-    afterEach(function () {
+    afterEach(() => {
         return audioContext.close();
     });
 
-    beforeEach(function () {
+    beforeEach(() => {
         /* eslint-disable indent */
         var injector = ReflectiveInjector.resolveAndCreate([
-                { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
-                { provide: wndw, useValue: window }
+                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+                WINDOW_PROVIDER
             ]);
         /* eslint-enable indent */
 
@@ -26,15 +26,15 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
-    it('should not provide an unprefixed constructor', function () {
+    it('should not provide an unprefixed constructor', () => {
         expect(window.AudioContext).to.be.undefined;
     });
 
-    describe('createAnalyser()', function () {
+    describe('createAnalyser()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var analyserNode = audioContext.createAnalyser(),
                 gainNode = audioContext.createGain();
 
@@ -43,22 +43,22 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createBiquadFilter()', function () {
+    describe('createBiquadFilter()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var biquadFilterNode = audioContext.createBiquadFilter(),
                 gainNode = audioContext.createGain();
 
             expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
         });
 
-        describe('getFrequencyResponse()', function () {
+        describe('getFrequencyResponse()', () => {
 
             // bug #22
 
-            it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', function () {
+            it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
                 var biquadFilterNode = audioContext.createBiquadFilter(),
                     magResponse = new Float32Array(5),
                     phaseResponse = new Float32Array(5);
@@ -73,11 +73,11 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createBufferSource()', function () {
+    describe('createBufferSource()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var audioBufferSourceNode = audioContext.createBufferSource(),
                 gainNode = audioContext.createGain();
 
@@ -86,7 +86,7 @@ describe('audioContextConstructor', function () {
 
         // bug #18
 
-        it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', function () {
+        it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', () => {
             var audioBuffer = audioContext.createBuffer(1, 100, 44100),
                 audioBufferSourceNode = audioContext.createBufferSource();
 
@@ -94,19 +94,19 @@ describe('audioContextConstructor', function () {
             audioBufferSourceNode.connect(audioContext.destination);
             audioBufferSourceNode.start();
             audioBufferSourceNode.stop(audioContext.currentTime + 1);
-            expect(function () {
+            expect(() => {
                 audioBufferSourceNode.stop();
             }).to.throw(Error);
         });
 
         // bug #19
 
-        it('should not ignore calls to stop() of an already stopped AudioBufferSourceNode', function (done) {
+        it('should not ignore calls to stop() of an already stopped AudioBufferSourceNode', (done) => {
             var audioBuffer = audioContext.createBuffer(1, 100, 44100),
                 audioBufferSourceNode = audioContext.createBufferSource();
 
-            audioBufferSourceNode.onended = function () {
-                expect(function () {
+            audioBufferSourceNode.onended = () => {
+                expect(() => {
                     audioBufferSourceNode.stop();
                 }).to.throw(Error);
 
@@ -121,11 +121,11 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createChannelMerger()', function () {
+    describe('createChannelMerger()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var channelMergerNode = audioContext.createChannelMerger(),
                 gainNode = audioContext.createGain();
 
@@ -134,13 +134,13 @@ describe('audioContextConstructor', function () {
 
         // bug #15
 
-        it('should have a wrong channelCount', function () {
+        it('should have a wrong channelCount', () => {
             var channelMergerNode = audioContext.createChannelMerger();
 
             expect(channelMergerNode.channelCount).to.not.equal(1);
         });
 
-        it('should have a wrong channelCountMode', function () {
+        it('should have a wrong channelCountMode', () => {
             var channelMergerNode = audioContext.createChannelMerger();
 
             expect(channelMergerNode.channelCountMode).to.not.equal('explicit');
@@ -148,7 +148,7 @@ describe('audioContextConstructor', function () {
 
         // bug #20
 
-        it('should not handle unconnected channels as silence', function (done) {
+        it('should not handle unconnected channels as silence', (done) => {
             var audioBuffer,
                 audioBufferSourceNode = audioContext.createBufferSource(),
                 channelMergerNode = audioContext.createChannelMerger(),
@@ -194,11 +194,11 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createChannelSplitter()', function () {
+    describe('createChannelSplitter()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var channelSplitterNode = audioContext.createChannelSplitter(),
                 gainNode = audioContext.createGain();
 
@@ -207,7 +207,7 @@ describe('audioContextConstructor', function () {
 
         // bug #29
 
-        it('should have a wrong channelCountMode', function () {
+        it('should have a wrong channelCountMode', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
@@ -215,7 +215,7 @@ describe('audioContextConstructor', function () {
 
         // bug #30
 
-        it('should allow to set the channelCountMode', function () {
+        it('should allow to set the channelCountMode', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
@@ -223,7 +223,7 @@ describe('audioContextConstructor', function () {
 
         // bug #31
 
-        it('should have a wrong channelInterpretation', function () {
+        it('should have a wrong channelInterpretation', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
@@ -231,7 +231,7 @@ describe('audioContextConstructor', function () {
 
         // bug #32
 
-        it('should allow to set the channelInterpretation', function () {
+        it('should allow to set the channelInterpretation', () => {
             var channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
@@ -239,11 +239,11 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createGain()', function () {
+    describe('createGain()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var gainNodeA = audioContext.createGain(),
                 gainNodeB = audioContext.createGain();
 
@@ -252,7 +252,7 @@ describe('audioContextConstructor', function () {
 
         // bug #12
 
-        it('should not allow to disconnect a specific destination', function (done) {
+        it('should not allow to disconnect a specific destination', (done) => {
             var analyzer,
                 candidate,
                 channelData,
@@ -280,7 +280,7 @@ describe('audioContextConstructor', function () {
             candidate.connect(dummy);
             candidate.disconnect(dummy);
 
-            analyzer.onaudioprocess = function (event) {
+            analyzer.onaudioprocess = (event) => {
                 var channelData = event.inputBuffer.getChannelData(0);
 
                 if (Array.prototype.some.call(channelData, (sample) => sample === 1)) {
@@ -290,7 +290,7 @@ describe('audioContextConstructor', function () {
 
             source.start();
 
-            setTimeout(function () {
+            setTimeout(() => {
                 source.stop();
 
                 analyzer.onaudioprocess = null;
@@ -303,17 +303,17 @@ describe('audioContextConstructor', function () {
             }, 500);
         });
 
-        describe('cancelAndHoldAtTime()', function () {
+        describe('cancelAndHoldAtTime()', () => {
 
             var gainNode;
 
-            beforeEach(function () {
+            beforeEach(() => {
                 gainNode = audioContext.createGain();
             });
 
             // bug #28
 
-            it('should not be implemented', function () {
+            it('should not be implemented', () => {
                 expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
             });
 
@@ -321,21 +321,21 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('createIIRFilter()', function () {
+    describe('createIIRFilter()', () => {
 
         // bug #9
 
-        it('should not be implemented', function () {
+        it('should not be implemented', () => {
             expect(audioContext.createIIRFilter).to.be.undefined;
         });
 
     });
 
-    describe('createOscillator()', function () {
+    describe('createOscillator()', () => {
 
         // bug #11
 
-        it('should not be chainable', function () {
+        it('should not be chainable', () => {
             var gainNode = audioContext.createGain(),
                 oscillatorNode = audioContext.createOscillator();
 
@@ -344,15 +344,15 @@ describe('audioContextConstructor', function () {
 
     });
 
-    describe('decodeAudioData()', function () {
+    describe('decodeAudioData()', () => {
 
         // bug #1
 
-        it('should require the success callback function as a parameter', function (done) {
-            loadFixture('1000-frames-of-noise.wav', function (err, arrayBuffer) {
+        it('should require the success callback function as a parameter', (done) => {
+            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
-                expect(function () {
+                expect(() => {
                     audioContext.decodeAudioData(arrayBuffer);
                 }).to.throw(TypeError, 'Not enough arguments');
 
@@ -366,10 +366,10 @@ describe('audioContextConstructor', function () {
             this.timeout(5000);
 
             // PNG files are not supported by any browser :-)
-            loadFixture('one-pixel-of-transparency.png', function (err, arrayBuffer) {
+            loadFixture('one-pixel-of-transparency.png', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
-                audioContext.decodeAudioData(arrayBuffer, function () {}, function (err) {
+                audioContext.decodeAudioData(arrayBuffer, () => {}, (err) => {
                     expect(err).to.be.null;
 
                     done();
@@ -379,11 +379,11 @@ describe('audioContextConstructor', function () {
 
         // bug #5
 
-        it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
-            loadFixture('1000-frames-of-noise.wav', function (err, arrayBuffer) {
+        it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', (done) => {
+            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
-                audioContext.decodeAudioData(arrayBuffer, function (audioBuffer) {
+                audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
                     expect(audioBuffer.copyFromChannel).to.be.undefined;
                     expect(audioBuffer.copyToChannel).to.be.undefined;
 
@@ -394,11 +394,11 @@ describe('audioContextConstructor', function () {
 
         // bug #21
 
-        it('should not return a promise', function (done) {
-            loadFixture('1000-frames-of-noise.wav', function (err, arrayBuffer) {
+        it('should not return a promise', (done) => {
+            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
-                expect(audioContext.decodeAudioData(arrayBuffer, function () {})).to.be.undefined;
+                expect(audioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
 
                 done();
             });
@@ -406,9 +406,9 @@ describe('audioContextConstructor', function () {
 
         // bug #26
 
-        it('should throw a synchronous error', function (done) {
+        it('should throw a synchronous error', (done) => {
             try {
-                audioContext.decodeAudioData(null, function () {});
+                audioContext.decodeAudioData(null, () => {});
             } catch (err) {
                 done();
             }

@@ -1,18 +1,18 @@
-import 'reflect-metadata';
+import 'core-js/es7/reflect';
+import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextConstructor } from '../../../../src/providers/unpatched-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
-import { unpatchedAudioContextConstructor } from '../../../../src/unpatched-audio-context-constructor';
-import { window as wndw } from '../../../../src/window';
+import { WINDOW_PROVIDER } from '../../../../src/providers/window';
 
-describe('audioContextConstructor', function () {
+describe('audioContextConstructor', () => {
 
     var audioContext,
         AudioContext;
 
-    beforeEach(function () {
+    beforeEach(() => {
         /* eslint-disable indent */
         var injector = ReflectiveInjector.resolveAndCreate([
-                { provide: unpatchedAudioContextConstructor, useFactory: unpatchedAudioContextConstructor },
-                { provide: wndw, useValue: window }
+                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+                WINDOW_PROVIDER
             ]);
         /* eslint-enable indent */
 
@@ -21,13 +21,13 @@ describe('audioContextConstructor', function () {
         audioContext = new AudioContext();
     });
 
-    describe('createIIRFilter()', function () {
+    describe('createIIRFilter()', () => {
 
-        describe('getFrequencyResponse()', function () {
+        describe('getFrequencyResponse()', () => {
 
             // bug #23
 
-            it('should not throw an NotSupportedError', function () {
+            it('should not throw an NotSupportedError', () => {
                 var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
@@ -35,7 +35,7 @@ describe('audioContextConstructor', function () {
 
             // bug #24
 
-            it('should not throw an NotSupportedError', function () {
+            it('should not throw an NotSupportedError', () => {
                 var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));

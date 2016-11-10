@@ -1,10 +1,10 @@
 export const loadFixture = (fixture, callback) => {
     var request = new XMLHttpRequest();
 
-    request.onerror = function () {
+    request.onerror = () => {
         callback('request-failed');
     };
-    request.onload = function (event) {
+    request.onload = (event) => {
         callback(null, event.target.response);
     };
     request.open('GET', 'base/test/fixtures/' + fixture);
