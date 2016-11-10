@@ -114,52 +114,6 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
-    describe('createScriptProcessor()', () => {
-
-        // bug #8
-
-        it('should not fire onaudioprocess for every buffer', (done) => {
-            var scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
-
-            scriptProcessorNode.connect(offlineAudioContext.destination);
-            scriptProcessorNode.onaudioprocess = sinon.stub(); // eslint-disable-line no-undef
-
-            offlineAudioContext.oncomplete = () => {
-                expect(scriptProcessorNode.onaudioprocess.callCount).to.be.below(1000);
-
-                done();
-            };
-            offlineAudioContext.startRendering();
-        });
-
-        // bug #13
-
-        it('should not have any output', () => {
-            var channelData,
-                scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
-
-            channelData = new Float32Array(scriptProcessorNode.bufferSize);
-
-            scriptProcessorNode.connect(offlineAudioContext.destination);
-            scriptProcessorNode.onaudioprocess = (event) => {
-                channelData.fill(1);
-
-                event.outputBuffer.copyToChannel(channelData, 0);
-            };
-
-            return offlineAudioContext
-                .startRendering()
-                .then((buffer) => {
-                    var channelData = new Float32Array(scriptProcessorNode.bufferSize * 100);
-
-                    buffer.copyFromChannel(channelData, 0, 256);
-
-                    expect(Array.from(channelData)).to.not.contain(1);
-                });
-        });
-
-    });
-
     describe('decodeAudioData()', () => {
 
         // bug #6
