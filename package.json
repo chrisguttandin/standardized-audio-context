@@ -13,7 +13,7 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.18.0",
     "chai": "^3.5.0",
-    "eslint-config-holy-grail": "^12.0.0",
+    "eslint-config-holy-grail": "^13.0.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
@@ -42,8 +42,8 @@
     "rollup-plugin-babel": "^2.6.1",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
-    "ts-loader": "^1.1.0",
-    "tslint-config-holy-grail": "^2.0.1",
+    "ts-loader": "^1.2.0",
+    "tslint-config-holy-grail": "^3.0.2",
     "typescript": "^2.1.1",
     "webpack": "^2.1.0-beta.25"
   },
