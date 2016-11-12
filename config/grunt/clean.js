@@ -1,7 +1,6 @@
 module.exports = {
     build: [
-        'build/*',
-        '!build/.git*'
+        'build/*'
     ],
     modernizr: [
         'src/modernizr.js'
