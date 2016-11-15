@@ -59,7 +59,8 @@ module.exports = function (config) {
 
             browsers: [
                 'ChromeBrowserStack',
-                'EdgeBrowserStack',
+                // @todo Enable Edge tests again.
+                // 'EdgeBrowserStack',
                 'FirefoxBrowserStack'
                 // @todo Enable Safari tests again.
                 // 'SafariBrowserStack'
@@ -109,6 +110,7 @@ module.exports = function (config) {
             browsers: [
                 'Chrome',
                 'ChromeCanary',
+                // @todo Enable Edge tests again.
                 // 'EdgeBrowserStack',
                 'Firefox',
                 'FirefoxDeveloper',
