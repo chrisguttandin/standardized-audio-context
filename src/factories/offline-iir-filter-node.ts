@@ -66,17 +66,15 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
         }
 
         for (let i = 0, length = frequencyHz.length; i < length; i += 1) {
-            let denominator,
-                numerator,
-                omega,
-                response,
-                z;
+            const omega = -Math.PI * (frequencyHz[i] / this._nyquist);
 
-            omega = -Math.PI * (frequencyHz[i] / this._nyquist);
-            z = [ Math.cos(omega), Math.sin(omega) ];
-            numerator = evaluatePolynomial(this._feedforward, z);
-            denominator = evaluatePolynomial(this._feedback, z);
-            response = divide(numerator, denominator);
+            const z = [ Math.cos(omega), Math.sin(omega) ];
+
+            const numerator = evaluatePolynomial(this._feedforward, z);
+
+            const denominator = evaluatePolynomial(this._feedback, z);
+
+            const response = divide(numerator, denominator);
 
             magResponse[i] = Math.sqrt((response[0] * response[0]) + (response[1] * response[1]));
             phaseResponse[i] = Math.atan2(response[1], response[0]);
@@ -122,7 +120,7 @@ export class OfflineIIRFilterNodeFaker {
         numberOfChannels,
         promiseSupportTester,
         sampleRate,
-        UnpatchedOfflineAudioContext
+        UnpatchedOfflineAudioContext // tslint:disable-line:variable-name
     }) {
         if (feedback.length === 0 || feedback.length > 20) {
             throw notSupportedErrorFactory.create();
@@ -213,8 +211,9 @@ export class OfflineIIRFilterNodeFaker {
         // tslint:disable-next-line:max-line-length
         // {@link https://chromium.googlesource.com/chromium/src.git/+/master/third_party/WebKit/Source/platform/audio/IIRFilter.cpp|Chromium's IIRFilter}.
         for (let i = 0, numberOfChannels = renderedBuffer.numberOfChannels; i < numberOfChannels; i += 1) {
-            let input = renderedBuffer.getChannelData(i),
-                output = filteredBuffer.getChannelData(i);
+            const input = renderedBuffer.getChannelData(i);
+
+            const output = filteredBuffer.getChannelData(i);
 
             // @todo Use TypedArray.prototype.fill() once it lands in Safari.
             for (let i = 0; i < bufferLength; i += 1) {
@@ -326,14 +325,15 @@ export class OfflineIIRFilterNodeFaker {
 export class OfflineIIRFilterNodeFakerFactory {
 
     constructor (
+        @Inject(unpatchedOfflineAudioContextConstructor) private _UnpatchedOfflineAudioContext,
         @Inject(InvalidStateErrorFactory) private _invalidStateErrorFactory,
         @Inject(NotSupportedErrorFactory) private _notSupportedErrorFactory,
-        @Inject(PromiseSupportTester) private _promiseSupportTester,
-        @Inject(unpatchedOfflineAudioContextConstructor) private _UnpatchedOfflineAudioContext
+        @Inject(PromiseSupportTester) private _promiseSupportTester
     ) { }
 
     public create ({ fakeNodeStore, feedback, feedforward, length, nativeNode, numberOfChannels, sampleRate }) {
         return new OfflineIIRFilterNodeFaker({
+            UnpatchedOfflineAudioContext: this._UnpatchedOfflineAudioContext,
             fakeNodeStore,
             feedback,
             feedforward,
@@ -343,8 +343,7 @@ export class OfflineIIRFilterNodeFakerFactory {
             notSupportedErrorFactory: this._notSupportedErrorFactory,
             numberOfChannels,
             promiseSupportTester: this._promiseSupportTester,
-            sampleRate,
-            UnpatchedOfflineAudioContext: this._UnpatchedOfflineAudioContext
+            sampleRate
         });
     }
 

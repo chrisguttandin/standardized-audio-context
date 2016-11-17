@@ -586,7 +586,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         }
 
                         reject(err);
-                    }
+                    };
 
                     const succeed = (dBffrWrppr) => {
                         resolve(dBffrWrppr);
@@ -594,7 +594,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         if (typeof successCallback === 'function') {
                             successCallback(dBffrWrppr);
                         }
-                    }
+                    };
 
                     // Bug #26: Safari throws a synchronous error.
                     try {

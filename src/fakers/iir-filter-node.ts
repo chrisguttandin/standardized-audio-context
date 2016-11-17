@@ -123,17 +123,15 @@ export class IIRFilterNodeFaker {
             }
 
             for (let i = 0, length = frequencyHz.length; i < length; i += 1) {
-                let denominator,
-                    numerator,
-                    omega,
-                    response,
-                    z;
+                const omega = -Math.PI * (frequencyHz[i] / nyquist);
 
-                omega = -Math.PI * (frequencyHz[i] / nyquist);
-                z = [ Math.cos(omega), Math.sin(omega) ];
-                numerator = evaluatePolynomial(feedforward, z);
-                denominator = evaluatePolynomial(feedback, z);
-                response = divide(numerator, denominator);
+                const z = [ Math.cos(omega), Math.sin(omega) ];
+
+                const numerator = evaluatePolynomial(feedforward, z);
+
+                const denominator = evaluatePolynomial(feedback, z);
+
+                const response = divide(numerator, denominator);
 
                 magResponse[i] = Math.sqrt((response[0] * response[0]) + (response[1] * response[1]));
                 phaseResponse[i] = Math.atan2(response[1], response[0]);
