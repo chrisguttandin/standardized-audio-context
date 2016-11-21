@@ -493,7 +493,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Bug #9: Only Chrome and Opera currently implement the createIIRFilter() method.
+                // Bug #9: Only Chrome, Firefox and Opera currently support IIRFilterNodes.
                 if (this._unpatchedAudioContext.createIIRFilter === undefined) {
                     return iIRFilterNodeFaker.fake(feedforward, feedback, this, this._unpatchedAudioContext);
                 }

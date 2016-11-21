@@ -155,7 +155,7 @@ describe('OfflineAudioContext', () => {
 
         describe('getFrequencyResponse()', () => {
 
-            // bug #22 This is not implemented in FirefoxDeveloper, Opera and Safari.
+            // bug #22 This is not yet implemented in Edge and Safari.
 
             xit('should fill the magResponse and phaseResponse arrays', () => {
                 var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
