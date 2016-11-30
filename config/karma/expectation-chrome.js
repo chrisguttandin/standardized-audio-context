@@ -1,4 +1,4 @@
-var common = require('./expectation.js');
+const common = require('./expectation.js');
 
 module.exports = (config) => {
 
