@@ -7,7 +7,6 @@ import { InvalidStateErrorFactory } from '../../../src/factories/invalid-state-e
 import { NotSupportedErrorFactory } from '../../../src/factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from '../../../src/factories/offline-audio-buffer-source-node';
 import { OfflineAudioDestinationNodeFakerFactory } from '../../../src/factories/offline-audio-destination-node';
-import { OfflineAudioNodeProxy } from '../../../src/offline-audio-node';
 import { OfflineBiquadFilterNodeFakerFactory } from '../../../src/factories/offline-biquad-filter-node';
 import { OfflineGainNodeFakerFactory } from '../../../src/factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from '../../../src/factories/offline-iir-filter-node';
@@ -31,7 +30,6 @@ describe('OfflineAudioContext', () => {
             InvalidStateErrorFactory,
             NotSupportedErrorFactory,
             OfflineAudioBufferSourceNodeFakerFactory,
-            OfflineAudioNodeProxy,
             OfflineAudioDestinationNodeFakerFactory,
             OfflineBiquadFilterNodeFakerFactory,
             OfflineGainNodeFakerFactory,
