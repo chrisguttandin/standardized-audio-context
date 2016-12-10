@@ -5,16 +5,14 @@ import { WINDOW_PROVIDER } from '../../../../src/providers/window';
 
 describe('offlineAudioContextConstructor', () => {
 
-    var offlineAudioContext,
-        OfflineAudioContext;
+    let offlineAudioContext;
+    let OfflineAudioContext;
 
     beforeEach(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
@@ -26,18 +24,14 @@ describe('offlineAudioContextConstructor', () => {
         // bug #12
 
         it('should not allow to disconnect a specific destination', (done) => {
-            var candidate,
-                dummy,
-                ones,
-                source;
+            const candidate = offlineAudioContext.createGain();
+            const dummy = offlineAudioContext.createGain();
+            const ones = offlineAudioContext.createBuffer(1, 1, 44100);
 
-            candidate = offlineAudioContext.createGain();
-            dummy = offlineAudioContext.createGain();
-
-            ones = offlineAudioContext.createBuffer(1, 1, 44100);
             ones.getChannelData(0)[0] = 1;
 
-            source = offlineAudioContext.createBufferSource();
+            const source = offlineAudioContext.createBufferSource();
+
             source.buffer = ones;
 
             source.connect(candidate);
@@ -48,7 +42,7 @@ describe('offlineAudioContextConstructor', () => {
             source.start();
 
             offlineAudioContext.oncomplete = (event) => {
-                var channelData = event.renderedBuffer.getChannelData(0);
+                const channelData = event.renderedBuffer.getChannelData(0);
 
                 expect(channelData[0]).to.equal(0);
 

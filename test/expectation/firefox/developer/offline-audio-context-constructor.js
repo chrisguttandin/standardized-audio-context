@@ -5,16 +5,14 @@ import { WINDOW_PROVIDER } from '../../../../src/providers/window';
 
 describe('offlineAudioContextConstructor', () => {
 
-    var offlineAudioContext,
-        OfflineAudioContext;
+    let offlineAudioContext;
+    let OfflineAudioContext;
 
     beforeEach(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
@@ -28,7 +26,7 @@ describe('offlineAudioContextConstructor', () => {
             // bug #23
 
             it('should not throw an NotSupportedError', () => {
-                var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
             });
@@ -36,7 +34,7 @@ describe('offlineAudioContextConstructor', () => {
             // bug #24
 
             it('should not throw an NotSupportedError', () => {
-                var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
             });

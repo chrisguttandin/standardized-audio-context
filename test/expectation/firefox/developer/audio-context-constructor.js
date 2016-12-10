@@ -5,16 +5,14 @@ import { WINDOW_PROVIDER } from '../../../../src/providers/window';
 
 describe('audioContextConstructor', () => {
 
-    var audioContext,
-        AudioContext;
+    let audioContext;
+    let AudioContext;
 
     beforeEach(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         AudioContext = injector.get(unpatchedAudioContextConstructor);
 
@@ -28,7 +26,7 @@ describe('audioContextConstructor', () => {
             // bug #23
 
             it('should not throw an NotSupportedError', () => {
-                var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
             });
@@ -36,7 +34,7 @@ describe('audioContextConstructor', () => {
             // bug #24
 
             it('should not throw an NotSupportedError', () => {
-                var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
             });

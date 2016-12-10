@@ -7,10 +7,10 @@ import { ReflectiveInjector } from '@angular/core';
 
 describe('isSupportedPromise', () => {
 
-    var fakeDecodeAudioDataTypeErrorSupportTester,
-        fakeMergingSupportTester,
-        fakeModernizr,
-        injector;
+    let fakeDecodeAudioDataTypeErrorSupportTester;
+    let fakeMergingSupportTester;
+    let fakeModernizr;
+    let injector;
 
     beforeEach(() => {
         fakeDecodeAudioDataTypeErrorSupportTester = {
