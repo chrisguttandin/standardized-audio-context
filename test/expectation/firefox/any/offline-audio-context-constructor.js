@@ -6,16 +6,14 @@ import { loadFixture } from '../../../helper/load-fixture';
 
 describe('offlineAudioContextConstructor', () => {
 
-    var offlineAudioContext,
-        OfflineAudioContext;
+    let offlineAudioContext;
+    let OfflineAudioContext;
 
     beforeEach(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
@@ -27,13 +25,13 @@ describe('offlineAudioContextConstructor', () => {
         // bug #16
 
         it('should allow to set the channelCount', () => {
-            var channelMergerNode = offlineAudioContext.createChannelMerger();
+            const channelMergerNode = offlineAudioContext.createChannelMerger();
 
             channelMergerNode.channelCountMode = '2';
         });
 
         it('should allow to set the channelCountMode', () => {
-            var channelMergerNode = offlineAudioContext.createChannelMerger();
+            const channelMergerNode = offlineAudioContext.createChannelMerger();
 
             channelMergerNode.channelCountMode = 'max';
         });
@@ -45,7 +43,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #29
 
         it('should have a channelCountMode of max', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
         });
@@ -53,7 +51,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #30
 
         it('should allow to set the channelCountMode', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
         });
@@ -61,7 +59,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #31
 
         it('should have a channelInterpretation of max', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
         });
@@ -69,7 +67,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #32
 
         it('should allow to set the channelInterpretation', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
         });
@@ -81,7 +79,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #25
 
         it('should not allow to use setValueCurveAtTime after calling cancelScheduledValues', () => {
-            var gainNode = offlineAudioContext.createGain();
+            const gainNode = offlineAudioContext.createGain();
 
             gainNode.gain.setValueCurveAtTime(new Float32Array([ 1, 1 ]), 0, 1);
             gainNode.gain.cancelScheduledValues(0.2);
@@ -92,7 +90,7 @@ describe('offlineAudioContextConstructor', () => {
 
         describe('cancelAndHoldAtTime()', () => {
 
-            var gainNode;
+            let gainNode;
 
             beforeEach(() => {
                 gainNode = offlineAudioContext.createGain();
@@ -113,10 +111,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #13
 
         it('should not have any output', () => {
-            var channelData,
-                scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
-
-            channelData = new Float32Array(scriptProcessorNode.bufferSize);
+            const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
+            const channelData = new Float32Array(scriptProcessorNode.bufferSize);
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
             scriptProcessorNode.onaudioprocess = (event) => {
@@ -128,7 +124,7 @@ describe('offlineAudioContextConstructor', () => {
             return offlineAudioContext
                 .startRendering()
                 .then((buffer) => {
-                    var channelData = new Float32Array(scriptProcessorNode.bufferSize * 100);
+                    const channelData = new Float32Array(scriptProcessorNode.bufferSize * 100);
 
                     buffer.copyFromChannel(channelData, 0, 256);
 
@@ -143,7 +139,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #6
 
         it('should not call the errorCallback at all', (done) => {
-            var errorCallback = sinon.spy(); // eslint-disable-line no-undef
+            const errorCallback = sinon.spy(); // eslint-disable-line no-undef
 
             offlineAudioContext.decodeAudioData(null, () => {}, errorCallback);
 

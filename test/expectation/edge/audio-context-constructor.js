@@ -5,17 +5,15 @@ import { WINDOW_PROVIDER } from '../../../src/providers/window';
 
 describe('audioContextConstructor', () => {
 
-    var audioContext,
-        AudioContext;
+    let audioContext;
+    let AudioContext;
 
     // @todo Use beforeEach() again when the AudioContext can be closed.
     before(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         AudioContext = injector.get(unpatchedAudioContextConstructor);
 
@@ -37,8 +35,8 @@ describe('audioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var analyserNode = audioContext.createAnalyser(),
-                gainNode = audioContext.createGain();
+            const analyserNode = audioContext.createAnalyser();
+            const gainNode = audioContext.createGain();
 
             expect(analyserNode.connect(gainNode)).to.be.undefined;
         });
@@ -50,8 +48,8 @@ describe('audioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var biquadFilterNode = audioContext.createBiquadFilter(),
-                gainNode = audioContext.createGain();
+            const biquadFilterNode = audioContext.createBiquadFilter();
+            const gainNode = audioContext.createGain();
 
             expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
         });
@@ -61,9 +59,9 @@ describe('audioContextConstructor', () => {
             // bug #22
 
             it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
-                var biquadFilterNode = audioContext.createBiquadFilter(),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const biquadFilterNode = audioContext.createBiquadFilter();
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -80,8 +78,8 @@ describe('audioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var audioBufferSourceNode = audioContext.createBufferSource(),
-                gainNode = audioContext.createGain();
+            const audioBufferSourceNode = audioContext.createBufferSource();
+            const gainNode = audioContext.createGain();
 
             expect(audioBufferSourceNode.connect(gainNode)).to.be.undefined;
         });
@@ -93,8 +91,8 @@ describe('audioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var channelMergerNode = audioContext.createChannelMerger(),
-                gainNode = audioContext.createGain();
+            const channelMergerNode = audioContext.createChannelMerger();
+            const gainNode = audioContext.createGain();
 
             expect(channelMergerNode.connect(gainNode)).to.be.undefined;
         });
@@ -106,8 +104,8 @@ describe('audioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter(),
-                gainNode = audioContext.createGain();
+            const channelSplitterNode = audioContext.createChannelSplitter();
+            const gainNode = audioContext.createGain();
 
             expect(channelSplitterNode.connect(gainNode)).to.be.undefined;
         });
@@ -115,7 +113,7 @@ describe('audioContextConstructor', () => {
         // bug #29
 
         it('should have a channelCountMode of max', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
         });
@@ -123,7 +121,7 @@ describe('audioContextConstructor', () => {
         // bug #30
 
         it('should allow to set the channelCountMode', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
         });
@@ -131,7 +129,7 @@ describe('audioContextConstructor', () => {
         // bug #31
 
         it('should have a channelInterpretation of max', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
         });
@@ -139,7 +137,7 @@ describe('audioContextConstructor', () => {
         // bug #32
 
         it('should allow to set the channelInterpretation', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
         });
@@ -151,15 +149,15 @@ describe('audioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var gainNodeA = audioContext.createGain(),
-                gainNodeB = audioContext.createGain();
+            const gainNodeA = audioContext.createGain();
+            const gainNodeB = audioContext.createGain();
 
             expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
         });
 
         describe('cancelAndHoldAtTime()', () => {
 
-            var gainNode;
+            let gainNode;
 
             beforeEach(() => {
                 gainNode = audioContext.createGain();
@@ -190,8 +188,8 @@ describe('audioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var gainNode = audioContext.createGain(),
-                oscillatorNode = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const oscillatorNode = audioContext.createOscillator();
 
             expect(oscillatorNode.connect(gainNode)).to.be.undefined;
         });

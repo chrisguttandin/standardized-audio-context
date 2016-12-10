@@ -6,16 +6,14 @@ import { loadFixture } from '../../../helper/load-fixture';
 
 describe('audioContextConstructor', () => {
 
-    var audioContext,
-        AudioContext;
+    let audioContext;
+    let AudioContext;
 
     beforeEach(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         AudioContext = injector.get(unpatchedAudioContextConstructor);
 
@@ -27,13 +25,13 @@ describe('audioContextConstructor', () => {
         // bug #16
 
         it('should allow to set the channelCount', () => {
-            var channelMergerNode = audioContext.createChannelMerger();
+            const channelMergerNode = audioContext.createChannelMerger();
 
             channelMergerNode.channelCountMode = '2';
         });
 
         it('should allow to set the channelCountMode', () => {
-            var channelMergerNode = audioContext.createChannelMerger();
+            const channelMergerNode = audioContext.createChannelMerger();
 
             channelMergerNode.channelCountMode = 'max';
         });
@@ -45,7 +43,7 @@ describe('audioContextConstructor', () => {
         // bug #29
 
         it('should have a channelCountMode of max', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
         });
@@ -53,7 +51,7 @@ describe('audioContextConstructor', () => {
         // bug #30
 
         it('should allow to set the channelCountMode', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
         });
@@ -61,7 +59,7 @@ describe('audioContextConstructor', () => {
         // bug #31
 
         it('should have a channelInterpretation of max', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
         });
@@ -69,7 +67,7 @@ describe('audioContextConstructor', () => {
         // bug #32
 
         it('should allow to set the channelInterpretation', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
         });
@@ -81,7 +79,7 @@ describe('audioContextConstructor', () => {
         // bug #25
 
         it('should not allow to use setValueCurveAtTime after calling cancelScheduledValues', () => {
-            var gainNode = audioContext.createGain();
+            const gainNode = audioContext.createGain();
 
             gainNode.gain.setValueCurveAtTime(new Float32Array([ 1, 1 ]), 0, 1);
             gainNode.gain.cancelScheduledValues(0.2);
@@ -92,7 +90,7 @@ describe('audioContextConstructor', () => {
 
         describe('cancelAndHoldAtTime()', () => {
 
-            var gainNode;
+            let gainNode;
 
             beforeEach(() => {
                 gainNode = audioContext.createGain();
@@ -113,7 +111,7 @@ describe('audioContextConstructor', () => {
         // bug #6
 
         it('should not call the errorCallback at all', (done) => {
-            var errorCallback = sinon.spy(); // eslint-disable-line no-undef
+            const errorCallback = sinon.spy(); // eslint-disable-line no-undef
 
             audioContext.decodeAudioData(null, () => {}, errorCallback);
 

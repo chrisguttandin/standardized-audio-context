@@ -5,16 +5,14 @@ import { WINDOW_PROVIDER } from '../../../../src/providers/window';
 
 describe('audioContextConstructor', () => {
 
-    var audioContext,
-        AudioContext;
+    let audioContext;
+    let AudioContext;
 
     beforeEach(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         AudioContext = injector.get(unpatchedAudioContextConstructor);
 
@@ -26,22 +24,16 @@ describe('audioContextConstructor', () => {
         // bug #12
 
         it('should not allow to disconnect a specific destination', (done) => {
-            var analyzer,
-                candidate,
-                channelData,
-                dummy,
-                ones,
-                source;
+            const analyzer = audioContext.createScriptProcessor(256, 1, 1);
+            const candidate = audioContext.createGain();
+            const dummy = audioContext.createGain();
+            const ones = audioContext.createBuffer(1, 1, 44100);
+            const channelData = ones.getChannelData(0);
 
-            analyzer = audioContext.createScriptProcessor(256, 1, 1);
-            candidate = audioContext.createGain();
-            dummy = audioContext.createGain();
-
-            ones = audioContext.createBuffer(1, 1, 44100);
-            channelData = ones.getChannelData(0);
             channelData[0] = 1;
 
-            source = audioContext.createBufferSource();
+            const source = audioContext.createBufferSource();
+
             source.buffer = ones;
             source.loop = true;
 
@@ -52,7 +44,7 @@ describe('audioContextConstructor', () => {
             candidate.disconnect(dummy);
 
             analyzer.onaudioprocess = (event) => {
-                var channelData = event.inputBuffer.getChannelData(0);
+                const channelData = event.inputBuffer.getChannelData(0);
 
                 if (Array.prototype.some.call(channelData, (sample) => sample === 1)) {
                     done('should never happen');
