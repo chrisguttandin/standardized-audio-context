@@ -9,6 +9,8 @@ describe('audioContextConstructor', () => {
     let audioContext;
     let AudioContext;
 
+    afterEach(() => audioContext.close());
+
     beforeEach(() => {
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,

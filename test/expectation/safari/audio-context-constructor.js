@@ -9,9 +9,7 @@ describe('audioContextConstructor', () => {
     let audioContext;
     let AudioContext;
 
-    afterEach(() => {
-        return audioContext.close();
-    });
+    afterEach(() => audioContext.close());
 
     beforeEach(() => {
         const injector = ReflectiveInjector.resolveAndCreate([
