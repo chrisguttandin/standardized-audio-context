@@ -1,5 +1,5 @@
-import { Window } from './window';
 import { OpaqueToken } from '@angular/core';
+import { Window } from './window';
 
 export const unpatchedOfflineAudioContextConstructor = new OpaqueToken('UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
 

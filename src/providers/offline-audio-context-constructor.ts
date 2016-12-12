@@ -1,3 +1,4 @@
+import { OpaqueToken } from '@angular/core';
 import { EncodingErrorFactory } from '../factories/encoding-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from '../factories/offline-audio-buffer-source-node';
 import { OfflineAudioDestinationNodeFakerFactory } from '../factories/offline-audio-destination-node';
@@ -9,7 +10,6 @@ import { PromiseSupportTester } from '../testers/promise-support';
 import { AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
-import { OpaqueToken } from '@angular/core';
 
 export const offlineAudioContextConstructor = new OpaqueToken('OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
 

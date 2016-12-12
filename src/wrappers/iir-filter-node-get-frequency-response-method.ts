@@ -1,5 +1,5 @@
-import { NotSupportedErrorFactory } from '../factories/not-supported-error';
 import { Inject, Injectable } from '@angular/core';
+import { NotSupportedErrorFactory } from '../factories/not-supported-error';
 
 @Injectable()
 export class IIRFilterNodeGetFrequencyResponseMethodWrapper {

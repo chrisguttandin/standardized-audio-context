@@ -1,7 +1,7 @@
+import { OpaqueToken } from '@angular/core';
 import { DecodeAudioDataTypeErrorSupportTester } from '../testers/decode-audio-data-type-error-support';
 import { MergingSupportTester } from '../testers/merging-support';
 import { Modernizr } from './modernizr';
-import { OpaqueToken } from '@angular/core';
 
 export const IsSupportedPromise = new OpaqueToken('IS_SUPPORTED_PROMISE'); // tslint:disable-line:variable-name
 

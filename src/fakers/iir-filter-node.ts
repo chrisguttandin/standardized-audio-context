@@ -1,6 +1,6 @@
+import { Inject, Injectable } from '@angular/core';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../factories/not-supported-error';
-import { Inject, Injectable } from '@angular/core';
 
 function divide (a, b) {
     const denominator = (b[0] * b[0]) + (b[1] * b[1]);
