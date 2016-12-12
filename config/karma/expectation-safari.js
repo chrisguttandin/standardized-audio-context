@@ -1,6 +1,6 @@
-var common = require('./expectation.js');
+const common = require('./expectation.js');
 
-module.exports = function (config) {
+module.exports = (config) => {
 
     common(config);
 
@@ -27,6 +27,8 @@ module.exports = function (config) {
 
         config.set({
 
+            browserNoActivityTimeout: 20000,
+
             browserStack: {
                 accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
                 username: process.env.BROWSER_STACK_USERNAME
@@ -35,7 +37,6 @@ module.exports = function (config) {
             browsers: [
                 'SafariBrowserStack'
             ],
-
             captureTimeout: 120000,
 
             customLaunchers: {

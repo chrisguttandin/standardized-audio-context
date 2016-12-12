@@ -1,6 +1,6 @@
-var common = require('./expectation.js');
+const common = require('./expectation.js');
 
-module.exports = function (config) {
+module.exports = (config) => {
 
     common(config);
 
@@ -29,21 +29,28 @@ module.exports = function (config) {
 
         config.set({
 
+            browserStack: {
+                accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
+                username: process.env.BROWSER_STACK_USERNAME
+            },
+
             browsers: [
-                'FirefoxSauceLabs'
+                'FirefoxBrowserStack'
             ],
 
             captureTimeout: 120000,
 
             customLaunchers: {
-                FirefoxSauceLabs: {
-                    base: 'SauceLabs',
-                    browserName: 'firefox',
-                    platform: 'OS X 10.11'
+                FirefoxBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'firefox',
+                    os: 'OS X',
+                    os_version: 'Sierra' // eslint-disable-line camelcase
                 }
             },
 
             tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+
         });
 
     } else {

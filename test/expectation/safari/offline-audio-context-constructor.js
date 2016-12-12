@@ -6,16 +6,14 @@ import { loadFixture } from '../../helper/load-fixture';
 
 describe('offlineAudioContextConstructor', () => {
 
-    var offlineAudioContext,
-        OfflineAudioContext;
+    let offlineAudioContext;
+    let OfflineAudioContext;
 
     beforeEach(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
@@ -41,7 +39,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var analyserNode = offlineAudioContext.createAnalyser(),
+            const analyserNode = offlineAudioContext.createAnalyser(),
                 gainNode = offlineAudioContext.createGain();
 
             expect(analyserNode.connect(gainNode)).to.be.undefined;
@@ -54,7 +52,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
+            const biquadFilterNode = offlineAudioContext.createBiquadFilter(),
                 gainNode = offlineAudioContext.createGain();
 
             expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
@@ -65,9 +63,9 @@ describe('offlineAudioContextConstructor', () => {
             // bug #22
 
             it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
-                var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const biquadFilterNode = offlineAudioContext.createBiquadFilter();
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -84,8 +82,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var audioBufferSourceNode = offlineAudioContext.createBufferSource(),
-                gainNode = offlineAudioContext.createGain();
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(audioBufferSourceNode.connect(gainNode)).to.be.undefined;
         });
@@ -93,9 +91,9 @@ describe('offlineAudioContextConstructor', () => {
         // bug #14
 
         it('should not resample an oversampled AudioBuffer', (done) => {
-            var audioBuffer = offlineAudioContext.createBuffer(1, 8, 88200),
-                audioBufferSourceNode = offlineAudioContext.createBufferSource(),
-                eightRandomValues = [];
+            const audioBuffer = offlineAudioContext.createBuffer(1, 8, 88200);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const eightRandomValues = [];
 
             for (let i = 0; i < 8; i += 1) {
                 eightRandomValues[i] = (Math.random() * 2) - 1;
@@ -110,7 +108,7 @@ describe('offlineAudioContextConstructor', () => {
 
             offlineAudioContext.oncomplete = (event) => {
                 // @todo Use AudioBuffer.prototype.copyFromChannel() once it lands in Safari.
-                var channelData = event.renderedBuffer.getChannelData(0);
+                const channelData = event.renderedBuffer.getChannelData(0);
 
                 expect(channelData[0]).to.closeTo(eightRandomValues[0], 0.0000001);
                 expect(channelData[1]).to.closeTo(eightRandomValues[2], 0.0000001);
@@ -125,8 +123,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #18
 
         it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', () => {
-            var audioBuffer = offlineAudioContext.createBuffer(1, 100, 44100),
-                audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const audioBuffer = offlineAudioContext.createBuffer(1, 100, 44100);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
             audioBufferSourceNode.buffer = audioBuffer;
             audioBufferSourceNode.connect(offlineAudioContext.destination);
@@ -140,8 +138,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #19
 
         it('should not ignore calls to stop() of an already stopped AudioBufferSourceNode', (done) => {
-            var audioBuffer = offlineAudioContext.createBuffer(1, 100, 44100),
-                audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const audioBuffer = offlineAudioContext.createBuffer(1, 100, 44100);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
             audioBufferSourceNode.onended = () => {
                 expect(() => {
@@ -166,8 +164,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var channelMergerNode = offlineAudioContext.createChannelMerger(),
-                gainNode = offlineAudioContext.createGain();
+            const channelMergerNode = offlineAudioContext.createChannelMerger();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(channelMergerNode.connect(gainNode)).to.be.undefined;
         });
@@ -175,13 +173,13 @@ describe('offlineAudioContextConstructor', () => {
         // bug #15
 
         it('should have a wrong channelCount', () => {
-            var channelMergerNode = offlineAudioContext.createChannelMerger();
+            const channelMergerNode = offlineAudioContext.createChannelMerger();
 
             expect(channelMergerNode.channelCount).to.not.equal(1);
         });
 
         it('should have a wrong channelCountMode', () => {
-            var channelMergerNode = offlineAudioContext.createChannelMerger();
+            const channelMergerNode = offlineAudioContext.createChannelMerger();
 
             expect(channelMergerNode.channelCountMode).to.not.equal('explicit');
         });
@@ -193,7 +191,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter(),
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter(),
                 gainNode = offlineAudioContext.createGain();
 
             expect(channelSplitterNode.connect(gainNode)).to.be.undefined;
@@ -202,7 +200,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #29
 
         it('should have a channelCountMode of max', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
         });
@@ -210,7 +208,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #30
 
         it('should allow to set the channelCountMode', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
         });
@@ -218,7 +216,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #31
 
         it('should have a channelInterpretation of max', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
         });
@@ -226,7 +224,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #32
 
         it('should allow to set the channelInterpretation', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
         });
@@ -238,8 +236,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var gainNodeA = offlineAudioContext.createGain(),
-                gainNodeB = offlineAudioContext.createGain();
+            const gainNodeA = offlineAudioContext.createGain();
+            const gainNodeB = offlineAudioContext.createGain();
 
             expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
         });
@@ -247,20 +245,17 @@ describe('offlineAudioContextConstructor', () => {
         // bug #12
 
         it('should not allow to disconnect a specific destination', (done) => {
-            var candidate,
-                dummy,
-                ones,
-                source;
-
-            candidate = offlineAudioContext.createGain();
-            dummy = offlineAudioContext.createGain();
+            const candidate = offlineAudioContext.createGain();
+            const dummy = offlineAudioContext.createGain();
 
             // Safari does not play buffers which contain just one frame.
-            ones = offlineAudioContext.createBuffer(1, 2, 44100);
+            const ones = offlineAudioContext.createBuffer(1, 2, 44100);
+
             ones.getChannelData(0)[0] = 1;
             ones.getChannelData(0)[1] = 1;
 
-            source = offlineAudioContext.createBufferSource();
+            const source = offlineAudioContext.createBufferSource();
+
             source.buffer = ones;
 
             source.connect(candidate);
@@ -271,7 +266,7 @@ describe('offlineAudioContextConstructor', () => {
             source.start();
 
             offlineAudioContext.oncomplete = (event) => {
-                var channelData = event.renderedBuffer.getChannelData(0);
+                const channelData = event.renderedBuffer.getChannelData(0);
 
                 expect(channelData[0]).to.equal(0);
 
@@ -285,7 +280,7 @@ describe('offlineAudioContextConstructor', () => {
 
         describe('cancelAndHoldAtTime()', () => {
 
-            var gainNode;
+            let gainNode;
 
             beforeEach(() => {
                 gainNode = offlineAudioContext.createGain();
@@ -316,8 +311,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var gainNode = offlineAudioContext.createGain(),
-                oscillatorNode = offlineAudioContext.createOscillator();
+            const gainNode = offlineAudioContext.createGain();
+            const oscillatorNode = offlineAudioContext.createOscillator();
 
             expect(oscillatorNode.connect(gainNode)).to.be.undefined;
         });
@@ -329,7 +324,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #8
 
         it('should not fire onaudioprocess for every buffer', (done) => {
-            var scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
+            const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
             scriptProcessorNode.onaudioprocess = sinon.stub(); // eslint-disable-line no-undef
@@ -345,13 +340,13 @@ describe('offlineAudioContextConstructor', () => {
         // bug #13
 
         it('should not have any output', (done) => {
-            var scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
+            const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
             scriptProcessorNode.onaudioprocess = (event) => {
                 // @todo Use AudioBuffer.prototype.copyToChannel() and TypedArray.prototype.fill()
                 // once they land in Safari.
-                var channelData = event.outputBuffer.getChannelData(0);
+                const channelData = event.outputBuffer.getChannelData(0);
 
                 Array.prototype.forEach.call(channelData, (element, index) => {
                     channelData[index] = 1;
@@ -360,7 +355,7 @@ describe('offlineAudioContextConstructor', () => {
 
             offlineAudioContext.oncomplete = (event) => {
                 // @todo Use AudioBuffer.prototype.copyFromChannel() once it lands in Safari.
-                var channelData = event.renderedBuffer.getChannelData(0);
+                const channelData = event.renderedBuffer.getChannelData(0);
 
                 expect(Array.from(channelData)).to.not.contain(1);
 

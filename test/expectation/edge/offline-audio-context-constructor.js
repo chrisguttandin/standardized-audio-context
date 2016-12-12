@@ -5,16 +5,14 @@ import { WINDOW_PROVIDER } from '../../../src/providers/window';
 
 describe('offlineAudioContextConstructor', () => {
 
-    var offlineAudioContext,
-        OfflineAudioContext;
+    let offlineAudioContext;
+    let OfflineAudioContext;
 
     beforeEach(() => {
-        /* eslint-disable indent */
-        var injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-        /* eslint-enable indent */
+        const injector = ReflectiveInjector.resolveAndCreate([
+            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            WINDOW_PROVIDER
+        ]);
 
         OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
 
@@ -36,8 +34,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var analyserNode = offlineAudioContext.createAnalyser(),
-                gainNode = offlineAudioContext.createGain();
+            const analyserNode = offlineAudioContext.createAnalyser();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(analyserNode.connect(gainNode)).to.be.undefined;
         });
@@ -49,8 +47,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
-                gainNode = offlineAudioContext.createGain();
+            const biquadFilterNode = offlineAudioContext.createBiquadFilter();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
         });
@@ -60,9 +58,9 @@ describe('offlineAudioContextConstructor', () => {
             // bug #22
 
             it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
-                var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const biquadFilterNode = offlineAudioContext.createBiquadFilter();
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -79,8 +77,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var audioBufferSourceNode = offlineAudioContext.createBufferSource(),
-                gainNode = offlineAudioContext.createGain();
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(audioBufferSourceNode.connect(gainNode)).to.be.undefined;
         });
@@ -88,9 +86,9 @@ describe('offlineAudioContextConstructor', () => {
         // bug #14
 
         it('should not resample an oversampled AudioBuffer', (done) => {
-            var audioBuffer = offlineAudioContext.createBuffer(1, 8, 88200),
-                audioBufferSourceNode = offlineAudioContext.createBufferSource(),
-                eightRandomValues = [];
+            const audioBuffer = offlineAudioContext.createBuffer(1, 8, 88200);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const eightRandomValues = [];
 
             for (let i = 0; i < 8; i += 1) {
                 eightRandomValues[i] = (Math.random() * 2) - 1;
@@ -105,7 +103,7 @@ describe('offlineAudioContextConstructor', () => {
             offlineAudioContext
                 .startRendering()
                 .then((buffer) => {
-                    var channelData = new Float32Array(4);
+                    const channelData = new Float32Array(4);
 
                     buffer.copyFromChannel(channelData, 0);
 
@@ -125,8 +123,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var channelMergerNode = offlineAudioContext.createChannelMerger(),
-                gainNode = offlineAudioContext.createGain();
+            const channelMergerNode = offlineAudioContext.createChannelMerger();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(channelMergerNode.connect(gainNode)).to.be.undefined;
         });
@@ -138,8 +136,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter(),
-                gainNode = offlineAudioContext.createGain();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(channelSplitterNode.connect(gainNode)).to.be.undefined;
         });
@@ -147,7 +145,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #29
 
         it('should have a channelCountMode of max', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('max');
         });
@@ -155,7 +153,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #30
 
         it('should allow to set the channelCountMode', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
         });
@@ -163,7 +161,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #31
 
         it('should have a channelInterpretation of max', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
         });
@@ -171,7 +169,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #32
 
         it('should allow to set the channelInterpretation', () => {
-            var channelSplitterNode = offlineAudioContext.createChannelSplitter();
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             channelSplitterNode.channelInterpretation = 'discrete';
         });
@@ -183,15 +181,15 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var gainNodeA = offlineAudioContext.createGain(),
-                gainNodeB = offlineAudioContext.createGain();
+            const gainNodeA = offlineAudioContext.createGain();
+            const gainNodeB = offlineAudioContext.createGain();
 
             expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
         });
 
         describe('cancelAndHoldAtTime()', () => {
 
-            var gainNode;
+            let gainNode;
 
             beforeEach(() => {
                 gainNode = offlineAudioContext.createGain();
@@ -222,8 +220,8 @@ describe('offlineAudioContextConstructor', () => {
         // bug #11
 
         it('should not be chainable', () => {
-            var gainNode = offlineAudioContext.createGain(),
-                oscillatorNode = offlineAudioContext.createOscillator();
+            const gainNode = offlineAudioContext.createGain();
+            const oscillatorNode = offlineAudioContext.createOscillator();
 
             expect(oscillatorNode.connect(gainNode)).to.be.undefined;
         });

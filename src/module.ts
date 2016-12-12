@@ -10,7 +10,6 @@ import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filte
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { IAudioContextConstructor } from './interfaces/audio-context';
 import { IOfflineAudioContextConstructor } from './interfaces/offline-audio-context';
-import { OfflineAudioNodeProxy } from './offline-audio-node';
 import { AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, audioContextConstructor } from './providers/audio-context-constructor';
 import { IS_SUPPORTED_PROMISE_PROVIDER, IsSupportedPromise } from './providers/is-supported-promise';
 import { MODERNIZR_PROVIDER } from './providers/modernizr';
@@ -54,7 +53,6 @@ const injector = ReflectiveInjector.resolveAndCreate([
     NotSupportedErrorFactory,
     OfflineAudioBufferSourceNodeFakerFactory,
     OfflineAudioDestinationNodeFakerFactory,
-    OfflineAudioNodeProxy,
     OfflineBiquadFilterNodeFakerFactory,
     OfflineGainNodeFakerFactory,
     OfflineIIRFilterNodeFakerFactory,

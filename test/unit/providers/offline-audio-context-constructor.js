@@ -7,7 +7,6 @@ import { InvalidStateErrorFactory } from '../../../src/factories/invalid-state-e
 import { NotSupportedErrorFactory } from '../../../src/factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from '../../../src/factories/offline-audio-buffer-source-node';
 import { OfflineAudioDestinationNodeFakerFactory } from '../../../src/factories/offline-audio-destination-node';
-import { OfflineAudioNodeProxy } from '../../../src/offline-audio-node';
 import { OfflineBiquadFilterNodeFakerFactory } from '../../../src/factories/offline-biquad-filter-node';
 import { OfflineGainNodeFakerFactory } from '../../../src/factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from '../../../src/factories/offline-iir-filter-node';
@@ -31,7 +30,6 @@ describe('OfflineAudioContext', () => {
             InvalidStateErrorFactory,
             NotSupportedErrorFactory,
             OfflineAudioBufferSourceNodeFakerFactory,
-            OfflineAudioNodeProxy,
             OfflineAudioDestinationNodeFakerFactory,
             OfflineBiquadFilterNodeFakerFactory,
             OfflineGainNodeFakerFactory,
@@ -52,7 +50,7 @@ describe('OfflineAudioContext', () => {
     describe('destination', () => {
 
         it('should be an instance of the AudioDestinationNode interface', () => {
-            var destination = offlineAudioContext.destination;
+            const destination = offlineAudioContext.destination;
 
             // @todo expect(destination.channelCount).to.equal(2);
             // @todo expect(destination.channelCountMode).to.equal('explicit');
@@ -102,7 +100,7 @@ describe('OfflineAudioContext', () => {
     describe('createBiquadFilter()', () => {
 
         it('should return an instance of the BiquadFilterNode interface', () => {
-            var biquadFilterNode = offlineAudioContext.createBiquadFilter();
+            const biquadFilterNode = offlineAudioContext.createBiquadFilter();
 
             expect(biquadFilterNode.channelCountMode).to.equal('max');
             expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
@@ -147,20 +145,20 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
-                gainNode = offlineAudioContext.createGain();
+            const biquadFilterNode = offlineAudioContext.createBiquadFilter();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(biquadFilterNode.connect(gainNode)).to.equal(gainNode);
         });
 
         describe('getFrequencyResponse()', () => {
 
-            // bug #22 This is not implemented in FirefoxDeveloper, Opera and Safari.
+            // bug #22 This is not yet implemented in Edge and Safari.
 
             xit('should fill the magResponse and phaseResponse arrays', () => {
-                var biquadFilterNode = offlineAudioContext.createBiquadFilter(),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const biquadFilterNode = offlineAudioContext.createBiquadFilter();
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -175,7 +173,7 @@ describe('OfflineAudioContext', () => {
     describe('createGain()', () => {
 
         it('should return an instance of the GainNode interface', () => {
-            var gainNode = offlineAudioContext.createGain();
+            const gainNode = offlineAudioContext.createGain();
 
             expect(gainNode.channelCountMode).to.equal('max');
             expect(gainNode.channelInterpretation).to.equal('speakers');
@@ -193,27 +191,24 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var gainNodeA = offlineAudioContext.createGain(),
-                gainNodeB = offlineAudioContext.createGain();
+            const gainNodeA = offlineAudioContext.createGain();
+            const gainNodeB = offlineAudioContext.createGain();
 
             expect(gainNodeA.connect(gainNodeB)).to.equal(gainNodeB);
         });
 
         it('should be disconnectable', (done) => {
-            var candidate,
-                dummy,
-                ones,
-                source;
-
-            candidate = offlineAudioContext.createGain();
-            dummy = offlineAudioContext.createGain();
+            const candidate = offlineAudioContext.createGain();
+            const dummy = offlineAudioContext.createGain();
 
             // Safari does not play buffers which contain just one frame.
-            ones = offlineAudioContext.createBuffer(1, 2, 44100);
+            const ones = offlineAudioContext.createBuffer(1, 2, 44100);
+
             ones.getChannelData(0)[0] = 1;
             ones.getChannelData(0)[1] = 1;
 
-            source = offlineAudioContext.createBufferSource();
+            const source = offlineAudioContext.createBufferSource();
+
             source.buffer = ones;
 
             source.connect(candidate);
@@ -226,7 +221,7 @@ describe('OfflineAudioContext', () => {
             offlineAudioContext
                 .startRendering()
                 .then((renderedBuffer) => {
-                    var channelData = renderedBuffer.getChannelData(0);
+                    const channelData = renderedBuffer.getChannelData(0);
 
                     expect(channelData[0]).to.equal(1);
 
@@ -239,7 +234,7 @@ describe('OfflineAudioContext', () => {
     describe('createIIRFilter()', () => {
 
         it('should return an instance of the IIRFilterNode interface', () => {
-            var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
+            const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
 
             expect(iIRFilterNode.channelCountMode).to.equal('max');
             expect(iIRFilterNode.channelInterpretation).to.equal('speakers');
@@ -317,15 +312,11 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should filter the given input', function (done) {
-            var audioBuffer,
-                audioBufferSourceNode,
-                iIRFilterNode;
-
             this.timeout(10000);
 
-            audioBuffer = offlineAudioContext.createBuffer(2, 3, 44100);
-            audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+            const audioBuffer = offlineAudioContext.createBuffer(2, 3, 44100);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
 
             // @todo Use copyToChannel() once it becomes available.
             // buffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
@@ -348,8 +339,8 @@ describe('OfflineAudioContext', () => {
             offlineAudioContext
                 .startRendering()
                 .then((renderedBuffer) => {
-                    var leftChannelData = renderedBuffer.getChannelData(0),
-                        rightChannelData = renderedBuffer.getChannelData(1);
+                    const leftChannelData = renderedBuffer.getChannelData(0);
+                    const rightChannelData = renderedBuffer.getChannelData(1);
 
                     expect(leftChannelData[0]).to.equal(1);
                     expect(leftChannelData[1]).to.equal(-0.5);
@@ -364,18 +355,14 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should filter another given input', function (done) {
-            var audioBuffer,
-                audioBufferSourceNode,
-                iIRFilterNode;
-
             this.timeout(10000);
 
             // Recreate an OfflineAudioContext with 3 channels.
             offlineAudioContext = new OfflineAudioContext(3, offlineAudioContext.length, offlineAudioContext.sampleRate);
 
-            audioBuffer = offlineAudioContext.createBuffer(3, 3, 44100);
-            audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            iIRFilterNode = offlineAudioContext.createIIRFilter([ 0.5, -1 ], [ 1, -1 ]);
+            const audioBuffer = offlineAudioContext.createBuffer(3, 3, 44100);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const iIRFilterNode = offlineAudioContext.createIIRFilter([ 0.5, -1 ], [ 1, -1 ]);
 
             // @todo Use copyToChannel() once it becomes available.
             // buffer.copyToChannel(new Float32Array([1, 1, 1]), 0);
@@ -404,9 +391,9 @@ describe('OfflineAudioContext', () => {
             offlineAudioContext
                 .startRendering()
                 .then((renderedBuffer) => {
-                    var firstChannelData = renderedBuffer.getChannelData(0),
-                        secondChannelData = renderedBuffer.getChannelData(1),
-                        thirdChannelData = renderedBuffer.getChannelData(2);
+                    const firstChannelData = renderedBuffer.getChannelData(0);
+                    const secondChannelData = renderedBuffer.getChannelData(1);
+                    const thirdChannelData = renderedBuffer.getChannelData(2);
 
                     expect(firstChannelData[0]).to.equal(0.5);
                     expect(firstChannelData[1]).to.equal(0);
@@ -425,8 +412,8 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var gainNode = offlineAudioContext.createGain(),
-                iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+            const gainNode = offlineAudioContext.createGain();
+            const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
 
             expect(iIRFilterNode.connect(gainNode)).to.equal(gainNode);
         });
@@ -434,7 +421,7 @@ describe('OfflineAudioContext', () => {
         describe('getFrequencyResponse()', () => {
 
             it('should throw an NotSupportedError', (done) => {
-                var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 try {
                     iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
@@ -447,7 +434,7 @@ describe('OfflineAudioContext', () => {
             });
 
             it('should throw an NotSupportedError', (done) => {
-                var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 try {
                     iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
@@ -460,9 +447,9 @@ describe('OfflineAudioContext', () => {
             });
 
             it('should fill the magResponse and phaseResponse arrays', () => {
-                var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -471,9 +458,9 @@ describe('OfflineAudioContext', () => {
             });
 
             it('should fill the magResponse and phaseResponse arrays ... for some other values', () => {
-                var iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -513,7 +500,7 @@ describe('OfflineAudioContext', () => {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', (done) => {
-                var errorCallback = sinon.spy(); // eslint-disable-line no-undef
+                const errorCallback = sinon.spy(); // eslint-disable-line no-undef
 
                 offlineAudioContext
                     .decodeAudioData(null, () => {}, errorCallback)
@@ -528,7 +515,7 @@ describe('OfflineAudioContext', () => {
 
         describe('with an arrayBuffer of an unsupported file', function () {
 
-            var arrayBuffer;
+            let arrayBuffer;
 
             beforeEach((done) => {
                 this.timeout(5000);
@@ -565,7 +552,7 @@ describe('OfflineAudioContext', () => {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', (done) => {
-                var errorCallback = sinon.spy(); // eslint-disable-line no-undef
+                const errorCallback = sinon.spy(); // eslint-disable-line no-undef
 
                 offlineAudioContext
                     .decodeAudioData(arrayBuffer, () => {}, errorCallback)
@@ -580,7 +567,7 @@ describe('OfflineAudioContext', () => {
 
         describe('with an arrayBuffer of a supported file', function () {
 
-            var arrayBuffer;
+            let arrayBuffer;
 
             beforeEach((done) => {
                 this.timeout(5000);
@@ -626,7 +613,7 @@ describe('OfflineAudioContext', () => {
 
             // The promise is resolved before but the successCallback gets called synchronously.
             it('should call the successCallback before the promise gets resolved', () => {
-                var successCallback = sinon.spy(); // eslint-disable-line no-undef
+                const successCallback = sinon.spy(); // eslint-disable-line no-undef
 
                 return offlineAudioContext
                     .decodeAudioData(arrayBuffer, successCallback)

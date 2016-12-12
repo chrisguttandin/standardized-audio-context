@@ -70,7 +70,7 @@ describe('AudioContext', () => {
         });
 
         it('should advance over time', (done) => {
-            var now = audioContext.currentTime;
+            const now = audioContext.currentTime;
 
             audioContext.onstatechange = () => {
                 // Prevent consecutive calls.
@@ -92,7 +92,7 @@ describe('AudioContext', () => {
     describe('destination', () => {
 
         it('should be an instance of the AudioDestinationNode interface', () => {
-            var destination = audioContext.destination;
+            const destination = audioContext.destination;
 
             expect(destination.channelCount).to.equal(2);
             expect(destination.channelCountMode).to.equal('explicit');
@@ -133,11 +133,11 @@ describe('AudioContext', () => {
         });
 
         it('should not be assignable to something else', () => {
-            var onstatechange,
-                string = 'no function or null value';
+            const string = 'no function or null value';
 
             audioContext.onstatechange = () => {};
-            onstatechange = audioContext.onstatechange = string;
+
+            const onstatechange = audioContext.onstatechange = string;
 
             expect(onstatechange).to.equal(string);
             expect(audioContext.onstatechange).to.be.null;
@@ -230,7 +230,7 @@ describe('AudioContext', () => {
     describe('createAnalyser()', () => {
 
         it('should return an instance of the AnalyserNode interface', () => {
-            var analyserNode = audioContext.createAnalyser();
+            const analyserNode = audioContext.createAnalyser();
 
             expect(analyserNode.channelCount).to.equal(1);
             expect(analyserNode.channelCountMode).to.equal('max');
@@ -271,31 +271,27 @@ describe('AudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var analyserNode = audioContext.createAnalyser(),
-                gainNode = audioContext.createGain();
+            const analyserNode = audioContext.createAnalyser();
+            const gainNode = audioContext.createGain();
 
             expect(analyserNode.connect(gainNode)).to.equal(gainNode);
         });
 
         it('should be disconnectable', (done) => {
-            var analyzer,
-                candidate,
-                dummy,
-                ones,
-                source;
-
-            candidate = audioContext.createAnalyser();
-            dummy = audioContext.createGain();
+            const candidate = audioContext.createAnalyser();
+            const dummy = audioContext.createGain();
 
             // @todo remove this ugly hack
-            analyzer = candidate.context.createScriptProcessor(256, 1, 1);
+            const analyzer = candidate.context.createScriptProcessor(256, 1, 1);
 
             // Safari does not play buffers which contain just one frame.
-            ones = audioContext.createBuffer(1, 2, 44100);
+            const ones = audioContext.createBuffer(1, 2, 44100);
+
             ones.getChannelData(0)[0] = 1;
             ones.getChannelData(0)[1] = 1;
 
-            source = audioContext.createBufferSource();
+            const source = audioContext.createBufferSource();
+
             source.buffer = ones;
             source.loop = true;
 
@@ -306,7 +302,7 @@ describe('AudioContext', () => {
             candidate.disconnect(dummy);
 
             analyzer.onaudioprocess = (event) => {
-                var channelData = event.inputBuffer.getChannelData(0);
+                const channelData = event.inputBuffer.getChannelData(0);
 
                 if (Array.from(channelData).indexOf(1) > -1) {
                     source.stop();
@@ -329,7 +325,7 @@ describe('AudioContext', () => {
     describe('createBiquadFilter()', () => {
 
         it('should return an instance of the BiquadFilterNode interface', () => {
-            var biquadFilterNode = audioContext.createBiquadFilter();
+            const biquadFilterNode = audioContext.createBiquadFilter();
 
             expect(biquadFilterNode.channelCountMode).to.equal('max');
             expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
@@ -390,20 +386,20 @@ describe('AudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var biquadFilterNode = audioContext.createBiquadFilter(),
-                gainNode = audioContext.createGain();
+            const biquadFilterNode = audioContext.createBiquadFilter();
+            const gainNode = audioContext.createGain();
 
             expect(biquadFilterNode.connect(gainNode)).to.equal(gainNode);
         });
 
         describe('getFrequencyResponse()', () => {
 
-            // bug #22 This is not implemented in FirefoxDeveloper, Opera and Safari.
+            // bug #22 This is not yet implemented in Edge and Safari.
 
             xit('should fill the magResponse and phaseResponse arrays', () => {
-                var biquadFilterNode = audioContext.createBiquadFilter(),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const biquadFilterNode = audioContext.createBiquadFilter();
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -418,7 +414,7 @@ describe('AudioContext', () => {
     describe('createBuffer()', () => {
 
         it('should return an instance of the AudioBuffer interface', () => {
-            var audioBuffer = audioContext.createBuffer(2, 10, 44100);
+            const audioBuffer = audioContext.createBuffer(2, 10, 44100);
 
             expect(audioBuffer.duration).to.be.closeTo(10 / 44100, 0.001);
             expect(audioBuffer.length).to.equal(10);
@@ -430,16 +426,11 @@ describe('AudioContext', () => {
         });
 
         it('should implement the copyFromChannel()/copyToChannel() methods', () => {
-            var audioBuffer,
-                destination,
-                i,
-                source;
+            let audioBuffer = audioContext.createBuffer(2, 10, 44100);
+            let destination = new Float32Array(10);
+            let source = new Float32Array(10);
 
-            audioBuffer = audioContext.createBuffer(2, 10, 44100);
-            destination = new Float32Array(10);
-            source = new Float32Array(10);
-
-            for (i = 0; i < 10; i += 1) {
+            for (let i = 0; i < 10; i += 1) {
                 destination[i] = Math.random();
                 source[i] = Math.random();
             }
@@ -447,7 +438,7 @@ describe('AudioContext', () => {
             audioBuffer.copyToChannel(source, 0);
             audioBuffer.copyFromChannel(destination, 0);
 
-            for (i = 0; i < 10; i += 1) {
+            for (let i = 0; i < 10; i += 1) {
                 expect(destination[i]).to.equal(source[i]);
             }
 
@@ -455,7 +446,7 @@ describe('AudioContext', () => {
             destination = new Float32Array(10);
             source = new Float32Array(10);
 
-            for (i = 0; i < 10; i += 1) {
+            for (let i = 0; i < 10; i += 1) {
                 destination[i] = Math.random();
                 source[i] = Math.random();
             }
@@ -463,7 +454,7 @@ describe('AudioContext', () => {
             audioBuffer.copyToChannel(source, 0, 50);
             audioBuffer.copyFromChannel(destination, 0, 50);
 
-            for (i = 0; i < 10; i += 1) {
+            for (let i = 0; i < 10; i += 1) {
                 expect(destination[i]).to.equal(source[i]);
             }
         });
@@ -473,7 +464,7 @@ describe('AudioContext', () => {
     describe('createBufferSource()', () => {
 
         it('should return an instance of the AudioBufferSourceNode interface', () => {
-            var audioBufferSourceNode = audioContext.createBufferSource();
+            const audioBufferSourceNode = audioContext.createBufferSource();
 
             expect(audioBufferSourceNode.buffer).to.be.null;
 
@@ -505,21 +496,19 @@ describe('AudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var audioBufferSourceNode = audioContext.createBufferSource(),
-                gainNode = audioContext.createGain();
+            const audioBufferSourceNode = audioContext.createBufferSource();
+            const gainNode = audioContext.createGain();
 
             expect(audioBufferSourceNode.connect(gainNode)).to.equal(gainNode);
         });
 
         it('should stop an AudioBufferSourceNode scheduled for stopping in the future', (done) => {
-            var audioBuffer = audioContext.createBuffer(1, 44100, 44100),
-                audioBufferSourceNode = audioContext.createBufferSource(),
-                buffer = new Float32Array(44100),
-                currentTime,
-                scriptProcessorNode;
+            const audioBuffer = audioContext.createBuffer(1, 44100, 44100);
+            const audioBufferSourceNode = audioContext.createBufferSource();
+            const buffer = new Float32Array(44100);
 
             // @todo remove this ugly hack
-            scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 1, 1);
+            const scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 1, 1);
 
             // @todo Use TypedArray.prototype.fill() once it lands in Safari.
             for (let i = 0; i < 44100; i += 1) {
@@ -534,14 +523,14 @@ describe('AudioContext', () => {
                 .connect(scriptProcessorNode)
                 .connect(audioContext.destination);
 
-            currentTime = audioContext.currentTime;
+            const currentTime = audioContext.currentTime;
 
             audioBufferSourceNode.start();
             audioBufferSourceNode.stop(currentTime + 1);
             audioBufferSourceNode.stop(currentTime);
 
             scriptProcessorNode.onaudioprocess = (event) => {
-                var channelData = event.inputBuffer.getChannelData(0);
+                const channelData = event.inputBuffer.getChannelData(0);
 
                 expect(Array.from(channelData)).to.not.contain(1);
 
@@ -555,8 +544,8 @@ describe('AudioContext', () => {
         });
 
         it('should ignore calls to stop() of an already stopped AudioBufferSourceNode', (done) => {
-            var audioBuffer = audioContext.createBuffer(1, 100, 44100),
-                audioBufferSourceNode = audioContext.createBufferSource();
+            const audioBuffer = audioContext.createBuffer(1, 100, 44100);
+            const audioBufferSourceNode = audioContext.createBufferSource();
 
             audioBufferSourceNode.onended = () => {
                 audioBufferSourceNode.stop();
@@ -575,7 +564,7 @@ describe('AudioContext', () => {
     describe('createChannelMerger()', () => {
 
         it('should return an instance of the ChannelMergerNode interface', () => {
-            var channelMergerNode = audioContext.createChannelMerger();
+            const channelMergerNode = audioContext.createChannelMerger();
 
             expect(channelMergerNode.channelCount).to.equal(1);
             expect(channelMergerNode.channelCountMode).to.equal('explicit');
@@ -585,13 +574,13 @@ describe('AudioContext', () => {
         });
 
         it('should return a channelMergerNode with the given parameters', () => {
-            var channelMergerNode = audioContext.createChannelMerger(2);
+            const channelMergerNode = audioContext.createChannelMerger(2);
 
             expect(channelMergerNode.numberOfInputs).to.equal(2);
         });
 
         it('should not allow to change the value of the channelCount property', (done) => {
-            var channelMergerNode = audioContext.createChannelMerger(2);
+            const channelMergerNode = audioContext.createChannelMerger(2);
 
             try {
                 channelMergerNode.channelCount = 2;
@@ -604,7 +593,7 @@ describe('AudioContext', () => {
         });
 
         it('should not allow to change the value of the channelCountMode property', (done) => {
-            var channelMergerNode = audioContext.createChannelMerger(2);
+            const channelMergerNode = audioContext.createChannelMerger(2);
 
             try {
                 channelMergerNode.channelCountMode = 'max';
@@ -633,32 +622,27 @@ describe('AudioContext', () => {
         });
 
         it('should be connectable', () => {
-            var channelMergerNode = audioContext.createChannelMerger(),
-                gainNode = audioContext.createGain();
+            const channelMergerNode = audioContext.createChannelMerger();
+            const gainNode = audioContext.createGain();
 
             channelMergerNode.connect(gainNode);
         });
 
         it('should be chainable', () => {
-            var channelMergerNode = audioContext.createChannelMerger(),
-                gainNode = audioContext.createGain();
+            const channelMergerNode = audioContext.createChannelMerger();
+            const gainNode = audioContext.createGain();
 
             expect(channelMergerNode.connect(gainNode)).to.equal(gainNode);
         });
 
         it('should handle unconnected channels as silence', (done) => {
-            var audioBuffer,
-                audioBufferSourceNode = audioContext.createBufferSource(),
-                channelMergerNode = audioContext.createChannelMerger(),
-                sampleRate,
-                scriptProcessorNode,
-                startTime;
-
-            sampleRate = audioContext.sampleRate;
-            audioBuffer = audioContext.createBuffer(1, 2, sampleRate),
+            const audioBufferSourceNode = audioContext.createBufferSource();
+            const channelMergerNode = audioContext.createChannelMerger();
+            const sampleRate = audioContext.sampleRate;
+            const audioBuffer = audioContext.createBuffer(1, 2, sampleRate);
 
             // @todo remove this ugly hack
-            scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
+            const scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
 
             // @todo Safari does not play/loop 1 sample buffers. This should be patched.
             audioBuffer.getChannelData(0)[0] = 1;
@@ -667,10 +651,10 @@ describe('AudioContext', () => {
             audioBufferSourceNode.buffer = audioBuffer;
             audioBufferSourceNode.loop = true;
 
-            startTime = audioContext.currentTime;
+            const startTime = audioContext.currentTime;
 
             scriptProcessorNode.onaudioprocess = (event) => {
-                var channelData = event.inputBuffer.getChannelData(1);
+                const channelData = event.inputBuffer.getChannelData(1);
 
                 for (let i = 0, length = channelData.length; i < length; i += 1) {
                     if (channelData[i] === 1) {
@@ -698,7 +682,7 @@ describe('AudioContext', () => {
     describe('createChannelSplitter()', () => {
 
         it('should return an instance of the ChannelSplitterNode interface', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter();
+            const channelSplitterNode = audioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelCountMode).to.equal('explicit');
             expect(channelSplitterNode.channelInterpretation).to.equal('discrete');
@@ -707,13 +691,13 @@ describe('AudioContext', () => {
         });
 
         it('should return a channelSplitterNode with the given parameters', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter(2);
+            const channelSplitterNode = audioContext.createChannelSplitter(2);
 
             expect(channelSplitterNode.numberOfOutputs).to.equal(2);
         });
 
         it('should not allow to change the value of the channelCountMode property', (done) => {
-            var channelSplitterNode = audioContext.createChannelSplitter(2);
+            const channelSplitterNode = audioContext.createChannelSplitter(2);
 
             try {
                 channelSplitterNode.channelCountMode = 'speakers';
@@ -726,7 +710,7 @@ describe('AudioContext', () => {
         });
 
         it('should not allow to change the value of the channelInterpretation property', (done) => {
-            var channelSplitterNode = audioContext.createChannelSplitter(2);
+            const channelSplitterNode = audioContext.createChannelSplitter(2);
 
             try {
                 channelSplitterNode.channelCountMode = 'speakers';
@@ -755,8 +739,8 @@ describe('AudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter(),
-                gainNode = audioContext.createGain();
+            const channelSplitterNode = audioContext.createChannelSplitter();
+            const gainNode = audioContext.createGain();
 
             expect(channelSplitterNode.connect(gainNode)).to.equal(gainNode);
         });
@@ -766,7 +750,7 @@ describe('AudioContext', () => {
     describe('createGain()', () => {
 
         it('should return an instance of the GainNode interface', () => {
-            var gainNode = audioContext.createGain();
+            const gainNode = audioContext.createGain();
 
             expect(gainNode.channelCountMode).to.equal('max');
             expect(gainNode.channelInterpretation).to.equal('speakers');
@@ -800,30 +784,25 @@ describe('AudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var channelSplitterNode = audioContext.createChannelSplitter(),
-                gainNode = audioContext.createGain();
+            const channelSplitterNode = audioContext.createChannelSplitter();
+            const gainNode = audioContext.createGain();
 
             expect(gainNode.connect(channelSplitterNode)).to.equal(channelSplitterNode);
         });
 
         it('should be disconnectable', (done) => {
-            var analyzer,
-                candidate,
-                dummy,
-                ones,
-                source;
-
-            candidate = audioContext.createGain();
-            dummy = audioContext.createGain();
+            const candidate = audioContext.createGain();
+            const dummy = audioContext.createGain();
 
             // @todo remove this ugly hack
-            analyzer = candidate.context.createScriptProcessor(256, 1, 1);
+            const analyzer = candidate.context.createScriptProcessor(256, 1, 1);
+            const ones = audioContext.createBuffer(1, 2, 44100);
 
-            ones = audioContext.createBuffer(1, 2, 44100);
             ones.getChannelData(0)[0] = 1;
             ones.getChannelData(0)[1] = 1;
 
-            source = audioContext.createBufferSource();
+            const source = audioContext.createBufferSource();
+
             source.buffer = ones;
             source.loop = true;
 
@@ -834,7 +813,7 @@ describe('AudioContext', () => {
             candidate.disconnect(dummy);
 
             analyzer.onaudioprocess = (event) => {
-                var channelData = event.inputBuffer.getChannelData(0);
+                const channelData = event.inputBuffer.getChannelData(0);
 
                 if (Array.from(channelData).indexOf(1) > -1) {
                     source.stop();
@@ -857,7 +836,7 @@ describe('AudioContext', () => {
     describe('createIIRFilter()', () => {
 
         it('should return an instance of the IIRFilterNode interface', () => {
-            var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+            const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
             expect(iIRFilterNode.channelCountMode).to.equal('max');
             expect(iIRFilterNode.channelInterpretation).to.equal('speakers');
@@ -951,23 +930,16 @@ describe('AudioContext', () => {
         });
 
         it('should filter the given input', function (done) {
-            var audioBuffer,
-                audioBufferSourceNode,
-                gainNode,
-                iIRFilterNode,
-                scriptProcessorNode,
-                tested;
-
             this.timeout(10000);
 
-            audioBuffer = audioContext.createBuffer(2, 3, 44100);
-            audioBufferSourceNode = audioContext.createBufferSource();
-            gainNode = audioContext.createGain();
-            iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+            const audioBuffer = audioContext.createBuffer(2, 3, 44100);
+            const audioBufferSourceNode = audioContext.createBufferSource();
+            const gainNode = audioContext.createGain();
+            const iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
             // @todo remove this ugly hack
-            scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
+            const scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
 
-            tested = false;
+            let tested = false;
 
             audioBuffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
             audioBuffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
@@ -977,17 +949,15 @@ describe('AudioContext', () => {
             gainNode.gain.value = 0;
 
             scriptProcessorNode.onaudioprocess = (event) => {
-                var i,
-                    leftChannelData = event.inputBuffer.getChannelData(0),
-                    rightChannelData;
+                const leftChannelData = event.inputBuffer.getChannelData(0);
 
-                for (i = 0; i < scriptProcessorNode.bufferSize; i += 1) {
+                for (let i = 0; i < scriptProcessorNode.bufferSize; i += 1) {
                     if (leftChannelData[i] === 1 && tested === false) {
                         expect(leftChannelData[ i ]).to.equal(1);
                         expect(leftChannelData[ i + 1 ]).to.equal(-0.5);
                         expect(leftChannelData[ i + 2 ]).to.equal(-0.25);
 
-                        rightChannelData = event.inputBuffer.getChannelData(1);
+                        const rightChannelData = event.inputBuffer.getChannelData(1);
 
                         expect(rightChannelData[ i ]).to.equal(0);
                         expect(rightChannelData[ i + 1 ]).to.equal(1);
@@ -1013,8 +983,8 @@ describe('AudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var gainNode = audioContext.createGain(),
-                iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+            const gainNode = audioContext.createGain();
+            const iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
 
             expect(iIRFilterNode.connect(gainNode)).to.equal(gainNode);
         });
@@ -1022,7 +992,7 @@ describe('AudioContext', () => {
         describe('getFrequencyResponse()', () => {
 
             it('should throw an NotSupportedError', (done) => {
-                var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 try {
                     iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
@@ -1035,7 +1005,7 @@ describe('AudioContext', () => {
             });
 
             it('should throw an NotSupportedError', (done) => {
-                var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 try {
                     iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
@@ -1048,9 +1018,9 @@ describe('AudioContext', () => {
             });
 
             it('should fill the magResponse and phaseResponse arrays', () => {
-                var iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -1059,9 +1029,9 @@ describe('AudioContext', () => {
             });
 
             it('should fill the magResponse and phaseResponse arrays ... for some other values', () => {
-                var iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]),
-                    magResponse = new Float32Array(5),
-                    phaseResponse = new Float32Array(5);
+                const iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+                const magResponse = new Float32Array(5);
+                const phaseResponse = new Float32Array(5);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
 
@@ -1076,7 +1046,7 @@ describe('AudioContext', () => {
     describe('createOscillator()', () => {
 
         it('should return an instance of the OscillatorNode interface', () => {
-            var oscillatorNode = audioContext.createOscillator();
+            const oscillatorNode = audioContext.createOscillator();
 
             // channelCount is not specified
             // channelCountMode is not specified
@@ -1123,8 +1093,8 @@ describe('AudioContext', () => {
         });
 
         it('should be chainable', () => {
-            var gainNode = audioContext.createGain(),
-                oscillatorNode = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const oscillatorNode = audioContext.createOscillator();
 
             expect(oscillatorNode.connect(gainNode)).to.equal(gainNode);
         });
@@ -1159,7 +1129,7 @@ describe('AudioContext', () => {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', (done) => {
-                var errorCallback = sinon.spy(); // eslint-disable-line no-undef
+                const errorCallback = sinon.spy(); // eslint-disable-line no-undef
 
                 audioContext
                     .decodeAudioData(null, () => {}, errorCallback)
@@ -1174,7 +1144,7 @@ describe('AudioContext', () => {
 
         describe('with an arrayBuffer of an unsupported file', function () {
 
-            var arrayBuffer;
+            let arrayBuffer;
 
             beforeEach((done) => {
                 this.timeout(5000);
@@ -1211,7 +1181,7 @@ describe('AudioContext', () => {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', (done) => {
-                var errorCallback = sinon.spy(); // eslint-disable-line no-undef
+                const errorCallback = sinon.spy(); // eslint-disable-line no-undef
 
                 audioContext
                     .decodeAudioData(arrayBuffer, () => {}, errorCallback)
@@ -1226,7 +1196,7 @@ describe('AudioContext', () => {
 
         describe('with an arrayBuffer of a supported file', function () {
 
-            var arrayBuffer;
+            let arrayBuffer;
 
             beforeEach((done) => {
                 this.timeout(5000);
@@ -1272,7 +1242,7 @@ describe('AudioContext', () => {
 
             // The promise is resolved before but the successCallback gets called synchronously.
             it('should call the successCallback before the promise gets resolved', () => {
-                var successCallback = sinon.spy(); // eslint-disable-line no-undef
+                const successCallback = sinon.spy(); // eslint-disable-line no-undef
 
                 return audioContext
                     .decodeAudioData(arrayBuffer, successCallback)

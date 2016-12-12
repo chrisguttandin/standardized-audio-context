@@ -117,7 +117,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             public createIIRFilter (feedforward, feedback) {
                 let nativeNode = null;
 
-                // Bug #9: Only Chrome and Opera currently implement the createIIRFilter() method.
+                // Bug #9: Only Chrome, Firefox and Opera currently support IIRFilterNodes.
                 if (this._unpatchedOfflineAudioContext.createIIRFilter !== undefined) {
                     nativeNode = this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
 

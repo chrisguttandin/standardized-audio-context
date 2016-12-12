@@ -1,5 +1,5 @@
 export const loadFixture = (fixture, callback) => {
-    var request = new XMLHttpRequest();
+    const request = new XMLHttpRequest();
 
     request.onerror = () => {
         callback('request-failed');
