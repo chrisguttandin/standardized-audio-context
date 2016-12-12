@@ -27,6 +27,8 @@ module.exports = (config) => {
 
         config.set({
 
+            browserNoActivityTimeout: 20000,
+
             browserStack: {
                 accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
                 username: process.env.BROWSER_STACK_USERNAME
@@ -35,7 +37,6 @@ module.exports = (config) => {
             browsers: [
                 'SafariBrowserStack'
             ],
-
             captureTimeout: 120000,
 
             customLaunchers: {
