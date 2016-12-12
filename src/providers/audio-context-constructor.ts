@@ -1,3 +1,4 @@
+import { OpaqueToken } from '@angular/core';
 import { EncodingErrorFactory } from '../factories/encoding-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { IIRFilterNodeFaker } from '../fakers/iir-filter-node';
@@ -14,7 +15,6 @@ import { ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
 import { ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
-import { OpaqueToken } from '@angular/core';
 
 const POOL = [];
 

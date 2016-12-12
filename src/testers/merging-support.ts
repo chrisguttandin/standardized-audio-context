@@ -1,5 +1,5 @@
-import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
 import { Inject, Injectable } from '@angular/core';
+import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
 
 /**
  * Firefox up to version 44 had a bug which resulted in a misbehaving ChannelMergerNode. If one of

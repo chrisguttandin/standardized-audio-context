@@ -1,9 +1,9 @@
+import { Inject, Injectable } from '@angular/core';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
 import { unpatchedOfflineAudioContextConstructor } from '../providers/unpatched-offline-audio-context-constructor';
 import { PromiseSupportTester } from '../testers/promise-support';
 import { InvalidStateErrorFactory } from './invalid-state-error';
 import { NotSupportedErrorFactory } from './not-supported-error';
-import { Inject, Injectable } from '@angular/core';
 
 function divide (a, b) {
     const denominator = (b[0] * b[0]) + (b[1] * b[1]);

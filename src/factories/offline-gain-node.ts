@@ -1,5 +1,5 @@
-import { OfflineAudioNodeProxy } from '../offline-audio-node';
 import { Injectable } from '@angular/core';
+import { OfflineAudioNodeProxy } from '../offline-audio-node';
 
 class OfflineGainNodeFakerProxy extends OfflineAudioNodeProxy {
 

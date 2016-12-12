@@ -1,5 +1,5 @@
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { Inject, Injectable } from '@angular/core';
+import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 
 @Injectable()
 export class ChannelSplitterNodeWrapper {

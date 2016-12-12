@@ -1,4 +1,5 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
+import { ReflectiveInjector } from '@angular/core';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
@@ -30,7 +31,6 @@ import { AudioNodeDisconnectMethodWrapper } from './wrappers/audio-node-disconn
 import { ChannelMergerNodeWrapper } from './wrappers/channel-merger-node';
 import { ChannelSplitterNodeWrapper } from './wrappers/channel-splitter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrappers/iir-filter-node-get-frequency-response-method';
-import { ReflectiveInjector } from '@angular/core';
 
 const injector = ReflectiveInjector.resolveAndCreate([
     AudioBufferSourceNodeStopMethodWrapper,
