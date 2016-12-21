@@ -64,10 +64,14 @@ const injector = ReflectiveInjector.resolveAndCreate([
     WINDOW_PROVIDER
 ]);
 
+export { IAudioContextConstructor };
+
 // tslint:disable-next-line:variable-name
 export const AudioContext: IAudioContextConstructor = injector.get(audioContextConstructor);
 
 export const isSupported: Promise<boolean> = injector.get(IsSupportedPromise);
+
+export { IOfflineAudioContextConstructor };
 
 // tslint:disable-next-line:variable-name
 export const OfflineAudioContext: IOfflineAudioContextConstructor = injector.get(offlineAudioContextConstructor);
