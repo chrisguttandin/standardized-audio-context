@@ -216,9 +216,9 @@ export class OfflineIIRFilterNodeFaker {
             const output = filteredBuffer.getChannelData(i);
 
             // @todo Use TypedArray.prototype.fill() once it lands in Safari.
-            for (let i = 0; i < bufferLength; i += 1) {
-                xBuffer[i] = 0;
-                yBuffer[i] = 0;
+            for (let j = 0; j < bufferLength; j += 1) {
+                xBuffer[j] = 0;
+                yBuffer[j] = 0;
             }
 
             for (let inputLength = input.length, j = 0; j < inputLength; j += 1) {
