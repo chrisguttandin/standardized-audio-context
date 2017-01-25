@@ -119,14 +119,14 @@ describe('AudioContext', () => {
         it('should be assignable to a function', () => {
             const fn = () => {};
 
-            const onstatechange = audioContext.onstatechange = fn;
+            const onstatechange = audioContext.onstatechange = fn; // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.equal(fn);
             expect(audioContext.onstatechange).to.equal(fn);
         });
 
         it('should be assignable to null', () => {
-            const onstatechange = audioContext.onstatechange = null;
+            const onstatechange = audioContext.onstatechange = null; // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.be.null;
             expect(audioContext.onstatechange).to.be.null;
@@ -137,7 +137,7 @@ describe('AudioContext', () => {
 
             audioContext.onstatechange = () => {};
 
-            const onstatechange = audioContext.onstatechange = string;
+            const onstatechange = audioContext.onstatechange = string; // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.equal(string);
             expect(audioContext.onstatechange).to.be.null;
