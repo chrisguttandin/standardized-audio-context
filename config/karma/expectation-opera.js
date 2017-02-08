@@ -6,10 +6,6 @@ module.exports = (config) => {
 
     config.set({
 
-        browsers: [
-            'Opera'
-        ],
-
         files: [
             'test/expectation/any/**/*.js',
             'test/expectation/opera/**/*.js',
@@ -26,5 +22,45 @@ module.exports = (config) => {
         }
 
     });
+
+    if (process.env.TRAVIS) {
+
+        config.set({
+
+            browserStack: {
+                accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
+                username: process.env.BROWSER_STACK_USERNAME
+            },
+
+            browsers: [
+                'OperaBrowserStack'
+            ],
+
+            captureTimeout: 120000,
+
+            customLaunchers: {
+                OperaBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'opera',
+                    os: 'OS X',
+                    os_version: 'Sierra' // eslint-disable-line camelcase
+                }
+            },
+
+            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+
+        });
+
+    } else {
+
+        config.set({
+
+            browsers: [
+                'Opera'
+            ]
+
+        });
+
+    }
 
 };
