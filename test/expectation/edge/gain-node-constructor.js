@@ -29,4 +29,4 @@ describe('gainNodeConstructor', () => {
         }).to.throw(TypeError, 'Function expected');
     });
 
-});  
+});

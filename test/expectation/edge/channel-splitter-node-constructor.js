@@ -29,4 +29,4 @@ describe('channelSplitterNodeConstructor', () => {
         }).to.throw(TypeError, 'Function expected');
     });
 
-}); 
+});
