@@ -21,14 +21,6 @@ describe('audioContextConstructor', () => {
 
     describe('createChannelSplitter()', () => {
 
-        // bug #29
-
-        it('should have a channelCountMode of max', () => {
-            const channelSplitterNode = audioContext.createChannelSplitter();
-
-            expect(channelSplitterNode.channelCountMode).to.equal('max');
-        });
-
         // bug #30
 
         it('should allow to set the channelCountMode', () => {
