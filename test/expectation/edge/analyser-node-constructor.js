@@ -3,7 +3,7 @@ import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextCons
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 
-describe('audioBufferConstructor', () => {
+describe('analyserNodeConstructor', () => {
 
     let audioContext;
     let AudioContext;
@@ -23,9 +23,9 @@ describe('audioBufferConstructor', () => {
 
     // bug #33
 
-    it('should not allow to construct a AudioBuffer', () => {
+    it('should not allow to construct a AnalyserNode', () => {
         expect(() => {
-            new AudioBuffer(audioContext, { length: 1 });
+            new AnalyserNode(audioContext, {});
         }).to.throw(TypeError, 'Function expected');
     });
 

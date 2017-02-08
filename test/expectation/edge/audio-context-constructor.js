@@ -8,8 +8,9 @@ describe('audioContextConstructor', () => {
     let audioContext;
     let AudioContext;
 
-    // @todo Use beforeEach() again when the AudioContext can be closed.
-    before(() => {
+    afterEach(() => audioContext.close());
+
+    beforeEach(() => {
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             WINDOW_PROVIDER
