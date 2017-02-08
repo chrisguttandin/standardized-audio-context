@@ -22,7 +22,7 @@ module.exports = {
         'karma:test-chrome-canary',
         'karma:test-edge',
         'karma:test-firefox',
-        'karma:test-firefox-developer',
+        // 'karma:test-firefox-developer',
         'karma:test-opera',
         'karma:test-safari'
     ]
