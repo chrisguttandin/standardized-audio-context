@@ -19,39 +19,7 @@ describe('offlineAudioContextConstructor', () => {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
-    describe('length', () => {
-
-        // bug #17
-
-        it('should not expose its length', () => {
-            expect(offlineAudioContext.length).to.be.undefined;
-        });
-
-    });
-
-    describe('createAnalyser()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const analyserNode = offlineAudioContext.createAnalyser();
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(analyserNode.connect(gainNode)).to.be.undefined;
-        });
-
-    });
-
     describe('createBiquadFilter()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const biquadFilterNode = offlineAudioContext.createBiquadFilter();
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
-        });
 
         describe('getFrequencyResponse()', () => {
 
@@ -73,15 +41,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('createBufferSource()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(audioBufferSourceNode.connect(gainNode)).to.be.undefined;
-        });
 
         // bug #14
 
@@ -118,29 +77,7 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
-    describe('createChannelMerger()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const channelMergerNode = offlineAudioContext.createChannelMerger();
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(channelMergerNode.connect(gainNode)).to.be.undefined;
-        });
-
-    });
-
     describe('createChannelSplitter()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(channelSplitterNode.connect(gainNode)).to.be.undefined;
-        });
 
         // bug #29
 
@@ -178,15 +115,6 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('createGain()', () => {
 
-        // bug #11
-
-        it('should not be chainable', () => {
-            const gainNodeA = offlineAudioContext.createGain();
-            const gainNodeB = offlineAudioContext.createGain();
-
-            expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
-        });
-
         describe('cancelAndHoldAtTime()', () => {
 
             let gainNode;
@@ -201,29 +129,6 @@ describe('offlineAudioContextConstructor', () => {
                 expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
             });
 
-        });
-
-    });
-
-    describe('createIIRFilter()', () => {
-
-        // bug #9
-
-        it('should not be implemented', () => {
-            expect(offlineAudioContext.createIIRFilter).to.be.undefined;
-        });
-
-    });
-
-    describe('createOscillator()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const gainNode = offlineAudioContext.createGain();
-            const oscillatorNode = offlineAudioContext.createOscillator();
-
-            expect(oscillatorNode.connect(gainNode)).to.be.undefined;
         });
 
     });

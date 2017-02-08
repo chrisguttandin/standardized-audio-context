@@ -99,7 +99,7 @@ describe('audioNodeConstructors', () => {
         it('should not allow to construct a IIRFilterNode', () => {
             expect(() => {
                 new IIRFilterNode(audioContext, { feedback: [ 1 ], feedforward: [ 1 ] }); // eslint-disable-line no-undef
-            }).to.throw(ReferenceError, "'IIRFilterNode' is undefined");
+            }).to.throw(TypeError, 'Function expected');
         });
 
     });
