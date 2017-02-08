@@ -45,6 +45,7 @@ module.exports = (config) => {
             },
 
             tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+
         });
 
     } else {

@@ -37,6 +37,7 @@ module.exports = (config) => {
             browsers: [
                 'SafariBrowserStack'
             ],
+
             captureTimeout: 120000,
 
             customLaunchers: {
