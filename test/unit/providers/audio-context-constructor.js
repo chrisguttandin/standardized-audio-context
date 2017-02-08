@@ -204,9 +204,12 @@ describe('AudioContext', () => {
             audioContext
                 .close()
                 .then(() => {
-                    expect(audioContext.state).to.equal('closed');
+                    // According to the spec the context state is changed to 'closed' after the promise gets resolved.
+                    setTimeout(() => {
+                        expect(audioContext.state).to.equal('closed');
 
-                    done();
+                        done();
+                    });
                 })
                 .catch(done);
         });
