@@ -112,8 +112,7 @@ module.exports = (config) => {
             browsers: [
                 'Chrome',
                 'ChromeCanary',
-                // @todo Enable Edge tests again.
-                // 'EdgeBrowserStack',
+                'EdgeBrowserStack',
                 'Firefox',
                 'FirefoxDeveloper',
                 'Opera',
