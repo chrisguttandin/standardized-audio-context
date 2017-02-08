@@ -21,6 +21,18 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
+    describe('close()', () => {
+
+        // bug #35
+
+        it('should not throw an error if it was closed before', () => {
+            return audioContext
+                .close()
+                .then(() => audioContext.close());
+        });
+
+    });
+
     describe('createChannelMerger()', () => {
 
         // bug #16

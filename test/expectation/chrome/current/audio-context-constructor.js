@@ -19,6 +19,16 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
+    describe('state', () => {
+
+        // bug #34
+
+        it('should be set to running right away', () => {
+            expect(audioContext.state).to.equal('running');
+        });
+
+    });
+
     describe('createChannelSplitter()', () => {
 
         // bug #30

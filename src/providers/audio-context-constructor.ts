@@ -107,8 +107,10 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         this._isSupportingDisconnecting = isSupportingDisconnecting;
                     });
 
-                // Chrome and Opera pretend to be running right away, but fire a onstatechange event when their state actually changes to
-                // 'running'.
+                /*
+                 * Bug #34: Chrome and Opera pretend to be running right away, but fire an onstatechange event when the state actually
+                 * changes to 'running'.
+                 */
                 if (unpatchedAudioContext.state === 'running') {
                     this._state = 'suspended';
 
@@ -117,29 +119,12 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                             this._state = null;
                         }
 
-                        // Safari's AudioContext does not implement the EventTarget interface
                         if (unpatchedAudioContext.removeEventListener) {
                             unpatchedAudioContext.removeEventListener('statechange', revokeState);
-                        } else {
-                            unpatchedAudioContext.onchange = onchange;
                         }
                     };
 
-                    // Safari's AudioContext does not implement the EventTarget interface
-                    if (unpatchedAudioContext.addEventListener) {
-                        unpatchedAudioContext.addEventListener('statechange', revokeState);
-                    } else {
-                        const onchange = unpatchedAudioContext.onchange;
-
-                        if (onchange === null) {
-                            unpatchedAudioContext.onchange = revokeState;
-                        } else {
-                            unpatchedAudioContext.onchange = (event) => {
-                                revokeState();
-                                onchange(event);
-                            };
-                        }
-                    }
+                    unpatchedAudioContext.addEventListener('statechange', revokeState);
                 }
             }
 
@@ -208,7 +193,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public close () {
-                // If the unpatched AudioContext does not throw an error if it was closed before, it has to be faked.
+                // Bug #35: Firefox does not throw an error if the AudioContext was closed before.
                 if (this.state === 'closed') {
                     return this._unpatchedAudioContext
                         .close()
@@ -217,7 +202,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         });
                 }
 
-                // If the state was set to suspended before it should be revoked now.
+                // Bug #34: If the state was set to suspended before it should be revoked now.
                 if (this._state === 'suspended') {
                     this._state = null;
                 }
