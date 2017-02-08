@@ -254,7 +254,7 @@ describe('AudioContext', () => {
             expect(analyserNode.numberOfInputs).to.equal(1);
             expect(analyserNode.numberOfOutputs).to.equal(1);
 
-            expect(analyserNode.smoothingTimeConstant).to.equal(0.8);
+            expect(analyserNode.smoothingTimeConstant).to.closeTo(0.8, 0.0000001);
         });
 
         it('should throw an error if the AudioContext is closed', (done) => {
