@@ -16,8 +16,6 @@ import { ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
-const POOL = [];
-
 const wrapAnalyserNode = (analyserNode) => {
     analyserNode.getFloatTimeDomainData = (array) => {
         const byteTimeDomainData = new Uint8Array(array.length);
@@ -91,7 +89,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             private _state;
 
             constructor () {
-                const unpatchedAudioContext = (POOL.length > 0) ? POOL.shift() : new UnpatchedAudioContext();
+                const unpatchedAudioContext = new UnpatchedAudioContext();
 
                 this._isSupportingChaining = chainingSupportTester.test(unpatchedAudioContext);
                 this._isSupportingDisconnecting = false;
@@ -101,31 +99,13 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 this._isSupportingStoppingOfStoppedNodes = stopStoppedSupportTester.test(unpatchedAudioContext);
                 this._onStateChangeListener = null;
                 this._unpatchedAudioContext = unpatchedAudioContext;
-                this._state = (unpatchedAudioContext.state === undefined) ? 'suspended' : null;
+                this._state = null;
 
                 disconnectingSupportTester
                     .test(unpatchedAudioContext)
                     .then((isSupportingDisconnecting) => {
                         this._isSupportingDisconnecting = isSupportingDisconnecting;
                     });
-
-                // If the unpatched AudioContext does not expose its state, it gets faked by transitioning it to running after 100
-                // tslint:disable-next-line:comment-format
-                // milliseconds.
-                if (unpatchedAudioContext.state === undefined) {
-                    setTimeout(() => {
-                        if (this._state === 'suspended') {
-                            this._state = 'running';
-
-                            if (this._onStateChangeListener !== null) {
-                                this._onStateChangeListener();
-                            }
-
-                            // Kick of the AudioContext.
-                            unpatchedAudioContext.createBufferSource();
-                        }
-                    }, 100);
-                }
 
                 // Chrome and Opera pretend to be running right away, but fire a onstatechange event when their state actually changes to
                 // 'running'.
@@ -228,21 +208,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public close () {
-                // If the unpatched AudioContext does not provide a close method and was closed before it should throw an error.
-                if (this._unpatchedAudioContext === null && this.state === 'closed') {
-                    return Promise.reject(invalidStateErrorFactory.create());
-                }
-
-                // Bug #10: Edge does not provide a close method.
-                if (this._unpatchedAudioContext.close === undefined) {
-                    POOL.push(this._unpatchedAudioContext);
-
-                    this._unpatchedAudioContext = null;
-                    this._state = 'closed';
-
-                    return Promise.resolve();
-                }
-
                 // If the unpatched AudioContext does not throw an error if it was closed before, it has to be faked.
                 if (this.state === 'closed') {
                     return this._unpatchedAudioContext
@@ -261,14 +226,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public createAnalyser () {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
@@ -292,7 +249,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     analyserNode = wrapAnalyserNode(analyserNode);
                 }
 
-                // Bug #11: Edge and Safari do not support chaining yet.
+                // Bug #11: Safari does not support chaining yet.
                 if (!this._isSupportingChaining) {
                     analyserNode = audioNodeConnectMethodWrapper.wrap(analyserNode);
                 }
@@ -306,14 +263,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public createBiquadFilter () {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
@@ -327,7 +276,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Bug #11: Edge and Safari do not support chaining yet.
+                // Bug #11: Safari does not support chaining yet.
                 if (!this._isSupportingChaining) {
                     biquadFilterNode = audioNodeConnectMethodWrapper.wrap(biquadFilterNode);
                 }
@@ -336,14 +285,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public createBuffer (numberOfChannels, length, sampleRate) {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 let audioBuffer = this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
                 // Safari does not support copyFromChannel() and copyToChannel().
@@ -355,14 +296,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public createBufferSource () {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 const audioBufferSourceNode = this._unpatchedAudioContext.createBufferSource();
 
                 // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
@@ -370,23 +303,12 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     return audioBufferSourceNodeStopMethodWrapper.wrap(audioBufferSourceNode);
                 }
 
-                // Bug #11: Edge and Safari do not support chaining yet. But Safari is already patched above.
-                if (!this._isSupportingChaining) {
-                    return audioNodeConnectMethodWrapper.wrap(audioBufferSourceNode);
-                }
+                // Bug #11: Safari does not support chaining yet but is already patched above.
 
                 return audioBufferSourceNode;
             }
 
             public createChannelMerger (/* numberOfInputs */) {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
@@ -400,7 +322,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Bug #11: Edge and Safari do not support chaining yet.
+                // Bug #11: Safari does not support chaining yet.
                 if (!this._isSupportingChaining) {
                     channelMergerNode = audioNodeConnectMethodWrapper.wrap(channelMergerNode);
                 }
@@ -422,14 +344,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public createChannelSplitter (/* numberOfOutputs */) {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
@@ -443,24 +357,16 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Bug #11: Edge and Safari do not support chaining yet.
+                // Bug #11: Safari does not support chaining yet.
                 if (!this._isSupportingChaining) {
                     channelSplitterNode = audioNodeConnectMethodWrapper.wrap(channelSplitterNode);
                 }
 
-                // Bug #29 - #32: Only Chrome Canary partially supports the spec yet.
+                // Bug #29 - #32: Only Chrome partially supports the spec yet.
                 return channelSplitterNodeWrapper.wrap(channelSplitterNode);
             }
 
             public createGain () {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
@@ -474,7 +380,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Bug #11: Edge and Safari do not support chaining yet.
+                // Bug #11: Safari does not support chaining yet.
                 if (!this._isSupportingChaining) {
                     gainNode = audioNodeConnectMethodWrapper.wrap(gainNode);
                 }
@@ -493,7 +399,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Bug #9: Only Chrome, Firefox and Opera currently support IIRFilterNodes.
+                // Bug #9: Safari does not support IIRFilterNodes.
                 if (this._unpatchedAudioContext.createIIRFilter === undefined) {
                     return iIRFilterNodeFaker.fake(feedforward, feedback, this, this._unpatchedAudioContext);
                 }
@@ -509,14 +415,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public createOscillator () {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
@@ -530,7 +428,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Bug #11: Edge and Safari do not support chaining yet.
+                // Bug #11: Safari does not support chaining yet.
                 if (!this._isSupportingChaining) {
                     oscillatorNode = audioNodeConnectMethodWrapper.wrap(oscillatorNode);
                 }
@@ -539,14 +437,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public decodeAudioData (audioData, successCallback, errorCallback) {
-                if (this._state === 'suspended') {
-                    this._state = 'running';
-
-                    if (this._onStateChangeListener !== null) {
-                        this._onStateChangeListener();
-                    }
-                }
-
                 // Bug #21 Safari does not support promises yet.
                 if (this._isSupportingPromises) {
                     return this._unpatchedAudioContext

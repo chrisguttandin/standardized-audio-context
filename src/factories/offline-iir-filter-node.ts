@@ -56,7 +56,7 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
     }
 
     public getFrequencyResponse (frequencyHz, magResponse, phaseResponse) {
-        // Bug #9: Only Chrome, Firefox and Opera currently support IIRFilterNodes.
+        // Bug #9: Safari does not support IIRFilterNodes.
         if (this._nativeNode) {
             return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
@@ -258,7 +258,7 @@ export class OfflineIIRFilterNodeFaker {
 
         const promises = [];
 
-        // Bug #9: Only Chrome, Firefox and Opera currently support IIRFilterNodes.
+        // Bug #9: Safari does not support IIRFilterNodes.
         if (this._nativeNode) {
             this._node = offlineAudioContext.createIIRFilter(this._feedforward, this._feedback);
 

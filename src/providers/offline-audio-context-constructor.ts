@@ -78,7 +78,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public get length () {
-                // Bug #17: Only Chrome and Opera do expose the length up to now.
+                // Bug #17: Safari does not yet expose the length.
                 if (this._unpatchedOfflineAudioContext.length === undefined) {
                     return this._length;
                 }
@@ -117,7 +117,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             public createIIRFilter (feedforward, feedback) {
                 let nativeNode = null;
 
-                // Bug #9: Only Chrome, Firefox and Opera currently support IIRFilterNodes.
+                // Bug #9: Safari does not support IIRFilterNodes.
                 if (this._unpatchedOfflineAudioContext.createIIRFilter !== undefined) {
                     nativeNode = this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
 

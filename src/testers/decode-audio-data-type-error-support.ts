@@ -29,6 +29,12 @@ export class DecodeAudioDataTypeErrorSupportTester {
                 .catch ((err) => (err instanceof TypeError));
         } catch (err) {
             return Promise.resolve(err instanceof TypeError);
+        } finally {
+            try {
+                audioContext.close();
+            } catch (err) {
+                // Ignore errors.
+            }
         }
 
         if (promise === undefined) {
