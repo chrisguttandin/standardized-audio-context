@@ -19,11 +19,11 @@ module.exports = {
         'build',
         'karma:test',
         'karma:test-chrome',
-        // 'karma:test-chrome-canary',
+        'karma:test-chrome-canary',
         'karma:test-edge',
         'karma:test-firefox',
-        // 'karma:test-firefox-developer',
-        // 'karma:test-opera',
+        'karma:test-firefox-developer',
+        'karma:test-opera',
         'karma:test-safari'
     ]
 };
