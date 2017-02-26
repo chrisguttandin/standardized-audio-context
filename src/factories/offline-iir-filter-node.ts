@@ -65,7 +65,9 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
             throw this._notSupportedErrorFactory.create();
         }
 
-        for (let i = 0, length = frequencyHz.length; i < length; i += 1) {
+        const length = frequencyHz.length;
+
+        for (let i = 0; i < length; i += 1) {
             const omega = -Math.PI * (frequencyHz[i] / this._nyquist);
 
             const z = [ Math.cos(omega), Math.sin(omega) ];
@@ -187,11 +189,11 @@ export class OfflineIIRFilterNodeFaker {
         }
 
         if (feedback[0] !== 1) {
-            for (let i = 0, length = feedforward.length; i < length; i += 1) {
+            for (let i = 0; i < feedbackLength; i += 1) {
                 feedforward[i] /= feedback[0];
             }
 
-            for (let i = 1, length = feedback.length; i < length; i += 1) {
+            for (let i = 1; i < feedforwardLength; i += 1) {
                 feedback[i] /= feedback[0];
             }
         }
@@ -210,7 +212,9 @@ export class OfflineIIRFilterNodeFaker {
         // This implementation as shamelessly inspired by source code of
         // tslint:disable-next-line:max-line-length
         // {@link https://chromium.googlesource.com/chromium/src.git/+/master/third_party/WebKit/Source/platform/audio/IIRFilter.cpp|Chromium's IIRFilter}.
-        for (let i = 0, numberOfChannels = renderedBuffer.numberOfChannels; i < numberOfChannels; i += 1) {
+        const numberOfChannels = renderedBuffer.numberOfChannels;
+
+        for (let i = 0; i < numberOfChannels; i += 1) {
             const input = renderedBuffer.getChannelData(i);
 
             const output = filteredBuffer.getChannelData(i);
@@ -221,11 +225,13 @@ export class OfflineIIRFilterNodeFaker {
                 yBuffer[j] = 0;
             }
 
-            for (let inputLength = input.length, j = 0; j < inputLength; j += 1) {
+            const inputLength = input.length;
+
+            for (let j = 0; j < inputLength; j += 1) {
                 let y = feedforward[0] * input[j];
 
                 for (let k = 1; k < minLength; k += 1) {
-                    let x = (bufferIndex - k) & (bufferLength - 1); // tslint:disable-line:no-bitwise
+                    const x = (bufferIndex - k) & (bufferLength - 1); // tslint:disable-line:no-bitwise
 
                     y += feedforward[k] * xBuffer[x];
                     y -= feedback[k] * yBuffer[x];
@@ -262,7 +268,7 @@ export class OfflineIIRFilterNodeFaker {
         if (this._nativeNode) {
             this._node = offlineAudioContext.createIIRFilter(this._feedforward, this._feedback);
 
-            for (let [ source, { input, output } ] of this._sources) {
+            for (const [ source, { input, output } ] of this._sources) {
                 promises.push(source
                     .render(offlineAudioContext)
                     .then((node) => node.connect(this._node, output, input)));
@@ -280,7 +286,7 @@ export class OfflineIIRFilterNodeFaker {
             offlineAudioContext.sampleRate
         );
 
-        for (let [ source, { input, output } ] of this._sources) {
+        for (const [ source, { input, output } ] of this._sources) {
             promises.push(source
                 .render(partialOfflineAudioContext)
                 .then((node) => node.connect(partialOfflineAudioContext.destination, output, input)));

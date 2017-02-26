@@ -13,7 +13,9 @@ export class ChannelMergerNodeWrapper {
         channelMergerNode.channelCountMode = 'explicit';
 
         // Bug #20: Safari requires a connection of any kind to treat the input signal correctly.
-        for (let i = 0, length = channelMergerNode.numberOfInputs; i < length; i += 1) {
+        const length = channelMergerNode.numberOfInputs;
+
+        for (let i = 0; i < length; i += 1) {
             audioBufferSourceNode.connect(channelMergerNode, 0, i);
         }
 

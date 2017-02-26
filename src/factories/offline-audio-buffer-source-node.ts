@@ -70,7 +70,7 @@ export class OfflineAudioBufferSourceNodeFaker {
         this._node.buffer = this._proxy.buffer;
 
         if (this._start !== null) {
-            let { duration, offset, when } = this._start;
+            const { duration, offset, when } = this._start;
 
             if (duration === undefined) {
                 this._node.start(when, offset);
@@ -79,7 +79,7 @@ export class OfflineAudioBufferSourceNodeFaker {
             }
         }
 
-        for (let [ source, { input, output } ] of this._sources) {
+        for (const [ source, { input, output } ] of this._sources) {
             promises.push(source
                 .render(offlineAudioContext)
                 .then((node) => node.connect(this._node, output, input)));
