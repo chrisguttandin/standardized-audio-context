@@ -37,7 +37,9 @@ export class MergingSupportTester {
             scriptProcessorNode.onaudioprocess = (event) => {
                 const channelData = event.inputBuffer.getChannelData(1);
 
-                for (let i = 0, length = channelData.length; i < length; i += 1) {
+                const length = channelData.length;
+
+                for (let i = 0; i < length; i += 1) {
                     if (channelData[i] !== 0) {
                         resolve(false);
 

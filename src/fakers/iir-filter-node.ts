@@ -50,11 +50,11 @@ export class IIRFilterNodeFaker {
         }
 
         if (feedback[0] !== 1) {
-            for (let i = 0, length = feedforward.length; i < length; i += 1) {
+            for (let i = 0; i < feedforwardLength; i += 1) {
                 feedforward[i] /= feedback[0];
             }
 
-            for (let i = 1, length = feedback.length; i < length; i += 1) {
+            for (let i = 1; i < feedbackLength; i += 1) {
                 feedback[i] /= feedback[0];
             }
         }
@@ -85,7 +85,9 @@ export class IIRFilterNodeFaker {
 
             const outputBuffer = event.outputBuffer;
 
-            for (let i = 0, numberOfChannels = inputBuffer.numberOfChannels; i < numberOfChannels; i += 1) {
+            const numberOfChannels = inputBuffer.numberOfChannels;
+
+            for (let i = 0; i < numberOfChannels; i += 1) {
                 const input = inputBuffer.getChannelData(i);
                 const output = outputBuffer.getChannelData(i);
 
@@ -93,7 +95,7 @@ export class IIRFilterNodeFaker {
                     let y = feedforward[0] * input[j];
 
                     for (let k = 1; k < minLength; k += 1) {
-                        let x = (bufferIndex - k) & (bufferLength - 1); // tslint:disable-line:no-bitwise
+                        const x = (bufferIndex - k) & (bufferLength - 1); // tslint:disable-line:no-bitwise
 
                         y += feedforward[k] * xBuffer[x];
                         y -= feedback[k] * yBuffer[x];
@@ -122,7 +124,9 @@ export class IIRFilterNodeFaker {
                 throw this._notSupportedErrorFactory.create();
             }
 
-            for (let i = 0, length = frequencyHz.length; i < length; i += 1) {
+            const length = frequencyHz.length;
+
+            for (let i = 0; i < length; i += 1) {
                 const omega = -Math.PI * (frequencyHz[i] / nyquist);
 
                 const z = [ Math.cos(omega), Math.sin(omega) ];

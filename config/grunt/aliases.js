@@ -13,7 +13,8 @@ module.exports = {
     ],
     lint: [
         'eslint',
-        'tslint'
+        // @todo Use grunt-lint again when it support the type-check option.
+        'sh:lint'
     ],
     test: [
         'build',

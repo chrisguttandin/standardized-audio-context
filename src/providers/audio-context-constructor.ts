@@ -22,7 +22,9 @@ const wrapAnalyserNode = (analyserNode) => {
 
         analyserNode.getByteTimeDomainData(byteTimeDomainData);
 
-        for (let i = 0, length = Math.max(byteTimeDomainData.length, analyserNode.fftSize); i < length; i += 1) {
+        const length = Math.max(byteTimeDomainData.length, analyserNode.fftSize);
+
+        for (let i = 0; i < length; i += 1) {
             array[i] = (byteTimeDomainData[i] - 128) * 0.0078125;
         }
 
