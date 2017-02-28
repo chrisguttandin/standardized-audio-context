@@ -66,6 +66,8 @@ const injector = ReflectiveInjector.resolveAndCreate([
     WINDOW_PROVIDER
 ]);
 
+export { AudioContextState } from './enums/audio-context-state';
+
 export { IAudioContext };
 
 export { IAudioContextConstructor };

@@ -1,8 +1,4 @@
-export enum AudioContextState {
-    'closed',
-    'running',
-    'suspended'
-};
+import { AudioContextState } from '../enums/audio-context-state';
 
 export interface IAudioContext {
 
