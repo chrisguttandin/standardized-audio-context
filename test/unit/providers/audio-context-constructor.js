@@ -1,5 +1,7 @@
 import 'core-js/es7/reflect';
 import { AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, audioContextConstructor } from '../../../src/providers/audio-context-constructor';
+import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../../../src/wrappers/analyser-node-get-float-time-domain-data-method';
+import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../../../src/testers/analyser-node-get-float-time-domain-data';
 import { AudioBufferSourceNodeStopMethodWrapper } from '../../../src/wrappers/audio-buffer-source-node-stop-method';
 import { AudioBufferWrapper } from '../../../src/wrappers/audio-buffer';
 import { AudioNodeConnectMethodWrapper } from '../../../src/wrappers/audio-node-connect-method';
@@ -33,6 +35,8 @@ describe('AudioContext', () => {
     beforeEach(() => {
         const injector = ReflectiveInjector.resolveAndCreate([
             AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
+            AnalyserNodeGetFloatTimeDomainDataSupportTester,
             AudioBufferSourceNodeStopMethodWrapper,
             AudioBufferWrapper,
             AudioNodeConnectMethodWrapper,
