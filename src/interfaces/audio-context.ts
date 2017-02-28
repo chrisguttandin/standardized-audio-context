@@ -32,7 +32,7 @@ export interface IAudioContext {
 
     createGain(): GainNode;
 
-    createIIRFilter(feedforward: [ number ], feedback): [ number ]; // @todo IIRFilterNode;
+    createIIRFilter(feedforward: number[], feedback: number[]); // @todo IIRFilterNode;
 
     decodeAudioData(
         audioData: ArrayBuffer,
