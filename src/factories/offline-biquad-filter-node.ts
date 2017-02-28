@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
 
 class OfflineBiquadFilterNodeFakerProxy extends OfflineAudioNodeProxy {
@@ -140,7 +139,6 @@ export class OfflineBiquadFilterNodeFaker {
 
 }
 
-@Injectable()
 export class OfflineBiquadFilterNodeFakerFactory {
 
     public create ({ fakeNodeStore, nativeNode }) {

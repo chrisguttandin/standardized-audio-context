@@ -1,6 +1,3 @@
-import { Injectable } from '@angular/core';
-
-@Injectable()
 export class ChainingSupportTester {
 
     public test (audioContext) {

@@ -1,6 +1,3 @@
-import { Injectable } from '@angular/core';
-
-@Injectable()
 export class PromiseSupportTester {
 
     public test (audioContext) {
