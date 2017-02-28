@@ -3,10 +3,12 @@ import { EncodingErrorFactory } from '../factories/encoding-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { IIRFilterNodeFaker } from '../fakers/iir-filter-node';
 import { IAudioContext, IAudioContextConstructor } from '../interfaces/audio-context';
+import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../testers/analyser-node-get-float-time-domain-data';
 import { ChainingSupportTester } from '../testers/chaining-support';
 import { DisconnectingSupportTester } from '../testers/disconnecting-support';
 import { PromiseSupportTester } from '../testers/promise-support';
 import { StopStoppedSupportTester } from '../testers/stop-stopped-support';
+import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 import { AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { AudioBufferSourceNodeStopMethodWrapper } from '../wrappers/audio-buffer-source-node-stop-method';
 import { AudioNodeConnectMethodWrapper } from '../wrappers/audio-node-connect-method';
@@ -16,28 +18,12 @@ import { ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
-const wrapAnalyserNode = (analyserNode) => {
-    analyserNode.getFloatTimeDomainData = (array) => {
-        const byteTimeDomainData = new Uint8Array(array.length);
-
-        analyserNode.getByteTimeDomainData(byteTimeDomainData);
-
-        const length = Math.max(byteTimeDomainData.length, analyserNode.fftSize);
-
-        for (let i = 0; i < length; i += 1) {
-            array[i] = (byteTimeDomainData[i] - 128) * 0.0078125;
-        }
-
-        return array;
-    };
-
-    return analyserNode;
-};
-
 export const audioContextConstructor = new OpaqueToken('AUDIO_CONTEXT_CONSTRUCTOR');
 
 export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     deps: [
+        AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
+        AnalyserNodeGetFloatTimeDomainDataSupportTester,
         AudioBufferSourceNodeStopMethodWrapper,
         AudioBufferWrapper,
         AudioNodeConnectMethodWrapper,
@@ -56,6 +42,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     ],
     provide: audioContextConstructor,
     useFactory: (
+        analyserNodeGetFloatTimeDomainDataMethodWrapper,
+        analyserNodeGetFloatTimeDomainDataSupportTester,
         audioBufferSourceNodeStopMethodWrapper,
         audioBufferWrapper,
         audioNodeConnectMethodWrapper,
@@ -73,6 +61,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         UnpatchedAudioContext // tslint:disable-line:variable-name
     ): IAudioContextConstructor => {
         class AudioContext implements IAudioContext {
+
+            private _isSupportingAnalyserNodeGetFloatTimeDomainData;
 
             private _isSupportingChaining;
 
@@ -93,6 +83,9 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             constructor () {
                 const unpatchedAudioContext = new UnpatchedAudioContext();
 
+                this._isSupportingAnalyserNodeGetFloatTimeDomainData = analyserNodeGetFloatTimeDomainDataSupportTester.test(
+                    unpatchedAudioContext
+                );
                 this._isSupportingChaining = chainingSupportTester.test(unpatchedAudioContext);
                 this._isSupportingDisconnecting = false;
                 // @todo Actually check for getFrequencyResponse() errors support.
@@ -226,14 +219,14 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Only Firefox creates an AnalyserNode with default properties.
+                // Bug #37: Only Firefox creates an AnalyserNode with default properties.
                 if (analyserNode.channelCount === 2) {
                     analyserNode.channelCount = 1;
                 }
 
-                // Safari does not support getFloatTimeDomainData() yet.
-                if (typeof analyserNode.getFloatTimeDomainData !== 'function') {
-                    analyserNode = wrapAnalyserNode(analyserNode);
+                // Bug #36: Safari does not support getFloatTimeDomainData() yet.
+                if (!this._isSupportingAnalyserNodeGetFloatTimeDomainData) {
+                    analyserNode = analyserNodeGetFloatTimeDomainDataMethodWrapper.wrap(analyserNode);
                 }
 
                 // Bug #11: Safari does not support chaining yet.

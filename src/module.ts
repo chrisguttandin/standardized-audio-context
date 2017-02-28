@@ -22,9 +22,11 @@ import { ChainingSupportTester } from './testers/chaining-support';
 import { CloseSupportTester } from './testers/close-support';
 import { DecodeAudioDataTypeErrorSupportTester } from './testers/decode-audio-data-type-error-support';
 import { DisconnectingSupportTester } from './testers/disconnecting-support';
+import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from './testers/analyser-node-get-float-time-domain-data';
 import { MergingSupportTester } from './testers/merging-support';
 import { PromiseSupportTester } from './testers/promise-support';
 import { StopStoppedSupportTester } from './testers/stop-stopped-support';
+import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from './wrappers/analyser-node-get-float-time-domain-data-method';
 import { AudioBufferWrapper } from './wrappers/audio-buffer';
 import { AudioBufferSourceNodeStopMethodWrapper } from './wrappers/audio-buffer-source-node-stop-method';
 import { AudioNodeConnectMethodWrapper } from './wrappers/audio-node-connect-method';
@@ -34,6 +36,8 @@ import { ChannelSplitterNodeWrapper } from './wrappers/channel-splitter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrappers/iir-filter-node-get-frequency-response-method';
 
 const injector = ReflectiveInjector.resolveAndCreate([
+    AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
+    AnalyserNodeGetFloatTimeDomainDataSupportTester,
     AudioBufferSourceNodeStopMethodWrapper,
     AudioBufferWrapper,
     AudioNodeConnectMethodWrapper,

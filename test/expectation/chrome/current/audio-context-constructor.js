@@ -8,6 +8,8 @@ describe('audioContextConstructor', () => {
     let audioContext;
     let AudioContext;
 
+    afterEach(() => audioContext.close());
+
     beforeEach(() => {
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
@@ -25,6 +27,18 @@ describe('audioContextConstructor', () => {
 
         it('should be set to running right away', () => {
             expect(audioContext.state).to.equal('running');
+        });
+
+    });
+
+    describe('createAnalyser()', () => {
+
+        // bug #37
+
+        it('should have a channelCount of 2', () => {
+            const analyserNode = audioContext.createAnalyser();
+
+            expect(analyserNode.channelCount).to.equal(2);
         });
 
     });

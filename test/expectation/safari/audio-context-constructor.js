@@ -37,6 +37,26 @@ describe('audioContextConstructor', () => {
             expect(analyserNode.connect(gainNode)).to.be.undefined;
         });
 
+        // bug #37
+
+        it('should have a channelCount of 2', () => {
+            const analyserNode = audioContext.createAnalyser();
+
+            expect(analyserNode.channelCount).to.equal(2);
+        });
+
+        describe('getFloatTimeDomainData()', () => {
+
+            // bug #36
+
+            it('should not have a getFloatTimeDomainData method', () => {
+                const analyserNode = audioContext.createAnalyser();
+
+                expect(analyserNode.getFloatTimeDomainData).to.be.undefined;
+            });
+
+        });
+
     });
 
     describe('createBiquadFilter()', () => {
