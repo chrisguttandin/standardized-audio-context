@@ -20,43 +20,6 @@ describe('offlineAudioContextConstructor', () => {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
-    describe('createGain()', () => {
-
-        // bug #12
-
-        it('should not allow to disconnect a specific destination', (done) => {
-            const candidate = offlineAudioContext.createGain();
-            const dummy = offlineAudioContext.createGain();
-            const ones = offlineAudioContext.createBuffer(1, 1, 44100);
-
-            ones.getChannelData(0)[0] = 1;
-
-            const source = offlineAudioContext.createBufferSource();
-
-            source.buffer = ones;
-
-            source.connect(candidate);
-            candidate.connect(offlineAudioContext.destination);
-            candidate.connect(dummy);
-            candidate.disconnect(dummy);
-
-            source.start();
-
-            offlineAudioContext.oncomplete = (event) => {
-                const channelData = event.renderedBuffer.getChannelData(0);
-
-                expect(channelData[0]).to.equal(0);
-
-                source.disconnect(candidate);
-                candidate.disconnect(offlineAudioContext.destination);
-
-                done();
-            };
-            offlineAudioContext.startRendering();
-        });
-
-    });
-
     describe('decodeAudioData()', () => {
 
         // bug #7
