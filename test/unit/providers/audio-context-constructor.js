@@ -542,8 +542,9 @@ describe('AudioContext', () => {
                 expect(Array.from(channelData)).to.not.contain(1);
 
                 if (event.playbackTime > currentTime + 1) {
-                    scriptProcessorNode.disconnect(audioContext.destination);
-                    audioBufferSourceNode.disconnect(scriptProcessorNode);
+                    // @todo Disconnecting the nodes causes a strange error in Firefox version 52 and above.
+                    // @todo scriptProcessorNode.disconnect(audioContext.destination);
+                    // @todo audioBufferSourceNode.disconnect(scriptProcessorNode);
 
                     done();
                 }
