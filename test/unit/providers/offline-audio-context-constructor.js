@@ -15,6 +15,7 @@ import { ReflectiveInjector } from '@angular/core';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from '../../../src/providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
+import { spy } from 'sinon';
 
 describe('OfflineAudioContext', () => {
 
@@ -500,7 +501,7 @@ describe('OfflineAudioContext', () => {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', (done) => {
-                const errorCallback = sinon.spy(); // eslint-disable-line no-undef
+                const errorCallback = spy();
 
                 offlineAudioContext
                     .decodeAudioData(null, () => {}, errorCallback)
@@ -552,7 +553,7 @@ describe('OfflineAudioContext', () => {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', (done) => {
-                const errorCallback = sinon.spy(); // eslint-disable-line no-undef
+                const errorCallback = spy();
 
                 offlineAudioContext
                     .decodeAudioData(arrayBuffer, () => {}, errorCallback)
@@ -613,7 +614,7 @@ describe('OfflineAudioContext', () => {
 
             // The promise is resolved before but the successCallback gets called synchronously.
             it('should call the successCallback before the promise gets resolved', () => {
-                const successCallback = sinon.spy(); // eslint-disable-line no-undef
+                const successCallback = spy();
 
                 return offlineAudioContext
                     .decodeAudioData(arrayBuffer, successCallback)

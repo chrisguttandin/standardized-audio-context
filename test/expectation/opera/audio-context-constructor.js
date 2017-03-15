@@ -2,6 +2,7 @@ import 'core-js/es7/reflect';
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextConstructor } from '../../../src/providers/unpatched-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
+import { spy } from 'sinon';
 
 describe('audioContextConstructor', () => {
 
@@ -96,7 +97,7 @@ describe('audioContextConstructor', () => {
         // bug #6
 
         it('should not call the errorCallback at all', (done) => {
-            const errorCallback = sinon.spy(); // eslint-disable-line no-undef
+            const errorCallback = spy();
 
             audioContext.decodeAudioData(null, () => {}, errorCallback);
 

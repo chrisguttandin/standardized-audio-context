@@ -3,6 +3,7 @@ import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineA
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
+import { stub } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
 
@@ -327,7 +328,7 @@ describe('offlineAudioContextConstructor', () => {
             const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
-            scriptProcessorNode.onaudioprocess = sinon.stub(); // eslint-disable-line no-undef
+            scriptProcessorNode.onaudioprocess = stub();
 
             offlineAudioContext.oncomplete = () => {
                 expect(scriptProcessorNode.onaudioprocess.callCount).to.be.below(1000);

@@ -21,6 +21,7 @@ import { StopStoppedSupportTester } from '../../../src/testers/stop-stopped-sup
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from '../../../src/providers/unpatched-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
+import { spy } from 'sinon';
 
 describe('AudioContext', () => {
 
@@ -1137,7 +1138,7 @@ describe('AudioContext', () => {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', (done) => {
-                const errorCallback = sinon.spy(); // eslint-disable-line no-undef
+                const errorCallback = spy();
 
                 audioContext
                     .decodeAudioData(null, () => {}, errorCallback)
@@ -1189,7 +1190,7 @@ describe('AudioContext', () => {
 
             // The promise is rejected before but the errorCallback gets called synchronously.
             it('should call the errorCallback before the promise gets rejected', (done) => {
-                const errorCallback = sinon.spy(); // eslint-disable-line no-undef
+                const errorCallback = spy();
 
                 audioContext
                     .decodeAudioData(arrayBuffer, () => {}, errorCallback)
@@ -1250,7 +1251,7 @@ describe('AudioContext', () => {
 
             // The promise is resolved before but the successCallback gets called synchronously.
             it('should call the successCallback before the promise gets resolved', () => {
-                const successCallback = sinon.spy(); // eslint-disable-line no-undef
+                const successCallback = spy();
 
                 return audioContext
                     .decodeAudioData(arrayBuffer, successCallback)
