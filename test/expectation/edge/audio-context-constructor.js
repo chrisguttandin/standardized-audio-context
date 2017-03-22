@@ -126,4 +126,14 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('getOutputTimestamp()', () => {
+
+        // bug #38
+
+        it('should not be implemented', () => {
+            expect(audioContext.getOutputTimestamp).to.be.undefined;
+        });
+
+    });
+
 });
