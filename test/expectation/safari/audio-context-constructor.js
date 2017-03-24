@@ -26,6 +26,16 @@ describe('audioContextConstructor', () => {
         expect(window.AudioContext).to.be.undefined;
     });
 
+    describe('baseLatency', () => {
+
+        // bug #39
+
+        it('should not be implemented', () => {
+            expect(audioContext.baseLatency).to.be.undefined;
+        });
+
+    });
+
     describe('createAnalyser()', () => {
 
         // bug #11

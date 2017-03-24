@@ -21,6 +21,16 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
+    describe('baseLatency', () => {
+
+        // bug #39
+
+        it('should not be implemented', () => {
+            expect(audioContext.baseLatency).to.be.undefined;
+        });
+
+    });
+
     describe('createAnalyser()', () => {
 
         // bug #37
