@@ -24,7 +24,8 @@ module.exports = {
         'karma:test-edge',
         'karma:test-firefox',
         // 'karma:test-firefox-developer',
-        'karma:test-opera',
-        'karma:test-safari'
+        'karma:test-opera'
+        // @todo Enable Safari tests again, when BrowserStack supports Safari 10.1 or above.
+        // 'karma:test-safari'
     ]
 };
