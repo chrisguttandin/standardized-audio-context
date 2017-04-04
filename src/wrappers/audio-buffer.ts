@@ -25,8 +25,6 @@ export class AudioBufferWrapper {
                 channelData[i + startInChannel] = source[i];
             }
         };
-
-        return audioBuffer;
     }
 
 }

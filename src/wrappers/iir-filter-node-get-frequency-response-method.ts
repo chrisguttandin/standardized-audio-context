@@ -16,8 +16,6 @@ export class IIRFilterNodeGetFrequencyResponseMethodWrapper {
                 return getFrequencyResponse.call(iIRFilterNode, frequencyHz, magResponse, phaseResponse);
             };
         })(iIRFilterNode.getFrequencyResponse);
-
-        return iIRFilterNode;
     }
 
 }

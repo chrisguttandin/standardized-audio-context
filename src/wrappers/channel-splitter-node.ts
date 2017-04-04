@@ -23,8 +23,6 @@ export class ChannelSplitterNodeWrapper {
                 throw this._invalidStateErrorFactory.create();
             }
         });
-
-        return channelSplitterNode;
     }
 
 }

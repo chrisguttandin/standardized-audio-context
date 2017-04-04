@@ -14,8 +14,6 @@ export class AnalyserNodeGetFloatTimeDomainDataMethodWrapper {
 
             return array;
         };
-
-        return analyserNode;
     }
 
 }

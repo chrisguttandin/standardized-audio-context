@@ -36,8 +36,6 @@ export class AudioNodeConnectMethodWrapper {
                 };
             }
         })(audioNode.connect);
-
-        return audioNode;
     }
 
 }

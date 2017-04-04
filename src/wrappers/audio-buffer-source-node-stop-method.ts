@@ -33,8 +33,6 @@ export class AudioBufferSourceNodeStopMethodWrapper {
                 }
             };
         })(audioBufferSourceNode.stop);
-
-        return audioBufferSourceNode;
     }
 
 }

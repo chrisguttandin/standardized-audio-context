@@ -219,7 +219,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                let analyserNode = this._unpatchedAudioContext.createAnalyser();
+                const analyserNode = this._unpatchedAudioContext.createAnalyser();
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -235,20 +235,18 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #36: Safari does not support getFloatTimeDomainData() yet.
                 if (!this._isSupportingAnalyserNodeGetFloatTimeDomainData) {
-                    analyserNode = analyserNodeGetFloatTimeDomainDataMethodWrapper.wrap(analyserNode);
+                    analyserNodeGetFloatTimeDomainDataMethodWrapper.wrap(analyserNode);
                 }
 
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    analyserNode = audioNodeConnectMethodWrapper.wrap(
-                        analyserNode, this._isSupportingChaining, this._isSupportingConnecting
-                    );
+                    audioNodeConnectMethodWrapper.wrap(analyserNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
 
                 // Only Chrome and Opera support disconnecting of a specific destination.
                 if (!this._isSupportingDisconnecting) {
-                    analyserNode = audioNodeDisconnectMethodWrapper.wrap(analyserNode);
+                    audioNodeDisconnectMethodWrapper.wrap(analyserNode);
                 }
 
                 return analyserNode;
@@ -259,7 +257,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                let biquadFilterNode = this._unpatchedAudioContext.createBiquadFilter();
+                const biquadFilterNode = this._unpatchedAudioContext.createBiquadFilter();
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -271,20 +269,18 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    biquadFilterNode = audioNodeConnectMethodWrapper.wrap(
-                        biquadFilterNode, this._isSupportingChaining, this._isSupportingConnecting
-                    );
+                    audioNodeConnectMethodWrapper.wrap(biquadFilterNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
 
                 return biquadFilterNode;
             }
 
             public createBuffer (numberOfChannels, length, sampleRate) {
-                let audioBuffer = this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+                const audioBuffer = this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
                 // Safari does not support copyFromChannel() and copyToChannel().
                 if (typeof audioBuffer.copyFromChannel !== 'function') {
-                    audioBuffer = audioBufferWrapper.wrap(audioBuffer);
+                    audioBufferWrapper.wrap(audioBuffer);
                 }
 
                 return audioBuffer;
@@ -313,7 +309,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                let channelMergerNode = this._unpatchedAudioContext.createChannelMerger.apply(this._unpatchedAudioContext, arguments);
+                const channelMergerNode = this._unpatchedAudioContext.createChannelMerger.apply(this._unpatchedAudioContext, arguments);
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -325,22 +321,20 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    channelMergerNode = audioNodeConnectMethodWrapper.wrap(
-                        channelMergerNode, this._isSupportingChaining, this._isSupportingConnecting
-                    );
+                    audioNodeConnectMethodWrapper.wrap(channelMergerNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
 
                 // Bug #15: Safari does not return the default properties.
                 if (channelMergerNode.channelCount !== 1 &&
                         channelMergerNode.channelCountMode !== 'explicit') {
-                    channelMergerNode = channelMergerNodeWrapper.wrap(this._unpatchedAudioContext, channelMergerNode);
+                    channelMergerNodeWrapper.wrap(this._unpatchedAudioContext, channelMergerNode);
                 }
 
                 // Bug #16: Firefox does not throw an error when setting a different channelCount or channelCountMode.
                 try {
                     channelMergerNode.channelCount = 2;
 
-                    channelMergerNode = channelMergerNodeWrapper.wrap(this._unpatchedAudioContext, channelMergerNode);
+                    channelMergerNodeWrapper.wrap(this._unpatchedAudioContext, channelMergerNode);
                 } catch (err) {} // tslint:disable-line:no-empty
 
                 return channelMergerNode;
@@ -351,7 +345,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                let channelSplitterNode = this._unpatchedAudioContext.createChannelSplitter.apply(this._unpatchedAudioContext, arguments);
+                const channelSplitterNode = this._unpatchedAudioContext.createChannelSplitter.apply(this._unpatchedAudioContext, arguments);
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -363,9 +357,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    channelSplitterNode = audioNodeConnectMethodWrapper.wrap(
-                        channelSplitterNode, this._isSupportingChaining, this._isSupportingConnecting
-                    );
+                    audioNodeConnectMethodWrapper.wrap(channelSplitterNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
 
                 // Bug #29 - #32: Only Chrome partially supports the spec yet.
@@ -377,7 +369,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                let gainNode = this._unpatchedAudioContext.createGain();
+                const gainNode = this._unpatchedAudioContext.createGain();
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -389,12 +381,12 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    gainNode = audioNodeConnectMethodWrapper.wrap(gainNode, this._isSupportingChaining, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(gainNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
 
                 // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
                 if (!this._isSupportingDisconnecting) {
-                    gainNode = audioNodeDisconnectMethodWrapper.wrap(gainNode);
+                    audioNodeDisconnectMethodWrapper.wrap(gainNode);
                 }
 
                 return gainNode;
@@ -431,7 +423,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                let oscillatorNode = this._unpatchedAudioContext.createOscillator();
+                const oscillatorNode = this._unpatchedAudioContext.createOscillator();
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -443,9 +435,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    oscillatorNode = audioNodeConnectMethodWrapper.wrap(
-                        oscillatorNode, this._isSupportingChaining, this._isSupportingConnecting
-                    );
+                    audioNodeConnectMethodWrapper.wrap(oscillatorNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
 
                 return oscillatorNode;

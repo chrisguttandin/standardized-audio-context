@@ -24,8 +24,6 @@ export class AudioNodeDisconnectMethodWrapper {
                 }
             };
         })(audioNode.disconnect);
-
-        return audioNode;
     }
 
 }

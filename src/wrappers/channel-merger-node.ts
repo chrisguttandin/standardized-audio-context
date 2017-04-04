@@ -32,8 +32,6 @@ export class ChannelMergerNodeWrapper {
                 throw this._invalidStateErrorFactory.create();
             }
         });
-
-        return channelMergerNode;
     }
 
 }
