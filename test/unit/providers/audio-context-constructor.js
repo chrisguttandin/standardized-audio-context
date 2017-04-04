@@ -9,10 +9,12 @@ import { AudioNodeDisconnectMethodWrapper } from '../../../src/wrappers/audio-n
 import { ChainingSupportTester } from '../../../src/testers/chaining-support';
 import { ChannelMergerNodeWrapper } from '../../../src/wrappers/channel-merger-node';
 import { ChannelSplitterNodeWrapper } from '../../../src/wrappers/channel-splitter-node';
+import { ConnectingSupportTester } from '../../../src/testers/connecting-support';
 import { DisconnectingSupportTester } from '../../../src/testers/disconnecting-support';
 import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
 import { IIRFilterNodeFaker } from '../../../src/fakers/iir-filter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../../src/wrappers/iir-filter-node-get-frequency-response-method';
+import { InvalidAccessErrorFactory } from '../../../src/factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../../../src/factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../../../src/factories/not-supported-error';
 import { PromiseSupportTester } from '../../../src/testers/promise-support';
@@ -45,10 +47,12 @@ describe('AudioContext', () => {
             ChainingSupportTester,
             ChannelMergerNodeWrapper,
             ChannelSplitterNodeWrapper,
+            ConnectingSupportTester,
             DisconnectingSupportTester,
             EncodingErrorFactory,
             IIRFilterNodeFaker,
             IIRFilterNodeGetFrequencyResponseMethodWrapper,
+            InvalidAccessErrorFactory,
             InvalidStateErrorFactory,
             NotSupportedErrorFactory,
             PromiseSupportTester,
