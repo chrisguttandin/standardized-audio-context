@@ -152,6 +152,20 @@ describe('OfflineAudioContext', () => {
             expect(biquadFilterNode.connect(gainNode)).to.equal(gainNode);
         });
 
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherOfflineAudioContext = new OfflineAudioContext(2, 129, 44100);
+            const biquadFilterNode = offlineAudioContext.createBiquadFilter();
+
+            try {
+                biquadFilterNode.connect(anotherOfflineAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            }
+        });
+
         describe('getFrequencyResponse()', () => {
 
             // bug #22 This is not yet implemented in Edge and Safari.
@@ -228,6 +242,20 @@ describe('OfflineAudioContext', () => {
 
                     done();
                 });
+        });
+
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherOfflineAudioContext = new OfflineAudioContext(2, 129, 44100);
+            const gainNode = offlineAudioContext.createGain();
+
+            try {
+                gainNode.connect(anotherOfflineAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            }
         });
 
     });
@@ -417,6 +445,20 @@ describe('OfflineAudioContext', () => {
             const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
 
             expect(iIRFilterNode.connect(gainNode)).to.equal(gainNode);
+        });
+
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherOfflineAudioContext = new OfflineAudioContext(2, 129, 44100);
+            const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
+
+            try {
+                iIRFilterNode.connect(anotherOfflineAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            }
         });
 
         describe('getFrequencyResponse()', () => {

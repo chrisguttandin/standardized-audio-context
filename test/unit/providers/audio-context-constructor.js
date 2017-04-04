@@ -328,6 +328,22 @@ describe('AudioContext', () => {
             source.start();
         });
 
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const analyserNode = audioContext.createAnalyser();
+            const anotherAudioContext = new AudioContext();
+
+            try {
+                analyserNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
+        });
+
     });
 
     describe('createBiquadFilter()', () => {
@@ -398,6 +414,22 @@ describe('AudioContext', () => {
             const gainNode = audioContext.createGain();
 
             expect(biquadFilterNode.connect(gainNode)).to.equal(gainNode);
+        });
+
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherAudioContext = new AudioContext();
+            const biquadFilterNode = audioContext.createBiquadFilter();
+
+            try {
+                biquadFilterNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
         });
 
         describe('getFrequencyResponse()', () => {
@@ -508,6 +540,22 @@ describe('AudioContext', () => {
             const gainNode = audioContext.createGain();
 
             expect(audioBufferSourceNode.connect(gainNode)).to.equal(gainNode);
+        });
+
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherAudioContext = new AudioContext();
+            const audioBufferSourceNode = audioContext.createBufferSource();
+
+            try {
+                audioBufferSourceNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
         });
 
         it('should stop an AudioBufferSourceNode scheduled for stopping in the future', (done) => {
@@ -644,6 +692,22 @@ describe('AudioContext', () => {
             expect(channelMergerNode.connect(gainNode)).to.equal(gainNode);
         });
 
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherAudioContext = new AudioContext();
+            const channelMergerNode = audioContext.createChannelMerger();
+
+            try {
+                channelMergerNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
+        });
+
         it('should handle unconnected channels as silence', (done) => {
             const audioBufferSourceNode = audioContext.createBufferSource();
             const channelMergerNode = audioContext.createChannelMerger();
@@ -754,6 +818,22 @@ describe('AudioContext', () => {
             expect(channelSplitterNode.connect(gainNode)).to.equal(gainNode);
         });
 
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherAudioContext = new AudioContext();
+            const channelSplitterNode = audioContext.createChannelSplitter();
+
+            try {
+                channelSplitterNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
+        });
+
     });
 
     describe('createGain()', () => {
@@ -838,6 +918,22 @@ describe('AudioContext', () => {
             };
 
             source.start();
+        });
+
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherAudioContext = new AudioContext();
+            const gainNode = audioContext.createGain();
+
+            try {
+                gainNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
         });
 
     });
@@ -998,6 +1094,22 @@ describe('AudioContext', () => {
             expect(iIRFilterNode.connect(gainNode)).to.equal(gainNode);
         });
 
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherAudioContext = new AudioContext();
+            const iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
+
+            try {
+                iIRFilterNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
+        });
+
         describe('getFrequencyResponse()', () => {
 
             it('should throw an NotSupportedError', (done) => {
@@ -1106,6 +1218,22 @@ describe('AudioContext', () => {
             const oscillatorNode = audioContext.createOscillator();
 
             expect(oscillatorNode.connect(gainNode)).to.equal(gainNode);
+        });
+
+        it('should not be connectable to a node of another AudioContext', (done) => {
+            const anotherAudioContext = new AudioContext();
+            const oscillatorNode = audioContext.createOscillator();
+
+            try {
+                oscillatorNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(15);
+                expect(err.name).to.equal('InvalidAccessError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
         });
 
     });
