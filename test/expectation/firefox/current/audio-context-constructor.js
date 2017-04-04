@@ -22,6 +22,28 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
+    describe('createAnalyser()', () => {
+
+        // bug #41
+
+        it('should throw a SyntaxError when calling connect() with a node of another AudioContext', (done) => {
+            const analyserNode = audioContext.createAnalyser();
+            const anotherAudioContext = new AudioContext();
+
+            try {
+                analyserNode.connect(anotherAudioContext.destination);
+            } catch (err) {
+                expect(err.code).to.equal(12);
+                expect(err.name).to.equal('SyntaxError');
+
+                done();
+            } finally {
+                anotherAudioContext.close();
+            }
+        });
+
+    });
+
     describe('decodeAudioData()', () => {
 
         // bug #7
