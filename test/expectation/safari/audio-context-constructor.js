@@ -36,6 +36,16 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('outputLatency', () => {
+
+        // bug #40
+
+        it('should not be implemented', () => {
+            expect(audioContext.outputLatency).to.be.undefined;
+        });
+
+    });
+
     describe('createAnalyser()', () => {
 
         // bug #11
