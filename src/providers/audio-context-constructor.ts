@@ -1,10 +1,12 @@
 import { OpaqueToken } from '@angular/core';
 import { EncodingErrorFactory } from '../factories/encoding-error';
+import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { IIRFilterNodeFaker } from '../fakers/iir-filter-node';
 import { IAudioContext, IAudioContextConstructor } from '../interfaces/audio-context';
 import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../testers/analyser-node-get-float-time-domain-data';
 import { ChainingSupportTester } from '../testers/chaining-support';
+import { ConnectingSupportTester } from '../testers/connecting-support';
 import { DisconnectingSupportTester } from '../testers/disconnecting-support';
 import { PromiseSupportTester } from '../testers/promise-support';
 import { StopStoppedSupportTester } from '../testers/stop-stopped-support';
@@ -31,8 +33,10 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         ChainingSupportTester,
         ChannelMergerNodeWrapper,
         ChannelSplitterNodeWrapper,
+        ConnectingSupportTester,
         DisconnectingSupportTester,
         EncodingErrorFactory,
+        InvalidAccessErrorFactory,
         InvalidStateErrorFactory,
         IIRFilterNodeFaker,
         IIRFilterNodeGetFrequencyResponseMethodWrapper,
@@ -51,8 +55,10 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         chainingSupportTester,
         channelMergerNodeWrapper,
         channelSplitterNodeWrapper,
+        connectingSupportTester,
         disconnectingSupportTester,
         encodingErrorFactory,
+        invalidAccessErrorFactory,
         invalidStateErrorFactory,
         iIRFilterNodeFaker,
         iIRFilterNodeGetFrequencyResponseMethodWrapper,
@@ -65,6 +71,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             private _isSupportingAnalyserNodeGetFloatTimeDomainData;
 
             private _isSupportingChaining;
+
+            private _isSupportingConnecting;
 
             private _isSupportingDisconnecting;
 
@@ -87,6 +95,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     unpatchedAudioContext
                 );
                 this._isSupportingChaining = chainingSupportTester.test(unpatchedAudioContext);
+                this._isSupportingConnecting = connectingSupportTester.test(unpatchedAudioContext);
                 this._isSupportingDisconnecting = false;
                 // @todo Actually check for getFrequencyResponse() errors support.
                 this._isSupportingGetFrequencyResponseErrors = false;
@@ -230,8 +239,11 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                if (!this._isSupportingChaining) {
-                    analyserNode = audioNodeConnectMethodWrapper.wrap(analyserNode);
+                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                if (!this._isSupportingChaining || !this._isSupportingConnecting) {
+                    analyserNode = audioNodeConnectMethodWrapper.wrap(
+                        analyserNode, this._isSupportingChaining, this._isSupportingConnecting
+                    );
                 }
 
                 // Only Chrome and Opera support disconnecting of a specific destination.
@@ -257,8 +269,11 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                if (!this._isSupportingChaining) {
-                    biquadFilterNode = audioNodeConnectMethodWrapper.wrap(biquadFilterNode);
+                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                if (!this._isSupportingChaining || !this._isSupportingConnecting) {
+                    biquadFilterNode = audioNodeConnectMethodWrapper.wrap(
+                        biquadFilterNode, this._isSupportingChaining, this._isSupportingConnecting
+                    );
                 }
 
                 return biquadFilterNode;
@@ -280,10 +295,15 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
                 if (!this._isSupportingStoppingOfStoppedNodes) {
-                    return audioBufferSourceNodeStopMethodWrapper.wrap(audioBufferSourceNode);
+                    return audioBufferSourceNodeStopMethodWrapper.wrap(audioBufferSourceNode, this);
                 }
 
                 // Bug #11: Safari does not support chaining yet but is already patched above.
+
+                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                if (!this._isSupportingConnecting) {
+                    audioNodeConnectMethodWrapper.wrap(audioBufferSourceNode, true, this._isSupportingConnecting);
+                }
 
                 return audioBufferSourceNode;
             }
@@ -303,8 +323,11 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                if (!this._isSupportingChaining) {
-                    channelMergerNode = audioNodeConnectMethodWrapper.wrap(channelMergerNode);
+                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                if (!this._isSupportingChaining || !this._isSupportingConnecting) {
+                    channelMergerNode = audioNodeConnectMethodWrapper.wrap(
+                        channelMergerNode, this._isSupportingChaining, this._isSupportingConnecting
+                    );
                 }
 
                 // Bug #15: Safari does not return the default properties.
@@ -338,8 +361,11 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                if (!this._isSupportingChaining) {
-                    channelSplitterNode = audioNodeConnectMethodWrapper.wrap(channelSplitterNode);
+                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                if (!this._isSupportingChaining || !this._isSupportingConnecting) {
+                    channelSplitterNode = audioNodeConnectMethodWrapper.wrap(
+                        channelSplitterNode, this._isSupportingChaining, this._isSupportingConnecting
+                    );
                 }
 
                 // Bug #29 - #32: Only Chrome partially supports the spec yet.
@@ -361,8 +387,9 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                if (!this._isSupportingChaining) {
-                    gainNode = audioNodeConnectMethodWrapper.wrap(gainNode);
+                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                if (!this._isSupportingChaining || !this._isSupportingConnecting) {
+                    gainNode = audioNodeConnectMethodWrapper.wrap(gainNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
 
                 // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
@@ -391,6 +418,11 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(iIRFilterNode);
                 }
 
+                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                if (!this._isSupportingConnecting) {
+                    audioNodeConnectMethodWrapper.wrap(iIRFilterNode, true, this._isSupportingConnecting);
+                }
+
                 return iIRFilterNode;
             }
 
@@ -409,8 +441,11 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                if (!this._isSupportingChaining) {
-                    oscillatorNode = audioNodeConnectMethodWrapper.wrap(oscillatorNode);
+                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                if (!this._isSupportingChaining || !this._isSupportingConnecting) {
+                    oscillatorNode = audioNodeConnectMethodWrapper.wrap(
+                        oscillatorNode, this._isSupportingChaining, this._isSupportingConnecting
+                    );
                 }
 
                 return oscillatorNode;

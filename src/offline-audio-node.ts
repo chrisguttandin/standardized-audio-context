@@ -1,3 +1,8 @@
+// @todo Remove this declaration again if TypeScript supports the DOMException constructor.
+declare var DOMException: {
+    new (message: string, name: string): DOMException;
+};
+
 export class OfflineAudioNodeProxy {
 
     private _channelCountMode;
@@ -58,6 +63,21 @@ export class OfflineAudioNodeProxy {
 
     public connect (destination, output = 0, input = 0) {
         const faker = this._fakeNodeStore.get(destination);
+
+        if (faker === undefined) {
+            let exception;
+
+            try {
+                exception = new DOMException('', 'InvalidAccessError');
+            } catch (err) {
+                exception = new Error();
+
+                exception.code = 15;
+                exception.name = 'InvalidAccessError';
+            }
+
+            throw exception;
+        }
 
         return faker.wire(this._fakeNodeStore.get(this), output, input);
     }

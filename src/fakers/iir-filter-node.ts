@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../factories/not-supported-error';
 
@@ -28,6 +29,7 @@ function evaluatePolynomial (coefficient, z) {
 export class IIRFilterNodeFaker {
 
     constructor (
+        @Inject(InvalidAccessErrorFactory) private _invalidAccessErrorFactory,
         @Inject(InvalidStateErrorFactory) private _invalidStateErrorFactory,
         @Inject(NotSupportedErrorFactory) private _notSupportedErrorFactory
     ) { }
@@ -144,12 +146,20 @@ export class IIRFilterNodeFaker {
 
         gainNode.connect(scriptProcessorNode);
 
-        gainNode.connect = function (destination) {
-            // @todo Directly return the scriptProcessorNodeNode once it supports chaining.
-            scriptProcessorNode.connect.apply(scriptProcessorNode, arguments);
+        gainNode.connect = (destination, output = 0, input = 0) => {
+            console.log('HEY');
+            try {
+                scriptProcessorNode.connect.call(scriptProcessorNode, destination, output, input);
+            } catch (err) {
+                console.log(err, err.code);
 
-            // @todo Test this expectation.
-            // Only Chrome and Firefox support chaining in their dev versions yet.
+                if (err.code === 12) {
+                    throw this._invalidAccessErrorFactory.create();
+                }
+
+                throw err;
+            }
+
             return destination;
         };
 

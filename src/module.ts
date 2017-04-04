@@ -1,6 +1,7 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { EncodingErrorFactory } from './factories/encoding-error';
+import { InvalidAccessErrorFactory } from './factories/invalid-access-error';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from './factories/offline-audio-buffer-source-node';
@@ -20,6 +21,7 @@ import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './provide
 import { WINDOW_PROVIDER } from './providers/window';
 import { ChainingSupportTester } from './testers/chaining-support';
 import { CloseSupportTester } from './testers/close-support';
+import { ConnectingSupportTester } from './testers/connecting-support';
 import { DecodeAudioDataTypeErrorSupportTester } from './testers/decode-audio-data-type-error-support';
 import { DisconnectingSupportTester } from './testers/disconnecting-support';
 import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from './testers/analyser-node-get-float-time-domain-data';
@@ -47,11 +49,13 @@ const injector = ReflectiveInjector.resolveAndCreate([
     ChannelMergerNodeWrapper,
     ChannelSplitterNodeWrapper,
     CloseSupportTester,
+    ConnectingSupportTester,
     DecodeAudioDataTypeErrorSupportTester,
     DisconnectingSupportTester,
     EncodingErrorFactory,
     IIRFilterNodeFaker,
     IIRFilterNodeGetFrequencyResponseMethodWrapper,
+    InvalidAccessErrorFactory,
     InvalidStateErrorFactory,
     IS_SUPPORTED_PROMISE_PROVIDER,
     MergingSupportTester,
