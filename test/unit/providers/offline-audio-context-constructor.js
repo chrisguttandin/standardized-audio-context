@@ -1,8 +1,11 @@
 import 'core-js/es7/reflect';
 import { OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, offlineAudioContextConstructor } from '../../../src/providers/offline-audio-context-constructor';
+import { AudioBufferCopyChannelMethodsSupportTester } from '../../../src/testers/audio-buffer-copy-channel-methods-support';
+import { AudioBufferCopyChannelMethodsWrapper } from '../../../src/wrappers/audio-buffer-copy-channel-methods';
 import { AudioBufferWrapper } from '../../../src/wrappers/audio-buffer';
 import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../../src/wrappers/iir-filter-node-get-frequency-response-method';
+import { IndexSizeErrorFactory } from '../../../src/factories/index-size-error';
 import { InvalidStateErrorFactory } from '../../../src/factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../../../src/factories/not-supported-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from '../../../src/factories/offline-audio-buffer-source-node';
@@ -25,9 +28,12 @@ describe('OfflineAudioContext', () => {
 
     beforeEach(() => {
         const injector = ReflectiveInjector.resolveAndCreate([
+            AudioBufferCopyChannelMethodsSupportTester,
+            AudioBufferCopyChannelMethodsWrapper,
             AudioBufferWrapper,
             EncodingErrorFactory,
             IIRFilterNodeGetFrequencyResponseMethodWrapper,
+            IndexSizeErrorFactory,
             InvalidStateErrorFactory,
             NotSupportedErrorFactory,
             OfflineAudioBufferSourceNodeFakerFactory,

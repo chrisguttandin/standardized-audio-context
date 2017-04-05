@@ -2,6 +2,8 @@ import 'core-js/es7/reflect';
 import { AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, audioContextConstructor } from '../../../src/providers/audio-context-constructor';
 import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../../../src/wrappers/analyser-node-get-float-time-domain-data-method';
 import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../../../src/testers/analyser-node-get-float-time-domain-data';
+import { AudioBufferCopyChannelMethodsSupportTester } from '../../../src/testers/audio-buffer-copy-channel-methods-support';
+import { AudioBufferCopyChannelMethodsWrapper } from '../../../src/wrappers/audio-buffer-copy-channel-methods';
 import { AudioBufferSourceNodeStopMethodWrapper } from '../../../src/wrappers/audio-buffer-source-node-stop-method';
 import { AudioBufferWrapper } from '../../../src/wrappers/audio-buffer';
 import { AudioNodeConnectMethodWrapper } from '../../../src/wrappers/audio-node-connect-method';
@@ -14,6 +16,7 @@ import { DisconnectingSupportTester } from '../../../src/testers/disconnecting-
 import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
 import { IIRFilterNodeFaker } from '../../../src/fakers/iir-filter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../../src/wrappers/iir-filter-node-get-frequency-response-method';
+import { IndexSizeErrorFactory } from '../../../src/factories/index-size-error';
 import { InvalidAccessErrorFactory } from '../../../src/factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../../../src/factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../../../src/factories/not-supported-error';
@@ -40,6 +43,8 @@ describe('AudioContext', () => {
             AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
             AnalyserNodeGetFloatTimeDomainDataSupportTester,
+            AudioBufferCopyChannelMethodsSupportTester,
+            AudioBufferCopyChannelMethodsWrapper,
             AudioBufferSourceNodeStopMethodWrapper,
             AudioBufferWrapper,
             AudioNodeConnectMethodWrapper,
@@ -52,6 +57,7 @@ describe('AudioContext', () => {
             EncodingErrorFactory,
             IIRFilterNodeFaker,
             IIRFilterNodeGetFrequencyResponseMethodWrapper,
+            IndexSizeErrorFactory,
             InvalidAccessErrorFactory,
             InvalidStateErrorFactory,
             NotSupportedErrorFactory,
@@ -469,38 +475,134 @@ describe('AudioContext', () => {
             expect(audioBuffer.copyToChannel).to.be.a('function');
         });
 
-        it('should implement the copyFromChannel()/copyToChannel() methods', () => {
-            let audioBuffer = audioContext.createBuffer(2, 10, 44100);
-            let destination = new Float32Array(10);
-            let source = new Float32Array(10);
+        describe('copyFromChannel()', () => {
 
-            for (let i = 0; i < 10; i += 1) {
-                destination[i] = Math.random();
-                source[i] = Math.random();
-            }
+            let audioBuffer;
+            let destination;
 
-            audioBuffer.copyToChannel(source, 0);
-            audioBuffer.copyFromChannel(destination, 0);
+            beforeEach(() => {
+                audioBuffer = audioContext.createBuffer(2, 10, 44100);
+                destination = new Float32Array(10);
+            });
 
-            for (let i = 0; i < 10; i += 1) {
-                expect(destination[i]).to.equal(source[i]);
-            }
+            it('should not allow to copy a channel with a number greater or equal than the number of channels', (done) => {
+                try {
+                    audioBuffer.copyFromChannel(destination, 2);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
 
-            audioBuffer = audioContext.createBuffer(2, 100, 44100);
-            destination = new Float32Array(10);
-            source = new Float32Array(10);
+                    done();
+                }
+            });
 
-            for (let i = 0; i < 10; i += 1) {
-                destination[i] = Math.random();
-                source[i] = Math.random();
-            }
+            it('should not allow to copy values with an offset greater than the length', (done) => {
+                try {
+                    audioBuffer.copyFromChannel(destination, 0, 10);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
 
-            audioBuffer.copyToChannel(source, 0, 50);
-            audioBuffer.copyFromChannel(destination, 0, 50);
+                    done();
+                }
+            });
 
-            for (let i = 0; i < 10; i += 1) {
-                expect(destination[i]).to.equal(source[i]);
-            }
+        });
+
+        describe('copyToChannel()', () => {
+
+            let audioBuffer;
+            let source;
+
+            beforeEach(() => {
+                audioBuffer = audioContext.createBuffer(2, 10, 44100);
+                source = new Float32Array(10);
+            });
+
+            it('should not allow to copy a channel with a number greater or equal than the number of channels', (done) => {
+                try {
+                    audioBuffer.copyToChannel(source, 2);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
+            it('should not allow to copy values with an offset greater than the length', (done) => {
+                try {
+                    audioBuffer.copyToChannel(source, 0, 10);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
+        });
+
+        describe('copyFromChannel()/copyToChannel()', () => {
+
+            let audioBuffer;
+            let destination;
+            let source;
+
+            beforeEach(() => {
+                audioBuffer = audioContext.createBuffer(2, 100, 44100);
+                destination = new Float32Array(10);
+                source = new Float32Array(10);
+
+                for (let i = 0; i < 10; i += 1) {
+                    destination[i] = Math.random();
+                    source[i] = Math.random();
+                }
+            });
+
+            it('should copy values with an offset of 0', () => {
+                audioBuffer.copyToChannel(source, 0);
+                audioBuffer.copyFromChannel(destination, 0);
+
+                for (let i = 0; i < 10; i += 1) {
+                    expect(destination[i]).to.equal(source[i]);
+                }
+            });
+
+            it('should copy values with an offset of 50', () => {
+                audioBuffer.copyToChannel(source, 0, 50);
+                audioBuffer.copyFromChannel(destination, 0, 50);
+
+                for (let i = 0; i < 10; i += 1) {
+                    expect(destination[i]).to.equal(source[i]);
+                }
+            });
+
+            it('should copy values with an offset large enough to leave a part of the destination untouched', () => {
+                const destinationCopy = Array.from(destination);
+
+                audioBuffer.copyToChannel(source, 0, 95);
+                audioBuffer.copyFromChannel(destination, 0, 95);
+
+                for (let i = 0; i < 5; i += 1) {
+                    expect(destination[i]).to.equal(source[i]);
+                }
+
+                for (let i = 5; i < 10; i += 1) {
+                    expect(destination[i]).to.equal(destinationCopy[i]);
+                }
+            });
+
+            it('should copy values with an offset low enough to leave a part of the buffer untouched', () => {
+                audioBuffer.copyToChannel(source, 0, 35);
+                audioBuffer.copyToChannel(source, 0, 25);
+                audioBuffer.copyFromChannel(destination, 0, 35);
+
+                for (let i = 0; i < 10; i += 1) {
+                    expect(destination[i]).to.equal(source[i]);
+                }
+            });
+
         });
 
     });
