@@ -291,7 +291,9 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
                 if (!this._isSupportingStoppingOfStoppedNodes) {
-                    return audioBufferSourceNodeStopMethodWrapper.wrap(audioBufferSourceNode, this);
+                    audioBufferSourceNodeStopMethodWrapper.wrap(audioBufferSourceNode, this);
+
+                    return audioBufferSourceNode;
                 }
 
                 // Bug #11: Safari does not support chaining yet but is already patched above.
@@ -361,7 +363,9 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #29 - #32: Only Chrome partially supports the spec yet.
-                return channelSplitterNodeWrapper.wrap(channelSplitterNode);
+                channelSplitterNodeWrapper.wrap(channelSplitterNode);
+
+                return channelSplitterNode;
             }
 
             public createGain () {
