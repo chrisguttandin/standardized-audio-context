@@ -278,7 +278,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             public createBuffer (numberOfChannels, length, sampleRate) {
                 const audioBuffer = this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
-                // Safari does not support copyFromChannel() and copyToChannel().
+                // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                 if (typeof audioBuffer.copyFromChannel !== 'function') {
                     audioBufferWrapper.wrap(audioBuffer);
                 }
