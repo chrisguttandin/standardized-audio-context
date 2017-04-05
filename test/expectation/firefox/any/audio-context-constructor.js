@@ -54,6 +54,38 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createBuffer()', () => {
+
+        // bug #42
+
+        describe('copyFromChannel()/copyToChannel()', () => {
+
+            let audioBuffer;
+
+            beforeEach(() => {
+                audioBuffer = audioContext.createBuffer(2, 100, 44100);
+            });
+
+            it('should not allow to copy only a part to the source', () => {
+                const source = new Float32Array(10);
+
+                expect(() => {
+                    audioBuffer.copyToChannel(source, 0, 95);
+                }).to.throw(Error);
+            });
+
+            it('should not allow to copy only a part of the destination', () => {
+                const destination = new Float32Array(10);
+
+                expect(() => {
+                    audioBuffer.copyFromChannel(destination, 0, 95);
+                }).to.throw(Error);
+            });
+
+        });
+
+    });
+
     describe('createChannelMerger()', () => {
 
         // bug #16
