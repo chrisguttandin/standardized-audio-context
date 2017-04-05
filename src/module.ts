@@ -1,6 +1,7 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { EncodingErrorFactory } from './factories/encoding-error';
+import { IndexSizeErrorFactory } from './factories/index-size-error';
 import { InvalidAccessErrorFactory } from './factories/invalid-access-error';
 import { InvalidStateErrorFactory } from './factories/invalid-state-error';
 import { NotSupportedErrorFactory } from './factories/not-supported-error';
@@ -19,6 +20,7 @@ import { OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, offlineAudioContextConstruc
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-audio-context-constructor';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
+import { AudioBufferCopyChannelMethodsSupportTester } from './testers/audio-buffer-copy-channel-methods-support';
 import { ChainingSupportTester } from './testers/chaining-support';
 import { CloseSupportTester } from './testers/close-support';
 import { ConnectingSupportTester } from './testers/connecting-support';
@@ -29,6 +31,7 @@ import { MergingSupportTester } from './testers/merging-support';
 import { PromiseSupportTester } from './testers/promise-support';
 import { StopStoppedSupportTester } from './testers/stop-stopped-support';
 import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from './wrappers/analyser-node-get-float-time-domain-data-method';
+import { AudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
 import { AudioBufferWrapper } from './wrappers/audio-buffer';
 import { AudioBufferSourceNodeStopMethodWrapper } from './wrappers/audio-buffer-source-node-stop-method';
 import { AudioNodeConnectMethodWrapper } from './wrappers/audio-node-connect-method';
@@ -40,6 +43,8 @@ import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from './wrappers/iir-
 const injector = ReflectiveInjector.resolveAndCreate([
     AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
     AnalyserNodeGetFloatTimeDomainDataSupportTester,
+    AudioBufferCopyChannelMethodsSupportTester,
+    AudioBufferCopyChannelMethodsWrapper,
     AudioBufferSourceNodeStopMethodWrapper,
     AudioBufferWrapper,
     AudioNodeConnectMethodWrapper,
@@ -55,6 +60,7 @@ const injector = ReflectiveInjector.resolveAndCreate([
     EncodingErrorFactory,
     IIRFilterNodeFaker,
     IIRFilterNodeGetFrequencyResponseMethodWrapper,
+    IndexSizeErrorFactory,
     InvalidAccessErrorFactory,
     InvalidStateErrorFactory,
     IS_SUPPORTED_PROMISE_PROVIDER,

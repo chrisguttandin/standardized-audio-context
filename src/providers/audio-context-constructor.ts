@@ -5,6 +5,7 @@ import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { IIRFilterNodeFaker } from '../fakers/iir-filter-node';
 import { IAudioContext, IAudioContextConstructor } from '../interfaces/audio-context';
 import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../testers/analyser-node-get-float-time-domain-data';
+import { AudioBufferCopyChannelMethodsSupportTester } from '../testers/audio-buffer-copy-channel-methods-support';
 import { ChainingSupportTester } from '../testers/chaining-support';
 import { ConnectingSupportTester } from '../testers/connecting-support';
 import { DisconnectingSupportTester } from '../testers/disconnecting-support';
@@ -12,6 +13,7 @@ import { PromiseSupportTester } from '../testers/promise-support';
 import { StopStoppedSupportTester } from '../testers/stop-stopped-support';
 import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 import { AudioBufferWrapper } from '../wrappers/audio-buffer';
+import { AudioBufferCopyChannelMethodsWrapper } from '../wrappers/audio-buffer-copy-channel-methods';
 import { AudioBufferSourceNodeStopMethodWrapper } from '../wrappers/audio-buffer-source-node-stop-method';
 import { AudioNodeConnectMethodWrapper } from '../wrappers/audio-node-connect-method';
 import { AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
@@ -26,6 +28,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     deps: [
         AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
         AnalyserNodeGetFloatTimeDomainDataSupportTester,
+        AudioBufferCopyChannelMethodsSupportTester,
+        AudioBufferCopyChannelMethodsWrapper,
         AudioBufferSourceNodeStopMethodWrapper,
         AudioBufferWrapper,
         AudioNodeConnectMethodWrapper,
@@ -48,6 +52,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     useFactory: (
         analyserNodeGetFloatTimeDomainDataMethodWrapper,
         analyserNodeGetFloatTimeDomainDataSupportTester,
+        audioBufferCopyChannelMethodsSupportTester,
+        audioBufferCopyChannelMethodsWrapper,
         audioBufferSourceNodeStopMethodWrapper,
         audioBufferWrapper,
         audioNodeConnectMethodWrapper,
@@ -72,6 +78,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
             private _isSupportingChaining;
 
+            private _isSupportingCopyChannelMethods;
+
             private _isSupportingConnecting;
 
             private _isSupportingDisconnecting;
@@ -95,6 +103,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     unpatchedAudioContext
                 );
                 this._isSupportingChaining = chainingSupportTester.test(unpatchedAudioContext);
+                this._isSupportingCopyChannelMethods = audioBufferCopyChannelMethodsSupportTester.test(unpatchedAudioContext);
                 this._isSupportingConnecting = connectingSupportTester.test(unpatchedAudioContext);
                 this._isSupportingDisconnecting = false;
                 // @todo Actually check for getFrequencyResponse() errors support.
@@ -281,6 +290,9 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                 if (typeof audioBuffer.copyFromChannel !== 'function') {
                     audioBufferWrapper.wrap(audioBuffer);
+                // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
+                } else if (!this._isSupportingCopyChannelMethods) {
+                    audioBufferCopyChannelMethodsWrapper.wrap(audioBuffer);
                 }
 
                 return audioBuffer;
@@ -501,10 +513,13 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         this._unpatchedAudioContext.decodeAudioData(audioData, (audioBuffer) => {
                             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                             if (typeof audioBuffer.copyFromChannel !== 'function') {
-                                succeed(audioBufferWrapper.wrap(audioBuffer));
-                            } else {
-                                succeed(audioBuffer);
+                                audioBufferWrapper.wrap(audioBuffer);
+                            // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
+                            } else if (!this._isSupportingCopyChannelMethods) {
+                                audioBufferCopyChannelMethodsWrapper.wrap(audioBuffer);
                             }
+
+                            succeed(audioBuffer);
                         }, (err) => {
                             // Bug #4: Safari returns null instead of an error.
                             if (err === null) {

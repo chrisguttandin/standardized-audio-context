@@ -6,8 +6,10 @@ import { OfflineBiquadFilterNodeFakerFactory } from '../factories/offline-biqua
 import { OfflineGainNodeFakerFactory } from '../factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from '../factories/offline-iir-filter-node';
 import { IOfflineAudioContext, IOfflineAudioContextConstructor } from '../interfaces/offline-audio-context';
+import { AudioBufferCopyChannelMethodsSupportTester } from '../testers/audio-buffer-copy-channel-methods-support';
 import { PromiseSupportTester } from '../testers/promise-support';
 import { AudioBufferWrapper } from '../wrappers/audio-buffer';
+import { AudioBufferCopyChannelMethodsWrapper } from '../wrappers/audio-buffer-copy-channel-methods';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 
@@ -15,6 +17,8 @@ export const offlineAudioContextConstructor = new OpaqueToken('OFFLINE_AUDIO_CON
 
 export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     deps: [
+        AudioBufferCopyChannelMethodsSupportTester,
+        AudioBufferCopyChannelMethodsWrapper,
         AudioBufferWrapper,
         EncodingErrorFactory,
         IIRFilterNodeGetFrequencyResponseMethodWrapper,
@@ -28,6 +32,8 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     ],
     provide: offlineAudioContextConstructor,
     useFactory: (
+        audioBufferCopyChannelMethodsSupportTester,
+        audioBufferCopyChannelMethodsWrapper,
         audioBufferWrapper,
         encodingErrorFactory,
         iIRFilterNodeGetFrequencyResponseMethodWrapper,
@@ -44,6 +50,8 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             private _destination;
 
             private _fakeNodeStore;
+
+            private _isSupportingCopyChannelMethods;
 
             private _isSupportingGetFrequencyResponseErrors;
 
@@ -62,6 +70,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 this._destination = offlineAudioDestinationNodeFakerFactory.create({ fakeNodeStore });
                 this._fakeNodeStore = fakeNodeStore;
+                this._isSupportingCopyChannelMethods = audioBufferCopyChannelMethodsSupportTester.test(unpatchedOfflineAudioContext);
                 this._isSupportingGetFrequencyResponseErrors = false;
                 this._isSupportingPromises = promiseSupportTester.test(unpatchedOfflineAudioContext);
                 this._length = length;
@@ -194,10 +203,13 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         this._unpatchedOfflineAudioContext.decodeAudioData(audioData, (audioBuffer) => {
                             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                             if (typeof audioBuffer.copyFromChannel !== 'function') {
-                                succeed(audioBufferWrapper.wrap(audioBuffer));
-                            } else {
-                                succeed(audioBuffer);
+                                audioBufferWrapper.wrap(audioBuffer);
+                            // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
+                            } else if (!this._isSupportingCopyChannelMethods) {
+                                audioBufferCopyChannelMethodsWrapper.wrap(audioBuffer);
                             }
+
+                            succeed(audioBuffer);
                         }, (err) => {
                             // Bug #4: Safari returns null instead of an error.
                             if (err === null) {
