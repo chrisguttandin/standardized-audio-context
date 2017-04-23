@@ -1,5 +1,5 @@
 // @todo Remove this declaration again if TypeScript supports the DOMException constructor.
-declare var DOMException: {
+declare const DOMException: {
     new (message: string, name: string): DOMException;
 };
 

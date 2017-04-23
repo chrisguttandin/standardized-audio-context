@@ -534,7 +534,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 });
             }
 
-        };
+        }
 
         return AudioContext;
     }

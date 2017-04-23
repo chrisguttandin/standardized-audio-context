@@ -36,8 +36,10 @@ export interface IAudioContext {
         errorCallback?: (error: DOMException) => {}
     ): Promise<AudioBuffer>;
 
-};
+}
 
 export interface IAudioContextConstructor {
-    new(): IAudioContext;
-};
+
+    new (): IAudioContext;
+
+}

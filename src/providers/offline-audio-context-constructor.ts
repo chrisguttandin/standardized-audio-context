@@ -249,7 +249,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             // @todo     return this._unpatchedOfflineAudioContext.suspend(suspendTime);
             // @todo }
 
-        };
+        }
 
         return OfflineAudioContext;
     }

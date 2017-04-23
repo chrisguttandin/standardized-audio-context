@@ -81,7 +81,7 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
             magResponse[i] = Math.sqrt((response[0] * response[0]) + (response[1] * response[1]));
             phaseResponse[i] = Math.atan2(response[1], response[0]);
         }
-    };
+    }
 
 }
 

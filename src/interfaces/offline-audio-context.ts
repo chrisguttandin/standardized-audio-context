@@ -28,8 +28,10 @@ export interface IOfflineAudioContext {
 
     startRendering(): Promise<AudioBuffer>;
 
-};
+}
 
 export interface IOfflineAudioContextConstructor {
-    new(numberOfChannels: number, length: number, sampleRate: number): IOfflineAudioContext;
-};
+
+    new (numberOfChannels: number, length: number, sampleRate: number): IOfflineAudioContext;
+
+}
