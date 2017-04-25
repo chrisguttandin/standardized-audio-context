@@ -460,6 +460,11 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             public decodeAudioData (audioData, successCallback, errorCallback) {
                 // Bug #21 Safari does not support promises yet.
                 if (this._isSupportingPromises) {
+                    // Bug #1: Chrome requires a successCallback.
+                    if (successCallback === undefined) {
+                        successCallback = () => {}; // tslint:disable-line:no-empty
+                    }
+
                     return this._unpatchedAudioContext
                         .decodeAudioData(audioData, successCallback, (err) => {
                             if (typeof errorCallback === 'function') {
