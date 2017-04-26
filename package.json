@@ -55,7 +55,6 @@
     "src/"
   ],
   "homepage": "https://github.com/chrisguttandin/standardized-audio-context",
-  "jsnext:main": "build/es2015/module.js",
   "keywords": [
     "audio",
     "browser",
@@ -63,6 +62,7 @@
   ],
   "license": "MIT",
   "main": "build/es5/bundle.js",
+  "module": "build/es2015/module.js",
   "name": "standardized-audio-context",
   "repository": {
     "type": "git",

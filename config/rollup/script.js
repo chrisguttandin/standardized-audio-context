@@ -19,8 +19,6 @@ export default {
             ]
         }),
         commonjs(),
-        nodeResolve({
-            jsnext: true
-        })
+        nodeResolve()
     ]
 };
