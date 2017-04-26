@@ -243,7 +243,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                // Bug #37: Only Firefox creates an AnalyserNode with default properties.
+                // Bug #37: Only Chrome Canary and Firefox create an AnalyserNode with default properties.
                 if (analyserNode.channelCount === 2) {
                     analyserNode.channelCount = 1;
                 }
