@@ -2,7 +2,7 @@ import 'core-js/es7/reflect';
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextConstructor } from '../../../../src/providers/unpatched-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../../src/providers/window';
-import { loadFixture } from '../../helper/load-fixture';
+import { loadFixture } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 
 describe('audioContextConstructor', () => {
@@ -99,11 +99,14 @@ describe('audioContextConstructor', () => {
             loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
-                expect(() => {
-                    audioContext.decodeAudioData(arrayBuffer);
-                }).to.throw(TypeError, 'Not enough arguments');
+                audioContext
+                    .decodeAudioData(arrayBuffer, undefined, () => {})
+                    .catch((err) => {
+                        expect(err).to.be.an.instanceOf(TypeError);
+                        expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'BaseAudioContext': The callback provided as parameter 2 is not a function.");
 
-                done();
+                        done();
+                    });
             });
         });
 
