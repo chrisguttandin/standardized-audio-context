@@ -12,6 +12,8 @@ import { ChainingSupportTester } from '../../../src/testers/chaining-support';
 import { ChannelMergerNodeWrapper } from '../../../src/wrappers/channel-merger-node';
 import { ChannelSplitterNodeWrapper } from '../../../src/wrappers/channel-splitter-node';
 import { ConnectingSupportTester } from '../../../src/testers/connecting-support';
+import { DETACHED_AUDIO_BUFFERS_PROVIDER } from '../../../src/providers/detached-audio-buffers';
+import { DataCloneErrorFactory } from '../../../src/factories/data-clone-error';
 import { DisconnectingSupportTester } from '../../../src/testers/disconnecting-support';
 import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
 import { IIRFilterNodeFaker } from '../../../src/fakers/iir-filter-node';
@@ -53,6 +55,8 @@ describe('AudioContext', () => {
             ChannelMergerNodeWrapper,
             ChannelSplitterNodeWrapper,
             ConnectingSupportTester,
+            DETACHED_AUDIO_BUFFERS_PROVIDER,
+            DataCloneErrorFactory,
             DisconnectingSupportTester,
             EncodingErrorFactory,
             IIRFilterNodeFaker,
@@ -1491,6 +1495,18 @@ describe('AudioContext', () => {
                     .decodeAudioData(arrayBuffer, successCallback)
                     .then(() => {
                         expect(successCallback).to.have.been.calledOnce;
+                    });
+            });
+
+            it('should throw a DataCloneError', (done) => {
+                audioContext
+                    .decodeAudioData(arrayBuffer)
+                    .then(() => audioContext.decodeAudioData(arrayBuffer))
+                    .catch((err) => {
+                        expect(err.code).to.equal(25);
+                        expect(err.name).to.equal('DataCloneError');
+
+                        done();
                     });
             });
 

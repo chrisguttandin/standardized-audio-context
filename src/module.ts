@@ -1,5 +1,6 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
+import { DataCloneErrorFactory } from './factories/data-clone-error';
 import { EncodingErrorFactory } from './factories/encoding-error';
 import { IndexSizeErrorFactory } from './factories/index-size-error';
 import { InvalidAccessErrorFactory } from './factories/invalid-access-error';
@@ -14,6 +15,7 @@ import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { IAudioContext, IAudioContextConstructor } from './interfaces/audio-context';
 import { IOfflineAudioContext, IOfflineAudioContextConstructor } from './interfaces/offline-audio-context';
 import { AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, audioContextConstructor } from './providers/audio-context-constructor';
+import { DETACHED_AUDIO_BUFFERS_PROVIDER } from './providers/detached-audio-buffers';
 import { IS_SUPPORTED_PROMISE_PROVIDER, IsSupportedPromise } from './providers/is-supported-promise';
 import { MODERNIZR_PROVIDER } from './providers/modernizr';
 import { OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, offlineAudioContextConstructor } from './providers/offline-audio-context-constructor';
@@ -55,6 +57,8 @@ const injector = ReflectiveInjector.resolveAndCreate([
     ChannelSplitterNodeWrapper,
     CloseSupportTester,
     ConnectingSupportTester,
+    DETACHED_AUDIO_BUFFERS_PROVIDER,
+    DataCloneErrorFactory,
     DecodeAudioDataTypeErrorSupportTester,
     DisconnectingSupportTester,
     EncodingErrorFactory,

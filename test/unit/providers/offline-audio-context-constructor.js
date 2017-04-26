@@ -3,6 +3,8 @@ import { OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, offlineAudioContextConstruc
 import { AudioBufferCopyChannelMethodsSupportTester } from '../../../src/testers/audio-buffer-copy-channel-methods-support';
 import { AudioBufferCopyChannelMethodsWrapper } from '../../../src/wrappers/audio-buffer-copy-channel-methods';
 import { AudioBufferWrapper } from '../../../src/wrappers/audio-buffer';
+import { DETACHED_AUDIO_BUFFERS_PROVIDER } from '../../../src/providers/detached-audio-buffers';
+import { DataCloneErrorFactory } from '../../../src/factories/data-clone-error';
 import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../../src/wrappers/iir-filter-node-get-frequency-response-method';
 import { IndexSizeErrorFactory } from '../../../src/factories/index-size-error';
@@ -31,6 +33,8 @@ describe('OfflineAudioContext', () => {
             AudioBufferCopyChannelMethodsSupportTester,
             AudioBufferCopyChannelMethodsWrapper,
             AudioBufferWrapper,
+            DETACHED_AUDIO_BUFFERS_PROVIDER,
+            DataCloneErrorFactory,
             EncodingErrorFactory,
             IIRFilterNodeGetFrequencyResponseMethodWrapper,
             IndexSizeErrorFactory,
@@ -668,6 +672,18 @@ describe('OfflineAudioContext', () => {
                     .decodeAudioData(arrayBuffer, successCallback)
                     .then(() => {
                         expect(successCallback).to.have.been.calledOnce;
+                    });
+            });
+
+            it('should throw a DataCloneError', (done) => {
+                offlineAudioContext
+                    .decodeAudioData(arrayBuffer)
+                    .then(() => offlineAudioContext.decodeAudioData(arrayBuffer))
+                    .catch((err) => {
+                        expect(err.code).to.equal(25);
+                        expect(err.name).to.equal('DataCloneError');
+
+                        done();
                     });
             });
 

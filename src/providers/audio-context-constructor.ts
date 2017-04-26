@@ -1,4 +1,5 @@
 import { OpaqueToken } from '@angular/core';
+import { DataCloneErrorFactory } from '../factories/data-clone-error';
 import { EncodingErrorFactory } from '../factories/encoding-error';
 import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
@@ -20,6 +21,7 @@ import { AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconn
 import { ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
 import { ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
+import { DetachedAudioBuffers } from './detached-audio-buffers';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
 export const audioContextConstructor = new OpaqueToken('AUDIO_CONTEXT_CONSTRUCTOR');
@@ -38,6 +40,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         ChannelMergerNodeWrapper,
         ChannelSplitterNodeWrapper,
         ConnectingSupportTester,
+        DataCloneErrorFactory,
+        DetachedAudioBuffers,
         DisconnectingSupportTester,
         EncodingErrorFactory,
         InvalidAccessErrorFactory,
@@ -62,6 +66,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         channelMergerNodeWrapper,
         channelSplitterNodeWrapper,
         connectingSupportTester,
+        dataCloneErrorFactory,
+        detachedAudioBuffers,
         disconnectingSupportTester,
         encodingErrorFactory,
         invalidAccessErrorFactory,
@@ -458,6 +464,24 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public decodeAudioData (audioData, successCallback, errorCallback) {
+                // Bug #43 Only Chrome Canary does yet throw a DataCloneError.
+                if (detachedAudioBuffers.has(audioData)) {
+                    const err = dataCloneErrorFactory.create();
+
+                    if (typeof errorCallback === 'function') {
+                        errorCallback(err);
+                    }
+
+                    return Promise.reject(err);
+                }
+
+                // The audioData parameter maybe of a type which can't be added to a WeakSet.
+                try {
+                    detachedAudioBuffers.add(audioData);
+                } catch (err) {
+                    // Ignore errors.
+                }
+
                 // Bug #21 Safari does not support promises yet.
                 if (this._isSupportingPromises) {
                     // Bug #1: Chrome requires a successCallback.

@@ -1,4 +1,5 @@
 import { OpaqueToken } from '@angular/core';
+import { DataCloneErrorFactory } from '../factories/data-clone-error';
 import { EncodingErrorFactory } from '../factories/encoding-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from '../factories/offline-audio-buffer-source-node';
 import { OfflineAudioDestinationNodeFakerFactory } from '../factories/offline-audio-destination-node';
@@ -11,6 +12,7 @@ import { PromiseSupportTester } from '../testers/promise-support';
 import { AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { AudioBufferCopyChannelMethodsWrapper } from '../wrappers/audio-buffer-copy-channel-methods';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
+import { DetachedAudioBuffers } from './detached-audio-buffers';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 
 export const offlineAudioContextConstructor = new OpaqueToken('OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
@@ -20,6 +22,8 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         AudioBufferCopyChannelMethodsSupportTester,
         AudioBufferCopyChannelMethodsWrapper,
         AudioBufferWrapper,
+        DataCloneErrorFactory,
+        DetachedAudioBuffers,
         EncodingErrorFactory,
         IIRFilterNodeGetFrequencyResponseMethodWrapper,
         OfflineAudioBufferSourceNodeFakerFactory,
@@ -35,6 +39,8 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         audioBufferCopyChannelMethodsSupportTester,
         audioBufferCopyChannelMethodsWrapper,
         audioBufferWrapper,
+        dataCloneErrorFactory,
+        detachedAudioBuffers,
         encodingErrorFactory,
         iIRFilterNodeGetFrequencyResponseMethodWrapper,
         offlineAudioBufferSourceNodeFakerFactory,
@@ -148,6 +154,24 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public decodeAudioData (audioData, successCallback, errorCallback) {
+                // Bug #43 Only Chrome Canary does yet throw a DataCloneError.
+                if (detachedAudioBuffers.has(audioData)) {
+                    const err = dataCloneErrorFactory.create();
+
+                    if (typeof errorCallback === 'function') {
+                        errorCallback(err);
+                    }
+
+                    return Promise.reject(err);
+                }
+
+                // The audioData parameter maybe of a type which can't be added to a WeakSet.
+                try {
+                    detachedAudioBuffers.add(audioData);
+                } catch (err) {
+                    // Ignore errors.
+                }
+
                 // Bug #21 Safari does not support promises yet.
                 if (this._isSupportingPromises) {
                     // Bug #1: Chrome requires a successCallback.

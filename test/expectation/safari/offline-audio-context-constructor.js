@@ -437,6 +437,20 @@ describe('offlineAudioContextConstructor', () => {
             }
         });
 
+        // bug #43
+
+        it('should not throw a DataCloneError', (done) => {
+            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+                expect(err).to.be.null;
+
+                offlineAudioContext
+                    .decodeAudioData(arrayBuffer, () => {
+                        offlineAudioContext
+                            .decodeAudioData(arrayBuffer, () => done());
+                    });
+            });
+        });
+
     });
 
     describe('startRendering()', () => {
