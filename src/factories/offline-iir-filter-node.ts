@@ -295,7 +295,7 @@ export class OfflineIIRFilterNodeFaker {
         return Promise
             .all(promises)
             .then(() => {
-                // Bug #21 Safari does not support promises yet.
+                // Bug #21: Safari does not support promises yet.
                 if (this._promiseSupportTester.test(partialOfflineAudioContext)) {
                     return partialOfflineAudioContext.startRendering();
                 }

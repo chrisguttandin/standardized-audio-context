@@ -154,7 +154,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public decodeAudioData (audioData, successCallback, errorCallback) {
-                // Bug #43 Only Chrome Canary does yet throw a DataCloneError.
+                // Bug #43: Only Chrome Canary does yet throw a DataCloneError.
                 if (detachedAudioBuffers.has(audioData)) {
                     const err = dataCloneErrorFactory.create();
 
@@ -172,7 +172,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     // Ignore errors.
                 }
 
-                // Bug #21 Safari does not support promises yet.
+                // Bug #21: Safari does not support promises yet.
                 if (this._isSupportingPromises) {
                     // Bug #1: Chrome requires a successCallback.
                     if (successCallback === undefined) {
@@ -258,7 +258,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 return this._destination
                     .render(this._unpatchedOfflineAudioContext)
                     .then(() => {
-                        // Bug #21 Safari does not support promises yet.
+                        // Bug #21: Safari does not support promises yet.
                         if (this._isSupportingPromises) {
                             return this._unpatchedOfflineAudioContext.startRendering();
                         }
