@@ -10,38 +10,29 @@ export class DecodeAudioDataTypeErrorSupportTester {
 
     constructor (@Inject(unpatchedAudioContextConstructor) private _UnpatchedAudioContext) { }
 
-    public test () {
+    public test (): Promise<boolean> {
         if (this._UnpatchedAudioContext === null) {
             return Promise.resolve(false);
         }
 
         const audioContext = new this._UnpatchedAudioContext();
 
-        let promise;
-
-        // Bug #21 Safari does not support promises yet.
-        try {
-            // Bug #1: Chrome Canary & Safari requires a successCallback.
-            promise = audioContext
+        // Bug #21: Safari does not support promises yet.
+        // Bug #1: Chrome Canary & Safari requires a successCallback.
+        return new Promise((resolve) => {
+            audioContext
                 .decodeAudioData(null, () => {
                     // Ignore the success callback.
-                })
-                .catch ((err) => (err instanceof TypeError));
-        } catch (err) {
-            return Promise.resolve(err instanceof TypeError);
-        } finally {
-            try {
-                audioContext.close();
-            } catch (err) {
-                // Ignore errors.
-            }
-        }
+                }, (err) => {
+                    audioContext
+                        .close()
+                        .catch(() => {
+                            // Ignore errors.
+                        });
 
-        if (promise === undefined) {
-            return Promise.resolve(false);
-        }
-
-        return promise;
+                    resolve(err instanceof TypeError);
+                });
+        });
     }
 
 }
