@@ -182,11 +182,8 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     return this._unpatchedOfflineAudioContext
                         .decodeAudioData(audioData, successCallback, (err) => {
                             if (typeof errorCallback === 'function') {
-                                // Bug #7: Firefox calls the callback with undefined.
-                                if (err === undefined) {
-                                    errorCallback(encodingErrorFactory.create());
                                 // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
-                                } else if (err instanceof DOMException && err.name === 'NotSupportedError') {
+                                if (err instanceof DOMException && err.name === 'NotSupportedError') {
                                     errorCallback(new TypeError());
                                 } else {
                                     errorCallback(err);

@@ -254,7 +254,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
                     audioNodeConnectMethodWrapper.wrap(analyserNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
@@ -282,7 +282,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
                     audioNodeConnectMethodWrapper.wrap(biquadFilterNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
@@ -316,7 +316,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #11: Safari does not support chaining yet but is already patched above.
 
-                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingConnecting) {
                     audioNodeConnectMethodWrapper.wrap(audioBufferSourceNode, true, this._isSupportingConnecting);
                 }
@@ -339,7 +339,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
                     audioNodeConnectMethodWrapper.wrap(channelMergerNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
@@ -375,7 +375,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
                     audioNodeConnectMethodWrapper.wrap(channelSplitterNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
@@ -401,7 +401,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
                     audioNodeConnectMethodWrapper.wrap(gainNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
@@ -432,7 +432,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(iIRFilterNode);
                 }
 
-                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingConnecting) {
                     audioNodeConnectMethodWrapper.wrap(iIRFilterNode, true, this._isSupportingConnecting);
                 }
@@ -455,7 +455,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 }
 
                 // Bug #11: Safari does not support chaining yet.
-                // Bug #41: Only Chrome and Opera throw the correct exception by now.
+                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
                     audioNodeConnectMethodWrapper.wrap(oscillatorNode, this._isSupportingChaining, this._isSupportingConnecting);
                 }
@@ -492,11 +492,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     return this._unpatchedAudioContext
                         .decodeAudioData(audioData, successCallback, (err) => {
                             if (typeof errorCallback === 'function') {
-                                // Bug #7: Firefox calls the callback with undefined.
-                                if (err === undefined) {
-                                    errorCallback(encodingErrorFactory.create());
                                 // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
-                                } else if (err instanceof DOMException && err.name === 'NotSupportedError') {
+                                if (err instanceof DOMException && err.name === 'NotSupportedError') {
                                     errorCallback(new TypeError());
                                 } else {
                                     errorCallback(err);
