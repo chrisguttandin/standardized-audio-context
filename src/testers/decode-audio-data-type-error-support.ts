@@ -31,6 +31,9 @@ export class DecodeAudioDataTypeErrorSupportTester {
                         });
 
                     resolve(err instanceof TypeError);
+                })
+                .catch(() => {
+                    // Ignore errors.
                 });
         });
     }
