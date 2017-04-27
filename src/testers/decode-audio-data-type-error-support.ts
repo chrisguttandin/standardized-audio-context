@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@angular/core';
 import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
 
 /**
- * Edge up to version 14, Safari up to version 9 and maybe other browsers did not refuse to decode
- * invalid parameters with a TypeError.
+ * Edge up to version 14, Firefox up to version 52, Safari up to version 9 and maybe other browsers
+ * did not refuse to decode invalid parameters with a TypeError.
  */
 @Injectable()
 export class DecodeAudioDataTypeErrorSupportTester {

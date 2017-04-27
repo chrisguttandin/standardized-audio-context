@@ -13,11 +13,11 @@ export const IS_SUPPORTED_PROMISE_PROVIDER = {
         if (modernizr.promises && modernizr.typedarrays && modernizr.webaudio && closeSupportTester.test()) {
             return Promise
                 .all([
-                    // @todo decodeAudioDataTypeErrorSupportTester.test(),
+                    decodeAudioDataTypeErrorSupportTester.test(),
                     mergingSupportTester.test()
                 ])
-                .then(([ /* decodeAudioDataTypeErrorSupport, */ mergingSupport ]) => {
-                    return /* decodeAudioDataTypeErrorSupport && */ mergingSupport;
+                .then(([ decodeAudioDataTypeErrorSupport, mergingSupport ]) => {
+                    return decodeAudioDataTypeErrorSupport && mergingSupport;
                 });
         }
 

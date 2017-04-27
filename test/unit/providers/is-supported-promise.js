@@ -56,13 +56,13 @@ describe('isSupportedPromise', () => {
             .then((isSupported) => expect(isSupported).to.be.false);
     });
 
-    // it('should resolve to false if the test for decodeAudioData TypeError support fails', () => {
-    //     fakeDecodeAudioDataTypeErrorSupportTester.test = () => Promise.resolve(false);
-    //
-    //     return injector
-    //         .get(isSupportedPromise)
-    //         .then((isSupported) => expect(isSupported).to.be.false);
-    // });
+    it('should resolve to false if the test for decodeAudioData TypeError support fails', () => {
+        fakeDecodeAudioDataTypeErrorSupportTester.test = () => Promise.resolve(false);
+
+        return injector
+            .get(IsSupportedPromise)
+            .then((isSupported) => expect(isSupported).to.be.false);
+    });
 
     it('should resolve to false if the test for merging support fails', () => {
         fakeMergingSupportTester.test = () => Promise.resolve(false);
