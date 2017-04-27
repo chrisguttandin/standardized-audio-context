@@ -21,12 +21,4 @@ describe('biquadFilterNodeConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    // bug #33
-
-    it('should not allow to construct a BiquadFilterNode', () => {
-        expect(() => {
-            new BiquadFilterNode(audioContext, {});
-        }).to.throw(TypeError, 'Illegal constructor.');
-    });
-
 });

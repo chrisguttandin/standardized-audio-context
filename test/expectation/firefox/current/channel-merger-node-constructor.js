@@ -21,12 +21,4 @@ describe('channelMergerNodeConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    // bug #33
-
-    it('should not allow to construct a ChannelMergerNode', () => {
-        expect(() => {
-            new ChannelMergerNode(audioContext, {});
-        }).to.throw(TypeError, 'Illegal constructor.');
-    });
-
 });

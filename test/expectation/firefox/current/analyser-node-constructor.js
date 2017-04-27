@@ -21,12 +21,4 @@ describe('analyserNodeConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    // bug #33
-
-    it('should not allow to construct a AnalyserNode', () => {
-        expect(() => {
-            new AnalyserNode(audioContext, {});
-        }).to.throw(TypeError, 'Illegal constructor.');
-    });
-
 });

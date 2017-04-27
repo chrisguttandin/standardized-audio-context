@@ -21,12 +21,4 @@ describe('gainNodeConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    // bug #33
-
-    it('should not allow to construct a GainNode', () => {
-        expect(() => {
-            new GainNode(audioContext, {});
-        }).to.throw(TypeError, 'Illegal constructor.');
-    });
-
 });

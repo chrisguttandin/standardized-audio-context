@@ -21,12 +21,4 @@ describe('oscillatorNodeConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    // bug #33
-
-    it('should not allow to construct a OscillatorNode', () => {
-        expect(() => {
-            new OscillatorNode(audioContext, {});
-        }).to.throw(TypeError, 'Illegal constructor.');
-    });
-
 });

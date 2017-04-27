@@ -21,12 +21,4 @@ describe('audioBufferSourceNodeConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    // bug #33
-
-    it('should not allow to construct a AudioBufferSourceNode', () => {
-        expect(() => {
-            new AudioBufferSourceNode(audioContext, {});
-        }).to.throw(TypeError, 'Illegal constructor.');
-    });
-
 });

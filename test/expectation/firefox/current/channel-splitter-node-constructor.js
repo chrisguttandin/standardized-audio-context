@@ -21,12 +21,4 @@ describe('channelSplitterNodeConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    // bug #33
-
-    it('should not allow to construct a ChannelSplitterNode', () => {
-        expect(() => {
-            new ChannelSplitterNode(audioContext, {});
-        }).to.throw(TypeError, 'Illegal constructor.');
-    });
-
 });
