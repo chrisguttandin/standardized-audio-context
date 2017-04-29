@@ -8,7 +8,9 @@ module.exports = {
     'build-esm': {
         cmd: 'tsc -p src/tsconfig.json --declaration false --target es5 --outDir build/esm'
     },
-    // @todo Generating the script with 'rollup -c config/rollup/script.js' doesn't work right now.
+    'build-script': {
+        cmd: 'rollup -c config/rollup/script.js'
+    },
     'lint': {
         cmd: 'tslint -c config/tslint/src.json --project src/tsconfig.json --type-check src/**/*.ts'
     }
