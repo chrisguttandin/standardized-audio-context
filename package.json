@@ -62,7 +62,7 @@
   ],
   "license": "MIT",
   "main": "build/es5/bundle.js",
-  "module": "build/es2015/module.js",
+  "module": "build/esm/module.js",
   "name": "standardized-audio-context",
   "repository": {
     "type": "git",
