@@ -147,12 +147,9 @@ export class IIRFilterNodeFaker {
         gainNode.connect(scriptProcessorNode);
 
         gainNode.connect = (destination, output = 0, input = 0) => {
-            console.log('HEY');
             try {
                 scriptProcessorNode.connect.call(scriptProcessorNode, destination, output, input);
             } catch (err) {
-                console.log(err, err.code);
-
                 if (err.code === 12) {
                     throw this._invalidAccessErrorFactory.create();
                 }
