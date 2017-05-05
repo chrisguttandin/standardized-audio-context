@@ -1,10 +1,12 @@
+import { IAudioNode } from '../interfaces';
+
 export class AudioNodeDisconnectMethodWrapper {
 
-    public wrap (audioNode) {
+    public wrap (audioNode: IAudioNode) {
         const destinations = new Map();
 
         audioNode.connect = ((connect) => {
-            return (destination, output = 0, input = 0) => {
+            return (destination: IAudioNode, output = 0, input = 0) => {
                 destinations.set(destination, { input, output });
 
                 return connect.call(audioNode, destination, output, input);
@@ -12,10 +14,10 @@ export class AudioNodeDisconnectMethodWrapper {
         })(audioNode.connect);
 
         audioNode.disconnect = ((disconnect) => {
-            return (destination = null) => {
+            return (destination?: IAudioNode) => {
                 disconnect.apply(audioNode);
 
-                if (destination !== null && destinations.has(destination)) {
+                if (destination !== undefined && destinations.has(destination)) {
                     destinations.delete(destination);
 
                     destinations.forEach(({ input, output }, dstntn) => {

@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { IUnpatchedAudioContextConstructor } from '../interfaces';
 import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
 
 /**
@@ -8,20 +9,22 @@ import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-c
 @Injectable()
 export class DecodeAudioDataTypeErrorSupportTester {
 
-    constructor (@Inject(unpatchedAudioContextConstructor) private _UnpatchedAudioContext) { }
+    constructor (
+        @Inject(unpatchedAudioContextConstructor) private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
+    ) { }
 
     public test (): Promise<boolean> {
-        if (this._UnpatchedAudioContext === null) {
+        if (this._unpatchedAudioContextConstructor === null) {
             return Promise.resolve(false);
         }
 
-        const audioContext = new this._UnpatchedAudioContext();
+        const audioContext = new this._unpatchedAudioContextConstructor();
 
         // Bug #21: Safari does not support promises yet.
         // Bug #1: Chrome Canary & Safari requires a successCallback.
         return new Promise((resolve) => {
             audioContext
-                .decodeAudioData(null, () => {
+                .decodeAudioData(<any> null, () => {
                     // Ignore the success callback.
                 }, (err) => {
                     audioContext

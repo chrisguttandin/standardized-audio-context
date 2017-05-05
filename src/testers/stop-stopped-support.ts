@@ -1,6 +1,8 @@
+import { TUnpatchedAudioContext } from '../types';
+
 export class StopStoppedSupportTester {
 
-    public test (audioContext) {
+    public test (audioContext: TUnpatchedAudioContext) {
         const audioBuffer = audioContext.createBuffer(1, 1, 44100);
 
         const audioBufferSourceNode = audioContext.createBufferSource();

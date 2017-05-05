@@ -1,17 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
+import { IUnpatchedAudioContextConstructor } from '../interfaces';
 import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
 
 @Injectable()
 export class CloseSupportTester {
 
-    constructor (@Inject(unpatchedAudioContextConstructor) private _UnpatchedAudioContext) { }
+    constructor (
+        @Inject(unpatchedAudioContextConstructor) private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
+    ) { }
 
     public test () {
-        if (this._UnpatchedAudioContext === null) {
+        if (this._unpatchedAudioContextConstructor === null) {
             return false;
         }
 
-        const audioContext = new this._UnpatchedAudioContext();
+        const audioContext = new this._unpatchedAudioContextConstructor();
 
         const isAudioContextClosable = (audioContext.close !== undefined);
 

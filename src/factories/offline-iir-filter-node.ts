@@ -1,21 +1,29 @@
 import { Inject, Injectable } from '@angular/core';
+import {
+    IAudioNode,
+    IIIRFilterNode,
+    IOfflineAudioContext,
+    IOfflineAudioNodeFaker,
+    IUnpatchedOfflineAudioContextConstructor
+} from '../interfaces';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
 import { unpatchedOfflineAudioContextConstructor } from '../providers/unpatched-offline-audio-context-constructor';
 import { PromiseSupportTester } from '../testers/promise-support';
+import { TUnpatchedOfflineAudioContext } from '../types';
 import { InvalidStateErrorFactory } from './invalid-state-error';
 import { NotSupportedErrorFactory } from './not-supported-error';
 
-function divide (a, b) {
+function divide (a: number[], b: number[]) {
     const denominator = (b[0] * b[0]) + (b[1] * b[1]);
 
     return [ (((a[0] * b[0]) + (a[1] * b[1])) / denominator), (((a[1] * b[0]) - (a[0] * b[1])) / denominator) ];
 }
 
-function multiply (a, b) {
+function multiply (a: number[], b: number[]) {
     return [ ((a[0] * b[0]) - (a[1] * b[1])), ((a[0] * b[1]) + (a[1] * b[0])) ];
 }
 
-function evaluatePolynomial (coefficient, z) {
+function evaluatePolynomial (coefficient: number[], z: number[]) {
     let result = [ 0, 0 ];
 
     for (let i = coefficient.length - 1; i >= 0; i -= 1) {
@@ -27,37 +35,58 @@ function evaluatePolynomial (coefficient, z) {
     return result;
 }
 
-class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
+export interface IOfflineIIRFilterNodeProxyOptions {
 
-    private _feedback;
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
 
-    private _feedforward;
+    feedback: number[];
 
-    private _nativeNode;
+    feedforward: number[];
 
-    private _notSupportedErrorFactory;
+    nativeNode: null | IIIRFilterNode;
 
-    private _nyquist;
+    notSupportedErrorFactory: NotSupportedErrorFactory;
 
-    constructor ({ fakeNodeStore, feedback, feedforward, nativeNode, notSupportedErrorFactory, sampleRate }) {
+    offlineAudioContext: IOfflineAudioContext;
+
+    sampleRate: number;
+
+}
+
+export class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy implements IIIRFilterNode {
+
+    private _feedback: number[];
+
+    private _feedforward: number[];
+
+    private _nativeNode: null | IIIRFilterNode;
+
+    private _notSupportedErrorFactory: NotSupportedErrorFactory;
+
+    private _nyquist: number;
+
+    constructor ({
+        fakeNodeStore, feedback, feedforward, nativeNode, notSupportedErrorFactory, offlineAudioContext, sampleRate
+    }: IOfflineIIRFilterNodeProxyOptions) {
         super({
             channelCountMode: 'max',
             channelInterpretation: 'speakers',
             fakeNodeStore,
             numberOfInputs: 1,
-            numberOfOutputs: 1
+            numberOfOutputs: 1,
+            offlineAudioContext
         });
 
         this._feedback = feedback;
         this._feedforward = feedforward;
         this._nativeNode = nativeNode;
-            this._notSupportedErrorFactory = notSupportedErrorFactory;
+        this._notSupportedErrorFactory = notSupportedErrorFactory;
         this._nyquist = sampleRate / 2;
     }
 
-    public getFrequencyResponse (frequencyHz, magResponse, phaseResponse) {
+    public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
         // Bug #9: Safari does not support IIRFilterNodes.
-        if (this._nativeNode) {
+        if (this._nativeNode !== null) {
             return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
 
@@ -85,31 +114,59 @@ class OfflineIIRFilterNodeProxy extends OfflineAudioNodeProxy {
 
 }
 
-export class OfflineIIRFilterNodeFaker {
+export interface IOfflineIIRFilterNodeFakerOptions {
 
-    private _feedback;
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
 
-    private _feedforward;
+    feedback: number[];
 
-    private _invalidStateErrorFactory;
+    feedforward: number[];
 
-    private _length;
+    invalidStateErrorFactory: InvalidStateErrorFactory;
 
-    private _nativeNode;
+    length: number;
 
-    private _node;
+    nativeNode: null | IIIRFilterNode;
 
-    private _notSupportedErrorFactory;
+    notSupportedErrorFactory: NotSupportedErrorFactory;
 
-    private _numberOfChannels;
+    numberOfChannels: number;
 
-    private _promiseSupportTester;
+    offlineAudioContext: IOfflineAudioContext;
 
-    private _proxy;
+    promiseSupportTester: PromiseSupportTester;
 
-    private _sources;
+    sampleRate: number;
 
-    private _UnpatchedOfflineAudioContext;
+    unpatchedOfflineAudioContextConstructor: IUnpatchedOfflineAudioContextConstructor;
+
+}
+
+export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
+
+    private _feedback: number[];
+
+    private _feedforward: number[];
+
+    private _invalidStateErrorFactory: InvalidStateErrorFactory;
+
+    private _length: number;
+
+    private _nativeNode: null | IIIRFilterNode;
+
+    private _node: null | AudioNode;
+
+    private _notSupportedErrorFactory: NotSupportedErrorFactory;
+
+    private _numberOfChannels: number;
+
+    private _promiseSupportTester: PromiseSupportTester;
+
+    private _proxy: OfflineIIRFilterNodeProxy;
+
+    private _sources: Map<IOfflineAudioNodeFaker, { input: number, output: number }>;
+
+    private _unpatchedOfflineAudioContextConstructor: IUnpatchedOfflineAudioContextConstructor;
 
     constructor ({
         fakeNodeStore,
@@ -120,10 +177,11 @@ export class OfflineIIRFilterNodeFaker {
         nativeNode,
         notSupportedErrorFactory,
         numberOfChannels,
+        offlineAudioContext,
         promiseSupportTester,
         sampleRate,
-        UnpatchedOfflineAudioContext // tslint:disable-line:variable-name
-    }) {
+        unpatchedOfflineAudioContextConstructor
+    }: IOfflineIIRFilterNodeFakerOptions) {
         if (feedback.length === 0 || feedback.length > 20) {
             throw notSupportedErrorFactory.create();
         }
@@ -155,10 +213,11 @@ export class OfflineIIRFilterNodeFaker {
             feedforward,
             nativeNode,
             notSupportedErrorFactory,
+            offlineAudioContext,
             sampleRate
         });
         this._sources = new Map();
-        this._UnpatchedOfflineAudioContext = UnpatchedOfflineAudioContext;
+        this._unpatchedOfflineAudioContextConstructor = unpatchedOfflineAudioContextConstructor;
 
         fakeNodeStore.set(this._proxy, this);
     }
@@ -167,7 +226,7 @@ export class OfflineIIRFilterNodeFaker {
         return this._proxy;
     }
 
-    private _applyFilter (renderedBuffer, offlineAudioContext) {
+    private _applyFilter (renderedBuffer: AudioBuffer, offlineAudioContext: TUnpatchedOfflineAudioContext) {
         let bufferIndex = 0;
 
         const bufferLength = 32;
@@ -257,7 +316,7 @@ export class OfflineIIRFilterNodeFaker {
         return filteredBuffer;
     }
 
-    public render (offlineAudioContext) {
+    public render (offlineAudioContext: TUnpatchedOfflineAudioContext) {
         if (this._node !== null) {
             return Promise.resolve(this._node);
         }
@@ -271,7 +330,7 @@ export class OfflineIIRFilterNodeFaker {
             for (const [ source, { input, output } ] of this._sources) {
                 promises.push(source
                     .render(offlineAudioContext)
-                    .then((node) => node.connect(this._node, output, input)));
+                    .then((node) => node.connect(<IIRFilterNode> this._node, output, input)));
             }
 
             return Promise
@@ -280,7 +339,7 @@ export class OfflineIIRFilterNodeFaker {
         }
 
         // @todo Somehow retrieve the number of channels.
-        const partialOfflineAudioContext = new this._UnpatchedOfflineAudioContext(
+        const partialOfflineAudioContext = new this._unpatchedOfflineAudioContextConstructor(
             this._numberOfChannels,
             this._length,
             offlineAudioContext.sampleRate
@@ -307,23 +366,46 @@ export class OfflineIIRFilterNodeFaker {
                 });
             })
             .then((renderedBuffer) => {
-                this._node = offlineAudioContext.createBufferSource();
-                this._node.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
-                this._node.start(0);
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+
+                audioBufferSourceNode.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
+                audioBufferSourceNode.start(0);
+
+                this._node = audioBufferSourceNode;
 
                 return this._node;
             });
     }
 
-    public wire (source, output, input) {
+    public wire (source: IOfflineAudioNodeFaker, output: number, input: number) {
         this._sources.set(source, { input, output });
 
         return this._proxy;
     }
 
-    public unwire (source) {
+    public unwire (source: IOfflineAudioNodeFaker) {
         this._sources.delete(source);
     }
+
+}
+
+export interface IOfflineIIRFilterNodeFakerFactoryOptions {
+
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
+
+    feedback: number[];
+
+    feedforward: number[];
+
+    length: number;
+
+    nativeNode: null | IIIRFilterNode;
+
+    numberOfChannels: number;
+
+    offlineAudioContext: IOfflineAudioContext;
+
+    sampleRate: number;
 
 }
 
@@ -331,15 +413,17 @@ export class OfflineIIRFilterNodeFaker {
 export class OfflineIIRFilterNodeFakerFactory {
 
     constructor (
-        @Inject(unpatchedOfflineAudioContextConstructor) private _UnpatchedOfflineAudioContext,
-        @Inject(InvalidStateErrorFactory) private _invalidStateErrorFactory,
-        @Inject(NotSupportedErrorFactory) private _notSupportedErrorFactory,
-        @Inject(PromiseSupportTester) private _promiseSupportTester
+        @Inject(unpatchedOfflineAudioContextConstructor)
+        private _unpatchedOfflineAudioContextConstructor: IUnpatchedOfflineAudioContextConstructor,
+        private _invalidStateErrorFactory: InvalidStateErrorFactory,
+        private _notSupportedErrorFactory: NotSupportedErrorFactory,
+        private _promiseSupportTester: PromiseSupportTester
     ) { }
 
-    public create ({ fakeNodeStore, feedback, feedforward, length, nativeNode, numberOfChannels, sampleRate }) {
+    public create ({
+        fakeNodeStore, feedback, feedforward, length, nativeNode, numberOfChannels, offlineAudioContext, sampleRate
+    }: IOfflineIIRFilterNodeFakerFactoryOptions) {
         return new OfflineIIRFilterNodeFaker({
-            UnpatchedOfflineAudioContext: this._UnpatchedOfflineAudioContext,
             fakeNodeStore,
             feedback,
             feedforward,
@@ -348,8 +432,10 @@ export class OfflineIIRFilterNodeFakerFactory {
             nativeNode,
             notSupportedErrorFactory: this._notSupportedErrorFactory,
             numberOfChannels,
+            offlineAudioContext,
             promiseSupportTester: this._promiseSupportTester,
-            sampleRate
+            sampleRate,
+            unpatchedOfflineAudioContextConstructor: this._unpatchedOfflineAudioContextConstructor
         });
     }
 

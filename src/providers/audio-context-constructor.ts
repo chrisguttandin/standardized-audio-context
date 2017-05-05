@@ -1,10 +1,20 @@
 import { OpaqueToken } from '@angular/core';
 import { DataCloneErrorFactory } from '../factories/data-clone-error';
 import { EncodingErrorFactory } from '../factories/encoding-error';
-import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { IIRFilterNodeFaker } from '../fakers/iir-filter-node';
-import { IAudioContext, IAudioContextConstructor } from '../interfaces/audio-context';
+import {
+    IAnalyserNode,
+    IAudioBufferSourceNode,
+    IAudioContext,
+    IAudioContextConstructor,
+    IAudioDestinationNode,
+    IBiquadFilterNode,
+    IGainNode,
+    IIIRFilterNode,
+    IOscillatorNode,
+    IUnpatchedAudioContextConstructor
+} from '../interfaces';
 import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../testers/analyser-node-get-float-time-domain-data';
 import { AudioBufferCopyChannelMethodsSupportTester } from '../testers/audio-buffer-copy-channel-methods-support';
 import { ChainingSupportTester } from '../testers/chaining-support';
@@ -12,6 +22,13 @@ import { ConnectingSupportTester } from '../testers/connecting-support';
 import { DisconnectingSupportTester } from '../testers/disconnecting-support';
 import { PromiseSupportTester } from '../testers/promise-support';
 import { StopStoppedSupportTester } from '../testers/stop-stopped-support';
+import {
+    TAudioContextState,
+    TDecodeErrorCallback,
+    TDecodeSuccessCallback,
+    TStateChangeEventHandler,
+    TUnpatchedAudioContext
+} from '../types';
 import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 import { AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { AudioBufferCopyChannelMethodsWrapper } from '../wrappers/audio-buffer-copy-channel-methods';
@@ -44,7 +61,6 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         DetachedAudioBuffers,
         DisconnectingSupportTester,
         EncodingErrorFactory,
-        InvalidAccessErrorFactory,
         InvalidStateErrorFactory,
         IIRFilterNodeFaker,
         IIRFilterNodeGetFrequencyResponseMethodWrapper,
@@ -54,56 +70,55 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     ],
     provide: audioContextConstructor,
     useFactory: (
-        analyserNodeGetFloatTimeDomainDataMethodWrapper,
-        analyserNodeGetFloatTimeDomainDataSupportTester,
-        audioBufferCopyChannelMethodsSupportTester,
-        audioBufferCopyChannelMethodsWrapper,
-        audioBufferSourceNodeStopMethodWrapper,
-        audioBufferWrapper,
-        audioNodeConnectMethodWrapper,
-        audioNodeDisconnectMethodWrapper,
-        chainingSupportTester,
-        channelMergerNodeWrapper,
-        channelSplitterNodeWrapper,
-        connectingSupportTester,
-        dataCloneErrorFactory,
-        detachedAudioBuffers,
-        disconnectingSupportTester,
-        encodingErrorFactory,
-        invalidAccessErrorFactory,
-        invalidStateErrorFactory,
-        iIRFilterNodeFaker,
-        iIRFilterNodeGetFrequencyResponseMethodWrapper,
-        promiseSupportTester,
-        stopStoppedSupportTester,
-        UnpatchedAudioContext // tslint:disable-line:variable-name
+        analyserNodeGetFloatTimeDomainDataMethodWrapper: AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
+        analyserNodeGetFloatTimeDomainDataSupportTester: AnalyserNodeGetFloatTimeDomainDataSupportTester,
+        audioBufferCopyChannelMethodsSupportTester: AudioBufferCopyChannelMethodsSupportTester,
+        audioBufferCopyChannelMethodsWrapper: AudioBufferCopyChannelMethodsWrapper,
+        audioBufferSourceNodeStopMethodWrapper: AudioBufferSourceNodeStopMethodWrapper,
+        audioBufferWrapper: AudioBufferWrapper,
+        audioNodeConnectMethodWrapper: AudioNodeConnectMethodWrapper,
+        audioNodeDisconnectMethodWrapper: AudioNodeDisconnectMethodWrapper,
+        chainingSupportTester: ChainingSupportTester,
+        channelMergerNodeWrapper: ChannelMergerNodeWrapper,
+        channelSplitterNodeWrapper: ChannelSplitterNodeWrapper,
+        connectingSupportTester: ConnectingSupportTester,
+        dataCloneErrorFactory: DataCloneErrorFactory,
+        detachedAudioBuffers: WeakSet<ArrayBuffer>,
+        disconnectingSupportTester: DisconnectingSupportTester,
+        encodingErrorFactory: EncodingErrorFactory,
+        invalidStateErrorFactory: InvalidStateErrorFactory,
+        iIRFilterNodeFaker: IIRFilterNodeFaker,
+        iIRFilterNodeGetFrequencyResponseMethodWrapper: IIRFilterNodeGetFrequencyResponseMethodWrapper,
+        promiseSupportTester: PromiseSupportTester,
+        stopStoppedSupportTester: StopStoppedSupportTester,
+        unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
     ): IAudioContextConstructor => {
         class AudioContext implements IAudioContext {
 
-            private _isSupportingAnalyserNodeGetFloatTimeDomainData;
+            private _isSupportingAnalyserNodeGetFloatTimeDomainData: boolean;
 
-            private _isSupportingChaining;
+            private _isSupportingChaining: boolean;
 
-            private _isSupportingCopyChannelMethods;
+            private _isSupportingCopyChannelMethods: boolean;
 
-            private _isSupportingConnecting;
+            private _isSupportingConnecting: boolean;
 
-            private _isSupportingDisconnecting;
+            private _isSupportingDisconnecting: boolean;
 
-            private _isSupportingGetFrequencyResponseErrors;
+            private _isSupportingGetFrequencyResponseErrors: boolean;
 
-            private _isSupportingPromises;
+            private _isSupportingPromises: boolean;
 
-            private _isSupportingStoppingOfStoppedNodes;
+            private _isSupportingStoppingOfStoppedNodes: boolean;
 
-            private _onStateChangeListener;
+            private _onStateChangeListener: null | TStateChangeEventHandler;
 
-            private _unpatchedAudioContext;
+            private _unpatchedAudioContext: TUnpatchedAudioContext;
 
-            private _state;
+            private _state: null | TAudioContextState;
 
             constructor () {
-                const unpatchedAudioContext = new UnpatchedAudioContext();
+                const unpatchedAudioContext = new unpatchedAudioContextConstructor();
 
                 this._isSupportingAnalyserNodeGetFloatTimeDomainData = analyserNodeGetFloatTimeDomainDataSupportTester.test(
                     unpatchedAudioContext
@@ -152,34 +167,36 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public set currentTime (value) {
-                this._unpatchedAudioContext.currentTime = value;
+                (<any> this._unpatchedAudioContext).currentTime = value;
 
                 // If the unpatched AudioContext does not throw an error by itself, it has to be faked.
+                // @todo Test if this still needs to be patched.
                 throw new TypeError();
             }
 
-            public get destination () {
-                return this._unpatchedAudioContext.destination;
+            public get destination (): IAudioDestinationNode {
+                return <IAudioDestinationNode> this._unpatchedAudioContext.destination;
             }
 
             public set destination (value) {
-                this._unpatchedAudioContext.destination = value;
+                (<any> this._unpatchedAudioContext).destination = value;
 
                 // If the unpatched AudioContext does not throw an error by itself, it has to be faked.
+                // @todo Test if this still needs to be patched.
                 throw new TypeError();
             }
 
             public get onstatechange () {
                 if ('onstatechange' in this._unpatchedAudioContext) {
-                    return this._unpatchedAudioContext.onstatechange;
+                    return (<any> this._unpatchedAudioContext).onstatechange;
                 }
 
                 return this._onStateChangeListener;
             }
 
-            public set onstatechange (value) {
+            public set onstatechange (value: null | TStateChangeEventHandler) {
                 if ('onstatechange' in this._unpatchedAudioContext) {
-                    this._unpatchedAudioContext.onstatechange = value;
+                    (<any> this._unpatchedAudioContext).onstatechange = value;
                 } else {
                     this._onStateChangeListener = (typeof value === 'function') ? value : null;
                 }
@@ -190,9 +207,10 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             }
 
             public set sampleRate (value) {
-                this._unpatchedAudioContext.sampleRate = value;
+                (<any> this._unpatchedAudioContext).sampleRate = value;
 
                 // If the unpatched AudioContext does not throw an error by itself, it has to be faked.
+                // @todo Test if this still needs to be patched.
                 throw new TypeError();
             }
 
@@ -202,12 +220,14 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
             public set state (value) {
                 if (this._unpatchedAudioContext.state !== undefined) {
-                    this._unpatchedAudioContext.state = value;
+                    (<any> this._unpatchedAudioContext).state = value;
                 }
 
-                // If the unpatched AudioContext does not have a property called state or does not throw an error by itself, it has to be
-                // tslint:disable-next-line:comment-format
-                // faked.
+                /*
+                 * If the unpatched AudioContext does not have a property called state or does not throw an error by itself, it has to be
+                 * faked.
+                 * @todo Test if this still needs to be patched.
+                 */
                 throw new TypeError();
             }
 
@@ -229,12 +249,12 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 return this._unpatchedAudioContext.close();
             }
 
-            public createAnalyser () {
+            public createAnalyser (): IAnalyserNode {
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
 
-                const analyserNode = this._unpatchedAudioContext.createAnalyser();
+                const analyserNode = <IAnalyserNode> this._unpatchedAudioContext.createAnalyser();
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -256,7 +276,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    audioNodeConnectMethodWrapper.wrap(analyserNode, this._isSupportingChaining, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(analyserNode, this._isSupportingChaining);
                 }
 
                 // Only Chrome and Opera support disconnecting of a specific destination.
@@ -267,12 +287,12 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 return analyserNode;
             }
 
-            public createBiquadFilter () {
+            public createBiquadFilter (): IBiquadFilterNode {
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
 
-                const biquadFilterNode = this._unpatchedAudioContext.createBiquadFilter();
+                const biquadFilterNode = <IBiquadFilterNode> this._unpatchedAudioContext.createBiquadFilter();
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -284,13 +304,13 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    audioNodeConnectMethodWrapper.wrap(biquadFilterNode, this._isSupportingChaining, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(biquadFilterNode, this._isSupportingChaining);
                 }
 
                 return biquadFilterNode;
             }
 
-            public createBuffer (numberOfChannels, length, sampleRate) {
+            public createBuffer (numberOfChannels: number, length: number, sampleRate: number): AudioBuffer {
                 const audioBuffer = this._unpatchedAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
                 // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
@@ -304,8 +324,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 return audioBuffer;
             }
 
-            public createBufferSource () {
-                const audioBufferSourceNode = this._unpatchedAudioContext.createBufferSource();
+            public createBufferSource (): IAudioBufferSourceNode {
+                const audioBufferSourceNode = <IAudioBufferSourceNode> this._unpatchedAudioContext.createBufferSource();
 
                 // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
                 if (!this._isSupportingStoppingOfStoppedNodes) {
@@ -318,7 +338,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingConnecting) {
-                    audioNodeConnectMethodWrapper.wrap(audioBufferSourceNode, true, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(audioBufferSourceNode, true);
                 }
 
                 return audioBufferSourceNode;
@@ -341,7 +361,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    audioNodeConnectMethodWrapper.wrap(channelMergerNode, this._isSupportingChaining, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(channelMergerNode, this._isSupportingChaining);
                 }
 
                 // Bug #15: Safari does not return the default properties.
@@ -377,7 +397,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    audioNodeConnectMethodWrapper.wrap(channelSplitterNode, this._isSupportingChaining, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(channelSplitterNode, this._isSupportingChaining);
                 }
 
                 // Bug #29 - #32: Only Chrome partially supports the spec yet.
@@ -386,12 +406,12 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 return channelSplitterNode;
             }
 
-            public createGain () {
+            public createGain (): IGainNode {
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
 
-                const gainNode = this._unpatchedAudioContext.createGain();
+                const gainNode = <IGainNode> this._unpatchedAudioContext.createGain();
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -403,7 +423,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    audioNodeConnectMethodWrapper.wrap(gainNode, this._isSupportingChaining, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(gainNode, this._isSupportingChaining);
                 }
 
                 // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
@@ -414,7 +434,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 return gainNode;
             }
 
-            public createIIRFilter (feedforward, feedback) {
+            public createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode {
                 // Bug #10: Edge does not throw an error when the context is closed.
                 if (this._unpatchedAudioContext === null && this.state === 'closed') {
                     throw invalidStateErrorFactory.create();
@@ -425,7 +445,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     return iIRFilterNodeFaker.fake(feedforward, feedback, this, this._unpatchedAudioContext);
                 }
 
-                const iIRFilterNode = this._unpatchedAudioContext.createIIRFilter(feedforward, feedback);
+                const iIRFilterNode = <IIIRFilterNode> this._unpatchedAudioContext.createIIRFilter(feedforward, feedback);
 
                 // Bug 23 & 24: FirefoxDeveloper does not throw NotSupportedErrors anymore.
                 if (!this._isSupportingGetFrequencyResponseErrors) {
@@ -434,18 +454,18 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingConnecting) {
-                    audioNodeConnectMethodWrapper.wrap(iIRFilterNode, true, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(iIRFilterNode, true);
                 }
 
                 return iIRFilterNode;
             }
 
-            public createOscillator () {
+            public createOscillator (): IOscillatorNode {
                 if (this._unpatchedAudioContext === null) {
                     throw invalidStateErrorFactory.create();
                 }
 
-                const oscillatorNode = this._unpatchedAudioContext.createOscillator();
+                const oscillatorNode = <IOscillatorNode> this._unpatchedAudioContext.createOscillator();
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format
@@ -457,13 +477,15 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 // Bug #11: Safari does not support chaining yet.
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (!this._isSupportingChaining || !this._isSupportingConnecting) {
-                    audioNodeConnectMethodWrapper.wrap(oscillatorNode, this._isSupportingChaining, this._isSupportingConnecting);
+                    audioNodeConnectMethodWrapper.wrap(oscillatorNode, this._isSupportingChaining);
                 }
 
                 return oscillatorNode;
             }
 
-            public decodeAudioData (audioData, successCallback, errorCallback) {
+            public decodeAudioData (
+                audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback
+            ): Promise<AudioBuffer> {
                 // Bug #43: Only Chrome Canary does yet throw a DataCloneError.
                 if (detachedAudioBuffers.has(audioData)) {
                     const err = dataCloneErrorFactory.create();
@@ -490,7 +512,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     }
 
                     return this._unpatchedAudioContext
-                        .decodeAudioData(audioData, successCallback, (err) => {
+                        .decodeAudioData(audioData, successCallback, (err: DOMException | Error) => {
                             if (typeof errorCallback === 'function') {
                                 // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
                                 if (err instanceof DOMException && err.name === 'NotSupportedError') {
@@ -500,7 +522,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                                 }
                             }
                         })
-                        .catch ((err) => {
+                        .catch ((err: DOMException | Error) => {
                             // Bug #6: Chrome, Firefox and Opera do not call the errorCallback in case of an invalid buffer.
                             if (typeof errorCallback === 'function' && err instanceof TypeError) {
                                 errorCallback(err);
@@ -517,7 +539,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #21: Safari does not return a Promise yet.
                 return new Promise((resolve, reject) => {
-                    const fail = (err) => {
+                    const fail = (err: DOMException | Error) => {
                         if (typeof errorCallback === 'function') {
                             errorCallback(err);
                         }
@@ -525,7 +547,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         reject(err);
                     };
 
-                    const succeed = (dBffrWrppr) => {
+                    const succeed = (dBffrWrppr: AudioBuffer) => {
                         resolve(dBffrWrppr);
 
                         if (typeof successCallback === 'function') {
@@ -536,7 +558,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     // Bug #26: Safari throws a synchronous error.
                     try {
                         // Bug #1: Safari requires a successCallback.
-                        this._unpatchedAudioContext.decodeAudioData(audioData, (audioBuffer) => {
+                        this._unpatchedAudioContext.decodeAudioData(audioData, (audioBuffer: AudioBuffer) => {
                             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                             if (typeof audioBuffer.copyFromChannel !== 'function') {
                                 audioBufferWrapper.wrap(audioBuffer);
@@ -546,7 +568,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                             }
 
                             succeed(audioBuffer);
-                        }, (err) => {
+                        }, (err: DOMException | Error) => {
                             // Bug #4: Safari returns null instead of an error.
                             if (err === null) {
                                 fail(encodingErrorFactory.create());

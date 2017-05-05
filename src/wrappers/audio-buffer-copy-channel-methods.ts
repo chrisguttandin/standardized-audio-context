@@ -1,8 +1,9 @@
 export class AudioBufferCopyChannelMethodsWrapper {
 
-    public wrap (audioBuffer) {
+    public wrap (audioBuffer: AudioBuffer) {
+
         audioBuffer.copyFromChannel = ((copyFromChannel) => {
-            return (destination, channelNumber, startInChannel = 0) => {
+            return (destination: Float32Array, channelNumber: number, startInChannel = 0) => {
                 if (startInChannel < audioBuffer.length && audioBuffer.length - startInChannel < destination.length) {
                     return copyFromChannel.call(
                         audioBuffer, destination.subarray(0, audioBuffer.length - startInChannel), channelNumber, startInChannel
@@ -14,7 +15,7 @@ export class AudioBufferCopyChannelMethodsWrapper {
         })(audioBuffer.copyFromChannel);
 
         audioBuffer.copyToChannel = ((copyToChannel) => {
-            return (source, channelNumber, startInChannel = 0) => {
+            return (source: Float32Array, channelNumber: number, startInChannel = 0) => {
                 if (startInChannel < audioBuffer.length && audioBuffer.length - startInChannel < source.length) {
                     return copyToChannel.call(
                         audioBuffer, source.subarray(0, audioBuffer.length - startInChannel), channelNumber, startInChannel

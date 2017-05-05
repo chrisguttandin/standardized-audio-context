@@ -1,7 +1,7 @@
 import 'core-js/es7/reflect';
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextConstructor } from '../../../src/providers/unpatched-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
-import { Window } from '../../../src/providers/window';
+import { window } from '../../../src/providers/window';
 
 describe('UnpatchedAudioContext', () => {
 
@@ -19,7 +19,7 @@ describe('UnpatchedAudioContext', () => {
 
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            { provide: Window, useValue: fakeWindow }
+            { provide: window, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedAudioContextConstructor)).to.equal(null);
@@ -32,7 +32,7 @@ describe('UnpatchedAudioContext', () => {
 
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            { provide: Window, useValue: fakeWindow }
+            { provide: window, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedAudioContextConstructor)).to.equal(webkitAudioContext);
@@ -45,7 +45,7 @@ describe('UnpatchedAudioContext', () => {
 
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            { provide: Window, useValue: fakeWindow }
+            { provide: window, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedAudioContextConstructor)).to.equal(AudioContext);
@@ -59,7 +59,7 @@ describe('UnpatchedAudioContext', () => {
 
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            { provide: Window, useValue: fakeWindow }
+            { provide: window, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedAudioContextConstructor)).to.equal(AudioContext);

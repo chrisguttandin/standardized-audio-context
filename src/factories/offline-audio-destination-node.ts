@@ -1,14 +1,26 @@
+import { IAudioDestinationNode, IAudioNode, IOfflineAudioContext, IOfflineAudioNodeFaker } from '../interfaces';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
+import { TUnpatchedOfflineAudioContext } from '../types';
 
-class OfflineAudioDestinationNodeFakerProxy extends OfflineAudioNodeProxy {
+export interface IOfflineAudioDestinationNodeFakerProxyOptions {
 
-    constructor ({ fakeNodeStore }) {
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
+
+    offlineAudioContext: IOfflineAudioContext;
+
+}
+
+export class OfflineAudioDestinationNodeFakerProxy extends OfflineAudioNodeProxy implements IAudioDestinationNode {
+
+    constructor ({ fakeNodeStore, offlineAudioContext }: IOfflineAudioDestinationNodeFakerProxyOptions) {
         super({
+            channelCount: 2,
             channelCountMode: 'max',
             channelInterpretation: 'speakers',
             fakeNodeStore,
             numberOfInputs: 1,
-            numberOfOutputs: 0
+            numberOfOutputs: 0,
+            offlineAudioContext
         });
     }
 
@@ -19,17 +31,25 @@ class OfflineAudioDestinationNodeFakerProxy extends OfflineAudioNodeProxy {
 
 }
 
-export class OfflineAudioDestinationNodeFaker {
+export interface IOfflineAudioDestinationNodeFakerOptions {
 
-    private _node;
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
 
-    private _proxy;
+    offlineAudioContext: IOfflineAudioContext;
 
-    private _sources;
+}
 
-    constructor ({ fakeNodeStore }) {
+export class OfflineAudioDestinationNodeFaker implements IOfflineAudioNodeFaker {
+
+    private _node: null | AudioDestinationNode;
+
+    private _proxy: OfflineAudioDestinationNodeFakerProxy;
+
+    private _sources: Map<IOfflineAudioNodeFaker, { input: number, output: number }>;
+
+    constructor ({ fakeNodeStore, offlineAudioContext }: IOfflineAudioDestinationNodeFakerOptions) {
         this._node = null;
-        this._proxy = new OfflineAudioDestinationNodeFakerProxy({ fakeNodeStore });
+        this._proxy = new OfflineAudioDestinationNodeFakerProxy({ fakeNodeStore, offlineAudioContext });
         this._sources = new Map();
 
         fakeNodeStore.set(this._proxy, this);
@@ -39,7 +59,7 @@ export class OfflineAudioDestinationNodeFaker {
         return this._proxy;
     }
 
-    public render (offlineAudioContext) {
+    public render (offlineAudioContext: TUnpatchedOfflineAudioContext) {
         if (this._node !== null) {
             return Promise.resolve(this._node);
         }
@@ -51,7 +71,7 @@ export class OfflineAudioDestinationNodeFaker {
         for (const [ source, { input, output } ] of this._sources) {
             promises.push(source
                 .render(offlineAudioContext)
-                .then((node) => node.connect(this._node, output, input)));
+                .then((node) => node.connect(<AudioDestinationNode> this._node, output, input)));
         }
 
         return Promise
@@ -59,18 +79,30 @@ export class OfflineAudioDestinationNodeFaker {
             .then(() => this._node);
     }
 
-    public wire (source, output, input) {
+    public wire (source: IOfflineAudioNodeFaker, output: number, input: number) {
         this._sources.set(source, { input, output });
 
         return this._proxy;
     }
 
+    public unwire (source: IOfflineAudioNodeFaker) {
+        this._sources.delete(source);
+    }
+
+}
+
+export interface IOfflineAudioDestinationNodeFakerFactoryOptions {
+
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
+
+    offlineAudioContext: IOfflineAudioContext;
+
 }
 
 export class OfflineAudioDestinationNodeFakerFactory {
 
-    public create ({ fakeNodeStore }) {
-        return new OfflineAudioDestinationNodeFaker({ fakeNodeStore });
+    public create ({ fakeNodeStore, offlineAudioContext }: IOfflineAudioDestinationNodeFakerFactoryOptions) {
+        return new OfflineAudioDestinationNodeFaker({ fakeNodeStore, offlineAudioContext });
     }
 
 }

@@ -1,5 +1,5 @@
 import 'core-js/es7/reflect';
-import { WINDOW_PROVIDER, Window } from '../../../src/providers/window';
+import { WINDOW_PROVIDER, window as windowToken } from '../../../src/providers/window';
 import { ReflectiveInjector } from '@angular/core';
 
 describe('window', () => {
@@ -9,7 +9,7 @@ describe('window', () => {
             WINDOW_PROVIDER
         ]);
 
-        expect(injector.get(Window)).to.equal(window);
+        expect(injector.get(windowToken)).to.equal(window);
     });
 
 });

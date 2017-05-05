@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { IUnpatchedAudioContextConstructor } from '../interfaces';
 import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
 
 /**
@@ -9,21 +10,23 @@ import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-c
 @Injectable()
 export class MergingSupportTester {
 
-    constructor (@Inject(unpatchedAudioContextConstructor) private _UnpatchedAudioContext) { }
+    constructor (
+        @Inject(unpatchedAudioContextConstructor) private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
+    ) { }
 
     public test () {
-        if (this._UnpatchedAudioContext === null) {
+        if (this._unpatchedAudioContextConstructor === null) {
             return Promise.resolve(false);
         }
 
-        const audioContext = new this._UnpatchedAudioContext();
+        const audioContext = new this._unpatchedAudioContextConstructor();
         const audioBufferSourceNode = audioContext.createBufferSource();
         const audioBuffer = audioContext.createBuffer(2, 2, audioContext.sampleRate);
         const channelMergerNode = audioContext.createChannelMerger(2);
-        const scriptProcessorNode = audioContext.createScriptProcessor(256);
+        const scriptProcessorNode = (<any> audioContext).createScriptProcessor(256);
 
         return new Promise((resolve) => {
-            let startTime;
+            let startTime: number;
 
             // @todo Safari does not play/loop 1 sample buffers. This should be patched.
             audioBuffer.getChannelData(0)[0] = 1;
@@ -34,7 +37,7 @@ export class MergingSupportTester {
             audioBufferSourceNode.buffer = audioBuffer;
             audioBufferSourceNode.loop = true;
 
-            scriptProcessorNode.onaudioprocess = (event) => {
+            scriptProcessorNode.onaudioprocess = (event: AudioProcessingEvent) => {
                 const channelData = event.inputBuffer.getChannelData(1);
 
                 const length = channelData.length;

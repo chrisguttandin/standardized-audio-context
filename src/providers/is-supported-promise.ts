@@ -1,4 +1,5 @@
 import { OpaqueToken } from '@angular/core';
+import { IModernizr } from '../interfaces';
 import { CloseSupportTester } from '../testers/close-support';
 import { DecodeAudioDataTypeErrorSupportTester } from '../testers/decode-audio-data-type-error-support';
 import { MergingSupportTester } from '../testers/merging-support';
@@ -9,7 +10,12 @@ export const IsSupportedPromise = new OpaqueToken('IS_SUPPORTED_PROMISE'); // ts
 export const IS_SUPPORTED_PROMISE_PROVIDER = {
     deps: [ CloseSupportTester, DecodeAudioDataTypeErrorSupportTester, MergingSupportTester, Modernizr ],
     provide: IsSupportedPromise,
-    useFactory: (closeSupportTester, decodeAudioDataTypeErrorSupportTester, mergingSupportTester, modernizr): Promise<boolean> => {
+    useFactory: (
+        closeSupportTester: CloseSupportTester,
+        decodeAudioDataTypeErrorSupportTester: DecodeAudioDataTypeErrorSupportTester,
+        mergingSupportTester: MergingSupportTester,
+        modernizr: IModernizr
+    ): Promise<boolean> => {
         if (modernizr.promises && modernizr.typedarrays && modernizr.webaudio && closeSupportTester.test()) {
             return Promise
                 .all([

@@ -12,8 +12,7 @@ import { OfflineBiquadFilterNodeFakerFactory } from './factories/offline-biquad
 import { OfflineGainNodeFakerFactory } from './factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter-node';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
-import { IAudioContext, IAudioContextConstructor } from './interfaces/audio-context';
-import { IOfflineAudioContext, IOfflineAudioContextConstructor } from './interfaces/offline-audio-context';
+import { IAudioContext, IAudioContextConstructor, IOfflineAudioContext, IOfflineAudioContextConstructor } from './interfaces';
 import { AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, audioContextConstructor } from './providers/audio-context-constructor';
 import { DETACHED_AUDIO_BUFFERS_PROVIDER } from './providers/detached-audio-buffers';
 import { IS_SUPPORTED_PROMISE_PROVIDER, IsSupportedPromise } from './providers/is-supported-promise';
@@ -84,7 +83,7 @@ const injector = ReflectiveInjector.resolveAndCreate([
     WINDOW_PROVIDER
 ]);
 
-export { AudioContextState } from './enums/audio-context-state';
+export { TAudioContextState } from './types';
 
 export { IAudioContext };
 

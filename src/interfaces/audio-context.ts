@@ -1,45 +1,17 @@
-import { AudioContextState } from '../enums/audio-context-state';
+import { IAnalyserNode } from './analyser-node';
+import { IBaseAudioContext } from './base-audio-context';
 
-export interface IAudioContext {
-
-    readonly currentTime: number;
-
-    readonly destination: AudioDestinationNode;
-
-    onstatechange: Function;
-
-    readonly sampleRate: number;
-
-    readonly state: AudioContextState;
+export interface IAudioContext extends IBaseAudioContext {
 
     close(): Promise<void>;
 
-    createAnalyser(): AnalyserNode;
+    // @todo This should move into the IBaseAudioContext interface.
+    createAnalyser(): IAnalyserNode;
 
-    createBiquadFilter(): BiquadFilterNode;
-
-    createBuffer(numberOfChannels: number, length: number, sampleRate: number): AudioBuffer;
-
-    createBufferSource(): AudioBufferSourceNode;
-
+    // @todo This should move into the IBaseAudioContext interface.
     createChannelMerger(numberOfInputs: number): ChannelMergerNode;
 
+    // @todo This should move into the IBaseAudioContext interface.
     createChannelSplitter(numberOfOutputs: number): ChannelSplitterNode;
-
-    createGain(): GainNode;
-
-    createIIRFilter(feedforward: number[], feedback: number[]); // @todo IIRFilterNode;
-
-    decodeAudioData(
-        audioData: ArrayBuffer,
-        successCallback?: (decodedData: AudioBuffer) => {},
-        errorCallback?: (error: DOMException) => {}
-    ): Promise<AudioBuffer>;
-
-}
-
-export interface IAudioContextConstructor {
-
-    new (): IAudioContext;
 
 }

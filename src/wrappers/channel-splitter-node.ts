@@ -1,12 +1,12 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 
 @Injectable()
 export class ChannelSplitterNodeWrapper {
 
-    constructor (@Inject(InvalidStateErrorFactory) private _invalidStateErrorFactory) { }
+    constructor (private _invalidStateErrorFactory: InvalidStateErrorFactory) { }
 
-    public wrap (channelSplitterNode) {
+    public wrap (channelSplitterNode: ChannelSplitterNode) {
         channelSplitterNode.channelCountMode = 'explicit';
         channelSplitterNode.channelInterpretation = 'discrete';
 

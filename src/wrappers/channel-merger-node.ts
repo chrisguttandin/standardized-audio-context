@@ -1,12 +1,13 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { TUnpatchedAudioContext } from '../types';
 
 @Injectable()
 export class ChannelMergerNodeWrapper {
 
-    constructor (@Inject(InvalidStateErrorFactory) private _invalidStateErrorFactory) { }
+    constructor (private _invalidStateErrorFactory: InvalidStateErrorFactory) { }
 
-    public wrap (audioContext, channelMergerNode) {
+    public wrap (audioContext: TUnpatchedAudioContext, channelMergerNode: ChannelMergerNode) {
         const audioBufferSourceNode = audioContext.createBufferSource();
 
         channelMergerNode.channelCount = 1;

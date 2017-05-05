@@ -1,19 +1,21 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../factories/not-supported-error';
+import { IAudioContext, IAudioNode } from '../interfaces';
+import { TUnpatchedAudioContext } from '../types';
 
-function divide (a, b) {
+function divide (a: number[], b: number[]) {
     const denominator = (b[0] * b[0]) + (b[1] * b[1]);
 
     return [ (((a[0] * b[0]) + (a[1] * b[1])) / denominator), (((a[1] * b[0]) - (a[0] * b[1])) / denominator) ];
 }
 
-function multiply (a, b) {
+function multiply (a: number[], b: number[]) {
     return [ ((a[0] * b[0]) - (a[1] * b[1])), ((a[0] * b[1]) + (a[1] * b[0])) ];
 }
 
-function evaluatePolynomial (coefficient, z) {
+function evaluatePolynomial (coefficient: number[], z: number[]) {
     let result = [ 0, 0 ];
 
     for (let i = coefficient.length - 1; i >= 0; i -= 1) {
@@ -29,12 +31,12 @@ function evaluatePolynomial (coefficient, z) {
 export class IIRFilterNodeFaker {
 
     constructor (
-        @Inject(InvalidAccessErrorFactory) private _invalidAccessErrorFactory,
-        @Inject(InvalidStateErrorFactory) private _invalidStateErrorFactory,
-        @Inject(NotSupportedErrorFactory) private _notSupportedErrorFactory
+        private _invalidAccessErrorFactory: InvalidAccessErrorFactory,
+        private _invalidStateErrorFactory: InvalidStateErrorFactory,
+        private _notSupportedErrorFactory: NotSupportedErrorFactory
     ) { }
 
-    public fake (feedforward, feedback, audioContext, unpatchedAudioContext) {
+    public fake (feedforward: number[], feedback: number[], audioContext: IAudioContext, unpatchedAudioContext: TUnpatchedAudioContext) {
         let bufferIndex = 0;
 
         const bufferLength = 32;
@@ -61,8 +63,9 @@ export class IIRFilterNodeFaker {
             }
         }
 
-        const gainNode = audioContext.createGain();
+        const gainNode = <any> audioContext.createGain();
         const nyquist = audioContext.sampleRate / 2;
+
         // @todo Remove this once the audioContext supports the createScriptProcessor() method, too.
         const scriptProcessorNode = unpatchedAudioContext.createScriptProcessor(256, gainNode.channelCount, gainNode.channelCount);
 
@@ -82,7 +85,7 @@ export class IIRFilterNodeFaker {
         // This implementation as shamelessly inspired by source code of
         // tslint:disable-next-line:max-line-length
         // {@link https://chromium.googlesource.com/chromium/src.git/+/master/third_party/WebKit/Source/platform/audio/IIRFilter.cpp|Chromium's IIRFilter}.
-        scriptProcessorNode.onaudioprocess = (event) => {
+        scriptProcessorNode.onaudioprocess = (event: AudioProcessingEvent) => {
             const inputBuffer = event.inputBuffer;
 
             const outputBuffer = event.outputBuffer;
@@ -121,7 +124,7 @@ export class IIRFilterNodeFaker {
             }
         };
 
-        gainNode.getFrequencyResponse = (frequencyHz, magResponse, phaseResponse) => {
+        gainNode.getFrequencyResponse = (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) => {
             if (magResponse.length === 0 || phaseResponse.length === 0) {
                 throw this._notSupportedErrorFactory.create();
             }
@@ -146,7 +149,7 @@ export class IIRFilterNodeFaker {
 
         gainNode.connect(scriptProcessorNode);
 
-        gainNode.connect = (destination, output = 0, input = 0) => {
+        gainNode.connect = (destination: IAudioNode, output = 0, input = 0) => {
             try {
                 scriptProcessorNode.connect.call(scriptProcessorNode, destination, output, input);
             } catch (err) {

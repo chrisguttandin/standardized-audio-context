@@ -1,18 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
+import { IUnpatchedAudioContextConstructor } from '../interfaces';
 import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
+import { TUnpatchedAudioContext } from '../types';
 
 @Injectable()
 export class ConnectingSupportTester {
 
-    constructor (@Inject(unpatchedAudioContextConstructor) private _UnpatchedAudioContext) { }
+    constructor (
+        @Inject(unpatchedAudioContextConstructor) private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
+    ) { }
 
-    public test (audioContext) {
-        if (this._UnpatchedAudioContext === null) {
+    public test (audioContext: TUnpatchedAudioContext) {
+        if (this._unpatchedAudioContextConstructor === null) {
             return false;
         }
 
         const analyserNode = audioContext.createAnalyser();
-        const anotherAudioContext = new this._UnpatchedAudioContext();
+        const anotherAudioContext = new this._unpatchedAudioContextConstructor();
 
         try {
             analyserNode.connect(anotherAudioContext.destination);
@@ -21,6 +25,8 @@ export class ConnectingSupportTester {
         } finally {
             anotherAudioContext.close();
         }
+
+        return false;
     }
 
 }

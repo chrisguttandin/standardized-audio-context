@@ -1,12 +1,14 @@
+import { IAudioBufferSourceNode, IAudioContext, IAudioNode } from '../interfaces';
+
 export class AudioBufferSourceNodeStopMethodWrapper {
 
-    public wrap (audioBufferSourceNode, audioContext) {
+    public wrap (audioBufferSourceNode: IAudioBufferSourceNode, audioContext: IAudioContext) {
         const gainNode = audioContext.createGain();
 
         audioBufferSourceNode.connect(gainNode);
         audioBufferSourceNode.addEventListener('ended', () => audioBufferSourceNode.disconnect(gainNode));
 
-        audioBufferSourceNode.connect = (destination, output = 0, input = 0) => {
+        audioBufferSourceNode.connect = (destination: IAudioNode, output = 0, input = 0) => {
             gainNode.connect.call(gainNode, destination, output, input);
 
             return destination;

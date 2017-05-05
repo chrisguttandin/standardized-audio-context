@@ -1,6 +1,8 @@
+import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+
 export class AudioBufferCopyChannelMethodsSupportTester {
 
-    public test (audioContext) {
+    public test (audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) {
         const audioBuffer = audioContext.createBuffer(1, 1, audioContext.sampleRate);
         const source = new Float32Array(2);
 

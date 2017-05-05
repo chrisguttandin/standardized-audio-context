@@ -1,12 +1,12 @@
 import { OpaqueToken } from '@angular/core';
-import { Window } from './window';
+import { window as windowToken } from './window';
 
 export const unpatchedAudioContextConstructor = new OpaqueToken('UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR');
 
 export const UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
-    deps: [ Window ],
+    deps: [ windowToken ],
     provide: unpatchedAudioContextConstructor,
-    useFactory: (window) => (window.hasOwnProperty('AudioContext')) ?
+    useFactory: (window: any) => (window.hasOwnProperty('AudioContext')) ?
         window.AudioContext :
         (window.hasOwnProperty('webkitAudioContext')) ?
             window.webkitAudioContext :

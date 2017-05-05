@@ -2,13 +2,25 @@ import { OpaqueToken } from '@angular/core';
 import { DataCloneErrorFactory } from '../factories/data-clone-error';
 import { EncodingErrorFactory } from '../factories/encoding-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from '../factories/offline-audio-buffer-source-node';
-import { OfflineAudioDestinationNodeFakerFactory } from '../factories/offline-audio-destination-node';
+import { OfflineAudioDestinationNodeFaker, OfflineAudioDestinationNodeFakerFactory } from '../factories/offline-audio-destination-node';
 import { OfflineBiquadFilterNodeFakerFactory } from '../factories/offline-biquad-filter-node';
 import { OfflineGainNodeFakerFactory } from '../factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from '../factories/offline-iir-filter-node';
-import { IOfflineAudioContext, IOfflineAudioContextConstructor } from '../interfaces/offline-audio-context';
+import {
+    IAudioBufferSourceNode,
+    IAudioNode,
+    IBiquadFilterNode,
+    IGainNode,
+    IIIRFilterNode,
+    IOfflineAudioCompletionEvent,
+    IOfflineAudioContext,
+    IOfflineAudioContextConstructor,
+    IOfflineAudioNodeFaker,
+    IUnpatchedOfflineAudioContextConstructor
+} from '../interfaces';
 import { AudioBufferCopyChannelMethodsSupportTester } from '../testers/audio-buffer-copy-channel-methods-support';
 import { PromiseSupportTester } from '../testers/promise-support';
+import { TDecodeErrorCallback, TDecodeSuccessCallback, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { AudioBufferCopyChannelMethodsWrapper } from '../wrappers/audio-buffer-copy-channel-methods';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
@@ -36,45 +48,45 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     ],
     provide: offlineAudioContextConstructor,
     useFactory: (
-        audioBufferCopyChannelMethodsSupportTester,
-        audioBufferCopyChannelMethodsWrapper,
-        audioBufferWrapper,
-        dataCloneErrorFactory,
-        detachedAudioBuffers,
-        encodingErrorFactory,
-        iIRFilterNodeGetFrequencyResponseMethodWrapper,
-        offlineAudioBufferSourceNodeFakerFactory,
-        offlineAudioDestinationNodeFakerFactory,
-        offlineBiquadFilterNodeFakerFactory,
-        offlineGainNodeFakerFactory,
-        offlineIIRFilterNodeFakerFactory,
-        promiseSupportTester,
-        UnpatchedOfflineAudioContext // tslint:disable-line:variable-name
+        audioBufferCopyChannelMethodsSupportTester: AudioBufferCopyChannelMethodsSupportTester,
+        audioBufferCopyChannelMethodsWrapper: AudioBufferCopyChannelMethodsWrapper,
+        audioBufferWrapper: AudioBufferWrapper,
+        dataCloneErrorFactory: DataCloneErrorFactory,
+        detachedAudioBuffers: WeakSet<ArrayBuffer>,
+        encodingErrorFactory: EncodingErrorFactory,
+        iIRFilterNodeGetFrequencyResponseMethodWrapper: IIRFilterNodeGetFrequencyResponseMethodWrapper,
+        offlineAudioBufferSourceNodeFakerFactory: OfflineAudioBufferSourceNodeFakerFactory,
+        offlineAudioDestinationNodeFakerFactory: OfflineAudioDestinationNodeFakerFactory,
+        offlineBiquadFilterNodeFakerFactory: OfflineBiquadFilterNodeFakerFactory,
+        offlineGainNodeFakerFactory: OfflineGainNodeFakerFactory,
+        offlineIIRFilterNodeFakerFactory: OfflineIIRFilterNodeFakerFactory,
+        promiseSupportTester: PromiseSupportTester,
+        unpatchedOfflineAudioContextConstructor: IUnpatchedOfflineAudioContextConstructor
     ): IOfflineAudioContextConstructor => {
         class OfflineAudioContext implements IOfflineAudioContext {
 
-            private _destination;
+            private _destination: OfflineAudioDestinationNodeFaker;
 
-            private _fakeNodeStore;
+            private _fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
 
-            private _isSupportingCopyChannelMethods;
+            private _isSupportingCopyChannelMethods: boolean;
 
-            private _isSupportingGetFrequencyResponseErrors;
+            private _isSupportingGetFrequencyResponseErrors: boolean;
 
-            private _isSupportingPromises;
+            private _isSupportingPromises: boolean;
 
-            private _length;
+            private _length: number;
 
-            private _numberOfChannels;
+            private _numberOfChannels: number;
 
-            private _unpatchedOfflineAudioContext;
+            private _unpatchedOfflineAudioContext: TUnpatchedOfflineAudioContext;
 
-            constructor (numberOfChannels, length, sampleRate) {
+            constructor (numberOfChannels: number, length: number, sampleRate: number) {
                 const fakeNodeStore = new WeakMap();
 
-                const unpatchedOfflineAudioContext = new UnpatchedOfflineAudioContext(numberOfChannels, length, sampleRate);
+                const unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
 
-                this._destination = offlineAudioDestinationNodeFakerFactory.create({ fakeNodeStore });
+                this._destination = offlineAudioDestinationNodeFakerFactory.create({ fakeNodeStore, offlineAudioContext: this });
                 this._fakeNodeStore = fakeNodeStore;
                 this._isSupportingCopyChannelMethods = audioBufferCopyChannelMethodsSupportTester.test(unpatchedOfflineAudioContext);
                 this._isSupportingGetFrequencyResponseErrors = false;
@@ -84,7 +96,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 this._unpatchedOfflineAudioContext = unpatchedOfflineAudioContext;
             }
 
-            public get currentTime () {
+            public get currentTime (): number {
                 return this._unpatchedOfflineAudioContext.currentTime;
             }
 
@@ -92,7 +104,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 return this._destination.proxy;
             }
 
-            public get length () {
+            public get length (): number {
                 // Bug #17: Safari does not yet expose the length.
                 if (this._unpatchedOfflineAudioContext.length === undefined) {
                     return this._length;
@@ -101,40 +113,55 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 return this._unpatchedOfflineAudioContext.length;
             }
 
-            public get sampleRate () {
+            public get onstatechange () {
+                return (<any> this._unpatchedOfflineAudioContext).onstatechange;
+            }
+
+            public set onstatechange (value: (this: IOfflineAudioContext, ev: Event) => any) {
+                (<any> this._unpatchedOfflineAudioContext).onstatechange = value;
+            }
+
+            public get sampleRate (): number {
                 return this._unpatchedOfflineAudioContext.sampleRate;
             }
 
-            public createBiquadFilter () {
+            public get state () {
+                return this._unpatchedOfflineAudioContext.state;
+            }
+
+            public createBiquadFilter (): IBiquadFilterNode {
                 return offlineBiquadFilterNodeFakerFactory.create({
                     fakeNodeStore: this._fakeNodeStore,
-                    nativeNode: this._unpatchedOfflineAudioContext.createBiquadFilter()
+                    nativeNode: this._unpatchedOfflineAudioContext.createBiquadFilter(),
+                    offlineAudioContext: this
                 }).proxy;
             }
 
-            public createBuffer (numberOfChannels, length, sampleRate) {
+            public createBuffer (numberOfChannels: number, length: number, sampleRate: number): AudioBuffer {
                 // @todo Consider browsers which do not fully support this method yet.
                 return this._unpatchedOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
             }
 
-            public createBufferSource () {
+            public createBufferSource (): IAudioBufferSourceNode {
                 return offlineAudioBufferSourceNodeFakerFactory.create({
-                    fakeNodeStore: this._fakeNodeStore
+                    fakeNodeStore: this._fakeNodeStore,
+                    offlineAudioContext: this
                 }).proxy;
             }
 
-            public createGain () {
+            public createGain (): IGainNode {
                 return offlineGainNodeFakerFactory.create({
-                    fakeNodeStore: this._fakeNodeStore
+                    fakeNodeStore: this._fakeNodeStore,
+                    offlineAudioContext: this
                 }).proxy;
             }
 
-            public createIIRFilter (feedforward, feedback) {
+            public createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode {
                 let nativeNode = null;
 
                 // Bug #9: Safari does not support IIRFilterNodes.
                 if (this._unpatchedOfflineAudioContext.createIIRFilter !== undefined) {
-                    nativeNode = this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
+                    nativeNode = <IIIRFilterNode> this._unpatchedOfflineAudioContext.createIIRFilter(feedforward, feedback);
 
                     // Bug 23 & 24: FirefoxDeveloper does not throw NotSupportedErrors anymore.
                     if (!this._isSupportingGetFrequencyResponseErrors) {
@@ -149,12 +176,14 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     length: this.length,
                     nativeNode,
                     numberOfChannels: this._numberOfChannels,
+                    offlineAudioContext: this,
                     sampleRate: this._unpatchedOfflineAudioContext.sampleRate
                 }).proxy;
             }
 
-            public decodeAudioData (audioData, successCallback, errorCallback) {
-                // Bug #43: Only Chrome Canary does yet throw a DataCloneError.
+            public decodeAudioData (
+                audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback
+            ): Promise<AudioBuffer> {                // Bug #43: Only Chrome Canary does yet throw a DataCloneError.
                 if (detachedAudioBuffers.has(audioData)) {
                     const err = dataCloneErrorFactory.create();
 
@@ -180,7 +209,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     }
 
                     return this._unpatchedOfflineAudioContext
-                        .decodeAudioData(audioData, successCallback, (err) => {
+                        .decodeAudioData(audioData, successCallback, (err: DOMException | Error) => {
                             if (typeof errorCallback === 'function') {
                                 // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
                                 if (err instanceof DOMException && err.name === 'NotSupportedError') {
@@ -190,7 +219,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                                 }
                             }
                         })
-                        .catch ((err) => {
+                        .catch ((err: DOMException | Error) => {
                             // Bug #6: Chrome, Firefox and Opera do not call the errorCallback in case of an invalid buffer.
                             if (typeof errorCallback === 'function' && err instanceof TypeError) {
                                 errorCallback(err);
@@ -207,7 +236,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #21: Safari does not return a Promise yet.
                 return new Promise((resolve, reject) => {
-                    const fail = (err) => {
+                    const fail = (err: DOMException | Error) => {
                         if (typeof errorCallback === 'function') {
                             errorCallback(err);
                         }
@@ -215,7 +244,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         reject(err);
                     };
 
-                    const succeed = (dBffrWrppr) => {
+                    const succeed = (dBffrWrppr: AudioBuffer) => {
                         resolve(dBffrWrppr);
 
                         if (typeof successCallback === 'function') {
@@ -226,7 +255,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     // Bug #26: Safari throws a synchronous error.
                     try {
                         // Bug #1: Safari requires a successCallback.
-                        this._unpatchedOfflineAudioContext.decodeAudioData(audioData, (audioBuffer) => {
+                        this._unpatchedOfflineAudioContext.decodeAudioData(audioData, (audioBuffer: AudioBuffer) => {
                             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                             if (typeof audioBuffer.copyFromChannel !== 'function') {
                                 audioBufferWrapper.wrap(audioBuffer);
@@ -236,7 +265,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                             }
 
                             succeed(audioBuffer);
-                        }, (err) => {
+                        }, (err: DOMException | Error) => {
                             // Bug #4: Safari returns null instead of an error.
                             if (err === null) {
                                 fail(encodingErrorFactory.create());
@@ -264,7 +293,9 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         }
 
                         return new Promise((resolve) => {
-                            this._unpatchedOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
+                            (<any> this._unpatchedOfflineAudioContext).oncomplete = (event: IOfflineAudioCompletionEvent) => {
+                                resolve(event.renderedBuffer);
+                            };
 
                             this._unpatchedOfflineAudioContext.startRendering();
                         });

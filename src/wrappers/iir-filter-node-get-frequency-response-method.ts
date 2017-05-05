@@ -1,14 +1,15 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { NotSupportedErrorFactory } from '../factories/not-supported-error';
+import { IIIRFilterNode } from '../interfaces';
 
 @Injectable()
 export class IIRFilterNodeGetFrequencyResponseMethodWrapper {
 
-    constructor (@Inject(NotSupportedErrorFactory) private _notSupportedErrorFactory) { }
+    constructor (private _notSupportedErrorFactory: NotSupportedErrorFactory) { }
 
-    public wrap (iIRFilterNode) {
+    public wrap (iIRFilterNode: IIIRFilterNode) {
         iIRFilterNode.getFrequencyResponse = ((getFrequencyResponse) => {
-            return (frequencyHz, magResponse, phaseResponse) => {
+            return (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) => {
                 if (magResponse.length === 0 || phaseResponse.length === 0) {
                     throw this._notSupportedErrorFactory.create();
                 }

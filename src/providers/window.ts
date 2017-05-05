@@ -1,5 +1,7 @@
 import { OpaqueToken } from '@angular/core';
 
-export const Window = new OpaqueToken('WINDOW'); // tslint:disable-line:variable-name
+const windowToken = new OpaqueToken('WINDOW');
 
-export const WINDOW_PROVIDER = { provide: Window, useValue: window };
+export { windowToken as window };
+
+export const WINDOW_PROVIDER = { provide: windowToken, useValue: (typeof window === 'undefined') ? {} : window };

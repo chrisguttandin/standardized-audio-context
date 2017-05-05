@@ -1,7 +1,9 @@
+import { TUnpatchedAudioContext } from '../types';
+
 export class DisconnectingSupportTester {
 
-    public test (audioContext) {
-        return new Promise((resolve, reject) => {
+    public test (audioContext: TUnpatchedAudioContext): Promise<boolean> {
+        return new Promise((resolve) => {
             const analyzer = audioContext.createScriptProcessor(256, 1, 1);
 
             const dummy = audioContext.createGain();
@@ -27,7 +29,7 @@ export class DisconnectingSupportTester {
             analyzer.onaudioprocess = (event) => {
                 const chnnlDt = event.inputBuffer.getChannelData(0);
 
-                if (Array.prototype.some.call(chnnlDt, (sample) => sample === 1)) {
+                if (Array.prototype.some.call(chnnlDt, (sample: number) => sample === 1)) {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -35,7 +37,7 @@ export class DisconnectingSupportTester {
 
                 source.stop();
 
-                analyzer.onaudioprocess = null;
+                (<any> analyzer).onaudioprocess = null;
 
                 source.disconnect(analyzer);
                 analyzer.disconnect(audioContext.destination);

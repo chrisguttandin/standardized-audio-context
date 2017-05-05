@@ -1,6 +1,8 @@
+import { TUnpatchedAudioContext } from '../types';
+
 export class ChainingSupportTester {
 
-    public test (audioContext) {
+    public test (audioContext: TUnpatchedAudioContext) {
         const destination = audioContext.createGain();
 
         const target = audioContext.createGain();

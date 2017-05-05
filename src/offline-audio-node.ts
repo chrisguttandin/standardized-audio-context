@@ -1,32 +1,69 @@
+import { IOfflineAudioContext, IOfflineAudioNodeFaker, IAudioNode } from './interfaces';
+import { TChannelCountMode, TChannelInterpretation } from './types';
+
 // @todo Remove this declaration again if TypeScript supports the DOMException constructor.
 declare var DOMException: {
     new (message: string, name: string): DOMException;
 };
 
-export class OfflineAudioNodeProxy {
+export interface IAudioNodeOptions {
 
-    private _channelCountMode;
+    channelCount?: number;
 
-    private _channelInterpretation;
+    channelCountMode: TChannelCountMode;
 
-    private _fakeNodeStore;
+    channelInterpretation: TChannelInterpretation;
 
-    private _numberOfInputs;
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
 
-    private _numberOfOutputs;
+    numberOfInputs: number;
+
+    numberOfOutputs: number;
+
+    offlineAudioContext: IOfflineAudioContext;
+
+}
+
+export class OfflineAudioNodeProxy implements IAudioNode {
+
+    private _channelCount: number;
+
+    private _channelCountMode: TChannelCountMode;
+
+    private _channelInterpretation: TChannelInterpretation;
+
+    private _fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
+
+    private _numberOfInputs: number;
+
+    private _numberOfOutputs: number;
+
+    private _offlineAudioContext: IOfflineAudioContext;
 
     constructor ({
+        channelCount = 2,
         channelCountMode,
         channelInterpretation,
         fakeNodeStore,
         numberOfInputs,
-        numberOfOutputs
-    }: { channelCountMode?, channelInterpretation?, fakeNodeStore, numberOfInputs?, numberOfOutputs? }) {
+        numberOfOutputs,
+        offlineAudioContext
+    }: IAudioNodeOptions) {
+        this._channelCount = channelCount;
         this._channelCountMode = channelCountMode;
         this._channelInterpretation = channelInterpretation;
         this._fakeNodeStore = fakeNodeStore;
         this._numberOfInputs = numberOfInputs;
         this._numberOfOutputs = numberOfOutputs;
+        this._offlineAudioContext = offlineAudioContext;
+    }
+
+    public get channelCount () {
+        return this._channelCount;
+    }
+
+    public set channelCount (value) {
+        this._channelCount = value;
     }
 
     public get channelCountMode () {
@@ -45,6 +82,10 @@ export class OfflineAudioNodeProxy {
         this._channelInterpretation = value;
     }
 
+    public get context () {
+        return this._offlineAudioContext;
+    }
+
     public get numberOfInputs () {
         return this._numberOfInputs;
     }
@@ -61,31 +102,69 @@ export class OfflineAudioNodeProxy {
         this._numberOfOutputs = value;
     }
 
-    public connect (destination, output = 0, input = 0) {
+    addEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
+        // @todo
+        type;
+        listener;
+        options;
+    }
+
+    public connect (destination: IAudioNode, output = 0, input = 0): IAudioNode {
         const faker = this._fakeNodeStore.get(destination);
 
         if (faker === undefined) {
             let exception;
 
+            // @todo Use the error factory.
             try {
                 exception = new DOMException('', 'InvalidAccessError');
             } catch (err) {
                 exception = new Error();
 
-                exception.code = 15;
+                (<any> exception).code = 15;
                 exception.name = 'InvalidAccessError';
             }
 
             throw exception;
         }
 
-        return faker.wire(this._fakeNodeStore.get(this), output, input);
+        const source = this._fakeNodeStore.get(this);
+
+        if (source === undefined) {
+            throw new Error(/* @todo */);
+        }
+
+        return faker.wire(source, output, input);
     }
 
-    public disconnect (destination) {
+    public disconnect (destination: IAudioNode) {
         const faker = this._fakeNodeStore.get(destination);
 
-        return faker.unwire(this._fakeNodeStore.get(this));
+        if (faker === undefined) {
+            throw new Error(/* @todo */);
+        }
+
+        const source = this._fakeNodeStore.get(this);
+
+        if (source === undefined) {
+            throw new Error(/* @todo */);
+        }
+
+        return faker.unwire(source);
+    }
+
+    dispatchEvent (evt: Event) {
+        // @todo
+        evt;
+
+        return false;
+    }
+
+    removeEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) {
+        // @todo
+        type;
+        listener;
+        options;
     }
 
 }

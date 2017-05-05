@@ -1,6 +1,8 @@
+import {  TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+
 export class PromiseSupportTester {
 
-    public test (audioContext) {
+    public test (audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) {
         // This 12 numbers represent the 48 bytes of an empty WAVE file with a single sample.
         const uint32Array = new Uint32Array([
             1179011410,

@@ -1,7 +1,7 @@
 import 'core-js/es7/reflect';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor } from '../../../src/providers/unpatched-offline-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
-import { Window } from '../../../src/providers/window';
+import { window } from '../../../src/providers/window';
 
 describe('UnpatchedOfflineAudioContext', () => {
 
@@ -19,7 +19,7 @@ describe('UnpatchedOfflineAudioContext', () => {
 
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            { provide: Window, useValue: fakeWindow }
+            { provide: window, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedOfflineAudioContextConstructor)).to.equal(null);
@@ -32,7 +32,7 @@ describe('UnpatchedOfflineAudioContext', () => {
 
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            { provide: Window, useValue: fakeWindow }
+            { provide: window, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedOfflineAudioContextConstructor)).to.equal(webkitOfflineAudioContext);
@@ -45,7 +45,7 @@ describe('UnpatchedOfflineAudioContext', () => {
 
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            { provide: Window, useValue: fakeWindow }
+            { provide: window, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedOfflineAudioContextConstructor)).to.equal(OfflineAudioContext);
@@ -59,7 +59,7 @@ describe('UnpatchedOfflineAudioContext', () => {
 
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            { provide: Window, useValue: fakeWindow }
+            { provide: window, useValue: fakeWindow }
         ]);
 
         expect(injector.get(unpatchedOfflineAudioContextConstructor)).to.equal(OfflineAudioContext);

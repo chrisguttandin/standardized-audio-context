@@ -1,15 +1,16 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
+import { IAudioNode } from '../interfaces';
 
 @Injectable()
 export class AudioNodeConnectMethodWrapper {
 
-    constructor (@Inject(InvalidAccessErrorFactory) private _invalidAccessErrorFactory) { }
+    constructor (private _invalidAccessErrorFactory: InvalidAccessErrorFactory) { }
 
-    public wrap (audioNode) {
-        audioNode.connect = ((connect, isSupportingChaining, isSupportingConnecting) => {
-            if (isSupportingChaining) {
-                return (destination, output = 0, input = 0) => {
+    public wrap (audioNode: IAudioNode, isSupportingChaining: boolean) {
+        audioNode.connect = ((connect, sSpprtngChnng: boolean) => {
+            if (sSpprtngChnng) {
+                return (destination: IAudioNode, output = 0, input = 0) => {
                     try {
                         return connect.call(audioNode, destination, output, input);
                     } catch (err) {
@@ -21,7 +22,7 @@ export class AudioNodeConnectMethodWrapper {
                     }
                 };
             } else {
-                return (destination, output = 0, input = 0) => {
+                return (destination: IAudioNode, output = 0, input = 0) => {
                     try {
                         connect.call(audioNode, destination, output, input);
                     } catch (err) {
@@ -35,7 +36,7 @@ export class AudioNodeConnectMethodWrapper {
                     return destination;
                 };
             }
-        })(audioNode.connect);
+        })(audioNode.connect, isSupportingChaining);
     }
 
 }

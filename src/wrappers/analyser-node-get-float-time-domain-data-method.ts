@@ -1,7 +1,9 @@
+import { IAnalyserNode } from '../interfaces';
+
 export class AnalyserNodeGetFloatTimeDomainDataMethodWrapper {
 
-    public wrap (analyserNode) {
-        analyserNode.getFloatTimeDomainData = (array) => {
+    public wrap (analyserNode: IAnalyserNode) {
+        analyserNode.getFloatTimeDomainData = (array: Float32Array) => {
             const byteTimeDomainData = new Uint8Array(array.length);
 
             analyserNode.getByteTimeDomainData(byteTimeDomainData);

@@ -1,15 +1,32 @@
+import { IAudioBufferSourceNode, IAudioNode, IOfflineAudioContext, IOfflineAudioNodeFaker } from '../interfaces';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
+import { TUnpatchedOfflineAudioContext } from '../types';
 
-class OfflineAudioBufferSourceNodeFakerProxy extends OfflineAudioNodeProxy {
+export interface IOfflineAudioBufferSourceNodeFakerProxyOptions {
 
-    private _buffer;
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
 
-    private _ownFakeNodeStore;
+    offlineAudioContext: IOfflineAudioContext;
 
-    constructor ({ fakeNodeStore }) {
-        super({ fakeNodeStore });
+}
 
-        this._buffer = undefined;
+export class OfflineAudioBufferSourceNodeFakerProxy extends OfflineAudioNodeProxy implements IAudioBufferSourceNode {
+
+    private _buffer: null | AudioBuffer;
+
+    private _ownFakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
+
+    constructor ({ fakeNodeStore, offlineAudioContext }: IOfflineAudioBufferSourceNodeFakerProxyOptions) {
+        super({
+            channelCountMode: 'max',
+            channelInterpretation: 'speakers',
+            fakeNodeStore,
+            numberOfInputs: 0,
+            numberOfOutputs: 1,
+            offlineAudioContext
+        });
+
+        this._buffer = null;
         this._ownFakeNodeStore = fakeNodeStore;
     }
 
@@ -22,27 +39,150 @@ class OfflineAudioBufferSourceNodeFakerProxy extends OfflineAudioNodeProxy {
         this._buffer = value;
     }
 
-    public start (when = 0, offset = 0, duration) {
-        const faker = this._ownFakeNodeStore.get(this);
+    public get detune (): AudioParam {
+        // @todo Fake a proper AudioParam.
+        const audioParam = {
+            cancelScheduledValues: (startTime: number) => {
+                startTime; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            defaultValue: 0,
+            exponentialRampToValueAtTime: (value: number, endTime: number) => {
+                endTime; // tslint:disable-line:no-unused-expression
+                value; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            linearRampToValueAtTime: (value: number, endTime: number) => {
+                endTime; // tslint:disable-line:no-unused-expression
+                value; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            setTargetAtTime: (target: number, startTime: number, timeConstant: number) => {
+                startTime; // tslint:disable-line:no-unused-expression
+                target; // tslint:disable-line:no-unused-expression
+                timeConstant; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            setValueAtTime: (value: number, startTime: number) => {
+                startTime; // tslint:disable-line:no-unused-expression
+                value; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            setValueCurveAtTime: (values: Float32Array, startTime: number, duration: number) => {
+                duration; // tslint:disable-line:no-unused-expression
+                startTime; // tslint:disable-line:no-unused-expression
+                values; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            value: 0
+        };
+
+        return audioParam;
+    }
+
+    public get loop () {
+        // @todo
+        return false;
+    }
+
+    public get loopEnd () {
+        // @todo
+        return 0;
+    }
+
+    public get loopStart () {
+        // @todo
+        return 0;
+    }
+
+    public get playbackRate (): AudioParam {
+        // @todo Fake a proper AudioParam.
+        const audioParam = {
+            cancelScheduledValues: (startTime: number) => {
+                startTime; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            defaultValue: 1,
+            exponentialRampToValueAtTime: (value: number, endTime: number) => {
+                endTime; // tslint:disable-line:no-unused-expression
+                value; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            linearRampToValueAtTime: (value: number, endTime: number) => {
+                endTime; // tslint:disable-line:no-unused-expression
+                value; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            setTargetAtTime: (target: number, startTime: number, timeConstant: number) => {
+                startTime; // tslint:disable-line:no-unused-expression
+                target; // tslint:disable-line:no-unused-expression
+                timeConstant; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            setValueAtTime: (value: number, startTime: number) => {
+                startTime; // tslint:disable-line:no-unused-expression
+                value; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            setValueCurveAtTime: (values: Float32Array, startTime: number, duration: number) => {
+                duration; // tslint:disable-line:no-unused-expression
+                startTime; // tslint:disable-line:no-unused-expression
+                values; // tslint:disable-line:no-unused-expression
+
+                return audioParam;
+            },
+            value: 1
+        };
+
+        return audioParam;
+    }
+
+    public start (when = 0, offset = 0, duration?: number) {
+        const faker = <OfflineAudioBufferSourceNodeFaker> this._ownFakeNodeStore.get(this);
 
         faker.start = { duration, offset, when };
     }
 
+    public stop (when = 0) {
+        // @todo
+
+        when; // tslint:disable-line:no-unused-expression
+    }
+
 }
 
-export class OfflineAudioBufferSourceNodeFaker {
+export interface IOfflineAudioBufferSourceNodeFakerOptions {
 
-    private _node;
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
 
-    private _proxy;
+    offlineAudioContext: IOfflineAudioContext;
 
-    private _sources;
+}
 
-    private _start;
+export class OfflineAudioBufferSourceNodeFaker implements IOfflineAudioNodeFaker {
 
-    constructor ({ fakeNodeStore }) {
+    private _node: null | AudioBufferSourceNode;
+
+    private _proxy: OfflineAudioBufferSourceNodeFakerProxy;
+
+    private _sources: Map<IOfflineAudioNodeFaker, { input: number, output: number }>;
+
+    private _start: null | { duration?: number, offset: number, when: number };
+
+    constructor ({ fakeNodeStore, offlineAudioContext }: IOfflineAudioBufferSourceNodeFakerOptions) {
         this._node = null;
-        this._proxy = new OfflineAudioBufferSourceNodeFakerProxy({ fakeNodeStore });
+        this._proxy = new OfflineAudioBufferSourceNodeFakerProxy({ fakeNodeStore, offlineAudioContext });
         this._sources = new Map();
         this._start = null;
 
@@ -53,11 +193,11 @@ export class OfflineAudioBufferSourceNodeFaker {
         return this._proxy;
     }
 
-    public set start (value) {
+    public set start (value: { duration?: number, offset: number, when: number }) {
         this._start = value;
     }
 
-    public render (offlineAudioContext) {
+    public render (offlineAudioContext: TUnpatchedOfflineAudioContext) {
         if (this._node !== null) {
             return Promise.resolve(this._node);
         }
@@ -81,7 +221,7 @@ export class OfflineAudioBufferSourceNodeFaker {
         for (const [ source, { input, output } ] of this._sources) {
             promises.push(source
                 .render(offlineAudioContext)
-                .then((node) => node.connect(this._node, output, input)));
+                .then((node) => node.connect(<AudioBufferSourceNode> this._node, output, input)));
         }
 
         return Promise
@@ -89,18 +229,30 @@ export class OfflineAudioBufferSourceNodeFaker {
             .then(() => this._node);
     }
 
-    public wire (source, output, input) {
+    public wire (source: IOfflineAudioNodeFaker, output: number, input: number) {
         this._sources.set(source, { input, output });
 
         return this._proxy;
     }
 
+    public unwire (source: IOfflineAudioNodeFaker) {
+        this._sources.delete(source);
+    }
+
+}
+
+export interface IOfflineAudioBufferSourceNodeFakerFactoryOptions {
+
+    fakeNodeStore: WeakMap<IAudioNode, IOfflineAudioNodeFaker>;
+
+    offlineAudioContext: IOfflineAudioContext;
+
 }
 
 export class OfflineAudioBufferSourceNodeFakerFactory {
 
-    public create ({ fakeNodeStore }) {
-        return new OfflineAudioBufferSourceNodeFaker({ fakeNodeStore });
+    public create ({ fakeNodeStore, offlineAudioContext }: IOfflineAudioBufferSourceNodeFakerFactoryOptions) {
+        return new OfflineAudioBufferSourceNodeFaker({ fakeNodeStore, offlineAudioContext });
     }
 
 }
