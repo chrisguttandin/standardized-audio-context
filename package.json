@@ -75,6 +75,6 @@
     "prepublish": "grunt build",
     "test": "grunt lint && grunt test"
   },
-  "types": "build/es2015/module.d.ts",
+  "types": "src/module.ts",
   "version": "8.0.8"
 }
