@@ -697,6 +697,38 @@ describe('OfflineAudioContext', () => {
             expect(offlineAudioContext.startRendering()).to.be.an.instanceOf(Promise);
         });
 
+        it('should resolve with the renderedBuffer', (done) => {
+            const audioBuffer = offlineAudioContext.createBuffer(1, 10, 44100);
+            const bufferSourceNode = offlineAudioContext.createBufferSource();
+            const channelData = audioBuffer.getChannelData(0);
+
+            // @todo Use copyToChannel() when possible.
+            for (let i = 0; i < audioBuffer.length; i += 1) {
+                channelData[i] = i;
+            }
+
+            bufferSourceNode.buffer = audioBuffer;
+
+            bufferSourceNode.connect(offlineAudioContext.destination);
+
+            bufferSourceNode.start(0, undefined, undefined);
+
+            offlineAudioContext
+                .startRendering()
+                .then((renderedBuffer) => {
+                    // @todo expect(renderedBuffer.length).to.equal(audioBuffer.length);
+
+                    // @todo Use copyFromChannel() when possible.
+                    const channelData = renderedBuffer.getChannelData(0);
+
+                    for (let i = 0; i < audioBuffer.length; i += 1) {
+                        expect(channelData[i]).to.equal(i);
+                    }
+
+                    done();
+                });
+        });
+
     });
 
     // describe('suspend()', () => {
