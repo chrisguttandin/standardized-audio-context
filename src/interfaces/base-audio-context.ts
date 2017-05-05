@@ -1,4 +1,4 @@
-import { TDecodeErrorCallback, TDecodeSuccessCallback, TStateChangeEventHandler } from '../types';
+import { TAudioContextState, TDecodeErrorCallback, TDecodeSuccessCallback, TStateChangeEventHandler } from '../types';
 import { IAudioBufferSourceNode } from './audio-buffer-source-node';
 import { IAudioDestinationNode } from './audio-destination-node';
 import { IBiquadFilterNode } from './biquad-filter-node';
@@ -17,7 +17,7 @@ export interface IBaseAudioContext /* extends EventTarget */ {
 
     readonly sampleRate: number;
 
-    readonly state: AudioContextState;
+    readonly state: TAudioContextState;
 
     createBiquadFilter(): IBiquadFilterNode;
 
