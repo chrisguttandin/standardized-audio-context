@@ -64,15 +64,13 @@ export class OfflineAudioDestinationNodeFaker implements IOfflineAudioNodeFaker 
             return Promise.resolve(this._node);
         }
 
-        const promises = [];
-
         this._node = offlineAudioContext.destination;
 
-        for (const [ source, { input, output } ] of this._sources) {
-            promises.push(source
+        const promises = Array
+            .from(this._sources)
+            .map(([ source, { input, output } ]) => source
                 .render(offlineAudioContext)
                 .then((node) => node.connect(<AudioDestinationNode> this._node, output, input)));
-        }
 
         return Promise
             .all(promises)

@@ -202,8 +202,6 @@ export class OfflineAudioBufferSourceNodeFaker implements IOfflineAudioNodeFaker
             return Promise.resolve(this._node);
         }
 
-        const promises = [];
-
         this._node = offlineAudioContext.createBufferSource();
 
         this._node.buffer = this._proxy.buffer;
@@ -218,11 +216,11 @@ export class OfflineAudioBufferSourceNodeFaker implements IOfflineAudioNodeFaker
             }
         }
 
-        for (const [ source, { input, output } ] of this._sources) {
-            promises.push(source
+        const promises = Array
+            .from(this._sources)
+            .map(([ source, { input, output } ]) => source
                 .render(offlineAudioContext)
                 .then((node) => node.connect(<AudioBufferSourceNode> this._node, output, input)));
-        }
 
         return Promise
             .all(promises)

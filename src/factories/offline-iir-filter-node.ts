@@ -321,17 +321,15 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
             return Promise.resolve(this._node);
         }
 
-        const promises = [];
-
         // Bug #9: Safari does not support IIRFilterNodes.
         if (this._nativeNode) {
             this._node = offlineAudioContext.createIIRFilter(this._feedforward, this._feedback);
 
-            for (const [ source, { input, output } ] of this._sources) {
-                promises.push(source
+            const promises = Array
+                .from(this._sources)
+                .map(([ source, { input, output } ]) => source
                     .render(offlineAudioContext)
                     .then((node) => node.connect(<IIRFilterNode> this._node, output, input)));
-            }
 
             return Promise
                 .all(promises)
@@ -345,11 +343,11 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
             offlineAudioContext.sampleRate
         );
 
-        for (const [ source, { input, output } ] of this._sources) {
-            promises.push(source
+        const promises = Array
+            .from(this._sources)
+            .map(([ source, { input, output } ]) => source
                 .render(partialOfflineAudioContext)
                 .then((node) => node.connect(partialOfflineAudioContext.destination, output, input)));
-        }
 
         return Promise
             .all(promises)
