@@ -68,9 +68,12 @@ export class OfflineAudioDestinationNodeFaker implements IOfflineAudioNodeFaker 
 
         const promises = Array
             .from(this._sources)
-            .map(([ source, { input, output } ]) => source
-                .render(offlineAudioContext)
-                .then((node) => node.connect(<AudioDestinationNode> this._node, output, input)));
+            .map(([ source, { input, output } ]) => {
+                // For some reason this currently needs to be a function body with a return statement. The shortcut syntax causes an error.
+                return source
+                    .render(offlineAudioContext)
+                    .then((node) => node.connect(<AudioDestinationNode> this._node, output, input));
+            });
 
         return Promise
             .all(promises)
