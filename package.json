@@ -45,6 +45,7 @@
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "ts-loader": "^2.0.0",
+    "tsconfig-holy-grail": "^2.0.0",
     "tslint-config-holy-grail": "^7.0.0",
     "typescript": "^2.1.1",
     "webpack": "^2.2.0"
