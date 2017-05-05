@@ -1,3 +1,4 @@
+import { TEndedEventHandler } from '../types';
 import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
 
 export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
@@ -11,6 +12,8 @@ export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
     loopEnd: number;
 
     loopStart: number;
+
+    onended: null | TEndedEventHandler;
 
     playbackRate: AudioParam;
 

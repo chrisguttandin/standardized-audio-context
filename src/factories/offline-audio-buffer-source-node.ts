@@ -1,6 +1,6 @@
 import { IAudioBufferSourceNode, IAudioNode, IOfflineAudioContext, IOfflineAudioNodeFaker } from '../interfaces';
 import { OfflineAudioNodeProxy } from '../offline-audio-node';
-import { TUnpatchedOfflineAudioContext } from '../types';
+import { TEndedEventHandler, TUnpatchedOfflineAudioContext } from '../types';
 
 export interface IOfflineAudioBufferSourceNodeFakerProxyOptions {
 
@@ -37,6 +37,18 @@ export class OfflineAudioBufferSourceNodeFakerProxy extends OfflineAudioNodeProx
     public set buffer (value) {
         // @todo Allow to set the buffer only onces.
         this._buffer = value;
+    }
+
+    public get onended (): null | TEndedEventHandler {
+        // @todo
+
+        return null;
+    }
+
+    public set onended (value: null | TEndedEventHandler) {
+         // @todo
+
+         value; // tslint:disable-line:no-unused-expression
     }
 
     public get detune (): AudioParam {

@@ -4,6 +4,7 @@ export * from './channel-count-mode';
 export * from './channel-interpretation';
 export * from './decode-error-callback';
 export * from './decode-success-callback';
+export * from './ended-event-handler';
 export * from './oscillator-type';
 export * from './state-change-event-handler';
 export * from './unpatched-audio-context';
