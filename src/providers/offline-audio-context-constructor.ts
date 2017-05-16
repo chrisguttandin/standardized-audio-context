@@ -1,4 +1,5 @@
 import { OpaqueToken } from '@angular/core';
+import { deallocate } from 'async-array-buffer';
 import { DataCloneErrorFactory } from '../factories/data-clone-error';
 import { EncodingErrorFactory } from '../factories/encoding-error';
 import { OfflineAudioBufferSourceNodeFakerFactory } from '../factories/offline-audio-buffer-source-node';
@@ -208,7 +209,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                         successCallback = () => {}; // tslint:disable-line:no-empty
                     }
 
-                    return this._unpatchedOfflineAudioContext
+                    const promise = this._unpatchedOfflineAudioContext
                         .decodeAudioData(audioData, successCallback, (err: DOMException | Error) => {
                             if (typeof errorCallback === 'function') {
                                 // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
@@ -232,6 +233,14 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                             throw err;
                         });
+
+                    setTimeout(() => {
+                        try {
+                            deallocate(audioData);
+                        } catch (err) { /* Ignore errors. */ }
+                    });
+
+                    return promise;
                 }
 
                 // Bug #21: Safari does not return a Promise yet.
@@ -272,6 +281,12 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                             } else {
                                 fail(err);
                             }
+                        });
+
+                        setTimeout(() => {
+                            try {
+                                deallocate(audioData);
+                            } catch (err) { /* Ignore errors. */ }
                         });
                     } catch (err) {
                         fail(err);
