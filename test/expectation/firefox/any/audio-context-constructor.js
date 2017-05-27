@@ -87,6 +87,39 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createBufferSource()', () => {
+
+        describe('start()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const bufferSourceNode = audioContext.createBufferSource();
+
+                expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
+
+                // A negative offset does not throw anything.
+                bufferSourceNode.start(0, -1);
+
+                expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
+            });
+
+        });
+
+        describe('stop()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const bufferSourceNode = audioContext.createBufferSource();
+
+                expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
+            });
+
+        });
+
+    });
+
     describe('createChannelMerger()', () => {
 
         // bug #16

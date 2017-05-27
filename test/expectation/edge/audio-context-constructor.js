@@ -93,6 +93,36 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createBufferSource()', () => {
+
+        describe('start()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const bufferSourceNode = audioContext.createBufferSource();
+
+                expect(() => bufferSourceNode.start(-1)).to.throw('InvalidAccessError');
+                expect(() => bufferSourceNode.start(0, -1)).to.throw('InvalidStateError');
+                expect(() => bufferSourceNode.start(0, 0, -1)).to.throw('InvalidStateError');
+            });
+
+        });
+
+        describe('stop()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const bufferSourceNode = audioContext.createBufferSource();
+
+                expect(() => bufferSourceNode.stop(-1)).to.throw('InvalidStateError');
+            });
+
+        });
+
+    });
+
     describe('createChannelSplitter()', () => {
 
         // bug #29

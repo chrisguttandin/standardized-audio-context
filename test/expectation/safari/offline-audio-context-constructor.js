@@ -158,6 +158,32 @@ describe('offlineAudioContextConstructor', () => {
             offlineAudioContext.startRendering();
         });
 
+        describe('start()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const bufferSourceNode = offlineAudioContext.createBufferSource();
+
+                expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
+                expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
+                expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
+            });
+
+        });
+
+        describe('stop()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const bufferSourceNode = offlineAudioContext.createBufferSource();
+
+                expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
+            });
+
+        });
+
     });
 
     describe('createChannelMerger()', () => {
