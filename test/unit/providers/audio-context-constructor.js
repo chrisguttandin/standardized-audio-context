@@ -1166,7 +1166,7 @@ describe('AudioContext', () => {
             scriptProcessorNode.onaudioprocess = (event) => {
                 const leftChannelData = event.inputBuffer.getChannelData(0);
 
-                for (let i = 0; i < scriptProcessorNode.bufferSize; i += 1) {
+                for (let i = 0; i < scriptProcessorNode.bufferSize + 2; i += 1) {
                     if (leftChannelData[i] === 1 && tested === false) {
                         expect(leftChannelData[ i ]).to.equal(1);
                         expect(leftChannelData[ i + 1 ]).to.equal(-0.5);
@@ -1351,7 +1351,11 @@ describe('AudioContext', () => {
     describe('decodeAudioData()', () => {
 
         it('should return a promise', () => {
-            expect(audioContext.decodeAudioData()).to.be.an.instanceOf(Promise);
+            const promise = audioContext.decodeAudioData();
+
+            promise.catch(() => { /* Ignore the error. */ });
+
+            expect(promise).to.be.an.instanceOf(Promise);
         });
 
         describe('without a valid arrayBuffer', () => {
@@ -1367,11 +1371,13 @@ describe('AudioContext', () => {
             });
 
             it('should call the errorCallback with a TypeError', (done) => {
-                audioContext.decodeAudioData(null, () => {}, (err) => {
-                    expect(err).to.be.an.instanceOf(TypeError);
+                audioContext
+                    .decodeAudioData(null, () => {}, (err) => {
+                        expect(err).to.be.an.instanceOf(TypeError);
 
-                    done();
-                });
+                        done();
+                    })
+                    .catch(() => { /* Ignore the error. */ });
             });
 
             // The promise is rejected before but the errorCallback gets called synchronously.
@@ -1418,12 +1424,14 @@ describe('AudioContext', () => {
             });
 
             it('should call the errorCallback with an error', (done) => {
-                audioContext.decodeAudioData(arrayBuffer, () => {}, (err) => {
-                    expect(err.code).to.equal(0);
-                    expect(err.name).to.equal('EncodingError');
+                audioContext
+                    .decodeAudioData(arrayBuffer, () => {}, (err) => {
+                        expect(err.code).to.equal(0);
+                        expect(err.name).to.equal('EncodingError');
 
-                    done();
-                });
+                        done();
+                    })
+                    .catch(() => { /* Ignore the error. */ });
             });
 
             // The promise is rejected before but the errorCallback gets called synchronously.

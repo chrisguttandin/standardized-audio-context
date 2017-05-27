@@ -204,11 +204,6 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // Bug #21: Safari does not support promises yet.
                 if (this._isSupportingPromises) {
-                    // Bug #1: Chrome requires a successCallback.
-                    if (successCallback === undefined) {
-                        successCallback = () => {}; // tslint:disable-line:no-empty
-                    }
-
                     const promise = this._unpatchedOfflineAudioContext
                         .decodeAudioData(audioData, successCallback, (err: DOMException | Error) => {
                             if (typeof errorCallback === 'function') {

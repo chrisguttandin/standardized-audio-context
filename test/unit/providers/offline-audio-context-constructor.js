@@ -528,7 +528,11 @@ describe('OfflineAudioContext', () => {
     describe('decodeAudioData()', () => {
 
         it('should return a promise', () => {
-            expect(offlineAudioContext.decodeAudioData()).to.be.an.instanceOf(Promise);
+            const promise = offlineAudioContext.decodeAudioData();
+
+            promise.catch(() => { /* Ignore the error. */ });
+
+            expect(promise).to.be.an.instanceOf(Promise);
         });
 
         describe('without a valid arrayBuffer', () => {
@@ -544,11 +548,13 @@ describe('OfflineAudioContext', () => {
             });
 
             it('should call the errorCallback with a TypeError', (done) => {
-                offlineAudioContext.decodeAudioData(null, () => {}, (err) => {
-                    expect(err).to.be.an.instanceOf(TypeError);
+                offlineAudioContext
+                    .decodeAudioData(null, () => {}, (err) => {
+                        expect(err).to.be.an.instanceOf(TypeError);
 
-                    done();
-                });
+                        done();
+                    })
+                    .catch(() => { /* Ignore the error. */ });
             });
 
             // The promise is rejected before but the errorCallback gets called synchronously.
@@ -595,12 +601,14 @@ describe('OfflineAudioContext', () => {
             });
 
             it('should call the errorCallback with an error', (done) => {
-                offlineAudioContext.decodeAudioData(arrayBuffer, () => {}, (err) => {
-                    expect(err.code).to.equal(0);
-                    expect(err.name).to.equal('EncodingError');
+                offlineAudioContext
+                    .decodeAudioData(arrayBuffer, () => {}, (err) => {
+                        expect(err.code).to.equal(0);
+                        expect(err.name).to.equal('EncodingError');
 
-                    done();
-                });
+                        done();
+                    })
+                    .catch(() => { /* Ignore the error. */ });
             });
 
             // The promise is rejected before but the errorCallback gets called synchronously.
