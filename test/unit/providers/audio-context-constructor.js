@@ -26,6 +26,7 @@ import { PromiseSupportTester } from '../../../src/testers/promise-support';
 import { ReflectiveInjector } from '@angular/core';
 import { StopStoppedSupportTester } from '../../../src/testers/stop-stopped-support';
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from '../../../src/providers/unpatched-audio-context-constructor';
+import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from '../../../src/providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
 import { spy } from 'sinon';
@@ -68,6 +69,7 @@ describe('AudioContext', () => {
             PromiseSupportTester,
             StopStoppedSupportTester,
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             WINDOW_PROVIDER
         ]);
 

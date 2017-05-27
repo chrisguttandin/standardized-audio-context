@@ -14,6 +14,12 @@ export class CloseSupportTester {
             return false;
         }
 
+        // Try to check the prototype before constructing the AudioContext.
+        if (this._unpatchedAudioContextConstructor.prototype !== undefined &&
+                this._unpatchedAudioContextConstructor.prototype.close !== undefined) {
+            return true;
+        }
+
         const audioContext = new this._unpatchedAudioContextConstructor();
 
         const isAudioContextClosable = (audioContext.close !== undefined);

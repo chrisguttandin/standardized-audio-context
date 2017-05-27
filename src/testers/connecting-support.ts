@@ -1,29 +1,28 @@
 import { Inject, Injectable } from '@angular/core';
-import { IUnpatchedAudioContextConstructor } from '../interfaces';
-import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
+import { IUnpatchedOfflineAudioContextConstructor } from '../interfaces';
+import { unpatchedOfflineAudioContextConstructor } from '../providers/unpatched-offline-audio-context-constructor';
 import { TUnpatchedAudioContext } from '../types';
 
 @Injectable()
 export class ConnectingSupportTester {
 
     constructor (
-        @Inject(unpatchedAudioContextConstructor) private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
+        @Inject(unpatchedOfflineAudioContextConstructor)
+        private _unpatchedOfflineAudioContextConstructor: IUnpatchedOfflineAudioContextConstructor
     ) { }
 
     public test (audioContext: TUnpatchedAudioContext) {
-        if (this._unpatchedAudioContextConstructor === null) {
+        if (this._unpatchedOfflineAudioContextConstructor === null) {
             return false;
         }
 
         const analyserNode = audioContext.createAnalyser();
-        const anotherAudioContext = new this._unpatchedAudioContextConstructor();
+        const anotherAudioContext = new this._unpatchedOfflineAudioContextConstructor(1, 1, 44100);
 
         try {
             analyserNode.connect(anotherAudioContext.destination);
         } catch (err) {
             return err.code === 15;
-        } finally {
-            anotherAudioContext.close();
         }
 
         return false;
