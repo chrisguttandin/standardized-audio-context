@@ -1166,7 +1166,7 @@ describe('AudioContext', () => {
             scriptProcessorNode.onaudioprocess = (event) => {
                 const leftChannelData = event.inputBuffer.getChannelData(0);
 
-                for (let i = 0; i < scriptProcessorNode.bufferSize + 2; i += 1) {
+                for (let i = 0; i < scriptProcessorNode.bufferSize - 2; i += 1) {
                     if (leftChannelData[i] === 1 && tested === false) {
                         expect(leftChannelData[ i ]).to.equal(1);
                         expect(leftChannelData[ i + 1 ]).to.equal(-0.5);
