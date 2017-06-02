@@ -226,6 +226,84 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
         return this._proxy;
     }
 
+    public render (offlineAudioContext: TUnpatchedOfflineAudioContext) {
+        if (this._node !== null) {
+            return Promise.resolve(this._node);
+        }
+
+        // Bug #9: Safari does not support IIRFilterNodes.
+        if (this._nativeNode) {
+            this._node = offlineAudioContext.createIIRFilter(this._feedforward, this._feedback);
+
+            const promises = Array
+                .from(this._sources)
+                .map(([ source, { input, output } ]) => {
+                    /*
+                     * For some reason this currently needs to be a function body with a return statement. The shortcut syntax causes an
+                     * error.
+                     */
+                    return source
+                        .render(offlineAudioContext)
+                        .then((node) => node.connect(<IIRFilterNode> this._node, output, input));
+                });
+
+            return Promise
+                .all(promises)
+                .then(() => this._node);
+        }
+
+        // @todo Somehow retrieve the number of channels.
+        const partialOfflineAudioContext = new this._unpatchedOfflineAudioContextConstructor(
+            this._numberOfChannels,
+            this._length,
+            offlineAudioContext.sampleRate
+        );
+
+        const promises = Array
+            .from(this._sources)
+            .map(([ source, { input, output } ]) => {
+                // For some reason this currently needs to be a function body with a return statement. The shortcut syntax causes an error.
+                return source
+                    .render(partialOfflineAudioContext)
+                    .then((node) => node.connect(partialOfflineAudioContext.destination, output, input));
+            });
+
+        return Promise
+            .all(promises)
+            .then(() => {
+                // Bug #21: Safari does not support promises yet.
+                if (this._promiseSupportTester.test(partialOfflineAudioContext)) {
+                    return partialOfflineAudioContext.startRendering();
+                }
+
+                return new Promise((resolve) => {
+                    partialOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
+
+                    partialOfflineAudioContext.startRendering();
+                });
+            })
+            .then((renderedBuffer) => {
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+
+                audioBufferSourceNode.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
+                audioBufferSourceNode.start(0);
+
+                this._node = audioBufferSourceNode;
+
+                return this._node;
+            });
+    }
+
+    public wire (source: IOfflineAudioNodeFaker, output: number, input: number) {
+        this._sources.set(source, { input, output });
+
+        return this._proxy;
+    }
+
+    public unwire (source: IOfflineAudioNodeFaker) {
+        this._sources.delete(source);
+    }
+
     private _applyFilter (renderedBuffer: AudioBuffer, offlineAudioContext: TUnpatchedOfflineAudioContext) {
         let bufferIndex = 0;
 
@@ -314,84 +392,6 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
         }
 
         return filteredBuffer;
-    }
-
-    public render (offlineAudioContext: TUnpatchedOfflineAudioContext) {
-        if (this._node !== null) {
-            return Promise.resolve(this._node);
-        }
-
-        // Bug #9: Safari does not support IIRFilterNodes.
-        if (this._nativeNode) {
-            this._node = offlineAudioContext.createIIRFilter(this._feedforward, this._feedback);
-
-            const promises = Array
-                .from(this._sources)
-                .map(([ source, { input, output } ]) => {
-                    /*
-                     * For some reason this currently needs to be a function body with a return statement. The shortcut syntax causes an
-                     * error.
-                     */
-                    return source
-                        .render(offlineAudioContext)
-                        .then((node) => node.connect(<IIRFilterNode> this._node, output, input));
-                });
-
-            return Promise
-                .all(promises)
-                .then(() => this._node);
-        }
-
-        // @todo Somehow retrieve the number of channels.
-        const partialOfflineAudioContext = new this._unpatchedOfflineAudioContextConstructor(
-            this._numberOfChannels,
-            this._length,
-            offlineAudioContext.sampleRate
-        );
-
-        const promises = Array
-            .from(this._sources)
-            .map(([ source, { input, output } ]) => {
-                // For some reason this currently needs to be a function body with a return statement. The shortcut syntax causes an error.
-                return source
-                    .render(partialOfflineAudioContext)
-                    .then((node) => node.connect(partialOfflineAudioContext.destination, output, input));
-            });
-
-        return Promise
-            .all(promises)
-            .then(() => {
-                // Bug #21: Safari does not support promises yet.
-                if (this._promiseSupportTester.test(partialOfflineAudioContext)) {
-                    return partialOfflineAudioContext.startRendering();
-                }
-
-                return new Promise((resolve) => {
-                    partialOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
-
-                    partialOfflineAudioContext.startRendering();
-                });
-            })
-            .then((renderedBuffer) => {
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBufferSourceNode.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
-                audioBufferSourceNode.start(0);
-
-                this._node = audioBufferSourceNode;
-
-                return this._node;
-            });
-    }
-
-    public wire (source: IOfflineAudioNodeFaker, output: number, input: number) {
-        this._sources.set(source, { input, output });
-
-        return this._proxy;
-    }
-
-    public unwire (source: IOfflineAudioNodeFaker) {
-        this._sources.delete(source);
     }
 
 }
