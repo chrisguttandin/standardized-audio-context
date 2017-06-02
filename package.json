@@ -13,7 +13,7 @@
   "description": "A patched AudioContext which imitates the current API in current browsers.",
   "devDependencies": {
     "babel-preset-es2015": "^6.18.0",
-    "chai": "^4.0.0",
+    "chai": "^4.0.1",
     "eslint-config-holy-grail": "^17.0.2",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
@@ -46,9 +46,9 @@
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "ts-loader": "^2.0.0",
-    "tsconfig-holy-grail": "^2.0.0",
-    "tslint-config-holy-grail": "^8.0.0",
-    "typescript": "^2.1.1",
+    "tsconfig-holy-grail": "^2.2.3",
+    "tslint-config-holy-grail": "^9.0.1",
+    "typescript": "^2.3.4",
     "webpack": "^2.2.0"
   },
   "files": [
