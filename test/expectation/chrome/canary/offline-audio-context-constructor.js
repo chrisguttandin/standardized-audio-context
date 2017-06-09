@@ -2,6 +2,7 @@ import 'core-js/es7/reflect';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor } from '../../../../src/providers/unpatched-offline-audio-context-constructor';
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../../src/providers/window';
+import { loadFixture } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
@@ -106,6 +107,23 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('decodeAudioData()', () => {
+
+        // bug #1
+
+        it('should require the success callback function as a parameter', (done) => {
+            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+                expect(err).to.be.null;
+
+                offlineAudioContext
+                    .decodeAudioData(arrayBuffer, undefined, () => {})
+                    .catch((err) => {
+                        expect(err).to.be.an.instanceOf(TypeError);
+                        expect(err.message).to.equal("Failed to execute 'decodeAudioData' on 'BaseAudioContext': The callback provided as parameter 2 is not a function.");
+
+                        done();
+                    });
+            });
+        });
 
         // bug #6
 

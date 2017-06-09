@@ -20,7 +20,7 @@ export class PromiseSupportTester {
         ]);
 
         try {
-            // Bug #1: Safari requires a successCallback.
+            // Bug #1: Chrome Canary & Safari requires a successCallback.
             const promise = audioContext.decodeAudioData(uint32Array.buffer, () => {
                 // Ignore the success callback.
             });
