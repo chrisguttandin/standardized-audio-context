@@ -25,7 +25,6 @@ import { spy } from 'sinon';
 describe('OfflineAudioContext', () => {
 
     let offlineAudioContext;
-
     let OfflineAudioContext;
 
     beforeEach(() => {
@@ -225,7 +224,6 @@ describe('OfflineAudioContext', () => {
         it('should be disconnectable', (done) => {
             const candidate = offlineAudioContext.createGain();
             const dummy = offlineAudioContext.createGain();
-
             // Safari does not play buffers which contain just one frame.
             const ones = offlineAudioContext.createBuffer(1, 2, 44100);
 

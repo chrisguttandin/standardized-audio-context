@@ -16,7 +16,6 @@ describe('UnpatchedOfflineAudioContext', () => {
 
     it('should return null if there is no OfflineAudioContext', () => {
         const fakeWindow = {};
-
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             { provide: window, useValue: fakeWindow }
@@ -29,7 +28,6 @@ describe('UnpatchedOfflineAudioContext', () => {
         const fakeWindow = {
             webkitOfflineAudioContext
         };
-
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             { provide: window, useValue: fakeWindow }
@@ -42,7 +40,6 @@ describe('UnpatchedOfflineAudioContext', () => {
         const fakeWindow = {
             OfflineAudioContext
         };
-
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             { provide: window, useValue: fakeWindow }
@@ -56,7 +53,6 @@ describe('UnpatchedOfflineAudioContext', () => {
             OfflineAudioContext,
             webkitOfflineAudioContext
         };
-
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             { provide: window, useValue: fakeWindow }

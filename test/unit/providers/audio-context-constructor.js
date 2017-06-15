@@ -34,7 +34,6 @@ import { spy } from 'sinon';
 describe('AudioContext', () => {
 
     let audioContext;
-
     let AudioContext;
 
     afterEach(() => {
@@ -139,7 +138,6 @@ describe('AudioContext', () => {
 
         it('should be assignable to a function', () => {
             const fn = () => {};
-
             const onstatechange = audioContext.onstatechange = fn; // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.equal(fn);
@@ -304,10 +302,8 @@ describe('AudioContext', () => {
         it('should be disconnectable', (done) => {
             const candidate = audioContext.createAnalyser();
             const dummy = audioContext.createGain();
-
             // @todo remove this ugly hack
             const analyzer = candidate.context.createScriptProcessor(256, 1, 1);
-
             // Safari does not play buffers which contain just one frame.
             const ones = audioContext.createBuffer(1, 2, 44100);
 
@@ -674,7 +670,6 @@ describe('AudioContext', () => {
             const audioBuffer = audioContext.createBuffer(1, 44100, 44100);
             const audioBufferSourceNode = audioContext.createBufferSource();
             const buffer = new Float32Array(44100);
-
             // @todo remove this ugly hack
             const scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 1, 1);
 
@@ -825,7 +820,6 @@ describe('AudioContext', () => {
             const channelMergerNode = audioContext.createChannelMerger();
             const sampleRate = audioContext.sampleRate;
             const audioBuffer = audioContext.createBuffer(1, 2, sampleRate);
-
             // @todo remove this ugly hack
             const scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
 
@@ -994,7 +988,6 @@ describe('AudioContext', () => {
         it('should be disconnectable', (done) => {
             const candidate = audioContext.createGain();
             const dummy = audioContext.createGain();
-
             // @todo remove this ugly hack
             const analyzer = candidate.context.createScriptProcessor(256, 1, 1);
             const ones = audioContext.createBuffer(1, 2, 44100);
@@ -1158,8 +1151,8 @@ describe('AudioContext', () => {
 
             let tested = false;
 
-            audioBuffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
-            audioBuffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
+            audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0 ]), 0);
+            audioBuffer.copyToChannel(new Float32Array([ 0, 1, 1 ]), 1);
 
             audioBufferSourceNode.buffer = audioBuffer;
 

@@ -274,7 +274,6 @@ describe('offlineAudioContextConstructor', () => {
         it('should not allow to disconnect a specific destination', (done) => {
             const candidate = offlineAudioContext.createGain();
             const dummy = offlineAudioContext.createGain();
-
             // Safari does not play buffers which contain just one frame.
             const ones = offlineAudioContext.createBuffer(1, 2, 44100);
 
