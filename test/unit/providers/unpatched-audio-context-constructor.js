@@ -16,7 +16,6 @@ describe('UnpatchedAudioContext', () => {
 
     it('should return null if there is no AudioContext', () => {
         const fakeWindow = {};
-
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             { provide: window, useValue: fakeWindow }
@@ -29,7 +28,6 @@ describe('UnpatchedAudioContext', () => {
         const fakeWindow = {
             webkitAudioContext
         };
-
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             { provide: window, useValue: fakeWindow }
@@ -42,7 +40,6 @@ describe('UnpatchedAudioContext', () => {
         const fakeWindow = {
             AudioContext
         };
-
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             { provide: window, useValue: fakeWindow }
@@ -56,7 +53,6 @@ describe('UnpatchedAudioContext', () => {
             AudioContext,
             webkitAudioContext
         };
-
         const injector = ReflectiveInjector.resolveAndCreate([
             UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
             { provide: window, useValue: fakeWindow }
