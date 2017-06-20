@@ -99,6 +99,18 @@ describe('audioContextConstructor', () => {
 
     describe('createBufferSource()', () => {
 
+        describe('playbackRate', () => {
+
+            // bug #45
+
+            it('should not throw any exception', () => {
+                const bufferSourceNode = audioContext.createBufferSource();
+
+                bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+            });
+
+        });
+
         describe('start()', () => {
 
             // bug #44
