@@ -29,7 +29,7 @@
     "gruntify-eslint": "^4.0.0",
     "husky": "^0.14.2",
     "karma": "^1.2.0",
-    "karma-browserstack-launcher": "^1.1.1",
+    "karma-browserstack-launcher": "^1.3.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-mocha": "^1.3.0",
