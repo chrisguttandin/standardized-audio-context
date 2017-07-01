@@ -74,7 +74,7 @@
   },
   "scripts": {
     "precommit": "grunt lint",
-    "prepublish": "grunt build",
+    "prepublishOnly": "grunt build",
     "test": "grunt lint && grunt test"
   },
   "types": "build/es2015/module.d.ts",
