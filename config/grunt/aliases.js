@@ -1,3 +1,13 @@
+const COMMON_TEST_TASKS = [
+    'build',
+    'karma:test',
+    'karma:test-chrome',
+    'karma:test-edge',
+    'karma:test-firefox',
+    'karma:test-opera',
+    'karma:test-safari'
+];
+
 module.exports = {
     build: [
         'clean:build',
@@ -19,15 +29,7 @@ module.exports = {
         // @todo Use grunt-lint again when it support the type-check option.
         'sh:lint'
     ],
-    test: [
-        'build',
-        'karma:test',
-        'karma:test-chrome',
-        // 'karma:test-chrome-canary',
-        'karma:test-edge',
-        'karma:test-firefox',
-        // 'karma:test-firefox-developer',
-        'karma:test-opera',
-        'karma:test-safari'
-    ]
+    test: (process.env.TRAVIS)
+        ? COMMON_TEST_TASKS
+        : [ ...COMMON_TEST_TASKS, 'karma:test-chrome-canary', 'karma:test-firefox-developer' ]
 };
