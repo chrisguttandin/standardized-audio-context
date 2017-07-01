@@ -487,7 +487,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             public decodeAudioData (
                 audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback
             ): Promise<AudioBuffer> {
-                // Bug #43: Only Chrome does yet throw a DataCloneError.
+                // Bug #43: Only Chrome and Opera do throw a DataCloneError.
                 if (detachedAudioBuffers.has(audioData)) {
                     const err = dataCloneErrorFactory.create();
 
