@@ -4,10 +4,13 @@
     "url": "https://github.com/chrisguttandin/standardized-audio-context/issues"
   },
   "dependencies": {
-    "@angular/core": "^4.2.2",
+    "@angular/core": "^4.2.5",
     "async-array-buffer": "^1.0.4",
     "core-js": "^2.4.1",
+    "lru-cache": "^4.1.1",
     "rxjs": "^5.4.1",
+    "sigmund": "^1.0.1",
+    "win-spawn": "^2.0.0",
     "zone.js": "^0.8.12"
   },
   "description": "A patched AudioContext which imitates the current API in current browsers.",
