@@ -2,4 +2,3 @@
 build/
 config/environment/*
 node_modules/
-src/browsernizr.ts
