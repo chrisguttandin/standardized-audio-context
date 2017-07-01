@@ -1390,11 +1390,11 @@ describe('AudioContext', () => {
 
         });
 
-        describe('with an arrayBuffer of an unsupported file', function () {
+        describe('with an arrayBuffer of an unsupported file', () => {
 
             let arrayBuffer;
 
-            beforeEach((done) => {
+            beforeEach(function (done) {
                 this.timeout(5000);
 
                 // PNG files are not supported by any browser :-)
