@@ -180,7 +180,7 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
         offlineAudioContext,
         promiseSupportTester,
         sampleRate,
-        unpatchedOfflineAudioContextConstructor
+        unpatchedOfflineAudioContextConstructor: nptchdFflnDCntxtCnstrctr
     }: IOfflineIIRFilterNodeFakerOptions) {
         if (feedback.length === 0 || feedback.length > 20) {
             throw notSupportedErrorFactory.create();
@@ -217,7 +217,7 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
             sampleRate
         });
         this._sources = new Map();
-        this._unpatchedOfflineAudioContextConstructor = unpatchedOfflineAudioContextConstructor;
+        this._unpatchedOfflineAudioContextConstructor = nptchdFflnDCntxtCnstrctr;
 
         fakeNodeStore.set(this._proxy, this);
     }
@@ -235,7 +235,7 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
         if (this._nativeNode) {
             this._node = offlineAudioContext.createIIRFilter(this._feedforward, this._feedback);
 
-            const promises = Array
+            const prmss = Array
                 .from(this._sources)
                 .map(([ source, { input, output } ]) => {
                     /*
@@ -248,7 +248,7 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
                 });
 
             return Promise
-                .all(promises)
+                .all(prmss)
                 .then(() => this._node);
         }
 

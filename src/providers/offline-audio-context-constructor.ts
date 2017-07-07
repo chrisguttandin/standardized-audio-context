@@ -62,7 +62,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         offlineGainNodeFakerFactory: OfflineGainNodeFakerFactory,
         offlineIIRFilterNodeFakerFactory: OfflineIIRFilterNodeFakerFactory,
         promiseSupportTester: PromiseSupportTester,
-        unpatchedOfflineAudioContextConstructor: IUnpatchedOfflineAudioContextConstructor
+        nptchdFflnDCntxtCnstrctr: IUnpatchedOfflineAudioContextConstructor
     ): IOfflineAudioContextConstructor => {
         class OfflineAudioContext implements IOfflineAudioContext {
 
@@ -85,7 +85,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             constructor (numberOfChannels: number, length: number, sampleRate: number) {
                 const fakeNodeStore = new WeakMap();
 
-                const unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
+                const unpatchedOfflineAudioContext = new nptchdFflnDCntxtCnstrctr(numberOfChannels, length, sampleRate);
 
                 this._destination = offlineAudioDestinationNodeFakerFactory.create({ fakeNodeStore, offlineAudioContext: this });
                 this._fakeNodeStore = fakeNodeStore;

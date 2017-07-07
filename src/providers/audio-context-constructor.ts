@@ -92,7 +92,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         iIRFilterNodeGetFrequencyResponseMethodWrapper: IIRFilterNodeGetFrequencyResponseMethodWrapper,
         promiseSupportTester: PromiseSupportTester,
         stopStoppedSupportTester: StopStoppedSupportTester,
-        unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
+        nptchdFflnDCntxtCnstrctr: IUnpatchedAudioContextConstructor
     ): IAudioContextConstructor => {
         class AudioContext implements IAudioContext {
 
@@ -119,7 +119,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
             private _state: null | TAudioContextState;
 
             constructor () {
-                const unpatchedAudioContext = new unpatchedAudioContextConstructor();
+                const unpatchedAudioContext = new nptchdFflnDCntxtCnstrctr();
 
                 this._isSupportingAnalyserNodeGetFloatTimeDomainData = analyserNodeGetFloatTimeDomainDataSupportTester.test(
                     unpatchedAudioContext
