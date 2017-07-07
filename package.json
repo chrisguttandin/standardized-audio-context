@@ -54,7 +54,7 @@
     "tsconfig-holy-grail": "^2.2.13",
     "tslint-config-holy-grail": "^9.0.8",
     "typescript": "~2.3.4",
-    "webpack": "^3.0.0"
+    "webpack": "^3.1.0"
   },
   "files": [
     "build/es5/",
