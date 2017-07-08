@@ -1,4 +1,4 @@
-import { OpaqueToken } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { deallocate } from 'async-array-buffer';
 import { DataCloneErrorFactory } from '../factories/data-clone-error';
 import { EncodingErrorFactory } from '../factories/encoding-error';
@@ -39,10 +39,10 @@ import { AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconn
 import { ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
 import { ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
-import { DetachedAudioBuffers } from './detached-audio-buffers';
+import { detachedArrayBuffers } from './detached-array-buffers';
 import { unpatchedAudioContextConstructor } from './unpatched-audio-context-constructor';
 
-export const audioContextConstructor = new OpaqueToken('AUDIO_CONTEXT_CONSTRUCTOR');
+export const audioContextConstructor = new InjectionToken<IAudioContextConstructor>('AUDIO_CONTEXT_CONSTRUCTOR');
 
 export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     deps: [
@@ -59,7 +59,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         ChannelSplitterNodeWrapper,
         ConnectingSupportTester,
         DataCloneErrorFactory,
-        DetachedAudioBuffers,
+        detachedArrayBuffers,
         DisconnectingSupportTester,
         EncodingErrorFactory,
         InvalidStateErrorFactory,
@@ -84,7 +84,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         channelSplitterNodeWrapper: ChannelSplitterNodeWrapper,
         connectingSupportTester: ConnectingSupportTester,
         dataCloneErrorFactory: DataCloneErrorFactory,
-        detachedAudioBuffers: WeakSet<ArrayBuffer>,
+        dtchdRryBffrs: WeakSet<ArrayBuffer>,
         disconnectingSupportTester: DisconnectingSupportTester,
         encodingErrorFactory: EncodingErrorFactory,
         invalidStateErrorFactory: InvalidStateErrorFactory,
@@ -488,7 +488,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback
             ): Promise<AudioBuffer> {
                 // Bug #43: Only Chrome and Opera do throw a DataCloneError.
-                if (detachedAudioBuffers.has(audioData)) {
+                if (dtchdRryBffrs.has(audioData)) {
                     const err = dataCloneErrorFactory.create();
 
                     if (typeof errorCallback === 'function') {
@@ -500,7 +500,7 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // The audioData parameter maybe of a type which can't be added to a WeakSet.
                 try {
-                    detachedAudioBuffers.add(audioData);
+                    dtchdRryBffrs.add(audioData);
                 } catch (err) {
                     // Ignore errors.
                 }

@@ -10,7 +10,6 @@ export * from './biquad-filter-node';
 export * from './error-factory';
 export * from './gain-node';
 export * from './iir-filter-node';
-export * from './modernizr';
 export * from './offline-audio-completion-event';
 export * from './offline-audio-context';
 export * from './offline-audio-context-constructor';

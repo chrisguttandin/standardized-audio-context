@@ -1,4 +1,4 @@
-import { OpaqueToken } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { deallocate } from 'async-array-buffer';
 import { DataCloneErrorFactory } from '../factories/data-clone-error';
 import { EncodingErrorFactory } from '../factories/encoding-error';
@@ -25,10 +25,10 @@ import { TDecodeErrorCallback, TDecodeSuccessCallback, TUnpatchedOfflineAudioCon
 import { AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { AudioBufferCopyChannelMethodsWrapper } from '../wrappers/audio-buffer-copy-channel-methods';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
-import { DetachedAudioBuffers } from './detached-audio-buffers';
+import { detachedArrayBuffers } from './detached-array-buffers';
 import { unpatchedOfflineAudioContextConstructor } from './unpatched-offline-audio-context-constructor';
 
-export const offlineAudioContextConstructor = new OpaqueToken('OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
+export const offlineAudioContextConstructor = new InjectionToken<IOfflineAudioContextConstructor>('OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
 
 export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     deps: [
@@ -36,7 +36,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         AudioBufferCopyChannelMethodsWrapper,
         AudioBufferWrapper,
         DataCloneErrorFactory,
-        DetachedAudioBuffers,
+        detachedArrayBuffers,
         EncodingErrorFactory,
         IIRFilterNodeGetFrequencyResponseMethodWrapper,
         OfflineAudioBufferSourceNodeFakerFactory,
@@ -53,7 +53,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
         audioBufferCopyChannelMethodsWrapper: AudioBufferCopyChannelMethodsWrapper,
         audioBufferWrapper: AudioBufferWrapper,
         dataCloneErrorFactory: DataCloneErrorFactory,
-        detachedAudioBuffers: WeakSet<ArrayBuffer>,
+        dtchdRryBffrs: WeakSet<ArrayBuffer>,
         encodingErrorFactory: EncodingErrorFactory,
         iIRFilterNodeGetFrequencyResponseMethodWrapper: IIRFilterNodeGetFrequencyResponseMethodWrapper,
         offlineAudioBufferSourceNodeFakerFactory: OfflineAudioBufferSourceNodeFakerFactory,
@@ -186,7 +186,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                 audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback
             ): Promise<AudioBuffer> {
                 // Bug #43: Only Chrome and Opera do throw a DataCloneError.
-                if (detachedAudioBuffers.has(audioData)) {
+                if (dtchdRryBffrs.has(audioData)) {
                     const err = dataCloneErrorFactory.create();
 
                     if (typeof errorCallback === 'function') {
@@ -198,7 +198,7 @@ export const OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
 
                 // The audioData parameter maybe of a type which can't be added to a WeakSet.
                 try {
-                    detachedAudioBuffers.add(audioData);
+                    dtchdRryBffrs.add(audioData);
                 } catch (err) {
                     // Ignore errors.
                 }

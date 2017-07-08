@@ -1,6 +1,8 @@
-import { OpaqueToken } from '@angular/core';
-import modernizr from '../browsernizr';
+import { InjectionToken } from '@angular/core';
+import mdrnzr from '../browsernizr';
 
-export const Modernizr = new OpaqueToken('MODERNIZR'); // tslint:disable-line:variable-name
+export type TModernizr = typeof mdrnzr;
 
-export const MODERNIZR_PROVIDER = { provide: Modernizr, useValue: modernizr };
+export const modernizr = new InjectionToken<TModernizr>('MODERNIZR');
+
+export const MODERNIZR_PROVIDER = { provide: modernizr, useValue: mdrnzr };

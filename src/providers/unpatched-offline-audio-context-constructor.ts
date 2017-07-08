@@ -1,14 +1,15 @@
-import { OpaqueToken } from '@angular/core';
-import { window as windowToken } from './window';
+import { InjectionToken } from '@angular/core';
+import { window as wndw } from './window';
 
-export const unpatchedOfflineAudioContextConstructor = new OpaqueToken('UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
+export const unpatchedOfflineAudioContextConstructor =
+    new InjectionToken<Promise<null | OfflineAudioContext>>('UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
 
 export const UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
-    deps: [ windowToken ],
+    deps: [ wndw ],
     provide: unpatchedOfflineAudioContextConstructor,
-    useFactory: (window: any) => (window.hasOwnProperty('OfflineAudioContext')) ?
-        window.OfflineAudioContext :
+    useFactory: (window: Window) => (window.hasOwnProperty('OfflineAudioContext')) ?
+        (<any> window).OfflineAudioContext :
         (window.hasOwnProperty('webkitOfflineAudioContext')) ?
-            window.webkitOfflineAudioContext :
+            (<any> window).webkitOfflineAudioContext :
             null
 };

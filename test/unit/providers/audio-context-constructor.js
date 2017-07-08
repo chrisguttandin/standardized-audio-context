@@ -12,7 +12,7 @@ import { ChainingSupportTester } from '../../../src/testers/chaining-support';
 import { ChannelMergerNodeWrapper } from '../../../src/wrappers/channel-merger-node';
 import { ChannelSplitterNodeWrapper } from '../../../src/wrappers/channel-splitter-node';
 import { ConnectingSupportTester } from '../../../src/testers/connecting-support';
-import { DETACHED_AUDIO_BUFFERS_PROVIDER } from '../../../src/providers/detached-audio-buffers';
+import { DETACHED_ARRAY_BUFFERS_PROVIDER } from '../../../src/providers/detached-array-buffers';
 import { DataCloneErrorFactory } from '../../../src/factories/data-clone-error';
 import { DisconnectingSupportTester } from '../../../src/testers/disconnecting-support';
 import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
@@ -55,7 +55,7 @@ describe('AudioContext', () => {
             ChannelMergerNodeWrapper,
             ChannelSplitterNodeWrapper,
             ConnectingSupportTester,
-            DETACHED_AUDIO_BUFFERS_PROVIDER,
+            DETACHED_ARRAY_BUFFERS_PROVIDER,
             DataCloneErrorFactory,
             DisconnectingSupportTester,
             EncodingErrorFactory,

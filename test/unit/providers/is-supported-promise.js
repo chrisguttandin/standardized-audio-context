@@ -1,10 +1,10 @@
 import 'core-js/es7/reflect';
-import { IS_SUPPORTED_PROMISE_PROVIDER, IsSupportedPromise } from '../../../src/providers/is-supported-promise';
+import { IS_SUPPORTED_PROMISE_PROVIDER, isSupportedPromise } from '../../../src/providers/is-supported-promise';
 import { CloseSupportTester } from '../../../src/testers/close-support';
 import { DecodeAudioDataTypeErrorSupportTester } from '../../../src/testers/decode-audio-data-type-error-support';
 import { MergingSupportTester } from '../../../src/testers/merging-support';
-import { Modernizr } from '../../../src/providers/modernizr';
 import { ReflectiveInjector } from '@angular/core';
+import { modernizr } from '../../../src/providers/modernizr';
 
 describe('isSupportedPromise', () => {
 
@@ -38,13 +38,13 @@ describe('isSupportedPromise', () => {
             { provide: DecodeAudioDataTypeErrorSupportTester, useValue: fakeDecodeAudioDataTypeErrorSupportTester },
             { provide: MergingSupportTester, useValue: fakeMergingSupportTester },
             IS_SUPPORTED_PROMISE_PROVIDER,
-            { provide: Modernizr, useValue: fakeModernizr }
+            { provide: modernizr, useValue: fakeModernizr }
         ]);
     });
 
     it('should resolve to true if all test pass', () => {
         return injector
-            .get(IsSupportedPromise)
+            .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.true);
     });
 
@@ -52,7 +52,7 @@ describe('isSupportedPromise', () => {
         fakeCloseSupportTester.test = () => false;
 
         return injector
-            .get(IsSupportedPromise)
+            .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.false);
     });
 
@@ -60,7 +60,7 @@ describe('isSupportedPromise', () => {
         fakeDecodeAudioDataTypeErrorSupportTester.test = () => Promise.resolve(false);
 
         return injector
-            .get(IsSupportedPromise)
+            .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.false);
     });
 
@@ -68,7 +68,7 @@ describe('isSupportedPromise', () => {
         fakeMergingSupportTester.test = () => Promise.resolve(false);
 
         return injector
-            .get(IsSupportedPromise)
+            .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.false);
     });
 
@@ -76,7 +76,7 @@ describe('isSupportedPromise', () => {
         fakeModernizr.promises = false;
 
         return injector
-            .get(IsSupportedPromise)
+            .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.false);
     });
 
@@ -84,7 +84,7 @@ describe('isSupportedPromise', () => {
         fakeModernizr.typedarrays = false;
 
         return injector
-            .get(IsSupportedPromise)
+            .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.false);
     });
 
@@ -92,7 +92,7 @@ describe('isSupportedPromise', () => {
         fakeModernizr.webaudio = false;
 
         return injector
-            .get(IsSupportedPromise)
+            .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.false);
     });
 

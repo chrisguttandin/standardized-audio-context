@@ -1,22 +1,21 @@
-import { OpaqueToken } from '@angular/core';
-import { IModernizr } from '../interfaces';
+import { InjectionToken } from '@angular/core';
 import { CloseSupportTester } from '../testers/close-support';
 import { DecodeAudioDataTypeErrorSupportTester } from '../testers/decode-audio-data-type-error-support';
 import { MergingSupportTester } from '../testers/merging-support';
-import { Modernizr } from './modernizr';
+import { TModernizr, modernizr } from './modernizr';
 
-export const IsSupportedPromise = new OpaqueToken('IS_SUPPORTED_PROMISE'); // tslint:disable-line:variable-name
+export const isSupportedPromise = new InjectionToken<Promise<boolean>>('IS_SUPPORTED_PROMISE');
 
 export const IS_SUPPORTED_PROMISE_PROVIDER = {
-    deps: [ CloseSupportTester, DecodeAudioDataTypeErrorSupportTester, MergingSupportTester, Modernizr ],
-    provide: IsSupportedPromise,
+    deps: [ CloseSupportTester, DecodeAudioDataTypeErrorSupportTester, MergingSupportTester, modernizr ],
+    provide: isSupportedPromise,
     useFactory: (
         closeSupportTester: CloseSupportTester,
         decodeAudioDataTypeErrorSupportTester: DecodeAudioDataTypeErrorSupportTester,
         mergingSupportTester: MergingSupportTester,
-        modernizr: IModernizr
+        mdrnzr: TModernizr
     ): Promise<boolean> => {
-        if (modernizr.promises && modernizr.typedarrays && modernizr.webaudio && closeSupportTester.test()) {
+        if (mdrnzr.promises && mdrnzr.typedarrays && mdrnzr.webaudio && closeSupportTester.test()) {
             return Promise
                 .all([
                     decodeAudioDataTypeErrorSupportTester.test(),

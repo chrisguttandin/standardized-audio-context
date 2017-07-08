@@ -1,5 +1,5 @@
 import 'core-js/es7/reflect';
-import { MODERNIZR_PROVIDER, Modernizr } from '../../../src/providers/modernizr';
+import { MODERNIZR_PROVIDER, modernizr as mdrnzr } from '../../../src/providers/modernizr';
 import { ReflectiveInjector } from '@angular/core';
 
 describe('modernizr', () => {
@@ -11,7 +11,7 @@ describe('modernizr', () => {
             MODERNIZR_PROVIDER
         ]);
 
-        modernizr = injector.get(Modernizr);
+        modernizr = injector.get(mdrnzr);
     });
 
     it('should contain the result of the promises test', () => {

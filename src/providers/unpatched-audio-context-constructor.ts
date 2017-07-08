@@ -1,14 +1,14 @@
-import { OpaqueToken } from '@angular/core';
-import { window as windowToken } from './window';
+import { InjectionToken } from '@angular/core';
+import { window as wndw } from './window';
 
-export const unpatchedAudioContextConstructor = new OpaqueToken('UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR');
+export const unpatchedAudioContextConstructor = new InjectionToken<Promise<null | AudioContext>>('UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR');
 
 export const UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
-    deps: [ windowToken ],
+    deps: [ wndw ],
     provide: unpatchedAudioContextConstructor,
-    useFactory: (window: any) => (window.hasOwnProperty('AudioContext')) ?
-        window.AudioContext :
+    useFactory: (window: Window) => (window.hasOwnProperty('AudioContext')) ?
+        (<any> window).AudioContext :
         (window.hasOwnProperty('webkitAudioContext')) ?
-            window.webkitAudioContext :
+            (<any> window).webkitAudioContext :
             null
 };

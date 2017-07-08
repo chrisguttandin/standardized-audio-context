@@ -3,7 +3,7 @@ import { OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, offlineAudioContextConstruc
 import { AudioBufferCopyChannelMethodsSupportTester } from '../../../src/testers/audio-buffer-copy-channel-methods-support';
 import { AudioBufferCopyChannelMethodsWrapper } from '../../../src/wrappers/audio-buffer-copy-channel-methods';
 import { AudioBufferWrapper } from '../../../src/wrappers/audio-buffer';
-import { DETACHED_AUDIO_BUFFERS_PROVIDER } from '../../../src/providers/detached-audio-buffers';
+import { DETACHED_ARRAY_BUFFERS_PROVIDER } from '../../../src/providers/detached-array-buffers';
 import { DataCloneErrorFactory } from '../../../src/factories/data-clone-error';
 import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
 import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../../src/wrappers/iir-filter-node-get-frequency-response-method';
@@ -32,7 +32,7 @@ describe('OfflineAudioContext', () => {
             AudioBufferCopyChannelMethodsSupportTester,
             AudioBufferCopyChannelMethodsWrapper,
             AudioBufferWrapper,
-            DETACHED_AUDIO_BUFFERS_PROVIDER,
+            DETACHED_ARRAY_BUFFERS_PROVIDER,
             DataCloneErrorFactory,
             EncodingErrorFactory,
             IIRFilterNodeGetFrequencyResponseMethodWrapper,

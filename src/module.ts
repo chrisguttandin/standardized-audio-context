@@ -14,8 +14,8 @@ import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filte
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
 import { IAudioContext, IAudioContextConstructor, IOfflineAudioContext, IOfflineAudioContextConstructor } from './interfaces';
 import { AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, audioContextConstructor } from './providers/audio-context-constructor';
-import { DETACHED_AUDIO_BUFFERS_PROVIDER } from './providers/detached-audio-buffers';
-import { IS_SUPPORTED_PROMISE_PROVIDER, IsSupportedPromise } from './providers/is-supported-promise';
+import { DETACHED_ARRAY_BUFFERS_PROVIDER } from './providers/detached-array-buffers';
+import { IS_SUPPORTED_PROMISE_PROVIDER, isSupportedPromise } from './providers/is-supported-promise';
 import { MODERNIZR_PROVIDER } from './providers/modernizr';
 import { OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, offlineAudioContextConstructor } from './providers/offline-audio-context-constructor';
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-audio-context-constructor';
@@ -56,7 +56,7 @@ const injector = ReflectiveInjector.resolveAndCreate([
     ChannelSplitterNodeWrapper,
     CloseSupportTester,
     ConnectingSupportTester,
-    DETACHED_AUDIO_BUFFERS_PROVIDER,
+    DETACHED_ARRAY_BUFFERS_PROVIDER,
     DataCloneErrorFactory,
     DecodeAudioDataTypeErrorSupportTester,
     DisconnectingSupportTester,
@@ -92,7 +92,7 @@ export { IAudioContextConstructor };
 // tslint:disable-next-line:variable-name
 export const AudioContext: IAudioContextConstructor = injector.get(audioContextConstructor);
 
-export const isSupported: Promise<boolean> = injector.get(IsSupportedPromise);
+export const isSupported: Promise<boolean> = injector.get(isSupportedPromise);
 
 export { IOfflineAudioContext };
 

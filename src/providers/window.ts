@@ -1,6 +1,6 @@
-import { OpaqueToken } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 
-const windowToken = new OpaqueToken('WINDOW');
+export const windowToken = new InjectionToken<Window>('WINDOW');
 
 export { windowToken as window };
 
