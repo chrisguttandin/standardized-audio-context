@@ -4,7 +4,7 @@
     "url": "https://github.com/chrisguttandin/standardized-audio-context/issues"
   },
   "dependencies": {
-    "@angular/core": "^4.2.5",
+    "@angular/core": "^4.2.6",
     "async-array-buffer": "^1.0.4",
     "core-js": "^2.4.1",
     "lru-cache": "^4.1.1",
