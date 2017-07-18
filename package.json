@@ -48,7 +48,7 @@
     "rollup-plugin-commonjs": "^8.0.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "sinon": "^2.3.8",
-    "sinon-chai": "^2.8.0",
+    "sinon-chai": "^2.12.0",
     "ts-loader": "^2.3.0",
     "tsconfig-holy-grail": "^2.2.16",
     "tslint-config-holy-grail": "^9.0.10",
