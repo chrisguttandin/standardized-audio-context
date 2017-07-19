@@ -25,6 +25,18 @@ describe('offlineAudioContextConstructor', () => {
         expect(window.OfflineAudioContext).to.be.undefined;
     });
 
+    describe('constructor()', () => {
+
+        // bug #46
+
+        it('should throw a TypeError', () => {
+            expect(() => {
+                new OfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 });
+            }).to.throw(TypeError);
+        });
+
+    });
+
     describe('length', () => {
 
         // bug #17
