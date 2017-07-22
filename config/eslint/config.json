@@ -2,5 +2,8 @@
     "env": {
         "node": true
     },
-    "extends": "eslint-config-holy-grail"
+    "extends": "eslint-config-holy-grail",
+    "rules": {
+        "no-sync": 0
+    }
 }
