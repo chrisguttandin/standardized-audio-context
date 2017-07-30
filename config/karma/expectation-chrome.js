@@ -58,7 +58,7 @@ module.exports = (config) => {
         config.set({
 
             browsers: [
-                'Chrome'
+                'ChromeHeadless'
             ]
 
         });

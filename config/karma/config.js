@@ -110,8 +110,8 @@ module.exports = (config) => {
             browserStack: environment.browserStack,
 
             browsers: [
-                'Chrome',
-                'ChromeCanary',
+                'ChromeHeadless',
+                'ChromeCanaryHeadless',
                 'EdgeBrowserStack',
                 'Firefox',
                 'FirefoxDeveloper',
