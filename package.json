@@ -42,7 +42,7 @@
     "karma-sinon-chai": "^1.2.3",
     "karma-webpack": "^2.0.4",
     "load-grunt-config": "^0.19.2",
-    "mocha": "^3.1.2",
+    "mocha": "^3.5.0",
     "rollup": "^0.45.2",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^8.0.0",
