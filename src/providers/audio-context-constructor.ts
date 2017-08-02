@@ -466,7 +466,8 @@ export const AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
                     throw invalidStateErrorFactory.create();
                 }
 
-                const oscillatorNode = <IOscillatorNode> this._unpatchedAudioContext.createOscillator();
+                // @todo The typecasting to any is necessary because the default OscillatorNode has an incompatible onended handler.
+                const oscillatorNode = <IOscillatorNode> (<any> this._unpatchedAudioContext.createOscillator());
 
                 // If the unpatched AudioContext throws an error by itself, this code will never get executed. If it does it will imitate
                 // tslint:disable-next-line:comment-format

@@ -7,8 +7,6 @@ export interface IOscillatorNode extends IAudioScheduledSourceNode {
 
     readonly frequency: AudioParam;
 
-    // @todo onended
-
     type: TOscillatorType;
 
     // @todo setPeriodicWave (periodicWave: PeriodicWave): void;
