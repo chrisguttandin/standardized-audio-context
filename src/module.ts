@@ -12,7 +12,7 @@ import { OfflineBiquadFilterNodeFakerFactory } from './factories/offline-biquad
 import { OfflineGainNodeFakerFactory } from './factories/offline-gain-node';
 import { OfflineIIRFilterNodeFakerFactory } from './factories/offline-iir-filter-node';
 import { IIRFilterNodeFaker } from './fakers/iir-filter-node';
-import { IAudioContext, IAudioContextConstructor, IOfflineAudioContext, IOfflineAudioContextConstructor } from './interfaces';
+import { IAudioContextConstructor, IOfflineAudioContextConstructor } from './interfaces';
 import { AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, audioContextConstructor } from './providers/audio-context-constructor';
 import { DETACHED_ARRAY_BUFFERS_PROVIDER } from './providers/detached-array-buffers';
 import { IS_SUPPORTED_PROMISE_PROVIDER, isSupportedPromise } from './providers/is-supported-promise';
@@ -83,20 +83,13 @@ const injector = ReflectiveInjector.resolveAndCreate([
     WINDOW_PROVIDER
 ]);
 
-export { TAudioContextState } from './types';
-
-export { IAudioContext };
-
-export { IAudioContextConstructor };
+export * from './interfaces';
+export * from './types';
 
 // tslint:disable-next-line:variable-name
 export const AudioContext: IAudioContextConstructor = injector.get(audioContextConstructor);
 
 export const isSupported: Promise<boolean> = injector.get(isSupportedPromise);
-
-export { IOfflineAudioContext };
-
-export { IOfflineAudioContextConstructor };
 
 // tslint:disable-next-line:variable-name
 export const OfflineAudioContext: IOfflineAudioContextConstructor = injector.get(offlineAudioContextConstructor);
