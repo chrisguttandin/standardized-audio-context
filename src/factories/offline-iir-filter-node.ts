@@ -276,7 +276,7 @@ export class OfflineIIRFilterNodeFaker implements IOfflineAudioNodeFaker {
                     return partialOfflineAudioContext.startRendering();
                 }
 
-                return new Promise((resolve) => {
+                return new Promise<AudioBuffer>((resolve) => {
                     partialOfflineAudioContext.oncomplete = (event) => resolve(event.renderedBuffer);
 
                     partialOfflineAudioContext.startRendering();
