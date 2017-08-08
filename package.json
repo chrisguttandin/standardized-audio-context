@@ -3,6 +3,11 @@
   "bugs": {
     "url": "https://github.com/chrisguttandin/standardized-audio-context/issues"
   },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
   "dependencies": {
     "@angular/core": "^4.3.3",
     "async-array-buffer": "^1.1.1",
