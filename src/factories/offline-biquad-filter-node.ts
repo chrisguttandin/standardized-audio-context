@@ -312,10 +312,7 @@ export interface IOfflineBiquadFilterNodeFakerFactoryOptions {
 export class OfflineBiquadFilterNodeFakerFactory {
 
     public create ({ fakeNodeStore, nativeNode, offlineAudioContext }: IOfflineBiquadFilterNodeFakerFactoryOptions) {
-        return new OfflineBiquadFilterNodeFaker({
-            fakeNodeStore,
-            nativeNode, offlineAudioContext
-        });
+        return new OfflineBiquadFilterNodeFaker({ fakeNodeStore, nativeNode, offlineAudioContext });
     }
 
 }
