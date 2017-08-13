@@ -9,7 +9,7 @@
     }
   },
   "dependencies": {
-    "@angular/core": "^4.3.3",
+    "@angular/core": "^4.3.4",
     "async-array-buffer": "^1.1.1",
     "core-js": "^2.5.0",
     "lru-cache": "^4.1.1",
@@ -53,7 +53,7 @@
     "karma-webpack": "^2.0.4",
     "load-grunt-config": "^0.19.2",
     "mocha": "^3.5.0",
-    "rollup": "^0.47.0",
+    "rollup": "^0.47.2",
     "rollup-plugin-babel": "^3.0.1",
     "rollup-plugin-commonjs": "^8.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
@@ -86,6 +86,7 @@
     "url": "https://github.com/chrisguttandin/standardized-audio-context.git"
   },
   "scripts": {
+    "commitmsg": "commitlint --edit --extends @commitlint/config-angular",
     "precommit": "grunt lint",
     "prepublishOnly": "grunt build",
     "test": "grunt lint && grunt test"
