@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { TUnpatchedAudioContext } from '../types';
+import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { TUnpatchedAudioContext } from '../types';
 
 @Injectable()
 export class ChannelMergerNodeWrapper {

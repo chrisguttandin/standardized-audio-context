@@ -42,18 +42,6 @@ describe('audioContextConstructor', () => {
 
     });
 
-    describe('createAnalyser()', () => {
-
-        // bug #37
-
-        it('should have a channelCount of 2', () => {
-            const analyserNode = audioContext.createAnalyser();
-
-            expect(analyserNode.channelCount).to.equal(2);
-        });
-
-    });
-
     describe('createBufferSource()', () => {
 
         describe('playbackRate', () => {

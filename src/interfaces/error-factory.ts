@@ -1,5 +1,5 @@
 export interface IErrorFactory {
 
-    create (): DOMException | Error;
+    create (): DOMException | Error;
 
 }

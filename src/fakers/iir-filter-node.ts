@@ -1,57 +1,19 @@
 import { Injectable } from '@angular/core';
-import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { NotSupportedErrorFactory } from '../factories/not-supported-error';
-import { IAudioContext, IAudioNode } from '../interfaces';
-import { TUnpatchedAudioContext } from '../types';
-
-function divide (a: number[], b: number[]) {
-    const denominator = (b[0] * b[0]) + (b[1] * b[1]);
-
-    return [ (((a[0] * b[0]) + (a[1] * b[1])) / denominator), (((a[1] * b[0]) - (a[0] * b[1])) / denominator) ];
-}
-
-function multiply (a: number[], b: number[]) {
-    return [ ((a[0] * b[0]) - (a[1] * b[1])), ((a[0] * b[1]) + (a[1] * b[0])) ];
-}
-
-function evaluatePolynomial (coefficient: number[], z: number[]) {
-    let result = [ 0, 0 ];
-
-    for (let i = coefficient.length - 1; i >= 0; i -= 1) {
-        result = multiply(result, z);
-
-        result[0] += coefficient[i];
-    }
-
-    return result;
-}
+import { filterBuffer } from '../helpers/filter-buffer';
+import { TTypedArray, TUnpatchedAudioContext } from '../types';
 
 @Injectable()
 export class IIRFilterNodeFaker {
 
-    constructor (
-        private _invalidAccessErrorFactory: InvalidAccessErrorFactory,
-        private _invalidStateErrorFactory: InvalidStateErrorFactory,
-        private _notSupportedErrorFactory: NotSupportedErrorFactory
-    ) { }
-
-    public fake (feedforward: number[], feedback: number[], audioContext: IAudioContext, unpatchedAudioContext: TUnpatchedAudioContext) {
-        let bufferIndex = 0;
-
-        const bufferLength = 32;
-
+    public fake (
+        unpatchedAudioContext: TUnpatchedAudioContext,
+        feedback: number[] | TTypedArray,
+        feedforward: number[] | TTypedArray,
+        channelCount: number
+    ) {
         const feedbackLength = feedback.length;
-
         const feedforwardLength = feedforward.length;
-
-        if (feedforward.length === 0 || feedforward.length > 20 || feedback.length === 0 || feedback.length > 20) {
-            throw this._notSupportedErrorFactory.create();
-        }
-
-        if (feedforward[0] === 0 || feedback[0] === 0) {
-            throw this._invalidStateErrorFactory.create();
-        }
+        const minLength = Math.min(feedbackLength, feedforwardLength);
 
         if (feedback[0] !== 1) {
             for (let i = 0; i < feedforwardLength; i += 1) {
@@ -63,31 +25,29 @@ export class IIRFilterNodeFaker {
             }
         }
 
-        const gainNode = <any> audioContext.createGain();
-        const nyquist = audioContext.sampleRate / 2;
+        const scriptProcessorNode = unpatchedAudioContext.createScriptProcessor(256, channelCount, channelCount);
 
-        // @todo Remove this once the audioContext supports the createScriptProcessor() method, too.
-        const scriptProcessorNode = unpatchedAudioContext.createScriptProcessor(256, gainNode.channelCount, gainNode.channelCount);
+        const bufferLength = 32;
+        const bufferIndexes: number[] = [ ];
+        const xBuffers: Float32Array[] = [ ];
+        const yBuffers: Float32Array[] = [ ];
 
-        const bufferSize = scriptProcessorNode.bufferSize;
+        for (let i = 0; i < channelCount; i += 1) {
+            bufferIndexes.push(0);
 
-        const xBuffer = new Float32Array(bufferLength);
-        const yBuffer = new Float32Array(bufferLength);
+            const xBuffer = new Float32Array(bufferLength);
+            const yBuffer = new Float32Array(bufferLength);
 
-        const minLength = Math.min(feedbackLength, feedforwardLength);
+            // @todo Add a test which checks support for TypedArray.prototype.fill().
+            xBuffer.fill(0);
+            yBuffer.fill(0);
 
-        // @todo Use TypedArray.prototype.fill() once it lands in Safari.
-        for (let i = 0; i < bufferLength; i += 1) {
-            xBuffer[i] = 0;
-            yBuffer[i] = 0;
+            xBuffers.push(xBuffer);
+            yBuffers.push(yBuffer);
         }
 
-        // This implementation as shamelessly inspired by source code of
-        // tslint:disable-next-line:max-line-length
-        // {@link https://chromium.googlesource.com/chromium/src.git/+/master/third_party/WebKit/Source/platform/audio/IIRFilter.cpp|Chromium's IIRFilter}.
         scriptProcessorNode.onaudioprocess = (event: AudioProcessingEvent) => {
             const inputBuffer = event.inputBuffer;
-
             const outputBuffer = event.outputBuffer;
 
             const numberOfChannels = inputBuffer.numberOfChannels;
@@ -96,74 +56,23 @@ export class IIRFilterNodeFaker {
                 const input = inputBuffer.getChannelData(i);
                 const output = outputBuffer.getChannelData(i);
 
-                for (let j = 0; j < bufferSize; j += 1) {
-                    let y = feedforward[0] * input[j];
-
-                    for (let k = 1; k < minLength; k += 1) {
-                        const x = (bufferIndex - k) & (bufferLength - 1); // tslint:disable-line:no-bitwise
-
-                        y += feedforward[k] * xBuffer[x];
-                        y -= feedback[k] * yBuffer[x];
-                    }
-
-                    for (let k = minLength; k < feedforwardLength; k += 1) {
-                        y += feedforward[k] * xBuffer[(bufferIndex - k) & (bufferLength - 1)]; // tslint:disable-line:no-bitwise
-                    }
-
-                    for (let k = minLength; k < feedbackLength; k += 1) {
-                        y -= feedback[k] * yBuffer[(bufferIndex - k) & (bufferLength - 1)]; // tslint:disable-line:no-bitwise
-                    }
-
-                    xBuffer[bufferIndex] = input[j];
-                    yBuffer[bufferIndex] = y;
-
-                    bufferIndex = (bufferIndex + 1) & (bufferLength - 1); // tslint:disable-line:no-bitwise
-
-                    output[j] = y;
-                }
+                bufferIndexes[i] = filterBuffer(
+                    feedback,
+                    feedbackLength,
+                    feedforward,
+                    feedforwardLength,
+                    minLength,
+                    xBuffers[i],
+                    yBuffers[i],
+                    bufferIndexes[i],
+                    bufferLength,
+                    input,
+                    output
+                );
             }
         };
 
-        gainNode.getFrequencyResponse = (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) => {
-            if (magResponse.length === 0 || phaseResponse.length === 0) {
-                throw this._notSupportedErrorFactory.create();
-            }
-
-            const length = frequencyHz.length;
-
-            for (let i = 0; i < length; i += 1) {
-                const omega = -Math.PI * (frequencyHz[i] / nyquist);
-
-                const z = [ Math.cos(omega), Math.sin(omega) ];
-
-                const numerator = evaluatePolynomial(feedforward, z);
-
-                const denominator = evaluatePolynomial(feedback, z);
-
-                const response = divide(numerator, denominator);
-
-                magResponse[i] = Math.sqrt((response[0] * response[0]) + (response[1] * response[1]));
-                phaseResponse[i] = Math.atan2(response[1], response[0]);
-            }
-        };
-
-        gainNode.connect(scriptProcessorNode);
-
-        gainNode.connect = (destination: IAudioNode, output = 0, input = 0) => {
-            try {
-                scriptProcessorNode.connect.call(scriptProcessorNode, destination, output, input);
-            } catch (err) {
-                if (err.code === 12) {
-                    throw this._invalidAccessErrorFactory.create();
-                }
-
-                throw err;
-            }
-
-            return destination;
-        };
-
-        return gainNode;
+        return scriptProcessorNode;
     }
 
 }

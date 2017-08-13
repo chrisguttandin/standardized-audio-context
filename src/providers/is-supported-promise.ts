@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import { CloseSupportTester } from '../testers/close-support';
-import { DecodeAudioDataTypeErrorSupportTester } from '../testers/decode-audio-data-type-error-support';
-import { MergingSupportTester } from '../testers/merging-support';
+import { DecodeAudioDataTypeErrorSupportTester } from '../testers/decode-audio-data-type-error-support';
+import { MergingSupportTester } from '../testers/merging-support';
 import { TModernizr, modernizr } from './modernizr';
 
 export const isSupportedPromise = new InjectionToken<Promise<boolean>>('IS_SUPPORTED_PROMISE');

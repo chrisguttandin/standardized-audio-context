@@ -1,79 +1,24 @@
 import 'core-js/es7/reflect';
-import { AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, audioContextConstructor } from '../../../src/providers/audio-context-constructor';
-import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../../../src/wrappers/analyser-node-get-float-time-domain-data-method';
-import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../../../src/testers/analyser-node-get-float-time-domain-data';
-import { AudioBufferCopyChannelMethodsSupportTester } from '../../../src/testers/audio-buffer-copy-channel-methods-support';
-import { AudioBufferCopyChannelMethodsWrapper } from '../../../src/wrappers/audio-buffer-copy-channel-methods';
-import { AudioBufferSourceNodeStopMethodWrapper } from '../../../src/wrappers/audio-buffer-source-node-stop-method';
-import { AudioBufferWrapper } from '../../../src/wrappers/audio-buffer';
-import { AudioNodeConnectMethodWrapper } from '../../../src/wrappers/audio-node-connect-method';
-import { AudioNodeDisconnectMethodWrapper } from '../../../src/wrappers/audio-node-disconnect-method';
-import { ChainingSupportTester } from '../../../src/testers/chaining-support';
-import { ChannelMergerNodeWrapper } from '../../../src/wrappers/channel-merger-node';
-import { ChannelSplitterNodeWrapper } from '../../../src/wrappers/channel-splitter-node';
-import { ConnectingSupportTester } from '../../../src/testers/connecting-support';
-import { DETACHED_ARRAY_BUFFERS_PROVIDER } from '../../../src/providers/detached-array-buffers';
-import { DataCloneErrorFactory } from '../../../src/factories/data-clone-error';
-import { DisconnectingSupportTester } from '../../../src/testers/disconnecting-support';
-import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
-import { IIRFilterNodeFaker } from '../../../src/fakers/iir-filter-node';
-import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../../src/wrappers/iir-filter-node-get-frequency-response-method';
-import { IndexSizeErrorFactory } from '../../../src/factories/index-size-error';
-import { InvalidAccessErrorFactory } from '../../../src/factories/invalid-access-error';
-import { InvalidStateErrorFactory } from '../../../src/factories/invalid-state-error';
-import { NotSupportedErrorFactory } from '../../../src/factories/not-supported-error';
-import { PromiseSupportTester } from '../../../src/testers/promise-support';
+import {
+    UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+    unpatchedAudioContextConstructor as nptchdDCntxtCnstrctr
+} from '../../../src/providers/unpatched-audio-context-constructor';
+import { AudioContext } from '../../../src/audio-contexts/audio-context';
 import { ReflectiveInjector } from '@angular/core';
-import { StopStoppedSupportTester } from '../../../src/testers/stop-stopped-support';
-import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from '../../../src/providers/unpatched-audio-context-constructor';
-import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from '../../../src/providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
-import { loadFixture } from '../../helper/load-fixture';
+import { createScriptProcessor } from '../../helper/create-script-processor';
+import { loadFixture } from '../../helper/load-fixture';
 import { spy } from 'sinon';
 
 describe('AudioContext', () => {
 
     let audioContext;
-    let AudioContext;
 
     afterEach(() => {
         return audioContext.close();
     });
 
     beforeEach(() => {
-        const injector = ReflectiveInjector.resolveAndCreate([
-            AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
-            AnalyserNodeGetFloatTimeDomainDataSupportTester,
-            AudioBufferCopyChannelMethodsSupportTester,
-            AudioBufferCopyChannelMethodsWrapper,
-            AudioBufferSourceNodeStopMethodWrapper,
-            AudioBufferWrapper,
-            AudioNodeConnectMethodWrapper,
-            AudioNodeDisconnectMethodWrapper,
-            ChainingSupportTester,
-            ChannelMergerNodeWrapper,
-            ChannelSplitterNodeWrapper,
-            ConnectingSupportTester,
-            DETACHED_ARRAY_BUFFERS_PROVIDER,
-            DataCloneErrorFactory,
-            DisconnectingSupportTester,
-            EncodingErrorFactory,
-            IIRFilterNodeFaker,
-            IIRFilterNodeGetFrequencyResponseMethodWrapper,
-            IndexSizeErrorFactory,
-            InvalidAccessErrorFactory,
-            InvalidStateErrorFactory,
-            NotSupportedErrorFactory,
-            PromiseSupportTester,
-            StopStoppedSupportTester,
-            UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            WINDOW_PROVIDER
-        ]);
-
-        AudioContext = injector.get(audioContextConstructor);
-
         audioContext = new AudioContext();
     });
 
@@ -211,7 +156,7 @@ describe('AudioContext', () => {
     describe('close()', () => {
 
         afterEach(() => {
-            // create a closeable AudioContext to align the behaviour with other tests
+            // Create a closeable AudioContext to align the behaviour with other tests.
             audioContext = new AudioContext();
         });
 
@@ -302,12 +247,11 @@ describe('AudioContext', () => {
         it('should be disconnectable', (done) => {
             const candidate = audioContext.createAnalyser();
             const dummy = audioContext.createGain();
-            // @todo remove this ugly hack
-            const analyzer = candidate.context.createScriptProcessor(256, 1, 1);
+            const analyzer = createScriptProcessor(audioContext, 256, 1, 1);
             // Safari does not play buffers which contain just one frame.
             const ones = audioContext.createBuffer(1, 2, 44100);
 
-            ones.getChannelData(0)[0] = 1;
+            ones.copyToChannel(new Float32Array([ 1, 1 ]), 0);
             ones.getChannelData(0)[1] = 1;
 
             const source = audioContext.createBufferSource();
@@ -354,6 +298,19 @@ describe('AudioContext', () => {
             } finally {
                 anotherAudioContext.close();
             }
+        });
+
+        describe('getFloatTimeDomainData()', () => {
+
+            it('should return time-domain data', () => {
+                const analyserNode = audioContext.createAnalyser();
+                const data = new Float32Array(analyserNode.fftSize);
+
+                analyserNode.getFloatTimeDomainData(data);
+
+                expect(data[0]).to.equal(0);
+            });
+
         });
 
     });
@@ -475,6 +432,19 @@ describe('AudioContext', () => {
             expect(audioBuffer.getChannelData).to.be.a('function');
             expect(audioBuffer.copyFromChannel).to.be.a('function');
             expect(audioBuffer.copyToChannel).to.be.a('function');
+        });
+
+        it('should return an AudioBuffer which can be used with an unpatched AudioContext', () => {
+            const audioBuffer = audioContext.createBuffer(2, 10, 44100);
+            const injector = ReflectiveInjector.resolveAndCreate([
+                UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+                WINDOW_PROVIDER
+            ]);
+            const UnpatchedAudioContext = injector.get(nptchdDCntxtCnstrctr);
+            const unpatchedAudioContext = new UnpatchedAudioContext();
+            const unpatchedAudioBufferSourceNode = unpatchedAudioContext.createBufferSource();
+
+            unpatchedAudioBufferSourceNode.buffer = audioBuffer;
         });
 
         describe('copyFromChannel()', () => {
@@ -643,6 +613,22 @@ describe('AudioContext', () => {
             expect(audioBufferSourceNode.stop).to.be.a('function');
         });
 
+        it('should throw an error if the AudioContext is closed', (done) => {
+            audioContext
+                .close()
+                .then(() => {
+                    audioContext.createBufferSource();
+                })
+                .catch((err) => {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    audioContext = new AudioContext();
+
+                    done();
+                });
+        });
+
         it('should be chainable', () => {
             const audioBufferSourceNode = audioContext.createBufferSource();
             const gainNode = audioContext.createGain();
@@ -670,13 +656,9 @@ describe('AudioContext', () => {
             const audioBuffer = audioContext.createBuffer(1, 44100, 44100);
             const audioBufferSourceNode = audioContext.createBufferSource();
             const buffer = new Float32Array(44100);
-            // @todo remove this ugly hack
-            const scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 1, 1);
+            const scriptProcessorNode = createScriptProcessor(audioContext, 256, 1, 1);
 
-            // @todo Use TypedArray.prototype.fill() once it lands in Safari.
-            for (let i = 0; i < 44100; i += 1) {
-                buffer[i] = 1;
-            }
+            buffer.fill(1);
 
             audioBuffer.copyToChannel(buffer, 0, 0);
 
@@ -817,15 +799,13 @@ describe('AudioContext', () => {
 
         it('should handle unconnected channels as silence', (done) => {
             const audioBufferSourceNode = audioContext.createBufferSource();
-            const channelMergerNode = audioContext.createChannelMerger();
+            const channelMergerNode = audioContext.createChannelMerger(2);
             const sampleRate = audioContext.sampleRate;
             const audioBuffer = audioContext.createBuffer(1, 2, sampleRate);
-            // @todo remove this ugly hack
-            const scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
+            const scriptProcessorNode = createScriptProcessor(audioContext, 256, 2, 2);
 
             // @todo Safari does not play/loop 1 sample buffers. This should be patched.
-            audioBuffer.getChannelData(0)[0] = 1;
-            audioBuffer.getChannelData(0)[1] = 1;
+            audioBuffer.copyToChannel(new Float32Array([ 1, 1 ]), 0);
 
             audioBufferSourceNode.buffer = audioBuffer;
             audioBufferSourceNode.loop = true;
@@ -863,6 +843,7 @@ describe('AudioContext', () => {
         it('should return an instance of the ChannelSplitterNode interface', () => {
             const channelSplitterNode = audioContext.createChannelSplitter();
 
+            expect(channelSplitterNode.channelCount).to.equal(6);
             expect(channelSplitterNode.channelCountMode).to.equal('explicit');
             expect(channelSplitterNode.channelInterpretation).to.equal('discrete');
             expect(channelSplitterNode.numberOfInputs).to.equal(1);
@@ -875,11 +856,24 @@ describe('AudioContext', () => {
             expect(channelSplitterNode.numberOfOutputs).to.equal(2);
         });
 
+        it('should not allow to change the value of the channelCount property', (done) => {
+            const channelSplitterNode = audioContext.createChannelSplitter(2);
+
+            try {
+                channelSplitterNode.channelCount = 4;
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
+        });
+
         it('should not allow to change the value of the channelCountMode property', (done) => {
             const channelSplitterNode = audioContext.createChannelSplitter(2);
 
             try {
-                channelSplitterNode.channelCountMode = 'speakers';
+                channelSplitterNode.channelCountMode = 'max';
             } catch (err) {
                 expect(err.code).to.equal(11);
                 expect(err.name).to.equal('InvalidStateError');
@@ -892,7 +886,7 @@ describe('AudioContext', () => {
             const channelSplitterNode = audioContext.createChannelSplitter(2);
 
             try {
-                channelSplitterNode.channelCountMode = 'speakers';
+                channelSplitterNode.channelInterpretation = 'speakers';
             } catch (err) {
                 expect(err.code).to.equal(11);
                 expect(err.name).to.equal('InvalidStateError');
@@ -979,21 +973,19 @@ describe('AudioContext', () => {
         });
 
         it('should be chainable', () => {
-            const channelSplitterNode = audioContext.createChannelSplitter();
-            const gainNode = audioContext.createGain();
+            const gainNodeA = audioContext.createGain();
+            const gainNodeB = audioContext.createGain();
 
-            expect(gainNode.connect(channelSplitterNode)).to.equal(channelSplitterNode);
+            expect(gainNodeA.connect(gainNodeB)).to.equal(gainNodeB);
         });
 
         it('should be disconnectable', (done) => {
             const candidate = audioContext.createGain();
             const dummy = audioContext.createGain();
-            // @todo remove this ugly hack
-            const analyzer = candidate.context.createScriptProcessor(256, 1, 1);
+            const analyzer = createScriptProcessor(audioContext, 256, 1, 1);
             const ones = audioContext.createBuffer(1, 2, 44100);
 
-            ones.getChannelData(0)[0] = 1;
-            ones.getChannelData(0)[1] = 1;
+            ones.copyToChannel(new Float32Array([ 1, 1 ]), 0);
 
             const source = audioContext.createBufferSource();
 
@@ -1146,8 +1138,7 @@ describe('AudioContext', () => {
             const audioBufferSourceNode = audioContext.createBufferSource();
             const gainNode = audioContext.createGain();
             const iIRFilterNode = audioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
-            // @todo remove this ugly hack
-            const scriptProcessorNode = audioBufferSourceNode.context.createScriptProcessor(256, 2, 2);
+            const scriptProcessorNode = createScriptProcessor(audioContext, 256, 2, 2);
 
             let tested = false;
 
@@ -1184,9 +1175,7 @@ describe('AudioContext', () => {
             audioBufferSourceNode
                 .connect(iIRFilterNode)
                 .connect(scriptProcessorNode)
-                .connect(gainNode);
-            // @todo Chain the scriptProcessorNodeNode too once it supports chaining.
-            gainNode
+                .connect(gainNode)
                 .connect(audioContext.destination);
 
             audioBufferSourceNode.start(audioContext.currentTime + 0.1);
@@ -1274,7 +1263,8 @@ describe('AudioContext', () => {
         it('should return an instance of the OscillatorNode interface', () => {
             const oscillatorNode = audioContext.createOscillator();
 
-            // channelCount is not specified
+            expect(oscillatorNode.channelCount).to.equal(2);
+
             // channelCountMode is not specified
             // channelInterpretation is not specified
 
@@ -1527,6 +1517,16 @@ describe('AudioContext', () => {
 
                     done();
                 });
+            });
+
+            it('should resolve with a assignable AudioBuffer', () => {
+                return audioContext
+                    .decodeAudioData(arrayBuffer)
+                    .then((audioBuffer) => {
+                        const audioBufferSourceNode = audioContext.createBufferSource();
+
+                        audioBufferSourceNode.buffer = audioBuffer;
+                    });
             });
 
         });

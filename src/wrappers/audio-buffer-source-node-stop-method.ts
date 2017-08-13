@@ -1,8 +1,9 @@
-import { IAudioBufferSourceNode, IAudioContext, IAudioNode } from '../interfaces';
+import { IAudioBufferSourceNode, IAudioNode } from '../interfaces';
+import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
 export class AudioBufferSourceNodeStopMethodWrapper {
 
-    public wrap (audioBufferSourceNode: IAudioBufferSourceNode, audioContext: IAudioContext) {
+    public wrap (audioBufferSourceNode: IAudioBufferSourceNode, audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) {
         const gainNode = audioContext.createGain();
 
         audioBufferSourceNode.connect(gainNode);

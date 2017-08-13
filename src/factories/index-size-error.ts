@@ -1,4 +1,4 @@
-import { IErrorFactory } from '../interfaces';
+import { IErrorFactory } from '../interfaces';
 
 // @todo Remove this declaration again if TypeScript supports the DOMException constructor.
 declare const DOMException: {

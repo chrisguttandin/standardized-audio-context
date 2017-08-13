@@ -2,7 +2,7 @@ import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
 
 export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
 
-    buffer: null | AudioBuffer;
+    buffer: null | AudioBuffer;
 
     detune: AudioParam;
 

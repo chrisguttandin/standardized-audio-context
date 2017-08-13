@@ -1,5 +1,5 @@
 import { TBiquadFilterType } from '../types';
-import { IAudioNode } from './audio-node';
+import { IAudioNode } from './audio-node';
 
 export interface IBiquadFilterNode extends IAudioNode {
 
@@ -13,6 +13,6 @@ export interface IBiquadFilterNode extends IAudioNode {
 
     type: TBiquadFilterType;
 
-    getFrequencyResponse(frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void;
+    getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void;
 
 }

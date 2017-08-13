@@ -1,4 +1,4 @@
-import { TUnpatchedOfflineAudioContext } from '../types';
+import { TUnpatchedOfflineAudioContext } from '../types';
 
 export interface IUnpatchedOfflineAudioContextConstructor {
 

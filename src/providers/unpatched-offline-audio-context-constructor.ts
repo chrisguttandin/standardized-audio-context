@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core';
 import { window as wndw } from './window';
 
 export const unpatchedOfflineAudioContextConstructor =
-    new InjectionToken<Promise<null | OfflineAudioContext>>('UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
+    new InjectionToken<Promise<null | OfflineAudioContext>>('UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR');
 
 export const UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER = {
     deps: [ wndw ],

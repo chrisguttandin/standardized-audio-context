@@ -32,6 +32,16 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('destination', () => {
+
+        // bug #47
+
+        it('should not have a maxChannelCount property', () => {
+            expect(offlineAudioContext.destination.maxChannelCount).to.equal(0);
+        });
+
+    });
+
     describe('createBiquadFilter()', () => {
 
         describe('getFrequencyResponse()', () => {

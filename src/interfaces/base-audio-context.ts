@@ -1,23 +1,13 @@
-import { TAudioContextState, TDecodeErrorCallback, TDecodeSuccessCallback, TStateChangeEventHandler } from '../types';
+import { TDecodeErrorCallback, TDecodeSuccessCallback } from '../types';
 import { IAudioBufferSourceNode } from './audio-buffer-source-node';
-import { IAudioDestinationNode } from './audio-destination-node';
 import { IBiquadFilterNode } from './biquad-filter-node';
 import { IGainNode } from './gain-node';
 import { IIIRFilterNode } from './iir-filter-node';
+import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IBaseAudioContext /* extends EventTarget */ {
-
-    readonly currentTime: number;
-
-    readonly destination: IAudioDestinationNode;
+export interface IBaseAudioContext extends IMinimalBaseAudioContext {
 
     // @todo listener
-
-    onstatechange: null | TStateChangeEventHandler;
-
-    readonly sampleRate: number;
-
-    readonly state: TAudioContextState;
 
     createBiquadFilter(): IBiquadFilterNode;
 

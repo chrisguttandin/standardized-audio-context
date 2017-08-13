@@ -1,9 +1,8 @@
-import 'core-js/es7/reflect';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor } from '../../../src/providers/unpatched-offline-audio-context-constructor';
+import { spy, stub } from 'sinon';
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
-import { stub } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
 
@@ -37,12 +36,83 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('destination', () => {
+
+        // bug #47
+
+        it('should not have a maxChannelCount property', () => {
+            expect(offlineAudioContext.destination.maxChannelCount).to.equal(0);
+        });
+
+    });
+
     describe('length', () => {
 
         // bug #17
 
         it('should not expose its length', () => {
             expect(offlineAudioContext.length).to.be.undefined;
+        });
+
+    });
+
+    describe('oncomplete', () => {
+
+        // bug #48
+
+        it('should not fire without any connected node', (done) => {
+            offlineAudioContext.oncomplete = spy();
+
+            offlineAudioContext.startRendering();
+
+            // Wait a second to be sure oncomplete was not called.
+            setTimeout(() => {
+                expect(offlineAudioContext.oncomplete).to.have.not.been.called;
+
+                done();
+            }, 1000);
+        });
+
+    });
+
+    describe('onstatechange', () => {
+
+        // bug #49
+
+        it('should transition directly from suspended to closed', (done) => {
+            const runTest = (callback) => {
+                const offlineAudioContext = new OfflineAudioContext(1, 1, 44100);
+
+                let previousState = offlineAudioContext.state;
+
+                offlineAudioContext.onstatechange = () => {
+                    const currentState = offlineAudioContext.state;
+
+                    if (currentState === 'closed') {
+                        offlineAudioContext.onstatechange = null;
+
+                        callback(previousState === 'suspended');
+                    }
+
+                    previousState = currentState;
+                };
+
+                // Bug #48: Connect a GainNode to make sure the rendering succeeds.
+                offlineAudioContext
+                    .createGain()
+                    .connect(offlineAudioContext.destination);
+
+                offlineAudioContext.startRendering();
+            };
+            const callback = (hasTransitionedDirectlyFromSuspendedToClosed) => {
+                if (hasTransitionedDirectlyFromSuspendedToClosed) {
+                    done();
+                } else {
+                    runTest(callback);
+                }
+            };
+
+            runTest(callback);
         });
 
     });
@@ -382,13 +452,10 @@ describe('offlineAudioContextConstructor', () => {
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
             scriptProcessorNode.onaudioprocess = (event) => {
-                // @todo Use AudioBuffer.prototype.copyToChannel() and TypedArray.prototype.fill()
-                // once they land in Safari.
+                // @todo Use AudioBuffer.prototype.copyToChannel() once it lands in Safari.
                 const channelData = event.outputBuffer.getChannelData(0);
 
-                Array.prototype.forEach.call(channelData, (element, index) => {
-                    channelData[index] = 1;
-                });
+                channelData.fill(1);
             };
 
             offlineAudioContext.oncomplete = (event) => {

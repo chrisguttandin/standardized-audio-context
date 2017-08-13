@@ -1,4 +1,4 @@
-import { TUnpatchedAudioContext } from '../types';
+import { TUnpatchedAudioContext } from '../types';
 
 export class ChainingSupportTester {
 

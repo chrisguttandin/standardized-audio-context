@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { IUnpatchedOfflineAudioContextConstructor } from '../interfaces';
 import { unpatchedOfflineAudioContextConstructor } from '../providers/unpatched-offline-audio-context-constructor';
-import { TUnpatchedAudioContext } from '../types';
+import { TUnpatchedAudioContext } from '../types';
 
 @Injectable()
 export class ConnectingSupportTester {

@@ -1,113 +1,316 @@
 import 'core-js/es7/reflect';
-import { OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, offlineAudioContextConstructor } from '../../../src/providers/offline-audio-context-constructor';
-import { AudioBufferCopyChannelMethodsSupportTester } from '../../../src/testers/audio-buffer-copy-channel-methods-support';
-import { AudioBufferCopyChannelMethodsWrapper } from '../../../src/wrappers/audio-buffer-copy-channel-methods';
-import { AudioBufferWrapper } from '../../../src/wrappers/audio-buffer';
-import { DETACHED_ARRAY_BUFFERS_PROVIDER } from '../../../src/providers/detached-array-buffers';
-import { DataCloneErrorFactory } from '../../../src/factories/data-clone-error';
-import { EncodingErrorFactory } from '../../../src/factories/encoding-error';
-import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../../../src/wrappers/iir-filter-node-get-frequency-response-method';
-import { IndexSizeErrorFactory } from '../../../src/factories/index-size-error';
-import { InvalidStateErrorFactory } from '../../../src/factories/invalid-state-error';
-import { NotSupportedErrorFactory } from '../../../src/factories/not-supported-error';
-import { OfflineAudioBufferSourceNodeFakerFactory } from '../../../src/factories/offline-audio-buffer-source-node';
-import { OfflineAudioDestinationNodeFakerFactory } from '../../../src/factories/offline-audio-destination-node';
-import { OfflineBiquadFilterNodeFakerFactory } from '../../../src/factories/offline-biquad-filter-node';
-import { OfflineGainNodeFakerFactory } from '../../../src/factories/offline-gain-node';
-import { OfflineIIRFilterNodeFakerFactory } from '../../../src/factories/offline-iir-filter-node';
-import { PromiseSupportTester } from '../../../src/testers/promise-support';
+import {
+    UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+    unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
+} from '../../../src/providers/unpatched-offline-audio-context-constructor';
+import { OfflineAudioContext } from '../../../src/audio-contexts/offline-audio-context';
 import { ReflectiveInjector } from '@angular/core';
-import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from '../../../src/providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
 import { spy } from 'sinon';
 
 describe('OfflineAudioContext', () => {
 
-    let offlineAudioContext;
-    let OfflineAudioContext;
+    describe('currentTime', () => {
 
-    beforeEach(() => {
-        const injector = ReflectiveInjector.resolveAndCreate([
-            AudioBufferCopyChannelMethodsSupportTester,
-            AudioBufferCopyChannelMethodsWrapper,
-            AudioBufferWrapper,
-            DETACHED_ARRAY_BUFFERS_PROVIDER,
-            DataCloneErrorFactory,
-            EncodingErrorFactory,
-            IIRFilterNodeGetFrequencyResponseMethodWrapper,
-            IndexSizeErrorFactory,
-            InvalidStateErrorFactory,
-            NotSupportedErrorFactory,
-            OfflineAudioBufferSourceNodeFakerFactory,
-            OfflineAudioDestinationNodeFakerFactory,
-            OfflineBiquadFilterNodeFakerFactory,
-            OfflineGainNodeFakerFactory,
-            OfflineIIRFilterNodeFakerFactory,
-            OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            PromiseSupportTester,
-            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            WINDOW_PROVIDER
-        ]);
+        let offlineAudioContext;
 
-        OfflineAudioContext = injector.get(offlineAudioContextConstructor);
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
 
-        // Chrome, Firefox and maybe others as well do not call a ScriptProcessorNode if the length
-        // is 128 samples or less.
-        offlineAudioContext = new OfflineAudioContext(2, 129, 44100);
+        it('should be a number', () => {
+            expect(offlineAudioContext.currentTime).to.be.a('number');
+        });
+
+        it('should be readonly', () => {
+            expect(() => {
+                offlineAudioContext.currentTime = 0;
+            }).to.throw(TypeError);
+        });
+
     });
 
     describe('destination', () => {
 
+        let length;
+        let sampleRate;
+
+        beforeEach(() => {
+            length = 1;
+            sampleRate = 44100;
+        });
+
         it('should be an instance of the AudioDestinationNode interface', () => {
+            const offlineAudioContext = new OfflineAudioContext({ length, sampleRate });
             const destination = offlineAudioContext.destination;
 
-            // @todo expect(destination.channelCount).to.equal(2);
-            // @todo expect(destination.channelCountMode).to.equal('explicit');
+            expect(destination.channelCount).to.equal(1);
+            expect(destination.channelCountMode).to.equal('explicit');
             expect(destination.channelInterpretation).to.equal('speakers');
-            expect(destination.maxChannelCount).to.be.a('number');
-            // @todo expect(destination.maxChannelCount).to.equal( number of channels );
+            expect(destination.maxChannelCount).to.equal(1);
             expect(destination.numberOfInputs).to.equal(1);
             expect(destination.numberOfOutputs).to.equal(0);
         });
 
         it('should be readonly', () => {
+            const offlineAudioContext = new OfflineAudioContext({ length, sampleRate });
+
             expect(() => {
                 offlineAudioContext.destination = 'a fake AudioDestinationNode';
             }).to.throw(TypeError);
+        });
+
+        describe('with options as arguments', () => {
+
+            let numberOfChannels;
+            let offlineAudioContext;
+
+            beforeEach(() => {
+                numberOfChannels = 8;
+                offlineAudioContext = new OfflineAudioContext(numberOfChannels, length, sampleRate);
+            });
+
+            it('should have a channelCount which equals the numberOfChannels', () => {
+                expect(offlineAudioContext.destination.channelCount).to.equal(numberOfChannels);
+            });
+
+            it('should have a maxChannelCount which equals the numberOfChannels', () => {
+                expect(offlineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
+            });
+
+        });
+
+        describe('with a contextOptions', () => {
+
+            describe('without a specified value for numberOfChannels', () => {
+
+                let offlineAudioContext;
+
+                beforeEach(() => {
+                    offlineAudioContext = new OfflineAudioContext({ length, sampleRate });
+                });
+
+                it('should have a channelCount of one', () => {
+                    expect(offlineAudioContext.destination.channelCount).to.equal(1);
+                });
+
+                it('should have a maxChannelCount of one', () => {
+                    expect(offlineAudioContext.destination.maxChannelCount).to.equal(1);
+                });
+
+            });
+
+            describe('with a specified value for numberOfChannels', () => {
+
+                let numberOfChannels;
+                let offlineAudioContext;
+
+                beforeEach(() => {
+                    numberOfChannels = 8;
+                    offlineAudioContext = new OfflineAudioContext({ length, numberOfChannels, sampleRate });
+                });
+
+                it('should have a channelCount which equals the numberOfChannels', () => {
+                    expect(offlineAudioContext.destination.channelCount).to.equal(numberOfChannels);
+                });
+
+                it('should have a maxChannelCount which equals the numberOfChannels', () => {
+                    expect(offlineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
+                });
+
+            });
+
         });
 
     });
 
     describe('length', () => {
 
-        it('should expose its length', () => {
-            expect(offlineAudioContext.length).to.equal(129);
+        let length;
+
+        beforeEach(() => {
+            length = 129;
         });
 
         it('should be readonly', () => {
+            const offlineAudioContext = new OfflineAudioContext(1, length, 44100);
+
             expect(() => {
                 offlineAudioContext.length = 128;
             }).to.throw(TypeError);
+        });
+
+        describe('with options as arguments', () => {
+
+            let offlineAudioContext;
+
+            beforeEach(() => {
+                offlineAudioContext = new OfflineAudioContext(1, length, 44100);
+            });
+
+            it('should expose its length', () => {
+                expect(offlineAudioContext.length).to.equal(length);
+            });
+
+        });
+
+        describe('with a contextOptions', () => {
+
+            let offlineAudioContext;
+
+            beforeEach(() => {
+                offlineAudioContext = new OfflineAudioContext({ length, sampleRate: 44100 });
+            });
+
+            it('should expose its length', () => {
+                expect(offlineAudioContext.length).to.equal(length);
+            });
+
+        });
+
+    });
+
+    describe('oncomplete', () => {
+
+        // @todo
+
+    });
+
+    describe('onstatechange', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be null', () => {
+            expect(offlineAudioContext.onstatechange).to.be.null;
+        });
+
+        it('should be assignable to a function', () => {
+            const fn = () => {};
+            const onstatechange = offlineAudioContext.onstatechange = fn; // eslint-disable-line no-multi-assign
+
+            expect(onstatechange).to.equal(fn);
+            expect(offlineAudioContext.onstatechange).to.equal(fn);
+        });
+
+        it('should be assignable to null', () => {
+            const onstatechange = offlineAudioContext.onstatechange = null; // eslint-disable-line no-multi-assign
+
+            expect(onstatechange).to.be.null;
+            expect(offlineAudioContext.onstatechange).to.be.null;
+        });
+
+        it('should not be assignable to something else', () => {
+            const string = 'no function or null value';
+
+            offlineAudioContext.onstatechange = () => {};
+
+            const onstatechange = offlineAudioContext.onstatechange = string; // eslint-disable-line no-multi-assign
+
+            expect(onstatechange).to.equal(string);
+            expect(offlineAudioContext.onstatechange).to.be.null;
         });
 
     });
 
     describe('sampleRate', () => {
 
-        it('should be a number', () => {
-            expect(offlineAudioContext.sampleRate).to.equal(44100);
+        let sampleRate;
+
+        beforeEach(() => {
+            sampleRate = 44100;
         });
 
         it('should be readonly', () => {
+            const offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate });
+
             expect(() => {
                 offlineAudioContext.sampleRate = 22050;
             }).to.throw(TypeError);
         });
 
+        describe('with options as arguments', () => {
+
+            let offlineAudioContext;
+
+            beforeEach(() => {
+                offlineAudioContext = new OfflineAudioContext(1, 1, sampleRate);
+            });
+
+            it('should expose its sampleRate', () => {
+                expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
+            });
+        });
+
+        describe('with a contextOptions', () => {
+
+            let offlineAudioContext;
+
+            beforeEach(() => {
+                offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate });
+            });
+
+            it('should expose its sampleRate', () => {
+                expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
+            });
+
+        });
+
+    });
+
+    describe('state', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be suspended at the beginning', () => {
+            expect(offlineAudioContext.state).to.equal('suspended');
+        });
+
+        it('should be readonly', () => {
+            expect(() => {
+                offlineAudioContext.state = 'closed';
+            }).to.throw(TypeError);
+        });
+
+        // @todo This does currently not work because of bug #49.
+        // it('should be transitioned to running', (done) => {
+        //     offlineAudioContext.onstatechange = () => {
+        //         expect(offlineAudioContext.state).to.equal('running');
+        //
+        //         // Prevent consecutive calls.
+        //         offlineAudioContext.onstatechange = null;
+        //
+        //         done();
+        //     };
+        //
+        //     offlineAudioContext.startRendering();
+        // });
+
+        it('should be closed after the buffer was rendered', () => {
+            return offlineAudioContext
+                .startRendering()
+                .then(() => {
+                    expect(offlineAudioContext.state).to.equal('closed');
+                });
+        });
+
     });
 
     describe('createBiquadFilter()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
 
         it('should return an instance of the BiquadFilterNode interface', () => {
             const biquadFilterNode = offlineAudioContext.createBiquadFilter();
@@ -154,6 +357,8 @@ describe('OfflineAudioContext', () => {
             expect(biquadFilterNode.type).to.be.a('string');
         });
 
+        // it('should throw an error if the AudioContext is closed', () => {});
+
         it('should be chainable', () => {
             const biquadFilterNode = offlineAudioContext.createBiquadFilter();
             const gainNode = offlineAudioContext.createGain();
@@ -194,7 +399,178 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('createBuffer()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should return an instance of the AudioBuffer interface', () => {
+            const audioBuffer = offlineAudioContext.createBuffer(2, 10, 44100);
+
+            expect(audioBuffer.duration).to.be.closeTo(10 / 44100, 0.001);
+            expect(audioBuffer.length).to.equal(10);
+            expect(audioBuffer.numberOfChannels).to.equal(2);
+            expect(audioBuffer.sampleRate).to.equal(44100);
+            expect(audioBuffer.getChannelData).to.be.a('function');
+            expect(audioBuffer.copyFromChannel).to.be.a('function');
+            expect(audioBuffer.copyToChannel).to.be.a('function');
+        });
+
+        it('should return an AudioBuffer which can be used with an unpatched AudioContext', () => {
+            const audioBuffer = offlineAudioContext.createBuffer(2, 10, 44100);
+            const injector = ReflectiveInjector.resolveAndCreate([
+                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+                WINDOW_PROVIDER
+            ]);
+            const UnpatchedOfflineAudioContext = injector.get(nptchdFflnDCntxtCnstrctr);
+            const unpatchedOfflineAudioContext = new UnpatchedOfflineAudioContext(1, 1, 44100);
+            const unpatchedAudioBufferSourceNode = unpatchedOfflineAudioContext.createBufferSource();
+
+            unpatchedAudioBufferSourceNode.buffer = audioBuffer;
+        });
+
+        describe('copyFromChannel()', () => {
+
+            let audioBuffer;
+            let destination;
+
+            beforeEach(() => {
+                audioBuffer = offlineAudioContext.createBuffer(2, 10, 44100);
+                destination = new Float32Array(10);
+            });
+
+            it('should not allow to copy a channel with a number greater or equal than the number of channels', (done) => {
+                try {
+                    audioBuffer.copyFromChannel(destination, 2);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
+            it('should not allow to copy values with an offset greater than the length', (done) => {
+                try {
+                    audioBuffer.copyFromChannel(destination, 0, 10);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
+        });
+
+        describe('copyToChannel()', () => {
+
+            let audioBuffer;
+            let source;
+
+            beforeEach(() => {
+                audioBuffer = offlineAudioContext.createBuffer(2, 10, 44100);
+                source = new Float32Array(10);
+            });
+
+            it('should not allow to copy a channel with a number greater or equal than the number of channels', (done) => {
+                try {
+                    audioBuffer.copyToChannel(source, 2);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
+            it('should not allow to copy values with an offset greater than the length', (done) => {
+                try {
+                    audioBuffer.copyToChannel(source, 0, 10);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
+        });
+
+        describe('copyFromChannel()/copyToChannel()', () => {
+
+            let audioBuffer;
+            let destination;
+            let source;
+
+            beforeEach(() => {
+                audioBuffer = offlineAudioContext.createBuffer(2, 100, 44100);
+                destination = new Float32Array(10);
+                source = new Float32Array(10);
+
+                for (let i = 0; i < 10; i += 1) {
+                    destination[i] = Math.random();
+                    source[i] = Math.random();
+                }
+            });
+
+            it('should copy values with an offset of 0', () => {
+                audioBuffer.copyToChannel(source, 0);
+                audioBuffer.copyFromChannel(destination, 0);
+
+                for (let i = 0; i < 10; i += 1) {
+                    expect(destination[i]).to.equal(source[i]);
+                }
+            });
+
+            it('should copy values with an offset of 50', () => {
+                audioBuffer.copyToChannel(source, 0, 50);
+                audioBuffer.copyFromChannel(destination, 0, 50);
+
+                for (let i = 0; i < 10; i += 1) {
+                    expect(destination[i]).to.equal(source[i]);
+                }
+            });
+
+            it('should copy values with an offset large enough to leave a part of the destination untouched', () => {
+                const destinationCopy = Array.from(destination);
+
+                audioBuffer.copyToChannel(source, 0, 95);
+                audioBuffer.copyFromChannel(destination, 0, 95);
+
+                for (let i = 0; i < 5; i += 1) {
+                    expect(destination[i]).to.equal(source[i]);
+                }
+
+                for (let i = 5; i < 10; i += 1) {
+                    expect(destination[i]).to.equal(destinationCopy[i]);
+                }
+            });
+
+            it('should copy values with an offset low enough to leave a part of the buffer untouched', () => {
+                audioBuffer.copyToChannel(source, 0, 35);
+                audioBuffer.copyToChannel(source, 0, 25);
+                audioBuffer.copyFromChannel(destination, 0, 35);
+
+                for (let i = 0; i < 10; i += 1) {
+                    expect(destination[i]).to.equal(source[i]);
+                }
+            });
+
+        });
+
+    });
+
     describe('createGain()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
 
         it('should return an instance of the GainNode interface', () => {
             const gainNode = offlineAudioContext.createGain();
@@ -214,6 +590,8 @@ describe('OfflineAudioContext', () => {
             expect(gainNode.numberOfOutputs).to.equal(1);
         });
 
+        // @todo it('should throw an error if the AudioContext is closed', () => {});
+
         it('should be chainable', () => {
             const gainNodeA = offlineAudioContext.createGain();
             const gainNodeB = offlineAudioContext.createGain();
@@ -227,8 +605,7 @@ describe('OfflineAudioContext', () => {
             // Safari does not play buffers which contain just one frame.
             const ones = offlineAudioContext.createBuffer(1, 2, 44100);
 
-            ones.getChannelData(0)[0] = 1;
-            ones.getChannelData(0)[1] = 1;
+            ones.copyToChannel(new Float32Array([ 1, 1 ]), 0);
 
             const source = offlineAudioContext.createBufferSource();
 
@@ -269,6 +646,12 @@ describe('OfflineAudioContext', () => {
     });
 
     describe('createIIRFilter()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
 
         it('should return an instance of the IIRFilterNode interface', () => {
             const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
@@ -348,22 +731,21 @@ describe('OfflineAudioContext', () => {
             }
         });
 
+        // @todo it('should throw an error if the AudioContext is closed', () => {});
+
         it('should filter the given input', function (done) {
             this.timeout(10000);
+
+            // @todo Move this in a beforeEach block.
+            // Recreate an OfflineAudioContext with 2 channels.
+            offlineAudioContext = new OfflineAudioContext(2, 129, 44100);
 
             const audioBuffer = offlineAudioContext.createBuffer(2, 3, 44100);
             const audioBufferSourceNode = offlineAudioContext.createBufferSource();
             const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1, -1 ], [ 1, -0.5 ]);
 
-            // @todo Use copyToChannel() once it becomes available.
-            // buffer.copyToChannel(new Float32Array([1, 0, 0]), 0);
-            // buffer.copyToChannel(new Float32Array([0, 1, 1]), 1);
-            audioBuffer.getChannelData(0)[0] = 1;
-            audioBuffer.getChannelData(0)[1] = 0;
-            audioBuffer.getChannelData(0)[2] = 0;
-            audioBuffer.getChannelData(1)[0] = 0;
-            audioBuffer.getChannelData(1)[1] = 1;
-            audioBuffer.getChannelData(1)[2] = 1;
+            audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0 ]), 0);
+            audioBuffer.copyToChannel(new Float32Array([ 0, 1, 1 ]), 1);
 
             audioBufferSourceNode.buffer = audioBuffer;
 
@@ -394,28 +776,17 @@ describe('OfflineAudioContext', () => {
         it('should filter another given input', function (done) {
             this.timeout(10000);
 
+            // @todo Move this in a beforeEach block.
             // Recreate an OfflineAudioContext with 3 channels.
-            offlineAudioContext = new OfflineAudioContext(3, offlineAudioContext.length, offlineAudioContext.sampleRate);
+            offlineAudioContext = new OfflineAudioContext(3, 129, 44100);
 
             const audioBuffer = offlineAudioContext.createBuffer(3, 3, 44100);
             const audioBufferSourceNode = offlineAudioContext.createBufferSource();
             const iIRFilterNode = offlineAudioContext.createIIRFilter([ 0.5, -1 ], [ 1, -1 ]);
 
-            // @todo Use copyToChannel() once it becomes available.
-            // buffer.copyToChannel(new Float32Array([1, 1, 1]), 0);
-            // buffer.copyToChannel(new Float32Array([1, 0, 0]), 1);
-            // buffer.copyToChannel(new Float32Array([0, 1, 1]), 2);
-            audioBuffer.getChannelData(0)[0] = 1;
-            audioBuffer.getChannelData(0)[1] = 1;
-            audioBuffer.getChannelData(0)[2] = 1;
-
-            audioBuffer.getChannelData(1)[0] = 1;
-            audioBuffer.getChannelData(1)[1] = 0;
-            audioBuffer.getChannelData(1)[2] = 0;
-
-            audioBuffer.getChannelData(2)[0] = 0;
-            audioBuffer.getChannelData(2)[1] = 1;
-            audioBuffer.getChannelData(2)[2] = 1;
+            audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1 ]), 0);
+            audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0 ]), 1);
+            audioBuffer.copyToChannel(new Float32Array([ 0, 1, 1 ]), 2);
 
             audioBufferSourceNode.buffer = audioBuffer;
 
@@ -524,6 +895,12 @@ describe('OfflineAudioContext', () => {
     });
 
     describe('decodeAudioData()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
 
         it('should return a promise', () => {
             const promise = offlineAudioContext.decodeAudioData();
@@ -709,36 +1086,53 @@ describe('OfflineAudioContext', () => {
                 });
             });
 
+            it('should resolve with a assignable AudioBuffer', () => {
+                return offlineAudioContext
+                    .decodeAudioData(arrayBuffer)
+                    .then((audioBuffer) => {
+                        const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+
+                        audioBufferSourceNode.buffer = audioBuffer;
+                    });
+            });
+
         });
 
     });
 
     describe('startRendering()', () => {
 
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 10, sampleRate: 44100 });
+        });
+
         it('should return a promise', () => {
             expect(offlineAudioContext.startRendering()).to.be.an.instanceOf(Promise);
         });
 
-        it('should resolve with the renderedBuffer', (done) => {
+        it('should resolve with the renderedBuffer', () => {
             const audioBuffer = offlineAudioContext.createBuffer(1, 10, 44100);
-            const bufferSourceNode = offlineAudioContext.createBufferSource();
-            const channelData = audioBuffer.getChannelData(0);
+            const buffer = new Float32Array(10);
+            const bufferSourceNode = offlineAudioContext.createBufferSource(offlineAudioContext);
 
-            // @todo Use copyToChannel() when possible.
-            for (let i = 0; i < audioBuffer.length; i += 1) {
-                channelData[i] = i;
+            for (let i = 0; i < buffer.length; i += 1) {
+                buffer[i] = i;
             }
+
+            audioBuffer.copyToChannel(buffer, 0, 0);
 
             bufferSourceNode.buffer = audioBuffer;
 
             bufferSourceNode.connect(offlineAudioContext.destination);
 
-            bufferSourceNode.start(0, undefined, undefined);
+            bufferSourceNode.start(0);
 
-            offlineAudioContext
+            return offlineAudioContext
                 .startRendering()
                 .then((renderedBuffer) => {
-                    // @todo expect(renderedBuffer.length).to.equal(audioBuffer.length);
+                    expect(renderedBuffer.length).to.equal(audioBuffer.length);
 
                     // @todo Use copyFromChannel() when possible.
                     const channelData = renderedBuffer.getChannelData(0);
@@ -746,8 +1140,6 @@ describe('OfflineAudioContext', () => {
                     for (let i = 0; i < audioBuffer.length; i += 1) {
                         expect(channelData[i]).to.equal(i);
                     }
-
-                    done();
                 });
         });
 

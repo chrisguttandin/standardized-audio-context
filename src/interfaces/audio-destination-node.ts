@@ -1,4 +1,4 @@
-import { IAudioNode } from './audio-node';
+import { IAudioNode } from './audio-node';
 
 export interface IAudioDestinationNode extends IAudioNode {
 

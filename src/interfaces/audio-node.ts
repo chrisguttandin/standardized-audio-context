@@ -1,9 +1,9 @@
-import { TChannelCountMode, TChannelInterpretation } from '../types';
-import { IBaseAudioContext } from './base-audio-context';
+import { TChannelCountMode, TChannelInterpretation } from '../types';
+import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
 export interface IAudioNode extends EventTarget {
 
-    readonly context: IBaseAudioContext;
+    readonly context: IMinimalBaseAudioContext;
 
     channelCount: number;
 

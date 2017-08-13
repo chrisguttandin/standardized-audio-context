@@ -1,4 +1,4 @@
-import { TOscillatorType } from '../types';
+import { TOscillatorType } from '../types';
 import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
 
 export interface IOscillatorNode extends IAudioScheduledSourceNode {
@@ -9,6 +9,6 @@ export interface IOscillatorNode extends IAudioScheduledSourceNode {
 
     type: TOscillatorType;
 
-    // @todo setPeriodicWave (periodicWave: PeriodicWave): void;
+    setPeriodicWave (periodicWave: PeriodicWave): void;
 
 }

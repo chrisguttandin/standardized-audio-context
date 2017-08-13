@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { NotSupportedErrorFactory } from '../factories/not-supported-error';
-import { IIIRFilterNode } from '../interfaces';
+import { NotSupportedErrorFactory } from '../factories/not-supported-error';
+import { IIIRFilterNode } from '../interfaces';
 
 @Injectable()
 export class IIRFilterNodeGetFrequencyResponseMethodWrapper {

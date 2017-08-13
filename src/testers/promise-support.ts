@@ -1,4 +1,4 @@
-import {  TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import {  TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
 export class PromiseSupportTester {
 

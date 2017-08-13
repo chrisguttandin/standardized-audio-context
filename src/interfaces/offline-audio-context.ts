@@ -1,9 +1,7 @@
-import { IBaseAudioContext } from './base-audio-context';
+import { IBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
 
-export interface IOfflineAudioContext extends IBaseAudioContext {
+export interface IOfflineAudioContext extends IBaseAudioContext, IMinimalOfflineAudioContext {
 
-    readonly length: number;
-
-    startRendering(): Promise<AudioBuffer>;
+    // @todo oncomplete
 
 }

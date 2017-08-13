@@ -1,4 +1,4 @@
-import { IAnalyserNode } from '../interfaces';
+import { IAnalyserNode } from '../interfaces';
 
 export class AnalyserNodeGetFloatTimeDomainDataMethodWrapper {
 
