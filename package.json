@@ -92,5 +92,5 @@
     "test": "grunt lint && grunt test"
   },
   "types": "build/es2015/module.d.ts",
-  "version": "8.2.4"
+  "version": "9.0.0"
 }
