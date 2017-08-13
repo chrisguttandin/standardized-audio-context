@@ -32,6 +32,7 @@
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-uglify": "^3.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-karma": "^2.0.0",
@@ -69,6 +70,7 @@
     "build/es5/",
     "build/es2015/",
     "build/esm/",
+    "build/ts/",
     "src/"
   ],
   "homepage": "https://github.com/chrisguttandin/standardized-audio-context",
@@ -91,6 +93,6 @@
     "prepublishOnly": "grunt build",
     "test": "grunt lint && grunt test"
   },
-  "types": "build/es2015/module.d.ts",
+  "types": "build/ts/module.d.ts",
   "version": "9.0.0"
 }
