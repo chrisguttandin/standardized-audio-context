@@ -1,6 +1,6 @@
 module.exports = {
     'build-es2015': {
-        cmd: 'tsc -p src/tsconfig.json'
+        cmd: 'tsc -p src/tsconfig.json --declarationDir build/ts'
     },
     'build-es5': {
         cmd: 'rollup -c config/rollup/bundle.js'

@@ -14,6 +14,7 @@ module.exports = {
         'modernizr',
         'replace:modernizr',
         'clean:modernizr',
+        'copy:ts',
         'sh:build-es2015',
         'sh:build-es5',
         'sh:build-esm',
