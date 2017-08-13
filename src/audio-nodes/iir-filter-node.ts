@@ -42,7 +42,8 @@ function evaluatePolynomial (coefficient: number[] | TTypedArray, z: [ number, n
     return result;
 }
 
-const DEFAULT_OPTIONS = {
+// The DEFAULT_OPTIONS are only of type Partial<IIIRFilterOptions> because there are no default values for feedback and feedforward.
+const DEFAULT_OPTIONS: Partial<IIIRFilterOptions> = {
     channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers',

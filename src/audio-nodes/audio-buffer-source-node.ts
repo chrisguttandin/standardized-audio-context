@@ -37,7 +37,7 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
     return nativeNode;
 };
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     buffer: null,
     channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
     channelCountMode: <TChannelCountMode> 'max',

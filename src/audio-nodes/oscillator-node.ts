@@ -12,7 +12,8 @@ import {
 } from '../types';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const DEFAULT_OPTIONS = {
+// The DEFAULT_OPTIONS are only of type Partial<IOscillatorOptions> because there is no default value for periodicWave.
+const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
     channelCount: 2,
     channelCountMode: <TChannelCountMode> 'max', // This attribute has no effect for nodes with no inputs.
     channelInterpretation: <TChannelInterpretation> 'speakers', // This attribute has no effect for nodes with no inputs.

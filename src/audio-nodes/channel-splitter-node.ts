@@ -8,7 +8,7 @@ import { TChannelCountMode, TChannelInterpretation, TUnpatchedAudioContext, TUnp
 import { ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: IAudioNodeOptions = {
     channelCount: 6,
     channelCountMode: <TChannelCountMode> 'explicit',
     channelInterpretation: <TChannelInterpretation> 'discrete',

@@ -8,7 +8,7 @@ import { TChannelCountMode, TChannelInterpretation, TUnpatchedAudioContext, TUnp
 import { ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: IAudioNodeOptions = {
     channelCount: 1,
     channelCountMode: <TChannelCountMode> 'explicit',
     channelInterpretation: <TChannelInterpretation> 'speakers',

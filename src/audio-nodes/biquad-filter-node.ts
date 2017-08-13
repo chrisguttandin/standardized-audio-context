@@ -6,7 +6,7 @@ import { BiquadFilterNodeRenderer } from '../renderers/biquad-filter-node';
 import { TBiquadFilterType, TChannelCountMode, TChannelInterpretation, TNativeBiquadFilterNode } from '../types';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: IBiquadFilterOptions = {
     Q: 1,
     channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
     channelCountMode: <TChannelCountMode> 'max',

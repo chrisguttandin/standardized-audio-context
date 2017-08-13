@@ -15,7 +15,7 @@ import {
 import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: IAnalyserOptions = {
     channelCount: 1,
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers',

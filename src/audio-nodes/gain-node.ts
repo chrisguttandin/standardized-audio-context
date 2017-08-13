@@ -6,7 +6,7 @@ import { GainNodeRenderer } from '../renderers/gain-node';
 import { TChannelCountMode, TChannelInterpretation, TNativeGainNode } from '../types';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: IGainOptions = {
     channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers',
