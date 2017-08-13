@@ -70,7 +70,6 @@
     "build/es5/",
     "build/es2015/",
     "build/esm/",
-    "build/ts/",
     "src/"
   ],
   "homepage": "https://github.com/chrisguttandin/standardized-audio-context",
@@ -93,6 +92,6 @@
     "prepublishOnly": "grunt build",
     "test": "grunt lint && grunt test"
   },
-  "types": "build/ts/module.d.ts",
+  "types": "build/esm/module.d.ts",
   "version": "9.0.2"
 }
