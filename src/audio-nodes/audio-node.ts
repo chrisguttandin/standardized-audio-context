@@ -159,10 +159,6 @@ export class AudioNode extends EventTarget implements IAudioNode {
     }
 
     public disconnect (destination?: IAudioNode): void {
-        if (destination === undefined) {
-            return; // @todo
-        }
-
         const nativeContext = CONTEXT_STORE.get(this._context);
 
         if (nativeContext === undefined) {
@@ -170,6 +166,10 @@ export class AudioNode extends EventTarget implements IAudioNode {
         }
 
         if (isOfflineAudioContext(nativeContext)) {
+            if (destination === undefined) {
+                return; // @todo
+            }
+
             const faker = RENDERER_STORE.get(destination);
 
             if (faker === undefined) {
