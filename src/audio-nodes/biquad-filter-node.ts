@@ -38,191 +38,51 @@ export class BiquadFilterNode extends NoneAudioDestinationNode implements IBiqua
     }
 
     public get Q () {
-        // @todo Fake a proper AudioParam.
-        const audioParam =  {
-            cancelScheduledValues: (startTime: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
+        if (this._nativeNode === null) {
+            throw new Error('The associated nativeNode is missing.');
+        }
 
-                return audioParam;
-            },
-            defaultValue: 1,
-            exponentialRampToValueAtTime: (value: number, endTime: number) => {
-                endTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
+        if (isOfflineAudioContext(this._nativeNode.context)) {
+            // @todo Wrap the AudioParam to record the actions.
+        }
 
-                return audioParam;
-            },
-            linearRampToValueAtTime: (value: number, endTime: number) => {
-                endTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setTargetAtTime: (target: number, startTime: number, timeConstant: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
-                target; // tslint:disable-line:no-unused-expression
-                timeConstant; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setValueAtTime: (value: number, startTime: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setValueCurveAtTime: (values: Float32Array, startTime: number, duration: number) => {
-                duration; // tslint:disable-line:no-unused-expression
-                startTime; // tslint:disable-line:no-unused-expression
-                values; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            value: 1
-        };
-
-        return audioParam;
+        return (<TNativeBiquadFilterNode> this._nativeNode).Q;
     }
 
     public get detune () {
-        // @todo Fake a proper AudioParam.
-        const audioParam = {
-            cancelScheduledValues: (startTime: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
+        if (this._nativeNode === null) {
+            throw new Error('The associated nativeNode is missing.');
+        }
 
-                return audioParam;
-            },
-            defaultValue: 0,
-            exponentialRampToValueAtTime: (value: number, endTime: number) => {
-                endTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
+        if (isOfflineAudioContext(this._nativeNode.context)) {
+            // @todo Wrap the AudioParam to record the actions.
+        }
 
-                return audioParam;
-            },
-            linearRampToValueAtTime: (value: number, endTime: number) => {
-                endTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setTargetAtTime: (target: number, startTime: number, timeConstant: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
-                target; // tslint:disable-line:no-unused-expression
-                timeConstant; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setValueAtTime: (value: number, startTime: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setValueCurveAtTime: (values: Float32Array, startTime: number, duration: number) => {
-                duration; // tslint:disable-line:no-unused-expression
-                startTime; // tslint:disable-line:no-unused-expression
-                values; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            value: 0
-        };
-
-        return audioParam;
+        return (<TNativeBiquadFilterNode> this._nativeNode).detune;
     }
 
     public get frequency () {
-        // @todo Fake a proper AudioParam.
-        const audioParam = {
-            cancelScheduledValues: (startTime: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
+        if (this._nativeNode === null) {
+            throw new Error('The associated nativeNode is missing.');
+        }
 
-                return audioParam;
-            },
-            defaultValue: 350,
-            exponentialRampToValueAtTime: (value: number, endTime: number) => {
-                endTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
+        if (isOfflineAudioContext(this._nativeNode.context)) {
+            // @todo Wrap the AudioParam to record the actions.
+        }
 
-                return audioParam;
-            },
-            linearRampToValueAtTime: (value: number, endTime: number) => {
-                endTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setTargetAtTime: (target: number, startTime: number, timeConstant: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
-                target; // tslint:disable-line:no-unused-expression
-                timeConstant; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setValueAtTime: (value: number, startTime: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setValueCurveAtTime: (values: Float32Array, startTime: number, duration: number) => {
-                duration; // tslint:disable-line:no-unused-expression
-                startTime; // tslint:disable-line:no-unused-expression
-                values; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            value: 350
-        };
-
-        return audioParam;
+        return (<TNativeBiquadFilterNode> this._nativeNode).frequency;
     }
 
     public get gain () {
-        // @todo Fake a proper AudioParam.
-        const audioParam = {
-            cancelScheduledValues: (startTime: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
+        if (this._nativeNode === null) {
+            throw new Error('The associated nativeNode is missing.');
+        }
 
-                return audioParam;
-            },
-            defaultValue: 0,
-            exponentialRampToValueAtTime: (value: number, endTime: number) => {
-                endTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
+        if (isOfflineAudioContext(this._nativeNode.context)) {
+            // @todo Wrap the AudioParam to record the actions.
+        }
 
-                return audioParam;
-            },
-            linearRampToValueAtTime: (value: number, endTime: number) => {
-                endTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setTargetAtTime: (target: number, startTime: number, timeConstant: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
-                target; // tslint:disable-line:no-unused-expression
-                timeConstant; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setValueAtTime: (value: number, startTime: number) => {
-                startTime; // tslint:disable-line:no-unused-expression
-                value; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            setValueCurveAtTime: (values: Float32Array, startTime: number, duration: number) => {
-                duration; // tslint:disable-line:no-unused-expression
-                startTime; // tslint:disable-line:no-unused-expression
-                values; // tslint:disable-line:no-unused-expression
-
-                return audioParam;
-            },
-            value: 0
-        };
-
-        return audioParam;
+        return (<TNativeBiquadFilterNode> this._nativeNode).gain;
     }
 
     public get type () {

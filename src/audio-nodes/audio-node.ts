@@ -149,7 +149,7 @@ export class AudioNode extends EventTarget implements IAudioNode {
         const nativeDestinationNode = AUDIO_NODE_STORE.get(destination);
 
         if (this._nativeNode === null || nativeDestinationNode === undefined) {
-            throw new Error('The associated nativeNode is missing. A');
+            throw new Error('The associated nativeNode is missing.');
         }
 
         this._nativeNode.connect(nativeDestinationNode, output, input);
@@ -186,7 +186,7 @@ export class AudioNode extends EventTarget implements IAudioNode {
         }
 
         if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing. B');
+            throw new Error('The associated nativeNode is missing.');
         }
 
         if (destination === undefined) {
@@ -196,7 +196,7 @@ export class AudioNode extends EventTarget implements IAudioNode {
         const nativeDestinationNode = AUDIO_NODE_STORE.get(destination);
 
         if (nativeDestinationNode === undefined) {
-            throw new Error('The associated nativeNode is missing. C');
+            throw new Error('The associated nativeNode is missing.');
         }
 
         return this._nativeNode.disconnect(nativeDestinationNode);
