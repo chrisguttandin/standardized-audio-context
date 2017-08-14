@@ -1,5 +1,6 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
+import { IndexSizeErrorFactory } from '../factories/index-size-error';
 import { startRendering } from '../helpers/start-rendering';
 import { IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import {
@@ -8,13 +9,17 @@ import {
 } from '../providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
 import { TUnpatchedOfflineAudioContext } from '../types';
+import { AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { BaseAudioContext } from './base-audio-context';
 
 const injector = ReflectiveInjector.resolveAndCreate([
+    AudioBufferWrapper,
+    IndexSizeErrorFactory,
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
 ]);
 
+const audioBufferWrapper = injector.get(AudioBufferWrapper);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
 
 const DEFAULT_OPTIONS = {
@@ -59,7 +64,15 @@ export class OfflineAudioContext extends BaseAudioContext implements IOfflineAud
     }
 
     public startRendering () {
-        return startRendering(this.destination, this._unpatchedOfflineAudioContext);
+        return startRendering(this.destination, this._unpatchedOfflineAudioContext)
+            .then((audioBuffer) => {
+                // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
+                if (typeof audioBuffer.copyFromChannel !== 'function') {
+                    audioBufferWrapper.wrap(audioBuffer);
+                }
+
+                return audioBuffer;
+            });
     }
 
 }

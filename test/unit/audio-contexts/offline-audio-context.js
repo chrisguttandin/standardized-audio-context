@@ -1143,6 +1143,37 @@ describe('OfflineAudioContext', () => {
                 });
         });
 
+        it('should resolve to an instance of the AudioBuffer interface', () => {
+            const audioBuffer = offlineAudioContext.createBuffer(1, 10, 44100);
+            const buffer = new Float32Array(10);
+            const bufferSourceNode = offlineAudioContext.createBufferSource(offlineAudioContext);
+
+            for (let i = 0; i < buffer.length; i += 1) {
+                buffer[i] = i;
+            }
+
+            audioBuffer.copyToChannel(buffer, 0, 0);
+
+            bufferSourceNode.buffer = audioBuffer;
+
+            bufferSourceNode.connect(offlineAudioContext.destination);
+
+            bufferSourceNode.start(0);
+
+            return offlineAudioContext
+                .startRendering()
+                .then((renderedBuffer) => {
+                    expect(renderedBuffer.duration).to.be.closeTo(10 / 44100, 0.001);
+                    expect(renderedBuffer.length).to.equal(10);
+                    expect(renderedBuffer.numberOfChannels).to.equal(1);
+                    expect(renderedBuffer.sampleRate).to.equal(44100);
+
+                    expect(renderedBuffer.getChannelData).to.be.a('function');
+                    expect(renderedBuffer.copyFromChannel).to.be.a('function');
+                    expect(renderedBuffer.copyToChannel).to.be.a('function');
+                });
+        });
+
     });
 
     // describe('suspend()', () => {
