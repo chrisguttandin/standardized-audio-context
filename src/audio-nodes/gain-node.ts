@@ -20,11 +20,11 @@ export class GainNode extends NoneAudioDestinationNode implements IGainNode {
     constructor (context: IMinimalBaseAudioContext, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IGainOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = isOfflineAudioContext(nativeContext) ? null : nativeContext.createGain();
+        const nativeNode = nativeContext.createGain();
 
         super(context, nativeNode, mergedOptions);
 
-        if (nativeNode === null) {
+        if (isOfflineAudioContext(nativeContext)) {
             const gainNodeRenderer = new GainNodeRenderer(this);
 
             RENDERER_STORE.set(this, gainNodeRenderer);

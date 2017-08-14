@@ -58,7 +58,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = isOfflineAudioContext(nativeContext) ? null : createNativeNode(nativeContext);
+        const nativeNode = createNativeNode(nativeContext);
 
         super(context, nativeNode, mergedOptions);
 
@@ -66,7 +66,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
         // @todo this.buffer = options.buffer;
         this._buffer = null;
 
-        if (nativeNode === null) {
+        if (isOfflineAudioContext(nativeContext)) {
             const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
 
             RENDERER_STORE.set(this, audioBufferSourceNodeRenderer);
@@ -240,17 +240,14 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
     }
 
     public start (when = 0, offset = 0, duration?: number) {
-        if (this._nativeNode === null) {
-            const renderer = RENDERER_STORE.get(this);
+        const audioBufferSourceNodeRenderer = RENDERER_STORE.get(this);
 
-            if (renderer === undefined) {
-                throw new Error('Missing the associated renderer.');
-            }
+        if (audioBufferSourceNodeRenderer !== undefined) {
+            (<AudioBufferSourceNodeRenderer> audioBufferSourceNodeRenderer).start = { duration, offset, when };
 
-            (<AudioBufferSourceNodeRenderer> renderer).start = { duration, offset, when };
-        } else {
-            (<TNativeAudioBufferSourceNode> this._nativeNode).start(when, offset, duration);
         }
+
+        (<TNativeAudioBufferSourceNode> this._nativeNode).start(when, offset, duration);
     }
 
     public stop (when = 0) {

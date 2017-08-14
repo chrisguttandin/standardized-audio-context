@@ -1,3 +1,5 @@
+import { getNativeNode } from '../helpers/get-native-node';
+import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioBufferSourceNode, IAudioNodeRenderer } from '../interfaces';
 import { TNativeAudioBufferSourceNode, TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
@@ -27,16 +29,21 @@ export class AudioBufferSourceNodeRenderer extends AudioNodeRenderer implements 
             return Promise.resolve(this._nativeNode);
         }
 
-        this._nativeNode = offlineAudioContext.createBufferSource();
-        this._nativeNode.buffer = (this._proxy.buffer === null) ? null : this._proxy.buffer;
+        this._nativeNode = <TNativeAudioBufferSourceNode> getNativeNode(this._proxy);
 
-        if (this._start !== null) {
-            const { duration, offset, when } = this._start;
+        // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
+        if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
+            this._nativeNode = offlineAudioContext.createBufferSource();
+            this._nativeNode.buffer = (this._proxy.buffer === null) ? null : this._proxy.buffer;
 
-            if (duration === undefined) {
-                this._nativeNode.start(when, offset);
-            } else {
-                this._nativeNode.start(when, offset, duration);
+            if (this._start !== null) {
+                const { duration, offset, when } = this._start;
+
+                if (duration === undefined) {
+                    this._nativeNode.start(when, offset);
+                } else {
+                    this._nativeNode.start(when, offset, duration);
+                }
             }
         }
 

@@ -1,3 +1,5 @@
+import { getNativeNode } from '../helpers/get-native-node';
+import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNodeRenderer, IBiquadFilterNode } from '../interfaces';
 import { TNativeAudioNode, TNativeBiquadFilterNode, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
@@ -20,8 +22,13 @@ export class BiquadFilterNodeRenderer extends AudioNodeRenderer implements IAudi
             return Promise.resolve(this._nativeNode);
         }
 
-        this._nativeNode = offlineAudioContext.createBiquadFilter();
-        this._nativeNode.type = this._proxy.type;
+        this._nativeNode = <TNativeBiquadFilterNode> getNativeNode(this._proxy);
+
+        // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
+        if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
+            this._nativeNode = offlineAudioContext.createBiquadFilter();
+            this._nativeNode.type = this._proxy.type;
+        }
 
         return this
             ._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode)

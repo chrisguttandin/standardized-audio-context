@@ -2,6 +2,8 @@ import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { filterBuffer } from '../helpers/filter-buffer';
+import { getNativeNode } from '../helpers/get-native-node';
+import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNodeRenderer, IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioCompletionEvent } from '../interfaces';
 import {
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
@@ -61,49 +63,55 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer implements IAudioNo
             return Promise.resolve(this._nativeNode);
         }
 
-        // Bug #9: Safari does not support IIRFilterNodes.
-        if (offlineAudioContext.createIIRFilter !== undefined) {
-            this._nativeNode = offlineAudioContext.createIIRFilter(<any> this._feedforward, <any> this._feedback);
+        try {
+            this._nativeNode = <TNativeIIRFilterNode> getNativeNode(this._proxy);
+
+            // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
+            if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
+                this._nativeNode = offlineAudioContext.createIIRFilter(<any> this._feedforward, <any> this._feedback);
+            }
 
             return this
                 ._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode)
                 .then(() => <TNativeAudioNode> this._nativeNode);
-        }
 
-        const partialOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(
-            // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
-            (<IMinimalOfflineAudioContext> this._proxy.context).destination.channelCount,
-            // Bug #17: Safari does not yet expose the length.
-            (<IMinimalOfflineAudioContext> this._proxy.context).length,
-            offlineAudioContext.sampleRate
-        );
+        // Bug #9: Safari does not support IIRFilterNodes.
+        } catch (err) {
+            const partialOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(
+                // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
+                (<IMinimalOfflineAudioContext> this._proxy.context).destination.channelCount,
+                // Bug #17: Safari does not yet expose the length.
+                (<IMinimalOfflineAudioContext> this._proxy.context).length,
+                offlineAudioContext.sampleRate
+            );
 
-        return this
-            ._connectSources(partialOfflineAudioContext, <TNativeAudioNode> partialOfflineAudioContext.destination)
-            .then(() => {
-                // Bug #21: Safari does not support promises yet.
-                if (isSupportingPromises(partialOfflineAudioContext)) {
-                    return partialOfflineAudioContext.startRendering();
-                }
+            return this
+                ._connectSources(partialOfflineAudioContext, <TNativeAudioNode> partialOfflineAudioContext.destination)
+                .then(() => {
+                    // Bug #21: Safari does not support promises yet.
+                    if (isSupportingPromises(partialOfflineAudioContext)) {
+                        return partialOfflineAudioContext.startRendering();
+                    }
 
-                return new Promise((resolve) => {
-                    partialOfflineAudioContext.oncomplete = (event: IOfflineAudioCompletionEvent) => {
-                        resolve(event.renderedBuffer);
-                    };
+                    return new Promise((resolve) => {
+                        partialOfflineAudioContext.oncomplete = (event: IOfflineAudioCompletionEvent) => {
+                            resolve(event.renderedBuffer);
+                        };
 
-                    partialOfflineAudioContext.startRendering();
+                        partialOfflineAudioContext.startRendering();
+                    });
+                })
+                .then((renderedBuffer) => {
+                    const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+
+                    audioBufferSourceNode.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
+                    audioBufferSourceNode.start(0);
+
+                    this._nativeNode = audioBufferSourceNode;
+
+                    return <TNativeAudioNode> this._nativeNode;
                 });
-            })
-            .then((renderedBuffer) => {
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBufferSourceNode.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
-                audioBufferSourceNode.start(0);
-
-                this._nativeNode = audioBufferSourceNode;
-
-                return <TNativeAudioNode> this._nativeNode;
-            });
+        }
     }
 
     private _applyFilter (renderedBuffer: TNativeAudioBuffer, offlineAudioContext: TUnpatchedOfflineAudioContext) {
