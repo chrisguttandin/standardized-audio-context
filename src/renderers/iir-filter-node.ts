@@ -42,7 +42,7 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer implements IAudioNo
 
     private _length: number;
 
-    private _node: null | TNativeAudioBufferSourceNode | TNativeIIRFilterNode;
+    private _nativeNode: null | TNativeAudioBufferSourceNode | TNativeIIRFilterNode;
 
     private _proxy: IIIRFilterNode;
 
@@ -52,22 +52,22 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer implements IAudioNo
         this._feedback = feedback;
         this._feedforward = feedforward;
         this._length = length;
-        this._node = null;
+        this._nativeNode = null;
         this._proxy = proxy;
     }
 
     public render (offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> {
-        if (this._node !== null) {
-            return Promise.resolve(this._node);
+        if (this._nativeNode !== null) {
+            return Promise.resolve(this._nativeNode);
         }
 
         // Bug #9: Safari does not support IIRFilterNodes.
         if (offlineAudioContext.createIIRFilter !== undefined) {
-            this._node = offlineAudioContext.createIIRFilter(<any> this._feedforward, <any> this._feedback);
+            this._nativeNode = offlineAudioContext.createIIRFilter(<any> this._feedforward, <any> this._feedback);
 
             return this
-                ._connectSources(offlineAudioContext, <TNativeAudioNode> this._node)
-                .then(() => <TNativeAudioNode> this._node);
+                ._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode)
+                .then(() => <TNativeAudioNode> this._nativeNode);
         }
 
         const partialOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(
@@ -100,9 +100,9 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer implements IAudioNo
                 audioBufferSourceNode.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
                 audioBufferSourceNode.start(0);
 
-                this._node = audioBufferSourceNode;
+                this._nativeNode = audioBufferSourceNode;
 
-                return <TNativeAudioNode> this._node;
+                return <TNativeAudioNode> this._nativeNode;
             });
     }
 

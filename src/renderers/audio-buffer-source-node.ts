@@ -4,7 +4,7 @@ import { AudioNodeRenderer } from './audio-node';
 
 export class AudioBufferSourceNodeRenderer extends AudioNodeRenderer implements IAudioNodeRenderer {
 
-    private _node: null | TNativeAudioBufferSourceNode;
+    private _nativeNode: null | TNativeAudioBufferSourceNode;
 
     private _proxy: IAudioBufferSourceNode;
 
@@ -13,7 +13,7 @@ export class AudioBufferSourceNodeRenderer extends AudioNodeRenderer implements 
     constructor (proxy: IAudioBufferSourceNode) {
         super();
 
-        this._node = null;
+        this._nativeNode = null;
         this._proxy = proxy;
         this._start = null;
     }
@@ -23,26 +23,26 @@ export class AudioBufferSourceNodeRenderer extends AudioNodeRenderer implements 
     }
 
     public render (offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> {
-        if (this._node !== null) {
-            return Promise.resolve(this._node);
+        if (this._nativeNode !== null) {
+            return Promise.resolve(this._nativeNode);
         }
 
-        this._node = offlineAudioContext.createBufferSource();
-        this._node.buffer = (this._proxy.buffer === null) ? null : this._proxy.buffer;
+        this._nativeNode = offlineAudioContext.createBufferSource();
+        this._nativeNode.buffer = (this._proxy.buffer === null) ? null : this._proxy.buffer;
 
         if (this._start !== null) {
             const { duration, offset, when } = this._start;
 
             if (duration === undefined) {
-                this._node.start(when, offset);
+                this._nativeNode.start(when, offset);
             } else {
-                this._node.start(when, offset, duration);
+                this._nativeNode.start(when, offset, duration);
             }
         }
 
         return this
-            ._connectSources(offlineAudioContext, <TNativeAudioNode> this._node)
-            .then(() => <TNativeAudioNode> this._node);
+            ._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode)
+            .then(() => <TNativeAudioNode> this._nativeNode);
     }
 
 }
