@@ -252,7 +252,6 @@ describe('AudioContext', () => {
             const ones = audioContext.createBuffer(1, 2, 44100);
 
             ones.copyToChannel(new Float32Array([ 1, 1 ]), 0);
-            ones.getChannelData(0)[1] = 1;
 
             const source = audioContext.createBufferSource();
 
