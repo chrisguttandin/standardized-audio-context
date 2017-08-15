@@ -9,17 +9,17 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
 
     // @todo listener
 
-    createBiquadFilter(): IBiquadFilterNode;
+    createBiquadFilter (): IBiquadFilterNode;
 
-    createBuffer(numberOfChannels: number, length: number, sampleRate: number): AudioBuffer;
+    createBuffer (numberOfChannels: number, length: number, sampleRate: number): AudioBuffer;
 
-    createBufferSource(): IAudioBufferSourceNode;
+    createBufferSource (): IAudioBufferSourceNode;
 
-    createGain(): IGainNode;
+    createGain (): IGainNode;
 
-    createIIRFilter(feedforward: number[], feedback: number[]): IIIRFilterNode;
+    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode;
 
-    decodeAudioData(
+    decodeAudioData (
         audioData: ArrayBuffer,
         successCallback?: TDecodeSuccessCallback,
         errorCallback?: TDecodeErrorCallback
