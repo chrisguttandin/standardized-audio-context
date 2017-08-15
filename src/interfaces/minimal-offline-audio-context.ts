@@ -4,6 +4,6 @@ export interface IMinimalOfflineAudioContext extends IMinimalBaseAudioContext {
 
     readonly length: number;
 
-    startRendering(): Promise<AudioBuffer>;
+    startRendering (): Promise<AudioBuffer>;
 
 }

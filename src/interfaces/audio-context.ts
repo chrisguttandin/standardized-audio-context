@@ -7,15 +7,15 @@ import { IOscillatorNode } from './oscillator-node';
 export interface IAudioContext extends IBaseAudioContext, IMinimalAudioContext {
 
     // @todo This should move into the IBaseAudioContext interface.
-    createAnalyser(): IAnalyserNode;
+    createAnalyser (): IAnalyserNode;
 
     // @todo This should move into the IBaseAudioContext interface.
-    createChannelMerger(numberOfInputs?: number): IAudioNode;
+    createChannelMerger (numberOfInputs?: number): IAudioNode;
 
     // @todo This should move into the IBaseAudioContext interface.
-    createChannelSplitter(numberOfOutputs?: number): IAudioNode;
+    createChannelSplitter (numberOfOutputs?: number): IAudioNode;
 
     // @todo This should move into the IBaseAudioContext interface.
-    createOscillator(): IOscillatorNode;
+    createOscillator (): IOscillatorNode;
 
 }
