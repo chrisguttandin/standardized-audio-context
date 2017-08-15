@@ -1,10 +1,19 @@
+import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
+import { ReflectiveInjector } from '@angular/core';
 import { RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioParam, IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { GainNodeRenderer } from '../renderers/gain-node';
-import { TChannelCountMode, TChannelInterpretation, TNativeGainNode } from '../types';
+import { TChannelCountMode, TChannelInterpretation } from '../types';
+import { AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
+
+const injector = ReflectiveInjector.resolveAndCreate([
+    AudioParamWrapper
+]);
+
+const audioParamWrapper = injector.get(AudioParamWrapper);
 
 const DEFAULT_OPTIONS: IGainOptions = {
     channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
@@ -28,19 +37,17 @@ export class GainNode extends NoneAudioDestinationNode implements IGainNode {
             const gainNodeRenderer = new GainNodeRenderer(this);
 
             RENDERER_STORE.set(this, gainNodeRenderer);
+
+            audioParamWrapper.wrap(nativeNode, 'gain');
         }
     }
 
-    public get gain () {
+    public get gain (): IAudioParam {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
 
-        if (isOfflineAudioContext(this._nativeNode.context)) {
-            // @todo Wrap the AudioParam to record the actions.
-        }
-
-        return (<TNativeGainNode> this._nativeNode).gain;
+        return <IAudioParam> (<any> this._nativeNode).gain;
     }
 
 }

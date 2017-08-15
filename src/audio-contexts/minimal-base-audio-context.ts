@@ -28,7 +28,7 @@ export class MinimalBaseAudioContext extends EventTarget implements IMinimalBase
     }
 
     public get onstatechange (): null | TStateChangeEventHandler {
-        return <TStateChangeEventHandler> this._context.onstatechange;
+        return <TStateChangeEventHandler> (<any> this._context).onstatechange;
     }
 
     public set onstatechange (value: null | TStateChangeEventHandler) {

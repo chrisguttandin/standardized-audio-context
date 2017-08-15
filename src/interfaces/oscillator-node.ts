@@ -1,11 +1,12 @@
 import { TOscillatorType } from '../types';
+import { IAudioParam } from './audio-param';
 import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
 
 export interface IOscillatorNode extends IAudioScheduledSourceNode {
 
-    readonly detune: AudioParam;
+    readonly detune: IAudioParam;
 
-    readonly frequency: AudioParam;
+    readonly frequency: IAudioParam;
 
     type: TOscillatorType;
 

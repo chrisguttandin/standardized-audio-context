@@ -1,5 +1,6 @@
 export * from './audio-context-state';
 export * from './audio-param';
+export * from './automation';
 export * from './biquad-filter-type';
 export * from './channel-count-mode';
 export * from './channel-interpretation';

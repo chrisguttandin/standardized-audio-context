@@ -1,9 +1,9 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { RENDERER_STORE } from '../globals';
-import { IAudioDestinationNode, IOfflineAudioCompletionEvent } from '../interfaces';
+import { IAudioDestinationNode, IAudioNodeRenderer, IOfflineAudioCompletionEvent } from '../interfaces';
 import { PromiseSupportTester } from '../testers/promise-support';
-import { TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioBuffer, TUnpatchedOfflineAudioContext } from '../types';
 import { cacheTestResult } from './cache-test-result';
 
 const injector = ReflectiveInjector.resolveAndCreate([
@@ -17,8 +17,10 @@ const isSupportingPromises = (context: TUnpatchedOfflineAudioContext) => cacheTe
     () => promiseSupportTester.test(context)
 );
 
-export const startRendering = (destination: IAudioDestinationNode, unpatchedOfflineAudioContext: TUnpatchedOfflineAudioContext) => {
-    const audioDestinationNodeRenderer = RENDERER_STORE.get(destination);
+export const startRendering = (
+    destination: IAudioDestinationNode, unpatchedOfflineAudioContext: TUnpatchedOfflineAudioContext
+): Promise<TNativeAudioBuffer> => {
+    const audioDestinationNodeRenderer = <IAudioNodeRenderer> RENDERER_STORE.get(destination);
 
     if (audioDestinationNodeRenderer === undefined) {
         throw new Error('Missing the associated renderer.');

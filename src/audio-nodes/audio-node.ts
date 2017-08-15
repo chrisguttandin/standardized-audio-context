@@ -6,7 +6,7 @@ import { AUDIO_NODE_STORE, CONTEXT_STORE, RENDERER_STORE } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioNode, IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IAudioNodeOptions, IAudioNodeRenderer, IMinimalBaseAudioContext } from '../interfaces';
 import { DisconnectingSupportTester } from '../testers/disconnecting-support';
 import { TChannelCountMode, TChannelInterpretation, TNativeAudioNode } from '../types';
 import { AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
@@ -129,13 +129,13 @@ export class AudioNode extends EventTarget implements IAudioNode {
         }
 
         if (isOfflineAudioContext(nativeContext)) {
-            const faker = RENDERER_STORE.get(destination);
+            const faker = <IAudioNodeRenderer> RENDERER_STORE.get(destination);
 
             if (faker === undefined) {
                 throw invalidAccessErrorFactory.create();
             }
 
-            const source = RENDERER_STORE.get(this);
+            const source = <IAudioNodeRenderer> RENDERER_STORE.get(this);
 
             if (source === undefined) {
                 throw new Error('The associated renderer is missing.');
@@ -170,13 +170,13 @@ export class AudioNode extends EventTarget implements IAudioNode {
                 return; // @todo
             }
 
-            const faker = RENDERER_STORE.get(destination);
+            const faker = <IAudioNodeRenderer> RENDERER_STORE.get(destination);
 
             if (faker === undefined) {
                 throw new Error('The associated renderer is missing.');
             }
 
-            const source = RENDERER_STORE.get(this);
+            const source = <IAudioNodeRenderer> RENDERER_STORE.get(this);
 
             if (source === undefined) {
                 throw new Error('The associated renderer is missing.');

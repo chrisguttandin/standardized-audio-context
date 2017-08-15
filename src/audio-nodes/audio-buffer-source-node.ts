@@ -4,7 +4,7 @@ import { RENDERER_STORE } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioBuffer, IAudioBufferSourceNode, IAudioBufferSourceOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioBuffer, IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioBufferSourceNodeRenderer } from '../renderers/audio-buffer-source-node';
 import { StopStoppedSupportTester } from '../testers/stop-stopped-support';
 import {
@@ -16,14 +16,17 @@ import {
     TUnpatchedOfflineAudioContext
 } from '../types';
 import { AudioBufferSourceNodeStopMethodWrapper } from '../wrappers/audio-buffer-source-node-stop-method';
+import { AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const injector = ReflectiveInjector.resolveAndCreate([
     AudioBufferSourceNodeStopMethodWrapper,
+    AudioParamWrapper,
     StopStoppedSupportTester
 ]);
 
 const audioBufferSourceNodeStopMethodWrapper = injector.get(AudioBufferSourceNodeStopMethodWrapper);
+const audioParamWrapper = injector.get(AudioParamWrapper);
 const stopStoppedSupportTester = injector.get(StopStoppedSupportTester);
 
 const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => {
@@ -70,6 +73,9 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
             const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
 
             RENDERER_STORE.set(this, audioBufferSourceNodeRenderer);
+
+            audioParamWrapper.wrap(nativeNode, 'detune');
+            audioParamWrapper.wrap(nativeNode, 'playbackRate');
         }
     }
 
@@ -87,7 +93,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
 
     public get onended (): null | TEndedEventHandler {
         // @todo
-        return (this._nativeNode === null) ? null : (<TNativeAudioBufferSourceNode> this._nativeNode).onended;
+        return (this._nativeNode === null) ? null : <TEndedEventHandler> (<any> this._nativeNode).onended;
     }
 
     public set onended (value: null | TEndedEventHandler) {
@@ -98,16 +104,12 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
         }
     }
 
-    public get detune () {
+    public get detune (): IAudioParam {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
 
-        if (isOfflineAudioContext(this._nativeNode.context)) {
-            // @todo Wrap the AudioParam to record the actions.
-        }
-
-        return (<TNativeAudioBufferSourceNode> this._nativeNode).detune;
+        return <IAudioParam> (<any> this._nativeNode).detune;
     }
 
     public get loop () {
@@ -149,16 +151,12 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
         }
     }
 
-    public get playbackRate () {
+    public get playbackRate (): IAudioParam {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
 
-        if (isOfflineAudioContext(this._nativeNode.context)) {
-            // @todo Wrap the AudioParam to record the actions.
-        }
-
-        return (<TNativeAudioBufferSourceNode> this._nativeNode).playbackRate;
+        return <IAudioParam> (<any> this._nativeNode).playbackRate;
     }
 
     public start (when = 0, offset = 0, duration?: number) {

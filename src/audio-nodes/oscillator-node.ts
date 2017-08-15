@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOptions } from '../interfaces';
+import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOptions } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -42,20 +42,20 @@ export class OscillatorNode extends NoneAudioDestinationNode implements IOscilla
         super(context, nativeNode, mergedOptions);
     }
 
-    public get detune (): AudioParam {
-        if (this._nativeNode !== null) {
-            return (<TNativeOscillatorNode> this._nativeNode).detune;
+    public get detune (): IAudioParam {
+        if (this._nativeNode === null) {
+            throw new Error('The associated nativeNode is missing.');
         }
 
-        throw new Error('This is not yet supported.');
+        return <IAudioParam> (<any> this._nativeNode).detune;
     }
 
-    public get frequency (): AudioParam {
-        if (this._nativeNode !== null) {
-            return (<TNativeOscillatorNode> this._nativeNode).frequency;
+    public get frequency (): IAudioParam {
+        if (this._nativeNode === null) {
+            throw new Error('The associated nativeNode is missing.');
         }
 
-        throw new Error('This is not yet supported.');
+        return <IAudioParam> (<any> this._nativeNode).frequency;
     }
 
     public get onended (): null | TEndedEventHandler {

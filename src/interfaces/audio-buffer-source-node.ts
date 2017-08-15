@@ -1,10 +1,11 @@
+import { IAudioParam } from './audio-param';
 import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
 
 export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
 
     buffer: null | AudioBuffer;
 
-    detune: AudioParam;
+    readonly detune: IAudioParam;
 
     loop: boolean;
 
@@ -12,7 +13,7 @@ export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
 
     loopStart: number;
 
-    playbackRate: AudioParam;
+    readonly playbackRate: IAudioParam;
 
     start (when?: number, offset?: number, duration?: number): void;
 

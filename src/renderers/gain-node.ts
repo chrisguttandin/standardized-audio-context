@@ -1,6 +1,7 @@
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNodeRenderer, IGainNode } from '../interfaces';
+import { renderAutomation } from '../helpers/render-automation';
+import { IAudioNodeRenderer, IAudioParam, IGainNode } from '../interfaces';
 import { TNativeAudioNode, TNativeGainNode, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
@@ -26,7 +27,11 @@ export class GainNodeRenderer extends AudioNodeRenderer implements IAudioNodeRen
 
         // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
         if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
+            const gainAudioParam = <IAudioParam> (<any> this._nativeNode).gain;
+
             this._nativeNode = offlineAudioContext.createGain();
+
+            renderAutomation(gainAudioParam, this._nativeNode.gain);
         }
 
         return this

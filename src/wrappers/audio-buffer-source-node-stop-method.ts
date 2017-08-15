@@ -1,15 +1,17 @@
-import { IAudioBufferSourceNode, IAudioNode } from '../interfaces';
-import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { IAudioNode } from '../interfaces';
+import { TNativeAudioBufferSourceNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
 export class AudioBufferSourceNodeStopMethodWrapper {
 
-    public wrap (audioBufferSourceNode: IAudioBufferSourceNode, audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) {
+    public wrap (
+        audioBufferSourceNode: TNativeAudioBufferSourceNode, audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext
+    ) {
         const gainNode = audioContext.createGain();
 
         audioBufferSourceNode.connect(gainNode);
         audioBufferSourceNode.addEventListener('ended', () => audioBufferSourceNode.disconnect(gainNode));
 
-        audioBufferSourceNode.connect = (destination: IAudioNode, output = 0, input = 0) => {
+        (<any> audioBufferSourceNode).connect = (destination: IAudioNode, output = 0, input = 0) => {
             gainNode.connect.call(gainNode, destination, output, input);
 
             return destination;

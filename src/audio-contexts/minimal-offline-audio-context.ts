@@ -2,7 +2,7 @@ import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { IndexSizeErrorFactory } from '../factories/index-size-error';
 import { startRendering } from '../helpers/start-rendering';
-import { IMinimalOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
+import { IAudioBuffer, IMinimalOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import {
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
@@ -63,7 +63,7 @@ export class MinimalOfflineAudioContext extends MinimalBaseAudioContext implemen
                     audioBufferWrapper.wrap(audioBuffer);
                 }
 
-                return audioBuffer;
+                return <IAudioBuffer> audioBuffer;
             });
     }
 
