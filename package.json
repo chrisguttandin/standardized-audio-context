@@ -60,7 +60,7 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
-    "ts-loader": "^2.3.2",
+    "ts-loader": "^2.3.3",
     "tsconfig-holy-grail": "^2.2.21",
     "tslint-config-holy-grail": "^10.0.0",
     "typescript": "~2.3.4",
