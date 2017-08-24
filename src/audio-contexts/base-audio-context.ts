@@ -146,12 +146,19 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
 
         // Bug #21: Safari does not return a Promise yet.
         return new Promise((resolve, reject) => {
+            const complete = () => {
+                try {
+                    deallocate(audioData);
+                } catch (err) { /* Ignore errors. */ }
+            };
+
             const fail = (err: DOMException | Error) => {
                 if (typeof errorCallback === 'function') {
                     errorCallback(err);
                 }
 
                 reject(err);
+                complete();
             };
 
             const succeed = (dBffrWrppr: AudioBuffer) => {
@@ -160,6 +167,8 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
                 if (typeof successCallback === 'function') {
                     successCallback(dBffrWrppr);
                 }
+
+                complete();
             };
 
             // Bug #26: Safari throws a synchronous error.
@@ -182,12 +191,6 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
                     } else {
                         fail(err);
                     }
-                });
-
-                setTimeout(() => {
-                    try {
-                        deallocate(audioData);
-                    } catch (err) { /* Ignore errors. */ }
                 });
             } catch (err) {
                 fail(err);

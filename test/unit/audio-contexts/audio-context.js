@@ -1528,6 +1528,19 @@ describe('AudioContext', () => {
                     });
             });
 
+            it('should allow to encode in parallel', function () {
+                this.timeout(10000);
+
+                const arrayBufferCopies = [];
+
+                for (let i = 1; i < 100; i += 1) {
+                    arrayBufferCopies.push(arrayBuffer.slice(0));
+                }
+
+                return Promise
+                    .all(arrayBufferCopies.map((rrBffr) => audioContext.decodeAudioData(rrBffr)));
+            });
+
         });
 
     });
