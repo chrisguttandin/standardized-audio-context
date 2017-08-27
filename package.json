@@ -9,7 +9,7 @@
     }
   },
   "dependencies": {
-    "@angular/core": "^4.3.5",
+    "@angular/core": "^4.3.6",
     "async-array-buffer": "^1.1.1",
     "core-js": "^2.5.0",
     "lru-cache": "^4.1.1",
