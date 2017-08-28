@@ -16,9 +16,7 @@ module.exports = {
         'clean:modernizr',
         'sh:build-es2015',
         'sh:build-es5',
-        'sh:build-esm',
-        'sh:build-script',
-        'uglify'
+        'sh:build-esm'
     ],
     continuous: [
         'test',
