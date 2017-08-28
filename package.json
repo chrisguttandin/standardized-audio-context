@@ -55,7 +55,6 @@
     "mocha": "^3.5.0",
     "rollup": "^0.48.2",
     "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
     "ts-loader": "^2.3.4",
