@@ -13,7 +13,6 @@
     "async-array-buffer": "^1.1.1",
     "core-js": "^2.5.0",
     "rxjs": "^5.4.3",
-    "tslint": "^5.7.0",
     "zone.js": "^0.8.17"
   },
   "description": "A patched AudioContext which imitates the current API in current browsers.",
@@ -58,6 +57,7 @@
     "sinon-chai": "^2.13.0",
     "ts-loader": "^2.3.4",
     "tsconfig-holy-grail": "^2.2.24",
+    "tslint": "^5.7.0",
     "tslint-config-holy-grail": "^10.0.3",
     "typescript": "~2.3.4",
     "webpack": "^3.5.5"
