@@ -25,7 +25,7 @@
     "chai": "^4.1.1",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
-    "eslint-config-holy-grail": "^19.0.1",
+    "eslint-config-holy-grail": "^20.0.0",
     "greenkeeper-lockfile": "^1.8.1",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
