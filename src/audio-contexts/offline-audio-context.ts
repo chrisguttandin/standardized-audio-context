@@ -35,15 +35,19 @@ export class OfflineAudioContext extends BaseAudioContext implements IOfflineAud
     constructor (options: IOfflineAudioContextOptions);
     constructor (numberOfChannels: number, length: number, sampleRate: number);
     constructor (a: number | IOfflineAudioContextOptions, b?: number, c?: number) {
+        let options: IOfflineAudioContextOptions;
+
         if (typeof a === 'number' && b !== undefined && c !== undefined) {
-            a = { length: b, numberOfChannels: a, sampleRate: c };
-        } else if (typeof a !== 'object') {
+            options = { length: b, numberOfChannels: a, sampleRate: c };
+        } else if (typeof a === 'object') {
+            options = a;
+        } else {
             throw new Error('The given parameters are not valid.');
         }
 
         const { length, numberOfChannels, sampleRate } = <typeof DEFAULT_OPTIONS & IOfflineAudioContextOptions> {
             ...DEFAULT_OPTIONS,
-            ...a
+            ...options
         };
 
         const unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
