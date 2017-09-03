@@ -11,7 +11,12 @@ export default {
         babel({
             exclude: 'node_modules/**',
             plugins: [
-                'external-helpers'
+                'external-helpers',
+                [
+                    'transform-runtime', {
+                        polyfill: false
+                    }
+                ]
             ],
             presets: [
                 [
@@ -20,7 +25,8 @@ export default {
                         modules: false
                     }
                 ]
-            ]
+            ],
+            runtimeHelpers: true
         })
     ]
 };
