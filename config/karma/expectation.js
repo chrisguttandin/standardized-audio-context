@@ -4,6 +4,8 @@ module.exports = (config) => {
 
         basePath: '../../',
 
+        browserNoActivityTimeout: 240000,
+
         frameworks: [
             'mocha',
             'sinon-chai'
