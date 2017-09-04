@@ -1,3 +1,4 @@
+export * from './audio-context-latency-category';
 export * from './audio-context-state';
 export * from './audio-param';
 export * from './automation';
