@@ -5,6 +5,7 @@ export * from './audio-buffer-options';
 export * from './audio-buffer-source-node';
 export * from './audio-buffer-source-options';
 export * from './audio-context';
+export * from './audio-context-options';
 export * from './audio-node-options';
 export * from './audio-destination-node';
 export * from './audio-node';
