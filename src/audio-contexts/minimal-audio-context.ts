@@ -1,7 +1,8 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { IMinimalAudioContext } from '../interfaces';
+import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
+import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
 import {
     UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedAudioContextConstructor as nptchdDCntxtCnstrctr
@@ -25,8 +26,15 @@ export class MinimalAudioContext extends MinimalBaseAudioContext implements IMin
 
     private _unpatchedAudioContext: TUnpatchedAudioContext;
 
-    constructor () {
-        const unpatchedAudioContext = new unpatchedAudioContextConstructor();
+    constructor (options: IAudioContextOptions = {}) {
+        const unpatchedAudioContext = new unpatchedAudioContextConstructor(options);
+
+        // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.
+        if (!isValidLatencyHint(options.latencyHint)) {
+            throw new TypeError(
+                `The provided value '${ options.latencyHint }' is not a valid enum value of type AudioContextLatencyCategory.`
+            );
+        }
 
         super(unpatchedAudioContext, unpatchedAudioContext.destination.channelCount);
 

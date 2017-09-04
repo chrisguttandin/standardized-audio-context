@@ -5,7 +5,8 @@ import { ChannelMergerNode } from '../audio-nodes/channel-merger-node';
 import { ChannelSplitterNode } from '../audio-nodes/channel-splitter-node';
 import { OscillatorNode } from '../audio-nodes/oscillator-node';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { IAnalyserNode, IAudioContext, IOscillatorNode } from '../interfaces';
+import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
+import { IAnalyserNode, IAudioContext, IAudioContextOptions, IOscillatorNode } from '../interfaces';
 import {
     UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedAudioContextConstructor as nptchdDCntxtCnstrctr
@@ -28,8 +29,15 @@ export class AudioContext extends BaseAudioContext implements IAudioContext {
 
     private _unpatchedAudioContext: TUnpatchedAudioContext;
 
-    constructor () {
-        const unpatchedAudioContext = new unpatchedAudioContextConstructor();
+    constructor (options: IAudioContextOptions = {}) {
+        const unpatchedAudioContext = new unpatchedAudioContextConstructor(options);
+
+        // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.
+        if (!isValidLatencyHint(options.latencyHint)) {
+            throw new TypeError(
+                `The provided value '${ options.latencyHint }' is not a valid enum value of type AudioContextLatencyCategory.`
+            );
+        }
 
         super(unpatchedAudioContext, unpatchedAudioContext.destination.channelCount);
 
