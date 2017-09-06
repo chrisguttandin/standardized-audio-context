@@ -1,5 +1,6 @@
 import 'core-js/es7/reflect';
 import { IS_SUPPORTED_PROMISE_PROVIDER, isSupportedPromise } from '../../../src/providers/is-supported-promise';
+import { AudioContextOptionsSupportTester } from '../../../src/testers/audio-context-options';
 import { CloseSupportTester } from '../../../src/testers/close-support';
 import { DecodeAudioDataTypeErrorSupportTester } from '../../../src/testers/decode-audio-data-type-error-support';
 import { MergingSupportTester } from '../../../src/testers/merging-support';
@@ -8,6 +9,7 @@ import { modernizr } from '../../../src/providers/modernizr';
 
 describe('isSupportedPromise', () => {
 
+    let fakeAudioContextOptionsSupportTester;
     let fakeCloseSupportTester;
     let fakeDecodeAudioDataTypeErrorSupportTester;
     let fakeMergingSupportTester;
@@ -15,6 +17,10 @@ describe('isSupportedPromise', () => {
     let injector;
 
     beforeEach(() => {
+        fakeAudioContextOptionsSupportTester = {
+            test: () => true
+        };
+
         fakeCloseSupportTester = {
             test: () => true
         };
@@ -34,6 +40,7 @@ describe('isSupportedPromise', () => {
         };
 
         injector = ReflectiveInjector.resolveAndCreate([
+            { provide: AudioContextOptionsSupportTester, useValue: fakeAudioContextOptionsSupportTester },
             { provide: CloseSupportTester, useValue: fakeCloseSupportTester },
             { provide: DecodeAudioDataTypeErrorSupportTester, useValue: fakeDecodeAudioDataTypeErrorSupportTester },
             { provide: MergingSupportTester, useValue: fakeMergingSupportTester },
@@ -46,6 +53,14 @@ describe('isSupportedPromise', () => {
         return injector
             .get(isSupportedPromise)
             .then((isSupported) => expect(isSupported).to.be.true);
+    });
+
+    it('should resolve to false if the test for AudioContextOptions support fails', () => {
+        fakeAudioContextOptionsSupportTester.test = () => false;
+
+        return injector
+            .get(isSupportedPromise)
+            .then((isSupported) => expect(isSupported).to.be.false);
     });
 
     it('should resolve to false if the test for close support fails', () => {
