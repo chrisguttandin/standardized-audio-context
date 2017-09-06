@@ -5,10 +5,10 @@ import { MODERNIZR_PROVIDER } from './providers/modernizr';
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-audio-context-constructor';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
-import { AudioContextOptionsSupportTester } from './testers/audio-context-options';
-import { CloseSupportTester } from './testers/close-support';
-import { DecodeAudioDataTypeErrorSupportTester } from './testers/decode-audio-data-type-error-support';
-import { MergingSupportTester } from './testers/merging-support';
+import { AudioContextOptionsSupportTester } from './support-testers/audio-context-options';
+import { CloseSupportTester } from './support-testers/close';
+import { DecodeAudioDataTypeErrorSupportTester } from './support-testers/decode-audio-data-type-error';
+import { MergingSupportTester } from './support-testers/merging';
 
 const injector = ReflectiveInjector.resolveAndCreate([
     AudioContextOptionsSupportTester,

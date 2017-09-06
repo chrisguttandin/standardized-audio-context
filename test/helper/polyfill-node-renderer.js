@@ -3,7 +3,7 @@ import {
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
 } from '../../src/providers/unpatched-offline-audio-context-constructor';
-import { PromiseSupportTester } from '../../src/testers/promise-support';
+import { PromiseSupportTester } from '../../src/support-testers/promise';
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../src/providers/window';
 import { cacheTestResult } from '../../src/helpers/cache-test-result';

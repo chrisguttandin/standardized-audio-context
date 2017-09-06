@@ -10,7 +10,7 @@ import {
     unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
 } from '../providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
-import { PromiseSupportTester } from '../testers/promise-support';
+import { PromiseSupportTester } from '../support-testers/promise';
 import {
     TNativeAudioBuffer,
     TNativeAudioBufferSourceNode,

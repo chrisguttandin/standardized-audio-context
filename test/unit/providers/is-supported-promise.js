@@ -1,9 +1,9 @@
 import 'core-js/es7/reflect';
 import { IS_SUPPORTED_PROMISE_PROVIDER, isSupportedPromise } from '../../../src/providers/is-supported-promise';
-import { AudioContextOptionsSupportTester } from '../../../src/testers/audio-context-options';
-import { CloseSupportTester } from '../../../src/testers/close-support';
-import { DecodeAudioDataTypeErrorSupportTester } from '../../../src/testers/decode-audio-data-type-error-support';
-import { MergingSupportTester } from '../../../src/testers/merging-support';
+import { AudioContextOptionsSupportTester } from '../../../src/support-testers/audio-context-options';
+import { CloseSupportTester } from '../../../src/support-testers/close';
+import { DecodeAudioDataTypeErrorSupportTester } from '../../../src/support-testers/decode-audio-data-type-error';
+import { MergingSupportTester } from '../../../src/support-testers/merging';
 import { ReflectiveInjector } from '@angular/core';
 import { modernizr } from '../../../src/providers/modernizr';
 

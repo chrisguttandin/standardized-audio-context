@@ -7,7 +7,7 @@ import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioNode, IAudioNodeOptions, IAudioNodeRenderer, IMinimalBaseAudioContext } from '../interfaces';
-import { DisconnectingSupportTester } from '../testers/disconnecting-support';
+import { DisconnectingSupportTester } from '../support-testers/disconnecting';
 import { TChannelCountMode, TChannelInterpretation, TNativeAudioNode } from '../types';
 import { AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
 

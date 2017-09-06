@@ -5,7 +5,7 @@ import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer, IAudioBufferOptions } from './interfaces';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
-import { AudioBufferCopyChannelMethodsSupportTester } from './testers/audio-buffer-copy-channel-methods-support';
+import { AudioBufferCopyChannelMethodsSupportTester } from './support-testers/audio-buffer-copy-channel-methods';
 import { AudioBufferWrapper } from './wrappers/audio-buffer';
 import { AudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
 

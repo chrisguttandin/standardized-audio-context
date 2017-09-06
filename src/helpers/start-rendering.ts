@@ -2,7 +2,7 @@ import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { RENDERER_STORE } from '../globals';
 import { IAudioDestinationNode, IAudioNodeRenderer, IOfflineAudioCompletionEvent } from '../interfaces';
-import { PromiseSupportTester } from '../testers/promise-support';
+import { PromiseSupportTester } from '../support-testers/promise';
 import { TNativeAudioBuffer, TUnpatchedOfflineAudioContext } from '../types';
 import { cacheTestResult } from './cache-test-result';
 

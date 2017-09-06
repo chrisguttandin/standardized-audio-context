@@ -6,7 +6,7 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioBuffer, IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioBufferSourceNodeRenderer } from '../renderers/audio-buffer-source-node';
-import { StopStoppedSupportTester } from '../testers/stop-stopped-support';
+import { StopStoppedSupportTester } from '../support-testers/stop-stopped';
 import {
     TChannelCountMode,
     TChannelInterpretation,

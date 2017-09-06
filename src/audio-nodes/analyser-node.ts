@@ -4,7 +4,7 @@ import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../testers/analyser-node-get-float-time-domain-data';
+import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../support-testers/analyser-node-get-float-time-domain-data';
 import {
     TChannelCountMode,
     TChannelInterpretation,

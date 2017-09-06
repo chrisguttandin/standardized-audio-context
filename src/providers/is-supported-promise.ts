@@ -1,8 +1,8 @@
 import { InjectionToken } from '@angular/core';
-import { AudioContextOptionsSupportTester } from '../testers/audio-context-options';
-import { CloseSupportTester } from '../testers/close-support';
-import { DecodeAudioDataTypeErrorSupportTester } from '../testers/decode-audio-data-type-error-support';
-import { MergingSupportTester } from '../testers/merging-support';
+import { AudioContextOptionsSupportTester } from '../support-testers/audio-context-options';
+import { CloseSupportTester } from '../support-testers/close';
+import { DecodeAudioDataTypeErrorSupportTester } from '../support-testers/decode-audio-data-type-error';
+import { MergingSupportTester } from '../support-testers/merging';
 import { TModernizr, modernizr } from './modernizr';
 
 export const isSupportedPromise = new InjectionToken<Promise<boolean>>('IS_SUPPORTED_PROMISE');
