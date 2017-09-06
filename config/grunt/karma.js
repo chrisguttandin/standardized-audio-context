@@ -1,4 +1,7 @@
 module.exports = {
+    'integration': {
+        configFile: 'config/karma/integration.js'
+    },
     'test': {
         configFile: 'config/karma/config.js'
     },
