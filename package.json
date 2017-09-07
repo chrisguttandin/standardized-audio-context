@@ -30,7 +30,7 @@
     "cz-conventional-changelog": "^2.0.0",
     "eslint": "^4.6.1",
     "eslint-config-holy-grail": "^21.0.0",
-    "greenkeeper-lockfile": "^1.8.1",
+    "greenkeeper-lockfile": "^1.9.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
