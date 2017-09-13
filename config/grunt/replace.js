@@ -43,7 +43,7 @@ export default (function(window: any){`
                 replacement: 'return $1'
             }, {
                 match: /\}\)\(window,\sdocument\);/g,
-                replacement: '})(window);'
+                replacement: '})(window);\n'
             }, {
                 match: /new\swindow.Promise\(function\(r\)\s\{\sresolve\s=\sr;\s\}\);/g,
                 replacement: 'new window.Promise(function(r: any) { resolve = r; });'
