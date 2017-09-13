@@ -1,8 +1,8 @@
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor } from '../../../src/providers/unpatched-offline-audio-context-constructor';
-import { spy, stub } from 'sinon';
+import { spy, stub } from 'sinon';
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
-import { loadFixture } from '../../helper/load-fixture';
+import { loadFixture } from '../../helper/load-fixture';
 
 describe('offlineAudioContextConstructor', () => {
 
@@ -536,7 +536,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should throw a synchronous error', (done) => {
             try {
                 offlineAudioContext.decodeAudioData(null, () => {});
-            } catch (err) {
+            } catch (err) {
                 done();
             }
         });

@@ -526,7 +526,7 @@ describe('audioContextConstructor', () => {
             it('should throw a synchronous error', (done) => {
                 try {
                     audioContext.decodeAudioData(null, () => {});
-                } catch (err) {
+                } catch (err) {
                     done();
                 }
             });

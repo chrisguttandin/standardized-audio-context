@@ -7,7 +7,7 @@ import { OfflineAudioContext } from '../../../src/audio-contexts/offline-audio-c
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
-import { spy } from 'sinon';
+import { spy } from 'sinon';
 
 describe('OfflineAudioContext', () => {
 

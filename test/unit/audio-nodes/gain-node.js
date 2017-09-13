@@ -1,5 +1,5 @@
 import { OfflineAudioContext } from '../../../src/audio-contexts/offline-audio-context';
-import { PolyfillNode } from '../../helper/polyfill-node';
+import { PolyfillNode } from '../../helper/polyfill-node';
 
 describe('GainNode', () => {
 
