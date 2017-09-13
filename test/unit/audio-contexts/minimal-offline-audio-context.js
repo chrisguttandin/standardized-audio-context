@@ -1,4 +1,4 @@
-import { AudioBuffer } from '../../../src/audio-buffer';
+import { AudioBuffer } from '../../../src/audio-buffer';
 import { AudioBufferSourceNode } from '../../../src/audio-nodes/audio-buffer-source-node';
 import { MinimalOfflineAudioContext } from '../../../src/audio-contexts/minimal-offline-audio-context';
 

@@ -1,4 +1,4 @@
-import { AudioContext, OfflineAudioContext, decodeAudioData, isSupported } from '../../src/module';
+import { AudioContext, OfflineAudioContext, decodeAudioData, isSupported } from '../../src/module';
 
 describe('module', () => {
 

@@ -8,7 +8,7 @@ import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { createScriptProcessor } from '../../helper/create-script-processor';
 import { loadFixture } from '../../helper/load-fixture';
-import { spy } from 'sinon';
+import { spy } from 'sinon';
 
 describe('AudioContext', () => {
 

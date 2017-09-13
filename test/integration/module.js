@@ -1,4 +1,4 @@
-import { isSupported } from '../../src/module';
+import { isSupported } from '../../src/module';
 
 describe('module', () => {
 

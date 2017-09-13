@@ -1,4 +1,4 @@
-import { AUDIO_NODE_STORE, CONTEXT_STORE } from '../../src/globals';
+import { AUDIO_NODE_STORE, CONTEXT_STORE } from '../../src/globals';
 
 export const createScriptProcessor = (context, bufferSize, numberOfInputChannels, numberOfOutputChannels) => {
     const nativeContext = CONTEXT_STORE.get(context);
@@ -6,7 +6,7 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
     const scriptProcessorNodeProxy = new Proxy(scriptProcessorNode, {
 
         get (target, property) {
-            if (property === 'connect' || property === 'disconnect') {
+            if (property === 'connect' || property === 'disconnect') {
                 return function (destination, ...args) {
                     target[property].call(target, AUDIO_NODE_STORE.get(destination), ...args);
 
