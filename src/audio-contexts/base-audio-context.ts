@@ -3,7 +3,7 @@ import { AudioBufferSourceNode } from '../audio-nodes/audio-buffer-source-node';
 import { BiquadFilterNode } from '../audio-nodes/biquad-filter-node';
 import { GainNode } from '../audio-nodes/gain-node';
 import { IIRFilterNode } from '../audio-nodes/iir-filter-node';
-import { decodeAudioData } from '../decode-audio-data';
+import { decodeAudioData } from '../decode-audio-data';
 import { IAudioBuffer, IAudioBufferSourceNode, IBaseAudioContext, IBiquadFilterNode, IGainNode, IIIRFilterNode } from '../interfaces';
 import {
     TDecodeErrorCallback,

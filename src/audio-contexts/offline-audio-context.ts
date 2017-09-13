@@ -1,6 +1,6 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
-import { IndexSizeErrorFactory } from '../factories/index-size-error';
+import { IndexSizeErrorFactory } from '../factories/index-size-error';
 import { startRendering } from '../helpers/start-rendering';
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import {
@@ -41,7 +41,7 @@ export class OfflineAudioContext extends BaseAudioContext implements IOfflineAud
             options = { length: b, numberOfChannels: a, sampleRate: c };
         } else if (typeof a === 'object') {
             options = a;
-        } else {
+        } else {
             throw new Error('The given parameters are not valid.');
         }
 

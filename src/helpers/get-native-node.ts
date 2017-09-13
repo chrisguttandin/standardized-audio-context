@@ -1,5 +1,5 @@
 import { AUDIO_NODE_STORE } from '../globals';
-import { IAudioNode } from '../interfaces';
+import { IAudioNode } from '../interfaces';
 
 export const getNativeNode = (audioNode: IAudioNode) => {
     const nativeNode = AUDIO_NODE_STORE.get(audioNode);

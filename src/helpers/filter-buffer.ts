@@ -1,4 +1,4 @@
-import { TTypedArray } from '../types';
+import { TTypedArray } from '../types';
 
 // This implementation as shamelessly inspired by source code of
 // tslint:disable-next-line:max-line-length

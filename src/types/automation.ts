@@ -6,7 +6,7 @@ import {
     ISetValueCurveAutomation
 } from '../interfaces';
 
-export type TAutomation = IExponentialRampToValueAutomation |
+export type TAutomation = IExponentialRampToValueAutomation |
     ILinearRampToValueAutomation |
     ISetTargetAutomation |
     ISetValueAutomation |

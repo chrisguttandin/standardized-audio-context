@@ -25,10 +25,10 @@ const injector = ReflectiveInjector.resolveAndCreate([
 export * from './interfaces';
 export * from './types';
 
-export { AudioContext } from './audio-contexts/audio-context';
+export { AudioContext } from './audio-contexts/audio-context';
 
-export { OfflineAudioContext } from './audio-contexts/offline-audio-context';
+export { OfflineAudioContext } from './audio-contexts/offline-audio-context';
 
-export { decodeAudioData } from './decode-audio-data';
+export { decodeAudioData } from './decode-audio-data';
 
 export const isSupported: Promise<boolean> = injector.get(isSupportedPromise);

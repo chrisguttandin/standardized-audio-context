@@ -6,7 +6,7 @@ import { EncodingErrorFactory } from './factories/encoding-error';
 import { IndexSizeErrorFactory } from './factories/index-size-error';
 import { DETACHED_ARRAY_BUFFERS } from './globals';
 import { cacheTestResult } from './helpers/cache-test-result';
-import { IAudioBuffer } from './interfaces';
+import { IAudioBuffer } from './interfaces';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
 import { AudioBufferCopyChannelMethodsSupportTester } from './support-testers/audio-buffer-copy-channel-methods';

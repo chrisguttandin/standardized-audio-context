@@ -32,7 +32,7 @@ export class MinimalAudioContext extends MinimalBaseAudioContext implements IMin
         // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.
         if (!isValidLatencyHint(options.latencyHint)) {
             throw new TypeError(
-                `The provided value '${ options.latencyHint }' is not a valid enum value of type AudioContextLatencyCategory.`
+                `The provided value '${ options.latencyHint }' is not a valid enum value of type AudioContextLatencyCategory.`
             );
         }
 
