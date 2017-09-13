@@ -1,7 +1,7 @@
 import { AudioParam } from '../audio-param';
 import { RENDERER_STORE } from '../globals';
 import { IAudioNode } from '../interfaces';
-import { AudioParamRenderer } from '../renderers/audio-param';
+import { AudioParamRenderer } from '../renderers/audio-param';
 import { TNativeAudioParam } from '../types';
 
 export class AudioParamWrapper {

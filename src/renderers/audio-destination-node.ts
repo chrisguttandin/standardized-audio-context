@@ -1,6 +1,6 @@
 import { IAudioDestinationNode, IAudioNodeRenderer } from '../interfaces';
 import { TNativeAudioDestinationNode, TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
-import { AudioNodeRenderer } from './audio-node';
+import { AudioNodeRenderer } from './audio-node';
 
 export class AudioDestinationNodeRenderer extends AudioNodeRenderer implements IAudioNodeRenderer {
 

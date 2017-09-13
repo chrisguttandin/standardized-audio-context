@@ -1,7 +1,7 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { RENDERER_STORE } from '../globals';
-import { getNativeContext } from '../helpers/get-native-context';
+import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioParam, IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { GainNodeRenderer } from '../renderers/gain-node';

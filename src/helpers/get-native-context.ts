@@ -1,5 +1,5 @@
 import { CONTEXT_STORE } from '../globals';
-import { IMinimalBaseAudioContext } from '../interfaces';
+import { IMinimalBaseAudioContext } from '../interfaces';
 
 export const getNativeContext = (context: IMinimalBaseAudioContext) => {
     const nativeContext = CONTEXT_STORE.get(context);

@@ -1,4 +1,4 @@
-import { TAudioContextLatencyCategory } from '../types';
+import { TAudioContextLatencyCategory } from '../types';
 
 export interface IAudioContextOptions {
 

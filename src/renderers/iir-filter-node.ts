@@ -2,8 +2,8 @@ import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
 import { ReflectiveInjector } from '@angular/core';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { filterBuffer } from '../helpers/filter-buffer';
-import { getNativeNode } from '../helpers/get-native-node';
-import { isOwnedByContext } from '../helpers/is-owned-by-context';
+import { getNativeNode } from '../helpers/get-native-node';
+import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNodeRenderer, IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioCompletionEvent } from '../interfaces';
 import {
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
@@ -20,7 +20,7 @@ import {
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
-import { AudioNodeRenderer } from './audio-node';
+import { AudioNodeRenderer } from './audio-node';
 
 const injector = ReflectiveInjector.resolveAndCreate([
     PromiseSupportTester,
@@ -31,7 +31,7 @@ const injector = ReflectiveInjector.resolveAndCreate([
 const promiseSupportTester = injector.get(PromiseSupportTester);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
 
-const isSupportingPromises = (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => cacheTestResult(
+const isSupportingPromises = (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => cacheTestResult(
     PromiseSupportTester,
     () => promiseSupportTester.test(context)
 );

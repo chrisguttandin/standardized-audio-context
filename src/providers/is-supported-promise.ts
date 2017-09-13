@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { AudioContextOptionsSupportTester } from '../support-testers/audio-context-options';
+import { AudioContextOptionsSupportTester } from '../support-testers/audio-context-options';
 import { CloseSupportTester } from '../support-testers/close';
 import { DecodeAudioDataTypeErrorSupportTester } from '../support-testers/decode-audio-data-type-error';
 import { MergingSupportTester } from '../support-testers/merging';

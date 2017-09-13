@@ -1,8 +1,8 @@
-import { getNativeNode } from '../helpers/get-native-node';
-import { isOwnedByContext } from '../helpers/is-owned-by-context';
+import { getNativeNode } from '../helpers/get-native-node';
+import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNodeRenderer, IBiquadFilterNode } from '../interfaces';
 import { TNativeAudioNode, TNativeBiquadFilterNode, TUnpatchedOfflineAudioContext } from '../types';
-import { AudioNodeRenderer } from './audio-node';
+import { AudioNodeRenderer } from './audio-node';
 
 export class BiquadFilterNodeRenderer extends AudioNodeRenderer implements IAudioNodeRenderer {
 
