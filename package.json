@@ -93,5 +93,5 @@
     "test": "grunt lint && grunt test"
   },
   "types": "build/esm/module.d.ts",
-  "version": "9.5.4"
+  "version": "9.5.5"
 }
