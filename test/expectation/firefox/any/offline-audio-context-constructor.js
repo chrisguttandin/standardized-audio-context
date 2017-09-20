@@ -21,18 +21,6 @@ describe('offlineAudioContextConstructor', () => {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
-    describe('constructor()', () => {
-
-        // bug #46
-
-        it('should throw a TypeError', () => {
-            expect(() => {
-                new OfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 });
-            }).to.throw(TypeError);
-        });
-
-    });
-
     describe('createBufferSource()', () => {
 
         describe('start()', () => {
