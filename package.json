@@ -60,7 +60,7 @@
     "sinon": "^3.3.0",
     "sinon-chai": "^2.13.0",
     "ts-loader": "^2.3.7",
-    "tsconfig-holy-grail": "^2.4.3",
+    "tsconfig-holy-grail": "^2.4.4",
     "tslint": "^5.7.0",
     "tslint-config-holy-grail": "^13.0.3",
     "typescript": "~2.3.4",
