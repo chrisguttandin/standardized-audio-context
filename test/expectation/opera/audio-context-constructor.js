@@ -44,34 +44,6 @@ describe('audioContextConstructor', () => {
 
     describe('createBufferSource()', () => {
 
-        describe('playbackRate', () => {
-
-            // bug #45
-
-            it('should throw a DOMException', () => {
-                const bufferSourceNode = audioContext.createBufferSource();
-
-                expect(() => {
-                    bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
-                }).to.throw(DOMException);
-            });
-
-        });
-
-        describe('start()', () => {
-
-            // bug #44
-
-            it('should throw a DOMException', () => {
-                const bufferSourceNode = audioContext.createBufferSource();
-
-                expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
-                expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
-                expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
-            });
-
-        });
-
         describe('stop()', () => {
 
             // bug #44
