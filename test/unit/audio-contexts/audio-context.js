@@ -682,6 +682,19 @@ describe('AudioContext', () => {
                 }
             });
 
+            it('should not allow to stop an AudioBufferSourceNode which has not been started', (done) => {
+                const audioBufferSourceNode = audioContext.createBufferSource();
+
+                try {
+                    audioBufferSourceNode.stop();
+                } catch (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    done();
+                }
+            });
+
             it('should stop an AudioBufferSourceNode scheduled for stopping in the future', (done) => {
                 const audioBuffer = audioContext.createBuffer(1, 44100, 44100);
                 const audioBufferSourceNode = audioContext.createBufferSource();
