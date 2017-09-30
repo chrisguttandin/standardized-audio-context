@@ -1,27 +1,23 @@
 module.exports = {
     config: {
         options: {
-            configFile: 'config/eslint/config.json'
+            configFile: 'config/eslint/config.json',
+            reportUnusedDisableDirectives: true
         },
-        src: [
-            '*.js',
-            'config/**/*.js'
-        ]
+        src: [ '*.js', 'config/**/*.js' ]
     },
     src: {
         options: {
-            configFile: 'config/eslint/src.json'
+            configFile: 'config/eslint/src.json',
+            reportUnusedDisableDirectives: true
         },
-        src: [
-            'src/**/*.js'
-        ]
+        src: [ 'src/**/*.js' ]
     },
     test: {
         options: {
-            configFile: 'config/eslint/test.json'
+            configFile: 'config/eslint/test.json',
+            reportUnusedDisableDirectives: true
         },
-        src: [
-            'test/**/*.js'
-        ]
+        src: [ 'test/**/*.js' ]
     }
 };
