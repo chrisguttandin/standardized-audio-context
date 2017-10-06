@@ -16,7 +16,7 @@ import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../wrappers/ana
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IAnalyserOptions = {
-    channelCount: 1,
+    channelCount: 2,
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers',
     fftSize: 2048,
@@ -47,9 +47,9 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
 
     const nativeNode =  nativeContext.createAnalyser();
 
-    // Bug #37: Only Chrome, Firefox and Opera create an AnalyserNode with the default properties.
-    if (nativeNode.channelCount === 2) {
-        nativeNode.channelCount = 1;
+    // Bug #37: Only Edge and Safari create an AnalyserNode with the default properties.
+    if (nativeNode.channelCount === 1) {
+        nativeNode.channelCount = 2;
     }
 
     // Bug #36: Safari does not support getFloatTimeDomainData() yet.

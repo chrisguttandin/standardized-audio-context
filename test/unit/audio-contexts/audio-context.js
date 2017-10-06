@@ -230,7 +230,7 @@ describe('AudioContext', () => {
             it('should return an instance of the AnalyserNode interface', () => {
                 const analyserNode = audioContext.createAnalyser();
 
-                expect(analyserNode.channelCount).to.equal(1);
+                expect(analyserNode.channelCount).to.equal(2);
                 expect(analyserNode.channelCountMode).to.equal('max');
                 expect(analyserNode.channelInterpretation).to.equal('speakers');
 
