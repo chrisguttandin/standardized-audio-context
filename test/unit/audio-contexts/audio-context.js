@@ -435,16 +435,18 @@ describe('AudioContext', () => {
 
                 // bug #22 This is not yet implemented in Edge and Safari.
 
-                // it('should fill the magResponse and phaseResponse arrays', () => {
-                //     const biquadFilterNode = audioContext.createBiquadFilter();
-                //     const magResponse = new Float32Array(5);
-                //     const phaseResponse = new Float32Array(5);
-                //
-                //     biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
-                //
-                //     expect(Array.from(magResponse)).to.deep.equal([ 1.184295654296875, 0.9401244521141052, 0.2128090262413025, 0.048817940056324005, 0.011635963805019855 ]);
-                //     expect(Array.from(phaseResponse)).to.deep.equal([ -0.6473332643508911, -1.862880825996399, -2.692772388458252, -2.9405176639556885, -3.044968605041504 ]);
-                // });
+                /*
+                 * it('should fill the magResponse and phaseResponse arrays', () => {
+                 *     const biquadFilterNode = audioContext.createBiquadFilter();
+                 *     const magResponse = new Float32Array(5);
+                 *     const phaseResponse = new Float32Array(5);
+                 *
+                 *     biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+                 *
+                 *     expect(Array.from(magResponse)).to.deep.equal([ 1.184295654296875, 0.9401244521141052, 0.2128090262413025, 0.048817940056324005, 0.011635963805019855 ]);
+                 *     expect(Array.from(phaseResponse)).to.deep.equal([ -0.6473332643508911, -1.862880825996399, -2.692772388458252, -2.9405176639556885, -3.044968605041504 ]);
+                 * });
+                 */
 
             });
 
@@ -616,13 +618,15 @@ describe('AudioContext', () => {
 
                 expect(audioBufferSourceNode.buffer).to.be.null;
 
-                // expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
-                // expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
-                // expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a('function');
-                // expect(audioBufferSourceNode.detune.linearRampToValueAtTime).to.be.a('function');
-                // expect(audioBufferSourceNode.detune.setTargetAtTime).to.be.a('function');
-                // expect(audioBufferSourceNode.detune.setValueCurveAtTime).to.be.a('function');
-                // expect(audioBufferSourceNode.detune.value).to.equal(0);
+                /*
+                 * expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
+                 * expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
+                 * expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a('function');
+                 * expect(audioBufferSourceNode.detune.linearRampToValueAtTime).to.be.a('function');
+                 * expect(audioBufferSourceNode.detune.setTargetAtTime).to.be.a('function');
+                 * expect(audioBufferSourceNode.detune.setValueCurveAtTime).to.be.a('function');
+                 * expect(audioBufferSourceNode.detune.value).to.equal(0);
+                 */
 
                 expect(audioBufferSourceNode.loop).to.be.false;
                 expect(audioBufferSourceNode.loopEnd).to.equal(0);
@@ -723,9 +727,11 @@ describe('AudioContext', () => {
                     expect(Array.from(channelData)).to.not.contain(1);
 
                     if (event.playbackTime > currentTime + 1) {
-                        // @todo Disconnecting the nodes causes a strange error in Firefox version 52 and above.
-                        // @todo scriptProcessorNode.disconnect(audioContext.destination);
-                        // @todo audioBufferSourceNode.disconnect(scriptProcessorNode);
+                        /*
+                         * @todo Disconnecting the nodes causes a strange error in Firefox version 52 and above.
+                         * @todo scriptProcessorNode.disconnect(audioContext.destination);
+                         * @todo audioBufferSourceNode.disconnect(scriptProcessorNode);
+                         */
 
                         done();
                     }
@@ -1308,8 +1314,10 @@ describe('AudioContext', () => {
 
                 expect(oscillatorNode.channelCount).to.equal(2);
 
-                // channelCountMode is not specified
-                // channelInterpretation is not specified
+                /*
+                 * channelCountMode is not specified
+                 * channelInterpretation is not specified
+                 */
 
                 expect(oscillatorNode.detune.cancelScheduledValues).to.be.a('function');
                 expect(oscillatorNode.detune.defaultValue).to.equal(0);

@@ -23,8 +23,10 @@ describe('GainNode', () => {
             expect(gainNode.gain.defaultValue).to.equal(1);
             expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
             expect(gainNode.gain.linearRampToValueAtTime).to.be.a('function');
-            // @todo maxValue
-            // @todo minValue
+            /*
+             * @todo maxValue
+             * @todo minValue
+             */
             expect(gainNode.gain.setTargetAtTime).to.be.a('function');
             // @todo setValueAtTime
             expect(gainNode.gain.setValueCurveAtTime).to.be.a('function');

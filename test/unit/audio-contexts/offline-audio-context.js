@@ -280,19 +280,21 @@ describe('OfflineAudioContext', () => {
             }).to.throw(TypeError);
         });
 
-        // @todo This does currently not work because of bug #49.
-        // it('should be transitioned to running', (done) => {
-        //     offlineAudioContext.onstatechange = () => {
-        //         expect(offlineAudioContext.state).to.equal('running');
-        //
-        //         // Prevent consecutive calls.
-        //         offlineAudioContext.onstatechange = null;
-        //
-        //         done();
-        //     };
-        //
-        //     offlineAudioContext.startRendering();
-        // });
+        /*
+         * @todo This does currently not work because of bug #49.
+         * it('should be transitioned to running', (done) => {
+         *     offlineAudioContext.onstatechange = () => {
+         *         expect(offlineAudioContext.state).to.equal('running');
+         *
+         *         // Prevent consecutive calls.
+         *         offlineAudioContext.onstatechange = null;
+         *
+         *         done();
+         *     };
+         *
+         *     offlineAudioContext.startRendering();
+         * });
+         */
 
         it('should be closed after the buffer was rendered', () => {
             return offlineAudioContext
@@ -384,16 +386,18 @@ describe('OfflineAudioContext', () => {
 
             // bug #22 This is not yet implemented in Edge and Safari.
 
-            // it('should fill the magResponse and phaseResponse arrays', () => {
-            //     const biquadFilterNode = offlineAudioContext.createBiquadFilter();
-            //     const magResponse = new Float32Array(5);
-            //     const phaseResponse = new Float32Array(5);
-            //
-            //     biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
-            //
-            //     expect(Array.from(magResponse)).to.deep.equal([ 1.184295654296875, 0.9401244521141052, 0.2128090262413025, 0.048817940056324005, 0.011635963805019855 ]);
-            //     expect(Array.from(phaseResponse)).to.deep.equal([ -0.6473332643508911, -1.862880825996399, -2.692772388458252, -2.9405176639556885, -3.044968605041504 ]);
-            // });
+            /*
+             * it('should fill the magResponse and phaseResponse arrays', () => {
+             *     const biquadFilterNode = offlineAudioContext.createBiquadFilter();
+             *     const magResponse = new Float32Array(5);
+             *     const phaseResponse = new Float32Array(5);
+             *
+             *     biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+             *
+             *     expect(Array.from(magResponse)).to.deep.equal([ 1.184295654296875, 0.9401244521141052, 0.2128090262413025, 0.048817940056324005, 0.011635963805019855 ]);
+             *     expect(Array.from(phaseResponse)).to.deep.equal([ -0.6473332643508911, -1.862880825996399, -2.692772388458252, -2.9405176639556885, -3.044968605041504 ]);
+             * });
+             */
 
         });
 
@@ -736,8 +740,10 @@ describe('OfflineAudioContext', () => {
         it('should filter the given input', function (done) {
             this.timeout(10000);
 
-            // @todo Move this in a beforeEach block.
-            // Recreate an OfflineAudioContext with 2 channels.
+            /*
+             * @todo Move this in a beforeEach block.
+             * Recreate an OfflineAudioContext with 2 channels.
+             */
             offlineAudioContext = new OfflineAudioContext(2, 129, 44100);
 
             const audioBuffer = offlineAudioContext.createBuffer(2, 3, 44100);
@@ -776,8 +782,10 @@ describe('OfflineAudioContext', () => {
         it('should filter another given input', function (done) {
             this.timeout(10000);
 
-            // @todo Move this in a beforeEach block.
-            // Recreate an OfflineAudioContext with 3 channels.
+            /*
+             * @todo Move this in a beforeEach block.
+             * Recreate an OfflineAudioContext with 3 channels.
+             */
             offlineAudioContext = new OfflineAudioContext(3, 129, 44100);
 
             const audioBuffer = offlineAudioContext.createBuffer(3, 3, 44100);
@@ -1189,39 +1197,41 @@ describe('OfflineAudioContext', () => {
 
     });
 
-    // describe('suspend()', () => {
-    //
-    //     it('should suspend the render process at the render quantum', (done) => {
-    //         offlineAudioContext
-    //             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
-    //             .then(() => {
-    //                 expect(offlineAudioContext.currentTime).to.equal(0);
-    //
-    //                 offlineAudioContext.resume();
-    //
-    //                 done();
-    //             });
-    //
-    //         offlineAudioContext.startRendering();
-    //     });
-    //
-    //     it('should not allow to suspend the render process more than once at the render quantum', (done) => {
-    //         offlineAudioContext
-    //             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
-    //             .then(() => offlineAudioContext.resume());
-    //
-    //         offlineAudioContext
-    //             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
-    //             .catch((err) => {
-    //                 expect(err.code).to.equal(11);
-    //                 expect(err.name).to.equal('InvalidStateError');
-    //
-    //                 done();
-    //             });
-    //
-    //         offlineAudioContext.startRendering();
-    //     });
-    //
-    // });
+    /*
+     * describe('suspend()', () => {
+     *
+     *     it('should suspend the render process at the render quantum', (done) => {
+     *         offlineAudioContext
+     *             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
+     *             .then(() => {
+     *                 expect(offlineAudioContext.currentTime).to.equal(0);
+     *
+     *                 offlineAudioContext.resume();
+     *
+     *                 done();
+     *             });
+     *
+     *         offlineAudioContext.startRendering();
+     *     });
+     *
+     *     it('should not allow to suspend the render process more than once at the render quantum', (done) => {
+     *         offlineAudioContext
+     *             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
+     *             .then(() => offlineAudioContext.resume());
+     *
+     *         offlineAudioContext
+     *             .suspend(Math.floor(Math.random() * 128) / offlineAudioContext.sampleRate)
+     *             .catch((err) => {
+     *                 expect(err.code).to.equal(11);
+     *                 expect(err.name).to.equal('InvalidStateError');
+     *
+     *                 done();
+     *             });
+     *
+     *         offlineAudioContext.startRendering();
+     *     });
+     *
+     * });
+     */
 
 });

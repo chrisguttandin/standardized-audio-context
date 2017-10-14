@@ -196,19 +196,21 @@ describe('MinimalOfflineAudioContext', () => {
             }).to.throw(TypeError);
         });
 
-        // @todo This does currently not work because of bug #49.
-        // it('should be transitioned to running', (done) => {
-        //     minimalOfflineAudioContext.onstatechange = () => {
-        //         expect(minimalOfflineAudioContext.state).to.equal('running');
-        //
-        //         // Prevent consecutive calls.
-        //         minimalOfflineAudioContext.onstatechange = null;
-        //
-        //         done();
-        //     };
-        //
-        //     minimalOfflineAudioContext.startRendering();
-        // });
+        /*
+         * @todo This does currently not work because of bug #49.
+         * it('should be transitioned to running', (done) => {
+         *     minimalOfflineAudioContext.onstatechange = () => {
+         *         expect(minimalOfflineAudioContext.state).to.equal('running');
+         *
+         *         // Prevent consecutive calls.
+         *         minimalOfflineAudioContext.onstatechange = null;
+         *
+         *         done();
+         *     };
+         *
+         *     minimalOfflineAudioContext.startRendering();
+         * });
+         */
 
         it('should be closed after the buffer was rendered', () => {
             return minimalOfflineAudioContext
