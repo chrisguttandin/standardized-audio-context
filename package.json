@@ -9,7 +9,7 @@
     }
   },
   "dependencies": {
-    "@angular/core": "^4.4.5",
+    "@angular/core": "^4.4.6",
     "async-array-buffer": "^1.1.11",
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.1",
