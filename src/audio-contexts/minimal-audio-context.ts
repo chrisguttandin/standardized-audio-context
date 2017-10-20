@@ -1,5 +1,5 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core';
+import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';

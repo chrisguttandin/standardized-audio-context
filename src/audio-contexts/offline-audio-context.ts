@@ -1,5 +1,5 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core';
+import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { IndexSizeErrorFactory } from '../factories/index-size-error';
 import { startRendering } from '../helpers/start-rendering';
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';

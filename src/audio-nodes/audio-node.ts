@@ -1,5 +1,5 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core';
+import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { EventTarget } from '../event-target';
 import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { AUDIO_NODE_STORE, CONTEXT_STORE, RENDERER_STORE } from '../globals';
