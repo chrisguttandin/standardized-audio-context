@@ -9,7 +9,13 @@ export class AudioBufferSourceNodeStopMethodWrapper {
         const gainNode = audioContext.createGain();
 
         audioBufferSourceNode.connect(gainNode);
-        audioBufferSourceNode.addEventListener('ended', () => audioBufferSourceNode.disconnect(gainNode));
+
+        const disconnectGainNode = () => {
+            audioBufferSourceNode.disconnect(gainNode);
+            audioBufferSourceNode.removeEventListener('ended', disconnectGainNode);
+        };
+
+        audioBufferSourceNode.addEventListener('ended', disconnectGainNode);
 
         (<any> audioBufferSourceNode).connect = (destination: IAudioNode, output = 0, input = 0) => {
             gainNode.connect.call(gainNode, destination, output, input);
