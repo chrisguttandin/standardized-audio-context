@@ -61,11 +61,8 @@ export const decodeAudioData = (audioContext: TUnpatchedAudioContext | TUnpatche
 
     // Bug #21: Safari does not support promises yet.
     if (isSupportingPromises(audioContext)) {
-        // Bug #1: Chrome requires a successCallback.
-        const successCallback = () => {}; // tslint:disable-line:no-empty
-
         const promise = audioContext
-            .decodeAudioData(audioData, successCallback)
+            .decodeAudioData(audioData)
             .catch ((err: DOMException | Error) => {
                 // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
                 if (err instanceof DOMException && err.name === 'NotSupportedError') {
