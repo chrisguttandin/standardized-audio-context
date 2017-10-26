@@ -22,9 +22,9 @@ export class DecodeAudioDataTypeErrorSupportTester {
         const audioContext = new this._unpatchedOfflineAudioContextConstructor(1, 1, 44100);
 
         // Bug #21: Safari does not support promises yet.
-        // Bug #1: Chrome Canary & Safari requires a successCallback.
         return new Promise((resolve) => {
             audioContext
+                // Bug #1: Safari requires a successCallback.
                 .decodeAudioData(<any> null, () => {
                     // Ignore the success callback.
                 }, (err) => {
