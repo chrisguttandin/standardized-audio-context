@@ -763,6 +763,7 @@ describe('AudioContext', () => {
                     audioBufferSourceNode.buffer = audioBuffer;
                     audioBufferSourceNode.onended = (event) => {
                         expect(event).to.be.an.instanceOf(Event);
+                        expect(event.type).to.equal('ended');
 
                         done();
                     };
@@ -782,6 +783,7 @@ describe('AudioContext', () => {
                     audioBufferSourceNode.buffer = audioBuffer;
                     audioBufferSourceNode.addEventListener('ended', (event) => {
                         expect(event).to.be.an.instanceOf(Event);
+                        expect(event.type).to.equal('ended');
 
                         done();
                     });
