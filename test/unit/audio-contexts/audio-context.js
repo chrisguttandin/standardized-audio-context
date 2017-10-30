@@ -1448,6 +1448,84 @@ describe('AudioContext', () => {
                 }
             });
 
+            describe('onended', () => {
+
+                it('should fire an assigned ended event listener', (done) => {
+                    const gainNode = audioContext.createGain();
+                    const oscillatorNode = audioContext.createOscillator();
+
+                    oscillatorNode.onended = (event) => {
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.type).to.equal('ended');
+
+                        done();
+                    };
+
+                    gainNode.gain.value = 0;
+
+                    oscillatorNode
+                        .connect(gainNode)
+                        .connect(audioContext.destination);
+
+                    oscillatorNode.start();
+                    oscillatorNode.stop(audioContext.currentTime + 0.2);
+                });
+
+            });
+
+            describe('addEventListener()', () => {
+
+                it('should fire a registered ended event listener', (done) => {
+                    const gainNode = audioContext.createGain();
+                    const oscillatorNode = audioContext.createOscillator();
+
+                    gainNode.gain.value = 0;
+
+                    oscillatorNode.addEventListener('ended', (event) => {
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.type).to.equal('ended');
+
+                        done();
+                    });
+
+                    oscillatorNode
+                        .connect(gainNode)
+                        .connect(audioContext.destination);
+
+                    oscillatorNode.start();
+                    oscillatorNode.stop(audioContext.currentTime + 0.2);
+                });
+
+            });
+
+            describe('removeEventListener()', () => {
+
+                it('should not fire a removed ended event listener', (done) => {
+                    const gainNode = audioContext.createGain();
+                    const oscillatorNode = audioContext.createOscillator();
+                    const listener = spy();
+
+                    gainNode.gain.value = 0;
+
+                    oscillatorNode.addEventListener('ended', listener);
+                    oscillatorNode.removeEventListener('ended', listener);
+
+                    oscillatorNode
+                        .connect(gainNode)
+                        .connect(audioContext.destination);
+
+                    oscillatorNode.start();
+                    oscillatorNode.stop(audioContext.currentTime + 0.2);
+
+                    setTimeout(() => {
+                        expect(listener).to.have.not.been.called;
+
+                        done();
+                    }, 500);
+                });
+
+            });
+
         });
 
         describe('decodeAudioData()', () => {
