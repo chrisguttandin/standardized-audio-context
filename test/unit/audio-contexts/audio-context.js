@@ -769,6 +769,7 @@ describe('AudioContext', () => {
                     };
 
                     audioBufferSourceNode.connect(audioContext.destination);
+
                     audioBufferSourceNode.start();
                 });
 
@@ -789,6 +790,7 @@ describe('AudioContext', () => {
                     });
 
                     audioBufferSourceNode.connect(audioContext.destination);
+
                     audioBufferSourceNode.start();
                 });
 
@@ -802,11 +804,11 @@ describe('AudioContext', () => {
                     const listener = spy();
 
                     audioBufferSourceNode.buffer = audioBuffer;
-
                     audioBufferSourceNode.addEventListener('ended', listener);
                     audioBufferSourceNode.removeEventListener('ended', listener);
 
                     audioBufferSourceNode.connect(audioContext.destination);
+
                     audioBufferSourceNode.start();
 
                     setTimeout(() => {
