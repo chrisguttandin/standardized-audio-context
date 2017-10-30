@@ -754,6 +754,68 @@ describe('AudioContext', () => {
                 audioBufferSourceNode.stop();
             });
 
+            describe('onended', () => {
+
+                it('should fire an assigned ended event listener', (done) => {
+                    const audioBufferSourceNode = audioContext.createBufferSource();
+                    const audioBuffer = audioContext.createBuffer(2, 10, 44100);
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+                    audioBufferSourceNode.onended = (event) => {
+                        expect(event).to.be.an.instanceOf(Event);
+
+                        done();
+                    };
+
+                    audioBufferSourceNode.connect(audioContext.destination);
+                    audioBufferSourceNode.start();
+                });
+
+            });
+
+            describe('addEventListener()', () => {
+
+                it('should fire a registered ended event listener', (done) => {
+                    const audioBufferSourceNode = audioContext.createBufferSource();
+                    const audioBuffer = audioContext.createBuffer(2, 10, 44100);
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+                    audioBufferSourceNode.addEventListener('ended', (event) => {
+                        expect(event).to.be.an.instanceOf(Event);
+
+                        done();
+                    });
+
+                    audioBufferSourceNode.connect(audioContext.destination);
+                    audioBufferSourceNode.start();
+                });
+
+            });
+
+            describe('removeEventListener()', () => {
+
+                it('should not fire a removed ended event listener', (done) => {
+                    const audioBufferSourceNode = audioContext.createBufferSource();
+                    const audioBuffer = audioContext.createBuffer(2, 10, 44100);
+                    const listener = spy();
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+
+                    audioBufferSourceNode.addEventListener('ended', listener);
+                    audioBufferSourceNode.removeEventListener('ended', listener);
+
+                    audioBufferSourceNode.connect(audioContext.destination);
+                    audioBufferSourceNode.start();
+
+                    setTimeout(() => {
+                        expect(listener).to.have.not.been.called;
+
+                        done();
+                    }, 500);
+                });
+
+            });
+
         });
 
         describe('createChannelMerger()', () => {

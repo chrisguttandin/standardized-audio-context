@@ -116,6 +116,14 @@ export class AudioNode extends EventTarget implements IAudioNode {
         return (this._nativeNode === null) ? this._numberOfOutputs : this._nativeNode.numberOfOutputs;
     }
 
+    public addEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
+        if (this._nativeNode === null) {
+            return super.addEventListener(type, listener, options);
+        }
+
+        return this._nativeNode.addEventListener(type, listener, options);
+    }
+
     public connect (destination: IAudioNode, output = 0, input = 0): IAudioNode {
         // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
         if (this._context !== destination.context) {
@@ -200,6 +208,14 @@ export class AudioNode extends EventTarget implements IAudioNode {
         }
 
         return this._nativeNode.disconnect(nativeDestinationNode);
+    }
+
+    public removeEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) {
+        if (this._nativeNode === null) {
+            return super.removeEventListener(type, listener, options);
+        }
+
+        return this._nativeNode.removeEventListener(type, listener, options);
     }
 
 }
