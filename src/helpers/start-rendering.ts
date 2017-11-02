@@ -34,7 +34,7 @@ export const startRendering = (
                 return unpatchedOfflineAudioContext.startRendering();
             }
 
-            return new Promise((resolve) => {
+            return new Promise<AudioBuffer>((resolve) => {
                 unpatchedOfflineAudioContext.oncomplete = (event: IOfflineAudioCompletionEvent) => {
                     resolve(event.renderedBuffer);
                 };

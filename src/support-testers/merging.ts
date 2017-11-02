@@ -14,7 +14,7 @@ export class MergingSupportTester {
         @Inject(unpatchedAudioContextConstructor) private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
     ) { }
 
-    public test () {
+    public test (): Promise<boolean> {
         if (this._unpatchedAudioContextConstructor === null) {
             return Promise.resolve(false);
         }
@@ -25,7 +25,7 @@ export class MergingSupportTester {
         const channelMergerNode = audioContext.createChannelMerger(2);
         const scriptProcessorNode = (<any> audioContext).createScriptProcessor(256);
 
-        return new Promise((resolve) => {
+        return new Promise<boolean>((resolve) => {
             let startTime: number;
 
             // @todo Safari does not play/loop 1 sample buffers. This should be patched.
