@@ -1,7 +1,8 @@
 import { TUnpatchedAudioContext } from '../types';
+import { IAudioContextOptions } from './audio-context-options';
 
 export interface IUnpatchedAudioContextConstructor {
 
-    new (): TUnpatchedAudioContext;
+    new (options?: IAudioContextOptions): TUnpatchedAudioContext;
 
 }

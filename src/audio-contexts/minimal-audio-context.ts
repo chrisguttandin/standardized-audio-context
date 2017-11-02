@@ -1,6 +1,6 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
 import {
@@ -11,8 +11,8 @@ import { WINDOW_PROVIDER } from '../providers/window';
 import { TUnpatchedAudioContext } from '../types';
 import { MinimalBaseAudioContext } from './minimal-base-audio-context';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    InvalidStateErrorFactory,
+const injector = Injector.create([
+    INVALID_STATE_ERROR_FACTORY_PROVIDER,
     UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
 ]);
@@ -27,6 +27,10 @@ export class MinimalAudioContext extends MinimalBaseAudioContext implements IMin
     private _unpatchedAudioContext: TUnpatchedAudioContext;
 
     constructor (options: IAudioContextOptions = {}) {
+        if (unpatchedAudioContextConstructor === null) {
+            throw new Error(); // @todo
+        }
+
         const unpatchedAudioContext = new unpatchedAudioContextConstructor(options);
 
         // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.

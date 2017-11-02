@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { IUnpatchedOfflineAudioContextConstructor } from '../interfaces';
 import { unpatchedOfflineAudioContextConstructor } from '../providers/unpatched-offline-audio-context-constructor';
 
@@ -10,7 +10,6 @@ import { unpatchedOfflineAudioContextConstructor } from '../providers/unpatched-
 export class DecodeAudioDataTypeErrorSupportTester {
 
     constructor (
-        @Inject(unpatchedOfflineAudioContextConstructor)
         private _unpatchedOfflineAudioContextConstructor: IUnpatchedOfflineAudioContextConstructor
     ) { }
 
@@ -43,3 +42,8 @@ export class DecodeAudioDataTypeErrorSupportTester {
     }
 
 }
+
+export const DECODE_AUDIO_DATA_TYPE_ERROR_SUPPORT_TESTER_PROVIDER = {
+    deps: [ <InjectionToken<IUnpatchedOfflineAudioContextConstructor>> unpatchedOfflineAudioContextConstructor ],
+    provide: DecodeAudioDataTypeErrorSupportTester
+};

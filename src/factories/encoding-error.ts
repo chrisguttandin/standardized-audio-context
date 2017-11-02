@@ -21,3 +21,5 @@ export class EncodingErrorFactory implements IErrorFactory {
     }
 
 }
+
+export const ENCODING_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: EncodingErrorFactory };

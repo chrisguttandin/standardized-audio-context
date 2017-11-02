@@ -1,13 +1,13 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { RENDERER_STORE } from '../globals';
 import { IAudioDestinationNode, IAudioNodeRenderer, IOfflineAudioCompletionEvent } from '../interfaces';
-import { PromiseSupportTester } from '../support-testers/promise';
+import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from '../support-testers/promise';
 import { TNativeAudioBuffer, TUnpatchedOfflineAudioContext } from '../types';
 import { cacheTestResult } from './cache-test-result';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    PromiseSupportTester
+const injector = Injector.create([
+    PROMISE_SUPPORT_TESTER_PROVIDER
 ]);
 
 const promiseSupportTester = injector.get(PromiseSupportTester);

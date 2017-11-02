@@ -20,3 +20,5 @@ export class AudioBufferCopyChannelMethodsSupportTester {
     }
 
 }
+
+export const AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER = { deps: [ ], provide: AudioBufferCopyChannelMethodsSupportTester };

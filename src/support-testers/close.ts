@@ -1,13 +1,11 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { IUnpatchedAudioContextConstructor } from '../interfaces';
 import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
 
 @Injectable()
 export class CloseSupportTester {
 
-    constructor (
-        @Inject(unpatchedAudioContextConstructor) private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
-    ) { }
+    constructor (private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor) { }
 
     public test () {
         if (this._unpatchedAudioContextConstructor === null) {
@@ -34,3 +32,8 @@ export class CloseSupportTester {
     }
 
 }
+
+export const CLOSE_SUPPORT_TESTER_PROVIDER = {
+    deps: [ <InjectionToken<IUnpatchedAudioContextConstructor>> unpatchedAudioContextConstructor ],
+    provide: CloseSupportTester
+};

@@ -1,12 +1,11 @@
 import { AudioParam } from '../audio-param';
 import { RENDERER_STORE } from '../globals';
-import { IAudioNode } from '../interfaces';
 import { AudioParamRenderer } from '../renderers/audio-param';
-import { TNativeAudioParam } from '../types';
+import { TNativeAudioNode, TNativeAudioParam } from '../types';
 
 export class AudioParamWrapper {
 
-    public wrap (audioNode: IAudioNode, property: string) {
+    public wrap (audioNode: TNativeAudioNode, property: string) {
         const nativeAudioParam = <TNativeAudioParam> (<any> audioNode)[property];
         const audioParamRenderer = new AudioParamRenderer();
         const audioParam = new AudioParam({ audioParamRenderer, nativeAudioParam });
@@ -20,3 +19,5 @@ export class AudioParamWrapper {
     }
 
 }
+
+export const AUDIO_PARAM_WRAPPER_PROVIDER = { deps: [ ], provide: AudioParamWrapper };

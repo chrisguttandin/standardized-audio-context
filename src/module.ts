@@ -1,22 +1,22 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core';
+import { Injector } from '@angular/core';
 import { IS_SUPPORTED_PROMISE_PROVIDER, isSupportedPromise } from './providers/is-supported-promise';
 import { MODERNIZR_PROVIDER } from './providers/modernizr';
 import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-audio-context-constructor';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
-import { AudioContextOptionsSupportTester } from './support-testers/audio-context-options';
-import { CloseSupportTester } from './support-testers/close';
-import { DecodeAudioDataTypeErrorSupportTester } from './support-testers/decode-audio-data-type-error';
-import { MergingSupportTester } from './support-testers/merging';
+import { AUDIO_CONTEXT_OPTIONS_SUPPORT_TESTER_PROVIDER } from './support-testers/audio-context-options';
+import { CLOSE_SUPPORT_TESTER_PROVIDER } from './support-testers/close';
+import { DECODE_AUDIO_DATA_TYPE_ERROR_SUPPORT_TESTER_PROVIDER } from './support-testers/decode-audio-data-type-error';
+import { MERGE_SUPPORT_TESTER_PROVIDER } from './support-testers/merging';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AudioContextOptionsSupportTester,
-    CloseSupportTester,
-    DecodeAudioDataTypeErrorSupportTester,
+const injector = Injector.create([
+    AUDIO_CONTEXT_OPTIONS_SUPPORT_TESTER_PROVIDER,
+    CLOSE_SUPPORT_TESTER_PROVIDER,
+    DECODE_AUDIO_DATA_TYPE_ERROR_SUPPORT_TESTER_PROVIDER,
     IS_SUPPORTED_PROMISE_PROVIDER,
     MODERNIZR_PROVIDER,
-    MergingSupportTester,
+    MERGE_SUPPORT_TESTER_PROVIDER,
     UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
@@ -31,4 +31,4 @@ export { OfflineAudioContext } from './audio-contexts/offline-audio-context';
 
 export { decodeAudioData } from './decode-audio-data';
 
-export const isSupported: Promise<boolean> = injector.get(isSupportedPromise);
+export const isSupported = injector.get(isSupportedPromise);

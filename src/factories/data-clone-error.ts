@@ -21,3 +21,5 @@ export class DataCloneErrorFactory implements IErrorFactory {
     }
 
 }
+
+export const DATA_CLONE_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: DataCloneErrorFactory };

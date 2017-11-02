@@ -1,16 +1,16 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { BiquadFilterNodeRenderer } from '../renderers/biquad-filter-node';
 import { TBiquadFilterType, TChannelCountMode, TChannelInterpretation, TNativeBiquadFilterNode } from '../types';
-import { AudioParamWrapper } from '../wrappers/audio-param';
+import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AudioParamWrapper
+const injector = Injector.create([
+    AUDIO_PARAM_WRAPPER_PROVIDER
 ]);
 
 const audioParamWrapper = injector.get(AudioParamWrapper);

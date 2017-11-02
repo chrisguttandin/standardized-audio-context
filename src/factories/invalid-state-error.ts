@@ -21,3 +21,5 @@ export class InvalidStateErrorFactory implements IErrorFactory {
     }
 
 }
+
+export const INVALID_STATE_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: InvalidStateErrorFactory };

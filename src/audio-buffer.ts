@@ -1,23 +1,23 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core';
-import { IndexSizeErrorFactory } from './factories/index-size-error';
+import { Injector } from '@angular/core';
+import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from './factories/index-size-error';
 import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer, IAudioBufferOptions } from './interfaces';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
-import { AudioBufferCopyChannelMethodsSupportTester } from './support-testers/audio-buffer-copy-channel-methods';
-import { AudioBufferWrapper } from './wrappers/audio-buffer';
-import { AudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
+import { AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER, AudioBufferCopyChannelMethodsSupportTester } from './support-testers/audio-buffer-copy-channel-methods';
+import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from './wrappers/audio-buffer';
+import { AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER, AudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
 };
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AudioBufferWrapper,
-    AudioBufferCopyChannelMethodsSupportTester,
-    AudioBufferCopyChannelMethodsWrapper,
-    IndexSizeErrorFactory,
+const injector = Injector.create([
+    AUDIO_BUFFER_WRAPPER_PROVIDER,
+    AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
+    AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
+    INDEX_SIZE_ERROR_FACTORY_PROVIDER,
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
 ]);
@@ -38,6 +38,10 @@ export class AudioBuffer implements IAudioBuffer {
     public sampleRate: number;
 
     constructor (options: IAudioBufferOptions) {
+        if (unpatchedOfflineAudioContextConstructor === null) {
+            throw new Error(); // @todo
+        }
+
         const { length, numberOfChannels, sampleRate } = <typeof DEFAULT_OPTIONS & IAudioBufferOptions> { ...DEFAULT_OPTIONS, ...options };
 
         const unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(1, 1, 44100);

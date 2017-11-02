@@ -1,10 +1,12 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../support-testers/analyser-node-get-float-time-domain-data';
+import {
+    ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_SUPPORT_TESTER_PROVIDER,
+    AnalyserNodeGetFloatTimeDomainDataSupportTester } from '../support-testers/analyser-node-get-float-time-domain-data';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -12,7 +14,10 @@ import {
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
-import { AnalyserNodeGetFloatTimeDomainDataMethodWrapper } from '../wrappers/analyser-node-get-float-time-domain-data-method';
+import {
+    ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_METHOD_WRAPPER_PROVIDER,
+    AnalyserNodeGetFloatTimeDomainDataMethodWrapper
+} from '../wrappers/analyser-node-get-float-time-domain-data-method';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IAnalyserOptions = {
@@ -27,9 +32,9 @@ const DEFAULT_OPTIONS: IAnalyserOptions = {
     smoothingTimeConstant: 0.8
 };
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AnalyserNodeGetFloatTimeDomainDataMethodWrapper,
-    AnalyserNodeGetFloatTimeDomainDataSupportTester
+const injector = Injector.create([
+    ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_METHOD_WRAPPER_PROVIDER,
+    ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_SUPPORT_TESTER_PROVIDER
 ]);
 
 const analyserNodeGetFloatTimeDomainDataMethodWrapper = injector.get(AnalyserNodeGetFloatTimeDomainDataMethodWrapper);

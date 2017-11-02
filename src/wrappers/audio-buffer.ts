@@ -41,3 +41,5 @@ export class AudioBufferWrapper {
     }
 
 }
+
+export const AUDIO_BUFFER_WRAPPER_PROVIDER = { deps: [ IndexSizeErrorFactory ], provide: AudioBufferWrapper };

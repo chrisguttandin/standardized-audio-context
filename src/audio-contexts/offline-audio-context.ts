@@ -1,6 +1,6 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
-import { IndexSizeErrorFactory } from '../factories/index-size-error';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from '../factories/index-size-error';
 import { startRendering } from '../helpers/start-rendering';
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import {
@@ -9,12 +9,12 @@ import {
 } from '../providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
 import { TUnpatchedOfflineAudioContext } from '../types';
-import { AudioBufferWrapper } from '../wrappers/audio-buffer';
+import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { BaseAudioContext } from './base-audio-context';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AudioBufferWrapper,
-    IndexSizeErrorFactory,
+const injector = Injector.create([
+    AUDIO_BUFFER_WRAPPER_PROVIDER,
+    INDEX_SIZE_ERROR_FACTORY_PROVIDER,
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
 ]);
@@ -35,6 +35,10 @@ export class OfflineAudioContext extends BaseAudioContext implements IOfflineAud
     constructor (options: IOfflineAudioContextOptions);
     constructor (numberOfChannels: number, length: number, sampleRate: number);
     constructor (a: number | IOfflineAudioContextOptions, b?: number, c?: number) {
+        if (unpatchedOfflineAudioContextConstructor === null) {
+            throw new Error(); // @todo
+        }
+
         let options: IOfflineAudioContextOptions;
 
         if (typeof a === 'number' && b !== undefined && c !== undefined) {

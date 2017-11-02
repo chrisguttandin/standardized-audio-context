@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { filterBuffer } from '../helpers/filter-buffer';
-import { TTypedArray, TUnpatchedAudioContext } from '../types';
+import { TTypedArray, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
 @Injectable()
 export class IIRFilterNodeFaker {
 
     public fake (
-        unpatchedAudioContext: TUnpatchedAudioContext,
+        unpatchedAudioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
         feedback: number[] | TTypedArray,
         feedforward: number[] | TTypedArray,
         channelCount: number
@@ -76,3 +76,5 @@ export class IIRFilterNodeFaker {
     }
 
 }
+
+export const IIR_FILTER_NODE_FAKER_PROVIDER = { deps: [ ], provide: IIRFilterNodeFaker };

@@ -21,3 +21,5 @@ export class NotSupportedErrorFactory implements IErrorFactory {
     }
 
 }
+
+export const NOT_SUPPORTED_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: NotSupportedErrorFactory };

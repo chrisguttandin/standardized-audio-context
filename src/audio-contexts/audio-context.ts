@@ -1,10 +1,10 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { AnalyserNode } from '../audio-nodes/analyser-node';
 import { ChannelMergerNode } from '../audio-nodes/channel-merger-node';
 import { ChannelSplitterNode } from '../audio-nodes/channel-splitter-node';
 import { OscillatorNode } from '../audio-nodes/oscillator-node';
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAnalyserNode, IAudioContext, IAudioContextOptions, IOscillatorNode } from '../interfaces';
 import {
@@ -15,8 +15,8 @@ import { WINDOW_PROVIDER } from '../providers/window';
 import { TUnpatchedAudioContext } from '../types';
 import { BaseAudioContext } from './base-audio-context';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    InvalidStateErrorFactory,
+const injector = Injector.create([
+    INVALID_STATE_ERROR_FACTORY_PROVIDER,
     UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
 ]);
@@ -30,6 +30,10 @@ export class AudioContext extends BaseAudioContext implements IAudioContext {
     private _unpatchedAudioContext: TUnpatchedAudioContext;
 
     constructor (options: IAudioContextOptions = {}) {
+        if (unpatchedAudioContextConstructor === null) {
+            throw new Error(); // @todo
+        }
+
         const unpatchedAudioContext = new unpatchedAudioContextConstructor(options);
 
         // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.

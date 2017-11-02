@@ -1,11 +1,11 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TChannelCountMode, TChannelInterpretation, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
-import { ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
+import { CHANNEL_MERGER_NODE_WRAPPER_PROVIDER, ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IAudioNodeOptions = {
@@ -16,9 +16,9 @@ const DEFAULT_OPTIONS: IAudioNodeOptions = {
     numberOfOutputs: 1
 };
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    ChannelMergerNodeWrapper,
-    InvalidStateErrorFactory
+const injector = Injector.create([
+    CHANNEL_MERGER_NODE_WRAPPER_PROVIDER,
+    INVALID_STATE_ERROR_FACTORY_PROVIDER
 ]);
 
 const channelMergerNodeWrapper = injector.get(ChannelMergerNodeWrapper);

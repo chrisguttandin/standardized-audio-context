@@ -1,9 +1,9 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
-import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { NotSupportedErrorFactory } from '../factories/not-supported-error';
-import { IIRFilterNodeFaker } from '../fakers/iir-filter-node';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { INVALID_ACCES_ERROR_FACTORY_PROVIDER } from '../factories/invalid-access-error';
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { NOT_SUPPORTED_ERROR_FACTORY_PROVIDER, NotSupportedErrorFactory } from '../factories/not-supported-error';
+import { IIRFilterNodeFaker, IIR_FILTER_NODE_FAKER_PROVIDER } from '../fakers/iir-filter-node';
 import { RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
@@ -17,7 +17,10 @@ import {
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
-import { IIRFilterNodeGetFrequencyResponseMethodWrapper } from '../wrappers/iir-filter-node-get-frequency-response-method';
+import {
+    IIRFilterNodeGetFrequencyResponseMethodWrapper,
+    IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER
+} from '../wrappers/iir-filter-node-get-frequency-response-method';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 function divide (a: [ number, number ], b: [ number, number ]): [ number, number ] {
@@ -51,12 +54,12 @@ const DEFAULT_OPTIONS: Partial<IIIRFilterOptions> = {
     numberOfOutputs: 1
 };
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    InvalidAccessErrorFactory,
-    InvalidStateErrorFactory,
-    IIRFilterNodeFaker,
-    IIRFilterNodeGetFrequencyResponseMethodWrapper,
-    NotSupportedErrorFactory
+const injector = Injector.create([
+    INVALID_ACCES_ERROR_FACTORY_PROVIDER,
+    INVALID_STATE_ERROR_FACTORY_PROVIDER,
+    IIR_FILTER_NODE_FAKER_PROVIDER,
+    IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER,
+    NOT_SUPPORTED_ERROR_FACTORY_PROVIDER
 ]);
 
 const iIRFilterNodeFaker = injector.get(IIRFilterNodeFaker);
@@ -102,7 +105,7 @@ export class IIRFilterNode extends NoneAudioDestinationNode implements IIIRFilte
         this._feedforward = feedforward;
         this._nyquist = nativeContext.sampleRate / 2;
 
-        if (nativeNode === null || nativeNode.getFrequencyResponse === undefined) {
+        if (nativeNode === null || (<TNativeIIRFilterNode> nativeNode).getFrequencyResponse === undefined) {
             // Bug #9: Safari does not support IIRFilterNodes.
 
             if (feedback.length === 0 || feedback.length > 20) {
@@ -123,7 +126,7 @@ export class IIRFilterNode extends NoneAudioDestinationNode implements IIIRFilte
         } else {
             // Bug #23 & #24: FirefoxDeveloper does not throw NotSupportedErrors anymore.
             // @todo Write a test which allows other browsers to remain unpatched.
-            iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(nativeNode);
+            iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(<TNativeIIRFilterNode> nativeNode);
         }
 
         if (isOfflineAudioContext(nativeContext)) {

@@ -1,28 +1,28 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core';
+import { Injector } from '@angular/core';
 import { deallocate } from 'async-array-buffer';
-import { DataCloneErrorFactory } from './factories/data-clone-error';
-import { EncodingErrorFactory } from './factories/encoding-error';
-import { IndexSizeErrorFactory } from './factories/index-size-error';
+import { DATA_CLONE_ERROR_FACTORY_PROVIDER, DataCloneErrorFactory } from './factories/data-clone-error';
+import { ENCODING_ERROR_FACTORY_PROVIDER, EncodingErrorFactory } from './factories/encoding-error';
+import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from './factories/index-size-error';
 import { DETACHED_ARRAY_BUFFERS } from './globals';
 import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer } from './interfaces';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
-import { AudioBufferCopyChannelMethodsSupportTester } from './support-testers/audio-buffer-copy-channel-methods';
-import { PromiseSupportTester } from './support-testers/promise';
+import { AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER, AudioBufferCopyChannelMethodsSupportTester } from './support-testers/audio-buffer-copy-channel-methods';
+import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from './support-testers/promise';
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from './types';
-import { AudioBufferWrapper } from './wrappers/audio-buffer';
-import { AudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
+import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from './wrappers/audio-buffer';
+import { AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER ,AudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AudioBufferCopyChannelMethodsSupportTester,
-    AudioBufferCopyChannelMethodsWrapper,
-    AudioBufferWrapper,
-    DataCloneErrorFactory,
-    EncodingErrorFactory,
-    IndexSizeErrorFactory,
-    PromiseSupportTester,
+const injector = Injector.create([
+    AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
+    AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
+    AUDIO_BUFFER_WRAPPER_PROVIDER,
+    DATA_CLONE_ERROR_FACTORY_PROVIDER,
+    ENCODING_ERROR_FACTORY_PROVIDER,
+    INDEX_SIZE_ERROR_FACTORY_PROVIDER,
+    PROMISE_SUPPORT_TESTER_PROVIDER,
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
 ]);

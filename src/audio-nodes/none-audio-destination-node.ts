@@ -1,12 +1,12 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TNativeAudioNode } from '../types';
 import { AudioNode } from './audio-node';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    InvalidStateErrorFactory
+const injector = Injector.create([
+    INVALID_STATE_ERROR_FACTORY_PROVIDER
 ]);
 
 const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);

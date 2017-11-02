@@ -1,20 +1,20 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { EventTarget } from '../event-target';
-import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
+import { INVALID_ACCES_ERROR_FACTORY_PROVIDER, InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { AUDIO_NODE_STORE, CONTEXT_STORE, RENDERER_STORE } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioNode, IAudioNodeOptions, IAudioNodeRenderer, IMinimalBaseAudioContext } from '../interfaces';
-import { DisconnectingSupportTester } from '../support-testers/disconnecting';
-import { TChannelCountMode, TChannelInterpretation, TNativeAudioNode } from '../types';
-import { AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
+import { DISCONNECTING_SUPPORT_TESTER_PROVIDER, DisconnectingSupportTester } from '../support-testers/disconnecting';
+import { TChannelCountMode, TChannelInterpretation, TNativeAudioNode, TUnpatchedAudioContext } from '../types';
+import { AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER, AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AudioNodeDisconnectMethodWrapper,
-    DisconnectingSupportTester,
-    InvalidAccessErrorFactory
+const injector = Injector.create([
+    AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER,
+    DISCONNECTING_SUPPORT_TESTER_PROVIDER,
+    INVALID_ACCES_ERROR_FACTORY_PROVIDER
 ]);
 
 const audioNodeDisconnectMethodWrapper = injector.get(AudioNodeDisconnectMethodWrapper);
@@ -56,7 +56,10 @@ export class AudioNode extends EventTarget implements IAudioNode {
 
         if (nativeNode !== null) {
             // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
-            if (!cacheTestResult(DisconnectingSupportTester, () => disconnectingSupportTester.test(nativeContext))) {
+            // @todo Make sure this is not used with an OfflineAudioContext.
+            if (!cacheTestResult(DisconnectingSupportTester, () => {
+                return disconnectingSupportTester.test(<TUnpatchedAudioContext> nativeContext);
+            })) {
                 audioNodeDisconnectMethodWrapper.wrap(nativeNode);
             }
 

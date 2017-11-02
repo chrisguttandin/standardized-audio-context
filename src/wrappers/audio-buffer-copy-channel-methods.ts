@@ -28,3 +28,5 @@ export class AudioBufferCopyChannelMethodsWrapper {
     }
 
 }
+
+export const AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER = { deps: [ ], provide: AudioBufferCopyChannelMethodsWrapper };

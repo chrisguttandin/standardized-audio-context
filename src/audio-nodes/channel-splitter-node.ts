@@ -1,11 +1,11 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TChannelCountMode, TChannelInterpretation, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
-import { ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
+import { CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER, ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IAudioNodeOptions = {
@@ -16,9 +16,9 @@ const DEFAULT_OPTIONS: IAudioNodeOptions = {
     numberOfOutputs: 6
 };
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    ChannelSplitterNodeWrapper,
-    InvalidStateErrorFactory
+const injector = Injector.create([
+    CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER,
+    INVALID_STATE_ERROR_FACTORY_PROVIDER
 ]);
 
 const channelSplitterNodeWrapper = injector.get(ChannelSplitterNodeWrapper);

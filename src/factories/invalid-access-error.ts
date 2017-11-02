@@ -21,3 +21,5 @@ export class InvalidAccessErrorFactory implements IErrorFactory {
     }
 
 }
+
+export const INVALID_ACCES_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: InvalidAccessErrorFactory };

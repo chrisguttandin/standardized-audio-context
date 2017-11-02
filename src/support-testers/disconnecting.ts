@@ -48,3 +48,5 @@ export class DisconnectingSupportTester {
     }
 
 }
+
+export const DISCONNECTING_SUPPORT_TESTER_PROVIDER = { deps: [ ], provide: DisconnectingSupportTester };

@@ -21,3 +21,5 @@ export class IndexSizeErrorFactory implements IErrorFactory {
     }
 
 }
+
+export const INDEX_SIZE_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: IndexSizeErrorFactory };

@@ -42,3 +42,5 @@ export class PromiseSupportTester {
     }
 
 }
+
+export const PROMISE_SUPPORT_TESTER_PROVIDER = { deps: [ ], provide: PromiseSupportTester };

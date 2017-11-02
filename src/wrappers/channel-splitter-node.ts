@@ -35,3 +35,5 @@ export class ChannelSplitterNodeWrapper {
     }
 
 }
+
+export const CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER = { deps: [ InvalidStateErrorFactory ], provide: ChannelSplitterNodeWrapper };

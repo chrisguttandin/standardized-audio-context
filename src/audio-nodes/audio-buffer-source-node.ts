@@ -1,12 +1,12 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { RENDERER_STORE } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioBuffer, IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioBufferSourceNodeRenderer } from '../renderers/audio-buffer-source-node';
-import { StopStoppedSupportTester } from '../support-testers/stop-stopped';
+import { STOP_STOPPED_SUPPORT_TESTER_PROVIDER, StopStoppedSupportTester } from '../support-testers/stop-stopped';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -15,14 +15,17 @@ import {
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
-import { AudioBufferSourceNodeStopMethodWrapper } from '../wrappers/audio-buffer-source-node-stop-method';
-import { AudioParamWrapper } from '../wrappers/audio-param';
+import {
+    AUDIO_BUFFER_SOURCE_NODE_STOP_METHOD_WRAPPER_PROVIDER,
+    AudioBufferSourceNodeStopMethodWrapper
+} from '../wrappers/audio-buffer-source-node-stop-method';
+import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AudioBufferSourceNodeStopMethodWrapper,
-    AudioParamWrapper,
-    StopStoppedSupportTester
+const injector = Injector.create([
+    AUDIO_BUFFER_SOURCE_NODE_STOP_METHOD_WRAPPER_PROVIDER,
+    AUDIO_PARAM_WRAPPER_PROVIDER,
+    STOP_STOPPED_SUPPORT_TESTER_PROVIDER
 ]);
 
 const audioBufferSourceNodeStopMethodWrapper = injector.get(AudioBufferSourceNodeStopMethodWrapper);

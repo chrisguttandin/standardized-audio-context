@@ -1,6 +1,6 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
-import { IndexSizeErrorFactory } from '../factories/index-size-error';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from '../factories/index-size-error';
 import { startRendering } from '../helpers/start-rendering';
 import { IAudioBuffer, IMinimalOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import {
@@ -9,16 +9,16 @@ import {
 } from '../providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
 import { TUnpatchedOfflineAudioContext } from '../types';
-import { AudioBufferWrapper } from '../wrappers/audio-buffer';
+import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { MinimalBaseAudioContext } from './minimal-base-audio-context';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
 };
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    AudioBufferWrapper,
-    IndexSizeErrorFactory,
+const injector = Injector.create([
+    AUDIO_BUFFER_WRAPPER_PROVIDER,
+    INDEX_SIZE_ERROR_FACTORY_PROVIDER,
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
 ]);
@@ -33,6 +33,10 @@ export class MinimalOfflineAudioContext extends MinimalBaseAudioContext implemen
     private _unpatchedOfflineAudioContext: TUnpatchedOfflineAudioContext;
 
     constructor (options: IOfflineAudioContextOptions) {
+        if (unpatchedOfflineAudioContextConstructor === null) {
+            throw new Error(); // @todo
+        }
+
         const { length, numberOfChannels, sampleRate } = <typeof DEFAULT_OPTIONS & IOfflineAudioContextOptions> {
             ...DEFAULT_OPTIONS,
             ...options

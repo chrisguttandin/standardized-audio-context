@@ -47,3 +47,5 @@ export class AudioBufferSourceNodeStopMethodWrapper {
     }
 
 }
+
+export const AUDIO_BUFFER_SOURCE_NODE_STOP_METHOD_WRAPPER_PROVIDER = { deps: [ ], provide: AudioBufferSourceNodeStopMethodWrapper };

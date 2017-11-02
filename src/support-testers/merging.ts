@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { IUnpatchedAudioContextConstructor } from '../interfaces';
 import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
 
@@ -10,9 +10,7 @@ import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-c
 @Injectable()
 export class MergingSupportTester {
 
-    constructor (
-        @Inject(unpatchedAudioContextConstructor) private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor
-    ) { }
+    constructor (private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor) { }
 
     public test (): Promise<boolean> {
         if (this._unpatchedAudioContextConstructor === null) {
@@ -77,3 +75,8 @@ export class MergingSupportTester {
     }
 
 }
+
+export const MERGE_SUPPORT_TESTER_PROVIDER = {
+    deps: [ <InjectionToken<IUnpatchedAudioContextConstructor>> unpatchedAudioContextConstructor ],
+    provide: MergingSupportTester
+};

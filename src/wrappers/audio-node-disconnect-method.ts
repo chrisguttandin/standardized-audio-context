@@ -1,11 +1,12 @@
 import { IAudioNode } from '../interfaces';
+import { TNativeAudioNode } from '../types';
 
 export class AudioNodeDisconnectMethodWrapper {
 
-    public wrap (audioNode: IAudioNode) {
+    public wrap (audioNode: TNativeAudioNode) {
         const destinations = new Map();
 
-        audioNode.connect = ((connect) => {
+        (<IAudioNode['connect']> (<any> audioNode.connect)) = ((connect) => {
             return (destination: IAudioNode, output = 0, input = 0) => {
                 destinations.set(destination, { input, output });
 
@@ -13,7 +14,7 @@ export class AudioNodeDisconnectMethodWrapper {
             };
         })(audioNode.connect);
 
-        audioNode.disconnect = ((disconnect) => {
+        (<IAudioNode['disconnect']> audioNode.disconnect) = ((disconnect) => {
             return (destination?: IAudioNode) => {
                 disconnect.apply(audioNode);
 
@@ -29,3 +30,5 @@ export class AudioNodeDisconnectMethodWrapper {
     }
 
 }
+
+export const AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER = { deps: [ ], provide: AudioNodeDisconnectMethodWrapper };

@@ -1,5 +1,5 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { ReflectiveInjector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { filterBuffer } from '../helpers/filter-buffer';
 import { getNativeNode } from '../helpers/get-native-node';
@@ -10,7 +10,7 @@ import {
     unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
 } from '../providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
-import { PromiseSupportTester } from '../support-testers/promise';
+import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from '../support-testers/promise';
 import {
     TNativeAudioBuffer,
     TNativeAudioBufferSourceNode,
@@ -22,8 +22,8 @@ import {
 } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
-const injector = ReflectiveInjector.resolveAndCreate([
-    PromiseSupportTester,
+const injector = Injector.create([
+    PROMISE_SUPPORT_TESTER_PROVIDER,
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     WINDOW_PROVIDER
 ]);
@@ -59,6 +59,10 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer implements IAudioNo
     }
 
     public render (offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> {
+        if (unpatchedOfflineAudioContextConstructor === null) {
+            throw new Error(); // @todo
+        }
+
         if (this._nativeNode !== null) {
             return Promise.resolve(this._nativeNode);
         }
@@ -93,7 +97,7 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer implements IAudioNo
                         return partialOfflineAudioContext.startRendering();
                     }
 
-                    return new Promise((resolve) => {
+                    return new Promise<TNativeAudioBuffer>((resolve) => {
                         partialOfflineAudioContext.oncomplete = (event: IOfflineAudioCompletionEvent) => {
                             resolve(event.renderedBuffer);
                         };
