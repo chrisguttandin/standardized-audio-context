@@ -63,7 +63,7 @@
     "tsconfig-holy-grail": "^2.4.15",
     "tslint": "^5.8.0",
     "tslint-config-holy-grail": "^16.0.1",
-    "typescript": "~2.4.2",
+    "typescript": "^2.6.1",
     "webpack": "^3.8.1"
   },
   "files": [
