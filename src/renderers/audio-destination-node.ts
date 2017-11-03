@@ -1,4 +1,4 @@
-import { IAudioDestinationNode, IAudioNodeRenderer } from '../interfaces';
+import { IAudioNodeRenderer } from '../interfaces';
 import { TNativeAudioDestinationNode, TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
@@ -6,13 +6,10 @@ export class AudioDestinationNodeRenderer extends AudioNodeRenderer implements I
 
     private _nativeNode: null | TNativeAudioDestinationNode;
 
-    private _proxy: IAudioDestinationNode;
-
-    constructor (proxy: IAudioDestinationNode) {
+    constructor () {
         super();
 
         this._nativeNode = null;
-        this._proxy = proxy;
     }
 
     public render (offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> {

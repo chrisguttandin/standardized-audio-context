@@ -42,18 +42,15 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer implements IAudioNo
 
     private _feedforward: number [] | TTypedArray;
 
-    private _length: number;
-
     private _nativeNode: null | TNativeAudioBufferSourceNode | TNativeIIRFilterNode;
 
     private _proxy: IIIRFilterNode;
 
-    constructor (proxy: IIIRFilterNode, feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray, length: number) {
+    constructor (proxy: IIIRFilterNode, feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) {
         super();
 
         this._feedback = feedback;
         this._feedforward = feedforward;
-        this._length = length;
         this._nativeNode = null;
         this._proxy = proxy;
     }

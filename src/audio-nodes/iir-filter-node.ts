@@ -7,7 +7,7 @@ import { IIRFilterNodeFaker, IIR_FILTER_NODE_FAKER_PROVIDER } from '../fakers/ii
 import { RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
+import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { IIRFilterNodeRenderer } from '../renderers/iir-filter-node';
 import {
     TChannelCountMode,
@@ -130,8 +130,7 @@ export class IIRFilterNode extends NoneAudioDestinationNode implements IIIRFilte
         }
 
         if (isOfflineAudioContext(nativeContext)) {
-            const length = (<IMinimalOfflineAudioContext> context).length;
-            const biquadFilterNodeRenderer = new IIRFilterNodeRenderer(this, feedback, feedforward, length);
+            const biquadFilterNodeRenderer = new IIRFilterNodeRenderer(this, feedback, feedforward);
 
             RENDERER_STORE.set(this, biquadFilterNodeRenderer);
         }

@@ -36,7 +36,7 @@ export class AudioDestinationNode extends AudioNode implements IAudioDestination
         }
 
         if (isOfflineAudioContext(nativeContext)) {
-            const audioDestinationNodeRenderer = new AudioDestinationNodeRenderer(this);
+            const audioDestinationNodeRenderer = new AudioDestinationNodeRenderer();
 
             RENDERER_STORE.set(this, audioDestinationNodeRenderer);
         }
