@@ -1,5 +1,5 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { Injector } from '@angular/core';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { deallocate } from 'async-array-buffer';
 import { DATA_CLONE_ERROR_FACTORY_PROVIDER, DataCloneErrorFactory } from './factories/data-clone-error';
 import { ENCODING_ERROR_FACTORY_PROVIDER, EncodingErrorFactory } from './factories/encoding-error';
@@ -9,11 +9,17 @@ import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer } from './interfaces';
 import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
-import { AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER, AudioBufferCopyChannelMethodsSupportTester } from './support-testers/audio-buffer-copy-channel-methods';
+import {
+    AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
+    AudioBufferCopyChannelMethodsSupportTester
+} from './support-testers/audio-buffer-copy-channel-methods';
 import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from './support-testers/promise';
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from './types';
 import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from './wrappers/audio-buffer';
-import { AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER ,AudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
+import {
+    AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
+    AudioBufferCopyChannelMethodsWrapper
+} from './wrappers/audio-buffer-copy-channel-methods';
 
 const injector = Injector.create([
     AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
@@ -44,7 +50,10 @@ const isSupportingPromises = (context: TUnpatchedAudioContext | TUnpatchedOfflin
     () => promiseSupportTester.test(context)
 );
 
-export const decodeAudioData = (audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, audioData: ArrayBuffer): Promise<IAudioBuffer> => {
+export const decodeAudioData = (
+    audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    audioData: ArrayBuffer
+): Promise<IAudioBuffer> => {
     // Bug #43: Only Chrome and Opera do throw a DataCloneError.
     if (DETACHED_ARRAY_BUFFERS.has(audioData)) {
         const err = dataCloneErrorFactory.create();

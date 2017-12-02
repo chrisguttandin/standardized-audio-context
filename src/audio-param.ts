@@ -55,7 +55,7 @@ export class AudioParam implements IAudioParam {
         this._audioParamRenderer.record({ startTime: 0, type: 'setValue', value });
     }
 
-    cancelAndHoldAtTime (cancelTime: number) {
+    public cancelAndHoldAtTime (cancelTime: number) {
         if (this._nativeAudioParam !== null) {
             // @todo TypeScript does not yet know about the cancelAndHoldAtTime() method.
             (<any> this._nativeAudioParam).cancelAndHoldAtTime(cancelTime);
@@ -64,7 +64,7 @@ export class AudioParam implements IAudioParam {
         // @todo
     }
 
-    cancelScheduledValues (cancelTime: number) {
+    public cancelScheduledValues (cancelTime: number) {
         if (this._nativeAudioParam !== null) {
             this._nativeAudioParam.cancelScheduledValues(cancelTime);
         }
@@ -72,7 +72,7 @@ export class AudioParam implements IAudioParam {
         // @todo
     }
 
-    exponentialRampToValueAtTime (value: number, endTime: number) {
+    public exponentialRampToValueAtTime (value: number, endTime: number) {
         if (this._nativeAudioParam !== null) {
             this._nativeAudioParam.exponentialRampToValueAtTime(value, endTime);
         }
@@ -80,7 +80,7 @@ export class AudioParam implements IAudioParam {
         this._audioParamRenderer.record({ endTime, type: 'exponentialRampToValue', value });
     }
 
-    linearRampToValueAtTime (value: number, endTime: number) {
+    public linearRampToValueAtTime (value: number, endTime: number) {
         if (this._nativeAudioParam !== null) {
             this._nativeAudioParam.linearRampToValueAtTime(value, endTime);
         }
@@ -88,7 +88,7 @@ export class AudioParam implements IAudioParam {
         this._audioParamRenderer.record({ endTime, type: 'linearRampToValue', value });
     }
 
-    setTargetAtTime (target: number, startTime: number, timeConstant: number) {
+    public setTargetAtTime (target: number, startTime: number, timeConstant: number) {
         if (this._nativeAudioParam !== null) {
             this._nativeAudioParam.setTargetAtTime(target, startTime, timeConstant);
         }
@@ -96,7 +96,7 @@ export class AudioParam implements IAudioParam {
         this._audioParamRenderer.record({ startTime, target, timeConstant, type: 'setTarget' });
     }
 
-    setValueAtTime (value: number, startTime: number) {
+    public setValueAtTime (value: number, startTime: number) {
         if (this._nativeAudioParam !== null) {
             this._nativeAudioParam.setValueAtTime(value, startTime);
         }
@@ -104,7 +104,7 @@ export class AudioParam implements IAudioParam {
         this._audioParamRenderer.record({ startTime, type: 'setValue', value });
     }
 
-    setValueCurveAtTime (values: Float32Array, startTime: number, duration: number) {
+    public setValueCurveAtTime (values: Float32Array, startTime: number, duration: number) {
         if (this._nativeAudioParam !== null) {
             this._nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
         }

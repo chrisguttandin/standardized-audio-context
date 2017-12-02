@@ -1,13 +1,22 @@
 import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { Injector } from '@angular/core';
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
 import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from './factories/index-size-error';
 import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer, IAudioBufferOptions } from './interfaces';
-import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr } from './providers/unpatched-offline-audio-context-constructor';
+import {
+    UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+    unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
+} from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
-import { AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER, AudioBufferCopyChannelMethodsSupportTester } from './support-testers/audio-buffer-copy-channel-methods';
+import {
+    AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
+    AudioBufferCopyChannelMethodsSupportTester
+} from './support-testers/audio-buffer-copy-channel-methods';
 import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from './wrappers/audio-buffer';
-import { AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER, AudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
+import {
+    AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
+    AudioBufferCopyChannelMethodsWrapper
+} from './wrappers/audio-buffer-copy-channel-methods';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
@@ -70,9 +79,9 @@ export class AudioBuffer implements IAudioBuffer {
     }
 
     // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-    public copyFromChannel (_1: Float32Array, _2: number, _3: number = 0): void { }
+    public copyFromChannel (_1: Float32Array, _2: number, _3 = 0): void { } // tslint:disable-line:no-empty
 
     // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-    public copyToChannel (_1: Float32Array, _2: number, _3: number = 0): void { }
+    public copyToChannel (_1: Float32Array, _2: number, _3 = 0): void { } // tslint:disable-line:no-empty
 
 }
