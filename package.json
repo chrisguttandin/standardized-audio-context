@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@angular/core": "^5.0.5",
-    "async-array-buffer": "^1.1.12",
+    "async-array-buffer": "^1.1.13",
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.1",
     "rxjs": "^5.5.3",
