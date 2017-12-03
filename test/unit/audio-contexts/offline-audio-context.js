@@ -317,6 +317,7 @@ describe('OfflineAudioContext', () => {
         it('should return an instance of the BiquadFilterNode interface', () => {
             const biquadFilterNode = offlineAudioContext.createBiquadFilter();
 
+            expect(biquadFilterNode.channelCount).to.equal(2);
             expect(biquadFilterNode.channelCountMode).to.equal('max');
             expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
 
@@ -579,6 +580,7 @@ describe('OfflineAudioContext', () => {
         it('should return an instance of the GainNode interface', () => {
             const gainNode = offlineAudioContext.createGain();
 
+            expect(gainNode.channelCount).to.equal(2);
             expect(gainNode.channelCountMode).to.equal('max');
             expect(gainNode.channelInterpretation).to.equal('speakers');
 
@@ -660,6 +662,7 @@ describe('OfflineAudioContext', () => {
         it('should return an instance of the IIRFilterNode interface', () => {
             const iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
 
+            expect(iIRFilterNode.channelCount).to.equal(2);
             expect(iIRFilterNode.channelCountMode).to.equal('max');
             expect(iIRFilterNode.channelInterpretation).to.equal('speakers');
 

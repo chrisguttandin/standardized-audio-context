@@ -350,6 +350,7 @@ describe('AudioContext', () => {
             it('should return an instance of the BiquadFilterNode interface', () => {
                 const biquadFilterNode = audioContext.createBiquadFilter();
 
+                expect(biquadFilterNode.channelCount).to.equal(2);
                 expect(biquadFilterNode.channelCountMode).to.equal('max');
                 expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
 
@@ -617,6 +618,10 @@ describe('AudioContext', () => {
                 const audioBufferSourceNode = audioContext.createBufferSource();
 
                 expect(audioBufferSourceNode.buffer).to.be.null;
+
+                expect(audioBufferSourceNode.channelCount).to.equal(2);
+                expect(audioBufferSourceNode.channelCountMode).to.equal('max');
+                expect(audioBufferSourceNode.channelInterpretation).to.equal('speakers');
 
                 /*
                  * expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
@@ -1056,6 +1061,7 @@ describe('AudioContext', () => {
             it('should return an instance of the GainNode interface', () => {
                 const gainNode = audioContext.createGain();
 
+                expect(gainNode.channelCount).to.equal(2);
                 expect(gainNode.channelCountMode).to.equal('max');
                 expect(gainNode.channelInterpretation).to.equal('speakers');
 
@@ -1155,6 +1161,7 @@ describe('AudioContext', () => {
             it('should return an instance of the IIRFilterNode interface', () => {
                 const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
+                expect(iIRFilterNode.channelCount).to.equal(2);
                 expect(iIRFilterNode.channelCountMode).to.equal('max');
                 expect(iIRFilterNode.channelInterpretation).to.equal('speakers');
 
@@ -1379,11 +1386,8 @@ describe('AudioContext', () => {
                 const oscillatorNode = audioContext.createOscillator();
 
                 expect(oscillatorNode.channelCount).to.equal(2);
-
-                /*
-                 * channelCountMode is not specified
-                 * channelInterpretation is not specified
-                 */
+                expect(oscillatorNode.channelCountMode).to.equal('max');
+                expect(oscillatorNode.channelInterpretation).to.equal('speakers');
 
                 expect(oscillatorNode.detune.cancelScheduledValues).to.be.a('function');
                 expect(oscillatorNode.detune.defaultValue).to.equal(0);
