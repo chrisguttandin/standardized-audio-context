@@ -20,6 +20,29 @@ describe('offlineAudioContextConstructor', () => {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('destination', () => {
+
+        // bug #54
+
+        it('should throw an IndexSizeError', (done) => {
+            try {
+                offlineAudioContext.destination.channelCount = 2;
+            } catch (err) {
+                expect(err.code).to.equal(1);
+                expect(err.name).to.equal('IndexSizeError');
+
+                done();
+            }
+        });
+
+        // bug #53
+
+        it('should allow to change the value of the channelCountMode property', () => {
+            offlineAudioContext.destination.channelCountMode = 'max';
+        });
+
+    });
+
     describe('createBufferSource()', () => {
 
         describe('start()', () => {

@@ -40,7 +40,9 @@ export class AudioNode extends EventTarget implements IAudioNode {
     constructor (
         context: IMinimalBaseAudioContext,
         nativeNode: null | TNativeAudioNode,
-        { channelCount, channelCountMode, channelInterpretation, numberOfInputs, numberOfOutputs }: IAudioNodeOptions
+        { channelCount, channelCountMode, channelInterpretation, numberOfInputs, numberOfOutputs }: IAudioNodeOptions,
+        // @todo The parentNode property is only needed as long as the source gets transpiled to ES5.
+        parentNode?: IAudioNode
     ) {
         super();
 
@@ -63,7 +65,7 @@ export class AudioNode extends EventTarget implements IAudioNode {
                 audioNodeDisconnectMethodWrapper.wrap(nativeNode);
             }
 
-            AUDIO_NODE_STORE.set(this, nativeNode);
+            AUDIO_NODE_STORE.set((parentNode === undefined) ? this : parentNode, nativeNode);
         }
     }
 

@@ -61,6 +61,39 @@ describe('OfflineAudioContext', () => {
             }).to.throw(TypeError);
         });
 
+        it('should have maxChannelCount which is at least the channelCount', () => {
+            const offlineAudioContext = new OfflineAudioContext({ length, sampleRate });
+            const destination = offlineAudioContext.destination;
+
+            expect(destination.maxChannelCount).to.be.at.least(destination.channelCount);
+        });
+
+        it('should not allow to change the value of the channelCount property', (done) => {
+            const offlineAudioContext = new OfflineAudioContext({ length, sampleRate });
+
+            try {
+                offlineAudioContext.destination.channelCount = 2;
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
+        });
+
+        it('should not allow to change the value of the channelCountMode property', (done) => {
+            const offlineAudioContext = new OfflineAudioContext({ length, sampleRate });
+
+            try {
+                offlineAudioContext.destination.channelCountMode = 'max';
+            } catch (err) {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
+
+                done();
+            }
+        });
+
         describe('with options as arguments', () => {
 
             let numberOfChannels;

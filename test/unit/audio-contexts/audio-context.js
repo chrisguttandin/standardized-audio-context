@@ -104,6 +104,25 @@ describe('AudioContext', () => {
                 }).to.throw(TypeError);
             });
 
+            it('should have maxChannelCount which is at least the channelCount', () => {
+                const destination = audioContext.destination;
+
+                expect(destination.maxChannelCount).to.be.at.least(destination.channelCount);
+            });
+
+            it('should not allow to change the value of the channelCount property to a value above the maxChannelCount', (done) => {
+                const destination = audioContext.destination;
+
+                try {
+                    destination.channelCount = destination.maxChannelCount + 1;
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
         });
 
         describe('onstatechange', () => {
