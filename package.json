@@ -14,7 +14,7 @@
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.1",
     "rxjs": "^5.5.5",
-    "tslib": "^1.8.0",
+    "tslib": "^1.8.1",
     "zone.js": "^0.8.18"
   },
   "description": "A patched AudioContext which imitates the current API in current browsers.",
