@@ -119,8 +119,8 @@ module.exports = (config) => {
                 'ChromeHeadless',
                 'ChromeCanaryHeadless',
                 'EdgeBrowserStack',
-                'Firefox',
-                'FirefoxDeveloper',
+                'FirefoxHeadless',
+                'FirefoxDeveloperHeadless',
                 'Opera',
                 'Safari'
             ],
