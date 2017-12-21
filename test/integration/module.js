@@ -4,7 +4,7 @@ describe('module', () => {
 
     describe('isSupported', () => {
 
-        it('should be resolve to false', () => {
+        it('should resolve to false', () => {
             return isSupported
                 .then((sSpprtd) => {
                     expect(sSpprtd).to.be.false;
