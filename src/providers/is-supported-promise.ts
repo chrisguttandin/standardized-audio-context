@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { cacheTestResult } from '../helpers/cache-test-result';
 import { AudioContextOptionsSupportTester } from '../support-testers/audio-context-options';
 import { CloseSupportTester } from '../support-testers/close';
 import { DecodeAudioDataTypeErrorSupportTester } from '../support-testers/decode-audio-data-type-error';
@@ -17,14 +18,15 @@ export const IS_SUPPORTED_PROMISE_PROVIDER = {
         mergingSupportTester: MergingSupportTester,
         { promises, typedarrays, webaudio }: TModernizr
     ): Promise<boolean> => {
-        if (promises && typedarrays && webaudio && audioContextOptionsSupportTester.test() && closeSupportTester.test()) {
+        if (promises && typedarrays && webaudio && closeSupportTester.test()) {
             return Promise
                 .all([
-                    decodeAudioDataTypeErrorSupportTester.test(),
-                    mergingSupportTester.test()
+                    cacheTestResult(audioContextOptionsSupportTester, () => audioContextOptionsSupportTester.test()),
+                    cacheTestResult(decodeAudioDataTypeErrorSupportTester, () => decodeAudioDataTypeErrorSupportTester.test()),
+                    cacheTestResult(mergingSupportTester, () => mergingSupportTester.test())
                 ])
-                .then(([ decodeAudioDataTypeErrorSupport, mergingSupport ]) => {
-                    return decodeAudioDataTypeErrorSupport && mergingSupport;
+                .then(([ audioContextOptionsSupport, decodeAudioDataTypeErrorSupport, mergingSupport ]) => {
+                    return audioContextOptionsSupport && decodeAudioDataTypeErrorSupport && mergingSupport;
                 });
         }
 

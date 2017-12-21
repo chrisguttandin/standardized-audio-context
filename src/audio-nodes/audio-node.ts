@@ -59,7 +59,7 @@ export class AudioNode extends EventTarget implements IAudioNode {
         if (nativeNode !== null) {
             // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
             // @todo Make sure this is not used with an OfflineAudioContext.
-            if (!cacheTestResult(DisconnectingSupportTester, () => {
+            if (true !== cacheTestResult(DisconnectingSupportTester, () => {
                 return disconnectingSupportTester.test(<TUnpatchedAudioContext> nativeContext);
             })) {
                 audioNodeDisconnectMethodWrapper.wrap(nativeNode);
