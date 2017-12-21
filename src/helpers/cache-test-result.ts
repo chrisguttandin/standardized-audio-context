@@ -2,7 +2,7 @@ const TEST_RESULTS: WeakMap<object, boolean> = new WeakMap();
 const ONGOING_TESTS: Map<object, Promise<boolean>> = new Map();
 
 function cacheTestResult (tester: object, test: () => boolean): boolean;
-function cacheTestResult (tester: object, test: () => Promise<boolean>): boolean | Promise<boolean>;
+function cacheTestResult (tester: object, test: () => Promise<boolean>): boolean | Promise<boolean>;
 function cacheTestResult (tester: object, test: () => boolean | Promise<boolean>): boolean | Promise<boolean> {
     if (TEST_RESULTS.has(tester)) {
         return <boolean> TEST_RESULTS.get(tester);
@@ -29,6 +29,6 @@ function cacheTestResult (tester: object, test: () => boolean | Promise<boolean>
     TEST_RESULTS.set(tester, synchronousTestResult);
 
     return synchronousTestResult;
-};
+}
 
-export { cacheTestResult };
+export { cacheTestResult };
