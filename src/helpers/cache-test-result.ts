@@ -1,11 +1,20 @@
-const TEST_RESULTS: WeakMap<object, boolean> = new WeakMap();
+import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { TEST_RESULTS_PROVIDER, testResultsToken } from '../providers/test-results';
+
 const ONGOING_TESTS: Map<object, Promise<boolean>> = new Map();
+
+const injector = Injector.create([
+    TEST_RESULTS_PROVIDER
+]);
+
+const testResults = injector.get(testResultsToken);
 
 function cacheTestResult (tester: object, test: () => boolean): boolean;
 function cacheTestResult (tester: object, test: () => Promise<boolean>): boolean | Promise<boolean>;
 function cacheTestResult (tester: object, test: () => boolean | Promise<boolean>): boolean | Promise<boolean> {
-    if (TEST_RESULTS.has(tester)) {
-        return <boolean> TEST_RESULTS.get(tester);
+    if (testResults.has(tester)) {
+        return <boolean> testResults.get(tester);
     }
 
     if (ONGOING_TESTS.has(tester)) {
@@ -20,13 +29,13 @@ function cacheTestResult (tester: object, test: () => boolean | Promise<boolean>
         return synchronousTestResult
             .then((finalTestResult) => {
                 ONGOING_TESTS.delete(tester);
-                TEST_RESULTS.set(tester, finalTestResult);
+                testResults.set(tester, finalTestResult);
 
                 return finalTestResult;
             });
     }
 
-    TEST_RESULTS.set(tester, synchronousTestResult);
+    testResults.set(tester, synchronousTestResult);
 
     return synchronousTestResult;
 }

@@ -1,5 +1,6 @@
 import 'core-js/es7/reflect';
 import { IS_SUPPORTED_PROMISE_PROVIDER, isSupportedPromise } from '../../../src/providers/is-supported-promise';
+import { TEST_RESULTS_PROVIDER, testResultsToken } from '../../../src/providers/test-results';
 import { AudioContextOptionsSupportTester } from '../../../src/support-testers/audio-context-options';
 import { CloseSupportTester } from '../../../src/support-testers/close';
 import { DecodeAudioDataTypeErrorSupportTester } from '../../../src/support-testers/decode-audio-data-type-error';
@@ -45,8 +46,16 @@ describe('isSupportedPromise', () => {
             { provide: DecodeAudioDataTypeErrorSupportTester, useValue: fakeDecodeAudioDataTypeErrorSupportTester },
             { provide: MergingSupportTester, useValue: fakeMergingSupportTester },
             IS_SUPPORTED_PROMISE_PROVIDER,
-            { provide: modernizr, useValue: fakeModernizr }
+            { provide: modernizr, useValue: fakeModernizr },
+            TEST_RESULTS_PROVIDER
         ]);
+
+        const testResults = injector.get(testResultsToken);
+
+        testResults.delete(AudioContextOptionsSupportTester);
+        testResults.delete(CloseSupportTester);
+        testResults.delete(DecodeAudioDataTypeErrorSupportTester);
+        testResults.delete(MergingSupportTester);
     });
 
     it('should resolve to true if all test pass', () => {

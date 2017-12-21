@@ -18,15 +18,16 @@ export const IS_SUPPORTED_PROMISE_PROVIDER = {
         mergingSupportTester: MergingSupportTester,
         { promises, typedarrays, webaudio }: TModernizr
     ): Promise<boolean> => {
-        if (promises && typedarrays && webaudio && closeSupportTester.test()) {
+        if (promises && typedarrays && webaudio) {
             return Promise
                 .all([
-                    cacheTestResult(audioContextOptionsSupportTester, () => audioContextOptionsSupportTester.test()),
-                    cacheTestResult(decodeAudioDataTypeErrorSupportTester, () => decodeAudioDataTypeErrorSupportTester.test()),
-                    cacheTestResult(mergingSupportTester, () => mergingSupportTester.test())
+                    cacheTestResult(AudioContextOptionsSupportTester, () => audioContextOptionsSupportTester.test()),
+                    cacheTestResult(CloseSupportTester, () => closeSupportTester.test()),
+                    cacheTestResult(DecodeAudioDataTypeErrorSupportTester, () => decodeAudioDataTypeErrorSupportTester.test()),
+                    cacheTestResult(MergingSupportTester, () => mergingSupportTester.test())
                 ])
-                .then(([ audioContextOptionsSupport, decodeAudioDataTypeErrorSupport, mergingSupport ]) => {
-                    return audioContextOptionsSupport && decodeAudioDataTypeErrorSupport && mergingSupport;
+                .then(([ audioContextOptionsSupport, closeSupport, decodeAudioDataTypeErrorSupport, mergingSupport ]) => {
+                    return audioContextOptionsSupport && closeSupport && decodeAudioDataTypeErrorSupport && mergingSupport;
                 });
         }
 
