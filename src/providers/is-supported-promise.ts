@@ -18,16 +18,18 @@ export const IS_SUPPORTED_PROMISE_PROVIDER = {
         mergingSupportTester: MergingSupportTester,
         { promises, typedarrays, webaudio }: TModernizr
     ): Promise<boolean> => {
-        if (promises && typedarrays && webaudio) {
+        if (promises &&
+                typedarrays &&
+                webaudio &&
+                cacheTestResult(AudioContextOptionsSupportTester, () => audioContextOptionsSupportTester.test()) &&
+                cacheTestResult(CloseSupportTester, () => closeSupportTester.test())) {
             return Promise
                 .all([
-                    cacheTestResult(AudioContextOptionsSupportTester, () => audioContextOptionsSupportTester.test()),
-                    cacheTestResult(CloseSupportTester, () => closeSupportTester.test()),
                     cacheTestResult(DecodeAudioDataTypeErrorSupportTester, () => decodeAudioDataTypeErrorSupportTester.test()),
                     cacheTestResult(MergingSupportTester, () => mergingSupportTester.test())
                 ])
-                .then(([ audioContextOptionsSupport, closeSupport, decodeAudioDataTypeErrorSupport, mergingSupport ]) => {
-                    return audioContextOptionsSupport && closeSupport && decodeAudioDataTypeErrorSupport && mergingSupport;
+                .then(([ decodeAudioDataTypeErrorSupport, mergingSupport ]) => {
+                    return decodeAudioDataTypeErrorSupport && mergingSupport;
                 });
         }
 
