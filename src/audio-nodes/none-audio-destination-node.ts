@@ -1,5 +1,4 @@
-import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TNativeAudioNode } from '../types';

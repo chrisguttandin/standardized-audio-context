@@ -1,5 +1,4 @@
-import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core';
 import { INVALID_ACCES_ERROR_FACTORY_PROVIDER } from '../factories/invalid-access-error';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { NOT_SUPPORTED_ERROR_FACTORY_PROVIDER, NotSupportedErrorFactory } from '../factories/not-supported-error';

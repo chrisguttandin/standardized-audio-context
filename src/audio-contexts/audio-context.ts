@@ -1,5 +1,4 @@
-import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core';
 import { AnalyserNode } from '../audio-nodes/analyser-node';
 import { ChannelMergerNode } from '../audio-nodes/channel-merger-node';
 import { ChannelSplitterNode } from '../audio-nodes/channel-splitter-node';

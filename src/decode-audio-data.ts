@@ -1,5 +1,4 @@
-import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core';
 import { deallocate } from 'async-array-buffer';
 import { DATA_CLONE_ERROR_FACTORY_PROVIDER, DataCloneErrorFactory } from './factories/data-clone-error';
 import { ENCODING_ERROR_FACTORY_PROVIDER, EncodingErrorFactory } from './factories/encoding-error';

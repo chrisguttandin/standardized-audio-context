@@ -1,5 +1,4 @@
-import 'core-js/es7/reflect'; // tslint:disable-line:ordered-imports
-import { Injector } from '@angular/core'; // tslint:disable-line:ordered-imports
+import { Injector } from '@angular/core';
 import { TEST_RESULTS_PROVIDER, testResultsToken } from '../providers/test-results';
 
 const ONGOING_TESTS: Map<object, Promise<boolean>> = new Map();
