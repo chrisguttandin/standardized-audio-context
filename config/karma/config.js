@@ -117,7 +117,7 @@ module.exports = (config) => {
 
             browsers: [
                 'ChromeHeadless',
-                'ChromeCanaryHeadless',
+                'ChromeCanaryHeadlessWithNoRequiredUserGesture',
                 'EdgeBrowserStack',
                 'FirefoxHeadless',
                 'FirefoxDeveloperHeadless',
@@ -126,6 +126,10 @@ module.exports = (config) => {
             ],
 
             customLaunchers: {
+                ChromeCanaryHeadlessWithNoRequiredUserGesture: {
+                    base: 'ChromeCanaryHeadless',
+                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
+                },
                 EdgeBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'edge',
