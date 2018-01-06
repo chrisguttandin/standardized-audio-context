@@ -26,6 +26,7 @@ export class ChannelSplitterNodeWrapper {
             }
         });
 
+        // Bug #31: Only Chrome Canary has the correct channelInterpretation.
         Object.defineProperty(channelSplitterNode, 'channelInterpretation', {
             get: () => 'discrete',
             set: () => {
