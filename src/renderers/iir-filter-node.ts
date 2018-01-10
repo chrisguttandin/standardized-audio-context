@@ -21,11 +21,13 @@ import {
 } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
-const injector = Injector.create([
-    PROMISE_SUPPORT_TESTER_PROVIDER,
-    UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-    WINDOW_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        PROMISE_SUPPORT_TESTER_PROVIDER,
+        UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+        WINDOW_PROVIDER
+    ]
+});
 
 const promiseSupportTester = injector.get(PromiseSupportTester);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);

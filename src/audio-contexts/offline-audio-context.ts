@@ -11,12 +11,14 @@ import { TUnpatchedOfflineAudioContext } from '../types';
 import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from '../wrappers/audio-buffer';
 import { BaseAudioContext } from './base-audio-context';
 
-const injector = Injector.create([
-    AUDIO_BUFFER_WRAPPER_PROVIDER,
-    INDEX_SIZE_ERROR_FACTORY_PROVIDER,
-    UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-    WINDOW_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        AUDIO_BUFFER_WRAPPER_PROVIDER,
+        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
+        UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+        WINDOW_PROVIDER
+    ]
+});
 
 const audioBufferWrapper = injector.get(AudioBufferWrapper);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);

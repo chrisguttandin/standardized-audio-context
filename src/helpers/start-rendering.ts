@@ -5,9 +5,11 @@ import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from '../suppor
 import { TNativeAudioBuffer, TUnpatchedOfflineAudioContext } from '../types';
 import { cacheTestResult } from './cache-test-result';
 
-const injector = Injector.create([
-    PROMISE_SUPPORT_TESTER_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        PROMISE_SUPPORT_TESTER_PROVIDER
+    ]
+});
 
 const promiseSupportTester = injector.get(PromiseSupportTester);
 

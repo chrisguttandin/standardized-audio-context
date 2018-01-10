@@ -9,10 +9,12 @@ import { AudioDestinationNodeRenderer } from '../renderers/audio-destination-nod
 import { TChannelCountMode } from '../types';
 import { AudioNode } from './audio-node';
 
-const injector = Injector.create([
-    INDEX_SIZE_ERROR_FACTORY_PROVIDER,
-    INVALID_STATE_ERROR_FACTORY_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
+        INVALID_STATE_ERROR_FACTORY_PROVIDER
+    ]
+});
 
 const indexSizeErrorFactory = injector.get(IndexSizeErrorFactory);
 const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);

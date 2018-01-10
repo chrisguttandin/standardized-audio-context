@@ -53,13 +53,15 @@ const DEFAULT_OPTIONS: Partial<IIIRFilterOptions> = {
     numberOfOutputs: 1
 };
 
-const injector = Injector.create([
-    INVALID_ACCES_ERROR_FACTORY_PROVIDER,
-    INVALID_STATE_ERROR_FACTORY_PROVIDER,
-    IIR_FILTER_NODE_FAKER_PROVIDER,
-    IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER,
-    NOT_SUPPORTED_ERROR_FACTORY_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        INVALID_ACCES_ERROR_FACTORY_PROVIDER,
+        INVALID_STATE_ERROR_FACTORY_PROVIDER,
+        IIR_FILTER_NODE_FAKER_PROVIDER,
+        IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER,
+        NOT_SUPPORTED_ERROR_FACTORY_PROVIDER
+    ]
+});
 
 const iIRFilterNodeFaker = injector.get(IIRFilterNodeFaker);
 const iIRFilterNodeGetFrequencyResponseMethodWrapper = injector.get(IIRFilterNodeGetFrequencyResponseMethodWrapper);

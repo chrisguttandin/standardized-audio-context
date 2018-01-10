@@ -21,14 +21,16 @@ const DEFAULT_OPTIONS = {
     numberOfChannels: 1
 };
 
-const injector = Injector.create([
-    AUDIO_BUFFER_WRAPPER_PROVIDER,
-    AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
-    AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
-    INDEX_SIZE_ERROR_FACTORY_PROVIDER,
-    UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-    WINDOW_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        AUDIO_BUFFER_WRAPPER_PROVIDER,
+        AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
+        AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
+        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
+        UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+        WINDOW_PROVIDER
+    ]
+});
 
 const audioBufferWrapper = injector.get(AudioBufferWrapper);
 const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyChannelMethodsSupportTester);

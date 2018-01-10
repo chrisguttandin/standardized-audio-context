@@ -6,10 +6,12 @@ import {
 import { WINDOW_PROVIDER } from '../providers/window';
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
-const injector = Injector.create([
-    UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-    WINDOW_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+        WINDOW_PROVIDER
+    ]
+});
 
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
 

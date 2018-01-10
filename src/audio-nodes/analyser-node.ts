@@ -31,10 +31,12 @@ const DEFAULT_OPTIONS: IAnalyserOptions = {
     smoothingTimeConstant: 0.8
 };
 
-const injector = Injector.create([
-    ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_METHOD_WRAPPER_PROVIDER,
-    ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_SUPPORT_TESTER_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_METHOD_WRAPPER_PROVIDER,
+        ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_SUPPORT_TESTER_PROVIDER
+    ]
+});
 
 const analyserNodeGetFloatTimeDomainDataMethodWrapper = injector.get(AnalyserNodeGetFloatTimeDomainDataMethodWrapper);
 const analyserNodeGetFloatTimeDomainDataSupportTester = injector.get(AnalyserNodeGetFloatTimeDomainDataSupportTester);

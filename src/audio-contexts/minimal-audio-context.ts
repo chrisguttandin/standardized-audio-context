@@ -10,11 +10,13 @@ import { WINDOW_PROVIDER } from '../providers/window';
 import { TUnpatchedAudioContext } from '../types';
 import { MinimalBaseAudioContext } from './minimal-base-audio-context';
 
-const injector = Injector.create([
-    INVALID_STATE_ERROR_FACTORY_PROVIDER,
-    UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-    WINDOW_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        INVALID_STATE_ERROR_FACTORY_PROVIDER,
+        UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+        WINDOW_PROVIDER
+    ]
+});
 
 const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 const unpatchedAudioContextConstructor = injector.get(nptchdDCntxtCnstrctr);

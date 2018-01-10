@@ -15,10 +15,12 @@ const DEFAULT_OPTIONS: IAudioNodeOptions = {
     numberOfOutputs: 6
 };
 
-const injector = Injector.create([
-    CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER,
-    INVALID_STATE_ERROR_FACTORY_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER,
+        INVALID_STATE_ERROR_FACTORY_PROVIDER
+    ]
+});
 
 const channelSplitterNodeWrapper = injector.get(ChannelSplitterNodeWrapper);
 

@@ -8,9 +8,11 @@ import { TChannelCountMode, TChannelInterpretation } from '../types';
 import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const injector = Injector.create([
-    AUDIO_PARAM_WRAPPER_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        AUDIO_PARAM_WRAPPER_PROVIDER
+    ]
+});
 
 const audioParamWrapper = injector.get(AudioParamWrapper);
 

@@ -3,9 +3,11 @@ import { TEST_RESULTS_PROVIDER, testResultsToken } from '../providers/test-resul
 
 const ONGOING_TESTS: Map<object, Promise<boolean>> = new Map();
 
-const injector = Injector.create([
-    TEST_RESULTS_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        TEST_RESULTS_PROVIDER
+    ]
+});
 
 const testResults = injector.get(testResultsToken);
 

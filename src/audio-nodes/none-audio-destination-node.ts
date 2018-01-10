@@ -4,9 +4,11 @@ import { IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TNativeAudioNode } from '../types';
 import { AudioNode } from './audio-node';
 
-const injector = Injector.create([
-    INVALID_STATE_ERROR_FACTORY_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        INVALID_STATE_ERROR_FACTORY_PROVIDER
+    ]
+});
 
 const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 

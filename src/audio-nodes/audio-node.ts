@@ -10,11 +10,13 @@ import { DISCONNECTING_SUPPORT_TESTER_PROVIDER, DisconnectingSupportTester } fro
 import { TChannelCountMode, TChannelInterpretation, TNativeAudioNode, TUnpatchedAudioContext } from '../types';
 import { AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER, AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
 
-const injector = Injector.create([
-    AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER,
-    DISCONNECTING_SUPPORT_TESTER_PROVIDER,
-    INVALID_ACCES_ERROR_FACTORY_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER,
+        DISCONNECTING_SUPPORT_TESTER_PROVIDER,
+        INVALID_ACCES_ERROR_FACTORY_PROVIDER
+    ]
+});
 
 const audioNodeDisconnectMethodWrapper = injector.get(AudioNodeDisconnectMethodWrapper);
 const disconnectingSupportTester = injector.get(DisconnectingSupportTester);

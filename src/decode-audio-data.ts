@@ -20,17 +20,19 @@ import {
     AudioBufferCopyChannelMethodsWrapper
 } from './wrappers/audio-buffer-copy-channel-methods';
 
-const injector = Injector.create([
-    AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
-    AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
-    AUDIO_BUFFER_WRAPPER_PROVIDER,
-    DATA_CLONE_ERROR_FACTORY_PROVIDER,
-    ENCODING_ERROR_FACTORY_PROVIDER,
-    INDEX_SIZE_ERROR_FACTORY_PROVIDER,
-    PROMISE_SUPPORT_TESTER_PROVIDER,
-    UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-    WINDOW_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
+        AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
+        AUDIO_BUFFER_WRAPPER_PROVIDER,
+        DATA_CLONE_ERROR_FACTORY_PROVIDER,
+        ENCODING_ERROR_FACTORY_PROVIDER,
+        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
+        PROMISE_SUPPORT_TESTER_PROVIDER,
+        UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
+        WINDOW_PROVIDER
+    ]
+});
 
 const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyChannelMethodsSupportTester);
 const audioBufferCopyChannelMethodsWrapper = injector.get(AudioBufferCopyChannelMethodsWrapper);

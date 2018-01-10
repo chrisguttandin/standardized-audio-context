@@ -21,11 +21,13 @@ import {
 import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const injector = Injector.create([
-    AUDIO_BUFFER_SOURCE_NODE_STOP_METHOD_WRAPPER_PROVIDER,
-    AUDIO_PARAM_WRAPPER_PROVIDER,
-    STOP_STOPPED_SUPPORT_TESTER_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        AUDIO_BUFFER_SOURCE_NODE_STOP_METHOD_WRAPPER_PROVIDER,
+        AUDIO_PARAM_WRAPPER_PROVIDER,
+        STOP_STOPPED_SUPPORT_TESTER_PROVIDER
+    ]
+});
 
 const audioBufferSourceNodeStopMethodWrapper = injector.get(AudioBufferSourceNodeStopMethodWrapper);
 const audioParamWrapper = injector.get(AudioParamWrapper);

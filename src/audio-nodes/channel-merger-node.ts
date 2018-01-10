@@ -15,10 +15,12 @@ const DEFAULT_OPTIONS: IAudioNodeOptions = {
     numberOfOutputs: 1
 };
 
-const injector = Injector.create([
-    CHANNEL_MERGER_NODE_WRAPPER_PROVIDER,
-    INVALID_STATE_ERROR_FACTORY_PROVIDER
-]);
+const injector = Injector.create({
+    providers: [
+        CHANNEL_MERGER_NODE_WRAPPER_PROVIDER,
+        INVALID_STATE_ERROR_FACTORY_PROVIDER
+    ]
+});
 
 const channelMergerNodeWrapper = injector.get(ChannelMergerNodeWrapper);
 
