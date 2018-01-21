@@ -29,7 +29,7 @@
     "core-js": "^2.5.3",
     "cz-conventional-changelog": "^2.1.0",
     "eslint": "^4.16.0",
-    "eslint-config-holy-grail": "^24.0.1",
+    "eslint-config-holy-grail": "^25.0.0",
     "greenkeeper-lockfile": "^1.13.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
