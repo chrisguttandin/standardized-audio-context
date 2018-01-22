@@ -219,18 +219,129 @@ describe('MinimalAudioContext', () => {
                     .catch(done);
             });
 
-            it('should throw an error on consecutive calls to closed', (done) => {
-                minimalAudioContext
-                    .close()
-                    .then(() => {
-                        return minimalAudioContext.close();
-                    })
-                    .catch((err) => {
-                        expect(err.code).to.equal(11);
-                        expect(err.name).to.equal('InvalidStateError');
+            describe('with a closed MinimalAudioContext', () => {
 
-                        done();
-                    });
+                beforeEach(() => minimalAudioContext.close());
+
+                it('should throw an error', (done) => {
+                    minimalAudioContext
+                        .close()
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            done();
+                        });
+                });
+
+            });
+
+        });
+
+        describe('resume()', () => {
+
+            it('should return a promise', () => {
+                expect(minimalAudioContext.resume()).to.be.an.instanceOf(Promise);
+            });
+
+            it('should set the state to running', (done) => {
+                minimalAudioContext
+                    .resume()
+                    .then(() => {
+                        // According to the spec the context state is changed to 'running' after the promise gets resolved.
+                        setTimeout(() => {
+                            expect(minimalAudioContext.state).to.equal('running');
+
+                            done();
+                        });
+                    })
+                    .catch(done);
+            });
+
+            describe('with a closed MinimalAudioContext', () => {
+
+                afterEach(() => {
+                    // Create a closeable AudioContext to align the behaviour with other tests.
+                    minimalAudioContext = new MinimalAudioContext();
+                });
+
+                beforeEach(() => minimalAudioContext.close());
+
+                it('should throw an error', (done) => {
+                    minimalAudioContext
+                        .resume()
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            done();
+                        });
+                });
+
+            });
+
+            describe('with a running MinimalAudioContext', () => {
+
+                beforeEach(() => minimalAudioContext.resume());
+
+                it('should ignore consecutive calls', () => {
+                    return minimalAudioContext.resume();
+                });
+
+            });
+
+        });
+
+        describe('suspend()', () => {
+
+            it('should return a promise', () => {
+                expect(minimalAudioContext.suspend()).to.be.an.instanceOf(Promise);
+            });
+
+            it('should set the state to suspended', (done) => {
+                minimalAudioContext
+                    .suspend()
+                    .then(() => {
+                        // According to the spec the context state is changed to 'suspended' after the promise gets resolved.
+                        setTimeout(() => {
+                            expect(minimalAudioContext.state).to.equal('suspended');
+
+                            done();
+                        });
+                    })
+                    .catch(done);
+            });
+
+            describe('with a closed MinimalAudioContext', () => {
+
+                afterEach(() => {
+                    // Create a closeable AudioContext to align the behaviour with other tests.
+                    minimalAudioContext = new MinimalAudioContext();
+                });
+
+                beforeEach(() => minimalAudioContext.close());
+
+                it('should throw an error', (done) => {
+                    minimalAudioContext
+                        .suspend()
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            done();
+                        });
+                });
+
+            });
+
+            describe('with a suspended MinimalAudioContext', () => {
+
+                beforeEach(() => minimalAudioContext.suspend());
+
+                it('should ignore consecutive calls', () => {
+                    return minimalAudioContext.suspend();
+                });
+
             });
 
         });

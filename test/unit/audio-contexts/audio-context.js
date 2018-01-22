@@ -228,18 +228,21 @@ describe('AudioContext', () => {
                     .catch(done);
             });
 
-            it('should throw an error on consecutive calls to closed', (done) => {
-                audioContext
-                    .close()
-                    .then(() => {
-                        return audioContext.close();
-                    })
-                    .catch((err) => {
-                        expect(err.code).to.equal(11);
-                        expect(err.name).to.equal('InvalidStateError');
+            describe('with a closed AudioContext', () => {
 
-                        done();
-                    });
+                beforeEach(() => audioContext.close());
+
+                it('should throw an error', (done) => {
+                    audioContext
+                        .close()
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            done();
+                        });
+                });
+
             });
 
         });
@@ -1758,6 +1761,114 @@ describe('AudioContext', () => {
 
                     return Promise
                         .all(arrayBufferCopies.map((rrBffr) => audioContext.decodeAudioData(rrBffr)));
+                });
+
+            });
+
+        });
+
+        describe('resume()', () => {
+
+            it('should return a promise', () => {
+                expect(audioContext.resume()).to.be.an.instanceOf(Promise);
+            });
+
+            it('should set the state to running', (done) => {
+                audioContext
+                    .resume()
+                    .then(() => {
+                        // According to the spec the context state is changed to 'running' after the promise gets resolved.
+                        setTimeout(() => {
+                            expect(audioContext.state).to.equal('running');
+
+                            done();
+                        });
+                    })
+                    .catch(done);
+            });
+
+            describe('with a closed AudioContext', () => {
+
+                afterEach(() => {
+                    // Create a closeable AudioContext to align the behaviour with other tests.
+                    audioContext = new AudioContext();
+                });
+
+                beforeEach(() => audioContext.close());
+
+                it('should throw an error', (done) => {
+                    audioContext
+                        .resume()
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            done();
+                        });
+                });
+
+            });
+
+            describe('with a running AudioContext', () => {
+
+                beforeEach(() => audioContext.resume());
+
+                it('should ignore consecutive calls', () => {
+                    return audioContext.resume();
+                });
+
+            });
+
+        });
+
+        describe('suspend()', () => {
+
+            it('should return a promise', () => {
+                expect(audioContext.suspend()).to.be.an.instanceOf(Promise);
+            });
+
+            it('should set the state to suspended', (done) => {
+                audioContext
+                    .suspend()
+                    .then(() => {
+                        // According to the spec the context state is changed to 'suspended' after the promise gets resolved.
+                        setTimeout(() => {
+                            expect(audioContext.state).to.equal('suspended');
+
+                            done();
+                        });
+                    })
+                    .catch(done);
+            });
+
+            describe('with a closed AudioContext', () => {
+
+                afterEach(() => {
+                    // Create a closeable AudioContext to align the behaviour with other tests.
+                    audioContext = new AudioContext();
+                });
+
+                beforeEach(() => audioContext.close());
+
+                it('should throw an error', (done) => {
+                    audioContext
+                        .suspend()
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            done();
+                        });
+                });
+
+            });
+
+            describe('with a suspended AudioContext', () => {
+
+                beforeEach(() => audioContext.suspend());
+
+                it('should ignore consecutive calls', () => {
+                    return audioContext.suspend();
                 });
 
             });
