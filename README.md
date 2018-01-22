@@ -21,8 +21,8 @@ That said, there are a lot of other functions which are currently not implemente
 reason besides a lack of time: `createAudioWorker()`, `createConvolver()`,
 `createDelay()`, `createDynamicsCompressor()`, `createMediaElementSource()`,
 `createMediaStreamDestination()`, `createMediaStreamSource()`, `createPanner()`,
-`createPeriodicWave()`, `createScriptProcessor()`, `createStereoPanner()`, `createWaveShaper()`,
-`resume()` and `suspend()`. The `listener` property is also missing for now.
+`createPeriodicWave()`, `createScriptProcessor()`, `createStereoPanner()` and `createWaveShaper()`.
+The `listener` property is also missing for now.
 
 This module also provides an
 [`OfflineAudioContext`](http://webaudio.github.io/web-audio-api/#OfflineAudioContext) which does
