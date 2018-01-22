@@ -89,4 +89,31 @@ export class MinimalAudioContext extends MinimalBaseAudioContext implements IMin
         return this._unpatchedAudioContext.close();
     }
 
+    public resume () {
+        return this._unpatchedAudioContext
+            .resume()
+            .catch((err) => {
+                // Bug #55: Chrome, Edge and Opera do throw an InvalidAccessError instead of an InvalidStateError.
+                // Bug #56: Safari invokes the catch handler but without an error.
+                if (err === undefined || err.code === 15) {
+                    throw invalidStateErrorFactory.create();
+                }
+
+                throw err;
+            });
+    }
+
+    public suspend () {
+        return this._unpatchedAudioContext
+            .suspend()
+            .catch((err) => {
+                // Bug #56: Safari invokes the catch handler but without an error.
+                if (err === undefined) {
+                    throw invalidStateErrorFactory.create();
+                }
+
+                throw err;
+            });
+    }
+
 }
