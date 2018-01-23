@@ -1,3 +1,5 @@
+import { Injector } from '@angular/core';
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOptions } from '../interfaces';
@@ -11,6 +13,14 @@ import {
     TUnpatchedOfflineAudioContext
 } from '../types';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
+
+const injector = Injector.create({
+    providers: [
+        INVALID_STATE_ERROR_FACTORY_PROVIDER
+    ]
+});
+
+const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 
 // The DEFAULT_OPTIONS are only of type Partial<IOscillatorOptions> because there is no default value for periodicWave.
 const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
@@ -77,6 +87,15 @@ export class OscillatorNode extends NoneAudioDestinationNode implements IOscilla
         }
 
         throw new Error('This is not yet supported.');
+    }
+
+    public set type (value) {
+        (<TNativeOscillatorNode> this._nativeNode).type = value;
+
+        // Bug #57: Edge will not throw an error when assigning the type to 'custom'. But it still will change the value.
+        if (value === 'custom') {
+            throw invalidStateErrorFactory.create();
+        }
     }
 
     public setPeriodicWave (periodicWave: PeriodicWave) {
