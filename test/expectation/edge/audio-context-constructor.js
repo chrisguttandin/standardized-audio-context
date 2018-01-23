@@ -199,6 +199,28 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createOscillator()', () => {
+
+            describe('type', () => {
+
+                let oscillatorNode;
+
+                beforeEach(() => {
+                    oscillatorNode = audioContext.createOscillator();
+                });
+
+                // bug #57
+
+                it('should not throw an error', () => {
+                    oscillatorNode.type = 'custom';
+
+                    expect(oscillatorNode.type).to.equal('sine');
+                });
+
+            });
+
+        });
+
         describe('decodeAudioData()', () => {
 
             // bug #27
