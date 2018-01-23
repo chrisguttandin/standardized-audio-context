@@ -1499,6 +1499,31 @@ describe('AudioContext', () => {
 
             });
 
+            describe('type', () => {
+
+                it("should be assignable to another type but 'custom'", () => {
+                    const oscillatorNode = audioContext.createOscillator();
+
+                    oscillatorNode.type = 'square';
+
+                    expect(oscillatorNode.type).to.equal('square');
+                });
+
+                it("should not be assignable to the type 'custom'", (done) => {
+                    const oscillatorNode = audioContext.createOscillator();
+
+                    try {
+                        oscillatorNode.type = 'custom';
+                    } catch (err) {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
+
+                        done();
+                    }
+                });
+
+            });
+
             describe('addEventListener()', () => {
 
                 it('should fire a registered ended event listener', (done) => {
