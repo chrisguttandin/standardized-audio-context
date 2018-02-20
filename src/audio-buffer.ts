@@ -32,7 +32,7 @@ const injector = Injector.create({
     ]
 });
 
-const audioBufferWrapper = injector.get(AudioBufferWrapper);
+const audioBufferWrapper = injector.get<AudioBufferWrapper>(AudioBufferWrapper);
 const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyChannelMethodsSupportTester);
 const audioBufferCopyChannelMethodsWrapper = injector.get(AudioBufferCopyChannelMethodsWrapper);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);

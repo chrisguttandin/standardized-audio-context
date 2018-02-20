@@ -64,7 +64,8 @@ const injector = Injector.create({
 });
 
 const iIRFilterNodeFaker = injector.get(IIRFilterNodeFaker);
-const iIRFilterNodeGetFrequencyResponseMethodWrapper = injector.get(IIRFilterNodeGetFrequencyResponseMethodWrapper);
+const iIRFilterNodeGetFrequencyResponseMethodWrapper = injector
+    .get<IIRFilterNodeGetFrequencyResponseMethodWrapper>(IIRFilterNodeGetFrequencyResponseMethodWrapper);
 const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 const notSupportedErrorFactory = injector.get(NotSupportedErrorFactory);
 

@@ -36,7 +36,7 @@ const injector = Injector.create({
 
 const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyChannelMethodsSupportTester);
 const audioBufferCopyChannelMethodsWrapper = injector.get(AudioBufferCopyChannelMethodsWrapper);
-const audioBufferWrapper = injector.get(AudioBufferWrapper);
+const audioBufferWrapper = injector.get<AudioBufferWrapper>(AudioBufferWrapper);
 const dataCloneErrorFactory = injector.get(DataCloneErrorFactory);
 const encodingErrorFactory = injector.get(EncodingErrorFactory);
 const promiseSupportTester = injector.get(PromiseSupportTester);
