@@ -20,7 +20,7 @@ const injector = Injector.create({
     ]
 });
 
-const audioBufferWrapper = injector.get(AudioBufferWrapper);
+const audioBufferWrapper = injector.get<AudioBufferWrapper>(AudioBufferWrapper);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
 
 const DEFAULT_OPTIONS = {

@@ -22,7 +22,7 @@ const injector = Injector.create({
     ]
 });
 
-const channelMergerNodeWrapper = injector.get(ChannelMergerNodeWrapper);
+const channelMergerNodeWrapper = injector.get<ChannelMergerNodeWrapper>(ChannelMergerNodeWrapper);
 
 const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfInputs: number) => {
     if (isOfflineAudioContext(nativeContext)) {

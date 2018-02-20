@@ -22,7 +22,7 @@ const injector = Injector.create({
     ]
 });
 
-const channelSplitterNodeWrapper = injector.get(ChannelSplitterNodeWrapper);
+const channelSplitterNodeWrapper = injector.get<ChannelSplitterNodeWrapper>(ChannelSplitterNodeWrapper);
 
 const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfOutputs: number) => {
     if (isOfflineAudioContext(nativeContext)) {
