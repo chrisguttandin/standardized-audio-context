@@ -64,7 +64,7 @@
     "tslint": "^5.9.1",
     "tslint-config-holy-grail": "^22.0.6",
     "typescript": "^2.7.2",
-    "webpack": "^3.11.0"
+    "webpack": "^4.0.0"
   },
   "files": [
     "build/es5/",
