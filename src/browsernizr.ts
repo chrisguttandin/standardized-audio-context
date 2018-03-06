@@ -1,5 +1,5 @@
 /*!
- * modernizr v3.5.0
+ * modernizr v3.6.0
  * Build https://modernizr.com/download?-promises-typedarrays-webaudio-dontmin
  *
  * Copyright (c)
@@ -41,7 +41,7 @@ export default (function(window: any){
 
   var ModernizrProto = {
     // The current version, dummy
-    _version: '3.5.0',
+    _version: '3.6.0',
 
     // Any settings that don't work as separate modules
     // can go in here as configuration.
