@@ -1,130 +1,143 @@
+import { AudioContext } from '../../../src/audio-contexts/audio-context';
+import { GainNode } from '../../../src/audio-nodes/gain-node';
 import { OfflineAudioContext } from '../../../src/audio-contexts/offline-audio-context';
+import { createRenderer } from '../../helper/create-renderer';
 
 describe('GainNode', () => {
 
-    let offlineAudioContext;
+    // @todo leche seems to need a unique string as identifier as first argument.
+    leche.withData([
+        [ 'constructor with AudioContext', () => new AudioContext(), (context) => new GainNode(context) ],
+        [ 'constructor with OfflineAudioContext', () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }), (context) => new GainNode(context) ],
+        [ 'factory function of AudioContext', () => new AudioContext(), (context) => context.createGain() ],
+        [ 'factory function of OfflineAudioContext', () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }), (context) => context.createGain() ]
+    ], (_, createContext, createGainNode) => {
 
-    beforeEach(() => {
-        offlineAudioContext = new OfflineAudioContext({ length: 5, sampleRate: 44100 });
-    });
-
-    describe('gain', () => {
-
+        let context;
         let gainNode;
 
+        afterEach(() => {
+            if (context instanceof AudioContext) {
+                return context.close();
+            }
+        });
+
         beforeEach(() => {
-            gainNode = offlineAudioContext.createGain();
+            context = createContext();
+            gainNode = createGainNode(context);
         });
 
-        it('should return an instance of the AudioParam interface', () => {
-            // @todo cancelAndHoldAtTime
-            expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
-            expect(gainNode.gain.defaultValue).to.equal(1);
-            expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
-            expect(gainNode.gain.linearRampToValueAtTime).to.be.a('function');
-            /*
-             * @todo maxValue
-             * @todo minValue
-             */
-            expect(gainNode.gain.setTargetAtTime).to.be.a('function');
-            // @todo setValueAtTime
-            expect(gainNode.gain.setValueCurveAtTime).to.be.a('function');
-            expect(gainNode.gain.value).to.equal(1);
-        });
+        describe('gain', () => {
 
-        describe('automation', () => {
-
-            let values;
-
-            beforeEach(() => {
-                values = [ 1, 0.5, 0, -0.5, -1 ];
-
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-                const audioBuffer = offlineAudioContext.createBuffer(1, 5, 44100);
-
-                audioBuffer.copyToChannel(new Float32Array(values), 0);
-
-                audioBufferSourceNode.buffer = audioBuffer;
-
-                audioBufferSourceNode.start(0);
-
-                audioBufferSourceNode
-                    .connect(gainNode)
-                    .connect(offlineAudioContext.destination);
+            it('should return an instance of the AudioParam interface', () => {
+                // @todo cancelAndHoldAtTime
+                expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
+                expect(gainNode.gain.defaultValue).to.equal(1);
+                expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
+                expect(gainNode.gain.linearRampToValueAtTime).to.be.a('function');
+                /*
+                 * @todo maxValue
+                 * @todo minValue
+                 */
+                expect(gainNode.gain.setTargetAtTime).to.be.a('function');
+                // @todo setValueAtTime
+                expect(gainNode.gain.setValueCurveAtTime).to.be.a('function');
+                expect(gainNode.gain.value).to.equal(1);
             });
 
-            describe('without any automation', () => {
+            describe('automation', () => {
 
-                it('should not modify the signal', () => {
-                    return offlineAudioContext
-                        .startRendering()
-                        .then((renderedBuffer) => {
-                            const channelData = new Float32Array(5);
+                let audioBufferSourceNode;
+                let renderer;
+                let values;
 
-                            renderedBuffer.copyFromChannel(channelData, 0, 0);
+                beforeEach(() => {
+                    audioBufferSourceNode = context.createBufferSource();
+                    values = [ 1, 0.5, 0, -0.5, -1 ];
 
-                            expect(Array.from(channelData)).to.deep.equal(values);
-                        });
+                    const audioBuffer = context.createBuffer(1, 5, context.sampleRate);
+
+                    audioBuffer.copyToChannel(new Float32Array(values), 0);
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+
+                    renderer = createRenderer({
+                        connect (destination) {
+                            audioBufferSourceNode
+                                .connect(gainNode)
+                                .connect(destination);
+                        },
+                        context,
+                        length: (context instanceof AudioContext) ? 5 : undefined
+                    });
                 });
 
-            });
+                describe('without any automation', () => {
 
-            describe('with a modified value', () => {
+                    it('should not modify the signal', function () {
+                        this.timeout(5000);
 
-                it('should modify the signal', () => {
-                    gainNode.gain.value = 0.5;
+                        return renderer((startTime) => audioBufferSourceNode.start(startTime))
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal(values);
+                            });
+                    });
 
-                    return offlineAudioContext
-                        .startRendering()
-                        .then((renderedBuffer) => {
-                            const channelData = new Float32Array(5);
-
-                            renderedBuffer.copyFromChannel(channelData, 0, 0);
-
-                            expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
-                        });
                 });
 
-            });
+                describe('with a modified value', () => {
 
-            describe('with a call to setValueAtTime()', () => {
+                    it('should modify the signal', function () {
+                        this.timeout(5000);
 
-                it('should modify the signal', () => {
-                    gainNode.gain.setValueAtTime(0, 2 / 44100);
+                        gainNode.gain.value = 0.5;
 
-                    return offlineAudioContext
-                        .startRendering()
-                        .then((renderedBuffer) => {
-                            const channelData = new Float32Array(5);
+                        return renderer((startTime) => audioBufferSourceNode.start(startTime))
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
+                            });
+                    });
 
-                            renderedBuffer.copyFromChannel(channelData, 0, 0);
-
-                            expect(Array.from(channelData)).to.deep.equal([ 1, 0.5, 0, -0, -0 ]);
-                        });
                 });
 
-            });
+                describe('with a call to setValueAtTime()', () => {
 
-            describe('with a call to setValueCurveAtTime()', () => {
+                    it('should modify the signal', function () {
+                        this.timeout(5000);
 
-                it('should modify the signal', () => {
-                    gainNode.gain.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), 0, 5 / 44100);
+                        return renderer((startTime) => {
+                            gainNode.gain.setValueAtTime(0, startTime + (2 / context.sampleRate));
 
-                    return offlineAudioContext
-                        .startRendering()
-                        .then((renderedBuffer) => {
-                            const channelData = new Float32Array(5);
+                            audioBufferSourceNode.start(startTime);
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 1, 0.5, 0, -0, -0 ]);
+                            });
+                    });
 
-                            renderedBuffer.copyFromChannel(channelData, 0, 0);
-
-                            // @todo The implementation of Safari is different. Therefore this test only checks if the values have changed.
-                            expect(Array.from(channelData)).to.not.deep.equal(values);
-                        });
                 });
 
-            });
+                describe('with a call to setValueCurveAtTime()', () => {
 
-            // @todo Test other automations as well.
+                    it('should modify the signal', function () {
+                        this.timeout(5000);
+
+                        return renderer((startTime) => {
+                            gainNode.gain.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, startTime + (5 / context.sampleRate));
+
+                            audioBufferSourceNode.start(startTime);
+                        })
+                            .then((channelData) => {
+                                // @todo The implementation of Safari is different. Therefore this test only checks if the values have changed.
+                                expect(Array.from(channelData)).to.not.deep.equal(values);
+                            });
+                    });
+
+                });
+
+                // @todo Test other automations as well.
+
+            });
 
         });
 
