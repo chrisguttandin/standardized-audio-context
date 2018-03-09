@@ -1,5 +1,4 @@
 import { OfflineAudioContext } from '../../../src/audio-contexts/offline-audio-context';
-import { PolyfillNode } from '../../helper/polyfill-node';
 
 describe('GainNode', () => {
 
@@ -42,7 +41,6 @@ describe('GainNode', () => {
 
                 const audioBufferSourceNode = offlineAudioContext.createBufferSource();
                 const audioBuffer = offlineAudioContext.createBuffer(1, 5, 44100);
-                const polyfill = new PolyfillNode(offlineAudioContext);
 
                 audioBuffer.copyToChannel(new Float32Array(values), 0);
 
@@ -52,7 +50,6 @@ describe('GainNode', () => {
 
                 audioBufferSourceNode
                     .connect(gainNode)
-                    .connect(polyfill)
                     .connect(offlineAudioContext.destination);
             });
 
