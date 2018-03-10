@@ -168,6 +168,28 @@ describe('GainNode', () => {
 
         });
 
+        describe('connect()', () => {
+
+            it('should not be connectable to an AudioParam of another AudioContext', (done) => {
+                const anotherContext = createContext();
+                const anotherGainNode = createGainNode(anotherContext);
+
+                try {
+                    gainNode.connect(anotherGainNode.gain);
+                } catch (err) {
+                    expect(err.code).to.equal(15);
+                    expect(err.name).to.equal('InvalidAccessError');
+
+                    done();
+                } finally {
+                    if (anotherContext instanceof AudioContext) {
+                        return anotherContext.close();
+                    }
+                }
+            });
+
+        });
+
     });
 
 });

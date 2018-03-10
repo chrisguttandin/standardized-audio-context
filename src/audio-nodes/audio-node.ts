@@ -200,7 +200,16 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
                     throw new Error('The associated nativeAudioParam is missing.');
                 }
 
-                this._nativeNode.connect(nativeAudioParam, output);
+                try {
+                    this._nativeNode.connect(nativeAudioParam, output);
+                } catch (err) {
+                    // Bug #58: Only Firefox does throw an InvalidStateError yet.
+                    if (err.code === 12) {
+                        throw invalidAccessErrorFactory.create();
+                    }
+
+                    throw err;
+                }
             }
 
             faker.wire(source, output);
@@ -209,7 +218,16 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
                 throw new Error('The associated nativeNode is missing.');
             }
 
-            this._nativeNode.connect(<TNativeAudioParam> (<any> destination), output);
+            try {
+                this._nativeNode.connect(<TNativeAudioParam> (<any> destination), output);
+            } catch (err) {
+                // Bug #58: Only Firefox does throw an InvalidStateError yet.
+                if (err.code === 12) {
+                    throw invalidAccessErrorFactory.create();
+                }
+
+                throw err;
+            }
         }
     }
 
