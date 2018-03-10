@@ -188,6 +188,19 @@ describe('GainNode', () => {
                 }
             });
 
+            it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                const anotherGainNode = createGainNode(context);
+
+                try {
+                    gainNode.connect(anotherGainNode.gain, -1);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
         });
 
     });
