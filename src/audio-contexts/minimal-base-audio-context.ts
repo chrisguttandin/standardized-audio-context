@@ -27,15 +27,15 @@ export class MinimalBaseAudioContext extends EventTarget implements IMinimalBase
         return this._destination;
     }
 
-    public get onstatechange (): null | TStateChangeEventHandler {
-        return <TStateChangeEventHandler> (<any> this._context).onstatechange;
+    public get onstatechange () {
+        return <TStateChangeEventHandler> (<any> this._context.onstatechange);
     }
 
-    public set onstatechange (value: null | TStateChangeEventHandler) {
+    public set onstatechange (value) {
         this._context.onstatechange = (value === null) ? undefined : <any> value;
     }
 
-    public get sampleRate (): number {
+    public get sampleRate () {
         return this._context.sampleRate;
     }
 

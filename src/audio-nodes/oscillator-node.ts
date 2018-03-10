@@ -6,7 +6,6 @@ import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOpti
 import {
     TChannelCountMode,
     TChannelInterpretation,
-    TEndedEventHandler,
     TNativeOscillatorNode,
     TOscillatorType,
     TUnpatchedAudioContext,
@@ -52,7 +51,7 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
         super(context, nativeNode, mergedOptions);
     }
 
-    public get detune (): IAudioParam {
+    public get detune () {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
@@ -60,7 +59,7 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
         return <IAudioParam> (<any> this._nativeNode.detune);
     }
 
-    public get frequency (): IAudioParam {
+    public get frequency () {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
@@ -68,12 +67,12 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
         return <IAudioParam> (<any> this._nativeNode.frequency);
     }
 
-    public get onended (): null | TEndedEventHandler {
+    public get onended () {
         // @todo
-        return (this._nativeNode === null) ? null : (<any> this._nativeNode).onended;
+        return (this._nativeNode === null) ? null : <any> this._nativeNode.onended;
     }
 
-    public set onended (value: null | TEndedEventHandler) {
+    public set onended (value) {
         if (this._nativeNode === null) {
             // @todo
         } else {
@@ -81,7 +80,7 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
         }
     }
 
-    public get type (): TOscillatorType {
+    public get type () {
         if (this._nativeNode !== null) {
             return this._nativeNode.type;
         }

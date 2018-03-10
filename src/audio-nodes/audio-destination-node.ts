@@ -7,7 +7,6 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioDestinationNode, IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioDestinationNodeRenderer } from '../renderers/audio-destination-node';
-import { TChannelCountMode } from '../types';
 import { AudioNode } from './audio-node';
 
 const injector = Injector.create({
@@ -70,7 +69,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
         return this._audioNode.channelCount;
     }
 
-    public set channelCount (value: number) {
+    public set channelCount (value) {
         // Bug #52: Chrome, Edge, Opera & Safari do not throw an exception at all.
         // Bug #54: Firefox does throw an IndexSizeError.
         if (this._isOfflineAudioContext) {
@@ -89,7 +88,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
         return this._audioNode.channelCountMode;
     }
 
-    public set channelCountMode (value: TChannelCountMode) {
+    public set channelCountMode (value) {
         // Bug #53: No browser does throw an exception yet.
         if (this._isOfflineAudioContext) {
             throw invalidStateErrorFactory.create();

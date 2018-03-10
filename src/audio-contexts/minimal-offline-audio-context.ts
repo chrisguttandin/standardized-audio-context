@@ -51,7 +51,7 @@ export class MinimalOfflineAudioContext extends MinimalBaseAudioContext implemen
         this._unpatchedOfflineAudioContext = unpatchedOfflineAudioContext;
     }
 
-    public get length (): number {
+    public get length () {
         // Bug #17: Safari does not yet expose the length.
         if (this._unpatchedOfflineAudioContext.length === undefined) {
             return this._length;

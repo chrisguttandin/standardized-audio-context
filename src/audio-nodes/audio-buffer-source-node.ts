@@ -95,20 +95,20 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
         }
     }
 
-    public get onended (): null | TEndedEventHandler {
+    public get onended () {
         // @todo
-        return (this._nativeNode === null) ? null : <TEndedEventHandler> (<any> this._nativeNode).onended;
+        return (this._nativeNode === null) ? null : <TEndedEventHandler> (<any> this._nativeNode.onended);
     }
 
-    public set onended (value: null | TEndedEventHandler) {
+    public set onended (value) {
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<any> this._nativeNode).onended = value;
+            this._nativeNode.onended = <any> value;
         }
     }
 
-    public get detune (): IAudioParam {
+    public get detune () {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
@@ -155,7 +155,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
         }
     }
 
-    public get playbackRate (): IAudioParam {
+    public get playbackRate () {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }

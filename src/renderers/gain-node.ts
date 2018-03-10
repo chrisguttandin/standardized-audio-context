@@ -27,7 +27,7 @@ export class GainNodeRenderer extends AudioNodeRenderer implements IAudioNodeRen
 
         // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
         if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
-            const gainAudioParam = <IAudioParam> (<any> this._nativeNode).gain;
+            const gainAudioParam = <IAudioParam> (<any> this._nativeNode.gain);
 
             this._nativeNode = offlineAudioContext.createGain();
 

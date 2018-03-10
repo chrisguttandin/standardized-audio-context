@@ -52,7 +52,7 @@ export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilt
         }
     }
 
-    public get Q (): IAudioParam {
+    public get Q () {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
@@ -60,7 +60,7 @@ export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilt
         return <IAudioParam> (<any> this._nativeNode.Q);
     }
 
-    public get detune (): IAudioParam {
+    public get detune () {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
@@ -68,7 +68,7 @@ export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilt
         return <IAudioParam> (<any> this._nativeNode.detune);
     }
 
-    public get frequency (): IAudioParam {
+    public get frequency () {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
@@ -76,7 +76,7 @@ export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilt
         return <IAudioParam> (<any> this._nativeNode.frequency);
     }
 
-    public get gain (): IAudioParam {
+    public get gain () {
         if (this._nativeNode === null) {
             throw new Error('The associated nativeNode is missing.');
         }
