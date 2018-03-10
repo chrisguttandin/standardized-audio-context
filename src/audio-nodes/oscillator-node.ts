@@ -57,7 +57,7 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
             throw new Error('The associated nativeNode is missing.');
         }
 
-        return <IAudioParam> (<any> this._nativeNode).detune;
+        return <IAudioParam> (<any> this._nativeNode.detune);
     }
 
     public get frequency (): IAudioParam {
@@ -65,7 +65,7 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
             throw new Error('The associated nativeNode is missing.');
         }
 
-        return <IAudioParam> (<any> this._nativeNode).frequency;
+        return <IAudioParam> (<any> this._nativeNode.frequency);
     }
 
     public get onended (): null | TEndedEventHandler {

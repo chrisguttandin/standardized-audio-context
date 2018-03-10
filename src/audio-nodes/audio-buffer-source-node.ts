@@ -113,7 +113,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
             throw new Error('The associated nativeNode is missing.');
         }
 
-        return <IAudioParam> (<any> this._nativeNode).detune;
+        return <IAudioParam> (<any> this._nativeNode.detune);
     }
 
     public get loop () {
@@ -160,7 +160,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
             throw new Error('The associated nativeNode is missing.');
         }
 
-        return <IAudioParam> (<any> this._nativeNode).playbackRate;
+        return <IAudioParam> (<any> this._nativeNode.playbackRate);
     }
 
     public start (when = 0, offset = 0, duration?: number) {
