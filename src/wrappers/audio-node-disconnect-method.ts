@@ -1,25 +1,28 @@
-import { IAudioNode } from '../interfaces';
-import { TNativeAudioNode } from '../types';
+import { TNativeAudioNode, TNativeAudioParam } from '../types';
 
 export class AudioNodeDisconnectMethodWrapper {
 
     public wrap (audioNode: TNativeAudioNode) {
         const destinations = new Map();
 
-        (<IAudioNode['connect']> (<any> audioNode.connect)) = ((connect) => {
-            return (destination: IAudioNode, output = 0, input = 0) => {
+        audioNode.connect = ((connect) => {
+            return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0) => {
                 destinations.set(destination, { input, output });
 
-                return connect.call(audioNode, destination, output, input);
+                if (destination instanceof AudioNode) {
+                    return connect.call(audioNode, destination, output, input);
+                }
+
+                return connect.call(audioNode, destination, output);
             };
         })(audioNode.connect);
 
-        (<IAudioNode['disconnect']> audioNode.disconnect) = ((disconnect) => {
-            return (destination?: IAudioNode) => {
+        audioNode.disconnect = ((disconnect) => {
+            return (outputOrDestination?: number | TNativeAudioNode | TNativeAudioParam, _output?: number, _input?: number) => {
                 disconnect.apply(audioNode);
 
-                if (destination !== undefined && destinations.has(destination)) {
-                    destinations.delete(destination);
+                if (outputOrDestination !== undefined && destinations.has(outputOrDestination)) {
+                    destinations.delete(outputOrDestination);
 
                     destinations.forEach(({ input, output }, dstntn) => {
                         audioNode.connect(dstntn, input, output);

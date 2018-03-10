@@ -1,13 +1,17 @@
-import { RENDERER_STORE } from '../globals';
-import { IAudioParam, IAudioParamRenderer } from '../interfaces';
-import { TNativeAudioParam } from '../types';
+import { AUDIO_PARAM_RENDERER_STORE } from '../globals';
+import { IAudioParam } from '../interfaces';
+import { TNativeAudioParam, TUnpatchedOfflineAudioContext } from '../types';
 
-export const renderAutomation = (audioParam: IAudioParam, nativeAudioParam: TNativeAudioParam) => {
-    const audioParamRenderer = <IAudioParamRenderer> RENDERER_STORE.get(audioParam);
+export const renderAutomation = (
+    nativeOfflineAudioContext: TUnpatchedOfflineAudioContext,
+    audioParam: IAudioParam,
+    nativeAudioParam: TNativeAudioParam
+) => {
+    const audioParamRenderer = AUDIO_PARAM_RENDERER_STORE.get(audioParam);
 
     if (audioParamRenderer === undefined) {
         throw new Error('The associated renderer is missing.');
     }
 
-    audioParamRenderer.render(nativeAudioParam);
+    return audioParamRenderer.render(nativeOfflineAudioContext, nativeAudioParam);
 };

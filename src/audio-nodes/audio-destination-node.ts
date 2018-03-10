@@ -1,10 +1,11 @@
 import { Injector } from '@angular/core';
 import { INDEX_SIZE_ERROR_FACTORY_PROVIDER, IndexSizeErrorFactory } from '../factories/index-size-error';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { RENDERER_STORE } from '../globals';
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
+import { isAudioNode } from '../guards/audio-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioDestinationNode, IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioDestinationNode, IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioDestinationNodeRenderer } from '../renderers/audio-destination-node';
 import { TChannelCountMode } from '../types';
 import { AudioNode } from './audio-node';
@@ -61,7 +62,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
         if (isOfflineAudioContext(nativeContext)) {
             const audioDestinationNodeRenderer = new AudioDestinationNodeRenderer();
 
-            RENDERER_STORE.set(this, audioDestinationNodeRenderer);
+            AUDIO_NODE_RENDERER_STORE.set(this, audioDestinationNodeRenderer);
         }
     }
 
@@ -129,8 +130,14 @@ export class AudioDestinationNode implements IAudioDestinationNode {
         return this._audioNode.dispatchEvent(evt);
     }
 
-    public connect (destination: IAudioNode, output = 0, input = 0): IAudioNode {
-        return this._audioNode.connect(destination, output, input);
+    public connect (destinationNode: IAudioNode, output?: number, input?: number): IAudioNode;
+    public connect (destinationParam: IAudioParam, output?: number): void;
+    public connect (destination: IAudioNode | IAudioParam, output = 0, input = 0): void | IAudioNode {
+        if (isAudioNode(destination)) {
+            return this._audioNode.connect(destination, output, input);
+        }
+
+        return this._audioNode.connect(destination, output);
     }
 
     public disconnect (destination?: IAudioNode): void {

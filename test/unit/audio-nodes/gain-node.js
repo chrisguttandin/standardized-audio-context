@@ -135,6 +135,33 @@ describe('GainNode', () => {
 
                 });
 
+                describe('with another AudioNode connected to the AudioParam', () => {
+
+                    it('should modify the signal', function () {
+                        this.timeout(5000);
+
+                        const audioBufferSourceNodeForAudioParam = context.createBufferSource();
+                        const audioBuffer = context.createBuffer(1, 5, context.sampleRate);
+
+                        audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.5, 0.5, 0.5, 0.5 ]), 0);
+
+                        audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+
+                        return renderer((startTime) => {
+                            gainNode.gain.value = 0;
+                            // @todo This should probably be inside of the connect method.
+                            audioBufferSourceNodeForAudioParam.connect(gainNode.gain);
+
+                            audioBufferSourceNode.start(startTime);
+                            audioBufferSourceNodeForAudioParam.start(startTime);
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
+                            });
+                    });
+
+                });
+
                 // @todo Test other automations as well.
 
             });

@@ -1,5 +1,5 @@
 import { Injector } from '@angular/core';
-import { RENDERER_STORE } from '../globals';
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
@@ -76,7 +76,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
         if (isOfflineAudioContext(nativeContext)) {
             const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
 
-            RENDERER_STORE.set(this, audioBufferSourceNodeRenderer);
+            AUDIO_NODE_RENDERER_STORE.set(this, audioBufferSourceNodeRenderer);
 
             audioParamWrapper.wrap(nativeNode, 'detune');
             audioParamWrapper.wrap(nativeNode, 'playbackRate');
@@ -164,7 +164,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
     }
 
     public start (when = 0, offset = 0, duration?: number) {
-        const audioBufferSourceNodeRenderer = RENDERER_STORE.get(this);
+        const audioBufferSourceNodeRenderer = AUDIO_NODE_RENDERER_STORE.get(this);
 
         if (audioBufferSourceNodeRenderer !== undefined) {
             (<AudioBufferSourceNodeRenderer> audioBufferSourceNodeRenderer).start = { duration, offset, when };

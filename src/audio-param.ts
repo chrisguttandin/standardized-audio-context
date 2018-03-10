@@ -1,3 +1,4 @@
+import { AUDIO_PARAM_STORE } from './globals';
 import { IAudioParam, IAudioParamOptions, IAudioParamRenderer } from './interfaces';
 import { TNativeAudioParam } from './types';
 
@@ -9,7 +10,14 @@ export class AudioParam implements IAudioParam {
 
     constructor ({ audioParamRenderer, nativeAudioParam }: IAudioParamOptions) {
         this._audioParamRenderer = audioParamRenderer;
-        this._nativeAudioParam = (nativeAudioParam === undefined) ? null : nativeAudioParam;
+
+        if (nativeAudioParam === undefined) {
+            this._nativeAudioParam = null;
+        } else {
+            this._nativeAudioParam = nativeAudioParam;
+
+            AUDIO_PARAM_STORE.set(this, nativeAudioParam);
+        }
     }
 
     get defaultValue () {

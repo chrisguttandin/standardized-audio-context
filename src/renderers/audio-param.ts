@@ -1,12 +1,23 @@
-import { IAudioParamRenderer } from '../interfaces';
-import { TAutomation, TNativeAudioParam } from '../types';
+import { IAudioNodeRenderer, IAudioParamRenderer } from '../interfaces';
+import { TAutomation, TNativeAudioParam, TUnpatchedOfflineAudioContext } from '../types';
 
 export class AudioParamRenderer implements IAudioParamRenderer {
 
     private _automations: TAutomation[];
 
+    private _sources: Map<IAudioNodeRenderer, number>;
+
     constructor () {
         this._automations = [];
+        this._sources = new Map();
+    }
+
+    public unwire (source: IAudioNodeRenderer): void {
+        this._sources.delete(source);
+    }
+
+    public wire (source: IAudioNodeRenderer, output: number): void {
+        this._sources.set(source, output);
     }
 
     public record (automation: TAutomation) {
@@ -14,7 +25,7 @@ export class AudioParamRenderer implements IAudioParamRenderer {
         this._automations.push(automation);
     }
 
-    public render (audioParam: TNativeAudioParam) {
+    public render (offlineAudioContext: TUnpatchedOfflineAudioContext, audioParam: TNativeAudioParam): Promise<void> {
         for (const automation of this._automations) {
             if (automation.type === 'exponentialRampToValue') {
                 const { endTime, value } = automation;
@@ -40,6 +51,14 @@ export class AudioParamRenderer implements IAudioParamRenderer {
                 throw new Error("Can't apply an unkown automation.");
             }
         }
+
+        return Promise
+            .all(Array
+                .from(this._sources)
+                .map(([ source, output ]) => source
+                    .render(offlineAudioContext)
+                    .then((node) => node.connect(audioParam, output))))
+            .then(() => undefined);
     }
 
 }

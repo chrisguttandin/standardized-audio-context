@@ -3,7 +3,7 @@ import { INVALID_ACCES_ERROR_FACTORY_PROVIDER } from '../factories/invalid-acces
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { NOT_SUPPORTED_ERROR_FACTORY_PROVIDER, NotSupportedErrorFactory } from '../factories/not-supported-error';
 import { IIRFilterNodeFaker, IIR_FILTER_NODE_FAKER_PROVIDER } from '../fakers/iir-filter-node';
-import { RENDERER_STORE } from '../globals';
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
@@ -134,7 +134,7 @@ export class IIRFilterNode extends NoneAudioDestinationNode implements IIIRFilte
         if (isOfflineAudioContext(nativeContext)) {
             const biquadFilterNodeRenderer = new IIRFilterNodeRenderer(this, feedback, feedforward);
 
-            RENDERER_STORE.set(this, biquadFilterNodeRenderer);
+            AUDIO_NODE_RENDERER_STORE.set(this, biquadFilterNodeRenderer);
         }
     }
 

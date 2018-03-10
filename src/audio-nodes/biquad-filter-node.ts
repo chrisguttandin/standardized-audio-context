@@ -1,5 +1,5 @@
 import { Injector } from '@angular/core';
-import { RENDERER_STORE } from '../globals';
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
@@ -43,7 +43,7 @@ export class BiquadFilterNode extends NoneAudioDestinationNode implements IBiqua
         if (isOfflineAudioContext(nativeContext)) {
             const biquadFilterNodeRenderer = new BiquadFilterNodeRenderer(this);
 
-            RENDERER_STORE.set(this, biquadFilterNodeRenderer);
+            AUDIO_NODE_RENDERER_STORE.set(this, biquadFilterNodeRenderer);
 
             audioParamWrapper.wrap(nativeNode, 'Q');
             audioParamWrapper.wrap(nativeNode, 'detune');

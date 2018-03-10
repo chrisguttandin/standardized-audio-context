@@ -1,6 +1,6 @@
 import { Injector } from '@angular/core';
-import { RENDERER_STORE } from '../globals';
-import { IAudioDestinationNode, IAudioNodeRenderer, IOfflineAudioCompletionEvent } from '../interfaces';
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
+import { IAudioDestinationNode, IOfflineAudioCompletionEvent } from '../interfaces';
 import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from '../support-testers/promise';
 import { TNativeAudioBuffer, TUnpatchedOfflineAudioContext } from '../types';
 import { cacheTestResult } from './cache-test-result';
@@ -21,7 +21,7 @@ const isSupportingPromises = (context: TUnpatchedOfflineAudioContext) => cacheTe
 export const startRendering = (
     destination: IAudioDestinationNode, unpatchedOfflineAudioContext: TUnpatchedOfflineAudioContext
 ): Promise<TNativeAudioBuffer> => {
-    const audioDestinationNodeRenderer = <IAudioNodeRenderer> RENDERER_STORE.get(destination);
+    const audioDestinationNodeRenderer = AUDIO_NODE_RENDERER_STORE.get(destination);
 
     if (audioDestinationNodeRenderer === undefined) {
         throw new Error('Missing the associated renderer.');

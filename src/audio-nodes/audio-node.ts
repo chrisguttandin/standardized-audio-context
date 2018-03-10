@@ -1,13 +1,14 @@
 import { Injector } from '@angular/core';
 import { EventTarget } from '../event-target';
 import { INVALID_ACCES_ERROR_FACTORY_PROVIDER, InvalidAccessErrorFactory } from '../factories/invalid-access-error';
-import { AUDIO_NODE_STORE, CONTEXT_STORE, RENDERER_STORE } from '../globals';
+import { AUDIO_NODE_RENDERER_STORE, AUDIO_NODE_STORE, AUDIO_PARAM_RENDERER_STORE, AUDIO_PARAM_STORE, CONTEXT_STORE } from '../globals';
+import { isAudioNode } from '../guards/audio-node';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioNode, IAudioNodeOptions, IAudioNodeRenderer, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IAudioNodeOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { DISCONNECTING_SUPPORT_TESTER_PROVIDER, DisconnectingSupportTester } from '../support-testers/disconnecting';
-import { TChannelCountMode, TChannelInterpretation, TNativeAudioNode, TUnpatchedAudioContext } from '../types';
+import { TChannelCountMode, TChannelInterpretation, TNativeAudioNode, TNativeAudioParam, TUnpatchedAudioContext } from '../types';
 import { AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER, AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
 
 const injector = Injector.create({
@@ -130,46 +131,86 @@ export class AudioNode extends EventTarget implements IAudioNode {
         return this._nativeNode.addEventListener(type, listener, options);
     }
 
-    public connect (destination: IAudioNode, output = 0, input = 0): IAudioNode {
-        // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
-        if (this._context !== destination.context) {
-            throw invalidAccessErrorFactory.create();
-        }
-
+    public connect (destinationNode: IAudioNode, output?: number, input?: number): IAudioNode;
+    public connect (destinationParam: IAudioParam, output?: number): void;
+    public connect (destination: IAudioNode | IAudioParam, output = 0, input = 0): void | IAudioNode {
         const nativeContext = CONTEXT_STORE.get(this._context);
+
+        if (isAudioNode(destination)) {
+            // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
+            if (this._context !== destination.context) {
+                throw invalidAccessErrorFactory.create();
+            }
+
+            if (nativeContext === undefined) {
+                throw new Error('The native (Offline)AudioContext is missing.');
+            }
+
+            if (isOfflineAudioContext(nativeContext)) {
+                const faker = AUDIO_NODE_RENDERER_STORE.get(destination);
+
+                if (faker === undefined) {
+                    throw invalidAccessErrorFactory.create();
+                }
+
+                const source = AUDIO_NODE_RENDERER_STORE.get(this);
+
+                if (source === undefined) {
+                    throw new Error('The associated renderer is missing.');
+                }
+
+                faker.wire(source, output, input);
+
+                return destination;
+            }
+
+            const nativeDestinationNode = AUDIO_NODE_STORE.get(destination);
+
+            if (this._nativeNode === null || nativeDestinationNode === undefined) {
+                throw new Error('The associated nativeNode is missing.');
+            }
+
+            this._nativeNode.connect(nativeDestinationNode, output, input);
+
+            // Bug #11: Safari does not support chaining yet. This can be tested with the ChainingSupportTester.
+            return destination;
+        }
 
         if (nativeContext === undefined) {
             throw new Error('The native (Offline)AudioContext is missing.');
         }
 
         if (isOfflineAudioContext(nativeContext)) {
-            const faker = <IAudioNodeRenderer> RENDERER_STORE.get(destination);
+            const faker = AUDIO_PARAM_RENDERER_STORE.get(destination);
 
             if (faker === undefined) {
                 throw invalidAccessErrorFactory.create();
             }
 
-            const source = <IAudioNodeRenderer> RENDERER_STORE.get(this);
+            const source = AUDIO_NODE_RENDERER_STORE.get(this);
 
             if (source === undefined) {
                 throw new Error('The associated renderer is missing.');
             }
 
-            faker.wire(source, output, input);
+            if (this._nativeNode !== null) {
+                const nativeAudioParam = AUDIO_PARAM_STORE.get(destination);
 
-            return destination;
+                if (nativeAudioParam === undefined) {
+                    throw new Error('The associated nativeAudioParam is missing.');
+                }
+
+                this._nativeNode.connect(nativeAudioParam, output);
+            }
+
+            faker.wire(source, output);
+        } else {
+            if (this._nativeNode === null) {
+                throw new Error('The associated nativeNode is missing.');
+            }
+
+            this._nativeNode.connect(<TNativeAudioParam> (<any> destination), output);
         }
-
-        const nativeDestinationNode = AUDIO_NODE_STORE.get(destination);
-
-        if (this._nativeNode === null || nativeDestinationNode === undefined) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
-        this._nativeNode.connect(nativeDestinationNode, output, input);
-
-        // Bug #11: Safari does not support chaining yet. This can be tested with the ChainingSupportTester.
-        return destination;
     }
 
     public disconnect (destination?: IAudioNode): void {
@@ -184,13 +225,13 @@ export class AudioNode extends EventTarget implements IAudioNode {
                 return; // @todo
             }
 
-            const faker = <IAudioNodeRenderer> RENDERER_STORE.get(destination);
+            const faker = AUDIO_NODE_RENDERER_STORE.get(destination);
 
             if (faker === undefined) {
                 throw new Error('The associated renderer is missing.');
             }
 
-            const source = <IAudioNodeRenderer> RENDERER_STORE.get(this);
+            const source = AUDIO_NODE_RENDERER_STORE.get(this);
 
             if (source === undefined) {
                 throw new Error('The associated renderer is missing.');

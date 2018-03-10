@@ -18,7 +18,7 @@ export class GainNodeRenderer extends AudioNodeRenderer implements IAudioNodeRen
         this._proxy = proxy;
     }
 
-    public render (offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> {
+    public async render (offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> {
         if (this._nativeNode !== null) {
             return Promise.resolve(this._nativeNode);
         }
@@ -31,12 +31,12 @@ export class GainNodeRenderer extends AudioNodeRenderer implements IAudioNodeRen
 
             this._nativeNode = offlineAudioContext.createGain();
 
-            renderAutomation(gainAudioParam, this._nativeNode.gain);
+            await renderAutomation(offlineAudioContext, gainAudioParam, this._nativeNode.gain);
         }
 
-        return this
-            ._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode)
-            .then(() => <TNativeAudioNode> this._nativeNode);
+        await this._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode);
+
+        return <TNativeAudioNode> this._nativeNode;
     }
 
 }

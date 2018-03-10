@@ -1,5 +1,10 @@
-import { IAudioNode } from '../interfaces';
-import { TNativeAudioBufferSourceNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import {
+    TNativeAudioBufferSourceNode,
+    TNativeAudioNode,
+    TNativeAudioParam,
+    TUnpatchedAudioContext,
+    TUnpatchedOfflineAudioContext
+} from '../types';
 
 export class AudioBufferSourceNodeStopMethodWrapper {
 
@@ -17,11 +22,17 @@ export class AudioBufferSourceNodeStopMethodWrapper {
 
         audioBufferSourceNode.addEventListener('ended', disconnectGainNode);
 
-        (<any> audioBufferSourceNode).connect = (destination: IAudioNode, output = 0, input = 0) => {
-            gainNode.connect.call(gainNode, destination, output, input);
+        audioBufferSourceNode.connect = ((destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0) => {
+            if (destination instanceof AudioNode) {
+                gainNode.connect.call(gainNode, destination, output, input);
 
-            return destination;
-        };
+                // Bug #11: Safari does not support chaining yet.
+                return destination;
+            }
+
+            // @todo This return statement is necessary to satisfy TypeScript.
+            return gainNode.connect.call(gainNode, destination, output);
+        });
 
         audioBufferSourceNode.disconnect = function () {
             gainNode.disconnect.apply(gainNode, arguments);

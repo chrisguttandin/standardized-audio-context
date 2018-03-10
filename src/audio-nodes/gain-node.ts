@@ -1,10 +1,10 @@
 import { Injector } from '@angular/core';
-import { RENDERER_STORE } from '../globals';
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioParam, IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { GainNodeRenderer } from '../renderers/gain-node';
-import { TChannelCountMode, TChannelInterpretation } from '../types';
+import { TChannelCountMode, TChannelInterpretation, TNativeGainNode } from '../types';
 import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
@@ -37,7 +37,7 @@ export class GainNode extends NoneAudioDestinationNode implements IGainNode {
         if (isOfflineAudioContext(nativeContext)) {
             const gainNodeRenderer = new GainNodeRenderer(this);
 
-            RENDERER_STORE.set(this, gainNodeRenderer);
+            AUDIO_NODE_RENDERER_STORE.set(this, gainNodeRenderer);
 
             audioParamWrapper.wrap(nativeNode, 'gain');
         }
@@ -48,7 +48,7 @@ export class GainNode extends NoneAudioDestinationNode implements IGainNode {
             throw new Error('The associated nativeNode is missing.');
         }
 
-        return <IAudioParam> (<any> this._nativeNode).gain;
+        return <IAudioParam> (<any> (<TNativeGainNode> this._nativeNode).gain);
     }
 
 }

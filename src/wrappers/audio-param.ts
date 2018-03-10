@@ -1,5 +1,5 @@
 import { AudioParam } from '../audio-param';
-import { RENDERER_STORE } from '../globals';
+import { AUDIO_PARAM_RENDERER_STORE } from '../globals';
 import { AudioParamRenderer } from '../renderers/audio-param';
 import { TNativeAudioNode, TNativeAudioParam } from '../types';
 
@@ -10,7 +10,7 @@ export class AudioParamWrapper {
         const audioParamRenderer = new AudioParamRenderer();
         const audioParam = new AudioParam({ audioParamRenderer, nativeAudioParam });
 
-        RENDERER_STORE.set(audioParam, audioParamRenderer);
+        AUDIO_PARAM_RENDERER_STORE.set(audioParam, audioParamRenderer);
 
         Object.defineProperty(audioNode, property, {
             get: () => audioParam
