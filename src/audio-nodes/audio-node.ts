@@ -23,9 +23,9 @@ const audioNodeDisconnectMethodWrapper = injector.get(AudioNodeDisconnectMethodW
 const disconnectingSupportTester = injector.get(DisconnectingSupportTester);
 const invalidAccessErrorFactory = injector.get(InvalidAccessErrorFactory);
 
-export class AudioNode extends EventTarget implements IAudioNode {
+export class AudioNode<T extends TNativeAudioNode> extends EventTarget implements IAudioNode {
 
-    protected _nativeNode: null | TNativeAudioNode;
+    protected _nativeNode: null | T;
 
     private _channelCount: number;
 
@@ -41,7 +41,7 @@ export class AudioNode extends EventTarget implements IAudioNode {
 
     constructor (
         context: IMinimalBaseAudioContext,
-        nativeNode: null | TNativeAudioNode,
+        nativeNode: null | T,
         { channelCount, channelCountMode, channelInterpretation, numberOfInputs, numberOfOutputs }: IAudioNodeOptions,
         // @todo The parentNode property is only needed as long as the source gets transpiled to ES5.
         parentNode?: IAudioNode
@@ -73,14 +73,14 @@ export class AudioNode extends EventTarget implements IAudioNode {
 
     public get channelCount () {
         // Bug #47: The AudioDestinationNode in Edge and Safari do not intialize the maxChannelCount property correctly.
-        return (this._nativeNode === null || this._nativeNode === this._nativeNode.context.destination) ?
+        return (this._nativeNode === null || (<TNativeAudioNode> this._nativeNode) === this._nativeNode.context.destination) ?
             this._channelCount :
             this._nativeNode.channelCount;
     }
 
     public set channelCount (value) {
         // Bug #47: The AudioDestinationNode in Edge and Safari do not intialize the maxChannelCount property correctly.
-        if (this._nativeNode === null || this._nativeNode === this._nativeNode.context.destination) {
+        if (this._nativeNode === null || (<TNativeAudioNode> this._nativeNode) === this._nativeNode.context.destination) {
             this._channelCount = value;
         } else {
             this._nativeNode.channelCount = value;

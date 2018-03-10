@@ -29,7 +29,7 @@ const DEFAULT_OPTIONS: IBiquadFilterOptions = {
     type: <TBiquadFilterType> 'lowpass'
 };
 
-export class BiquadFilterNode extends NoneAudioDestinationNode implements IBiquadFilterNode {
+export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilterNode> implements IBiquadFilterNode {
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
@@ -85,15 +85,27 @@ export class BiquadFilterNode extends NoneAudioDestinationNode implements IBiqua
     }
 
     public get type () {
-        return (<TNativeBiquadFilterNode> this._nativeNode).type;
+        if (this._nativeNode !== null) {
+            return this._nativeNode.type;
+        }
+
+        throw new Error('This is not yet supported.');
     }
 
     public set type (value) {
-        (<TNativeBiquadFilterNode> this._nativeNode).type = value;
+        if (this._nativeNode === null) {
+            throw new Error('This is not yet supported.');
+        }
+
+        this._nativeNode.type = value;
     }
 
     public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
-        return (<TNativeBiquadFilterNode> this._nativeNode).getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+        if (this._nativeNode === null) {
+            throw new Error('This is not yet supported.');
+        }
+
+        return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
     }
 
 }

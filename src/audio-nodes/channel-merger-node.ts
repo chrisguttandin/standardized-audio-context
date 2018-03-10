@@ -3,7 +3,13 @@ import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TChannelCountMode, TChannelInterpretation, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import {
+    TChannelCountMode,
+    TChannelInterpretation,
+    TNativeChannelMergerNode,
+    TUnpatchedAudioContext,
+    TUnpatchedOfflineAudioContext
+} from '../types';
 import { CHANNEL_MERGER_NODE_WRAPPER_PROVIDER, ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
@@ -47,7 +53,7 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
     return nativeNode;
 };
 
-export class ChannelMergerNode extends NoneAudioDestinationNode {
+export class ChannelMergerNode extends NoneAudioDestinationNode<TNativeChannelMergerNode> {
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioNodeOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);

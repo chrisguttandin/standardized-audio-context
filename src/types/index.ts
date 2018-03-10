@@ -14,6 +14,8 @@ export * from './native-audio-buffer-source-node';
 export * from './native-audio-destination-node';
 export * from './native-audio-node';
 export * from './native-biquad-filter-node';
+export * from './native-channel-merger-node';
+export * from './native-channel-splitter-node';
 export * from './native-gain-node';
 export * from './native-iir-filter-node';
 export * from './native-oscillator-node';

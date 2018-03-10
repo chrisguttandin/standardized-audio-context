@@ -66,7 +66,7 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
     return nativeNode;
 };
 
-export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserNode {
+export class AnalyserNode extends NoneAudioDestinationNode<TNativeAnalyserNode> implements IAnalyserNode {
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
@@ -78,7 +78,7 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
 
     public get fftSize () {
         if (this._nativeNode !== null) {
-            return (<TNativeAnalyserNode> this._nativeNode).fftSize;
+            return this._nativeNode.fftSize;
         }
 
         throw new Error('The native (Offline)AudioContext is missing.');
@@ -88,13 +88,13 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<TNativeAnalyserNode> this._nativeNode).fftSize = value;
+            this._nativeNode.fftSize = value;
         }
     }
 
     public get frequencyBinCount () {
         if (this._nativeNode !== null) {
-            return (<TNativeAnalyserNode> this._nativeNode).frequencyBinCount;
+            return this._nativeNode.frequencyBinCount;
         }
 
         throw new Error('The native (Offline)AudioContext is missing.');
@@ -102,7 +102,7 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
 
     public get maxDecibels () {
         if (this._nativeNode !== null) {
-            return (<TNativeAnalyserNode> this._nativeNode).maxDecibels;
+            return this._nativeNode.maxDecibels;
         }
 
         throw new Error('The native (Offline)AudioContext is missing.');
@@ -112,13 +112,13 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<TNativeAnalyserNode> this._nativeNode).maxDecibels = value;
+            this._nativeNode.maxDecibels = value;
         }
     }
 
     public get minDecibels () {
         if (this._nativeNode !== null) {
-            return (<TNativeAnalyserNode> this._nativeNode).minDecibels;
+            return this._nativeNode.minDecibels;
         }
 
         throw new Error('The native (Offline)AudioContext is missing.');
@@ -128,13 +128,13 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<TNativeAnalyserNode> this._nativeNode).minDecibels = value;
+            this._nativeNode.minDecibels = value;
         }
     }
 
     public get smoothingTimeConstant () {
         if (this._nativeNode !== null) {
-            return (<TNativeAnalyserNode> this._nativeNode).smoothingTimeConstant;
+            return this._nativeNode.smoothingTimeConstant;
         }
 
         throw new Error('The native (Offline)AudioContext is missing.');
@@ -144,7 +144,7 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<TNativeAnalyserNode> this._nativeNode).smoothingTimeConstant = value;
+            this._nativeNode.smoothingTimeConstant = value;
         }
     }
 
@@ -152,7 +152,7 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
         if (this._nativeNode === null) {
             throw new Error('The native (Offline)AudioContext is missing.');
         } else {
-            (<TNativeAnalyserNode> this._nativeNode).getByteFrequencyData(array);
+            this._nativeNode.getByteFrequencyData(array);
         }
     }
 
@@ -160,7 +160,7 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
         if (this._nativeNode === null) {
             throw new Error('The native (Offline)AudioContext is missing.');
         } else {
-            (<TNativeAnalyserNode> this._nativeNode).getByteTimeDomainData(array);
+            this._nativeNode.getByteTimeDomainData(array);
         }
     }
 
@@ -168,7 +168,7 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
         if (this._nativeNode === null) {
             throw new Error('The native (Offline)AudioContext is missing.');
         } else {
-            (<TNativeAnalyserNode> this._nativeNode).getFloatFrequencyData(array);
+            this._nativeNode.getFloatFrequencyData(array);
         }
     }
 
@@ -176,7 +176,7 @@ export class AnalyserNode extends NoneAudioDestinationNode implements IAnalyserN
         if (this._nativeNode === null) {
             throw new Error('The native (Offline)AudioContext is missing.');
         } else {
-            (<TNativeAnalyserNode> this._nativeNode).getFloatTimeDomainData(array);
+            this._nativeNode.getFloatTimeDomainData(array);
         }
     }
 

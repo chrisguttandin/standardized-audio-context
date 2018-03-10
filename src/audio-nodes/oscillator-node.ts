@@ -42,7 +42,7 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
     return nativeContext.createOscillator();
 };
 
-export class OscillatorNode extends NoneAudioDestinationNode implements IOscillatorNode {
+export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNode> implements IOscillatorNode {
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
@@ -77,20 +77,24 @@ export class OscillatorNode extends NoneAudioDestinationNode implements IOscilla
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<any> this._nativeNode).onended = value;
+            this._nativeNode.onended = <any> value;
         }
     }
 
     public get type (): TOscillatorType {
         if (this._nativeNode !== null) {
-            return (<TNativeOscillatorNode> this._nativeNode).type;
+            return this._nativeNode.type;
         }
 
         throw new Error('This is not yet supported.');
     }
 
     public set type (value) {
-        (<TNativeOscillatorNode> this._nativeNode).type = value;
+        if (this._nativeNode === null) {
+            throw new Error('This is not yet supported.');
+        }
+
+        this._nativeNode.type = value;
 
         // Bug #57: Edge will not throw an error when assigning the type to 'custom'. But it still will change the value.
         if (value === 'custom') {
@@ -101,25 +105,25 @@ export class OscillatorNode extends NoneAudioDestinationNode implements IOscilla
     public setPeriodicWave (periodicWave: PeriodicWave) {
         if (this._nativeNode === null) {
             throw new Error('This is not yet supported.');
-        } else {
-            (<TNativeOscillatorNode> this._nativeNode).setPeriodicWave(periodicWave);
         }
+
+        this._nativeNode.setPeriodicWave(periodicWave);
     }
 
     public start (when = 0) {
         if (this._nativeNode === null) {
             throw new Error('This is not yet supported.');
-        } else {
-            (<TNativeOscillatorNode> this._nativeNode).start(when);
         }
+
+        this._nativeNode.start(when);
     }
 
     public stop (when = 0) {
         if (this._nativeNode === null) {
             throw new Error('This is not yet supported.');
-        } else {
-            (<TNativeOscillatorNode> this._nativeNode).stop(when);
         }
+
+        this._nativeNode.stop(when);
     }
 
 }

@@ -58,7 +58,7 @@ const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     playbackRate: 1
 };
 
-export class AudioBufferSourceNode extends NoneAudioDestinationNode implements IAudioBufferSourceNode {
+export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudioBufferSourceNode> implements IAudioBufferSourceNode {
 
     private _buffer: null | IAudioBuffer;
 
@@ -91,7 +91,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
         this._buffer = value;
         // @todo Allow to set the buffer only once.
         if (this._nativeNode !== null) {
-            (<TNativeAudioBufferSourceNode> this._nativeNode).buffer = value;
+            this._nativeNode.buffer = value;
         }
     }
 
@@ -118,40 +118,40 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
 
     public get loop () {
         // @todo
-        return (this._nativeNode === null) ? false : (<TNativeAudioBufferSourceNode> this._nativeNode).loop;
+        return (this._nativeNode === null) ? false : this._nativeNode.loop;
     }
 
     public set loop (value) {
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<TNativeAudioBufferSourceNode> this._nativeNode).loop = value;
+            this._nativeNode.loop = value;
         }
     }
 
     public get loopEnd () {
         // @todo
-        return (this._nativeNode === null) ? 0 : (<TNativeAudioBufferSourceNode> this._nativeNode).loopEnd;
+        return (this._nativeNode === null) ? 0 : this._nativeNode.loopEnd;
     }
 
     public set loopEnd (value) {
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<TNativeAudioBufferSourceNode> this._nativeNode).loopEnd = value;
+            this._nativeNode.loopEnd = value;
         }
     }
 
     public get loopStart () {
         // @todo
-        return (this._nativeNode === null) ? 0 : (<TNativeAudioBufferSourceNode> this._nativeNode).loopStart;
+        return (this._nativeNode === null) ? 0 : this._nativeNode.loopStart;
     }
 
     public set loopStart (value) {
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<TNativeAudioBufferSourceNode> this._nativeNode).loopStart = value;
+            this._nativeNode.loopStart = value;
         }
     }
 
@@ -168,17 +168,20 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode implements I
 
         if (audioBufferSourceNodeRenderer !== undefined) {
             (<AudioBufferSourceNodeRenderer> audioBufferSourceNodeRenderer).start = { duration, offset, when };
-
         }
 
-        (<TNativeAudioBufferSourceNode> this._nativeNode).start(when, offset, duration);
+        if (this._nativeNode === null) {
+            throw new Error('The associated nativeNode is missing.');
+        }
+
+        this._nativeNode.start(when, offset, duration);
     }
 
     public stop (when = 0) {
         if (this._nativeNode === null) {
             // @todo
         } else {
-            (<TNativeAudioBufferSourceNode> this._nativeNode).stop(when);
+            this._nativeNode.stop(when);
         }
     }
 

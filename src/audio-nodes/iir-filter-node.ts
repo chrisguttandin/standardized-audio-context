@@ -74,20 +74,20 @@ const createNativeNode = (
     feedback: number[] | TTypedArray,
     feedforward: number[] | TTypedArray,
     channelCount: number
-) => {
+): null | TNativeIIRFilterNode => {
     // Bug #9: Safari does not support IIRFilterNodes.
     if (nativeContext.createIIRFilter === undefined) {
         if (isOfflineAudioContext(nativeContext)) {
             return null;
         } else {
-            return iIRFilterNodeFaker.fake(nativeContext, feedback, feedforward, channelCount);
+            return <TNativeIIRFilterNode> (<any> iIRFilterNodeFaker.fake(nativeContext, feedback, feedforward, channelCount));
         }
     }
 
     return nativeContext.createIIRFilter(<number[]> feedforward, <number[]> feedback);
 };
 
-export class IIRFilterNode extends NoneAudioDestinationNode implements IIIRFilterNode {
+export class IIRFilterNode extends NoneAudioDestinationNode<TNativeIIRFilterNode> implements IIIRFilterNode {
 
     private _feedback: number[] | TTypedArray;
 
@@ -107,7 +107,7 @@ export class IIRFilterNode extends NoneAudioDestinationNode implements IIIRFilte
         this._feedforward = feedforward;
         this._nyquist = nativeContext.sampleRate / 2;
 
-        if (nativeNode === null || (<TNativeIIRFilterNode> nativeNode).getFrequencyResponse === undefined) {
+        if (nativeNode === null || nativeNode.getFrequencyResponse === undefined) {
             // Bug #9: Safari does not support IIRFilterNodes.
 
             if (feedback.length === 0 || feedback.length > 20) {
@@ -128,7 +128,7 @@ export class IIRFilterNode extends NoneAudioDestinationNode implements IIIRFilte
         } else {
             // Bug #23 & #24: FirefoxDeveloper does not throw NotSupportedErrors anymore.
             // @todo Write a test which allows other browsers to remain unpatched.
-            iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(<TNativeIIRFilterNode> nativeNode);
+            iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(nativeNode);
         }
 
         if (isOfflineAudioContext(nativeContext)) {
@@ -140,8 +140,8 @@ export class IIRFilterNode extends NoneAudioDestinationNode implements IIIRFilte
 
     public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
         // Bug #9: Safari does not support IIRFilterNodes.
-        if (this._nativeNode !== null && (<TNativeIIRFilterNode> this._nativeNode).getFrequencyResponse !== undefined) {
-            return (<TNativeIIRFilterNode> this._nativeNode).getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+        if (this._nativeNode !== null && this._nativeNode.getFrequencyResponse !== undefined) {
+            return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
 
         if (magResponse.length === 0 || phaseResponse.length === 0) {

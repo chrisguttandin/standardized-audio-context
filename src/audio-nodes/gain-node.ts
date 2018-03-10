@@ -25,7 +25,7 @@ const DEFAULT_OPTIONS: IGainOptions = {
     numberOfOutputs: 1
 };
 
-export class GainNode extends NoneAudioDestinationNode implements IGainNode {
+export class GainNode extends NoneAudioDestinationNode<TNativeGainNode> implements IGainNode {
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
@@ -48,7 +48,7 @@ export class GainNode extends NoneAudioDestinationNode implements IGainNode {
             throw new Error('The associated nativeNode is missing.');
         }
 
-        return <IAudioParam> (<any> (<TNativeGainNode> this._nativeNode).gain);
+        return <IAudioParam> (<any> this._nativeNode.gain);
     }
 
 }
