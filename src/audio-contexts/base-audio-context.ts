@@ -4,7 +4,16 @@ import { BiquadFilterNode } from '../audio-nodes/biquad-filter-node';
 import { GainNode } from '../audio-nodes/gain-node';
 import { IIRFilterNode } from '../audio-nodes/iir-filter-node';
 import { decodeAudioData } from '../decode-audio-data';
-import { IAudioBuffer, IAudioBufferSourceNode, IBaseAudioContext, IBiquadFilterNode, IGainNode, IIIRFilterNode } from '../interfaces';
+import {
+    IAudioBuffer,
+    IAudioBufferSourceNode,
+    IAudioWorklet,
+    IBaseAudioContext,
+    IBiquadFilterNode,
+    IGainNode,
+    IIIRFilterNode,
+    IWorkletOptions
+} from '../interfaces';
 import {
     TDecodeErrorCallback,
     TDecodeSuccessCallback,
@@ -16,8 +25,26 @@ import { MinimalBaseAudioContext } from './minimal-base-audio-context';
 
 export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAudioContext {
 
+    private _audioWorklet: IAudioWorklet;
+
     constructor (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfChannels: number) {
         super(context, numberOfChannels);
+
+        // Bug #59: Only Chrome Canary does implement the audioWorklet property.
+        if (context.hasOwnProperty('audioWorklet')) {
+            // @todo Define the native interface.
+            this._audioWorklet = (<any> context).audioWorklet;
+        } else {
+            this._audioWorklet = {
+                addModule (_1: string, _2: IWorkletOptions = { credentials: 'omit' }) {
+                    return Promise.resolve();
+                }
+            };
+        }
+    }
+
+    get audioWorklet (): IAudioWorklet {
+        return this._audioWorklet;
     }
 
     public createBiquadFilter (): IBiquadFilterNode {

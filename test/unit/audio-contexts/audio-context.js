@@ -53,6 +53,16 @@ describe('AudioContext', () => {
             audioContext = new AudioContext();
         });
 
+        describe('audioWorklet', () => {
+
+            it('should be an instance of the AudioWorklet interface', () => {
+                const audioWorklet = audioContext.audioWorklet;
+
+                expect(audioWorklet.addModule).to.be.a('function');
+            });
+
+        });
+
         describe('currentTime', () => {
 
             it('should be a number', () => {

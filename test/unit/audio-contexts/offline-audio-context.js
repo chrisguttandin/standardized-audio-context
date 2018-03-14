@@ -11,6 +11,22 @@ import { spy } from 'sinon';
 
 describe('OfflineAudioContext', () => {
 
+    describe('audioWorklet', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be an instance of the AudioWorklet interface', () => {
+            const audioWorklet = offlineAudioContext.audioWorklet;
+
+            expect(audioWorklet.addModule).to.be.a('function');
+        });
+
+    });
+
     describe('currentTime', () => {
 
         let offlineAudioContext;
