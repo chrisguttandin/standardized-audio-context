@@ -40,6 +40,16 @@ describe('audioContextConstructor', () => {
             expect(window.AudioContext).to.be.undefined;
         });
 
+        describe('audioWorklet', () => {
+
+            // bug #59
+
+            it('should not be implemented', () => {
+                expect(audioContext.audioWorklet).to.be.undefined;
+            });
+
+        });
+
         describe('baseLatency', () => {
 
             // bug #39

@@ -32,6 +32,16 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('audioWorklet', () => {
+
+        // bug #59
+
+        it('should not be implemented', () => {
+            expect(offlineAudioContext.audioWorklet).to.be.undefined;
+        });
+
+    });
+
     describe('destination', () => {
 
         // bug #52
