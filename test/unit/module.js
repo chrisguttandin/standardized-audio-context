@@ -1,4 +1,4 @@
-import { AudioContext, OfflineAudioContext, decodeAudioData, isSupported } from '../../src/module';
+import { AudioContext, OfflineAudioContext, addAudioWorkletModule, decodeAudioData, isSupported } from '../../src/module';
 
 describe('module', () => {
 
@@ -8,6 +8,10 @@ describe('module', () => {
 
     it('should export the OfflineAudioContext constructor', () => {
         expect(OfflineAudioContext).to.be.a('function');
+    });
+
+    it('should export the addAudioWorkletModule function', () => {
+        expect(addAudioWorkletModule).to.be.a('function');
     });
 
     it('should export the decodeAudioData function', () => {

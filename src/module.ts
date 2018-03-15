@@ -30,6 +30,8 @@ export { AudioContext } from './audio-contexts/audio-context';
 
 export { OfflineAudioContext } from './audio-contexts/offline-audio-context';
 
+export { addAudioWorkletModule } from './add-audio-worklet-module';
+
 export { decodeAudioData } from './decode-audio-data';
 
 export const isSupported = () => injector.get(isSupportedPromise);
