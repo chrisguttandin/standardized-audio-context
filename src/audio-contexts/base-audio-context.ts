@@ -1,3 +1,4 @@
+import { addAudioWorkletModule } from '../add-audio-worklet-module';
 import { AudioBuffer } from '../audio-buffer';
 import { AudioBufferSourceNode } from '../audio-nodes/audio-buffer-source-node';
 import { BiquadFilterNode } from '../audio-nodes/biquad-filter-node';
@@ -30,17 +31,9 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
     constructor (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfChannels: number) {
         super(context, numberOfChannels);
 
-        // Bug #59: Only Chrome Canary does implement the audioWorklet property.
-        if (context.hasOwnProperty('audioWorklet')) {
-            // @todo Define the native interface.
-            this._audioWorklet = (<any> context).audioWorklet;
-        } else {
-            this._audioWorklet = {
-                addModule (_1: string, _2: IWorkletOptions = { credentials: 'omit' }) {
-                    return Promise.resolve();
-                }
-            };
-        }
+        this._audioWorklet = {
+            addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(this._context, moduleURL, options)
+        };
     }
 
     get audioWorklet (): IAudioWorklet {
