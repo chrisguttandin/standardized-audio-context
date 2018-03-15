@@ -12,3 +12,9 @@ export const AUDIO_PARAM_STORE: WeakMap<IAudioParam, TNativeAudioParam> = new We
 export const CONTEXT_STORE: WeakMap<IMinimalBaseAudioContext, (TUnpatchedAudioContext | TUnpatchedOfflineAudioContext)> = new WeakMap();
 
 export const DETACHED_ARRAY_BUFFERS: WeakSet<ArrayBuffer> = new WeakSet();
+
+// This clunky name is borrowed from the spec. :-)
+export const NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS: WeakMap<
+    TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    Map<string, () => void>
+> = new WeakMap();

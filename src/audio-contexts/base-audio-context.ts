@@ -32,7 +32,7 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
         super(context, numberOfChannels);
 
         this._audioWorklet = {
-            addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(this._context, moduleURL, options)
+            addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(this, moduleURL, options)
         };
     }
 

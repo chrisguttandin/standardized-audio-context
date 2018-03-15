@@ -13,6 +13,8 @@ export * from './native-audio-buffer';
 export * from './native-audio-buffer-source-node';
 export * from './native-audio-destination-node';
 export * from './native-audio-node';
+export * from './native-audio-worklet';
+export * from './native-audio-worklet-node-options';
 export * from './native-biquad-filter-node';
 export * from './native-channel-merger-node';
 export * from './native-channel-splitter-node';
