@@ -51,7 +51,7 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
         throw new Error('This is not yet supported.');
     }
 
-    const nativeNode =  nativeContext.createAnalyser();
+    const nativeNode = nativeContext.createAnalyser();
 
     // Bug #37: Only Edge and Safari create an AnalyserNode with the default properties.
     if (nativeNode.channelCount === 1) {
