@@ -95,7 +95,10 @@ export class IIRFilterNode extends NoneAudioDestinationNode<TNativeIIRFilterNode
 
     private _nyquist: number;
 
-    constructor (context: IMinimalBaseAudioContext, options: Partial<IIIRFilterOptions> = DEFAULT_OPTIONS) {
+    constructor (
+        context: IMinimalBaseAudioContext,
+        options: { feedback: IIIRFilterOptions['feedback']; feedforward: IIIRFilterOptions['feedforward'] } & Partial<IIIRFilterOptions>
+    ) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
         const { channelCount, feedback, feedforward } = mergedOptions;
