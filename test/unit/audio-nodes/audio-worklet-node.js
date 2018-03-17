@@ -58,18 +58,23 @@ describe('AudioWorkletNode', () => {
 
         beforeEach(() => context = createContext());
 
-        it('should be an instance of the AudioWorkletNode interface', async () => {
+        it('should be an instance of the AudioNode interface', async () => {
             const audioWorkletNode = await createAudioWorkletNode(context);
 
             expect(audioWorkletNode.channelCount).to.equal(2);
             expect(audioWorkletNode.channelCountMode).to.equal('max');
             expect(audioWorkletNode.channelInterpretation).to.equal('speakers');
-
+            expect(audioWorkletNode.connect).to.be.a('function');
+            expect(audioWorkletNode.context).to.be.an.instanceOf(context.constructor);
+            expect(audioWorkletNode.disconnect).to.be.a('function');
             expect(audioWorkletNode.numberOfInputs).to.equal(1);
             expect(audioWorkletNode.numberOfOutputs).to.equal(1);
+        });
+
+        it('should be an instance of the AudioWorkletNode interface', async () => {
+            const audioWorkletNode = await createAudioWorkletNode(context);
 
             expect(audioWorkletNode.onprocessorstatechange).to.be.null;
-
             expect(audioWorkletNode.parameters.entries).to.be.a('function');
             expect(audioWorkletNode.parameters.forEach).to.be.a('function');
             expect(audioWorkletNode.parameters.get).to.be.a('function');
@@ -77,9 +82,7 @@ describe('AudioWorkletNode', () => {
             expect(audioWorkletNode.parameters.keys).to.be.a('function');
             expect(audioWorkletNode.parameters.values).to.be.a('function');
             expect(audioWorkletNode.parameters[ Symbol.iterator ]).to.be.a('function');
-
             expect(audioWorkletNode.port).to.be.an.instanceOf(MessagePort);
-
             expect(audioWorkletNode.processorState).to.equal('pending');
         });
 
@@ -110,7 +113,7 @@ describe('AudioWorkletNode', () => {
                 expect(audioWorkletNode.connect(gainNode)).to.equal(gainNode);
             });
 
-            it('should not be connectable to a node of another AudioContext', (done) => {
+            it('should not be connectable to an AudioNode of another AudioContext', (done) => {
                 const anotherContext = createContext();
 
                 try {
@@ -127,22 +130,53 @@ describe('AudioWorkletNode', () => {
                 }
             });
 
+            it('should not be connectable to an AudioParam of another AudioContext', (done) => {
+                const anotherContext = createContext();
+                const gainNode = new GainNode(anotherContext);
+
+                try {
+                    audioWorkletNode.connect(gainNode.gain);
+                } catch (err) {
+                    expect(err.code).to.equal(15);
+                    expect(err.name).to.equal('InvalidAccessError');
+
+                    done();
+                } finally {
+                    if (anotherContext.close !== undefined) {
+                        anotherContext.close();
+                    }
+                }
+            });
+
+            it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                const gainNode = new GainNode(context);
+
+                try {
+                    audioWorkletNode.connect(gainNode.gain, -1);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
         });
 
         describe('disconnect()', () => {
 
             let audioBufferSourceNode;
             let audioWorkletNode;
-            let firstGainNode;
-            let secondGainNode;
+            let firstDummyGainNode;
+            let secondDummyGainNode;
             let renderer;
             let values;
 
             beforeEach(async () => {
                 audioBufferSourceNode = new AudioBufferSourceNode(context);
                 audioWorkletNode = await createAudioWorkletNode(context);
-                firstGainNode = new GainNode(context);
-                secondGainNode = new GainNode(context);
+                firstDummyGainNode = new GainNode(context);
+                secondDummyGainNode = new GainNode(context);
                 values = [ 1, 1, 1, 1, 1 ];
 
                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
@@ -156,13 +190,13 @@ describe('AudioWorkletNode', () => {
                     connect (destination) {
                         audioBufferSourceNode
                             .connect(audioWorkletNode)
-                            .connect(firstGainNode)
+                            .connect(firstDummyGainNode)
                             .connect(destination);
 
-                        audioWorkletNode.connect(secondGainNode);
+                        audioWorkletNode.connect(secondDummyGainNode);
                     },
                     context,
-                    length: (context instanceof AudioContext || context instanceof MinimalAudioContext) ? 5 : undefined
+                    length: (context.length === undefined) ? 5 : undefined
                 });
             });
 
@@ -170,7 +204,7 @@ describe('AudioWorkletNode', () => {
                 this.timeout(5000);
 
                 return renderer((startTime) => {
-                    audioWorkletNode.disconnect(firstGainNode);
+                    audioWorkletNode.disconnect(firstDummyGainNode);
 
                     audioBufferSourceNode.start(startTime);
                 })
@@ -183,7 +217,7 @@ describe('AudioWorkletNode', () => {
                 this.timeout(5000);
 
                 return renderer((startTime) => {
-                    audioWorkletNode.disconnect(secondGainNode);
+                    audioWorkletNode.disconnect(secondDummyGainNode);
 
                     audioBufferSourceNode.start(startTime);
                 })

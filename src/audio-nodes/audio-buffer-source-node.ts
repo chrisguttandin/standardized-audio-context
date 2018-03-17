@@ -78,8 +78,8 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
             AUDIO_NODE_RENDERER_STORE.set(this, audioBufferSourceNodeRenderer);
 
-            audioParamWrapper.wrap(nativeNode, 'detune');
-            audioParamWrapper.wrap(nativeNode, 'playbackRate');
+            audioParamWrapper.wrap(nativeNode, context, 'detune');
+            audioParamWrapper.wrap(nativeNode, context, 'playbackRate');
         }
     }
 

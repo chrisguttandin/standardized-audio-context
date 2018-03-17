@@ -39,7 +39,7 @@ export class GainNode extends NoneAudioDestinationNode<TNativeGainNode> implemen
 
             AUDIO_NODE_RENDERER_STORE.set(this, gainNodeRenderer);
 
-            audioParamWrapper.wrap(nativeNode, 'gain');
+            audioParamWrapper.wrap(nativeNode, context, 'gain');
         }
     }
 

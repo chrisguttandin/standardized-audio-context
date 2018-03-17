@@ -626,76 +626,8 @@ describe('OfflineAudioContext', () => {
             offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
         });
 
-        it('should return an instance of the GainNode interface', () => {
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(gainNode.channelCount).to.equal(2);
-            expect(gainNode.channelCountMode).to.equal('max');
-            expect(gainNode.channelInterpretation).to.equal('speakers');
-
-            expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
-            expect(gainNode.gain.defaultValue).to.equal(1);
-            expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
-            expect(gainNode.gain.linearRampToValueAtTime).to.be.a('function');
-            expect(gainNode.gain.setTargetAtTime).to.be.a('function');
-            expect(gainNode.gain.setValueCurveAtTime).to.be.a('function');
-            expect(gainNode.gain.value).to.equal(1);
-
-            expect(gainNode.numberOfInputs).to.equal(1);
-            expect(gainNode.numberOfOutputs).to.equal(1);
-        });
-
-        // @todo it('should throw an error if the AudioContext is closed', () => {});
-
-        it('should be chainable', () => {
-            const gainNodeA = offlineAudioContext.createGain();
-            const gainNodeB = offlineAudioContext.createGain();
-
-            expect(gainNodeA.connect(gainNodeB)).to.equal(gainNodeB);
-        });
-
-        it('should be disconnectable', (done) => {
-            const candidate = offlineAudioContext.createGain();
-            const dummy = offlineAudioContext.createGain();
-            // Safari does not play buffers which contain just one frame.
-            const ones = offlineAudioContext.createBuffer(1, 2, 44100);
-
-            ones.copyToChannel(new Float32Array([ 1, 1 ]), 0);
-
-            const source = offlineAudioContext.createBufferSource();
-
-            source.buffer = ones;
-
-            source.connect(candidate);
-            candidate.connect(offlineAudioContext.destination);
-            candidate.connect(dummy);
-            candidate.disconnect(dummy);
-
-            source.start(0);
-
-            offlineAudioContext
-                .startRendering()
-                .then((renderedBuffer) => {
-                    const channelData = renderedBuffer.getChannelData(0);
-
-                    expect(channelData[0]).to.equal(1);
-
-                    done();
-                });
-        });
-
-        it('should not be connectable to a node of another AudioContext', (done) => {
-            const anotherOfflineAudioContext = new OfflineAudioContext(2, 129, 44100);
-            const gainNode = offlineAudioContext.createGain();
-
-            try {
-                gainNode.connect(anotherOfflineAudioContext.destination);
-            } catch (err) {
-                expect(err.code).to.equal(15);
-                expect(err.name).to.equal('InvalidAccessError');
-
-                done();
-            }
+        it('should be a function', () => {
+            expect(offlineAudioContext.createGain).to.be.a('function');
         });
 
     });

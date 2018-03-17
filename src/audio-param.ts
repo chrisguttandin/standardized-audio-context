@@ -1,4 +1,4 @@
-import { AUDIO_PARAM_STORE } from './globals';
+import { AUDIO_PARAM_CONTEXT_STORE, AUDIO_PARAM_STORE } from './globals';
 import { IAudioParam, IAudioParamOptions, IAudioParamRenderer } from './interfaces';
 import { TNativeAudioParam } from './types';
 
@@ -8,7 +8,7 @@ export class AudioParam implements IAudioParam {
 
     private _audioParamRenderer: IAudioParamRenderer;
 
-    constructor ({ audioParamRenderer, nativeAudioParam }: IAudioParamOptions) {
+    constructor ({ audioParamRenderer, context, nativeAudioParam }: IAudioParamOptions) {
         this._audioParamRenderer = audioParamRenderer;
 
         if (nativeAudioParam === undefined) {
@@ -18,6 +18,8 @@ export class AudioParam implements IAudioParam {
 
             AUDIO_PARAM_STORE.set(this, nativeAudioParam);
         }
+
+        AUDIO_PARAM_CONTEXT_STORE.set(this, context);
     }
 
     get defaultValue () {

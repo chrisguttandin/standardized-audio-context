@@ -45,10 +45,10 @@ export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilt
 
             AUDIO_NODE_RENDERER_STORE.set(this, biquadFilterNodeRenderer);
 
-            audioParamWrapper.wrap(nativeNode, 'Q');
-            audioParamWrapper.wrap(nativeNode, 'detune');
-            audioParamWrapper.wrap(nativeNode, 'frequency');
-            audioParamWrapper.wrap(nativeNode, 'gain');
+            audioParamWrapper.wrap(nativeNode, context, 'Q');
+            audioParamWrapper.wrap(nativeNode, context, 'detune');
+            audioParamWrapper.wrap(nativeNode, context, 'frequency');
+            audioParamWrapper.wrap(nativeNode, context, 'gain');
         }
     }
 

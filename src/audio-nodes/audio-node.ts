@@ -1,10 +1,12 @@
 import { Injector } from '@angular/core';
 import { EventTarget } from '../event-target';
+import { INDEX_SIZE_ERROR_FACTORY_PROVIDER, IndexSizeErrorFactory } from '../factories/index-size-error';
 import { INVALID_ACCES_ERROR_FACTORY_PROVIDER, InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import {
     AUDIO_NODE_RENDERER_DESTINATIONS_STORE,
     AUDIO_NODE_RENDERER_STORE,
     AUDIO_NODE_STORE,
+    AUDIO_PARAM_CONTEXT_STORE,
     AUDIO_PARAM_RENDERER_STORE,
     AUDIO_PARAM_STORE,
     CONTEXT_STORE
@@ -22,12 +24,14 @@ const injector = Injector.create({
     providers: [
         AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER,
         DISCONNECTING_SUPPORT_TESTER_PROVIDER,
+        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
         INVALID_ACCES_ERROR_FACTORY_PROVIDER
     ]
 });
 
 const audioNodeDisconnectMethodWrapper = injector.get(AudioNodeDisconnectMethodWrapper);
 const disconnectingSupportTester = injector.get(DisconnectingSupportTester);
+const indexSizeErrorFactory = injector.get(IndexSizeErrorFactory);
 const invalidAccessErrorFactory = injector.get(InvalidAccessErrorFactory);
 
 export class AudioNode<T extends TNativeAudioNode> extends EventTarget implements IAudioNode {
@@ -200,7 +204,15 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
                 throw new Error('The associated renderer is missing.');
             }
 
-            if (this._nativeNode !== null) {
+            if (this._nativeNode === null) {
+                if (this._context !== AUDIO_PARAM_CONTEXT_STORE.get(destination)) {
+                    throw invalidAccessErrorFactory.create();
+                }
+
+                if (output < 0 || output >= this._numberOfOutputs) {
+                    throw indexSizeErrorFactory.create();
+                }
+            } else {
                 const nativeAudioParam = AUDIO_PARAM_STORE.get(destination);
 
                 if (nativeAudioParam === undefined) {
