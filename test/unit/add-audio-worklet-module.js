@@ -32,7 +32,7 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
         describe('with a missing module', () => {
 
             it('should return a promise which rejects an AbortError', (done) => {
-                addAudioWorkletModule('base/test/fixtures/missing-processor.xs')
+                addAudioWorkletModule('base/test/fixtures/missing-processor.js')
                     .catch((err) => {
                         expect(err.code).to.equal(20);
                         expect(err.name).to.equal('AbortError');
@@ -46,7 +46,7 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
         describe('with an unparsable module', () => {
 
             it('should return a promise which rejects an AbortError', (done) => {
-                addAudioWorkletModule('base/test/fixtures/unparsable-processor.js')
+                addAudioWorkletModule('base/test/fixtures/unparsable-processor.xs')
                     .catch((err) => {
                         expect(err.code).to.equal(20);
                         expect(err.name).to.equal('AbortError');
