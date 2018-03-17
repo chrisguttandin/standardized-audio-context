@@ -93,8 +93,35 @@ export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkl
 
         super(context, nativeNode, mergedOptions);
 
-        // @todo Implement a readonly AudioParamMap. Test parameters support with an expectation test.
-        this._parameters = (nativeNode === null || nativeNode.parameters === undefined) ? new Map() : null;
+        if (nativeNode === null || nativeNode.parameters === undefined) {
+            const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
+
+            if (nodeNameToProcessorDefinitionMap === undefined) {
+                throw new Error(); // @todo
+            }
+
+            const processorDefinition = nodeNameToProcessorDefinitionMap.get(name);
+
+            if (processorDefinition === undefined) {
+                throw new Error(); // @todo
+            }
+
+            // @todo Actually implement the AudioParam interface and remove the functions which allow to mutate the map.
+            this._parameters = new Map(
+                (<any> processorDefinition).parameterDescriptors
+                    .map(({ defaultValue, name: parameterName }: any) => [ parameterName, {
+                        cancelScheduledValues () { }, // tslint:disable-line:no-empty
+                        defaultValue,
+                        exponentialRampToValueAtTime () { }, // tslint:disable-line:no-empty
+                        linearRampToValueAtTime () { }, // tslint:disable-line:no-empty
+                        setTargetAtTime () { }, // tslint:disable-line:no-empty
+                        setValueCurveAtTime () { }, // tslint:disable-line:no-empty
+                        value: defaultValue
+                    } ])
+            );
+        } else {
+            this._parameters = null;
+        }
         // @todo Test port support with an expectation test.
         this._port = (nativeNode === null || nativeNode.port === undefined) ? (new MessageChannel()).port1 : null;
 

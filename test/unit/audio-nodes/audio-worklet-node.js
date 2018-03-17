@@ -75,13 +75,7 @@ describe('AudioWorkletNode', () => {
             const audioWorkletNode = await createAudioWorkletNode(context);
 
             expect(audioWorkletNode.onprocessorstatechange).to.be.null;
-            expect(audioWorkletNode.parameters.entries).to.be.a('function');
-            expect(audioWorkletNode.parameters.forEach).to.be.a('function');
-            expect(audioWorkletNode.parameters.get).to.be.a('function');
-            expect(audioWorkletNode.parameters.has).to.be.a('function');
-            expect(audioWorkletNode.parameters.keys).to.be.a('function');
-            expect(audioWorkletNode.parameters.values).to.be.a('function');
-            expect(audioWorkletNode.parameters[ Symbol.iterator ]).to.be.a('function');
+            expect(audioWorkletNode.parameters).not.to.be.undefined;
             expect(audioWorkletNode.port).to.be.an.instanceOf(MessagePort);
             expect(audioWorkletNode.processorState).to.equal('pending');
         });
@@ -97,6 +91,156 @@ describe('AudioWorkletNode', () => {
 
                     done();
                 });
+        });
+
+        describe('parameters', () => {
+
+            let parameters;
+
+            beforeEach(async () => {
+                const audioWorkletNode = await createAudioWorkletNode(context);
+
+                parameters = audioWorkletNode.parameters;
+            });
+
+            it('should return an instance of the AudioParamMap interface', () => {
+                expect(parameters.entries).to.be.a('function');
+                expect(parameters.forEach).to.be.a('function');
+                expect(parameters.get).to.be.a('function');
+                expect(parameters.has).to.be.a('function');
+                expect(parameters.keys).to.be.a('function');
+                expect(parameters.values).to.be.a('function');
+                expect(parameters[ Symbol.iterator ]).to.be.a('function');
+            });
+
+            describe('entries()', () => {
+
+                let entries;
+
+                beforeEach(() => {
+                    entries = parameters.entries();
+                });
+
+                it('should return an instance of the Iterator interface', () => {
+                    expect(entries.next).to.be.a('function');
+                });
+
+                it('should iterate over all entries', () => {
+                    expect(Array.from(entries)).to.deep.equal([ [ 'gain', parameters.get('gain') ] ]);
+                });
+
+            });
+
+            describe('forEach()', () => {
+
+                it('should iterate over all parameters', () => {
+                    const args = [ ];
+
+                    parameters.forEach((value, key, map) => {
+                        args.push({ key, map, value });
+                    });
+
+                    expect(args).to.deep.equal([ {
+                        key: 'gain',
+                        map: parameters,
+                        value: parameters.get('gain')
+                    } ]);
+                });
+
+            });
+
+            describe('get()', () => {
+
+                describe('with an unexisting parameter', () => {
+
+                    it('should return undefined', () => {
+                        expect(parameters.get('unknown')).to.be.undefined;
+                    });
+
+                });
+
+                describe('with an existing parameter', () => {
+
+                    it('should return an instance of the AudioParam interface', () => {
+                        const gain = parameters.get('gain');
+
+                        // @todo cancelAndHoldAtTime
+                        expect(gain.cancelScheduledValues).to.be.a('function');
+                        expect(gain.defaultValue).to.equal(1);
+                        expect(gain.exponentialRampToValueAtTime).to.be.a('function');
+                        expect(gain.linearRampToValueAtTime).to.be.a('function');
+                        /*
+                         * @todo maxValue
+                         * @todo minValue
+                         */
+                        expect(gain.setTargetAtTime).to.be.a('function');
+                        // @todo setValueAtTime
+                        expect(gain.setValueCurveAtTime).to.be.a('function');
+                        expect(gain.value).to.equal(1);
+                    });
+
+                });
+
+            });
+
+            describe('has()', () => {
+
+                describe('with an unexisting parameter', () => {
+
+                    it('should return false', () => {
+                        expect(parameters.has('unknown')).to.be.false;
+                    });
+
+                });
+
+                describe('with an existing parameter', () => {
+
+                    it('should return true', () => {
+                        expect(parameters.has('gain')).to.be.true;
+                    });
+
+                });
+
+            });
+
+            describe('keys()', () => {
+
+                let keys;
+
+                beforeEach(() => {
+                    keys = parameters.keys();
+                });
+
+                it('should return an instance of the Iterator interface', () => {
+                    expect(keys.next).to.be.a('function');
+                });
+
+                it('should iterate over all keys', () => {
+                    expect(Array.from(keys)).to.deep.equal([ 'gain' ]);
+                });
+
+            });
+
+            describe('values()', () => {
+
+                let values;
+
+                beforeEach(() => {
+                    values = parameters.values();
+                });
+
+                it('should return an instance of the Iterator interface', () => {
+                    expect(values.next).to.be.a('function');
+                });
+
+                it('should iterate over all values', () => {
+                    expect(Array.from(values)).to.deep.equal([ parameters.get('gain') ]);
+                });
+
+            });
+
+            // @todo Symbol.iterator
+
         });
 
         describe('connect()', () => {
