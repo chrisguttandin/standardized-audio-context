@@ -1,7 +1,14 @@
 import { Injector } from '@angular/core';
 import { EventTarget } from '../event-target';
 import { INVALID_ACCES_ERROR_FACTORY_PROVIDER, InvalidAccessErrorFactory } from '../factories/invalid-access-error';
-import { AUDIO_NODE_RENDERER_STORE, AUDIO_NODE_STORE, AUDIO_PARAM_RENDERER_STORE, AUDIO_PARAM_STORE, CONTEXT_STORE } from '../globals';
+import {
+    AUDIO_NODE_RENDERER_DESTINATIONS_STORE,
+    AUDIO_NODE_RENDERER_STORE,
+    AUDIO_NODE_STORE,
+    AUDIO_PARAM_RENDERER_STORE,
+    AUDIO_PARAM_STORE,
+    CONTEXT_STORE
+} from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
@@ -61,7 +68,7 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
         if (nativeNode !== null) {
             // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
             // @todo Make sure this is not used with an OfflineAudioContext.
-            if (true !== cacheTestResult(DisconnectingSupportTester, () => {
+            if (!isOfflineAudioContext(nativeContext) && true !== cacheTestResult(DisconnectingSupportTester, () => {
                 return disconnectingSupportTester.test(<TUnpatchedAudioContext> nativeContext);
             })) {
                 audioNodeDisconnectMethodWrapper.wrap(nativeNode);
@@ -147,9 +154,9 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
             }
 
             if (isOfflineAudioContext(nativeContext)) {
-                const faker = AUDIO_NODE_RENDERER_STORE.get(destination);
+                const renderer = AUDIO_NODE_RENDERER_STORE.get(destination);
 
-                if (faker === undefined) {
+                if (renderer === undefined) {
                     throw invalidAccessErrorFactory.create();
                 }
 
@@ -159,7 +166,7 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
                     throw new Error('The associated renderer is missing.');
                 }
 
-                faker.wire(source, output, input);
+                renderer.wire(source, output, input);
 
                 return destination;
             }
@@ -181,9 +188,9 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
         }
 
         if (isOfflineAudioContext(nativeContext)) {
-            const faker = AUDIO_PARAM_RENDERER_STORE.get(destination);
+            const renderer = AUDIO_PARAM_RENDERER_STORE.get(destination);
 
-            if (faker === undefined) {
+            if (renderer === undefined) {
                 throw invalidAccessErrorFactory.create();
             }
 
@@ -212,7 +219,7 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
                 }
             }
 
-            faker.wire(source, output);
+            renderer.wire(source, output);
         } else {
             if (this._nativeNode === null) {
                 throw new Error('The associated nativeNode is missing.');
@@ -239,23 +246,29 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
         }
 
         if (isOfflineAudioContext(nativeContext)) {
-            if (destination === undefined) {
-                return; // @todo
-            }
-
-            const faker = AUDIO_NODE_RENDERER_STORE.get(destination);
-
-            if (faker === undefined) {
-                throw new Error('The associated renderer is missing.');
-            }
-
             const source = AUDIO_NODE_RENDERER_STORE.get(this);
 
             if (source === undefined) {
                 throw new Error('The associated renderer is missing.');
             }
 
-            return faker.unwire(source);
+            if (destination === undefined) {
+                const renderers = AUDIO_NODE_RENDERER_DESTINATIONS_STORE.get(source);
+
+                if (renderers === undefined) {
+                    return;
+                }
+
+                return renderers.forEach((rndrr) => rndrr.unwire(source));
+            }
+
+            const renderer = AUDIO_NODE_RENDERER_STORE.get(destination);
+
+            if (renderer === undefined) {
+                throw new Error('The associated renderer is missing.');
+            }
+
+            return renderer.unwire(source);
         }
 
         if (this._nativeNode === null) {

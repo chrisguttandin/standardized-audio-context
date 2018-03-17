@@ -1,6 +1,8 @@
 import { IAudioNode, IAudioNodeRenderer, IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext } from './interfaces';
 import { TNativeAudioNode, TNativeAudioParam, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from './types';
 
+export const AUDIO_NODE_RENDERER_DESTINATIONS_STORE: WeakMap<IAudioNodeRenderer, Set<IAudioNodeRenderer>> = new WeakMap();
+
 export const AUDIO_NODE_RENDERER_STORE: WeakMap<IAudioNode, IAudioNodeRenderer> = new WeakMap();
 
 export const AUDIO_NODE_STORE: WeakMap<IAudioNode, TNativeAudioNode> = new WeakMap();

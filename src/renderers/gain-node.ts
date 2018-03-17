@@ -1,11 +1,11 @@
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
-import { IAudioNodeRenderer, IAudioParam, IGainNode } from '../interfaces';
+import { IAudioParam, IGainNode } from '../interfaces';
 import { TNativeAudioNode, TNativeGainNode, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
-export class GainNodeRenderer extends AudioNodeRenderer implements IAudioNodeRenderer {
+export class GainNodeRenderer extends AudioNodeRenderer {
 
     private _nativeNode: null | TNativeGainNode;
 

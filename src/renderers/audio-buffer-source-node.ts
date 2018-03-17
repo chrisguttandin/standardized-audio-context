@@ -1,10 +1,10 @@
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioBufferSourceNode, IAudioNodeRenderer } from '../interfaces';
+import { IAudioBufferSourceNode } from '../interfaces';
 import { TNativeAudioBufferSourceNode, TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
-export class AudioBufferSourceNodeRenderer extends AudioNodeRenderer implements IAudioNodeRenderer {
+export class AudioBufferSourceNodeRenderer extends AudioNodeRenderer {
 
     private _nativeNode: null | TNativeAudioBufferSourceNode;
 

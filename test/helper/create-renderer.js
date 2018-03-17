@@ -1,43 +1,68 @@
+import { AudioBuffer } from '../../src/audio-buffer';
+import { AudioBufferSourceNode } from '../../src/audio-nodes/audio-buffer-source-node';
 import { AudioContext } from '../../src/audio-contexts/audio-context';
+import { MinimalAudioContext } from '../../src/audio-contexts/minimal-audio-context';
 import { createScriptProcessor } from './create-script-processor';
 
-export const createRenderer = ({ context, length, connect }) => {
-    if (context instanceof AudioContext) {
+export const createRenderer = ({ bufferSize = 0, context, length, connect }) => {
+    if (context instanceof AudioContext || context instanceof MinimalAudioContext) {
+        if (length === undefined) {
+            throw new Error('The length need to be specified when using an AudioContext or MinimalAudioContext.');
+        }
+
         if (length > 128) {
             throw new Error('Running tests for longer than 128 samples is not yet possible.');
         }
 
         const sampleRate = context.sampleRate;
-        const audioBuffer = context.createBuffer(1, length, sampleRate);
-        const audioBufferSourceNode = context.createBufferSource();
-        const bufferSize = 512;
-        const scriptProcessorNode = createScriptProcessor(context, bufferSize, 1, 1);
+        const audioBuffer = new AudioBuffer({ length: 5, sampleRate });
+        const audioBufferSourceNode = new AudioBufferSourceNode(context);
+        const bufferScriptProcessorNode = (bufferSize === 0) ? null : createScriptProcessor(context, bufferSize, 1, 1);
+        const recorderBufferSize = 8192;
+        const recorderScriptProcessorNode = createScriptProcessor(context, recorderBufferSize, 1, 1);
 
         audioBuffer.copyToChannel(new Float32Array([ 1 ]), 0);
 
         audioBufferSourceNode.buffer = audioBuffer;
 
-        connect(scriptProcessorNode);
+        if (bufferScriptProcessorNode !== null) {
+            bufferScriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }) => {
+                const input = inputBuffer.getChannelData(0);
+                const output = outputBuffer.getChannelData(0);
 
-        audioBufferSourceNode.connect(scriptProcessorNode);
+                output.set(input);
+            };
+        }
+
+        connect(recorderScriptProcessorNode);
+
+        if (bufferScriptProcessorNode === null) {
+            audioBufferSourceNode.connect(recorderScriptProcessorNode);
+        } else {
+            audioBufferSourceNode
+                .connect(bufferScriptProcessorNode)
+                .connect(recorderScriptProcessorNode);
+        }
         // @todo Maybe add an additional GainNode to avoid any hearable output.
-        scriptProcessorNode.connect(context.destination);
+        recorderScriptProcessorNode.connect(context.destination);
 
         return (start) => {
-            // Start the impulse in 4096 samples from now to make sure there is enough time to set everything up.
-            const impulseStartTime = context.currentTime + (4096 / sampleRate);
+            const renderQuantum = 128 / sampleRate;
+            // Start the impulse in 8192 samples from now to make sure there is enough time to set everything up.
+            const impulseStartTime = (Math.round(context.currentTime / renderQuantum) * renderQuantum) + (8192 / sampleRate);
             // Add an additional delay of 512 samples to the startTime.
-            const startTime = impulseStartTime + (512 / sampleRate);
+            const startTimeOffset = 512;
+            const startTime = impulseStartTime + (startTimeOffset / sampleRate);
             const promise = new Promise((resolve, reject) => {
                 const stop = () => {
-                    scriptProcessorNode.onaudioprocess = null;
-                    scriptProcessorNode.disconnect(context.destination);
+                    recorderScriptProcessorNode.onaudioprocess = null;
+                    recorderScriptProcessorNode.disconnect(context.destination);
                 };
 
                 let impulseOffset = null;
                 let lastPlaybackOffset = null;
 
-                scriptProcessorNode.onaudioprocess = ({ inputBuffer, playbackTime }) => {
+                recorderScriptProcessorNode.onaudioprocess = ({ inputBuffer, playbackTime }) => {
                     /*
                      * @todo Add an expectation test to prove the following assumption.
                      * Keeping track of the playbackOffset is necessary because Edge doesn't always report the correct playbackTime.
@@ -45,7 +70,7 @@ export const createRenderer = ({ context, length, connect }) => {
                     if (lastPlaybackOffset === null) {
                         lastPlaybackOffset = Math.round(playbackTime * sampleRate);
                     } else {
-                        lastPlaybackOffset += bufferSize;
+                        lastPlaybackOffset += recorderBufferSize;
                     }
 
                     const channelData = inputBuffer.getChannelData(0);
@@ -53,9 +78,9 @@ export const createRenderer = ({ context, length, connect }) => {
                     // Look for the impulse in case it was not detected yet.
                     if (impulseOffset === null) {
                         // The impulse will be at the first sample of a render quantum.
-                        for (let i = 0; i < bufferSize; i += 128) {
+                        for (let i = 0; i < recorderBufferSize; i += 1) {
                             if (channelData[i] === 1) {
-                                impulseOffset = lastPlaybackOffset - Math.round(impulseStartTime * sampleRate) + i;
+                                impulseOffset = lastPlaybackOffset + i;
 
                                 break;
                             }
@@ -63,10 +88,10 @@ export const createRenderer = ({ context, length, connect }) => {
                     }
 
                     if (impulseOffset !== null) {
-                        const expectedPlaybackOffset = Math.round(startTime * sampleRate) + impulseOffset;
+                        const expectedPlaybackOffset = impulseOffset + startTimeOffset;
 
                         if (lastPlaybackOffset <= expectedPlaybackOffset &&
-                                lastPlaybackOffset + bufferSize >= expectedPlaybackOffset + length) {
+                                lastPlaybackOffset + recorderBufferSize >= expectedPlaybackOffset + length) {
                             stop();
 
                             const index = expectedPlaybackOffset - lastPlaybackOffset;

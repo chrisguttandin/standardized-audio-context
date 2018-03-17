@@ -1,13 +1,15 @@
+import { TAudioWorkletProcessorState, TProcessorStateChangeEventHandler } from '../types';
 import { IAudioNode } from './audio-node';
+import { IAudioParamMap } from './audio-param-map';
 
 export interface IAudioWorkletNode extends IAudioNode {
 
-    // @todo onprocessorstatechange: EventHandler;
+    onprocessorstatechange: null | TProcessorStateChangeEventHandler;
 
-    // @todo readonly parameters: IAudioParamMap;
+    readonly parameters: IAudioParamMap;
 
     readonly port: MessagePort;
 
-    // @todo readonly processorState: TAudioWorkletProcessorState;
+    readonly processorState: TAudioWorkletProcessorState;
 
 }

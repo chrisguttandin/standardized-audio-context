@@ -1,9 +1,12 @@
 import { Injector } from '@angular/core';
 import { cacheTestResult } from '../helpers/cache-test-result';
-import { filterBuffer } from '../helpers/filter-buffer';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioCompletionEvent } from '../interfaces';
+import { IAudioWorkletNode, IMinimalOfflineAudioContext, INativeAudioWorkletNode, IOfflineAudioCompletionEvent } from '../interfaces';
+import {
+    NATIVE_AUDIO_WORKLET_NODE_CONSTRUCTOR_PROVIDER,
+    nativeAudioWorkletNodeConstructor as ntvDWrkltNdCnstrctr
+} from '../providers/native-audio-worklet-node-constructor';
 import {
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
@@ -14,8 +17,6 @@ import {
     TNativeAudioBuffer,
     TNativeAudioBufferSourceNode,
     TNativeAudioNode,
-    TNativeIIRFilterNode,
-    TTypedArray,
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
@@ -23,12 +24,14 @@ import { AudioNodeRenderer } from './audio-node';
 
 const injector = Injector.create({
     providers: [
+        NATIVE_AUDIO_WORKLET_NODE_CONSTRUCTOR_PROVIDER,
         PROMISE_SUPPORT_TESTER_PROVIDER,
         UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
+const nativeAudioWorkletNodeConstructor = injector.get(ntvDWrkltNdCnstrctr);
 const promiseSupportTester = injector.get(PromiseSupportTester);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
 
@@ -37,21 +40,18 @@ const isSupportingPromises = (context: TUnpatchedAudioContext | TUnpatchedOfflin
     () => promiseSupportTester.test(context)
 );
 
-export class IIRFilterNodeRenderer extends AudioNodeRenderer {
+export class AudioWorkletNodeRenderer extends AudioNodeRenderer {
 
-    private _feedback: number [] | TTypedArray;
+    private _name: string;
 
-    private _feedforward: number [] | TTypedArray;
+    private _nativeNode: null | TNativeAudioBufferSourceNode | INativeAudioWorkletNode;
 
-    private _nativeNode: null | TNativeAudioBufferSourceNode | TNativeIIRFilterNode;
+    private _proxy: IAudioWorkletNode;
 
-    private _proxy: IIIRFilterNode;
-
-    constructor (proxy: IIIRFilterNode, feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) {
+    constructor (proxy: IAudioWorkletNode, name: string) {
         super();
 
-        this._feedback = feedback;
-        this._feedforward = feedforward;
+        this._name = name;
         this._nativeNode = null;
         this._proxy = proxy;
     }
@@ -66,18 +66,22 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer {
         }
 
         try {
-            this._nativeNode = <TNativeIIRFilterNode> getNativeNode(this._proxy);
+            this._nativeNode = <INativeAudioWorkletNode> getNativeNode(this._proxy);
+
+            if (nativeAudioWorkletNodeConstructor === null) {
+                throw new Error(); // @todo
+            }
 
             // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
-                this._nativeNode = offlineAudioContext.createIIRFilter(<any> this._feedforward, <any> this._feedback);
+                this._nativeNode = new nativeAudioWorkletNodeConstructor(offlineAudioContext, this._name);
             }
 
             return this
                 ._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode)
                 .then(() => <TNativeAudioNode> this._nativeNode);
 
-        // Bug #9: Safari does not support IIRFilterNodes.
+        // Bug #61: Only Chrome Canary has an implementation of the AudioWorkletNode yet.
         } catch (err) {
             const partialOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(
                 // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
@@ -106,7 +110,7 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer {
                 .then((renderedBuffer) => {
                     const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                    audioBufferSourceNode.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
+                    audioBufferSourceNode.buffer = renderedBuffer;
                     audioBufferSourceNode.start(0);
 
                     this._nativeNode = audioBufferSourceNode;
@@ -114,52 +118,6 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer {
                     return <TNativeAudioNode> this._nativeNode;
                 });
         }
-    }
-
-    private _applyFilter (renderedBuffer: TNativeAudioBuffer, offlineAudioContext: TUnpatchedOfflineAudioContext) {
-        const feedback = this._feedback;
-        const feedforward = this._feedforward;
-
-        const feedbackLength = feedback.length;
-        const feedforwardLength = feedforward.length;
-        const minLength = Math.min(feedbackLength, feedforwardLength);
-
-        if (feedback[0] !== 1) {
-            for (let i = 0; i < feedbackLength; i += 1) {
-                feedforward[i] /= feedback[0];
-            }
-
-            for (let i = 1; i < feedforwardLength; i += 1) {
-                feedback[i] /= feedback[0];
-            }
-        }
-
-        const bufferLength = 32;
-        const xBuffer = new Float32Array(bufferLength);
-        const yBuffer = new Float32Array(bufferLength);
-
-        const filteredBuffer = offlineAudioContext.createBuffer(
-            renderedBuffer.numberOfChannels,
-            renderedBuffer.length,
-            renderedBuffer.sampleRate
-        );
-
-        const numberOfChannels = renderedBuffer.numberOfChannels;
-
-        for (let i = 0; i < numberOfChannels; i += 1) {
-            const input = renderedBuffer.getChannelData(i);
-            const output = filteredBuffer.getChannelData(i);
-
-            // @todo Add a test which checks support for TypedArray.prototype.fill().
-            xBuffer.fill(0);
-            yBuffer.fill(0);
-
-            filterBuffer(
-                feedback, feedbackLength, feedforward, feedforwardLength, minLength, xBuffer, yBuffer, 0, bufferLength, input, output
-            );
-        }
-
-        return filteredBuffer;
     }
 
 }
