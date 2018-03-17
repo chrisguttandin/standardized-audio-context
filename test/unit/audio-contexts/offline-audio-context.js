@@ -842,7 +842,7 @@ describe('OfflineAudioContext', () => {
 
             const audioBuffer = offlineAudioContext.createBuffer(3, 3, 44100);
             const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            const iIRFilterNode = offlineAudioContext.createIIRFilter([ 0.5, -1 ], [ 1, -1 ]);
+            const iIRFilterNode = offlineAudioContext.createIIRFilter([ 0.5, -1 ], [ 1, 0.5 ]);
 
             audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1 ]), 0);
             audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0 ]), 1);
@@ -864,16 +864,16 @@ describe('OfflineAudioContext', () => {
                     const thirdChannelData = renderedBuffer.getChannelData(2);
 
                     expect(firstChannelData[0]).to.equal(0.5);
-                    expect(firstChannelData[1]).to.equal(0);
-                    expect(firstChannelData[2]).to.equal(-0.5);
+                    expect(firstChannelData[1]).to.equal(-0.75);
+                    expect(firstChannelData[2]).to.equal(-0.125);
 
                     expect(secondChannelData[0]).to.equal(0.5);
-                    expect(secondChannelData[1]).to.equal(-0.5);
-                    expect(secondChannelData[2]).to.equal(-0.5);
+                    expect(secondChannelData[1]).to.equal(-1.25);
+                    expect(secondChannelData[2]).to.equal(0.625);
 
                     expect(thirdChannelData[0]).to.equal(0);
                     expect(thirdChannelData[1]).to.equal(0.5);
-                    expect(thirdChannelData[2]).to.equal(0);
+                    expect(thirdChannelData[2]).to.equal(-0.75);
 
                     done();
                 });
