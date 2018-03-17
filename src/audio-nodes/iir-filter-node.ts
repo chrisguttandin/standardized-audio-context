@@ -135,9 +135,9 @@ export class IIRFilterNode extends NoneAudioDestinationNode<TNativeIIRFilterNode
         }
 
         if (isOfflineAudioContext(nativeContext)) {
-            const biquadFilterNodeRenderer = new IIRFilterNodeRenderer(this, feedback, feedforward);
+            const iirFilterNodeRenderer = new IIRFilterNodeRenderer(this, feedback, feedforward);
 
-            AUDIO_NODE_RENDERER_STORE.set(this, biquadFilterNodeRenderer);
+            AUDIO_NODE_RENDERER_STORE.set(this, iirFilterNodeRenderer);
         }
     }
 
