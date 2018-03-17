@@ -85,6 +85,12 @@ describe('GainNode', () => {
                 expect(gainNode.gain.value).to.equal(1);
             });
 
+            it('should be readonly', () => {
+                expect(() => {
+                    gainNode.gain = 'anything';
+                }).to.throw(TypeError);
+            });
+
             describe('automation', () => {
 
                 let audioBufferSourceNode;

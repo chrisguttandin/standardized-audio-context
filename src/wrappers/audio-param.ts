@@ -15,7 +15,6 @@ export class AudioParamWrapper {
 
         Object.defineProperty(audioNode, property, {
             get: () => audioParam
-            // @todo set: () => { throw ... }
         });
     }
 
