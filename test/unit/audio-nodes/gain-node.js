@@ -45,13 +45,7 @@ describe('GainNode', () => {
         it('should return an instance of the GainNode interface', () => {
             const gainNode = createGainNode(context);
 
-            expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
-            expect(gainNode.gain.defaultValue).to.equal(1);
-            expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
-            expect(gainNode.gain.linearRampToValueAtTime).to.be.a('function');
-            expect(gainNode.gain.setTargetAtTime).to.be.a('function');
-            expect(gainNode.gain.setValueCurveAtTime).to.be.a('function');
-            expect(gainNode.gain.value).to.equal(1);
+            expect(gainNode.gain).not.to.be.undefined;
         });
 
         it('should throw an error if the AudioContext is closed', (done) => {
