@@ -7,27 +7,27 @@
 [![version](https://img.shields.io/npm/v/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
 
 This is a hopelessly naive attempt to patch the current implementation of the Web Audio API's
-[`AudioContext`](http://webaudio.github.io/web-audio-api/#AudioContext) in current browsers. The
+[`AudioContext`](https://webaudio.github.io/web-audio-api/#AudioContext) in current browsers. The
 goal is to make them all behave as promised by the
-[Specification](http://webaudio.github.io/web-audio-api/).
+[Specification](https://webaudio.github.io/web-audio-api/).
 
-There are of course some things which cannot be faked in a reasonable way. The most obvious amongst
-those is the [`AudioWorkerNode`](http://webaudio.github.io/web-audio-api/#AudioWorker)
-which is currently not implemented by any browser. Therefore the corresponding
-`createAudioWorker()` method is missing here, too. All implemented methods are covered by unit
-tests.
+There are of course some things which cannot be faked in a way that makes them as performant as
+they could be when implemented natively. The most obvious amongst those things is the
+[`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet).
+All implemented methods are covered by unit tests.
 
-That said, there are a lot of other functions which are currently not implemented for no specific
-reason besides a lack of time: `createAudioWorker()`, `createConvolver()`,
+That said, there are still some functions which are currently not implemented for no specific
+reason besides a lack of time: `createConvolver()`,
 `createDelay()`, `createDynamicsCompressor()`, `createMediaElementSource()`,
 `createMediaStreamDestination()`, `createMediaStreamSource()`, `createPanner()`,
 `createPeriodicWave()`, `createScriptProcessor()`, `createStereoPanner()` and `createWaveShaper()`.
 The `listener` property is also missing for now.
 
 This module also provides an
-[`OfflineAudioContext`](http://webaudio.github.io/web-audio-api/#OfflineAudioContext) which does
-only expose the `destination`, `length` and `sampleRate` attributes as well as the `createGain()`
-and `decodeAudioData()` methods up to now.
+[`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#OfflineAudioContext) which does
+expose the `audioWorklet`, `destination`, `length` and `sampleRate` attributes as well as the
+`createBiquadFilter()`, `createBuffer()`, `createBufferSource()`, `createConstantSource()`,
+`createGain()`, `createIIRFilter()` and `decodeAudioData()` methods up to now.
 
 ## Usage
 
