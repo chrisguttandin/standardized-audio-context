@@ -23,6 +23,10 @@ export class AudioWorkletNodeFaker {
         processorDefinition: IAudioWorkletProcessorConstructor,
         options: IAudioWorkletNodeOptions
     ): INativeAudioWorkletNodeFaker {
+        const messageChannel = new MessageChannel();
+
+        processorDefinition.prototype.port = messageChannel.port1;
+
         const audioWorkletProcessor = new processorDefinition();
         const bufferSize = 512;
         const gainNode = unpatchedAudioContext.createGain();
@@ -169,7 +173,7 @@ export class AudioWorkletNodeFaker {
                 return parameterMap;
             },
             get port () {
-                return (new MessageChannel()).port1;
+                return messageChannel.port2;
             },
             get processorState () {
                 // @todo Implement processorState.

@@ -381,6 +381,28 @@ describe('AudioWorkletNode', () => {
 
         });
 
+        describe('port', () => {
+
+            let audioWorkletNode;
+
+            beforeEach(async () => {
+                audioWorkletNode = await createAudioWorkletNode(context);
+            });
+
+            it('should echo any message', (done) => {
+                const message = { a: 'simple', test: 'message' };
+
+                audioWorkletNode.port.onmessage = ({ data }) => {
+                    expect(data).to.deep.equal(message);
+
+                    done();
+                };
+
+                audioWorkletNode.port.postMessage(message);
+            });
+
+        });
+
         describe('connect()', () => {
 
             let audioWorkletNode;

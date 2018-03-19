@@ -4,6 +4,10 @@ class GainProcessor extends AudioWorkletProcessor { // eslint-disable-line no-un
 
     constructor () {
         super();
+
+        this.port.onmessage = (event) => {
+            this.port.postMessage(event.data);
+        };
     }
 
     process ([ input ], [ output ], { gain }) { // eslint-disable-line class-methods-use-this
