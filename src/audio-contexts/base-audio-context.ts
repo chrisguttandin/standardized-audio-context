@@ -2,6 +2,7 @@ import { addAudioWorkletModule } from '../add-audio-worklet-module';
 import { AudioBuffer } from '../audio-buffer';
 import { AudioBufferSourceNode } from '../audio-nodes/audio-buffer-source-node';
 import { BiquadFilterNode } from '../audio-nodes/biquad-filter-node';
+import { ConstantSourceNode } from '../audio-nodes/constant-source-node';
 import { GainNode } from '../audio-nodes/gain-node';
 import { IIRFilterNode } from '../audio-nodes/iir-filter-node';
 import { decodeAudioData } from '../decode-audio-data';
@@ -50,6 +51,10 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
 
     public createBufferSource (): IAudioBufferSourceNode {
         return new AudioBufferSourceNode(this);
+    }
+
+    public createConstantSource () {
+        return new ConstantSourceNode(this);
     }
 
     public createGain (): IGainNode {

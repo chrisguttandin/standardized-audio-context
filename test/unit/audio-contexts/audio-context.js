@@ -1088,6 +1088,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createConstantSource()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createConstantSource).to.be.a('function');
+            });
+
+        });
+
         describe('createGain()', () => {
 
             it('should be a function', () => {

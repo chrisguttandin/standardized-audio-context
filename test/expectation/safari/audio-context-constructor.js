@@ -366,6 +366,16 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createConstantSource()', () => {
+
+            // bug #62
+
+            it('should not be implemented', () => {
+                expect(audioContext.createConstantSource).to.be.undefined;
+            });
+
+        });
+
         describe('createGain()', () => {
 
             // bug #11
