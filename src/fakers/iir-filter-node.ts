@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../factories/not-supported-error';
 import { filterBuffer } from '../helpers/filter-buffer';
@@ -31,6 +32,7 @@ function evaluatePolynomial (coefficient: number[] | TTypedArray, z: [ number, n
 export class IIRFilterNodeFaker {
 
     constructor (
+        private _invalidAccessErrorFactory: InvalidAccessErrorFactory,
         private _invalidStateErrorFactory: InvalidStateErrorFactory,
         private _notSupportedErrorFactory: NotSupportedErrorFactory
     ) { }
@@ -119,7 +121,7 @@ export class IIRFilterNodeFaker {
             }
         };
 
-        const notSupportedErrorFactory = this._notSupportedErrorFactory;
+        const invalidAccessErrorFactory = this._invalidAccessErrorFactory;
         const nyquist = unpatchedAudioContext.sampleRate / 2;
 
         return {
@@ -165,8 +167,8 @@ export class IIRFilterNodeFaker {
                 return scriptProcessorNode.dispatchEvent(args[0]);
             },
             getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
-                if (magResponse.length === 0 || phaseResponse.length === 0) {
-                    throw notSupportedErrorFactory.create();
+                if ((frequencyHz.length !== magResponse.length) || (magResponse.length !== phaseResponse.length)) {
+                    throw invalidAccessErrorFactory.create();
                 }
 
                 const length = frequencyHz.length;
@@ -190,4 +192,7 @@ export class IIRFilterNodeFaker {
 
 }
 
-export const IIR_FILTER_NODE_FAKER_PROVIDER = { deps: [ InvalidStateErrorFactory, NotSupportedErrorFactory ], provide: IIRFilterNodeFaker };
+export const IIR_FILTER_NODE_FAKER_PROVIDER = {
+    deps: [ InvalidAccessErrorFactory, InvalidStateErrorFactory, NotSupportedErrorFactory ],
+    provide: IIRFilterNodeFaker
+};

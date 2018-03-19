@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { NotSupportedErrorFactory } from '../factories/not-supported-error';
+import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { TNativeIIRFilterNode } from '../types';
 
 @Injectable()
 export class IIRFilterNodeGetFrequencyResponseMethodWrapper {
 
-    constructor (private _notSupportedErrorFactory: NotSupportedErrorFactory) { }
+    constructor (private _invalidAccessErrorFactory: InvalidAccessErrorFactory) { }
 
     public wrap (iIRFilterNode: TNativeIIRFilterNode) {
         iIRFilterNode.getFrequencyResponse = ((getFrequencyResponse) => {
             return (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) => {
-                if (magResponse.length === 0 || phaseResponse.length === 0) {
-                    throw this._notSupportedErrorFactory.create();
+                if ((frequencyHz.length !== magResponse.length) || (magResponse.length !== phaseResponse.length)) {
+                    throw this._invalidAccessErrorFactory.create();
                 }
 
                 return getFrequencyResponse.call(iIRFilterNode, frequencyHz, magResponse, phaseResponse);
@@ -22,6 +22,6 @@ export class IIRFilterNodeGetFrequencyResponseMethodWrapper {
 }
 
 export const IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER = {
-    deps: [ NotSupportedErrorFactory ],
+    deps: [ InvalidAccessErrorFactory ],
     provide: IIRFilterNodeGetFrequencyResponseMethodWrapper
 };

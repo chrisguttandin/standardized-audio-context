@@ -1,9 +1,10 @@
+import { AUDIO_PARAM_STORE } from '../globals';
 import { connectAudioParam } from '../helpers/connect-audio-param';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { IAudioParam, IGainNode } from '../interfaces';
-import { TNativeAudioNode, TNativeGainNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioNode, TNativeAudioParam, TNativeGainNode, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
 export class GainNodeRenderer extends AudioNodeRenderer {
@@ -34,7 +35,9 @@ export class GainNodeRenderer extends AudioNodeRenderer {
 
             await renderAutomation(offlineAudioContext, gainAudioParam, this._nativeNode.gain);
         } else {
-            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.gain), this._nativeNode.gain);
+            const nativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.gain);
+
+            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.gain), nativeAudioParam);
         }
 
         await this._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode);

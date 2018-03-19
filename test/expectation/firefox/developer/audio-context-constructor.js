@@ -27,7 +27,7 @@ describe('audioContextConstructor', () => {
 
             // bug #23
 
-            it('should not throw an NotSupportedError', () => {
+            it('should not throw an InvalidAccessError', () => {
                 const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
@@ -35,7 +35,7 @@ describe('audioContextConstructor', () => {
 
             // bug #24
 
-            it('should not throw an NotSupportedError', () => {
+            it('should not throw an InvalidAccessError', () => {
                 const iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
 
                 iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));

@@ -1,9 +1,10 @@
+import { AUDIO_PARAM_STORE } from '../globals';
 import { connectAudioParam } from '../helpers/connect-audio-param';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { IAudioParam, IConstantSourceNode, INativeConstantSourceNode } from '../interfaces';
-import { TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioParam, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
 export class ConstantSourceNodeRenderer extends AudioNodeRenderer {
@@ -35,7 +36,9 @@ export class ConstantSourceNodeRenderer extends AudioNodeRenderer {
 
             await renderAutomation(offlineAudioContext, offsetAudioParam, this._nativeNode.offset);
         } else {
-            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.offset), this._nativeNode.offset);
+            const nativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.offset);
+
+            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.offset), nativeAudioParam);
         }
 
         await this._connectSources(offlineAudioContext, <INativeConstantSourceNode> this._nativeNode);

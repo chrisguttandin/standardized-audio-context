@@ -72,7 +72,7 @@ export class IIRFilterNode extends NoneAudioDestinationNode<TNativeIIRFilterNode
 
         super(context, nativeNode, mergedOptions);
 
-        // Bug #23 & #24: FirefoxDeveloper does not throw NotSupportedErrors anymore.
+        // Bug #23 & #24: FirefoxDeveloper does not throw an InvalidAccessError.
         // @todo Write a test which allows other browsers to remain unpatched.
         iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(nativeNode);
 
