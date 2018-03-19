@@ -168,7 +168,7 @@ describe('offlineAudioContextConstructor', () => {
 
         // bug #31
 
-        it('should have a channelInterpretation of max', () => {
+        it('should have a channelInterpretation of speakers', () => {
             const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
             expect(channelSplitterNode.channelInterpretation).to.equal('speakers');

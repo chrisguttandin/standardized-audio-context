@@ -192,7 +192,7 @@ describe('audioContextConstructor', () => {
 
             // bug #31
 
-            it('should have a channelInterpretation of max', () => {
+            it('should have a channelInterpretation of speakers', () => {
                 const channelSplitterNode = audioContext.createChannelSplitter();
 
                 expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
