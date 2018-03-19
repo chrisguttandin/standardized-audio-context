@@ -1,12 +1,11 @@
 import { Injector } from '@angular/core';
 import { EventTarget } from '../event-target';
-import { INDEX_SIZE_ERROR_FACTORY_PROVIDER, IndexSizeErrorFactory } from '../factories/index-size-error';
+import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from '../factories/index-size-error';
 import { INVALID_ACCES_ERROR_FACTORY_PROVIDER, InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import {
     AUDIO_NODE_RENDERER_DESTINATIONS_STORE,
     AUDIO_NODE_RENDERER_STORE,
     AUDIO_NODE_STORE,
-    AUDIO_PARAM_CONTEXT_STORE,
     AUDIO_PARAM_RENDERER_STORE,
     AUDIO_PARAM_STORE,
     CONTEXT_STORE
@@ -15,9 +14,9 @@ import { isAudioNode } from '../guards/audio-node';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioNode, IAudioNodeOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IAudioNodeOptions, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
 import { DISCONNECTING_SUPPORT_TESTER_PROVIDER, DisconnectingSupportTester } from '../support-testers/disconnecting';
-import { TChannelCountMode, TChannelInterpretation, TNativeAudioNode, TNativeAudioParam, TUnpatchedAudioContext } from '../types';
+import { TNativeAudioNode, TNativeAudioParam, TUnpatchedAudioContext } from '../types';
 import { AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER, AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
 
 const injector = Injector.create({
@@ -31,67 +30,52 @@ const injector = Injector.create({
 
 const audioNodeDisconnectMethodWrapper = injector.get(AudioNodeDisconnectMethodWrapper);
 const disconnectingSupportTester = injector.get(DisconnectingSupportTester);
-const indexSizeErrorFactory = injector.get(IndexSizeErrorFactory);
 const invalidAccessErrorFactory = injector.get(InvalidAccessErrorFactory);
 
-export class AudioNode<T extends TNativeAudioNode> extends EventTarget implements IAudioNode {
+export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> extends EventTarget implements IAudioNode {
 
-    protected _nativeNode: null | T;
+    protected _nativeNode: T;
 
     private _channelCount: number;
 
-    private _channelCountMode: TChannelCountMode;
-
-    private _channelInterpretation: TChannelInterpretation;
-
     private _context: IMinimalBaseAudioContext;
-
-    private _numberOfInputs: number;
-
-    private _numberOfOutputs: number;
 
     constructor (
         context: IMinimalBaseAudioContext,
-        nativeNode: null | T,
-        { channelCount, channelCountMode, channelInterpretation, numberOfInputs, numberOfOutputs }: IAudioNodeOptions,
+        nativeNode: T,
+        { channelCount }: IAudioNodeOptions,
         // @todo The parentNode property is only needed as long as the source gets transpiled to ES5.
         parentNode?: IAudioNode
     ) {
         super();
 
         this._channelCount = channelCount;
-        this._channelCountMode = channelCountMode;
-        this._channelInterpretation = channelInterpretation;
         this._context = context;
         this._nativeNode = nativeNode;
-        this._numberOfInputs = numberOfInputs;
-        this._numberOfOutputs = numberOfOutputs;
 
         const nativeContext = getNativeContext(context);
 
-        if (nativeNode !== null) {
-            // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
-            // @todo Make sure this is not used with an OfflineAudioContext.
-            if (!isOfflineAudioContext(nativeContext) && true !== cacheTestResult(DisconnectingSupportTester, () => {
-                return disconnectingSupportTester.test(<TUnpatchedAudioContext> nativeContext);
-            })) {
-                audioNodeDisconnectMethodWrapper.wrap(nativeNode);
-            }
-
-            AUDIO_NODE_STORE.set((parentNode === undefined) ? this : parentNode, nativeNode);
+        // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
+        // @todo Make sure this is not used with an OfflineAudioContext.
+        if (!isOfflineAudioContext(nativeContext) && true !== cacheTestResult(DisconnectingSupportTester, () => {
+            return disconnectingSupportTester.test(<TUnpatchedAudioContext> nativeContext);
+        })) {
+            audioNodeDisconnectMethodWrapper.wrap(nativeNode);
         }
+
+        AUDIO_NODE_STORE.set((parentNode === undefined) ? this : parentNode, nativeNode);
     }
 
     public get channelCount () {
         // Bug #47: The AudioDestinationNode in Edge and Safari do not intialize the maxChannelCount property correctly.
-        return (this._nativeNode === null || (<TNativeAudioNode> this._nativeNode) === this._nativeNode.context.destination) ?
+        return ((<TNativeAudioNode> this._nativeNode) === this._nativeNode.context.destination) ?
             this._channelCount :
             this._nativeNode.channelCount;
     }
 
     public set channelCount (value) {
         // Bug #47: The AudioDestinationNode in Edge and Safari do not intialize the maxChannelCount property correctly.
-        if (this._nativeNode === null || (<TNativeAudioNode> this._nativeNode) === this._nativeNode.context.destination) {
+        if ((<TNativeAudioNode> this._nativeNode) === this._nativeNode.context.destination) {
             this._channelCount = value;
         } else {
             this._nativeNode.channelCount = value;
@@ -99,27 +83,19 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
     }
 
     public get channelCountMode () {
-        return (this._nativeNode === null) ? this._channelCountMode : this._nativeNode.channelCountMode;
+        return this._nativeNode.channelCountMode;
     }
 
     public set channelCountMode (value) {
-        if (this._nativeNode === null) {
-            this._channelCountMode = value;
-        } else {
-            this._nativeNode.channelCountMode = value;
-        }
+        this._nativeNode.channelCountMode = value;
     }
 
     public get channelInterpretation () {
-        return (this._nativeNode === null) ? this._channelInterpretation : this._nativeNode.channelInterpretation;
+        return this._nativeNode.channelInterpretation;
     }
 
     public set channelInterpretation (value) {
-        if (this._nativeNode === null) {
-            this._channelInterpretation = value;
-        } else {
-            this._nativeNode.channelInterpretation = value;
-        }
+        this._nativeNode.channelInterpretation = value;
     }
 
     public get context () {
@@ -127,18 +103,14 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
     }
 
     public get numberOfInputs () {
-        return (this._nativeNode === null) ? this._numberOfInputs : this._nativeNode.numberOfInputs;
+        return this._nativeNode.numberOfInputs;
     }
 
     public get numberOfOutputs () {
-        return (this._nativeNode === null) ? this._numberOfOutputs : this._nativeNode.numberOfOutputs;
+        return this._nativeNode.numberOfOutputs;
     }
 
     public addEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
-        if (this._nativeNode === null) {
-            return super.addEventListener(type, listener, options);
-        }
-
         return this._nativeNode.addEventListener(type, listener, options);
     }
 
@@ -177,11 +149,15 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
 
             const nativeDestinationNode = AUDIO_NODE_STORE.get(destination);
 
-            if (this._nativeNode === null || nativeDestinationNode === undefined) {
+            if (nativeDestinationNode === undefined) {
                 throw new Error('The associated nativeNode is missing.');
             }
 
-            this._nativeNode.connect(nativeDestinationNode, output, input);
+            if ((<INativeAudioNodeFaker> nativeDestinationNode).input !== undefined) {
+                this._nativeNode.connect((<TNativeAudioNode> (<INativeAudioNodeFaker> nativeDestinationNode).input), output, input);
+            } else {
+                this._nativeNode.connect(nativeDestinationNode, output, input);
+            }
 
             // Bug #11: Safari does not support chaining yet. This can be tested with the ChainingSupportTester.
             return destination;
@@ -204,39 +180,26 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
                 throw new Error('The associated renderer is missing.');
             }
 
-            if (this._nativeNode === null) {
-                if (this._context !== AUDIO_PARAM_CONTEXT_STORE.get(destination)) {
+            const nativeAudioParam = AUDIO_PARAM_STORE.get(destination);
+
+            if (nativeAudioParam === undefined) {
+                throw new Error('The associated nativeAudioParam is missing.');
+            }
+
+            try {
+                // @todo This is only needed to throw possible errors.
+                this._nativeNode.connect(nativeAudioParam, output);
+            } catch (err) {
+                // Bug #58: Only Firefox does throw an InvalidStateError yet.
+                if (err.code === 12) {
                     throw invalidAccessErrorFactory.create();
                 }
 
-                if (output < 0 || output >= this._numberOfOutputs) {
-                    throw indexSizeErrorFactory.create();
-                }
-            } else {
-                const nativeAudioParam = AUDIO_PARAM_STORE.get(destination);
-
-                if (nativeAudioParam === undefined) {
-                    throw new Error('The associated nativeAudioParam is missing.');
-                }
-
-                try {
-                    this._nativeNode.connect(nativeAudioParam, output);
-                } catch (err) {
-                    // Bug #58: Only Firefox does throw an InvalidStateError yet.
-                    if (err.code === 12) {
-                        throw invalidAccessErrorFactory.create();
-                    }
-
-                    throw err;
-                }
+                throw err;
             }
 
             renderer.wire(source, output);
         } else {
-            if (this._nativeNode === null) {
-                throw new Error('The associated nativeNode is missing.');
-            }
-
             try {
                 this._nativeNode.connect(<TNativeAudioParam> (<any> destination), output);
             } catch (err) {
@@ -283,10 +246,6 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
             return renderer.unwire(source);
         }
 
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         if (destination === undefined) {
             return this._nativeNode.disconnect();
         }
@@ -297,14 +256,14 @@ export class AudioNode<T extends TNativeAudioNode> extends EventTarget implement
             throw new Error('The associated nativeNode is missing.');
         }
 
+        if ((<INativeAudioNodeFaker> nativeDestinationNode).input !== undefined) {
+            return this._nativeNode.disconnect(<TNativeAudioNode> (<INativeAudioNodeFaker> nativeDestinationNode).input);
+        }
+
         return this._nativeNode.disconnect(nativeDestinationNode);
     }
 
     public removeEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) {
-        if (this._nativeNode === null) {
-            return super.removeEventListener(type, listener, options);
-        }
-
         return this._nativeNode.removeEventListener(type, listener, options);
     }
 

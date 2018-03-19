@@ -31,6 +31,7 @@ const injector = Injector.create({
 const channelSplitterNodeWrapper = injector.get<ChannelSplitterNodeWrapper>(ChannelSplitterNodeWrapper);
 
 const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfOutputs: number) => {
+    // @todo Use this inside the AudioWorkletNodeFaker once it supports the OfflineAudioContext.
     if (isOfflineAudioContext(nativeContext)) {
         throw new Error('This is not yet supported.');
     }

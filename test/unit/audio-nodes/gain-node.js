@@ -29,6 +29,14 @@ describe('GainNode', () => {
 
         beforeEach(() => context = createContext());
 
+        it('should be an instance of the EventTarget interface', () => {
+            const gainNode = createGainNode(context);
+
+            expect(gainNode.addEventListener).to.be.a('function');
+            expect(gainNode.dispatchEvent).to.be.a('function');
+            expect(gainNode.removeEventListener).to.be.a('function');
+        });
+
         it('should be an instance of the AudioNode interface', () => {
             const gainNode = createGainNode(context);
 
@@ -55,7 +63,7 @@ describe('GainNode', () => {
                     expect(err.code).to.equal(11);
                     expect(err.name).to.equal('InvalidStateError');
 
-                    context = new AudioContext();
+                    context.close = undefined;
 
                     done();
                 });
@@ -152,12 +160,12 @@ describe('GainNode', () => {
                         this.timeout(5000);
 
                         return renderer((startTime) => {
-                            gainNode.gain.setValueAtTime(0, startTime + (2 / context.sampleRate));
+                            gainNode.gain.setValueAtTime(0.5, startTime + (2 / context.sampleRate));
 
                             audioBufferSourceNode.start(startTime);
                         })
                             .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 1, 0.5, 0, -0, -0 ]);
+                                expect(Array.from(channelData)).to.deep.equal([ 1, 0.5, 0, -0.25, -0.5 ]);
                             });
                     });
 

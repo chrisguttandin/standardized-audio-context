@@ -2,7 +2,7 @@ import { Injector } from '@angular/core';
 import { ABORT_ERROR_FACTORY_PROVIDER, AbortErrorFactory } from './factories/abort-error';
 import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from './globals';
 import { getNativeContext } from './helpers/get-native-context';
-import { IMinimalBaseAudioContext, IWorkletOptions } from './interfaces';
+import { IAudioWorkletProcessorConstructor, IMinimalBaseAudioContext, IWorkletOptions } from './interfaces';
 import { TNativeAudioWorklet } from './types';
 
 const injector = Injector.create({
@@ -38,15 +38,18 @@ export const addAudioWorkletModule = (
                 const fn = new Function('AudioWorkletProcessor', 'registerProcessor', source);
 
                 // @todo Evaluating the given source code is a possible security problem.
-                fn(class AudioWorkletProcessor { }, function (name: string, processorCtor: () => void) {
-                    const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
+                fn(
+                    class AudioWorkletProcessor { },
+                    function <T extends IAudioWorkletProcessorConstructor> (name: string, processorCtor: T) {
+                        const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
 
-                    if (nodeNameToProcessorDefinitionMap !== undefined) {
-                        nodeNameToProcessorDefinitionMap.set(name, processorCtor);
-                    } else {
-                        NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
+                        if (nodeNameToProcessorDefinitionMap !== undefined) {
+                            nodeNameToProcessorDefinitionMap.set(name, processorCtor);
+                        } else {
+                            NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
+                        }
                     }
-                });
+                );
             })
             .catch((err) => {
                 if (err.name === 'SyntaxError') {

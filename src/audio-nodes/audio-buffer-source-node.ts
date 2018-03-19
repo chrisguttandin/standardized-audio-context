@@ -3,7 +3,7 @@ import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioBuffer, IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioBufferSourceNodeRenderer } from '../renderers/audio-buffer-source-node';
 import { STOP_STOPPED_SUPPORT_TESTER_PROVIDER, StopStoppedSupportTester } from '../support-testers/stop-stopped';
 import {
@@ -60,8 +60,6 @@ const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
 
 export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudioBufferSourceNode> implements IAudioBufferSourceNode {
 
-    private _buffer: null | IAudioBuffer;
-
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
@@ -71,7 +69,6 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
         // @todo Set all the other options.
         // @todo this.buffer = options.buffer;
-        this._buffer = null;
 
         if (isOfflineAudioContext(nativeContext)) {
             const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
@@ -84,82 +81,51 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
     }
 
     public get buffer () {
-        return this._buffer;
+        return this._nativeNode.buffer;
     }
 
     public set buffer (value) {
-        this._buffer = value;
         // @todo Allow to set the buffer only once.
-        if (this._nativeNode !== null) {
-            this._nativeNode.buffer = value;
-        }
+        this._nativeNode.buffer = value;
     }
 
     public get onended () {
-        // @todo
-        return (this._nativeNode === null) ? null : <TEndedEventHandler> (<any> this._nativeNode.onended);
+        return <TEndedEventHandler> (<any> this._nativeNode.onended);
     }
 
     public set onended (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.onended = <any> value;
-        }
+        this._nativeNode.onended = <any> value;
     }
 
     public get detune () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.detune);
     }
 
     public get loop () {
-        // @todo
-        return (this._nativeNode === null) ? false : this._nativeNode.loop;
+        return this._nativeNode.loop;
     }
 
     public set loop (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.loop = value;
-        }
+        this._nativeNode.loop = value;
     }
 
     public get loopEnd () {
-        // @todo
-        return (this._nativeNode === null) ? 0 : this._nativeNode.loopEnd;
+        return this._nativeNode.loopEnd;
     }
 
     public set loopEnd (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.loopEnd = value;
-        }
+        this._nativeNode.loopEnd = value;
     }
 
     public get loopStart () {
-        // @todo
-        return (this._nativeNode === null) ? 0 : this._nativeNode.loopStart;
+        return this._nativeNode.loopStart;
     }
 
     public set loopStart (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.loopStart = value;
-        }
+        this._nativeNode.loopStart = value;
     }
 
     public get playbackRate () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.playbackRate);
     }
 
@@ -170,19 +136,11 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
             (<AudioBufferSourceNodeRenderer> audioBufferSourceNodeRenderer).start = { duration, offset, when };
         }
 
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         this._nativeNode.start(when, offset, duration);
     }
 
     public stop (when = 0) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.stop(when);
-        }
+        this._nativeNode.stop(when);
     }
 
 }

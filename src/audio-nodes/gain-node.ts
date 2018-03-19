@@ -44,10 +44,6 @@ export class GainNode extends NoneAudioDestinationNode<TNativeGainNode> implemen
     }
 
     public get gain () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.gain);
     }
 

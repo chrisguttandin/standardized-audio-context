@@ -77,107 +77,55 @@ export class AnalyserNode extends NoneAudioDestinationNode<TNativeAnalyserNode> 
     }
 
     public get fftSize () {
-        if (this._nativeNode !== null) {
-            return this._nativeNode.fftSize;
-        }
-
-        throw new Error('The native (Offline)AudioContext is missing.');
+        return this._nativeNode.fftSize;
     }
 
     public set fftSize (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.fftSize = value;
-        }
+        this._nativeNode.fftSize = value;
     }
 
     public get frequencyBinCount () {
-        if (this._nativeNode !== null) {
-            return this._nativeNode.frequencyBinCount;
-        }
-
-        throw new Error('The native (Offline)AudioContext is missing.');
+        return this._nativeNode.frequencyBinCount;
     }
 
     public get maxDecibels () {
-        if (this._nativeNode !== null) {
-            return this._nativeNode.maxDecibels;
-        }
-
-        throw new Error('The native (Offline)AudioContext is missing.');
+        return this._nativeNode.maxDecibels;
     }
 
     public set maxDecibels (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.maxDecibels = value;
-        }
+        this._nativeNode.maxDecibels = value;
     }
 
     public get minDecibels () {
-        if (this._nativeNode !== null) {
-            return this._nativeNode.minDecibels;
-        }
-
-        throw new Error('The native (Offline)AudioContext is missing.');
+        return this._nativeNode.minDecibels;
     }
 
     public set minDecibels (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.minDecibels = value;
-        }
+        this._nativeNode.minDecibels = value;
     }
 
     public get smoothingTimeConstant () {
-        if (this._nativeNode !== null) {
-            return this._nativeNode.smoothingTimeConstant;
-        }
-
-        throw new Error('The native (Offline)AudioContext is missing.');
+        return this._nativeNode.smoothingTimeConstant;
     }
 
     public set smoothingTimeConstant (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.smoothingTimeConstant = value;
-        }
+        this._nativeNode.smoothingTimeConstant = value;
     }
 
     public getByteFrequencyData (array: Uint8Array) {
-        if (this._nativeNode === null) {
-            throw new Error('The native (Offline)AudioContext is missing.');
-        } else {
-            this._nativeNode.getByteFrequencyData(array);
-        }
+        this._nativeNode.getByteFrequencyData(array);
     }
 
     public getByteTimeDomainData (array: Uint8Array) {
-        if (this._nativeNode === null) {
-            throw new Error('The native (Offline)AudioContext is missing.');
-        } else {
-            this._nativeNode.getByteTimeDomainData(array);
-        }
+        this._nativeNode.getByteTimeDomainData(array);
     }
 
     public getFloatFrequencyData (array: Float32Array) {
-        if (this._nativeNode === null) {
-            throw new Error('The native (Offline)AudioContext is missing.');
-        } else {
-            this._nativeNode.getFloatFrequencyData(array);
-        }
+        this._nativeNode.getFloatFrequencyData(array);
     }
 
     public getFloatTimeDomainData (array: Float32Array) {
-        if (this._nativeNode === null) {
-            throw new Error('The native (Offline)AudioContext is missing.');
-        } else {
-            this._nativeNode.getFloatTimeDomainData(array);
-        }
+        this._nativeNode.getFloatTimeDomainData(array);
     }
 
 }

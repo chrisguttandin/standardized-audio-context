@@ -1,13 +1,17 @@
 import { Injector } from '@angular/core';
+import { AudioParam } from '../audio-param';
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
 import { NOT_SUPPORTED_ERROR_FACTORY_PROVIDER, NotSupportedErrorFactory } from '../factories/not-supported-error';
 import { AUDIO_WORKLET_NODE_FAKER_PROVIDER, AudioWorkletNodeFaker } from '../fakers/audio-worklet-node';
-import { AUDIO_NODE_RENDERER_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
+import { CONSTANT_SOURCE_NODE_FAKER_PROVIDER } from '../fakers/constant-source-node';
+import { AUDIO_NODE_RENDERER_STORE, AUDIO_PARAM_RENDERER_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import {
-    IAudioParamMap,
+    IAudioParam,
     IAudioWorkletNode,
     IAudioWorkletNodeOptions,
+    IAudioWorkletProcessorConstructor,
     IMinimalBaseAudioContext,
     INativeAudioWorkletNode
 } from '../interfaces';
@@ -16,13 +20,18 @@ import {
     nativeAudioWorkletNodeConstructor as ntvDWrkltNdCnstrctr
 } from '../providers/native-audio-worklet-node-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
+import { ReadOnlyMap } from '../read-only-map';
+import { AudioParamRenderer } from '../renderers/audio-param';
 import { AudioWorkletNodeRenderer } from '../renderers/audio-worklet-node';
 import {
+    TAudioParamMap,
     TChannelCountMode,
     TChannelInterpretation,
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
+import { CHANNEL_MERGER_NODE_WRAPPER_PROVIDER } from '../wrappers/channel-merger-node';
+import { CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER } from '../wrappers/channel-splitter-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
@@ -36,19 +45,24 @@ const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
 const injector = Injector.create({
     providers: [
         AUDIO_WORKLET_NODE_FAKER_PROVIDER,
+        CHANNEL_MERGER_NODE_WRAPPER_PROVIDER,
+        CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER,
+        CONSTANT_SOURCE_NODE_FAKER_PROVIDER,
+        INVALID_STATE_ERROR_FACTORY_PROVIDER,
         NATIVE_AUDIO_WORKLET_NODE_CONSTRUCTOR_PROVIDER,
         NOT_SUPPORTED_ERROR_FACTORY_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
-const audioWorkletNodeFaker = injector.get(AudioWorkletNodeFaker);
+const audioWorkletNodeFaker = injector.get<AudioWorkletNodeFaker>(AudioWorkletNodeFaker);
 const nativeAudioWorkletNodeConstructor = injector.get(ntvDWrkltNdCnstrctr);
 const notSupportedErrorFactory = injector.get(NotSupportedErrorFactory);
 
 const createNativeAudioWorkletNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
     name: string,
+    processorDefinition: undefined | IAudioWorkletProcessorConstructor,
     options: IAudioWorkletNodeOptions
 ) => {
     if (nativeAudioWorkletNodeConstructor !== null) {
@@ -65,70 +79,47 @@ const createNativeAudioWorkletNode = (
     }
 
     // Bug #61: Only Chrome Canary has an implementation of the AudioWorkletNode yet.
-    if (isOfflineAudioContext(nativeContext)) {
-        return null;
-    } else {
-        return <INativeAudioWorkletNode> (<any> audioWorkletNodeFaker.fake(nativeContext, options));
+    if (processorDefinition === undefined) {
+        throw notSupportedErrorFactory.create();
     }
+
+    return audioWorkletNodeFaker.fake(nativeContext, processorDefinition, options);
 };
 
 export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkletNode> implements IAudioWorkletNode {
 
-    private _parameters: null | IAudioParamMap;
-
-    private _port: null | MessagePort;
+    private _parameters: null | TAudioParamMap;
 
     constructor (context: IMinimalBaseAudioContext, name: string, options: IAudioWorkletNodeOptions = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IAudioWorkletNodeOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = createNativeAudioWorkletNode(nativeContext, name, mergedOptions);
-
-        if (nativeAudioWorkletNodeConstructor === null) {
-            const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
-
-            if (nodeNameToProcessorDefinitionMap === undefined || !nodeNameToProcessorDefinitionMap.has(name)) {
-                throw notSupportedErrorFactory.create();
-            }
-        }
+        const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
+        const processorDefinition = (nodeNameToProcessorDefinitionMap === undefined) ?
+            undefined :
+            nodeNameToProcessorDefinitionMap.get(name);
+        const nativeNode = createNativeAudioWorkletNode(nativeContext, name, processorDefinition, mergedOptions);
 
         super(context, nativeNode, mergedOptions);
 
-        if (nativeNode === null || nativeNode.parameters === undefined) {
-            const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
-
-            if (nodeNameToProcessorDefinitionMap === undefined) {
-                throw new Error(); // @todo
-            }
-
-            const processorDefinition = nodeNameToProcessorDefinitionMap.get(name);
-
-            if (processorDefinition === undefined) {
-                throw new Error(); // @todo
-            }
-
-            // @todo Actually implement the AudioParam interface and remove the functions which allow to mutate the map.
-            this._parameters = new Map(
-                (<any> processorDefinition).parameterDescriptors
-                    .map(({ defaultValue, name: parameterName }: any) => [ parameterName, {
-                        cancelScheduledValues () { }, // tslint:disable-line:no-empty
-                        defaultValue,
-                        exponentialRampToValueAtTime () { }, // tslint:disable-line:no-empty
-                        linearRampToValueAtTime () { }, // tslint:disable-line:no-empty
-                        setTargetAtTime () { }, // tslint:disable-line:no-empty
-                        setValueCurveAtTime () { }, // tslint:disable-line:no-empty
-                        value: defaultValue
-                    } ])
-            );
-        } else {
-            this._parameters = null;
-        }
-        // @todo Test port support with an expectation test.
-        this._port = (nativeNode === null || nativeNode.port === undefined) ? (new MessageChannel()).port1 : null;
-
         if (isOfflineAudioContext(nativeContext)) {
-            const audioWorkletNodeRenderer = new AudioWorkletNodeRenderer(this, name/* @todo options */);
+            const audioWorkletNodeRenderer = new AudioWorkletNodeRenderer(this, name, processorDefinition);
 
             AUDIO_NODE_RENDERER_STORE.set(this, audioWorkletNodeRenderer);
+
+            const parameters: [ string, IAudioParam ][] = [ ];
+
+            nativeNode.parameters.forEach((nativeAudioParam, nm) => {
+                const audioParamRenderer = new AudioParamRenderer();
+                const audioParam = new AudioParam({ audioParamRenderer, context, nativeAudioParam });
+
+                AUDIO_PARAM_RENDERER_STORE.set(audioParam, audioParamRenderer);
+
+                parameters.push([ nm, audioParam ]);
+            });
+
+            this._parameters = new ReadOnlyMap(parameters);
+        } else {
+            this._parameters = null;
         }
     }
 
@@ -138,48 +129,27 @@ export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkl
     }
 
     set onprocessorstatechange (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.onprocessorstatechange = <any> value;
-        }
+        this._nativeNode.onprocessorstatechange = <any> value;
     }
 
-    get parameters () {
+    get parameters (): TAudioParamMap {
         if (this._parameters === null) {
-            if (this._nativeNode === null) {
-                throw new Error('The associated nativeNode is missing.');
-            }
-
-            return <IAudioParamMap> (<any> this._nativeNode.parameters);
+            return <TAudioParamMap> (<any> this._nativeNode.parameters);
         }
 
         return this._parameters;
     }
 
     get port () {
-        if (this._port === null) {
-            if (this._nativeNode === null) {
-                throw new Error('The associated nativeNode is missing.');
-            }
-
-            return this._nativeNode.port;
-        }
-
-        return this._port;
+        return this._nativeNode.port;
     }
 
     get processorState () {
-        if (this._nativeNode === null) {
-            return 'pending';
-        }
-
         // @todo Chrome Canary does not implement the processorState property.
         if (this._nativeNode.processorState === undefined) {
             return 'pending';
         }
 
-        // @todo This is currently dead code since no browser supports this.
         return this._nativeNode.processorState;
     }
 

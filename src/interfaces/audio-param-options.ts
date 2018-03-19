@@ -8,6 +8,6 @@ export interface IAudioParamOptions {
 
     context: IMinimalBaseAudioContext;
 
-    nativeAudioParam?: TNativeAudioParam;
+    nativeAudioParam: TNativeAudioParam;
 
 }

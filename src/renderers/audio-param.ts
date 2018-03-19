@@ -1,4 +1,4 @@
-import { IAudioNodeRenderer, IAudioParamRenderer } from '../interfaces';
+import { IAudioNodeRenderer, IAudioParam, IAudioParamRenderer } from '../interfaces';
 import { TAutomation, TNativeAudioParam, TUnpatchedOfflineAudioContext } from '../types';
 
 export class AudioParamRenderer implements IAudioParamRenderer {
@@ -12,6 +12,16 @@ export class AudioParamRenderer implements IAudioParamRenderer {
         this._sources = new Map();
     }
 
+    public connect (offlineAudioContext: TUnpatchedOfflineAudioContext, audioParam: TNativeAudioParam): Promise<void> {
+        return Promise
+            .all(Array
+                .from(this._sources)
+                .map(([ source, output ]) => source
+                    .render(offlineAudioContext)
+                    .then((node) => node.connect(audioParam, output))))
+            .then(() => undefined);
+    }
+
     public unwire (source: IAudioNodeRenderer): void {
         this._sources.delete(source);
     }
@@ -20,12 +30,12 @@ export class AudioParamRenderer implements IAudioParamRenderer {
         this._sources.set(source, output);
     }
 
-    public record (automation: TAutomation) {
+    public record (automation: TAutomation): void {
         // @todo Order automations.
         this._automations.push(automation);
     }
 
-    public render (offlineAudioContext: TUnpatchedOfflineAudioContext, audioParam: TNativeAudioParam): Promise<void> {
+    public replay (audioParam: IAudioParam | TNativeAudioParam): void {
         for (const automation of this._automations) {
             if (automation.type === 'exponentialRampToValue') {
                 const { endTime, value } = automation;
@@ -51,14 +61,12 @@ export class AudioParamRenderer implements IAudioParamRenderer {
                 throw new Error("Can't apply an unkown automation.");
             }
         }
+    }
 
-        return Promise
-            .all(Array
-                .from(this._sources)
-                .map(([ source, output ]) => source
-                    .render(offlineAudioContext)
-                    .then((node) => node.connect(audioParam, output))))
-            .then(() => undefined);
+    public render (offlineAudioContext: TUnpatchedOfflineAudioContext, audioParam: TNativeAudioParam): Promise<void> {
+        this.replay(audioParam);
+
+        return this.connect(offlineAudioContext, audioParam);
     }
 
 }

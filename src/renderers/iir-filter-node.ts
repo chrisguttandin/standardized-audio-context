@@ -1,41 +1,32 @@
 import { Injector } from '@angular/core';
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { filterBuffer } from '../helpers/filter-buffer';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioCompletionEvent } from '../interfaces';
+import { renderNativeOfflineAudioContext } from '../helpers/render-native-offline-audio-context';
+import { IIIRFilterNode, IMinimalOfflineAudioContext } from '../interfaces';
 import {
     UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
 } from '../providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
-import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from '../support-testers/promise';
 import {
     TNativeAudioBuffer,
     TNativeAudioBufferSourceNode,
     TNativeAudioNode,
     TNativeIIRFilterNode,
     TTypedArray,
-    TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
 const injector = Injector.create({
     providers: [
-        PROMISE_SUPPORT_TESTER_PROVIDER,
         UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
-const promiseSupportTester = injector.get(PromiseSupportTester);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
-
-const isSupportingPromises = (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => cacheTestResult(
-    PromiseSupportTester,
-    () => promiseSupportTester.test(context)
-);
 
 export class IIRFilterNodeRenderer extends AudioNodeRenderer {
 
@@ -66,6 +57,12 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer {
         }
 
         try {
+            // Throw an error if the native factory method is not supported.
+            // @todo Use a simple if clause instead of throwing an error.
+            if (offlineAudioContext.createIIRFilter === undefined) {
+                throw new Error();
+            }
+
             this._nativeNode = <TNativeIIRFilterNode> getNativeNode(this._proxy);
 
             // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
@@ -89,24 +86,11 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer {
 
             return this
                 ._connectSources(partialOfflineAudioContext, <TNativeAudioNode> partialOfflineAudioContext.destination)
-                .then(() => {
-                    // Bug #21: Safari does not support promises yet.
-                    if (isSupportingPromises(partialOfflineAudioContext)) {
-                        return partialOfflineAudioContext.startRendering();
-                    }
-
-                    return new Promise<TNativeAudioBuffer>((resolve) => {
-                        partialOfflineAudioContext.oncomplete = (event: IOfflineAudioCompletionEvent) => {
-                            resolve(event.renderedBuffer);
-                        };
-
-                        partialOfflineAudioContext.startRendering();
-                    });
-                })
+                .then(() => renderNativeOfflineAudioContext(partialOfflineAudioContext))
                 .then((renderedBuffer) => {
                     const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                    audioBufferSourceNode.buffer = this._applyFilter(renderedBuffer, offlineAudioContext);
+                    audioBufferSourceNode.buffer = this._filterBuffer(renderedBuffer, offlineAudioContext);
                     audioBufferSourceNode.start(0);
 
                     this._nativeNode = audioBufferSourceNode;
@@ -116,7 +100,7 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer {
         }
     }
 
-    private _applyFilter (renderedBuffer: TNativeAudioBuffer, offlineAudioContext: TUnpatchedOfflineAudioContext) {
+    private _filterBuffer (renderedBuffer: TNativeAudioBuffer, offlineAudioContext: TUnpatchedOfflineAudioContext) {
         const feedback = this._feedback;
         const feedforward = this._feedforward;
 

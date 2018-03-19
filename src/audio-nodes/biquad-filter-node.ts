@@ -53,58 +53,30 @@ export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilt
     }
 
     public get Q () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.Q);
     }
 
     public get detune () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.detune);
     }
 
     public get frequency () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.frequency);
     }
 
     public get gain () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.gain);
     }
 
     public get type () {
-        if (this._nativeNode !== null) {
-            return this._nativeNode.type;
-        }
-
-        throw new Error('This is not yet supported.');
+        return this._nativeNode.type;
     }
 
     public set type (value) {
-        if (this._nativeNode === null) {
-            throw new Error('This is not yet supported.');
-        }
-
         this._nativeNode.type = value;
     }
 
     public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
-        if (this._nativeNode === null) {
-            throw new Error('This is not yet supported.');
-        }
-
         return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
     }
 

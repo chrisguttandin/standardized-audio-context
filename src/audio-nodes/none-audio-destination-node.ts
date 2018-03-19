@@ -14,7 +14,7 @@ const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 
 export class NoneAudioDestinationNode<T extends TNativeAudioNode> extends AudioNode<T> {
 
-    constructor (context: IMinimalBaseAudioContext, nativeNode: null | T, options: IAudioNodeOptions) {
+    constructor (context: IMinimalBaseAudioContext, nativeNode: T, options: IAudioNodeOptions) {
         // Bug #50 Safari does not throw an error when the context is already closed.
         if (context.state === 'closed') {
             throw invalidStateErrorFactory.create();

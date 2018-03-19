@@ -6,6 +6,7 @@ import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOpti
 import {
     TChannelCountMode,
     TChannelInterpretation,
+    TEndedEventHandler,
     TNativeOscillatorNode,
     TOscillatorType,
     TUnpatchedAudioContext,
@@ -52,47 +53,26 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
     }
 
     public get detune () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.detune);
     }
 
     public get frequency () {
-        if (this._nativeNode === null) {
-            throw new Error('The associated nativeNode is missing.');
-        }
-
         return <IAudioParam> (<any> this._nativeNode.frequency);
     }
 
     public get onended () {
-        // @todo
-        return (this._nativeNode === null) ? null : <any> this._nativeNode.onended;
+        return <TEndedEventHandler> (<any> this._nativeNode.onended);
     }
 
     public set onended (value) {
-        if (this._nativeNode === null) {
-            // @todo
-        } else {
-            this._nativeNode.onended = <any> value;
-        }
+        this._nativeNode.onended = <any> value;
     }
 
     public get type () {
-        if (this._nativeNode !== null) {
-            return this._nativeNode.type;
-        }
-
-        throw new Error('This is not yet supported.');
+        return this._nativeNode.type;
     }
 
     public set type (value) {
-        if (this._nativeNode === null) {
-            throw new Error('This is not yet supported.');
-        }
-
         this._nativeNode.type = value;
 
         // Bug #57: Edge will not throw an error when assigning the type to 'custom'. But it still will change the value.
@@ -102,26 +82,14 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
     }
 
     public setPeriodicWave (periodicWave: PeriodicWave) {
-        if (this._nativeNode === null) {
-            throw new Error('This is not yet supported.');
-        }
-
         this._nativeNode.setPeriodicWave(periodicWave);
     }
 
     public start (when = 0) {
-        if (this._nativeNode === null) {
-            throw new Error('This is not yet supported.');
-        }
-
         this._nativeNode.start(when);
     }
 
     public stop (when = 0) {
-        if (this._nativeNode === null) {
-            throw new Error('This is not yet supported.');
-        }
-
         this._nativeNode.stop(when);
     }
 

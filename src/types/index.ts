@@ -1,6 +1,6 @@
 export * from './audio-context-latency-category';
 export * from './audio-context-state';
-export * from './audio-param';
+export * from './audio-param-map';
 export * from './audio-worklet-processor-state';
 export * from './automation';
 export * from './biquad-filter-type';
@@ -14,6 +14,8 @@ export * from './native-audio-buffer';
 export * from './native-audio-buffer-source-node';
 export * from './native-audio-destination-node';
 export * from './native-audio-node';
+export * from './native-audio-param';
+export * from './native-audio-param-map';
 export * from './native-audio-worklet';
 export * from './native-audio-worklet-node-options';
 export * from './native-audio-worklet-processor-state';

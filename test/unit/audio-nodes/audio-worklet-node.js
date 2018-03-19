@@ -58,6 +58,14 @@ describe('AudioWorkletNode', () => {
 
         beforeEach(() => context = createContext());
 
+        it('should be an instance of the EventTarget interface', async () => {
+            const audioWorkletNode = await createAudioWorkletNode(context);
+
+            expect(audioWorkletNode.addEventListener).to.be.a('function');
+            expect(audioWorkletNode.dispatchEvent).to.be.a('function');
+            expect(audioWorkletNode.removeEventListener).to.be.a('function');
+        });
+
         it('should be an instance of the AudioNode interface', async () => {
             const audioWorkletNode = await createAudioWorkletNode(context);
 
@@ -87,7 +95,7 @@ describe('AudioWorkletNode', () => {
                     expect(err.code).to.equal(11);
                     expect(err.name).to.equal('InvalidStateError');
 
-                    context = new AudioContext();
+                    context.close = undefined;
 
                     done();
                 });
@@ -95,11 +103,11 @@ describe('AudioWorkletNode', () => {
 
         describe('parameters', () => {
 
+            let audioWorkletNode;
             let parameters;
 
             beforeEach(async () => {
-                const audioWorkletNode = await createAudioWorkletNode(context);
-
+                audioWorkletNode = await createAudioWorkletNode(context);
                 parameters = audioWorkletNode.parameters;
             });
 
@@ -110,7 +118,13 @@ describe('AudioWorkletNode', () => {
                 expect(parameters.has).to.be.a('function');
                 expect(parameters.keys).to.be.a('function');
                 expect(parameters.values).to.be.a('function');
-                expect(parameters[ Symbol.iterator ]).to.be.a('function');
+                // @todo expect(parameters[ Symbol.iterator ]).to.be.a('function');
+            });
+
+            describe('size', () => {
+
+                // @todo
+
             });
 
             describe('entries()', () => {
@@ -241,6 +255,130 @@ describe('AudioWorkletNode', () => {
 
             // @todo Symbol.iterator
 
+            describe('automation', () => {
+
+                let audioBufferSourceNode;
+                let renderer;
+                let values;
+
+                beforeEach(() => {
+                    audioBufferSourceNode = new AudioBufferSourceNode(context);
+                    values = [ 1, 0.5, 0, -0.5, -1 ];
+
+                    // @todo For some reason up-mixing doesn't work yet, which is why a stereo buffer is used for testing.
+                    const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 2, sampleRate: context.sampleRate });
+
+                    audioBuffer.copyToChannel(new Float32Array(values), 0);
+                    audioBuffer.copyToChannel(new Float32Array(values), 1);
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+
+                    renderer = createRenderer({
+                        bufferSize: (audioWorkletNode._nativeNode.bufferSize === undefined) ? 0 : audioWorkletNode._nativeNode.bufferSize,
+                        connect (destination) {
+                            audioBufferSourceNode
+                                .connect(audioWorkletNode)
+                                .connect(destination);
+                        },
+                        context,
+                        length: (context.length === undefined) ? 5 : undefined
+                    });
+                });
+
+                describe('without any automation', () => {
+
+                    it('should not modify the signal', function () {
+                        this.timeout(5000);
+
+                        return renderer((startTime) => audioBufferSourceNode.start(startTime))
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal(values);
+                            });
+                    });
+
+                });
+
+                describe('with a modified value', () => {
+
+                    it('should modify the signal', function () {
+                        this.timeout(5000);
+
+                        parameters.get('gain').value = 0.5;
+
+                        return renderer((startTime) => audioBufferSourceNode.start(startTime))
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
+                            });
+                    });
+
+                });
+
+                describe('with a call to setValueAtTime()', () => {
+
+                    it('should modify the signal', function () {
+                        this.timeout(5000);
+
+                        return renderer((startTime) => {
+                            parameters.get('gain').setValueAtTime(0.5, startTime + (2 / context.sampleRate));
+
+                            audioBufferSourceNode.start(startTime);
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 1, 0.5, 0, -0.25, -0.5 ]);
+                            });
+                    });
+
+                });
+
+                describe('with a call to setValueCurveAtTime()', () => {
+
+                    it('should modify the signal', function () {
+                        this.timeout(5000);
+
+                        return renderer((startTime) => {
+                            parameters.get('gain').setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, startTime + (5 / context.sampleRate));
+
+                            audioBufferSourceNode.start(startTime);
+                        })
+                            .then((channelData) => {
+                                // @todo The implementation of Safari is different. Therefore this test only checks if the values have changed.
+                                expect(Array.from(channelData)).to.not.deep.equal(values);
+                            });
+                    });
+
+                });
+
+                describe('with another AudioNode connected to the AudioParam', () => {
+
+                    it('should modify the signal', function () {
+                        this.timeout(5000);
+
+                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                        const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+
+                        audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.5, 0.5, 0.5, 0.5 ]), 0);
+
+                        audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+
+                        return renderer((startTime) => {
+                            parameters.get('gain').value = 0;
+                            // @todo This should probably be inside of the connect method.
+                            audioBufferSourceNodeForAudioParam.connect(parameters.get('gain'));
+
+                            audioBufferSourceNode.start(startTime);
+                            audioBufferSourceNodeForAudioParam.start(startTime);
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
+                            });
+                    });
+
+                });
+
+                // @todo Test other automations as well.
+
+            });
+
         });
 
         describe('connect()', () => {
@@ -323,14 +461,16 @@ describe('AudioWorkletNode', () => {
                 secondDummyGainNode = new GainNode(context);
                 values = [ 1, 1, 1, 1, 1 ];
 
-                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                // @todo For some reason up-mixing doesn't work yet, which is why a stereo buffer is used for testing.
+                const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 2, sampleRate: context.sampleRate });
 
                 audioBuffer.copyToChannel(new Float32Array(values), 0);
+                audioBuffer.copyToChannel(new Float32Array(values), 1);
 
                 audioBufferSourceNode.buffer = audioBuffer;
 
                 renderer = createRenderer({
-                    bufferSize: (audioWorkletNode._nativeNode === null) ? 0 : ((audioWorkletNode._nativeNode.bufferSize === undefined) ? 0 : audioWorkletNode._nativeNode.bufferSize),
+                    bufferSize: (audioWorkletNode._nativeNode.bufferSize === undefined) ? 0 : audioWorkletNode._nativeNode.bufferSize,
                     connect (destination) {
                         audioBufferSourceNode
                             .connect(audioWorkletNode)
