@@ -15,7 +15,7 @@ export const createRenderer = ({ bufferSize = 0, context, length, connect }) => 
         }
 
         const sampleRate = context.sampleRate;
-        const audioBuffer = new AudioBuffer({ length: 5, sampleRate });
+        const audioBuffer = new AudioBuffer({ length, sampleRate });
         const audioBufferSourceNode = new AudioBufferSourceNode(context);
         const bufferScriptProcessorNode = (bufferSize === 0) ? null : createScriptProcessor(context, bufferSize, 1, 1);
         const recorderBufferSize = 8192;
