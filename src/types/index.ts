@@ -25,6 +25,7 @@ export * from './native-channel-splitter-node';
 export * from './native-gain-node';
 export * from './native-iir-filter-node';
 export * from './native-media-element-audio-source-node';
+export * from './native-media-stream-audio-source-node';
 export * from './native-oscillator-node';
 export * from './oscillator-type';
 export * from './processor-state-change-event-handler';
