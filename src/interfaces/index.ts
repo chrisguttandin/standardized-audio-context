@@ -33,6 +33,8 @@ export * from './gain-options';
 export * from './iir-filter-node';
 export * from './iir-filter-options';
 export * from './linear-ramp-to-value-automation';
+export * from './media-element-audio-source-node';
+export * from './media-element-audio-source-options';
 export * from './minimal-audio-context';
 export * from './minimal-base-audio-context';
 export * from './minimal-offline-audio-context';

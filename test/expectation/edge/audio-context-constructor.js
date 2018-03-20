@@ -238,6 +238,26 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createMediaElementSource()', () => {
+
+            describe('mediaElement', () => {
+
+                let mediaElementSourceNode;
+
+                beforeEach(() => {
+                    mediaElementSourceNode = audioContext.createMediaElementSource(new Audio());
+                });
+
+                // bug #63
+
+                it('should not be implemented', () => {
+                    expect(mediaElementSourceNode.mediaElement).to.be.undefined;
+                });
+
+            });
+
+        });
+
         describe('createOscillator()', () => {
 
             describe('type', () => {

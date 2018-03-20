@@ -2,6 +2,7 @@ import { Injector } from '@angular/core';
 import { AnalyserNode } from '../audio-nodes/analyser-node';
 import { ChannelMergerNode } from '../audio-nodes/channel-merger-node';
 import { ChannelSplitterNode } from '../audio-nodes/channel-splitter-node';
+import { MediaElementAudioSourceNode } from '../audio-nodes/media-element-audio-source-node';
 import { OscillatorNode } from '../audio-nodes/oscillator-node';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
@@ -84,6 +85,10 @@ export class AudioContext extends BaseAudioContext implements IAudioContext {
 
     public createChannelSplitter (numberOfOutputs = 6) {
         return new ChannelSplitterNode(this, { numberOfOutputs });
+    }
+
+    public createMediaElementSource (mediaElement: HTMLMediaElement) {
+        return new MediaElementAudioSourceNode(this, { mediaElement });
     }
 
     public createOscillator (): IOscillatorNode {
