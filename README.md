@@ -19,8 +19,8 @@ All implemented methods are covered by unit tests.
 That said, there are still some functions which are currently not implemented for no specific
 reason besides a lack of time: `createConvolver()`,
 `createDelay()`, `createDynamicsCompressor()`, `createMediaStreamDestination()`,
-`createMediaStreamSource()`, `createPanner()`, `createPeriodicWave()`, `createScriptProcessor()`,
-`createStereoPanner()` and `createWaveShaper()`. The `listener` property is also missing for now.
+`createPanner()`, `createPeriodicWave()`, `createScriptProcessor()`, `createStereoPanner()` and
+`createWaveShaper()`. The `listener` property is also missing for now.
 
 This module also provides an
 [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#OfflineAudioContext) which does
