@@ -170,39 +170,41 @@ describe('IIRFilterNode', () => {
 
             describe('rendering', () => {
 
-                let audioBufferSourceNode;
-                let iIRFilterNode;
                 let renderer;
 
                 describe('with some filter coefficients', () => {
 
                     beforeEach(() => {
-                        audioBufferSourceNode = new AudioBufferSourceNode(context);
-                        iIRFilterNode = createIIRFilterNode(context, [ 1, -0.5 ], [ 1, -1 ]);
-
-                        const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
-
-                        audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0, 0, 0 ]), 0);
-                        // @todo Render a second channel with the following values: 0, 1, 1 ...
-
-                        audioBufferSourceNode.buffer = audioBuffer;
-
                         renderer = createRenderer({
-                            bufferSize: (iIRFilterNode._nativeNode.bufferSize === undefined) ? 0 : iIRFilterNode._nativeNode.bufferSize,
-                            connect (destination) {
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const iIRFilterNode = createIIRFilterNode(context, [ 1, -0.5 ], [ 1, -1 ]);
+
+                                audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0, 0, 0 ]), 0);
+                                // @todo Render a second channel with the following values: 0, 1, 1 ...
+
+                                audioBufferSourceNode.buffer = audioBuffer;
+
                                 audioBufferSourceNode
                                     .connect(iIRFilterNode)
                                     .connect(destination);
-                            },
-                            context,
-                            length: (context.length === undefined) ? 5 : undefined
+
+                                return { audioBufferSourceNode, iIRFilterNode };
+                            }
                         });
                     });
 
                     it('should modify the signal', function () {
                         this.timeout(5000);
 
-                        return renderer((startTime) => audioBufferSourceNode.start(startTime))
+                        return renderer({
+                            start (startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
+                            }
+                        })
                             .then((channelData) => {
                                 expect(Array.from(channelData)).to.deep.equal([ 1, -0.5, -0.25, -0.125, -0.0625 ]);
                                 // @todo The second channel should be 0, 1, 0.5 ...
@@ -214,35 +216,39 @@ describe('IIRFilterNode', () => {
                 describe('with some other filter coefficients', () => {
 
                     beforeEach(() => {
-                        audioBufferSourceNode = new AudioBufferSourceNode(context);
-                        iIRFilterNode = createIIRFilterNode(context, [ 1, 0.5 ], [ 0.5, -1 ]);
-
-                        const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
-
-                        audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
-                        /*
-                         * @todo Render a second channel with the following values: 1, 0, 0 ...
-                         * @todo Render a third channel with the following values: 0, 1, 1 ...
-                         */
-
-                        audioBufferSourceNode.buffer = audioBuffer;
-
                         renderer = createRenderer({
-                            bufferSize: (iIRFilterNode._nativeNode.bufferSize === undefined) ? 0 : iIRFilterNode._nativeNode.bufferSize,
-                            connect (destination) {
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const iIRFilterNode = createIIRFilterNode(context, [ 1, 0.5 ], [ 0.5, -1 ]);
+
+                                audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+                                /*
+                                 * @todo Render a second channel with the following values: 1, 0, 0 ...
+                                 * @todo Render a third channel with the following values: 0, 1, 1 ...
+                                 */
+
+                                audioBufferSourceNode.buffer = audioBuffer;
+
                                 audioBufferSourceNode
                                     .connect(iIRFilterNode)
                                     .connect(destination);
-                            },
-                            context,
-                            length: (context.length === undefined) ? 5 : undefined
+
+                                return { audioBufferSourceNode, iIRFilterNode };
+                            }
                         });
                     });
 
                     it('should modify the signal', function () {
                         this.timeout(5000);
 
-                        return renderer((startTime) => audioBufferSourceNode.start(startTime))
+                        return renderer({
+                            start (startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
+                            }
+                        })
                             .then((channelData) => {
                                 expect(Array.from(channelData)).to.deep.equal([ 0.5, -0.75, -0.125, -0.4375, -0.28125 ]);
                                 /*
@@ -324,48 +330,48 @@ describe('IIRFilterNode', () => {
 
         describe('disconnect()', () => {
 
-            let audioBufferSourceNode;
-            let firstDummyGainNode;
-            let iIRFilterNode;
-            let secondDummyGainNode;
             let renderer;
             let values;
 
             beforeEach(() => {
-                audioBufferSourceNode = new AudioBufferSourceNode(context);
-                iIRFilterNode = createIIRFilterNode(context, feedback, feedforward);
-                firstDummyGainNode = new GainNode(context);
-                secondDummyGainNode = new GainNode(context);
                 values = [ 1, 1, 1, 1, 1 ];
 
-                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-
-                audioBuffer.copyToChannel(new Float32Array(values), 0);
-
-                audioBufferSourceNode.buffer = audioBuffer;
-
                 renderer = createRenderer({
-                    bufferSize: (iIRFilterNode._nativeNode.bufferSize === undefined) ? 0 : iIRFilterNode._nativeNode.bufferSize,
-                    connect (destination) {
+                    context,
+                    length: (context.length === undefined) ? 5 : undefined,
+                    prepare (destination) {
+                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                        const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                        const firstDummyGainNode = new GainNode(context);
+                        const iIRFilterNode = createIIRFilterNode(context, feedback, feedforward);
+                        const secondDummyGainNode = new GainNode(context);
+
+                        audioBuffer.copyToChannel(new Float32Array(values), 0);
+
+                        audioBufferSourceNode.buffer = audioBuffer;
+
                         audioBufferSourceNode
                             .connect(iIRFilterNode)
                             .connect(firstDummyGainNode)
                             .connect(destination);
 
                         iIRFilterNode.connect(secondDummyGainNode);
-                    },
-                    context,
-                    length: (context.length === undefined) ? 5 : undefined
+
+                        return { audioBufferSourceNode, firstDummyGainNode, iIRFilterNode, secondDummyGainNode };
+                    }
                 });
             });
 
             it('should be possible to disconnect a destination', function () {
                 this.timeout(5000);
 
-                return renderer((startTime) => {
-                    iIRFilterNode.disconnect(firstDummyGainNode);
-
-                    audioBufferSourceNode.start(startTime);
+                return renderer({
+                    prepare ({ firstDummyGainNode, iIRFilterNode }) {
+                        iIRFilterNode.disconnect(firstDummyGainNode);
+                    },
+                    start (startTime, { audioBufferSourceNode }) {
+                        audioBufferSourceNode.start(startTime);
+                    }
                 })
                     .then((channelData) => {
                         expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
@@ -375,10 +381,13 @@ describe('IIRFilterNode', () => {
             it('should be possible to disconnect another destination in isolation', function () {
                 this.timeout(5000);
 
-                return renderer((startTime) => {
-                    iIRFilterNode.disconnect(secondDummyGainNode);
-
-                    audioBufferSourceNode.start(startTime);
+                return renderer({
+                    prepare ({ iIRFilterNode, secondDummyGainNode }) {
+                        iIRFilterNode.disconnect(secondDummyGainNode);
+                    },
+                    start (startTime, { audioBufferSourceNode }) {
+                        audioBufferSourceNode.start(startTime);
+                    }
                 })
                     .then((channelData) => {
                         expect(Array.from(channelData)).to.deep.equal(values);
@@ -388,10 +397,13 @@ describe('IIRFilterNode', () => {
             it('should be possible to disconnect all destinations', function () {
                 this.timeout(5000);
 
-                return renderer((startTime) => {
-                    iIRFilterNode.disconnect();
-
-                    audioBufferSourceNode.start(startTime);
+                return renderer({
+                    prepare ({ iIRFilterNode }) {
+                        iIRFilterNode.disconnect();
+                    },
+                    start (startTime, { audioBufferSourceNode }) {
+                        audioBufferSourceNode.start(startTime);
+                    }
                 })
                     .then((channelData) => {
                         expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);

@@ -153,9 +153,6 @@ describe('MediaElementAudioSourceNode', () => {
 
         describe('disconnect()', () => {
 
-            let firstDummyGainNode;
-            let mediaElementAudioSourceNode;
-            let secondDummyGainNode;
             let renderer;
 
             afterEach(() => {
@@ -171,20 +168,22 @@ describe('MediaElementAudioSourceNode', () => {
             beforeEach(function () {
                 this.timeout(10000);
 
-                firstDummyGainNode = new GainNode(context);
-                mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
-                secondDummyGainNode = new GainNode(context);
-
                 renderer = createRenderer({
-                    connect (destination) {
+                    context,
+                    length: (context.length === undefined) ? 5 : undefined,
+                    prepare (destination) {
+                        const firstDummyGainNode = new GainNode(context);
+                        const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
+                        const secondDummyGainNode = new GainNode(context);
+
                         mediaElementAudioSourceNode
                             .connect(firstDummyGainNode)
                             .connect(destination);
 
                         mediaElementAudioSourceNode.connect(secondDummyGainNode);
-                    },
-                    context,
-                    length: (context.length === undefined) ? 5 : undefined
+
+                        return { firstDummyGainNode, mediaElementAudioSourceNode, secondDummyGainNode };
+                    }
                 });
 
                 /*
@@ -214,7 +213,11 @@ describe('MediaElementAudioSourceNode', () => {
             it('should be possible to disconnect a destination', function () {
                 this.timeout(10000);
 
-                return renderer(() => mediaElementAudioSourceNode.disconnect(firstDummyGainNode))
+                return renderer({
+                    prepare ({ firstDummyGainNode, mediaElementAudioSourceNode }) {
+                        mediaElementAudioSourceNode.disconnect(firstDummyGainNode);
+                    }
+                })
                     .then((channelData) => {
                         expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
                     });
@@ -223,20 +226,25 @@ describe('MediaElementAudioSourceNode', () => {
             it('should be possible to disconnect another destination in isolation', function () {
                 this.timeout(10000);
 
-                return renderer(() => mediaElementAudioSourceNode.disconnect(secondDummyGainNode))
+                return renderer({
+                    prepare ({ mediaElementAudioSourceNode, secondDummyGainNode }) {
+                        mediaElementAudioSourceNode.disconnect(secondDummyGainNode);
+                    }
+                })
                     .then((channelData) => {
                         // @todo The mediaElement will just play a sine wave. Therefore it is okay to only test for non zero values.
                         expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
-
-                        mediaElementAudioSourceNode.disconnect(firstDummyGainNode);
-                        firstDummyGainNode.disconnect();
                     });
             });
 
             it('should be possible to disconnect all destinations', function () {
                 this.timeout(10000);
 
-                return renderer(() => mediaElementAudioSourceNode.disconnect())
+                return renderer({
+                    prepare ({ mediaElementAudioSourceNode }) {
+                        mediaElementAudioSourceNode.disconnect();
+                    }
+                })
                     .then((channelData) => {
                         expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
                     });

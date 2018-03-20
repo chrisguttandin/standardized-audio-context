@@ -101,28 +101,30 @@ describe('GainNode', () => {
 
             describe('automation', () => {
 
-                let audioBufferSourceNode;
                 let renderer;
                 let values;
 
                 beforeEach(() => {
-                    audioBufferSourceNode = new AudioBufferSourceNode(context);
                     values = [ 1, 0.5, 0, -0.5, -1 ];
 
-                    const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-
-                    audioBuffer.copyToChannel(new Float32Array(values), 0);
-
-                    audioBufferSourceNode.buffer = audioBuffer;
-
                     renderer = createRenderer({
-                        connect (destination) {
+                        context,
+                        length: (context.length === undefined) ? 5 : undefined,
+                        prepare (destination) {
+                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                            const gainNode = createGainNode(context);
+
+                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+
+                            audioBufferSourceNode.buffer = audioBuffer;
+
                             audioBufferSourceNode
                                 .connect(gainNode)
                                 .connect(destination);
-                        },
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined
+
+                            return { audioBufferSourceNode, gainNode };
+                        }
                     });
                 });
 
@@ -131,7 +133,11 @@ describe('GainNode', () => {
                     it('should not modify the signal', function () {
                         this.timeout(5000);
 
-                        return renderer((startTime) => audioBufferSourceNode.start(startTime))
+                        return renderer({
+                            start (startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
+                            }
+                        })
                             .then((channelData) => {
                                 expect(Array.from(channelData)).to.deep.equal(values);
                             });
@@ -144,9 +150,14 @@ describe('GainNode', () => {
                     it('should modify the signal', function () {
                         this.timeout(5000);
 
-                        gainNode.gain.value = 0.5;
-
-                        return renderer((startTime) => audioBufferSourceNode.start(startTime))
+                        return renderer({
+                            prepare ({ gainNode }) {
+                                gainNode.gain.value = 0.5;
+                            },
+                            start (startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
+                            }
+                        })
                             .then((channelData) => {
                                 expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
                             });
@@ -159,10 +170,12 @@ describe('GainNode', () => {
                     it('should modify the signal', function () {
                         this.timeout(5000);
 
-                        return renderer((startTime) => {
-                            gainNode.gain.setValueAtTime(0.5, startTime + (2 / context.sampleRate));
+                        return renderer({
+                            start (startTime, { audioBufferSourceNode, gainNode }) {
+                                gainNode.gain.setValueAtTime(0.5, startTime + (2 / context.sampleRate));
 
-                            audioBufferSourceNode.start(startTime);
+                                audioBufferSourceNode.start(startTime);
+                            }
                         })
                             .then((channelData) => {
                                 expect(Array.from(channelData)).to.deep.equal([ 1, 0.5, 0, -0.25, -0.5 ]);
@@ -176,10 +189,12 @@ describe('GainNode', () => {
                     it('should modify the signal', function () {
                         this.timeout(5000);
 
-                        return renderer((startTime) => {
-                            gainNode.gain.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, startTime + (5 / context.sampleRate));
+                        return renderer({
+                            start (startTime, { audioBufferSourceNode, gainNode }) {
+                                gainNode.gain.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, startTime + (5 / context.sampleRate));
 
-                            audioBufferSourceNode.start(startTime);
+                                audioBufferSourceNode.start(startTime);
+                            }
                         })
                             .then((channelData) => {
                                 // @todo The implementation of Safari is different. Therefore this test only checks if the values have changed.
@@ -194,20 +209,25 @@ describe('GainNode', () => {
                     it('should modify the signal', function () {
                         this.timeout(5000);
 
-                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                        const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+                        return renderer({
+                            prepare ({ gainNode }) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
 
-                        audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.5, 0.5, 0.5, 0.5 ]), 0);
+                                audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.5, 0.5, 0.5, 0.5 ]), 0);
 
-                        audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+                                audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
 
-                        return renderer((startTime) => {
-                            gainNode.gain.value = 0;
-                            // @todo This should probably be inside of the connect method.
-                            audioBufferSourceNodeForAudioParam.connect(gainNode.gain);
+                                gainNode.gain.value = 0;
 
-                            audioBufferSourceNode.start(startTime);
-                            audioBufferSourceNodeForAudioParam.start(startTime);
+                                audioBufferSourceNodeForAudioParam.connect(gainNode.gain);
+
+                                return { audioBufferSourceNodeForAudioParam };
+                            },
+                            start (startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                audioBufferSourceNode.start(startTime);
+                                audioBufferSourceNodeForAudioParam.start(startTime);
+                            }
                         })
                             .then((channelData) => {
                                 expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
@@ -288,47 +308,48 @@ describe('GainNode', () => {
 
         describe('disconnect()', () => {
 
-            let audioBufferSourceNode;
-            let firstDummyGainNode;
-            let gainNode;
-            let secondDummyGainNode;
             let renderer;
             let values;
 
             beforeEach(() => {
-                audioBufferSourceNode = new AudioBufferSourceNode(context);
-                gainNode = createGainNode(context);
-                firstDummyGainNode = new GainNode(context);
-                secondDummyGainNode = new GainNode(context);
                 values = [ 1, 1, 1, 1, 1 ];
 
-                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-
-                audioBuffer.copyToChannel(new Float32Array(values), 0);
-
-                audioBufferSourceNode.buffer = audioBuffer;
-
                 renderer = createRenderer({
-                    connect (destination) {
+                    context,
+                    length: (context.length === undefined) ? 5 : undefined,
+                    prepare (destination) {
+                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                        const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                        const firstDummyGainNode = new GainNode(context);
+                        const gainNode = createGainNode(context);
+                        const secondDummyGainNode = new GainNode(context);
+
+                        audioBuffer.copyToChannel(new Float32Array(values), 0);
+
+                        audioBufferSourceNode.buffer = audioBuffer;
+
                         audioBufferSourceNode
                             .connect(gainNode)
                             .connect(firstDummyGainNode)
                             .connect(destination);
 
                         gainNode.connect(secondDummyGainNode);
-                    },
-                    context,
-                    length: (context.length === undefined) ? 5 : undefined
+
+                        return { audioBufferSourceNode, firstDummyGainNode, gainNode, secondDummyGainNode };
+                    }
                 });
             });
 
             it('should be possible to disconnect a destination', function () {
                 this.timeout(5000);
 
-                return renderer((startTime) => {
-                    gainNode.disconnect(firstDummyGainNode);
-
-                    audioBufferSourceNode.start(startTime);
+                return renderer({
+                    prepare ({ firstDummyGainNode, gainNode }) {
+                        gainNode.disconnect(firstDummyGainNode);
+                    },
+                    start (startTime, { audioBufferSourceNode }) {
+                        audioBufferSourceNode.start(startTime);
+                    }
                 })
                     .then((channelData) => {
                         expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
@@ -338,10 +359,13 @@ describe('GainNode', () => {
             it('should be possible to disconnect another destination in isolation', function () {
                 this.timeout(5000);
 
-                return renderer((startTime) => {
-                    gainNode.disconnect(secondDummyGainNode);
-
-                    audioBufferSourceNode.start(startTime);
+                return renderer({
+                    prepare ({ gainNode, secondDummyGainNode }) {
+                        gainNode.disconnect(secondDummyGainNode);
+                    },
+                    start (startTime, { audioBufferSourceNode }) {
+                        audioBufferSourceNode.start(startTime);
+                    }
                 })
                     .then((channelData) => {
                         expect(Array.from(channelData)).to.deep.equal(values);
@@ -351,10 +375,13 @@ describe('GainNode', () => {
             it('should be possible to disconnect all destinations', function () {
                 this.timeout(5000);
 
-                return renderer((startTime) => {
-                    gainNode.disconnect();
-
-                    audioBufferSourceNode.start(startTime);
+                return renderer({
+                    prepare ({ gainNode }) {
+                        gainNode.disconnect();
+                    },
+                    start (startTime, { audioBufferSourceNode }) {
+                        audioBufferSourceNode.start(startTime);
+                    }
                 })
                     .then((channelData) => {
                         expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
