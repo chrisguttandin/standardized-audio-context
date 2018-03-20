@@ -258,6 +258,16 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createMediaStreamDestination()', () => {
+
+            // bug #64
+
+            it('should not be implemented', () => {
+                expect(audioContext.createMediaStreamDestination).to.be.undefined;
+            });
+
+        });
+
         describe('createOscillator()', () => {
 
             describe('type', () => {
