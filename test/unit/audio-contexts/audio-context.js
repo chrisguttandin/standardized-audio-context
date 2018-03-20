@@ -1112,6 +1112,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createMediaElementSource()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createMediaElementSource).to.be.a('function');
+            });
+
+        });
+
         describe('createOscillator()', () => {
 
             it('should return an instance of the OscillatorNode interface', () => {
