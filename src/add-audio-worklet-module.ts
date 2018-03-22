@@ -35,11 +35,35 @@ export const addAudioWorkletModule = (
                 throw abortErrorFactory.create();
             })
             .then((source) => {
-                const fn = new Function('AudioWorkletProcessor', 'registerProcessor', source);
+                const fn = new Function(
+                    'AudioWorkletProcessor',
+                    'currentTime',
+                    'global',
+                    'registerProcessor',
+                    'sampleRate',
+                    'self',
+                    'window',
+                    source
+                );
+
+                const globalScope = Object.create(null, {
+                    currentTime: {
+                        get () {
+                            return nativeContext.currentTime;
+                        }
+                    },
+                    sampleRate: {
+                        get () {
+                            return nativeContext.sampleRate;
+                        }
+                    }
+                });
 
                 // @todo Evaluating the given source code is a possible security problem.
                 fn(
                     class AudioWorkletProcessor { },
+                    globalScope.currentTime,
+                    undefined,
                     function <T extends IAudioWorkletProcessorConstructor> (name: string, processorCtor: T) {
                         const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
 
@@ -48,7 +72,10 @@ export const addAudioWorkletModule = (
                         } else {
                             NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
                         }
-                    }
+                    },
+                    globalScope.sampleRate,
+                    undefined,
+                    undefined
                 );
             })
             .catch((err) => {
