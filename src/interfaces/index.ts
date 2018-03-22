@@ -25,6 +25,7 @@ export * from './base-audio-context';
 export * from './biquad-filter-node';
 export * from './biquad-filter-options';
 export * from './constant-source-node';
+export * from './constructor';
 export * from './constant-source-options';
 export * from './error-factory';
 export * from './exponential-ramp-to-value-automation';

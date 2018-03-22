@@ -103,22 +103,16 @@ describe('AudioWorkletNode', () => {
 
         describe('parameters', () => {
 
-            let audioWorkletNode;
-            let parameters;
+            it('should return an instance of the AudioParamMap interface', async () => {
+                const audioWorkletNode = await createAudioWorkletNode(context);
 
-            beforeEach(async () => {
-                audioWorkletNode = await createAudioWorkletNode(context);
-                parameters = audioWorkletNode.parameters;
-            });
-
-            it('should return an instance of the AudioParamMap interface', () => {
-                expect(parameters.entries).to.be.a('function');
-                expect(parameters.forEach).to.be.a('function');
-                expect(parameters.get).to.be.a('function');
-                expect(parameters.has).to.be.a('function');
-                expect(parameters.keys).to.be.a('function');
-                expect(parameters.values).to.be.a('function');
-                // @todo expect(parameters[ Symbol.iterator ]).to.be.a('function');
+                expect(audioWorkletNode.parameters.entries).to.be.a('function');
+                expect(audioWorkletNode.parameters.forEach).to.be.a('function');
+                expect(audioWorkletNode.parameters.get).to.be.a('function');
+                expect(audioWorkletNode.parameters.has).to.be.a('function');
+                expect(audioWorkletNode.parameters.keys).to.be.a('function');
+                expect(audioWorkletNode.parameters.values).to.be.a('function');
+                // @todo expect(audioWorkletNode.parameters[ Symbol.iterator ]).to.be.a('function');
             });
 
             describe('size', () => {
@@ -130,8 +124,12 @@ describe('AudioWorkletNode', () => {
             describe('entries()', () => {
 
                 let entries;
+                let parameters;
 
-                beforeEach(() => {
+                beforeEach(async () => {
+                    const audioWorkletNode = await createAudioWorkletNode(context);
+
+                    parameters = audioWorkletNode.parameters;
                     entries = parameters.entries();
                 });
 
@@ -146,6 +144,14 @@ describe('AudioWorkletNode', () => {
             });
 
             describe('forEach()', () => {
+
+                let parameters;
+
+                beforeEach(async () => {
+                    const audioWorkletNode = await createAudioWorkletNode(context);
+
+                    parameters = audioWorkletNode.parameters;
+                });
 
                 it('should iterate over all parameters', () => {
                     const args = [ ];
@@ -164,6 +170,14 @@ describe('AudioWorkletNode', () => {
             });
 
             describe('get()', () => {
+
+                let parameters;
+
+                beforeEach(async () => {
+                    const audioWorkletNode = await createAudioWorkletNode(context);
+
+                    parameters = audioWorkletNode.parameters;
+                });
 
                 describe('with an unexisting parameter', () => {
 
@@ -199,6 +213,14 @@ describe('AudioWorkletNode', () => {
 
             describe('has()', () => {
 
+                let parameters;
+
+                beforeEach(async () => {
+                    const audioWorkletNode = await createAudioWorkletNode(context);
+
+                    parameters = audioWorkletNode.parameters;
+                });
+
                 describe('with an unexisting parameter', () => {
 
                     it('should return false', () => {
@@ -221,8 +243,10 @@ describe('AudioWorkletNode', () => {
 
                 let keys;
 
-                beforeEach(() => {
-                    keys = parameters.keys();
+                beforeEach(async () => {
+                    const audioWorkletNode = await createAudioWorkletNode(context);
+
+                    keys = audioWorkletNode.parameters.keys();
                 });
 
                 it('should return an instance of the Iterator interface', () => {
@@ -238,8 +262,12 @@ describe('AudioWorkletNode', () => {
             describe('values()', () => {
 
                 let values;
+                let parameters;
 
-                beforeEach(() => {
+                beforeEach(async () => {
+                    const audioWorkletNode = await createAudioWorkletNode(context);
+
+                    parameters = audioWorkletNode.parameters;
                     values = parameters.values();
                 });
 
