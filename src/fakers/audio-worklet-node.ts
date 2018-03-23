@@ -3,10 +3,11 @@ import { createNativeConstantSourceNode } from '../helpers/create-native-constan
 import {
     IAudioWorkletNodeOptions,
     IAudioWorkletProcessorConstructor,
+    INativeAudioWorkletNode,
     INativeAudioWorkletNodeFaker
 } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
-import { TNativeAudioParam, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioParam, TProcessorErrorEventHandler, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 import { ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
 import { ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 
@@ -108,6 +109,9 @@ export class AudioWorkletNodeFaker {
             outputChannelSplitterNode.connect(outputChannelMergerNode, i, i);
         }
 
+        let isActive = true;
+        let onprocessorerror: null | TProcessorErrorEventHandler = null;
+
         scriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }: AudioProcessingEvent) => {
             for (let i = 0; i < bufferSize; i += 128) {
                 // @todo Handle multiple inputs ...
@@ -128,15 +132,31 @@ export class AudioWorkletNodeFaker {
                     parameters[ name ].set(slicedInputBuffer);
                 });
 
-                /* @todo const result = */audioWorkletProcessor.process(inputs, outputs, parameters);
+                try {
+                    const activeSourceFlag = audioWorkletProcessor.process(inputs, outputs, parameters);
 
-                // @todo Handle multiple outputs ...
-                for (let j = 0; j < numberOfChannels; j += 1) {
-                    // Bug #5: Safari does not support copyToChannel().
+                    isActive = activeSourceFlag;
 
-                    outputBuffer
-                        .getChannelData(j)
-                        .set(outputs[0][j], i);
+                    // @todo Handle multiple outputs ...
+                    for (let j = 0; j < numberOfChannels; j += 1) {
+                        // Bug #5: Safari does not support copyToChannel().
+
+                        outputBuffer
+                            .getChannelData(j)
+                            .set(outputs[0][j], i);
+                    }
+                } catch (err) {
+                    isActive = false;
+
+                    if (onprocessorerror !== null) {
+                        onprocessorerror.call(<any> null, new ErrorEvent('processorerror'));
+                    }
+                }
+
+                if (!isActive) {
+                    scriptProcessorNode.onaudioprocess = <any> null;
+
+                    break;
                 }
             }
         };
@@ -166,18 +186,21 @@ export class AudioWorkletNodeFaker {
             get numberOfOutputs () {
                 return gainNode.numberOfOutputs;
             },
-            get onprocessorstatechange () {
-                return null;
+            get onprocessorerror () {
+                return <INativeAudioWorkletNode['onprocessorerror']> onprocessorerror;
+            },
+            set onprocessorerror (value) {
+                if (value === null || typeof value === 'function') {
+                    onprocessorerror = <any> value;
+                } else {
+                    onprocessorerror = null;
+                }
             },
             get parameters () {
                 return parameterMap;
             },
             get port () {
                 return messageChannel.port2;
-            },
-            get processorState () {
-                // @todo Implement processorState.
-                return <any> 'pending';
             },
             addEventListener (...args: any[]) {
                 return gainNode.addEventListener(args[0], args[1], args[2]);

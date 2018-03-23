@@ -27,6 +27,7 @@ import {
     TAudioParamMap,
     TChannelCountMode,
     TChannelInterpretation,
+    TProcessorErrorEventHandler,
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
@@ -123,13 +124,12 @@ export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkl
         }
     }
 
-    get onprocessorstatechange () {
-        // @todo No browser does implement the processorState property yet.
-        return null;
+    public get onprocessorerror () {
+        return <TProcessorErrorEventHandler> (<any> this._nativeNode.onprocessorerror);
     }
 
-    set onprocessorstatechange (value) {
-        this._nativeNode.onprocessorstatechange = <any> value;
+    public set onprocessorerror (value) {
+        this._nativeNode.onprocessorerror = <any> value;
     }
 
     get parameters (): TAudioParamMap {
@@ -142,15 +142,6 @@ export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkl
 
     get port () {
         return this._nativeNode.port;
-    }
-
-    get processorState () {
-        // @todo Chrome Canary does not implement the processorState property.
-        if (this._nativeNode.processorState === undefined) {
-            return 'pending';
-        }
-
-        return this._nativeNode.processorState;
     }
 
 }

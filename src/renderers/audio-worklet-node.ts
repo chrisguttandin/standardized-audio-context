@@ -202,7 +202,19 @@ export class AudioWorkletNodeRenderer extends AudioNodeRenderer {
 
             // @todo slice the parameters ...
 
-            /* @todo const result = */audioWorkletProcessor.process(inputs, outputs, parameters);
+            try {
+                const activeSourceFlag = audioWorkletProcessor.process(inputs, outputs, parameters);
+
+                if (!activeSourceFlag) {
+                    break;
+                }
+            } catch (err) {
+                if (this._proxy.onprocessorerror !== null) {
+                    this._proxy.onprocessorerror.call(<any> null, new ErrorEvent('processorerror'));
+                }
+
+                break;
+            }
 
             // @todo Handle multiple outputs ...
             for (let j = 0; j < numberOfChannels; j += 1) {

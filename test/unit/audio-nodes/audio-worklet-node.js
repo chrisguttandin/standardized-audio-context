@@ -16,34 +16,34 @@ describe('AudioWorkletNode', () => {
         [
             'constructor with AudioContext',
             () => new AudioContext(),
-            async (context) => {
-                await context.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+            async (context, filename) => {
+                await context.audioWorklet.addModule(`base/test/fixtures/${ filename }.js`);
 
-                return new AudioWorkletNode(context, 'gain-processor');
+                return new AudioWorkletNode(context, filename);
             }
         ], [
             'constructor with MinimalAudioContext',
             () => new MinimalAudioContext(),
-            async (context) => {
-                await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+            async (context, filename) => {
+                await addAudioWorkletModule(context, `base/test/fixtures/${ filename }.js`);
 
-                return new AudioWorkletNode(context, 'gain-processor');
+                return new AudioWorkletNode(context, filename);
             }
         ], [
             'constructor with OfflineAudioContext',
             () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
-            async (context) => {
-                await context.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+            async (context, filename) => {
+                await context.audioWorklet.addModule(`base/test/fixtures/${ filename }.js`);
 
-                return new AudioWorkletNode(context, 'gain-processor');
+                return new AudioWorkletNode(context, filename);
             }
         ], [
             'constructor with MinimalOfflineAudioContext',
             () => new MinimalOfflineAudioContext({ length: 5, sampleRate: 44100 }),
-            async (context) => {
-                await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+            async (context, filename) => {
+                await addAudioWorkletModule(context, `base/test/fixtures/${ filename }.js`);
 
-                return new AudioWorkletNode(context, 'gain-processor');
+                return new AudioWorkletNode(context, filename);
             }
         ]
     ], (_, createContext, createAudioWorkletNode) => {
@@ -59,7 +59,7 @@ describe('AudioWorkletNode', () => {
         beforeEach(() => context = createContext());
 
         it('should be an instance of the EventTarget interface', async () => {
-            const audioWorkletNode = await createAudioWorkletNode(context);
+            const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
             expect(audioWorkletNode.addEventListener).to.be.a('function');
             expect(audioWorkletNode.dispatchEvent).to.be.a('function');
@@ -67,7 +67,7 @@ describe('AudioWorkletNode', () => {
         });
 
         it('should be an instance of the AudioNode interface', async () => {
-            const audioWorkletNode = await createAudioWorkletNode(context);
+            const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
             expect(audioWorkletNode.channelCount).to.equal(2);
             expect(audioWorkletNode.channelCountMode).to.equal('max');
@@ -80,17 +80,16 @@ describe('AudioWorkletNode', () => {
         });
 
         it('should be an instance of the AudioWorkletNode interface', async () => {
-            const audioWorkletNode = await createAudioWorkletNode(context);
+            const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
-            expect(audioWorkletNode.onprocessorstatechange).to.be.null;
+            expect(audioWorkletNode.onprocessorerror).to.be.null;
             expect(audioWorkletNode.parameters).not.to.be.undefined;
             expect(audioWorkletNode.port).to.be.an.instanceOf(MessagePort);
-            expect(audioWorkletNode.processorState).to.equal('pending');
         });
 
         it('should throw an error if the AudioContext is closed', (done) => {
             ((context.close === undefined) ? context.startRendering() : context.close())
-                .then(() => createAudioWorkletNode(context))
+                .then(() => createAudioWorkletNode(context, 'gain-processor'))
                 .catch((err) => {
                     expect(err.code).to.equal(11);
                     expect(err.name).to.equal('InvalidStateError');
@@ -101,10 +100,67 @@ describe('AudioWorkletNode', () => {
                 });
         });
 
+        describe('onprocessorerror', () => {
+
+            it('should be null', async () => {
+                const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
+
+                expect(audioWorkletNode.onprocessorerror).to.be.null;
+            });
+
+            it('should be assignable to a function', async () => {
+                const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
+                const fn = () => {};
+                const onprocessorerror = audioWorkletNode.onprocessorerror = fn; // eslint-disable-line no-multi-assign
+
+                expect(onprocessorerror).to.equal(fn);
+                expect(audioWorkletNode.onprocessorerror).to.equal(fn);
+            });
+
+            it('should be assignable to null', async () => {
+                const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
+                const onprocessorerror = audioWorkletNode.onprocessorerror = null; // eslint-disable-line no-multi-assign
+
+                expect(onprocessorerror).to.be.null;
+                expect(audioWorkletNode.onprocessorerror).to.be.null;
+            });
+
+            it('should not be assignable to something else', async () => {
+                const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
+                const string = 'no function or null value';
+
+                audioWorkletNode.onprocessorerror = () => {};
+
+                const onprocessorerror = audioWorkletNode.onprocessorerror = string; // eslint-disable-line no-multi-assign
+
+                expect(onprocessorerror).to.equal(string);
+                expect(audioWorkletNode.onprocessorerror).to.be.null;
+            });
+
+            it('should fire an assigned processorerror event listener', (done) => {
+                createAudioWorkletNode(context, 'failing-processor')
+                    .then((audioWorkletNode) => {
+                        audioWorkletNode.onprocessorerror = (event) => {
+                            expect(event).to.be.an.instanceOf(Event);
+                            expect(event.type).to.equal('processorerror');
+
+                            done();
+                        };
+
+                        audioWorkletNode.connect(context.destination);
+
+                        if (context.startRendering !== undefined) {
+                            context.startRendering();
+                        }
+                    });
+            });
+
+        });
+
         describe('parameters', () => {
 
             it('should return an instance of the AudioParamMap interface', async () => {
-                const audioWorkletNode = await createAudioWorkletNode(context);
+                const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                 expect(audioWorkletNode.parameters.entries).to.be.a('function');
                 expect(audioWorkletNode.parameters.forEach).to.be.a('function');
@@ -127,7 +183,7 @@ describe('AudioWorkletNode', () => {
                 let parameters;
 
                 beforeEach(async () => {
-                    const audioWorkletNode = await createAudioWorkletNode(context);
+                    const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                     parameters = audioWorkletNode.parameters;
                     entries = parameters.entries();
@@ -148,7 +204,7 @@ describe('AudioWorkletNode', () => {
                 let parameters;
 
                 beforeEach(async () => {
-                    const audioWorkletNode = await createAudioWorkletNode(context);
+                    const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                     parameters = audioWorkletNode.parameters;
                 });
@@ -174,7 +230,7 @@ describe('AudioWorkletNode', () => {
                 let parameters;
 
                 beforeEach(async () => {
-                    const audioWorkletNode = await createAudioWorkletNode(context);
+                    const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                     parameters = audioWorkletNode.parameters;
                 });
@@ -216,7 +272,7 @@ describe('AudioWorkletNode', () => {
                 let parameters;
 
                 beforeEach(async () => {
-                    const audioWorkletNode = await createAudioWorkletNode(context);
+                    const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                     parameters = audioWorkletNode.parameters;
                 });
@@ -244,7 +300,7 @@ describe('AudioWorkletNode', () => {
                 let keys;
 
                 beforeEach(async () => {
-                    const audioWorkletNode = await createAudioWorkletNode(context);
+                    const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                     keys = audioWorkletNode.parameters.keys();
                 });
@@ -265,7 +321,7 @@ describe('AudioWorkletNode', () => {
                 let parameters;
 
                 beforeEach(async () => {
-                    const audioWorkletNode = await createAudioWorkletNode(context);
+                    const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                     parameters = audioWorkletNode.parameters;
                     values = parameters.values();
@@ -298,7 +354,7 @@ describe('AudioWorkletNode', () => {
                             // @todo For some reason up-mixing doesn't work yet, which is why a stereo buffer is used for testing.
                             const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 2, sampleRate: context.sampleRate });
                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const audioWorkletNode = await createAudioWorkletNode(context);
+                            const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                             audioBuffer.copyToChannel(new Float32Array(values), 0);
                             audioBuffer.copyToChannel(new Float32Array(values), 1);
@@ -433,7 +489,7 @@ describe('AudioWorkletNode', () => {
             let audioWorkletNode;
 
             beforeEach(async () => {
-                audioWorkletNode = await createAudioWorkletNode(context);
+                audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
             });
 
             it('should echo any message', (done) => {
@@ -455,7 +511,7 @@ describe('AudioWorkletNode', () => {
             let audioWorkletNode;
 
             beforeEach(async () => {
-                audioWorkletNode = await createAudioWorkletNode(context);
+                audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
             });
 
             it('should be chainable', () => {
@@ -529,7 +585,7 @@ describe('AudioWorkletNode', () => {
                         // @todo For some reason up-mixing doesn't work yet, which is why a stereo buffer is used for testing.
                         const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 2, sampleRate: context.sampleRate });
                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                        const audioWorkletNode = await createAudioWorkletNode(context);
+                        const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
                         const firstDummyGainNode = new GainNode(context);
                         const secondDummyGainNode = new GainNode(context);
 
