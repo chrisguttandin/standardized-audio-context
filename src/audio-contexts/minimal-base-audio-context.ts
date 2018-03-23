@@ -32,7 +32,7 @@ export class MinimalBaseAudioContext extends EventTarget implements IMinimalBase
     }
 
     public set onstatechange (value) {
-        this._context.onstatechange = (value === null) ? undefined : <any> value;
+        this._context.onstatechange = <any> value;
     }
 
     public get sampleRate () {
