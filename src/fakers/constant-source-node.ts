@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { INativeConstantSourceNode, INativeConstantSourceNodeFaker } from '../interfaces';
+import { IConstantSourceOptions, INativeConstantSourceNode, INativeConstantSourceNodeFaker } from '../interfaces';
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
 @Injectable()
 export class ConstantSourceNodeFaker {
 
-    public fake (unpatchedAudioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext): INativeConstantSourceNodeFaker {
+    public fake (
+        unpatchedAudioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+        options: Partial<IConstantSourceOptions>
+    ): INativeConstantSourceNodeFaker {
         // @todo Safari does not play/loop 1 sample buffers. This should be covered by an expectation test.
         const audioBuffer = unpatchedAudioContext.createBuffer(1, 2, unpatchedAudioContext.sampleRate);
         const audioBufferSourceNode = unpatchedAudioContext.createBufferSource();
@@ -14,11 +17,27 @@ export class ConstantSourceNodeFaker {
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
         const channelData = audioBuffer.getChannelData(0);
 
-        channelData[0] = 1;
-        channelData[1] = 1;
+        const offset = (options.offset === undefined) ? 1 : options.offset;
+
+        channelData[0] = offset;
+        channelData[1] = offset;
 
         audioBufferSourceNode.buffer = audioBuffer;
         audioBufferSourceNode.loop = true;
+
+        if (options.channelCount !== undefined) {
+            gainNode.channelCount = options.channelCount;
+        }
+
+        if (options.channelCountMode !== undefined) {
+            gainNode.channelCountMode = options.channelCountMode;
+        }
+
+        if (options.channelInterpretation !== undefined) {
+            gainNode.channelInterpretation = options.channelInterpretation;
+        }
+
+        gainNode.gain.value = offset;
 
         audioBufferSourceNode.connect(gainNode);
 
@@ -29,11 +48,20 @@ export class ConstantSourceNodeFaker {
             get channelCount () {
                 return gainNode.channelCount;
             },
+            set channelCount (value) {
+                gainNode.channelCount = value;
+            },
             get channelCountMode () {
                 return gainNode.channelCountMode;
             },
+            set channelCountMode (value) {
+                gainNode.channelCountMode = value;
+            },
             get channelInterpretation () {
                 return gainNode.channelInterpretation;
+            },
+            set channelInterpretation (value) {
+                gainNode.channelInterpretation = value;
             },
             get context () {
                 return gainNode.context;

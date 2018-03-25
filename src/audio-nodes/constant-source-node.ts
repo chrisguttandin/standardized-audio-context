@@ -41,12 +41,7 @@ export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstant
     constructor (context: IMinimalBaseAudioContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = createNativeConstantSourceNode(nativeContext);
-
-        // @todo Firefox returns a channelCount of 1 instead of 2.
-        if (nativeNode.channelCount === 1) {
-            nativeNode.channelCount = 2;
-        }
+        const nativeNode = createNativeConstantSourceNode(nativeContext, options);
 
         super(context, nativeNode, mergedOptions);
 

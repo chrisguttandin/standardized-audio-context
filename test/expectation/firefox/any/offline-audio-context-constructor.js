@@ -140,6 +140,18 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createConstantSource()', () => {
+
+        // bug #67
+
+        it('should have a channelCount of 1', () => {
+            const constantSourceNode = offlineAudioContext.createConstantSource();
+
+            expect(constantSourceNode.channelCount).to.equal(1);
+        });
+
+    });
+
     describe('createGain()', () => {
 
         // bug #25

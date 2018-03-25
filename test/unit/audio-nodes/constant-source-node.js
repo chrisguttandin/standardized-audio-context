@@ -12,12 +12,100 @@ describe('ConstantSourceNode', () => {
 
     // @todo leche seems to need a unique string as identifier as first argument.
     leche.withData([
-        [ 'constructor with AudioContext', () => new AudioContext(), (context) => new ConstantSourceNode(context) ],
-        [ 'constructor with MinimalAudioContext', () => new MinimalAudioContext(), (context) => new ConstantSourceNode(context) ],
-        [ 'constructor with OfflineAudioContext', () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }), (context) => new ConstantSourceNode(context) ],
-        [ 'constructor with MinimalOfflineAudioContext', () => new MinimalOfflineAudioContext({ length: 5, sampleRate: 44100 }), (context) => new ConstantSourceNode(context) ],
-        [ 'factory function of AudioContext', () => new AudioContext(), (context) => context.createConstantSource() ],
-        [ 'factory function of OfflineAudioContext', () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }), (context) => context.createConstantSource() ]
+        [
+            'constructor with AudioContext',
+            () => new AudioContext(),
+            (context, options = null) => {
+                if (options === null) {
+                    return new ConstantSourceNode(context);
+                }
+
+                return new ConstantSourceNode(context, options);
+            }
+        ],
+        [
+            'constructor with MinimalAudioContext',
+            () => new MinimalAudioContext(),
+            (context, options = null) => {
+                if (options === null) {
+                    return new ConstantSourceNode(context);
+                }
+
+                return new ConstantSourceNode(context, options);
+            }
+        ],
+        [
+            'constructor with OfflineAudioContext',
+            () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
+            (context, options = null) => {
+                if (options === null) {
+                    return new ConstantSourceNode(context);
+                }
+
+                return new ConstantSourceNode(context, options);
+            }
+        ],
+        [
+            'constructor with MinimalOfflineAudioContext',
+            () => new MinimalOfflineAudioContext({ length: 5, sampleRate: 44100 }),
+            (context, options = null) => {
+                if (options === null) {
+                    return new ConstantSourceNode(context);
+                }
+
+                return new ConstantSourceNode(context, options);
+            }
+        ],
+        [
+            'factory function of AudioContext',
+            () => new AudioContext(),
+            (context, options = null) => {
+                const constantSourceNode = context.createConstantSource();
+
+                if (options !== null && options.channelCount !== undefined) {
+                    constantSourceNode.channelCount = options.channelCount;
+                }
+
+                if (options !== null && options.channelCountMode !== undefined) {
+                    constantSourceNode.channelCountMode = options.channelCountMode;
+                }
+
+                if (options !== null && options.channelInterpretation !== undefined) {
+                    constantSourceNode.channelInterpretation = options.channelInterpretation;
+                }
+
+                if (options !== null && options.offset !== undefined) {
+                    constantSourceNode.offset.value = options.offset;
+                }
+
+                return constantSourceNode;
+            }
+        ],
+        [
+            'factory function of OfflineAudioContext',
+            () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
+            (context, options = null) => {
+                const constantSourceNode = context.createConstantSource();
+
+                if (options !== null && options.channelCount !== undefined) {
+                    constantSourceNode.channelCount = options.channelCount;
+                }
+
+                if (options !== null && options.channelCountMode !== undefined) {
+                    constantSourceNode.channelCountMode = options.channelCountMode;
+                }
+
+                if (options !== null && options.channelInterpretation !== undefined) {
+                    constantSourceNode.channelInterpretation = options.channelInterpretation;
+                }
+
+                if (options !== null && options.offset !== undefined) {
+                    constantSourceNode.offset.value = options.offset;
+                }
+
+                return constantSourceNode;
+            }
+        ]
     ], (_, createContext, createConstantSourceNode) => {
 
         let context;
@@ -30,44 +118,138 @@ describe('ConstantSourceNode', () => {
 
         beforeEach(() => context = createContext());
 
-        it('should be an instance of the EventTarget interface', () => {
-            const constantSourceNode = createConstantSourceNode(context);
+        describe('constructor()', () => {
 
-            expect(constantSourceNode.addEventListener).to.be.a('function');
-            expect(constantSourceNode.dispatchEvent).to.be.a('function');
-            expect(constantSourceNode.removeEventListener).to.be.a('function');
-        });
+            describe('without any options', () => {
 
-        it('should be an instance of the AudioNode interface', () => {
-            const constantSourceNode = createConstantSourceNode(context);
+                let constantSourceNode;
 
-            expect(constantSourceNode.channelCount).to.equal(2);
-            expect(constantSourceNode.channelCountMode).to.equal('max');
-            expect(constantSourceNode.channelInterpretation).to.equal('speakers');
-            expect(constantSourceNode.connect).to.be.a('function');
-            expect(constantSourceNode.context).to.be.an.instanceOf(context.constructor);
-            expect(constantSourceNode.disconnect).to.be.a('function');
-            expect(constantSourceNode.numberOfInputs).to.equal(0);
-            expect(constantSourceNode.numberOfOutputs).to.equal(1);
-        });
-
-        it('should return an instance of the ConstantSourceNode interface', () => {
-            const constantSourceNode = createConstantSourceNode(context);
-
-            expect(constantSourceNode.offset).not.to.be.undefined;
-        });
-
-        it('should throw an error if the AudioContext is closed', (done) => {
-            ((context.close === undefined) ? context.startRendering() : context.close())
-                .then(() => createConstantSourceNode(context))
-                .catch((err) => {
-                    expect(err.code).to.equal(11);
-                    expect(err.name).to.equal('InvalidStateError');
-
-                    context.close = undefined;
-
-                    done();
+                beforeEach(() => {
+                    constantSourceNode = createConstantSourceNode(context);
                 });
+
+                it('should be an instance of the EventTarget interface', () => {
+                    expect(constantSourceNode.addEventListener).to.be.a('function');
+                    expect(constantSourceNode.dispatchEvent).to.be.a('function');
+                    expect(constantSourceNode.removeEventListener).to.be.a('function');
+                });
+
+                it('should be an instance of the AudioNode interface', () => {
+                    expect(constantSourceNode.channelCount).to.equal(2);
+                    expect(constantSourceNode.channelCountMode).to.equal('max');
+                    expect(constantSourceNode.channelInterpretation).to.equal('speakers');
+                    expect(constantSourceNode.connect).to.be.a('function');
+                    expect(constantSourceNode.context).to.be.an.instanceOf(context.constructor);
+                    expect(constantSourceNode.disconnect).to.be.a('function');
+                    expect(constantSourceNode.numberOfInputs).to.equal(0);
+                    expect(constantSourceNode.numberOfOutputs).to.equal(1);
+                });
+
+                it('should return an instance of the ConstantSourceNode interface', () => {
+                    expect(constantSourceNode.offset).not.to.be.undefined;
+                });
+
+                it('should throw an error if the AudioContext is closed', (done) => {
+                    ((context.close === undefined) ? context.startRendering() : context.close())
+                        .then(() => createConstantSourceNode(context))
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            context.close = undefined;
+
+                            done();
+                        });
+                });
+
+            });
+
+            describe('with valid options', () => {
+
+                it('should return an instance with the given channelCount', () => {
+                    const channelCount = 4;
+                    const constantSourceNode = createConstantSourceNode(context, { channelCount });
+
+                    expect(constantSourceNode.channelCount).to.equal(channelCount);
+                });
+
+                it('should return an instance with the given channelCountMode', () => {
+                    const channelCountMode = 'explicit';
+                    const constantSourceNode = createConstantSourceNode(context, { channelCountMode });
+
+                    expect(constantSourceNode.channelCountMode).to.equal(channelCountMode);
+                });
+
+                it('should return an instance with the given channelInterpretation', () => {
+                    const channelInterpretation = 'discrete';
+                    const constantSourceNode = createConstantSourceNode(context, { channelInterpretation });
+
+                    expect(constantSourceNode.channelInterpretation).to.equal(channelInterpretation);
+                });
+
+                it('should return an instance with the given intial value for offset', () => {
+                    const offset = 0.5;
+                    const constantSourceNode = createConstantSourceNode(context, { offset });
+
+                    expect(constantSourceNode.offset.value).to.equal(offset);
+                });
+
+            });
+
+        });
+
+        describe('channelCount', () => {
+
+            let constantSourceNode;
+
+            beforeEach(() => {
+                constantSourceNode = createConstantSourceNode(context);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelCount = 4;
+
+                constantSourceNode.channelCount = channelCount;
+
+                expect(constantSourceNode.channelCount).to.equal(channelCount);
+            });
+
+        });
+
+        describe('channelCountMode', () => {
+
+            let constantSourceNode;
+
+            beforeEach(() => {
+                constantSourceNode = createConstantSourceNode(context);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelCountMode = 'explicit';
+
+                constantSourceNode.channelCountMode = channelCountMode;
+
+                expect(constantSourceNode.channelCountMode).to.equal(channelCountMode);
+            });
+
+        });
+
+        describe('channelInterpretation', () => {
+
+            let constantSourceNode;
+
+            beforeEach(() => {
+                constantSourceNode = createConstantSourceNode(context);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelInterpretation = 'discrete';
+
+                constantSourceNode.channelInterpretation = channelInterpretation;
+
+                expect(constantSourceNode.channelInterpretation).to.equal(channelInterpretation);
+            });
+
         });
 
         describe('offset', () => {

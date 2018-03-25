@@ -300,48 +300,59 @@ describe('AudioWorkletNode', () => {
 
         describe('channelCount', () => {
 
+            let audioWorkletNode;
+
+            beforeEach(async () => {
+                audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
+            });
+
             it('should not be assignable to another value', (done) => {
-                createAudioWorkletNode(context, 'gain-processor')
-                    .then((audioWorkletNode) => {
-                        const channelCount = 6;
+                const channelCount = 6;
 
-                        try {
-                            audioWorkletNode.channelCount = channelCount;
-                        } catch (err) {
-                            expect(err.code).to.equal(11);
-                            expect(err.name).to.equal('InvalidStateError');
+                try {
+                    audioWorkletNode.channelCount = channelCount;
+                } catch (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
 
-                            done();
-                        }
-                    });
+                    done();
+                }
             });
 
         });
 
         describe('channelCountMode', () => {
 
+            let audioWorkletNode;
+
+            beforeEach(async () => {
+                audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
+            });
+
             it('should not be assignable to another value', (done) => {
-                createAudioWorkletNode(context, 'gain-processor')
-                    .then((audioWorkletNode) => {
-                        const channelCountMode = 'max';
+                const channelCountMode = 'max';
 
-                        try {
-                            audioWorkletNode.channelCountMode = channelCountMode;
-                        } catch (err) {
-                            expect(err.code).to.equal(11);
-                            expect(err.name).to.equal('InvalidStateError');
+                try {
+                    audioWorkletNode.channelCountMode = channelCountMode;
+                } catch (err) {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
 
-                            done();
-                        }
-                    });
+                    done();
+                }
             });
 
         });
 
         describe('channelInterpretation', () => {
 
-            it('should be assignable to another value', async () => {
-                const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
+            let audioWorkletNode;
+
+            beforeEach(async () => {
+                audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
+            });
+
+            it('should be assignable to another value', () => {
                 const channelInterpretation = 'discrete';
 
                 audioWorkletNode.channelInterpretation = channelInterpretation;
