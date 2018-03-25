@@ -26,8 +26,6 @@ const DEFAULT_OPTIONS: IAnalyserOptions = {
     fftSize: 2048,
     maxDecibels: -30,
     minDecibels: -100,
-    numberOfInputs: 1,
-    numberOfOutputs: 1,
     smoothingTimeConstant: 0.8
 };
 
@@ -70,10 +68,10 @@ export class AnalyserNode extends NoneAudioDestinationNode<TNativeAnalyserNode> 
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const mergedOptions = <IAnalyserOptions> { ...DEFAULT_OPTIONS, ...options };
+        const { channelCount } = <IAnalyserOptions> { ...DEFAULT_OPTIONS, ...options };
         const nativeNode = createNativeNode(nativeContext);
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, channelCount);
     }
 
     public get fftSize () {

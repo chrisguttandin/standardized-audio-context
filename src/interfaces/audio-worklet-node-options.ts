@@ -6,10 +6,10 @@ export interface IAudioWorkletNodeOptions extends IAudioNodeOptions {
 
     numberOfOutputs: number;
 
-    // @todo outputChannelCount: sequence<unsigned long>;
+    outputChannelCount: undefined | number[];
 
-    // @todo parameterData: record<DOMString, double>;
+    parameterData: { [ name: string ]: number };
 
-    // @todo processorOptions: object;
+    processorOptions: null | object;
 
 }

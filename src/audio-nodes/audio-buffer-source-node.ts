@@ -46,15 +46,13 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
 
 const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     buffer: null,
-    channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
+    channelCount: 2,
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers',
     detune: 0,
     loop: false,
     loopEnd: 0,
     loopStart: 0,
-    numberOfInputs: 0,
-    numberOfOutputs: 1,
     playbackRate: 1
 };
 
@@ -62,10 +60,10 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const mergedOptions = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
+        const { channelCount } = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
         const nativeNode = createNativeNode(nativeContext);
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, channelCount);
 
         // @todo Set all the other options.
         // @todo this.buffer = options.buffer;

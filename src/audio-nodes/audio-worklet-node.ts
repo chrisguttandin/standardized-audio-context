@@ -154,10 +154,10 @@ export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkl
             nodeNameToProcessorDefinitionMap.get(name);
         const nativeNode = createNativeAudioWorkletNode(nativeContext, name, processorDefinition, mergedOptions);
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, mergedOptions.channelCount);
 
         if (isOfflineAudioContext(nativeContext)) {
-            const audioWorkletNodeRenderer = new AudioWorkletNodeRenderer(this, name, options, processorDefinition);
+            const audioWorkletNodeRenderer = new AudioWorkletNodeRenderer(this, name, mergedOptions, processorDefinition);
 
             AUDIO_NODE_RENDERER_STORE.set(this, audioWorkletNodeRenderer);
 

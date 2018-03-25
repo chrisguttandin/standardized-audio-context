@@ -2,7 +2,7 @@ import { Injector } from '@angular/core';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IChannelSplitterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -13,11 +13,10 @@ import {
 import { CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER, ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const DEFAULT_OPTIONS: IAudioNodeOptions = {
+const DEFAULT_OPTIONS: IChannelSplitterOptions = {
     channelCount: 6,
     channelCountMode: <TChannelCountMode> 'explicit',
     channelInterpretation: <TChannelInterpretation> 'discrete',
-    numberOfInputs: 1,
     numberOfOutputs: 6
 };
 
@@ -46,15 +45,13 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
 
 export class ChannelSplitterNode extends NoneAudioDestinationNode<TNativeChannelSplitterNode> {
 
-    constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioNodeOptions> = DEFAULT_OPTIONS) {
+    constructor (context: IMinimalBaseAudioContext, options: Partial<IChannelSplitterOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const mergedOptions = <IAudioNodeOptions> { ...DEFAULT_OPTIONS, ...options };
+        const { numberOfOutputs } = <IChannelSplitterOptions> { ...DEFAULT_OPTIONS, ...options };
 
-        mergedOptions.channelCount = mergedOptions.numberOfOutputs;
+        const nativeNode = createNativeNode(nativeContext, numberOfOutputs);
 
-        const nativeNode = createNativeNode(nativeContext, mergedOptions.numberOfOutputs);
-
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, numberOfOutputs);
     }
 
 }

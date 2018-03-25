@@ -3,7 +3,7 @@ import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { NotSupportedErrorFactory } from '../factories/not-supported-error';
 import { filterBuffer } from '../helpers/filter-buffer';
-import { INativeIIRFilterNodeFaker } from '../interfaces';
+import { IIIRFilterOptions, INativeIIRFilterNodeFaker } from '../interfaces';
 import { TTypedArray, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
 function divide (a: [ number, number ], b: [ number, number ]): [ number, number ] {
@@ -39,9 +39,7 @@ export class IIRFilterNodeFaker {
 
     public fake (
         unpatchedAudioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-        feedback: number[] | TTypedArray,
-        feedforward: number[] | TTypedArray,
-        channelCount: number
+        { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }: IIIRFilterOptions
     ): INativeIIRFilterNodeFaker {
         const bufferSize = 256;
         const feedbackLength = feedback.length;
@@ -75,6 +73,10 @@ export class IIRFilterNodeFaker {
         }
 
         const scriptProcessorNode = unpatchedAudioContext.createScriptProcessor(bufferSize, channelCount, channelCount);
+
+        scriptProcessorNode.channelCount = channelCount;
+        scriptProcessorNode.channelCountMode = channelCountMode;
+        scriptProcessorNode.channelInterpretation = channelInterpretation;
 
         const bufferLength = 32;
         const bufferIndexes: number[] = [ ];
@@ -131,11 +133,20 @@ export class IIRFilterNodeFaker {
             get channelCount () {
                 return scriptProcessorNode.channelCount;
             },
+            set channelCount (value) {
+                scriptProcessorNode.channelCount = value;
+            },
             get channelCountMode () {
                 return scriptProcessorNode.channelCountMode;
             },
+            set channelCountMode (value) {
+                scriptProcessorNode.channelCountMode = value;
+            },
             get channelInterpretation () {
                 return scriptProcessorNode.channelInterpretation;
+            },
+            set channelInterpretation (value) {
+                scriptProcessorNode.channelInterpretation = value;
             },
             get context () {
                 return scriptProcessorNode.context;

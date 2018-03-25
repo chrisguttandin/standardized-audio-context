@@ -29,8 +29,6 @@ const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
     channelInterpretation: <TChannelInterpretation> 'speakers', // This attribute has no effect for nodes with no inputs.
     detune: 0,
     frequency: 440,
-    numberOfInputs: 0,
-    numberOfOutputs: 1,
     type: <TOscillatorType> 'sine'
 };
 
@@ -46,10 +44,10 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
+        const { channelCount } = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
         const nativeNode = createNativeNode(nativeContext);
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, channelCount);
     }
 
     public get detune () {

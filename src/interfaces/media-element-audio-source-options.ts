@@ -1,6 +1,4 @@
-import { IAudioNodeOptions } from './audio-node-options';
-
-export interface IMediaElementAudioSourceOptions extends IAudioNodeOptions {
+export interface IMediaElementAudioSourceOptions {
 
     mediaElement: HTMLMediaElement;
 

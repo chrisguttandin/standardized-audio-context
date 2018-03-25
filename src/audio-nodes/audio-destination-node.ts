@@ -35,13 +35,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
          * @todo Transpiling super access inside the channelCount/channelCountMode property accessors down to ES5 does not work. That's why
          * the audioNode is stored as a private property and all its methods and properties get proxied.
          */
-        this._audioNode = new AudioNode(context, nativeNode, {
-            channelCount,
-            channelCountMode: 'explicit',
-            channelInterpretation: 'speakers',
-            numberOfInputs: 1,
-            numberOfOutputs: 0
-        }, this);
+        this._audioNode = new AudioNode(context, nativeNode, channelCount, this);
         this._isOfflineAudioContext = isOfflineAudioContext(nativeContext);
 
         const maxChannelCount = nativeNode.maxChannelCount;

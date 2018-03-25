@@ -8,8 +8,4 @@ export interface IAudioNodeOptions {
 
     channelInterpretation: TChannelInterpretation;
 
-    numberOfInputs: number;
-
-    numberOfOutputs: number;
-
 }

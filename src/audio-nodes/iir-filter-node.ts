@@ -12,7 +12,6 @@ import {
     TChannelCountMode,
     TChannelInterpretation,
     TNativeIIRFilterNode,
-    TTypedArray,
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
@@ -24,11 +23,9 @@ import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 // The DEFAULT_OPTIONS are only of type Partial<IIIRFilterOptions> because there are no default values for feedback and feedforward.
 const DEFAULT_OPTIONS: Partial<IIIRFilterOptions> = {
-    channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
+    channelCount: 2,
     channelCountMode: <TChannelCountMode> 'max',
-    channelInterpretation: <TChannelInterpretation> 'speakers',
-    numberOfInputs: 1,
-    numberOfOutputs: 1
+    channelInterpretation: <TChannelInterpretation> 'speakers'
 };
 
 const injector = Injector.create({
@@ -47,16 +44,28 @@ const iIRFilterNodeGetFrequencyResponseMethodWrapper = injector
 
 const createNativeNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    feedback: number[] | TTypedArray,
-    feedforward: number[] | TTypedArray,
-    channelCount: number
+    options: IIIRFilterOptions
 ): TNativeIIRFilterNode => {
     // Bug #9: Safari does not support IIRFilterNodes.
     if (nativeContext.createIIRFilter === undefined) {
-        return iIRFilterNodeFaker.fake(nativeContext, feedback, feedforward, channelCount);
+        return iIRFilterNodeFaker.fake(nativeContext, options);
     }
 
-    return nativeContext.createIIRFilter(<number[]> feedforward, <number[]> feedback);
+    const iIRFilterNode = nativeContext.createIIRFilter(<number[]> options.feedforward, <number[]> options.feedback);
+
+    if (options.channelCount !== undefined) {
+        iIRFilterNode.channelCount = options.channelCount;
+    }
+
+    if (options.channelCountMode !== undefined) {
+        iIRFilterNode.channelCountMode = options.channelCountMode;
+    }
+
+    if (options.channelInterpretation !== undefined) {
+        iIRFilterNode.channelInterpretation = options.channelInterpretation;
+    }
+
+    return iIRFilterNode;
 };
 
 export class IIRFilterNode extends NoneAudioDestinationNode<TNativeIIRFilterNode> implements IIIRFilterNode {
@@ -67,17 +76,16 @@ export class IIRFilterNode extends NoneAudioDestinationNode<TNativeIIRFilterNode
     ) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
-        const { channelCount, feedback, feedforward } = mergedOptions;
-        const nativeNode = createNativeNode(nativeContext, feedback, feedforward, channelCount);
+        const nativeNode = createNativeNode(nativeContext, mergedOptions);
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, mergedOptions.channelCount);
 
         // Bug #23 & #24: FirefoxDeveloper does not throw an InvalidAccessError.
         // @todo Write a test which allows other browsers to remain unpatched.
         iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(nativeNode);
 
         if (isOfflineAudioContext(nativeContext)) {
-            const iirFilterNodeRenderer = new IIRFilterNodeRenderer(this, feedback, feedforward);
+            const iirFilterNodeRenderer = new IIRFilterNodeRenderer(this, mergedOptions.feedback, mergedOptions.feedforward);
 
             AUDIO_NODE_RENDERER_STORE.set(this, iirFilterNodeRenderer);
         }

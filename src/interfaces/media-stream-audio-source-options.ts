@@ -1,6 +1,4 @@
-import { IAudioNodeOptions } from './audio-node-options';
-
-export interface IMediaStreamAudioSourceOptions extends IAudioNodeOptions {
+export interface IMediaStreamAudioSourceOptions {
 
     mediaStream: MediaStream;
 

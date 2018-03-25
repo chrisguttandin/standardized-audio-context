@@ -2,7 +2,7 @@ import { Injector } from '@angular/core';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IChannelMergerOptions, IMinimalBaseAudioContext } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -13,12 +13,11 @@ import {
 import { CHANNEL_MERGER_NODE_WRAPPER_PROVIDER, ChannelMergerNodeWrapper } from '../wrappers/channel-merger-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
-const DEFAULT_OPTIONS: IAudioNodeOptions = {
+const DEFAULT_OPTIONS: IChannelMergerOptions = {
     channelCount: 1,
     channelCountMode: <TChannelCountMode> 'explicit',
     channelInterpretation: <TChannelInterpretation> 'speakers',
-    numberOfInputs: 6,
-    numberOfOutputs: 1
+    numberOfInputs: 6
 };
 
 const injector = Injector.create({
@@ -56,12 +55,12 @@ const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOffl
 
 export class ChannelMergerNode extends NoneAudioDestinationNode<TNativeChannelMergerNode> {
 
-    constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioNodeOptions> = DEFAULT_OPTIONS) {
+    constructor (context: IMinimalBaseAudioContext, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const mergedOptions = <IAudioNodeOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = createNativeNode(nativeContext, mergedOptions.numberOfInputs);
+        const { channelCount, numberOfInputs } = <IChannelMergerOptions> { ...DEFAULT_OPTIONS, ...options };
+        const nativeNode = createNativeNode(nativeContext, numberOfInputs);
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, channelCount);
     }
 
 }

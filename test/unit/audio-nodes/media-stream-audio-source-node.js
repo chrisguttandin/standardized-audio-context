@@ -38,44 +38,106 @@ describe('MediaStreamAudioSourceNode', () => {
                 mediaStream = audioElement.captureStream();
             });
 
-            it('should be an instance of the EventTarget interface', () => {
-                const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
+            describe('constructor()', () => {
 
-                expect(mediaStreamAudioSourceNode.addEventListener).to.be.a('function');
-                expect(mediaStreamAudioSourceNode.dispatchEvent).to.be.a('function');
-                expect(mediaStreamAudioSourceNode.removeEventListener).to.be.a('function');
-            });
+                describe('with valid options', () => {
 
-            it('should be an instance of the AudioNode interface', () => {
-                const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
+                    it('should be an instance of the EventTarget interface', () => {
+                        const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
 
-                expect(mediaStreamAudioSourceNode.channelCount).to.equal(2);
-                expect(mediaStreamAudioSourceNode.channelCountMode).to.equal('max');
-                expect(mediaStreamAudioSourceNode.channelInterpretation).to.equal('speakers');
-                expect(mediaStreamAudioSourceNode.connect).to.be.a('function');
-                expect(mediaStreamAudioSourceNode.context).to.be.an.instanceOf(context.constructor);
-                expect(mediaStreamAudioSourceNode.disconnect).to.be.a('function');
-                expect(mediaStreamAudioSourceNode.numberOfInputs).to.equal(0);
-                expect(mediaStreamAudioSourceNode.numberOfOutputs).to.equal(1);
-            });
-
-            it('should return an instance of the MediaStreamAudioSourceNode interface', () => {
-                const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
-
-                expect(mediaStreamAudioSourceNode.mediaStream).to.be.an.instanceOf(MediaStream);
-            });
-
-            it('should throw an error if the AudioContext is closed', (done) => {
-                ((context.close === undefined) ? context.startRendering() : context.close())
-                    .then(() => createMediaStreamAudioSourceNode(context, mediaStream))
-                    .catch((err) => {
-                        expect(err.code).to.equal(11);
-                        expect(err.name).to.equal('InvalidStateError');
-
-                        context.close = undefined;
-
-                        done();
+                        expect(mediaStreamAudioSourceNode.addEventListener).to.be.a('function');
+                        expect(mediaStreamAudioSourceNode.dispatchEvent).to.be.a('function');
+                        expect(mediaStreamAudioSourceNode.removeEventListener).to.be.a('function');
                     });
+
+                    it('should be an instance of the AudioNode interface', () => {
+                        const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
+
+                        expect(mediaStreamAudioSourceNode.channelCount).to.equal(2);
+                        expect(mediaStreamAudioSourceNode.channelCountMode).to.equal('max');
+                        expect(mediaStreamAudioSourceNode.channelInterpretation).to.equal('speakers');
+                        expect(mediaStreamAudioSourceNode.connect).to.be.a('function');
+                        expect(mediaStreamAudioSourceNode.context).to.be.an.instanceOf(context.constructor);
+                        expect(mediaStreamAudioSourceNode.disconnect).to.be.a('function');
+                        expect(mediaStreamAudioSourceNode.numberOfInputs).to.equal(0);
+                        expect(mediaStreamAudioSourceNode.numberOfOutputs).to.equal(1);
+                    });
+
+                    it('should return an instance of the MediaStreamAudioSourceNode interface', () => {
+                        const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
+
+                        expect(mediaStreamAudioSourceNode.mediaStream).to.be.an.instanceOf(MediaStream);
+                    });
+
+                    it('should throw an error if the AudioContext is closed', (done) => {
+                        ((context.close === undefined) ? context.startRendering() : context.close())
+                            .then(() => createMediaStreamAudioSourceNode(context, mediaStream))
+                            .catch((err) => {
+                                expect(err.code).to.equal(11);
+                                expect(err.name).to.equal('InvalidStateError');
+
+                                context.close = undefined;
+
+                                done();
+                            });
+                    });
+
+                });
+
+            });
+
+            describe('channelCount', () => {
+
+                let mediaStreamAudioSourceNode;
+
+                beforeEach(() => {
+                    mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
+                });
+
+                it('should be assignable to another value', () => {
+                    const channelCount = 4;
+
+                    mediaStreamAudioSourceNode.channelCount = channelCount;
+
+                    expect(mediaStreamAudioSourceNode.channelCount).to.equal(channelCount);
+                });
+
+            });
+
+            describe('channelCountMode', () => {
+
+                let mediaStreamAudioSourceNode;
+
+                beforeEach(() => {
+                    mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
+                });
+
+                it('should be assignable to another value', () => {
+                    const channelCountMode = 'explicit';
+
+                    mediaStreamAudioSourceNode.channelCountMode = channelCountMode;
+
+                    expect(mediaStreamAudioSourceNode.channelCountMode).to.equal(channelCountMode);
+                });
+
+            });
+
+            describe('channelInterpretation', () => {
+
+                let mediaStreamAudioSourceNode;
+
+                beforeEach(() => {
+                    mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, mediaStream);
+                });
+
+                it('should be assignable to another value', () => {
+                    const channelInterpretation = 'discrete';
+
+                    mediaStreamAudioSourceNode.channelInterpretation = channelInterpretation;
+
+                    expect(mediaStreamAudioSourceNode.channelInterpretation).to.equal(channelInterpretation);
+                });
+
             });
 
             describe('mediaStream', () => {

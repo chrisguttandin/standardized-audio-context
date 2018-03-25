@@ -14,7 +14,7 @@ import { isAudioNode } from '../guards/audio-node';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
-import { IAudioNode, IAudioNodeOptions, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
+import { IAudioNode, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
 import { DISCONNECTING_SUPPORT_TESTER_PROVIDER, DisconnectingSupportTester } from '../support-testers/disconnecting';
 import { TNativeAudioNode, TNativeAudioParam, TUnpatchedAudioContext } from '../types';
 import { AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER, AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
@@ -43,7 +43,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
     constructor (
         context: IMinimalBaseAudioContext,
         nativeNode: T,
-        { channelCount }: IAudioNodeOptions,
+        channelCount: number,
         // @todo The parentNode property is only needed as long as the source gets transpiled to ES5.
         parentNode?: IAudioNode
     ) {

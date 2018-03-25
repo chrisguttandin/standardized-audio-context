@@ -27,44 +27,106 @@ describe('MediaElementAudioSourceNode', () => {
             mediaElement = new Audio();
         });
 
-        it('should be an instance of the EventTarget interface', () => {
-            const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
+        describe('constructor()', () => {
 
-            expect(mediaElementAudioSourceNode.addEventListener).to.be.a('function');
-            expect(mediaElementAudioSourceNode.dispatchEvent).to.be.a('function');
-            expect(mediaElementAudioSourceNode.removeEventListener).to.be.a('function');
-        });
+            describe('with valid options', () => {
 
-        it('should be an instance of the AudioNode interface', () => {
-            const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
+                it('should be an instance of the EventTarget interface', () => {
+                    const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
 
-            expect(mediaElementAudioSourceNode.channelCount).to.equal(2);
-            expect(mediaElementAudioSourceNode.channelCountMode).to.equal('max');
-            expect(mediaElementAudioSourceNode.channelInterpretation).to.equal('speakers');
-            expect(mediaElementAudioSourceNode.connect).to.be.a('function');
-            expect(mediaElementAudioSourceNode.context).to.be.an.instanceOf(context.constructor);
-            expect(mediaElementAudioSourceNode.disconnect).to.be.a('function');
-            expect(mediaElementAudioSourceNode.numberOfInputs).to.equal(0);
-            expect(mediaElementAudioSourceNode.numberOfOutputs).to.equal(1);
-        });
-
-        it('should return an instance of the MediaElementAudioSourceNode interface', () => {
-            const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
-
-            expect(mediaElementAudioSourceNode.mediaElement).to.be.an.instanceOf(HTMLMediaElement);
-        });
-
-        it('should throw an error if the AudioContext is closed', (done) => {
-            ((context.close === undefined) ? context.startRendering() : context.close())
-                .then(() => createMediaElementAudioSourceNode(context, mediaElement))
-                .catch((err) => {
-                    expect(err.code).to.equal(11);
-                    expect(err.name).to.equal('InvalidStateError');
-
-                    context.close = undefined;
-
-                    done();
+                    expect(mediaElementAudioSourceNode.addEventListener).to.be.a('function');
+                    expect(mediaElementAudioSourceNode.dispatchEvent).to.be.a('function');
+                    expect(mediaElementAudioSourceNode.removeEventListener).to.be.a('function');
                 });
+
+                it('should be an instance of the AudioNode interface', () => {
+                    const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
+
+                    expect(mediaElementAudioSourceNode.channelCount).to.equal(2);
+                    expect(mediaElementAudioSourceNode.channelCountMode).to.equal('max');
+                    expect(mediaElementAudioSourceNode.channelInterpretation).to.equal('speakers');
+                    expect(mediaElementAudioSourceNode.connect).to.be.a('function');
+                    expect(mediaElementAudioSourceNode.context).to.be.an.instanceOf(context.constructor);
+                    expect(mediaElementAudioSourceNode.disconnect).to.be.a('function');
+                    expect(mediaElementAudioSourceNode.numberOfInputs).to.equal(0);
+                    expect(mediaElementAudioSourceNode.numberOfOutputs).to.equal(1);
+                });
+
+                it('should return an instance of the MediaElementAudioSourceNode interface', () => {
+                    const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
+
+                    expect(mediaElementAudioSourceNode.mediaElement).to.be.an.instanceOf(HTMLMediaElement);
+                });
+
+                it('should throw an error if the AudioContext is closed', (done) => {
+                    ((context.close === undefined) ? context.startRendering() : context.close())
+                        .then(() => createMediaElementAudioSourceNode(context, mediaElement))
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            context.close = undefined;
+
+                            done();
+                        });
+                });
+
+            });
+
+        });
+
+        describe('channelCount', () => {
+
+            let mediaElementAudioSourceNode;
+
+            beforeEach(() => {
+                mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelCount = 4;
+
+                mediaElementAudioSourceNode.channelCount = channelCount;
+
+                expect(mediaElementAudioSourceNode.channelCount).to.equal(channelCount);
+            });
+
+        });
+
+        describe('channelCountMode', () => {
+
+            let mediaElementAudioSourceNode;
+
+            beforeEach(() => {
+                mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelCountMode = 'explicit';
+
+                mediaElementAudioSourceNode.channelCountMode = channelCountMode;
+
+                expect(mediaElementAudioSourceNode.channelCountMode).to.equal(channelCountMode);
+            });
+
+        });
+
+        describe('channelInterpretation', () => {
+
+            let mediaElementAudioSourceNode;
+
+            beforeEach(() => {
+                mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, mediaElement);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelInterpretation = 'discrete';
+
+                mediaElementAudioSourceNode.channelInterpretation = channelInterpretation;
+
+                expect(mediaElementAudioSourceNode.channelInterpretation).to.equal(channelInterpretation);
+            });
+
         });
 
         describe('mediaElement', () => {

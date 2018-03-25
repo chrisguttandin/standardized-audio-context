@@ -18,14 +18,12 @@ const audioParamWrapper = injector.get(AudioParamWrapper);
 
 const DEFAULT_OPTIONS: IBiquadFilterOptions = {
     Q: 1,
-    channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
+    channelCount: 2,
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers',
     detune: 0,
     frequency: 350,
     gain: 0,
-    numberOfInputs: 1,
-    numberOfOutputs: 1,
     type: <TBiquadFilterType> 'lowpass'
 };
 
@@ -33,10 +31,10 @@ export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilt
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const mergedOptions = <IBiquadFilterOptions> { ...DEFAULT_OPTIONS, ...options };
+        const { channelCount } = <IBiquadFilterOptions> { ...DEFAULT_OPTIONS, ...options };
         const nativeNode = nativeContext.createBiquadFilter();
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, channelCount);
 
         // @todo Set values for Q, detune, frequency and gain.
 

@@ -26,9 +26,7 @@ const DEFAULT_OPTIONS: IGainOptions = {
     channelCount: 2,
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers',
-    gain: 1,
-    numberOfInputs: 1,
-    numberOfOutputs: 1
+    gain: 1
 };
 
 const createNativeGainNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, options: IGainOptions) => {
@@ -60,7 +58,7 @@ export class GainNode extends NoneAudioDestinationNode<TNativeGainNode> implemen
         const mergedOptions = <IGainOptions> { ...DEFAULT_OPTIONS, ...options };
         const nativeNode = createNativeGainNode(nativeContext, mergedOptions);
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, mergedOptions.channelCount);
 
         if (isOfflineAudioContext(nativeContext)) {
             const gainNodeRenderer = new GainNodeRenderer(this);

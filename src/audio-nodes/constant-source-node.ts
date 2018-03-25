@@ -24,11 +24,9 @@ const injector = Injector.create({
 const audioParamWrapper = injector.get(AudioParamWrapper);
 
 const DEFAULT_OPTIONS: IConstantSourceOptions = {
-    channelCount: 2, // @todo channelCount is not specified because it is ignored when the channelCountMode equals 'max'.
+    channelCount: 2,
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers',
-    numberOfInputs: 1,
-    numberOfOutputs: 1,
     offset: 1
 };
 
@@ -39,7 +37,7 @@ export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstant
         const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
         const nativeNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
 
-        super(context, nativeNode, mergedOptions);
+        super(context, nativeNode, mergedOptions.channelCount);
 
         if (isOfflineAudioContext(nativeContext)) {
             const constantSourceNodeRenderer = new ConstantSourceNodeRenderer(this);
