@@ -11,11 +11,7 @@ import {
     INativeConstantSourceNode
 } from '../interfaces';
 import { ConstantSourceNodeRenderer } from '../renderers/constant-source-node';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TEndedEventHandler
-} from '../types';
+import { TChannelCountMode, TChannelInterpretation, TEndedEventHandler } from '../types';
 import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
@@ -41,7 +37,7 @@ export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstant
     constructor (context: IMinimalBaseAudioContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = createNativeConstantSourceNode(nativeContext, options);
+        const nativeNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
 
         super(context, nativeNode, mergedOptions);
 

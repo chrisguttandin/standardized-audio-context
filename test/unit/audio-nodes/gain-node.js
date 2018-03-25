@@ -11,12 +11,100 @@ describe('GainNode', () => {
 
     // @todo leche seems to need a unique string as identifier as first argument.
     leche.withData([
-        [ 'constructor with AudioContext', () => new AudioContext(), (context) => new GainNode(context) ],
-        [ 'constructor with MinimalAudioContext', () => new MinimalAudioContext(), (context) => new GainNode(context) ],
-        [ 'constructor with OfflineAudioContext', () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }), (context) => new GainNode(context) ],
-        [ 'constructor with MinimalOfflineAudioContext', () => new MinimalOfflineAudioContext({ length: 5, sampleRate: 44100 }), (context) => new GainNode(context) ],
-        [ 'factory function of AudioContext', () => new AudioContext(), (context) => context.createGain() ],
-        [ 'factory function of OfflineAudioContext', () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }), (context) => context.createGain() ]
+        [
+            'constructor with AudioContext',
+            () => new AudioContext(),
+            (context, options = null) => {
+                if (options === null) {
+                    return new GainNode(context);
+                }
+
+                return new GainNode(context, options);
+            }
+        ],
+        [
+            'constructor with MinimalAudioContext',
+            () => new MinimalAudioContext(),
+            (context, options = null) => {
+                if (options === null) {
+                    return new GainNode(context);
+                }
+
+                return new GainNode(context, options);
+            }
+        ],
+        [
+            'constructor with OfflineAudioContext',
+            () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
+            (context, options = null) => {
+                if (options === null) {
+                    return new GainNode(context);
+                }
+
+                return new GainNode(context, options);
+            }
+        ],
+        [
+            'constructor with MinimalOfflineAudioContext',
+            () => new MinimalOfflineAudioContext({ length: 5, sampleRate: 44100 }),
+            (context, options = null) => {
+                if (options === null) {
+                    return new GainNode(context);
+                }
+
+                return new GainNode(context, options);
+            }
+        ],
+        [
+            'factory function of AudioContext',
+            () => new AudioContext(),
+            (context, options = null) => {
+                const gainNode = context.createGain();
+
+                if (options !== null && options.channelCount !== undefined) {
+                    gainNode.channelCount = options.channelCount;
+                }
+
+                if (options !== null && options.channelCountMode !== undefined) {
+                    gainNode.channelCountMode = options.channelCountMode;
+                }
+
+                if (options !== null && options.channelInterpretation !== undefined) {
+                    gainNode.channelInterpretation = options.channelInterpretation;
+                }
+
+                if (options !== null && options.gain !== undefined) {
+                    gainNode.gain.value = options.gain;
+                }
+
+                return gainNode;
+            }
+        ],
+        [
+            'factory function of OfflineAudioContext',
+            () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
+            (context, options = null) => {
+                const gainNode = context.createGain();
+
+                if (options !== null && options.channelCount !== undefined) {
+                    gainNode.channelCount = options.channelCount;
+                }
+
+                if (options !== null && options.channelCountMode !== undefined) {
+                    gainNode.channelCountMode = options.channelCountMode;
+                }
+
+                if (options !== null && options.channelInterpretation !== undefined) {
+                    gainNode.channelInterpretation = options.channelInterpretation;
+                }
+
+                if (options !== null && options.gain !== undefined) {
+                    gainNode.gain.value = options.gain;
+                }
+
+                return gainNode;
+            }
+        ]
     ], (_, createContext, createGainNode) => {
 
         let context;
@@ -29,44 +117,138 @@ describe('GainNode', () => {
 
         beforeEach(() => context = createContext());
 
-        it('should be an instance of the EventTarget interface', () => {
-            const gainNode = createGainNode(context);
+        describe('constructor()', () => {
 
-            expect(gainNode.addEventListener).to.be.a('function');
-            expect(gainNode.dispatchEvent).to.be.a('function');
-            expect(gainNode.removeEventListener).to.be.a('function');
-        });
+            describe('without any options', () => {
 
-        it('should be an instance of the AudioNode interface', () => {
-            const gainNode = createGainNode(context);
+                let gainNode;
 
-            expect(gainNode.channelCount).to.equal(2);
-            expect(gainNode.channelCountMode).to.equal('max');
-            expect(gainNode.channelInterpretation).to.equal('speakers');
-            expect(gainNode.connect).to.be.a('function');
-            expect(gainNode.context).to.be.an.instanceOf(context.constructor);
-            expect(gainNode.disconnect).to.be.a('function');
-            expect(gainNode.numberOfInputs).to.equal(1);
-            expect(gainNode.numberOfOutputs).to.equal(1);
-        });
-
-        it('should return an instance of the GainNode interface', () => {
-            const gainNode = createGainNode(context);
-
-            expect(gainNode.gain).not.to.be.undefined;
-        });
-
-        it('should throw an error if the AudioContext is closed', (done) => {
-            ((context.close === undefined) ? context.startRendering() : context.close())
-                .then(() => createGainNode(context))
-                .catch((err) => {
-                    expect(err.code).to.equal(11);
-                    expect(err.name).to.equal('InvalidStateError');
-
-                    context.close = undefined;
-
-                    done();
+                beforeEach(() => {
+                    gainNode = createGainNode(context);
                 });
+
+                it('should be an instance of the EventTarget interface', () => {
+                    expect(gainNode.addEventListener).to.be.a('function');
+                    expect(gainNode.dispatchEvent).to.be.a('function');
+                    expect(gainNode.removeEventListener).to.be.a('function');
+                });
+
+                it('should be an instance of the AudioNode interface', () => {
+                    expect(gainNode.channelCount).to.equal(2);
+                    expect(gainNode.channelCountMode).to.equal('max');
+                    expect(gainNode.channelInterpretation).to.equal('speakers');
+                    expect(gainNode.connect).to.be.a('function');
+                    expect(gainNode.context).to.be.an.instanceOf(context.constructor);
+                    expect(gainNode.disconnect).to.be.a('function');
+                    expect(gainNode.numberOfInputs).to.equal(1);
+                    expect(gainNode.numberOfOutputs).to.equal(1);
+                });
+
+                it('should return an instance of the GainNode interface', () => {
+                    expect(gainNode.gain).not.to.be.undefined;
+                });
+
+                it('should throw an error if the AudioContext is closed', (done) => {
+                    ((context.close === undefined) ? context.startRendering() : context.close())
+                        .then(() => createGainNode(context))
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            context.close = undefined;
+
+                            done();
+                        });
+                });
+
+            });
+
+            describe('with valid options', () => {
+
+                it('should return an instance with the given channelCount', () => {
+                    const channelCount = 4;
+                    const gainNode = createGainNode(context, { channelCount });
+
+                    expect(gainNode.channelCount).to.equal(channelCount);
+                });
+
+                it('should return an instance with the given channelCountMode', () => {
+                    const channelCountMode = 'explicit';
+                    const gainNode = createGainNode(context, { channelCountMode });
+
+                    expect(gainNode.channelCountMode).to.equal(channelCountMode);
+                });
+
+                it('should return an instance with the given channelInterpretation', () => {
+                    const channelInterpretation = 'discrete';
+                    const gainNode = createGainNode(context, { channelInterpretation });
+
+                    expect(gainNode.channelInterpretation).to.equal(channelInterpretation);
+                });
+
+                it('should return an instance with the given intial value for gain', () => {
+                    const gain = 0.5;
+                    const gainNode = createGainNode(context, { gain });
+
+                    expect(gainNode.gain.value).to.equal(gain);
+                });
+
+            });
+
+        });
+
+        describe('channelCount', () => {
+
+            let gainNode;
+
+            beforeEach(() => {
+                gainNode = createGainNode(context);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelCount = 4;
+
+                gainNode.channelCount = channelCount;
+
+                expect(gainNode.channelCount).to.equal(channelCount);
+            });
+
+        });
+
+        describe('channelCountMode', () => {
+
+            let gainNode;
+
+            beforeEach(() => {
+                gainNode = createGainNode(context);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelCountMode = 'explicit';
+
+                gainNode.channelCountMode = channelCountMode;
+
+                expect(gainNode.channelCountMode).to.equal(channelCountMode);
+            });
+
+        });
+
+        describe('channelInterpretation', () => {
+
+            let gainNode;
+
+            beforeEach(() => {
+                gainNode = createGainNode(context);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelInterpretation = 'discrete';
+
+                gainNode.channelInterpretation = channelInterpretation;
+
+                expect(gainNode.channelInterpretation).to.equal(channelInterpretation);
+            });
+
         });
 
         describe('gain', () => {
