@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { IndexSizeErrorFactory } from '../factories/index-size-error';
+import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { NotSupportedErrorFactory } from '../factories/not-supported-error';
 import { createNativeConstantSourceNode } from '../helpers/create-native-constant-source-node';
 import {
     IAudioWorkletNodeOptions,
@@ -16,7 +19,10 @@ export class AudioWorkletNodeFaker {
 
     constructor (
         private _channelMergerNodeWrapper: ChannelMergerNodeWrapper,
-        private _channelSplitterNodeWrapper: ChannelSplitterNodeWrapper
+        private _channelSplitterNodeWrapper: ChannelSplitterNodeWrapper,
+        private _indexSizeErrorFactory: IndexSizeErrorFactory,
+        private _invalidStateErrorFactory: InvalidStateErrorFactory,
+        private _notSupportedErrorFactory: NotSupportedErrorFactory
     ) { }
 
     public fake (
@@ -24,14 +30,34 @@ export class AudioWorkletNodeFaker {
         processorDefinition: IAudioWorkletProcessorConstructor,
         options: IAudioWorkletNodeOptions
     ): INativeAudioWorkletNodeFaker {
+        if (options.numberOfInputs === 0 && options.numberOfOutputs === 0) {
+            throw this._notSupportedErrorFactory.create();
+        }
+
+        if (options.outputChannelCount !== undefined) {
+            if (options.outputChannelCount.length !== options.numberOfOutputs) {
+                throw this._indexSizeErrorFactory.create();
+            }
+
+            // @todo Check if any of the channelCount values is greater than the implementation's maximum number of channels.
+            if (options.outputChannelCount.some((channelCount) => (channelCount < 1))) {
+                throw this._notSupportedErrorFactory.create();
+            }
+        }
+
+        // Bug #61: This is not part of the standard but required for the faker to work.
+        if (options.channelCountMode !== 'explicit') {
+            throw this._notSupportedErrorFactory.create();
+        }
+
         const messageChannel = new MessageChannel();
 
         processorDefinition.prototype.port = messageChannel.port1;
 
-        const audioWorkletProcessor = new processorDefinition();
+        const audioWorkletProcessor = new processorDefinition(options);
         const bufferSize = 512;
         const gainNode = unpatchedAudioContext.createGain();
-        const numberOfChannels = options.channelCount;
+        const numberOfChannels = options.channelCount * options.numberOfInputs;
         const numberOfParameters = processorDefinition.parameterDescriptors.length;
         const inputChannelSplitterNode = unpatchedAudioContext.createChannelSplitter(numberOfChannels);
         // @todo Create multiple ChannelMergerNodes to support more than (6 - numberOfChannels) parameters.
@@ -45,7 +71,9 @@ export class AudioWorkletNodeFaker {
             numberOfChannels
         );
 
-        gainNode.channelCount = numberOfChannels;
+        gainNode.channelCount = options.channelCount;
+        gainNode.channelCountMode = options.channelCountMode;
+        gainNode.channelInterpretation = options.channelInterpretation;
 
         // Bug #15: Safari does not return the default properties.
         if (inputChannelMergerNode.channelCount !== 1 &&
@@ -161,6 +189,8 @@ export class AudioWorkletNodeFaker {
             }
         };
 
+        const invalidStateErrorFactory = this._invalidStateErrorFactory;
+
         return {
             get bufferSize () {
                 return bufferSize;
@@ -168,11 +198,22 @@ export class AudioWorkletNodeFaker {
             get channelCount () {
                 return gainNode.channelCount;
             },
+            set channelCount (_) {
+                // Bug #61: This is not part of the standard but required for the faker to work.
+                throw invalidStateErrorFactory.create();
+            },
             get channelCountMode () {
                 return gainNode.channelCountMode;
             },
+            set channelCountMode (_) {
+                // Bug #61: This is not part of the standard but required for the faker to work.
+                throw invalidStateErrorFactory.create();
+            },
             get channelInterpretation () {
                 return gainNode.channelInterpretation;
+            },
+            set channelInterpretation (value) {
+                gainNode.channelInterpretation = value;
             },
             get context () {
                 return gainNode.context;
@@ -181,10 +222,10 @@ export class AudioWorkletNodeFaker {
                 return gainNode;
             },
             get numberOfInputs () {
-                return gainNode.numberOfInputs;
+                return options.numberOfInputs;
             },
             get numberOfOutputs () {
-                return gainNode.numberOfOutputs;
+                return options.numberOfOutputs;
             },
             get onprocessorerror () {
                 return <INativeAudioWorkletNode['onprocessorerror']> onprocessorerror;
@@ -231,6 +272,12 @@ export class AudioWorkletNodeFaker {
 }
 
 export const AUDIO_WORKLET_NODE_FAKER_PROVIDER = {
-    deps: [ ChannelMergerNodeWrapper, ChannelSplitterNodeWrapper ],
+    deps: [
+        ChannelMergerNodeWrapper,
+        ChannelSplitterNodeWrapper,
+        IndexSizeErrorFactory,
+        InvalidStateErrorFactory,
+        NotSupportedErrorFactory
+    ],
     provide: AudioWorkletNodeFaker
 };

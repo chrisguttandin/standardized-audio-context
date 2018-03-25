@@ -1,6 +1,6 @@
 class InspectorProcessor extends AudioWorkletProcessor { // eslint-disable-line no-undef
 
-    constructor () {
+    constructor (options) {
         super();
 
         this.port.onmessage = () => {
@@ -8,16 +8,21 @@ class InspectorProcessor extends AudioWorkletProcessor { // eslint-disable-line 
             const typeOfSelf = typeof self;
             const typeOfWindow = typeof window;
 
-            this.port.postMessage({ currentTime, sampleRate, typeOfGlobal, typeOfSelf, typeOfWindow }); // eslint-disable-line no-undef
+            this.port.postMessage({ currentTime, options, sampleRate, typeOfGlobal, typeOfSelf, typeOfWindow }); // eslint-disable-line no-undef
         };
     }
 
-    process () { // eslint-disable-line class-methods-use-this
+    process (inputs, outputs, parameters) {
+        this.port.postMessage({ inputs, outputs, parameters });
+
         return true;
     }
 
 }
 
-InspectorProcessor.parameterDescriptors = [ ];
+InspectorProcessor.parameterDescriptors = [ {
+    defaultValue: 1,
+    name: 'gain'
+} ];
 
 registerProcessor('inspector-processor', InspectorProcessor); // eslint-disable-line no-undef

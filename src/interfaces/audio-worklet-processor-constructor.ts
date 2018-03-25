@@ -1,10 +1,11 @@
 import { IAudioParamDescriptor } from './audio-param-descriptor';
+import { IAudioWorkletNodeOptions } from './audio-worklet-node-options';
 import { IAudioWorkletProcessor } from './audio-worklet-processor';
 
 export interface IAudioWorkletProcessorConstructor {
 
     parameterDescriptors: IAudioParamDescriptor[];
 
-    new (): IAudioWorkletProcessor;
+    new (options: IAudioWorkletNodeOptions): IAudioWorkletProcessor;
 
 }

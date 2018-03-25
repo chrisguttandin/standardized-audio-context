@@ -7,6 +7,7 @@ import { renderAutomation } from '../helpers/render-automation';
 import { renderNativeOfflineAudioContext } from '../helpers/render-native-offline-audio-context';
 import {
     IAudioWorkletNode,
+    IAudioWorkletNodeOptions,
     IAudioWorkletProcessorConstructor,
     IMinimalOfflineAudioContext,
     INativeAudioWorkletNode
@@ -46,15 +47,23 @@ export class AudioWorkletNodeRenderer extends AudioNodeRenderer {
 
     private _nativeNode: null | TNativeAudioBufferSourceNode | INativeAudioWorkletNode;
 
+    private _options: IAudioWorkletNodeOptions;
+
     private _processorDefinition: undefined | IAudioWorkletProcessorConstructor;
 
     private _proxy: IAudioWorkletNode;
 
-    constructor (proxy: IAudioWorkletNode, name: string, processorDefinition: undefined | IAudioWorkletProcessorConstructor) {
+    constructor (
+        proxy: IAudioWorkletNode,
+        name: string,
+        options: IAudioWorkletNodeOptions,
+        processorDefinition: undefined | IAudioWorkletProcessorConstructor
+    ) {
         super();
 
         this._name = name;
         this._nativeNode = null;
+        this._options = options;
         this._processorDefinition = processorDefinition;
         this._proxy = proxy;
     }
@@ -172,7 +181,7 @@ export class AudioWorkletNodeRenderer extends AudioNodeRenderer {
             throw new Error();
         }
 
-        const audioWorkletProcessor = new this._processorDefinition();
+        const audioWorkletProcessor = new this._processorDefinition(this._options);
 
         const inputs = [ ];
         const outputs = [ ];

@@ -37,4 +37,18 @@ describe('AudioWorklet', () => {
 
     });
 
+    describe('with processorOptions set to null', () => {
+
+        // bug #66
+
+        it('should throw a TypeError', async () => {
+            await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+
+            expect(() => {
+                new AudioWorkletNode(audioContext, 'gain-processor', { processorOptions: null }); // eslint-disable-line no-undef
+            }).to.throw(TypeError, "Failed to construct 'AudioWorkletNode': member processorOptions is not an object.");
+        });
+
+    });
+
 });
