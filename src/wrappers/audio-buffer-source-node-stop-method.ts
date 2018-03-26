@@ -1,3 +1,4 @@
+import { createNativeGainNode } from '../helpers/create-native-gain-node';
 import {
     TNativeAudioBufferSourceNode,
     TNativeAudioNode,
@@ -11,7 +12,7 @@ export class AudioBufferSourceNodeStopMethodWrapper {
     public wrap (
         audioBufferSourceNode: TNativeAudioBufferSourceNode, audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext
     ) {
-        const gainNode = audioContext.createGain();
+        const gainNode = createNativeGainNode(audioContext);
 
         audioBufferSourceNode.connect(gainNode);
 

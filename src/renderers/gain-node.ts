@@ -1,5 +1,6 @@
 import { AUDIO_PARAM_STORE } from '../globals';
 import { connectAudioParam } from '../helpers/connect-audio-param';
+import { createNativeGainNode } from '../helpers/create-native-gain-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
@@ -31,7 +32,7 @@ export class GainNodeRenderer extends AudioNodeRenderer {
         if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
             const gainAudioParam = <IAudioParam> (<any> this._nativeNode.gain);
 
-            this._nativeNode = offlineAudioContext.createGain();
+            this._nativeNode = createNativeGainNode(offlineAudioContext);
 
             await renderAutomation(offlineAudioContext, gainAudioParam, this._nativeNode.gain);
         } else {

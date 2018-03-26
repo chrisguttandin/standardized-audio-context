@@ -5,6 +5,6 @@ export interface INativeConstantSourceNodeFaker extends INativeAudioNodeFaker, I
 
     bufferSize: undefined;
 
-    input: undefined;
+    inputs: undefined;
 
 }

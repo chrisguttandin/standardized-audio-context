@@ -77,13 +77,8 @@ const createChannelCount = (length: number): number[] => {
     return channelCount;
 };
 
-const createNativeAudioWorkletNode = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    name: string,
-    processorDefinition: undefined | IAudioWorkletProcessorConstructor,
-    options: IAudioWorkletNodeOptions
-) => {
-    const sanitizedOptions: { outputChannelCount: number[] } & IAudioWorkletNodeOptions = {
+const sanitizedOptions = (options: IAudioWorkletNodeOptions): { outputChannelCount: number[] } & IAudioWorkletNodeOptions => {
+    return {
         ...options,
         outputChannelCount: (options.outputChannelCount !== undefined) ?
             options.outputChannelCount :
@@ -98,10 +93,17 @@ const createNativeAudioWorkletNode = (
         // Bug #66: The default value of processorOptions should be null, but Chrome Canary doesn't like it.
         processorOptions: (options.processorOptions === null) ? { } : options.processorOptions
     };
+};
 
+const createNativeAudioWorkletNode = (
+    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    name: string,
+    processorDefinition: undefined | IAudioWorkletProcessorConstructor,
+    options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions
+) => {
     if (nativeAudioWorkletNodeConstructor !== null) {
         try {
-            const nativeNode = new nativeAudioWorkletNodeConstructor(nativeContext, name, sanitizedOptions);
+            const nativeNode = new nativeAudioWorkletNodeConstructor(nativeContext, name, options);
 
             /*
              * Bug #61: Overwriting the property accessors is necessary as long as some browsers have no native implementation to achieve a
@@ -138,7 +140,7 @@ const createNativeAudioWorkletNode = (
         throw notSupportedErrorFactory.create();
     }
 
-    return audioWorkletNodeFaker.fake(nativeContext, processorDefinition, sanitizedOptions);
+    return audioWorkletNodeFaker.fake(nativeContext, processorDefinition, options);
 };
 
 export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkletNode> implements IAudioWorkletNode {
@@ -147,7 +149,7 @@ export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkl
 
     constructor (context: IMinimalBaseAudioContext, name: string, options: IAudioWorkletNodeOptions = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const mergedOptions = <IAudioWorkletNodeOptions> { ...DEFAULT_OPTIONS, ...options };
+        const mergedOptions = sanitizedOptions(<IAudioWorkletNodeOptions> { ...DEFAULT_OPTIONS, ...options });
         const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
         const processorDefinition = (nodeNameToProcessorDefinitionMap === undefined) ?
             undefined :

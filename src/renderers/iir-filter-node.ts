@@ -1,4 +1,5 @@
 import { Injector } from '@angular/core';
+import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
 import { filterBuffer } from '../helpers/filter-buffer';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
@@ -78,7 +79,7 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer {
         } catch (err) {
             const partialOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(
                 // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
-                (<IMinimalOfflineAudioContext> this._proxy.context).destination.channelCount,
+                this._proxy.context.destination.channelCount,
                 // Bug #17: Safari does not yet expose the length.
                 (<IMinimalOfflineAudioContext> this._proxy.context).length,
                 offlineAudioContext.sampleRate
@@ -88,7 +89,7 @@ export class IIRFilterNodeRenderer extends AudioNodeRenderer {
                 ._connectSources(partialOfflineAudioContext, <TNativeAudioNode> partialOfflineAudioContext.destination)
                 .then(() => renderNativeOfflineAudioContext(partialOfflineAudioContext))
                 .then((renderedBuffer) => {
-                    const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+                    const audioBufferSourceNode = createNativeAudioBufferSourceNode(offlineAudioContext);
 
                     audioBufferSourceNode.buffer = this._filterBuffer(renderedBuffer, offlineAudioContext);
                     audioBufferSourceNode.start(0);

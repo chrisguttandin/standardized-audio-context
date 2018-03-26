@@ -6,6 +6,6 @@ export interface INativeAudioWorkletNodeFaker extends INativeAudioNodeFaker, INa
 
     bufferSize: number;
 
-    input: TNativeAudioNode;
+    inputs: TNativeAudioNode[];
 
 }

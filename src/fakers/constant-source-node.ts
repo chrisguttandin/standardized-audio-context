@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
+import { createNativeGainNode } from '../helpers/create-native-gain-node';
 import { IConstantSourceOptions, INativeConstantSourceNode, INativeConstantSourceNodeFaker } from '../interfaces';
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
@@ -7,37 +9,21 @@ export class ConstantSourceNodeFaker {
 
     public fake (
         unpatchedAudioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-        options: Partial<IConstantSourceOptions>
+        { offset, ...audioNodeOptions }: Partial<IConstantSourceOptions>
     ): INativeConstantSourceNodeFaker {
         // @todo Safari does not play/loop 1 sample buffers. This should be covered by an expectation test.
         const audioBuffer = unpatchedAudioContext.createBuffer(1, 2, unpatchedAudioContext.sampleRate);
-        const audioBufferSourceNode = unpatchedAudioContext.createBufferSource();
-        const gainNode = unpatchedAudioContext.createGain();
+        const audioBufferSourceNode = createNativeAudioBufferSourceNode(unpatchedAudioContext);
+        const gainNode = createNativeGainNode(unpatchedAudioContext, { ...audioNodeOptions, gain: offset });
 
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
         const channelData = audioBuffer.getChannelData(0);
 
-        const offset = (options.offset === undefined) ? 1 : options.offset;
-
-        channelData[0] = offset;
-        channelData[1] = offset;
+        channelData[0] = (offset === undefined) ? 1 : offset;
+        channelData[1] = (offset === undefined) ? 1 : offset;
 
         audioBufferSourceNode.buffer = audioBuffer;
         audioBufferSourceNode.loop = true;
-
-        if (options.channelCount !== undefined) {
-            gainNode.channelCount = options.channelCount;
-        }
-
-        if (options.channelCountMode !== undefined) {
-            gainNode.channelCountMode = options.channelCountMode;
-        }
-
-        if (options.channelInterpretation !== undefined) {
-            gainNode.channelInterpretation = options.channelInterpretation;
-        }
-
-        gainNode.gain.value = offset;
 
         audioBufferSourceNode.connect(gainNode);
 
@@ -66,7 +52,7 @@ export class ConstantSourceNodeFaker {
             get context () {
                 return gainNode.context;
             },
-            get input () {
+            get inputs () {
                 return undefined;
             },
             get numberOfInputs () {

@@ -1,3 +1,4 @@
+import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioBufferSourceNode } from '../interfaces';
@@ -33,7 +34,11 @@ export class AudioBufferSourceNodeRenderer extends AudioNodeRenderer {
 
         // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
         if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
-            this._nativeNode = offlineAudioContext.createBufferSource();
+            this._nativeNode = createNativeAudioBufferSourceNode(offlineAudioContext, {
+                channelCount: this._nativeNode.channelCount,
+                channelCountMode: this._nativeNode.channelCountMode,
+                channelInterpretation: this._nativeNode.channelInterpretation
+            });
             this._nativeNode.buffer = (this._proxy.buffer === null) ? null : this._proxy.buffer;
 
             if (this._start !== null) {

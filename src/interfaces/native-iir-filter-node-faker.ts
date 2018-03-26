@@ -5,6 +5,6 @@ export interface INativeIIRFilterNodeFaker extends INativeAudioNodeFaker, TNativ
 
     bufferSize: number;
 
-    input: TNativeAudioNode;
+    inputs: TNativeAudioNode[];
 
 }

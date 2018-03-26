@@ -1,48 +1,21 @@
 import { Injector } from '@angular/core';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
-import { cacheTestResult } from '../helpers/cache-test-result';
+import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioBufferSourceNodeRenderer } from '../renderers/audio-buffer-source-node';
-import { STOP_STOPPED_SUPPORT_TESTER_PROVIDER, StopStoppedSupportTester } from '../support-testers/stop-stopped';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TEndedEventHandler,
-    TNativeAudioBufferSourceNode,
-    TUnpatchedAudioContext,
-    TUnpatchedOfflineAudioContext
-} from '../types';
-import {
-    AUDIO_BUFFER_SOURCE_NODE_STOP_METHOD_WRAPPER_PROVIDER,
-    AudioBufferSourceNodeStopMethodWrapper
-} from '../wrappers/audio-buffer-source-node-stop-method';
+import { TChannelCountMode, TChannelInterpretation, TEndedEventHandler, TNativeAudioBufferSourceNode } from '../types';
 import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const injector = Injector.create({
     providers: [
-        AUDIO_BUFFER_SOURCE_NODE_STOP_METHOD_WRAPPER_PROVIDER,
-        AUDIO_PARAM_WRAPPER_PROVIDER,
-        STOP_STOPPED_SUPPORT_TESTER_PROVIDER
+        AUDIO_PARAM_WRAPPER_PROVIDER
     ]
 });
 
-const audioBufferSourceNodeStopMethodWrapper = injector.get(AudioBufferSourceNodeStopMethodWrapper);
 const audioParamWrapper = injector.get(AudioParamWrapper);
-const stopStoppedSupportTester = injector.get(StopStoppedSupportTester);
-
-const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => {
-    const nativeNode = nativeContext.createBufferSource();
-
-    // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
-    if (!cacheTestResult(StopStoppedSupportTester, () => stopStoppedSupportTester.test(nativeContext))) {
-        audioBufferSourceNodeStopMethodWrapper.wrap(nativeNode, nativeContext);
-    }
-
-    return nativeNode;
-};
 
 const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     buffer: null,
@@ -60,10 +33,10 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const { channelCount } = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = createNativeNode(nativeContext);
+        const mergedOptions = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
+        const nativeNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);
 
-        super(context, nativeNode, channelCount);
+        super(context, nativeNode, mergedOptions.channelCount);
 
         // @todo Set all the other options.
         // @todo this.buffer = options.buffer;

@@ -1,5 +1,4 @@
-import { Injector } from '@angular/core';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
+import { createNativeChannelSplitterNode } from '../helpers/create-native-channel-splitter-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IChannelSplitterOptions, IMinimalBaseAudioContext } from '../interfaces';
@@ -10,7 +9,6 @@ import {
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
-import { CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER, ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IChannelSplitterOptions = {
@@ -20,27 +18,13 @@ const DEFAULT_OPTIONS: IChannelSplitterOptions = {
     numberOfOutputs: 6
 };
 
-const injector = Injector.create({
-    providers: [
-        CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER,
-        INVALID_STATE_ERROR_FACTORY_PROVIDER
-    ]
-});
-
-const channelSplitterNodeWrapper = injector.get<ChannelSplitterNodeWrapper>(ChannelSplitterNodeWrapper);
-
 const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfOutputs: number) => {
     // @todo Use this inside the AudioWorkletNodeFaker once it supports the OfflineAudioContext.
     if (isOfflineAudioContext(nativeContext)) {
         throw new Error('This is not yet supported.');
     }
 
-    const nativeNode = nativeContext.createChannelSplitter(numberOfOutputs);
-
-    // Bug #29 - #32: Only Chrome partially supports the spec yet.
-    channelSplitterNodeWrapper.wrap(nativeNode);
-
-    return nativeNode;
+    return createNativeChannelSplitterNode(nativeContext, { numberOfOutputs });
 };
 
 export class ChannelSplitterNode extends NoneAudioDestinationNode<TNativeChannelSplitterNode> {

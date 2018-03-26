@@ -153,8 +153,10 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
                 throw new Error('The associated nativeNode is missing.');
             }
 
-            if ((<INativeAudioNodeFaker> nativeDestinationNode).input !== undefined) {
-                this._nativeNode.connect((<TNativeAudioNode> (<INativeAudioNodeFaker> nativeDestinationNode).input), output, input);
+            if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
+                const nativeInputDestinationNode = (<TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs)[input];
+
+                this._nativeNode.connect(nativeInputDestinationNode, output, input);
             } else {
                 this._nativeNode.connect(nativeDestinationNode, output, input);
             }
@@ -256,8 +258,12 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
             throw new Error('The associated nativeNode is missing.');
         }
 
-        if ((<INativeAudioNodeFaker> nativeDestinationNode).input !== undefined) {
-            return this._nativeNode.disconnect(<TNativeAudioNode> (<INativeAudioNodeFaker> nativeDestinationNode).input);
+        if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
+            for (const input of (<TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs)) {
+                this._nativeNode.disconnect(input);
+            }
+
+            return;
         }
 
         return this._nativeNode.disconnect(nativeDestinationNode);

@@ -613,13 +613,11 @@ describe('AudioWorkletNode', () => {
                         context,
                         length: (context.length === undefined) ? 5 : undefined,
                         prepare: async (destination) => {
-                            // @todo For some reason up-mixing doesn't work yet, which is why a stereo buffer is used for testing.
-                            const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 2, sampleRate: context.sampleRate });
+                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
                             const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
 
                             audioBuffer.copyToChannel(new Float32Array(values), 0);
-                            audioBuffer.copyToChannel(new Float32Array(values), 1);
 
                             audioBufferSourceNode.buffer = audioBuffer;
 
@@ -846,15 +844,13 @@ describe('AudioWorkletNode', () => {
                     context,
                     length: (context.length === undefined) ? 5 : undefined,
                     prepare: async (destination) => {
-                        // @todo For some reason up-mixing doesn't work yet, which is why a stereo buffer is used for testing.
-                        const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 2, sampleRate: context.sampleRate });
+                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                         const audioWorkletNode = await createAudioWorkletNode(context, 'gain-processor');
                         const firstDummyGainNode = new GainNode(context);
                         const secondDummyGainNode = new GainNode(context);
 
                         audioBuffer.copyToChannel(new Float32Array(values), 0);
-                        audioBuffer.copyToChannel(new Float32Array(values), 1);
 
                         audioBufferSourceNode.buffer = audioBuffer;
 

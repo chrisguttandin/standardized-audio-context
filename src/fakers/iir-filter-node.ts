@@ -151,8 +151,8 @@ export class IIRFilterNodeFaker {
             get context () {
                 return scriptProcessorNode.context;
             },
-            get input () {
-                return scriptProcessorNode;
+            get inputs () {
+                return [ scriptProcessorNode ];
             },
             get numberOfInputs () {
                 return scriptProcessorNode.numberOfInputs;

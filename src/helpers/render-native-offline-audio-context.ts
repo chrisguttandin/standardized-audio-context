@@ -1,5 +1,6 @@
 import { Injector } from '@angular/core';
 import { cacheTestResult } from '../helpers/cache-test-result';
+import { createNativeGainNode } from '../helpers/create-native-gain-node';
 import { IOfflineAudioCompletionEvent } from '../interfaces';
 import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from '../support-testers/promise';
 import { TNativeAudioBuffer, TUnpatchedOfflineAudioContext } from '../types';
@@ -29,8 +30,7 @@ export const renderNativeOfflineAudioContext = (nativeOfflineAudioContext: TUnpa
         };
 
         // Bug #48: Safari does not render an OfflineAudioContext without any connected node.
-        nativeOfflineAudioContext
-            .createGain()
+        createNativeGainNode(nativeOfflineAudioContext)
             .connect(nativeOfflineAudioContext.destination);
 
         nativeOfflineAudioContext.startRendering();
