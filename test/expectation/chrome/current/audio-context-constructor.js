@@ -52,6 +52,22 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createBiquadFilter()', () => {
+
+        describe('getFrequencyResponse()', () => {
+
+            // bug #68
+
+            it('should throw no error', () => {
+                const biquadFilterNode = audioContext.createBiquadFilter();
+
+                biquadFilterNode.getFrequencyResponse(new Float32Array(), new Float32Array(1), new Float32Array(1));
+            });
+
+        });
+
+    });
+
     describe('createBufferSource()', () => {
 
         describe('stop()', () => {
