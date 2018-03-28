@@ -22,8 +22,7 @@ describe('ConstantSourceNode', () => {
 
                 return new ConstantSourceNode(context, options);
             }
-        ],
-        [
+        ], [
             'constructor with MinimalAudioContext',
             () => new MinimalAudioContext(),
             (context, options = null) => {
@@ -33,8 +32,7 @@ describe('ConstantSourceNode', () => {
 
                 return new ConstantSourceNode(context, options);
             }
-        ],
-        [
+        ], [
             'constructor with OfflineAudioContext',
             () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
             (context, options = null) => {
@@ -44,8 +42,7 @@ describe('ConstantSourceNode', () => {
 
                 return new ConstantSourceNode(context, options);
             }
-        ],
-        [
+        ], [
             'constructor with MinimalOfflineAudioContext',
             () => new MinimalOfflineAudioContext({ length: 5, sampleRate: 44100 }),
             (context, options = null) => {
@@ -55,8 +52,7 @@ describe('ConstantSourceNode', () => {
 
                 return new ConstantSourceNode(context, options);
             }
-        ],
-        [
+        ], [
             'factory function of AudioContext',
             () => new AudioContext(),
             (context, options = null) => {
@@ -80,8 +76,7 @@ describe('ConstantSourceNode', () => {
 
                 return constantSourceNode;
             }
-        ],
-        [
+        ], [
             'factory function of OfflineAudioContext',
             () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
             (context, options = null) => {

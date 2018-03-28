@@ -16,23 +16,19 @@ describe('IIRFilterNode', () => {
             'constructor with AudioContext',
             () => new AudioContext(),
             (context, options) => new IIRFilterNode(context, options)
-        ],
-        [
+        ], [
             'constructor with MinimalAudioContext',
             () => new MinimalAudioContext(),
             (context, options) => new IIRFilterNode(context, options)
-        ],
-        [
+        ], [
             'constructor with OfflineAudioContext',
             () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
             (context, options) => new IIRFilterNode(context, options)
-        ],
-        [
+        ], [
             'constructor with MinimalOfflineAudioContext',
             () => new MinimalOfflineAudioContext({ length: 5, sampleRate: 44100 }),
             (context, options) => new IIRFilterNode(context, options)
-        ],
-        [
+        ], [
             'factory function of AudioContext',
             () => new AudioContext(),
             (context, options) => {
@@ -52,8 +48,7 @@ describe('IIRFilterNode', () => {
 
                 return iIRFilterNode;
             }
-        ],
-        [
+        ], [
             'factory function of OfflineAudioContext',
             () => new OfflineAudioContext({ length: 5, sampleRate: 44100 }),
             (context, options) => {
