@@ -262,6 +262,19 @@ describe('offlineAudioContextConstructor', () => {
             offlineAudioContext.startRendering();
         });
 
+        describe('buffer', () => {
+
+            // bug #72
+
+            it('should allow to assign the buffer multiple times', () => {
+                const bufferSourceNode = offlineAudioContext.createBufferSource();
+
+                bufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
+                bufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
+            });
+
+        });
+
         describe('start()', () => {
 
             // bug #44

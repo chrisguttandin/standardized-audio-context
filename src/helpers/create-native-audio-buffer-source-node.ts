@@ -21,8 +21,8 @@ import {
 } from '../support-testers/audio-scheduled-source-node-stop-method-negative-parameters';
 import { TNativeAudioBufferSourceNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_WRAPPER_PROVIDER,
-    AudioScheduledSourceNodeStartMethodConsecutiveCallsWrapper
+    AUDIO_BUFFER_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_WRAPPER_PROVIDER,
+    AudioBufferSourceNodeStartMethodConsecutiveCallsWrapper
 } from '../wrappers/audio-buffer-source-node-start-method-consecutive-calls';
 import {
     AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
@@ -40,7 +40,7 @@ import {
 const injector = Injector.create({
     providers: [
         AUDIO_BUFFER_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
-        AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_WRAPPER_PROVIDER,
+        AUDIO_BUFFER_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_WRAPPER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
@@ -53,7 +53,7 @@ const injector = Injector.create({
 
 const startMethodConsecutiveCallsSupportTester = injector.get(AudioBufferSourceNodeStartMethodConsecutiveCallsSupportTester);
 const startMethodConsecutiveCallsWrapper = injector
-    .get<AudioScheduledSourceNodeStartMethodConsecutiveCallsWrapper>(AudioScheduledSourceNodeStartMethodConsecutiveCallsWrapper);
+    .get<AudioBufferSourceNodeStartMethodConsecutiveCallsWrapper>(AudioBufferSourceNodeStartMethodConsecutiveCallsWrapper);
 const startMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester);
 const startMethodNegativeParametersWrapper = injector.get(AudioScheduledSourceNodeStartMethodNegativeParametersWrapper);
 const stopMethodConsecutiveCallsSupportTester = injector.get(AudioScheduledSourceNodeStopMethodConsecutiveCallsSupportTester);

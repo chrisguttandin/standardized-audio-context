@@ -124,6 +124,19 @@ describe('audioContextConstructor', () => {
 
         describe('createBufferSource()', () => {
 
+            describe('buffer', () => {
+
+                // bug #72
+
+                it('should allow to assign the buffer multiple times', () => {
+                    const bufferSourceNode = audioContext.createBufferSource();
+
+                    bufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
+                    bufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
+                });
+
+            });
+
             describe('playbackRate', () => {
 
                 // bug #45

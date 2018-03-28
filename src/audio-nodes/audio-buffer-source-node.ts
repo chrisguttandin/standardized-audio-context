@@ -1,4 +1,5 @@
 import { Injector } from '@angular/core';
+import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
 import { getNativeContext } from '../helpers/get-native-context';
@@ -11,11 +12,13 @@ import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const injector = Injector.create({
     providers: [
-        AUDIO_PARAM_WRAPPER_PROVIDER
+        AUDIO_PARAM_WRAPPER_PROVIDER,
+        INVALID_STATE_ERROR_FACTORY_PROVIDER
     ]
 });
 
 const audioParamWrapper = injector.get(AudioParamWrapper);
+const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 
 const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     buffer: null,
@@ -30,6 +33,10 @@ const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
 };
 
 export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudioBufferSourceNode> implements IAudioBufferSourceNode {
+
+    private _isBufferNullified: boolean;
+
+    private _isBufferSet: boolean;
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
@@ -46,15 +53,40 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
             audioParamWrapper.wrap(nativeNode, context, 'detune');
             audioParamWrapper.wrap(nativeNode, context, 'playbackRate');
         }
+
+        this._isBufferNullified = false;
+        this._isBufferSet = false;
     }
 
     public get buffer () {
+        if (this._isBufferNullified) {
+            return null;
+        }
+
         return this._nativeNode.buffer;
     }
 
     public set buffer (value) {
-        // @todo Allow to set the buffer only once.
-        this._nativeNode.buffer = value;
+        // Bug #71: Edge does not allow to set the buffer to null.
+        try {
+            this._nativeNode.buffer = value;
+        } catch (err) {
+            if (value !== null || err.code !== 17) {
+                throw err;
+            }
+
+            // @todo Create a new internal nativeNode.
+            this._isBufferNullified = (this._nativeNode.buffer !== null);
+        }
+
+        // Bug #72: Only Chrome, Edge & Opera do not allow to reassign the buffer yet.
+        if (value !== null) {
+            if (this._isBufferSet) {
+                throw invalidStateErrorFactory.create();
+            }
+
+            this._isBufferSet = true;
+        }
     }
 
     public get onended () {
