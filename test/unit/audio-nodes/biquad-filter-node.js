@@ -221,21 +221,21 @@ describe('BiquadFilterNode', () => {
                     expect(biquadFilterNode.channelInterpretation).to.equal(channelInterpretation);
                 });
 
-                it('should return an instance with the given intial value for detune', () => {
+                it('should return an instance with the given initial value for detune', () => {
                     const detune = 0.5;
                     const biquadFilterNode = createBiquadFilterNode(context, { detune });
 
                     expect(biquadFilterNode.detune.value).to.equal(detune);
                 });
 
-                it('should return an instance with the given intial value for frequency', () => {
+                it('should return an instance with the given initial value for frequency', () => {
                     const frequency = 1000;
                     const biquadFilterNode = createBiquadFilterNode(context, { frequency });
 
                     expect(biquadFilterNode.frequency.value).to.equal(frequency);
                 });
 
-                it('should return an instance with the given intial value for gain', () => {
+                it('should return an instance with the given initial value for gain', () => {
                     const gain = 0.5;
                     const biquadFilterNode = createBiquadFilterNode(context, { gain });
 
@@ -249,7 +249,7 @@ describe('BiquadFilterNode', () => {
                     expect(biquadFilterNode.type).to.equal(type);
                 });
 
-                it('should return an instance with the given intial value for Q', () => {
+                it('should return an instance with the given initial value for Q', () => {
                     const Q = 2;
                     const biquadFilterNode = createBiquadFilterNode(context, { Q });
 

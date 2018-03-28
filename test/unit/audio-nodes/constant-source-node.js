@@ -182,7 +182,7 @@ describe('ConstantSourceNode', () => {
                     expect(constantSourceNode.channelInterpretation).to.equal(channelInterpretation);
                 });
 
-                it('should return an instance with the given intial value for offset', () => {
+                it('should return an instance with the given initial value for offset', () => {
                     const offset = 0.5;
                     const constantSourceNode = createConstantSourceNode(context, { offset });
 

@@ -181,7 +181,7 @@ describe('GainNode', () => {
                     expect(gainNode.channelInterpretation).to.equal(channelInterpretation);
                 });
 
-                it('should return an instance with the given intial value for gain', () => {
+                it('should return an instance with the given initial value for gain', () => {
                     const gain = 0.5;
                     const gainNode = createGainNode(context, { gain });
 
