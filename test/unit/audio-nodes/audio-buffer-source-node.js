@@ -827,7 +827,7 @@ describe('AudioBufferSourceNode', () => {
             describe('with a previous call to stop()', () => {
 
                 beforeEach(() => {
-                    // ... Safari needs a buffer
+                    // @todo Safari needs a buffer to start() an AudioBufferSourceNode.
                     audioBufferSourceNode.buffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                     audioBufferSourceNode.start();
                     audioBufferSourceNode.stop();
