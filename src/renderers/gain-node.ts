@@ -36,9 +36,9 @@ export class GainNodeRenderer extends AudioNodeRenderer {
 
             await renderAutomation(offlineAudioContext, gainAudioParam, this._nativeNode.gain);
         } else {
-            const nativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.gain);
+            const gainNativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.gain);
 
-            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.gain), nativeAudioParam);
+            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.gain), gainNativeAudioParam);
         }
 
         await this._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode);

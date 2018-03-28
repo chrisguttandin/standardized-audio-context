@@ -36,9 +36,9 @@ export class ConstantSourceNodeRenderer extends AudioNodeRenderer {
 
             await renderAutomation(offlineAudioContext, offsetAudioParam, this._nativeNode.offset);
         } else {
-            const nativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.offset);
+            const offsetNativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.offset);
 
-            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.offset), nativeAudioParam);
+            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.offset), offsetNativeAudioParam);
         }
 
         await this._connectSources(offlineAudioContext, <INativeConstantSourceNode> this._nativeNode);
