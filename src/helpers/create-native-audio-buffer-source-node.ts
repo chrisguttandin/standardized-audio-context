@@ -4,26 +4,26 @@ import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-nod
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { IAudioBufferSourceOptions } from '../interfaces';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
-    AudioScheduledSourceNodeStartMethodConsecutiveCallsSupportTester
-} from '../support-testers/audio-scheduled-source-node-start-methods-consecutive-calls';
+    AUDIO_BUFFER_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
+    AudioBufferSourceNodeStartMethodConsecutiveCallsSupportTester
+} from '../support-testers/audio-buffer-source-node-start-method-consecutive-calls';
 import {
     AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
     AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester
-} from '../support-testers/audio-scheduled-source-node-start-methods-negative-parameters';
+} from '../support-testers/audio-scheduled-source-node-start-method-negative-parameters';
 import {
     AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
     AudioScheduledSourceNodeStopMethodConsecutiveCallsSupportTester
-} from '../support-testers/audio-scheduled-source-node-stop-methods-consecutive-calls';
+} from '../support-testers/audio-scheduled-source-node-stop-method-consecutive-calls';
 import {
     AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
     AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester
-} from '../support-testers/audio-scheduled-source-node-stop-methods-negative-parameters';
+} from '../support-testers/audio-scheduled-source-node-stop-method-negative-parameters';
 import { TNativeAudioBufferSourceNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 import {
     AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_WRAPPER_PROVIDER,
     AudioScheduledSourceNodeStartMethodConsecutiveCallsWrapper
-} from '../wrappers/audio-scheduled-source-node-start-method-consecutive-calls';
+} from '../wrappers/audio-buffer-source-node-start-method-consecutive-calls';
 import {
     AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
     AudioScheduledSourceNodeStartMethodNegativeParametersWrapper
@@ -39,7 +39,7 @@ import {
 
 const injector = Injector.create({
     providers: [
-        AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
+        AUDIO_BUFFER_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_WRAPPER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
@@ -51,7 +51,7 @@ const injector = Injector.create({
     ]
 });
 
-const startMethodConsecutiveCallsSupportTester = injector.get(AudioScheduledSourceNodeStartMethodConsecutiveCallsSupportTester);
+const startMethodConsecutiveCallsSupportTester = injector.get(AudioBufferSourceNodeStartMethodConsecutiveCallsSupportTester);
 const startMethodConsecutiveCallsWrapper = injector
     .get<AudioScheduledSourceNodeStartMethodConsecutiveCallsWrapper>(AudioScheduledSourceNodeStartMethodConsecutiveCallsWrapper);
 const startMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester);
@@ -96,7 +96,7 @@ export const createNativeAudioBufferSourceNode = (
 
     // Bug #69: Safari does allow calls to start() of an already scheduled AudioBufferSourceNode.
     if (!cacheTestResult(
-        AudioScheduledSourceNodeStartMethodConsecutiveCallsSupportTester,
+        AudioBufferSourceNodeStartMethodConsecutiveCallsSupportTester,
         () => startMethodConsecutiveCallsSupportTester.test(nativeContext)
     )) {
         startMethodConsecutiveCallsWrapper.wrap(nativeNode);

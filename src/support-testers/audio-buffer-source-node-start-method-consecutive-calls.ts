@@ -1,6 +1,6 @@
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
-export class AudioScheduledSourceNodeStartMethodConsecutiveCallsSupportTester {
+export class AudioBufferSourceNodeStartMethodConsecutiveCallsSupportTester {
 
     public test (audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) {
         const audioBuffer = audioContext.createBufferSource();
@@ -18,7 +18,7 @@ export class AudioScheduledSourceNodeStartMethodConsecutiveCallsSupportTester {
 
 }
 
-export const AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER = {
+export const AUDIO_BUFFER_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER = {
     deps: [ ],
-    provide: AudioScheduledSourceNodeStartMethodConsecutiveCallsSupportTester
+    provide: AudioBufferSourceNodeStartMethodConsecutiveCallsSupportTester
 };

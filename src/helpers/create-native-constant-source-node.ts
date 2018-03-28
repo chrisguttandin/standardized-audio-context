@@ -6,11 +6,11 @@ import { IConstantSourceOptions, INativeConstantSourceNode } from '../interfaces
 import {
     AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
     AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester
-} from '../support-testers/audio-scheduled-source-node-start-methods-negative-parameters';
+} from '../support-testers/audio-scheduled-source-node-start-method-negative-parameters';
 import {
     AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
     AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester
-} from '../support-testers/audio-scheduled-source-node-stop-methods-negative-parameters';
+} from '../support-testers/audio-scheduled-source-node-stop-method-negative-parameters';
 import {
     CONSTANT_SOURCE_NODE_ACCURATE_SCHEDULING_SUPPORT_TESTER_PROVIDER,
     ConstantSourceNodeAccurateSchedulingSupportTester
