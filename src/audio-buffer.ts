@@ -11,6 +11,7 @@ import {
     AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
     AudioBufferCopyChannelMethodsSupportTester
 } from './support-testers/audio-buffer-copy-channel-methods';
+import { TUnpatchedOfflineAudioContext } from './types';
 import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from './wrappers/audio-buffer';
 import {
     AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
@@ -37,6 +38,8 @@ const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyC
 const audioBufferCopyChannelMethodsWrapper = injector.get(AudioBufferCopyChannelMethodsWrapper);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
 
+let unpatchedOfflineAudioContext: null | TUnpatchedOfflineAudioContext = null;
+
 export class AudioBuffer implements IAudioBuffer {
 
     public duration: number;
@@ -54,7 +57,10 @@ export class AudioBuffer implements IAudioBuffer {
 
         const { length, numberOfChannels, sampleRate } = <typeof DEFAULT_OPTIONS & IAudioBufferOptions> { ...DEFAULT_OPTIONS, ...options };
 
-        const unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(1, 1, 44100);
+        if (unpatchedOfflineAudioContext === null) {
+            unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(1, 1, 44100);
+        }
+
         const audioBuffer = unpatchedOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
@@ -64,7 +70,10 @@ export class AudioBuffer implements IAudioBuffer {
         } else if (
             !cacheTestResult(
                 AudioBufferCopyChannelMethodsSupportTester,
-                () => audioBufferCopyChannelMethodsSupportTester.test(unpatchedOfflineAudioContext)
+                () => {
+                    return (unpatchedOfflineAudioContext !== null &&
+                        audioBufferCopyChannelMethodsSupportTester.test(unpatchedOfflineAudioContext));
+                }
             )
         ) {
             audioBufferCopyChannelMethodsWrapper.wrap(audioBuffer);
