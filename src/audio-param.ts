@@ -75,7 +75,8 @@ export class AudioParam implements IAudioParam {
     }
 
     public setValueCurveAtTime (values: Float32Array, startTime: number, duration: number) {
-        this._nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
+        // @todo TypeScript is expecting values to be an array of numbers.
+        this._nativeAudioParam.setValueCurveAtTime(<any> values, startTime, duration);
         this._audioParamRenderer.record({ duration, startTime, type: 'setValueCurve', values });
     }
 

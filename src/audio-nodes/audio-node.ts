@@ -110,7 +110,11 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
         return this._nativeNode.numberOfOutputs;
     }
 
-    public addEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
+    public addEventListener (
+        type: string,
+        listener: EventListenerOrEventListenerObject | null = null,
+        options?: boolean | AddEventListenerOptions
+    ): void {
         return this._nativeNode.addEventListener(type, listener, options);
     }
 
@@ -269,7 +273,11 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
         return this._nativeNode.disconnect(nativeDestinationNode);
     }
 
-    public removeEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) {
+    public removeEventListener (
+        type: string,
+        listener: EventListenerOrEventListenerObject | null = null,
+        options?: EventListenerOptions | boolean
+    ): void {
         return this._nativeNode.removeEventListener(type, listener, options);
     }
 

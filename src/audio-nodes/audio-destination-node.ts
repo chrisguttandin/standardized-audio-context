@@ -115,7 +115,11 @@ export class AudioDestinationNode implements IAudioDestinationNode {
         return this._audioNode.numberOfOutputs;
     }
 
-    public addEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
+    public addEventListener (
+        type: string,
+        listener: EventListenerOrEventListenerObject | null = null,
+        options?: boolean | AddEventListenerOptions
+    ): void {
         return this._audioNode.addEventListener(type, listener, options);
     }
 
@@ -137,7 +141,11 @@ export class AudioDestinationNode implements IAudioDestinationNode {
         return this._audioNode.disconnect(destination);
     }
 
-    public removeEventListener (type: string, listener?: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) {
+    public removeEventListener (
+        type: string,
+        listener: EventListenerOrEventListenerObject | null = null,
+        options?: EventListenerOptions | boolean
+    ): void {
         return this._audioNode.removeEventListener(type, listener, options);
     }
 

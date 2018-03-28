@@ -56,7 +56,8 @@ export class AudioParamRenderer implements IAudioParamRenderer {
             } else if (automation.type === 'setValueCurve') {
                 const { duration, startTime, values } = automation;
 
-                audioParam.setValueCurveAtTime(values, startTime, duration);
+                // @todo TypeScript is expecting values to be an array of numbers.
+                (<any> audioParam).setValueCurveAtTime(values, startTime, duration);
             } else {
                 throw new Error("Can't apply an unkown automation.");
             }
