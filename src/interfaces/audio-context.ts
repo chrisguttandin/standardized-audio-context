@@ -4,7 +4,6 @@ import { IBaseAudioContext } from './base-audio-context';
 import { IMediaElementAudioSourceNode } from './media-element-audio-source-node';
 import { IMediaStreamAudioSourceNode } from './media-stream-audio-source-node';
 import { IMinimalAudioContext } from './minimal-audio-context';
-import { IOscillatorNode } from './oscillator-node';
 
 export interface IAudioContext extends IBaseAudioContext, IMinimalAudioContext {
 
@@ -20,8 +19,5 @@ export interface IAudioContext extends IBaseAudioContext, IMinimalAudioContext {
     createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode;
 
     createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode;
-
-    // @todo This should move into the IBaseAudioContext interface.
-    createOscillator (): IOscillatorNode;
 
 }

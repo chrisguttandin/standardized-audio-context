@@ -418,7 +418,26 @@ describe('BiquadFilterNode', () => {
 
         describe('type', () => {
 
-            // @todo
+            let biquadFilterNode;
+
+            beforeEach(() => {
+                biquadFilterNode = createBiquadFilterNode(context);
+            });
+
+            it('should be assignable to another type', () => {
+                const type = biquadFilterNode.type = 'allpass'; // eslint-disable-line no-multi-assign
+
+                expect(type).to.equal('allpass');
+                expect(biquadFilterNode.type).to.equal('allpass');
+            });
+
+            it('should not be assignable to something else', () => {
+                const string = 'none of the accepted types';
+                const type = biquadFilterNode.type = string; // eslint-disable-line no-multi-assign
+
+                expect(type).to.equal(string);
+                expect(biquadFilterNode.type).to.equal('lowpass');
+            });
 
         });
 

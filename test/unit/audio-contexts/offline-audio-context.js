@@ -562,6 +562,20 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('createOscillator()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createOscillator).to.be.a('function');
+        });
+
+    });
+
     describe('createGain()', () => {
 
         let offlineAudioContext;

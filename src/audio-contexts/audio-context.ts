@@ -4,10 +4,9 @@ import { ChannelMergerNode } from '../audio-nodes/channel-merger-node';
 import { ChannelSplitterNode } from '../audio-nodes/channel-splitter-node';
 import { MediaElementAudioSourceNode } from '../audio-nodes/media-element-audio-source-node';
 import { MediaStreamAudioSourceNode } from '../audio-nodes/media-stream-audio-source-node';
-import { OscillatorNode } from '../audio-nodes/oscillator-node';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
-import { IAnalyserNode, IAudioContext, IAudioContextOptions, IOscillatorNode } from '../interfaces';
+import { IAnalyserNode, IAudioContext, IAudioContextOptions } from '../interfaces';
 import {
     UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedAudioContextConstructor as nptchdDCntxtCnstrctr
@@ -94,10 +93,6 @@ export class AudioContext extends BaseAudioContext implements IAudioContext {
 
     public createMediaStreamSource (mediaStream: MediaStream) {
         return new MediaStreamAudioSourceNode(this, { mediaStream });
-    }
-
-    public createOscillator (): IOscillatorNode {
-        return new OscillatorNode(this);
     }
 
     public close () {

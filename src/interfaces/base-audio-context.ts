@@ -6,6 +6,7 @@ import { IConstantSourceNode } from './constant-source-node';
 import { IGainNode } from './gain-node';
 import { IIIRFilterNode } from './iir-filter-node';
 import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
+import { IOscillatorNode } from './oscillator-node';
 
 export interface IBaseAudioContext extends IMinimalBaseAudioContext {
 
@@ -24,6 +25,8 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
     createGain (): IGainNode;
 
     createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode;
+
+    createOscillator (): IOscillatorNode;
 
     decodeAudioData (
         audioData: ArrayBuffer,

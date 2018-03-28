@@ -1,25 +1,23 @@
 import { Injector } from '@angular/core';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
+import { createNativeOscillatorNode } from '../helpers/create-native-oscillator-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOptions } from '../interfaces';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TEndedEventHandler,
-    TNativeOscillatorNode,
-    TOscillatorType,
-    TUnpatchedAudioContext,
-    TUnpatchedOfflineAudioContext
-} from '../types';
+import { OscillatorNodeRenderer } from '../renderers/oscillator-node';
+import { TChannelCountMode, TChannelInterpretation, TEndedEventHandler, TNativeOscillatorNode, TOscillatorType } from '../types';
+import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const injector = Injector.create({
     providers: [
+        AUDIO_PARAM_WRAPPER_PROVIDER,
         INVALID_STATE_ERROR_FACTORY_PROVIDER
     ]
 });
 
+const audioParamWrapper = injector.get(AudioParamWrapper);
 const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 
 // The DEFAULT_OPTIONS are only of type Partial<IOscillatorOptions> because there is no default value for periodicWave.
@@ -32,22 +30,23 @@ const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
     type: <TOscillatorType> 'sine'
 };
 
-const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => {
-    if (isOfflineAudioContext(nativeContext)) {
-        throw new Error('This is not yet supported.');
-    }
-
-    return nativeContext.createOscillator();
-};
-
 export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNode> implements IOscillatorNode {
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const { channelCount } = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = createNativeNode(nativeContext);
+        const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
+        const nativeNode = createNativeOscillatorNode(nativeContext, mergedOptions);
 
-        super(context, nativeNode, channelCount);
+        super(context, nativeNode, mergedOptions.channelCount);
+
+        if (isOfflineAudioContext(nativeContext)) {
+            const oscillatorNodeRenderer = new OscillatorNodeRenderer(this);
+
+            AUDIO_NODE_RENDERER_STORE.set(this, oscillatorNodeRenderer);
+
+            audioParamWrapper.wrap(nativeNode, context, 'detune');
+            audioParamWrapper.wrap(nativeNode, context, 'frequency');
+        }
     }
 
     public get detune () {

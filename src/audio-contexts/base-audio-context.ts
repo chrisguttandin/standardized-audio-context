@@ -5,6 +5,7 @@ import { BiquadFilterNode } from '../audio-nodes/biquad-filter-node';
 import { ConstantSourceNode } from '../audio-nodes/constant-source-node';
 import { GainNode } from '../audio-nodes/gain-node';
 import { IIRFilterNode } from '../audio-nodes/iir-filter-node';
+import { OscillatorNode } from '../audio-nodes/oscillator-node';
 import { decodeAudioData } from '../decode-audio-data';
 import {
     IAudioBuffer,
@@ -14,6 +15,7 @@ import {
     IBiquadFilterNode,
     IGainNode,
     IIIRFilterNode,
+    IOscillatorNode,
     IWorkletOptions
 } from '../interfaces';
 import {
@@ -63,6 +65,10 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
 
     public createIIRFilter (feedforward: number[] | TTypedArray, feedback: number[] | TTypedArray): IIIRFilterNode {
         return new IIRFilterNode(this, { feedback, feedforward });
+    }
+
+    public createOscillator (): IOscillatorNode {
+        return new OscillatorNode(this);
     }
 
     public decodeAudioData (
