@@ -40,7 +40,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
 
         const maxChannelCount = nativeNode.maxChannelCount;
 
-        // Bug #47: The AudioDestinationNode in Edge and Safari do not intialize the maxChannelCount property correctly.
+        // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
         if (maxChannelCount === 0) {
             if (this._isOfflineAudioContext) {
                 nativeNode.channelCount = channelCount;
@@ -70,7 +70,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
             throw invalidStateErrorFactory.create();
         }
 
-        // Bug #47: The AudioDestinationNode in Edge and Safari do not intialize the maxChannelCount property correctly.
+        // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
         if (value > this._maxChannelCount) {
             throw indexSizeErrorFactory.create();
         }

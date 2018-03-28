@@ -67,14 +67,14 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
     }
 
     public get channelCount () {
-        // Bug #47: The AudioDestinationNode in Edge and Safari do not intialize the maxChannelCount property correctly.
+        // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
         return ((<TNativeAudioNode> this._nativeNode) === this._nativeNode.context.destination) ?
             this._channelCount :
             this._nativeNode.channelCount;
     }
 
     public set channelCount (value) {
-        // Bug #47: The AudioDestinationNode in Edge and Safari do not intialize the maxChannelCount property correctly.
+        // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
         if ((<TNativeAudioNode> this._nativeNode) === this._nativeNode.context.destination) {
             this._channelCount = value;
         } else {
