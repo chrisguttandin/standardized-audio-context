@@ -355,6 +355,20 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('createAnalyser()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createAnalyser).to.be.a('function');
+        });
+
+    });
+
     describe('createBiquadFilter()', () => {
 
         let offlineAudioContext;

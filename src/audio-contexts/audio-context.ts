@@ -1,12 +1,11 @@
 import { Injector } from '@angular/core';
-import { AnalyserNode } from '../audio-nodes/analyser-node';
 import { ChannelMergerNode } from '../audio-nodes/channel-merger-node';
 import { ChannelSplitterNode } from '../audio-nodes/channel-splitter-node';
 import { MediaElementAudioSourceNode } from '../audio-nodes/media-element-audio-source-node';
 import { MediaStreamAudioSourceNode } from '../audio-nodes/media-stream-audio-source-node';
 import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
-import { IAnalyserNode, IAudioContext, IAudioContextOptions } from '../interfaces';
+import { IAudioContext, IAudioContextOptions } from '../interfaces';
 import {
     UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedAudioContextConstructor as nptchdDCntxtCnstrctr
@@ -73,10 +72,6 @@ export class AudioContext extends BaseAudioContext implements IAudioContext {
 
     public get state () {
         return (this._state !== null) ? this._state : this._unpatchedAudioContext.state;
-    }
-
-    public createAnalyser (): IAnalyserNode {
-        return new AnalyserNode(this);
     }
 
     public createChannelMerger (numberOfInputs = 6) {

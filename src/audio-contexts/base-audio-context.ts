@@ -1,5 +1,6 @@
 import { addAudioWorkletModule } from '../add-audio-worklet-module';
 import { AudioBuffer } from '../audio-buffer';
+import { AnalyserNode } from '../audio-nodes/analyser-node';
 import { AudioBufferSourceNode } from '../audio-nodes/audio-buffer-source-node';
 import { BiquadFilterNode } from '../audio-nodes/biquad-filter-node';
 import { ConstantSourceNode } from '../audio-nodes/constant-source-node';
@@ -8,6 +9,7 @@ import { IIRFilterNode } from '../audio-nodes/iir-filter-node';
 import { OscillatorNode } from '../audio-nodes/oscillator-node';
 import { decodeAudioData } from '../decode-audio-data';
 import {
+    IAnalyserNode,
     IAudioBuffer,
     IAudioBufferSourceNode,
     IAudioWorklet,
@@ -41,6 +43,10 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
 
     get audioWorklet (): IAudioWorklet {
         return this._audioWorklet;
+    }
+
+    public createAnalyser (): IAnalyserNode {
+        return new AnalyserNode(this);
     }
 
     public createBiquadFilter (): IBiquadFilterNode {
