@@ -117,7 +117,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
 
     public addEventListener (
         type: string,
-        listener: EventListenerOrEventListenerObject | null = null,
+        listener: any, // @todo EventListenerOrEventListenerObject | null = null,
         options?: boolean | AddEventListenerOptions
     ): void {
         return this._audioNode.addEventListener(type, listener, options);
@@ -143,7 +143,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
 
     public removeEventListener (
         type: string,
-        listener: EventListenerOrEventListenerObject | null = null,
+        listener: any, // @todo EventListenerOrEventListenerObject | null = null,
         options?: EventListenerOptions | boolean
     ): void {
         return this._audioNode.removeEventListener(type, listener, options);

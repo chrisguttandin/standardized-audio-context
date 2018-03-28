@@ -12,14 +12,22 @@ export interface INativeConstantSourceNode extends AudioNode {
         listener: (this: OscillatorNode, ev: INativeConstantSourceNodeMap[K]) => any,
         options?: boolean | AddEventListenerOptions
     ): void;
-    addEventListener (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    addEventListener (
+        type: string,
+        listener: any, // @todo EventListenerOrEventListenerObject,
+        options?: boolean | AddEventListenerOptions
+    ): void;
 
     removeEventListener <K extends keyof INativeConstantSourceNodeMap> (
         type: K,
         listener: (this: OscillatorNode, ev: INativeConstantSourceNodeMap[K]) => any,
         options?: boolean | EventListenerOptions
     ): void;
-    removeEventListener (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    removeEventListener (
+        type: string,
+        listener: any, // @todo EventListenerOrEventListenerObject,
+        options?: boolean | EventListenerOptions
+    ): void;
 
     start (when?: number): void;
 

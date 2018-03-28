@@ -22,11 +22,11 @@ export class AudioScheduledSourceNodeStopMethodConsecutiveCallsWrapper {
         const disconnectGainNode = ((disconnect) => {
             return () => {
                 disconnect.call(audioScheduledSourceNode, gainNode);
-                audioScheduledSourceNode.removeEventListener('ended', disconnectGainNode);
+                (<any> audioScheduledSourceNode).removeEventListener('ended', disconnectGainNode);
             };
         })(audioScheduledSourceNode.disconnect);
 
-        audioScheduledSourceNode.addEventListener('ended', disconnectGainNode);
+        (<any> audioScheduledSourceNode).addEventListener('ended', disconnectGainNode);
 
         audioScheduledSourceNode.connect = ((destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0) => {
             if (destination instanceof AudioNode) {

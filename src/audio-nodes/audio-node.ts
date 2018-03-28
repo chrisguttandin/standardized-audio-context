@@ -112,7 +112,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
 
     public addEventListener (
         type: string,
-        listener: EventListenerOrEventListenerObject | null = null,
+        listener: any, // @todo EventListenerOrEventListenerObject | null = null,
         options?: boolean | AddEventListenerOptions
     ): void {
         return this._nativeNode.addEventListener(type, listener, options);
@@ -275,7 +275,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
 
     public removeEventListener (
         type: string,
-        listener: EventListenerOrEventListenerObject | null = null,
+        listener: any, // @todo EventListenerOrEventListenerObject | null = null,
         options?: EventListenerOptions | boolean
     ): void {
         return this._nativeNode.removeEventListener(type, listener, options);

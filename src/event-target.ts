@@ -2,7 +2,7 @@ export class EventTarget {
 
     public addEventListener (
         type: string,
-        listener: EventListenerOrEventListenerObject | null,
+        listener: any, // @todo EventListenerOrEventListenerObject | null = null,
         options?: boolean | AddEventListenerOptions
     ): void {
         // @todo Implement the addEventListener() method.
@@ -20,7 +20,7 @@ export class EventTarget {
 
     public removeEventListener (
         type: string,
-        listener?: EventListenerOrEventListenerObject | null,
+        listener: any, // @todo EventListenerOrEventListenerObject | null = null,
         options?: EventListenerOptions | boolean
     ): void {
         // @todo Implement the removeEventListener() method.
