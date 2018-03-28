@@ -109,22 +109,6 @@ describe('audioContextConstructor', () => {
             channelSplitterNode.channelCountMode = 'explicit';
         });
 
-        // bug #31
-
-        it('should have a channelInterpretation of speakers', () => {
-            const channelSplitterNode = audioContext.createChannelSplitter();
-
-            expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
-        });
-
-        // bug #32
-
-        it('should allow to set the channelInterpretation', () => {
-            const channelSplitterNode = audioContext.createChannelSplitter();
-
-            channelSplitterNode.channelInterpretation = 'discrete';
-        });
-
     });
 
     describe('createGain()', () => {

@@ -22,7 +22,7 @@ export const createNativeChannelSplitterNode = (
 
     assignNativeAudioNodeOptions(nativeNode, options);
 
-    // Bug #29 - #32: Only Chrome partially supports the spec yet.
+    // Bug #29 - #32: Only Chrome & Opera partially support the spec yet.
     channelSplitterNodeWrapper.wrap(nativeNode);
 
     return nativeNode;
