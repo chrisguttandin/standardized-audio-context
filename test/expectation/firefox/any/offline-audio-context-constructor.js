@@ -142,12 +142,79 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('createConstantSource()', () => {
 
-        // bug #67
+        describe('channelCount', () => {
 
-        it('should have a channelCount of 1', () => {
-            const constantSourceNode = offlineAudioContext.createConstantSource();
+            // bug #67
 
-            expect(constantSourceNode.channelCount).to.equal(1);
+            it('should have a channelCount of 1', () => {
+                const constantSourceNode = offlineAudioContext.createConstantSource();
+
+                expect(constantSourceNode.channelCount).to.equal(1);
+            });
+
+        });
+
+        describe('start()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const constantSourceNode = offlineAudioContext.createConstantSource();
+
+                expect(() => constantSourceNode.start(-1)).to.throw(DOMException);
+            });
+
+            // bug #70
+
+            it('should start it with a maximum accurary of 128 samples', () => {
+                const constantSourceNode = offlineAudioContext.createConstantSource();
+
+                constantSourceNode.connect(offlineAudioContext.destination);
+                constantSourceNode.start(127 / offlineAudioContext.sampleRate);
+
+                return offlineAudioContext
+                    .startRendering()
+                    .then((buffer) => {
+                        const channelData = new Float32Array(5);
+
+                        buffer.copyFromChannel(channelData, 0, 0);
+
+                        expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
+                    });
+            });
+
+        });
+
+        describe('stop()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const constantSourceNode = offlineAudioContext.createConstantSource();
+
+                expect(() => constantSourceNode.stop(-1)).to.throw(DOMException);
+            });
+
+            // bug #70
+
+            it('should stop it with a maximum accurary of 128 samples', () => {
+                const constantSourceNode = offlineAudioContext.createConstantSource();
+
+                constantSourceNode.connect(offlineAudioContext.destination);
+                constantSourceNode.start();
+                constantSourceNode.stop(1 / offlineAudioContext.sampleRate);
+
+                return offlineAudioContext
+                    .startRendering()
+                    .then((buffer) => {
+                        const channelData = new Float32Array(5);
+
+                        buffer.copyFromChannel(channelData, 0, 0);
+
+                        expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
+                    });
+            });
+
         });
 
     });

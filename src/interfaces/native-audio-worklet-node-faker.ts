@@ -1,8 +1,8 @@
 import { TNativeAudioNode } from '../types';
-import { INativeAudioNodeFaker } from './native-audio-node-faker';
 import { INativeAudioWorkletNode } from './native-audio-worklet-node';
 
-export interface INativeAudioWorkletNodeFaker extends INativeAudioNodeFaker, INativeAudioWorkletNode {
+// @todo This does kind of implement the INativeAudioNodeFaker interface.
+export interface INativeAudioWorkletNodeFaker extends INativeAudioWorkletNode {
 
     bufferSize: number;
 

@@ -130,6 +130,20 @@ describe('audioContextConstructor', () => {
 
         describe('createBufferSource()', () => {
 
+            describe('buffer', () => {
+
+                // bug #71
+
+                it('should throw a DOMException', () => {
+                    const bufferSourceNode = audioContext.createBufferSource();
+
+                    expect(() => {
+                        bufferSourceNode.buffer = null;
+                    }).to.throw('TypeMismatchError');
+                });
+
+            });
+
             describe('playbackRate', () => {
 
                 // bug #45

@@ -534,6 +534,20 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('createBufferSource()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createBufferSource).to.be.a('function');
+        });
+
+    });
+
     describe('createConstantSource()', () => {
 
         let offlineAudioContext;

@@ -225,12 +225,40 @@ describe('audioContextConstructor', () => {
 
         describe('createConstantSource()', () => {
 
-            // bug #67
+            describe('channelCount()', () => {
 
-            it('should have a channelCount of 1', () => {
-                const constantSourceNode = audioContext.createConstantSource();
+                // bug #67
 
-                expect(constantSourceNode.channelCount).to.equal(1);
+                it('should have a channelCount of 1', () => {
+                    const constantSourceNode = audioContext.createConstantSource();
+
+                    expect(constantSourceNode.channelCount).to.equal(1);
+                });
+
+            });
+
+            describe('start()', () => {
+
+                // bug #44
+
+                it('should throw a DOMException', () => {
+                    const constantSourceNode = audioContext.createConstantSource();
+
+                    expect(() => constantSourceNode.start(-1)).to.throw(DOMException);
+                });
+
+            });
+
+            describe('stop()', () => {
+
+                // bug #44
+
+                it('should throw a DOMException', () => {
+                    const constantSourceNode = audioContext.createConstantSource();
+
+                    expect(() => constantSourceNode.stop(-1)).to.throw(DOMException);
+                });
+
             });
 
         });

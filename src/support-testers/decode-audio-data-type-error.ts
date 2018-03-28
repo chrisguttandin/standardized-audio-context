@@ -18,20 +18,16 @@ export class DecodeAudioDataTypeErrorSupportTester {
             return Promise.resolve(false);
         }
 
-        const audioContext = new this._unpatchedOfflineAudioContextConstructor(1, 1, 44100);
+        const offlineAudioContext = new this._unpatchedOfflineAudioContextConstructor(1, 1, 44100);
 
         // Bug #21: Safari does not support promises yet.
         return new Promise((resolve) => {
-            audioContext
+            offlineAudioContext
                 // Bug #1: Safari requires a successCallback.
                 .decodeAudioData(<any> null, () => {
                     // Ignore the success callback.
                 }, (err) => {
-                    audioContext
-                        .close()
-                        .catch(() => {
-                            // Ignore errors.
-                        });
+                    offlineAudioContext.startRendering();
 
                     resolve(err instanceof TypeError);
                 })

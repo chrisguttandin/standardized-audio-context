@@ -7,6 +7,7 @@ import { MinimalAudioContext } from '../../../src/audio-contexts/minimal-audio-c
 import { MinimalOfflineAudioContext } from '../../../src/audio-contexts/minimal-offline-audio-context';
 import { OfflineAudioContext } from '../../../src/audio-contexts/offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { spy } from 'sinon';
 
 describe('ConstantSourceNode', () => {
 
@@ -138,6 +139,12 @@ describe('ConstantSourceNode', () => {
                     expect(constantSourceNode.disconnect).to.be.a('function');
                     expect(constantSourceNode.numberOfInputs).to.equal(0);
                     expect(constantSourceNode.numberOfOutputs).to.equal(1);
+                });
+
+                it('should return an instance of the AudioScheduledSourceNode interface', () => {
+                    expect(constantSourceNode.onended).to.be.null;
+                    expect(constantSourceNode.start).to.be.a('function');
+                    expect(constantSourceNode.stop).to.be.a('function');
                 });
 
                 it('should return an instance of the ConstantSourceNode interface', () => {
@@ -412,7 +419,57 @@ describe('ConstantSourceNode', () => {
 
         describe('onended', () => {
 
-            // @todo
+            let constantSourceNode;
+
+            beforeEach(() => {
+                constantSourceNode = createConstantSourceNode(context, { offset: 0 });
+            });
+
+            it('should fire an assigned ended event listener', (done) => {
+                constantSourceNode.onended = (event) => {
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.type).to.equal('ended');
+
+                    done();
+                };
+
+                constantSourceNode.connect(context.destination);
+
+                constantSourceNode.start();
+                constantSourceNode.stop();
+
+                if (context.startRendering !== undefined) {
+                    context.startRendering();
+                }
+            });
+
+        });
+
+        describe('addEventListener()', () => {
+
+            let constantSourceNode;
+
+            beforeEach(() => {
+                constantSourceNode = createConstantSourceNode(context, { offset: 0 });
+            });
+
+            it('should fire a registered ended event listener', (done) => {
+                constantSourceNode.addEventListener('ended', (event) => {
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.type).to.equal('ended');
+
+                    done();
+                });
+
+                constantSourceNode.connect(context.destination);
+
+                constantSourceNode.start();
+                constantSourceNode.stop();
+
+                if (context.startRendering !== undefined) {
+                    context.startRendering();
+                }
+            });
 
         });
 
@@ -554,15 +611,231 @@ describe('ConstantSourceNode', () => {
 
         });
 
+        describe('removeEventListener()', () => {
+
+            let constantSourceNode;
+
+            beforeEach(() => {
+                constantSourceNode = createConstantSourceNode(context, { offset: 0 });
+            });
+
+            it('should not fire a removed ended event listener', (done) => {
+                const listener = spy();
+
+                constantSourceNode.addEventListener('ended', listener);
+                constantSourceNode.removeEventListener('ended', listener);
+
+                constantSourceNode.connect(context.destination);
+
+                constantSourceNode.start();
+                constantSourceNode.stop();
+
+                setTimeout(() => {
+                    expect(listener).to.have.not.been.called;
+
+                    done();
+                }, 500);
+
+                if (context.startRendering !== undefined) {
+                    context.startRendering();
+                }
+            });
+
+        });
+
         describe('start()', () => {
 
-            // @todo
+            let constantSourceNode;
+
+            beforeEach(() => {
+                constantSourceNode = createConstantSourceNode(context);
+            });
+
+            describe('with a previous call to start()', () => {
+
+                beforeEach(() => {
+                    constantSourceNode.start();
+                });
+
+                it('should throw an InvalidStateError', (done) => {
+                    try {
+                        constantSourceNode.start();
+                    } catch (err) {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
+
+                        done();
+                    }
+                });
+
+            });
+
+            describe('with a previous call to stop()', () => {
+
+                beforeEach(() => {
+                    constantSourceNode.start();
+                    constantSourceNode.stop();
+                });
+
+                it('should throw an InvalidStateError', (done) => {
+                    try {
+                        constantSourceNode.start();
+                    } catch (err) {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
+
+                        done();
+                    }
+                });
+
+            });
+
+            describe('with a negative value as first parameter', () => {
+
+                it('should throw an RangeError', () => {
+                    expect(() => {
+                        constantSourceNode.start(-1);
+                    }).to.throw(RangeError);
+                });
+
+            });
 
         });
 
         describe('stop()', () => {
 
-            // @todo
+            describe('without a previous call to start()', () => {
+
+                let constantSourceNode;
+
+                beforeEach(() => {
+                    constantSourceNode = createConstantSourceNode(context);
+                });
+
+                it('should throw an InvalidStateError', (done) => {
+                    try {
+                        constantSourceNode.stop();
+                    } catch (err) {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
+
+                        done();
+                    }
+                });
+
+            });
+
+            describe('with a previous call to stop()', () => {
+
+                let renderer;
+
+                beforeEach(() => {
+                    renderer = createRenderer({
+                        context,
+                        length: (context.length === undefined) ? 5 : undefined,
+                        prepare (destination) {
+                            const constantSourceNode = createConstantSourceNode(context);
+
+                            constantSourceNode.connect(destination);
+
+                            return { constantSourceNode };
+                        }
+                    });
+                });
+
+                it('should apply the values from the last invocation', function () {
+                    this.timeout(5000);
+
+                    return renderer({
+                        start (startTime, { constantSourceNode }) {
+                            constantSourceNode.start(startTime);
+                            constantSourceNode.stop(startTime + (5 / context.sampleRate));
+                            constantSourceNode.stop(startTime + (3 / context.sampleRate));
+                        }
+                    })
+                        .then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 0, 0 ]);
+                        });
+                });
+
+            });
+
+            describe('with a stop time reached prior to the start time', () => {
+
+                let renderer;
+
+                beforeEach(() => {
+                    renderer = createRenderer({
+                        context,
+                        length: (context.length === undefined) ? 5 : undefined,
+                        prepare (destination) {
+                            const constantSourceNode = createConstantSourceNode(context);
+
+                            constantSourceNode.connect(destination);
+
+                            return { constantSourceNode };
+                        }
+                    });
+                });
+
+                it('should not play anything', function () {
+                    this.timeout(5000);
+
+                    return renderer({
+                        start (startTime, { constantSourceNode }) {
+                            constantSourceNode.start(startTime + (3 / context.sampleRate));
+                            constantSourceNode.stop(startTime + (1 / context.sampleRate));
+                        }
+                    })
+                        .then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                        });
+                });
+
+            });
+
+            describe('with an emitted ended event', () => {
+
+                let constantSourceNode;
+
+                beforeEach((done) => {
+                    constantSourceNode = createConstantSourceNode(context);
+
+                    constantSourceNode.onended = () => done();
+
+                    constantSourceNode.connect(context.destination);
+
+                    constantSourceNode.start();
+                    constantSourceNode.stop();
+
+                    if (context.startRendering !== undefined) {
+                        context.startRendering();
+                    }
+                });
+
+                it('should ignore calls to stop()', () => {
+                    constantSourceNode.stop();
+                });
+
+            });
+
+            describe('with a negative value as first parameter', () => {
+
+                let constantSourceNode;
+
+                beforeEach(() => {
+                    constantSourceNode = createConstantSourceNode(context);
+
+                    constantSourceNode.start();
+                });
+
+                it('should throw an RangeError', () => {
+                    expect(() => {
+                        constantSourceNode.stop(-1);
+                    }).to.throw(RangeError);
+                });
+
+            });
 
         });
 

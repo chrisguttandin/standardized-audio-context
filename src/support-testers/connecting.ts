@@ -23,6 +23,8 @@ export class ConnectingSupportTester {
             analyserNode.connect(anotherAudioContext.destination);
         } catch (err) {
             return err.code === 15;
+        } finally {
+            anotherAudioContext.startRendering();
         }
 
         return false;

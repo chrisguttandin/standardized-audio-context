@@ -286,6 +286,15 @@ describe('offlineAudioContextConstructor', () => {
                 expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
             });
 
+            // bug #69
+
+            it('should not ignore calls repeated calls to stop()', () => {
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+
+                audioBufferSourceNode.start();
+                audioBufferSourceNode.start();
+            });
+
         });
 
     });

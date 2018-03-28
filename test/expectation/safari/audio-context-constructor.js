@@ -132,48 +132,6 @@ describe('audioContextConstructor', () => {
 
         });
 
-        describe('createBufferSource()', () => {
-
-            describe('playbackRate', () => {
-
-                // bug #45
-
-                it('should not throw any exception', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
-
-                    bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
-                });
-
-            });
-
-            describe('start()', () => {
-
-                // bug #44
-
-                it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
-
-                    expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
-                    expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
-                    expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
-                });
-
-            });
-
-            describe('stop()', () => {
-
-                // bug #44
-
-                it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
-
-                    expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
-                });
-
-            });
-
-        });
-
         describe('createBiquadFilter()', () => {
 
             // bug #11
@@ -248,6 +206,53 @@ describe('audioContextConstructor', () => {
                 audioBufferSourceNode.connect(audioContext.destination);
                 audioBufferSourceNode.start();
                 audioBufferSourceNode.stop();
+            });
+
+            describe('playbackRate', () => {
+
+                // bug #45
+
+                it('should not throw any exception', () => {
+                    const bufferSourceNode = audioContext.createBufferSource();
+
+                    bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                });
+
+            });
+
+            describe('start()', () => {
+
+                // bug #44
+
+                it('should throw a DOMException', () => {
+                    const bufferSourceNode = audioContext.createBufferSource();
+
+                    expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
+                    expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
+                    expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
+                });
+
+                // bug #69
+
+                it('should not ignore calls repeated calls to stop()', () => {
+                    const audioBufferSourceNode = audioContext.createBufferSource();
+
+                    audioBufferSourceNode.start();
+                    audioBufferSourceNode.start();
+                });
+
+            });
+
+            describe('stop()', () => {
+
+                // bug #44
+
+                it('should throw a DOMException', () => {
+                    const bufferSourceNode = audioContext.createBufferSource();
+
+                    expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
+                });
+
             });
 
         });

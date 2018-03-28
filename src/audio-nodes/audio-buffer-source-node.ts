@@ -38,9 +38,6 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
         super(context, nativeNode, mergedOptions.channelCount);
 
-        // @todo Set all the other options.
-        // @todo this.buffer = options.buffer;
-
         if (isOfflineAudioContext(nativeContext)) {
             const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
 

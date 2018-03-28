@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
 @Injectable()
@@ -9,7 +8,7 @@ export class ChannelMergerNodeWrapper {
     constructor (private _invalidStateErrorFactory: InvalidStateErrorFactory) { }
 
     public wrap (audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, channelMergerNode: ChannelMergerNode) {
-        const audioBufferSourceNode = createNativeAudioBufferSourceNode(audioContext);
+        const audioBufferSourceNode = audioContext.createBufferSource();
 
         channelMergerNode.channelCount = 1;
         channelMergerNode.channelCountMode = 'explicit';

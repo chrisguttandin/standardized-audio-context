@@ -1,7 +1,7 @@
 import { TNativeAudioNode, TNativeIIRFilterNode } from '../types';
-import { INativeAudioNodeFaker } from './native-audio-node-faker';
 
-export interface INativeIIRFilterNodeFaker extends INativeAudioNodeFaker, TNativeIIRFilterNode {
+// @todo This does kind of implement the INativeAudioNodeFaker interface.
+export interface INativeIIRFilterNodeFaker extends TNativeIIRFilterNode {
 
     bufferSize: number;
 

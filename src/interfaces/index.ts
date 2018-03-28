@@ -49,6 +49,7 @@ export * from './native-audio-worklet-node-constructor';
 export * from './native-audio-worklet-node-faker';
 export * from './native-constant-source-node';
 export * from './native-constant-source-node-faker';
+export * from './native-constant-source-node-map';
 export * from './native-iir-filter-node-faker';
 export * from './offline-audio-completion-event';
 export * from './offline-audio-context';
