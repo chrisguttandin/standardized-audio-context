@@ -34,6 +34,8 @@ const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
 
 export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudioBufferSourceNode> implements IAudioBufferSourceNode {
 
+    private _audioBufferSourceNodeRenderer: null | AudioBufferSourceNodeRenderer;
+
     private _isBufferNullified: boolean;
 
     private _isBufferSet: boolean;
@@ -52,6 +54,10 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
             audioParamWrapper.wrap(nativeNode, context, 'detune');
             audioParamWrapper.wrap(nativeNode, context, 'playbackRate');
+
+            this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
+        } else {
+            this._audioBufferSourceNodeRenderer = null;
         }
 
         this._isBufferNullified = false;
@@ -130,17 +136,19 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
     }
 
     public start (when = 0, offset = 0, duration?: number) {
-        const audioBufferSourceNodeRenderer = AUDIO_NODE_RENDERER_STORE.get(this);
-
-        if (audioBufferSourceNodeRenderer !== undefined) {
-            (<AudioBufferSourceNodeRenderer> audioBufferSourceNodeRenderer).start = { duration, offset, when };
-        }
-
         this._nativeNode.start(when, offset, duration);
+
+        if (this._audioBufferSourceNodeRenderer !== null) {
+            this._audioBufferSourceNodeRenderer.start = (duration === undefined) ? [ when, offset ] : [ when, offset, duration ];
+        }
     }
 
     public stop (when = 0) {
         this._nativeNode.stop(when);
+
+        if (this._audioBufferSourceNodeRenderer !== null) {
+            this._audioBufferSourceNodeRenderer.stop = when;
+        }
     }
 
 }

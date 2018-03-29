@@ -32,6 +32,8 @@ const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
 
 export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNode> implements IOscillatorNode {
 
+    private _oscillatorNodeRenderer: null | OscillatorNodeRenderer;
+
     constructor (context: IMinimalBaseAudioContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
@@ -46,6 +48,10 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
 
             audioParamWrapper.wrap(nativeNode, context, 'detune');
             audioParamWrapper.wrap(nativeNode, context, 'frequency');
+
+            this._oscillatorNodeRenderer = oscillatorNodeRenderer;
+        } else {
+            this._oscillatorNodeRenderer = null;
         }
     }
 
@@ -84,10 +90,18 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
 
     public start (when = 0) {
         this._nativeNode.start(when);
+
+        if (this._oscillatorNodeRenderer !== null) {
+            this._oscillatorNodeRenderer.start = when;
+        }
     }
 
     public stop (when = 0) {
         this._nativeNode.stop(when);
+
+        if (this._oscillatorNodeRenderer !== null) {
+            this._oscillatorNodeRenderer.stop = when;
+        }
     }
 
 }

@@ -7,7 +7,7 @@ export interface IOscillatorOptions extends IAudioNodeOptions {
 
     frequency: number;
 
-    periodicWave: PeriodicWave; // @todo Define a new interface.
+    periodicWave?: PeriodicWave; // @todo Define a new interface.
 
     type: TOscillatorType;
 

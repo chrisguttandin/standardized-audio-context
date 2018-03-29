@@ -24,8 +24,8 @@ export class ConstantSourceNodeFaker {
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
         const channelData = audioBuffer.getChannelData(0);
 
-        channelData[0] = (offset === undefined) ? 1 : offset;
-        channelData[1] = (offset === undefined) ? 1 : offset;
+        channelData[0] = 1;
+        channelData[1] = 1;
 
         audioBufferSourceNode.buffer = audioBuffer;
         audioBufferSourceNode.loop = true;

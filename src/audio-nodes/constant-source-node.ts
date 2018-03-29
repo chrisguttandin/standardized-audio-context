@@ -32,6 +32,8 @@ const DEFAULT_OPTIONS: IConstantSourceOptions = {
 
 export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstantSourceNode> implements IConstantSourceNode {
 
+    private _constantSourceNodeRenderer: null | ConstantSourceNodeRenderer;
+
     constructor (context: IMinimalBaseAudioContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
         const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
@@ -45,6 +47,10 @@ export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstant
             AUDIO_NODE_RENDERER_STORE.set(this, constantSourceNodeRenderer);
 
             audioParamWrapper.wrap(nativeNode, context, 'offset');
+
+            this._constantSourceNodeRenderer = constantSourceNodeRenderer;
+        } else {
+            this._constantSourceNodeRenderer = null;
         }
     }
 
@@ -62,10 +68,18 @@ export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstant
 
     public start (when = 0) {
         this._nativeNode.start(when);
+
+        if (this._constantSourceNodeRenderer !== null) {
+            this._constantSourceNodeRenderer.start = when;
+        }
     }
 
     public stop (when = 0) {
         this._nativeNode.stop(when);
+
+        if (this._constantSourceNodeRenderer !== null) {
+            this._constantSourceNodeRenderer.stop = when;
+        }
     }
 
 }
