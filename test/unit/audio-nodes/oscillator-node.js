@@ -267,7 +267,7 @@ describe('OscillatorNode', () => {
                     expect(oscillatorNode.detune.maxValue).to.equal(3.4028234663852886e38);
                     expect(oscillatorNode.detune.minValue).to.equal(-3.4028234663852886e38);
                     expect(oscillatorNode.detune.setTargetAtTime).to.be.a('function');
-                    // @todo setValueAtTime
+                    expect(oscillatorNode.detune.setValueAtTime).to.be.a('function');
                     expect(oscillatorNode.detune.setValueCurveAtTime).to.be.a('function');
                     expect(oscillatorNode.detune.value).to.equal(0);
                 });
@@ -298,7 +298,7 @@ describe('OscillatorNode', () => {
                     expect(oscillatorNode.frequency.maxValue).to.equal(context.sampleRate / 2);
                     expect(oscillatorNode.frequency.minValue).to.equal(-(context.sampleRate / 2));
                     expect(oscillatorNode.frequency.setTargetAtTime).to.be.a('function');
-                    // @todo setValueAtTime
+                    expect(oscillatorNode.frequency.setValueAtTime).to.be.a('function');
                     expect(oscillatorNode.frequency.setValueCurveAtTime).to.be.a('function');
                     expect(oscillatorNode.frequency.value).to.equal(440);
                 });

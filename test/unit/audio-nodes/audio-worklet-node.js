@@ -506,7 +506,7 @@ describe('AudioWorkletNode', () => {
                             expect(gain.maxValue).to.be.at.least(3.402820018375656e+38);
                             expect(gain.minValue).to.be.at.most(-3.402820018375656e+38);
                             expect(gain.setTargetAtTime).to.be.a('function');
-                            // @todo setValueAtTime
+                            expect(gain.setValueAtTime).to.be.a('function');
                             expect(gain.setValueCurveAtTime).to.be.a('function');
                             expect(gain.value).to.equal(1);
                         });

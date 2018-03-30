@@ -230,7 +230,7 @@ describe('GainNode', () => {
                     expect(gainNode.gain.maxValue).to.equal(3.4028234663852886e38);
                     expect(gainNode.gain.minValue).to.equal(-3.4028234663852886e38);
                     expect(gainNode.gain.setTargetAtTime).to.be.a('function');
-                    // @todo setValueAtTime
+                    expect(gainNode.gain.setValueAtTime).to.be.a('function');
                     expect(gainNode.gain.setValueCurveAtTime).to.be.a('function');
                     expect(gainNode.gain.value).to.equal(1);
                 });

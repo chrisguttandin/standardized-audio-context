@@ -351,7 +351,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo     expect(audioBufferSourceNode.detune.maxValue).to.equal(3.4028234663852886e38);
                  * @todo     expect(audioBufferSourceNode.detune.minValue).to.equal(-3.4028234663852886e38);
                  * @todo     expect(audioBufferSourceNode.detune.setTargetAtTime).to.be.a('function');
-                 * @todo     // @todo setValueAtTime
+                 * @todo     expect(audioBufferSourceNode.detune.setValueAtTime).to.be.a('function');
                  * @todo     expect(audioBufferSourceNode.detune.setValueCurveAtTime).to.be.a('function');
                  * @todo     expect(audioBufferSourceNode.detune.value).to.equal(0);
                  * @todo });
@@ -559,7 +559,7 @@ describe('AudioBufferSourceNode', () => {
                     expect(audioBufferSourceNode.playbackRate.maxValue).to.equal(3.4028234663852886e38);
                     expect(audioBufferSourceNode.playbackRate.minValue).to.equal(-3.4028234663852886e38);
                     expect(audioBufferSourceNode.playbackRate.setTargetAtTime).to.be.a('function');
-                    // @todo setValueAtTime
+                    expect(audioBufferSourceNode.playbackRate.setValueAtTime).to.be.a('function');
                     expect(audioBufferSourceNode.playbackRate.setValueCurveAtTime).to.be.a('function');
                     expect(audioBufferSourceNode.playbackRate.value).to.equal(1);
                 });

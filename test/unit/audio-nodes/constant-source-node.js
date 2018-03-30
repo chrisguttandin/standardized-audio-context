@@ -238,7 +238,7 @@ describe('ConstantSourceNode', () => {
                     expect(constantSourceNode.offset.maxValue).to.equal(3.4028234663852886e38);
                     expect(constantSourceNode.offset.minValue).to.equal(-3.4028234663852886e38);
                     expect(constantSourceNode.offset.setTargetAtTime).to.be.a('function');
-                    // @todo setValueAtTime
+                    expect(constantSourceNode.offset.setValueAtTime).to.be.a('function');
                     expect(constantSourceNode.offset.setValueCurveAtTime).to.be.a('function');
                     expect(constantSourceNode.offset.value).to.equal(1);
                 });
