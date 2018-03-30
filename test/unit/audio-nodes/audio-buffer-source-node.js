@@ -344,7 +344,6 @@ describe('AudioBufferSourceNode', () => {
                  * @todo });
                  * @todo
                  * @todo it('should return an instance of the AudioParam interface', () => {
-                 * @todo     // @todo cancelAndHoldAtTime
                  * @todo     expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
                  * @todo     expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
                  * @todo     expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a('function');
@@ -553,7 +552,6 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
-                    // @todo cancelAndHoldAtTime
                     expect(audioBufferSourceNode.playbackRate.cancelScheduledValues).to.be.a('function');
                     expect(audioBufferSourceNode.playbackRate.defaultValue).to.equal(1);
                     expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime).to.be.a('function');

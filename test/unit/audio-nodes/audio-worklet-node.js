@@ -498,7 +498,6 @@ describe('AudioWorkletNode', () => {
                         it('should return an instance of the AudioParam interface', () => {
                             const gain = parameters.get('gain');
 
-                            // @todo cancelAndHoldAtTime
                             expect(gain.cancelScheduledValues).to.be.a('function');
                             expect(gain.defaultValue).to.equal(1);
                             expect(gain.exponentialRampToValueAtTime).to.be.a('function');

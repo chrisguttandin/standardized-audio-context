@@ -260,7 +260,6 @@ describe('OscillatorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
-                    // @todo cancelAndHoldAtTime
                     expect(oscillatorNode.detune.cancelScheduledValues).to.be.a('function');
                     expect(oscillatorNode.detune.defaultValue).to.equal(0);
                     expect(oscillatorNode.detune.exponentialRampToValueAtTime).to.be.a('function');
@@ -292,7 +291,6 @@ describe('OscillatorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
-                    // @todo cancelAndHoldAtTime
                     expect(oscillatorNode.frequency.cancelScheduledValues).to.be.a('function');
                     expect(oscillatorNode.frequency.defaultValue).to.equal(440);
                     expect(oscillatorNode.frequency.exponentialRampToValueAtTime).to.be.a('function');

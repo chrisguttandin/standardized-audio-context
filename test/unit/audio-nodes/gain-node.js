@@ -223,7 +223,6 @@ describe('GainNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
-                    // @todo cancelAndHoldAtTime
                     expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
                     expect(gainNode.gain.defaultValue).to.equal(1);
                     expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');

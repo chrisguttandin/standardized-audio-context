@@ -66,12 +66,6 @@ export class AudioParam implements IAudioParam {
         }
     }
 
-    public cancelAndHoldAtTime (cancelTime: number) {
-        (<any> this._nativeAudioParam).cancelAndHoldAtTime(cancelTime);
-
-        // @todo
-    }
-
     public cancelScheduledValues (cancelTime: number) {
         this._nativeAudioParam.cancelScheduledValues(cancelTime);
 

@@ -231,7 +231,6 @@ describe('ConstantSourceNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
-                    // @todo cancelAndHoldAtTime
                     expect(constantSourceNode.offset.cancelScheduledValues).to.be.a('function');
                     expect(constantSourceNode.offset.defaultValue).to.equal(1);
                     expect(constantSourceNode.offset.exponentialRampToValueAtTime).to.be.a('function');
