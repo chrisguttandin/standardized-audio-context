@@ -66,51 +66,63 @@ export class AudioParam implements IAudioParam {
         }
     }
 
-    public cancelScheduledValues (cancelTime: number) {
+    public cancelScheduledValues (cancelTime: number): IAudioParam {
         this._nativeAudioParam.cancelScheduledValues(cancelTime);
 
         // @todo
+
+        return this;
     }
 
-    public exponentialRampToValueAtTime (value: number, endTime: number) {
+    public exponentialRampToValueAtTime (value: number, endTime: number): IAudioParam {
         this._nativeAudioParam.exponentialRampToValueAtTime(value, endTime);
 
         if (this._audioParamRenderer !== null) {
             this._audioParamRenderer.record({ endTime, type: 'exponentialRampToValue', value });
         }
+
+        return this;
     }
 
-    public linearRampToValueAtTime (value: number, endTime: number) {
+    public linearRampToValueAtTime (value: number, endTime: number): IAudioParam {
         this._nativeAudioParam.linearRampToValueAtTime(value, endTime);
 
         if (this._audioParamRenderer !== null) {
             this._audioParamRenderer.record({ endTime, type: 'linearRampToValue', value });
         }
+
+        return this;
     }
 
-    public setTargetAtTime (target: number, startTime: number, timeConstant: number) {
+    public setTargetAtTime (target: number, startTime: number, timeConstant: number): IAudioParam {
         this._nativeAudioParam.setTargetAtTime(target, startTime, timeConstant);
 
         if (this._audioParamRenderer !== null) {
             this._audioParamRenderer.record({ startTime, target, timeConstant, type: 'setTarget' });
         }
+
+        return this;
     }
 
-    public setValueAtTime (value: number, startTime: number) {
+    public setValueAtTime (value: number, startTime: number): IAudioParam {
         this._nativeAudioParam.setValueAtTime(value, startTime);
 
         if (this._audioParamRenderer !== null) {
             this._audioParamRenderer.record({ startTime, type: 'setValue', value });
         }
+
+        return this;
     }
 
-    public setValueCurveAtTime (values: Float32Array, startTime: number, duration: number) {
+    public setValueCurveAtTime (values: Float32Array, startTime: number, duration: number): IAudioParam {
         // @todo TypeScript is expecting values to be an array of numbers.
         this._nativeAudioParam.setValueCurveAtTime(<any> values, startTime, duration);
 
         if (this._audioParamRenderer !== null) {
             this._audioParamRenderer.record({ duration, startTime, type: 'setValueCurve', values });
         }
+
+        return this;
     }
 
 }

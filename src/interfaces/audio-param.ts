@@ -10,19 +10,19 @@ export interface IAudioParam {
 
     /*
      * Bug #28: Edge, Firefox & Safari do not yet implement cancelAndHoldAtTime().
-     * cancelAndHoldAtTime (cancelTime: number): void;
+     * cancelAndHoldAtTime (cancelTime: number): IAudioParam;
      */
 
-    cancelScheduledValues (cancelTime: number): void;
+    cancelScheduledValues (cancelTime: number): IAudioParam;
 
-    exponentialRampToValueAtTime (value: number, endTime: number): void;
+    exponentialRampToValueAtTime (value: number, endTime: number): IAudioParam;
 
-    linearRampToValueAtTime (value: number, endTime: number): void;
+    linearRampToValueAtTime (value: number, endTime: number): IAudioParam;
 
-    setTargetAtTime (target: number, startTime: number, timeConstant: number): void;
+    setTargetAtTime (target: number, startTime: number, timeConstant: number): IAudioParam;
 
-    setValueAtTime (value: number, startTime: number): void;
+    setValueAtTime (value: number, startTime: number): IAudioParam;
 
-    setValueCurveAtTime (values: Float32Array, startTime: number, duration: number): void;
+    setValueCurveAtTime (values: Float32Array, startTime: number, duration: number): IAudioParam;
 
 }

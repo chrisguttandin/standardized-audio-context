@@ -495,9 +495,13 @@ describe('AudioWorkletNode', () => {
 
                     describe('with an existing parameter', () => {
 
-                        it('should return an instance of the AudioParam interface', () => {
-                            const gain = parameters.get('gain');
+                        let gain;
 
+                        beforeEach(() => {
+                            gain = parameters.get('gain');
+                        });
+
+                        it('should return an instance of the AudioParam interface', () => {
                             expect(gain.cancelScheduledValues).to.be.a('function');
                             expect(gain.defaultValue).to.equal(1);
                             expect(gain.exponentialRampToValueAtTime).to.be.a('function');
@@ -509,6 +513,54 @@ describe('AudioWorkletNode', () => {
                             expect(gain.setValueAtTime).to.be.a('function');
                             expect(gain.setValueCurveAtTime).to.be.a('function');
                             expect(gain.value).to.equal(1);
+                        });
+
+                        describe('cancelScheduledValues()', () => {
+
+                            it('should be chainable', () => {
+                                expect(gain.cancelScheduledValues(0)).to.equal(gain);
+                            });
+
+                        });
+
+                        describe('exponentialRampToValueAtTime()', () => {
+
+                            it('should be chainable', () => {
+                                expect(gain.exponentialRampToValueAtTime(1, 0)).to.equal(gain);
+                            });
+
+                        });
+
+                        describe('linearRampToValueAtTime()', () => {
+
+                            it('should be chainable', () => {
+                                expect(gain.linearRampToValueAtTime(1, 0)).to.equal(gain);
+                            });
+
+                        });
+
+                        describe('setTargetAtTime()', () => {
+
+                            it('should be chainable', () => {
+                                expect(gain.setTargetAtTime(1, 0, 0.1)).to.equal(gain);
+                            });
+
+                        });
+
+                        describe('setValueAtTime()', () => {
+
+                            it('should be chainable', () => {
+                                expect(gain.setValueAtTime(1, 0)).to.equal(gain);
+                            });
+
+                        });
+
+                        describe('setValueCurveAtTime()', () => {
+
+                            it('should be chainable', () => {
+                                expect(gain.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(gain);
+                            });
+
                         });
 
                     });

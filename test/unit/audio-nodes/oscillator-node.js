@@ -278,6 +278,57 @@ describe('OscillatorNode', () => {
                     }).to.throw(TypeError);
                 });
 
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.detune.cancelScheduledValues(0)).to.equal(oscillatorNode.detune);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                        oscillatorNode.detune.value = 1;
+
+                        expect(oscillatorNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(oscillatorNode.detune);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.detune.linearRampToValueAtTime(1, 0)).to.equal(oscillatorNode.detune);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.detune.setTargetAtTime(1, 0, 0.1)).to.equal(oscillatorNode.detune);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.detune.setValueAtTime(1, 0)).to.equal(oscillatorNode.detune);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.detune.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(oscillatorNode.detune);
+                    });
+
+                });
+
                 // @todo automation
 
             });
@@ -307,6 +358,54 @@ describe('OscillatorNode', () => {
                     expect(() => {
                         oscillatorNode.frequency = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.frequency.cancelScheduledValues(0)).to.equal(oscillatorNode.frequency);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.frequency.exponentialRampToValueAtTime(1, 0)).to.equal(oscillatorNode.frequency);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.frequency.linearRampToValueAtTime(1, 0)).to.equal(oscillatorNode.frequency);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.frequency.setTargetAtTime(1, 0, 0.1)).to.equal(oscillatorNode.frequency);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.frequency.setValueAtTime(1, 0)).to.equal(oscillatorNode.frequency);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.frequency.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(oscillatorNode.frequency);
+                    });
+
                 });
 
                 // @todo automation

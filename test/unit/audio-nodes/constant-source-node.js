@@ -249,6 +249,54 @@ describe('ConstantSourceNode', () => {
                     }).to.throw(TypeError);
                 });
 
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(constantSourceNode.offset.cancelScheduledValues(0)).to.equal(constantSourceNode.offset);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(constantSourceNode.offset.exponentialRampToValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(constantSourceNode.offset.linearRampToValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(constantSourceNode.offset.setTargetAtTime(1, 0, 0.1)).to.equal(constantSourceNode.offset);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(constantSourceNode.offset.setValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(constantSourceNode.offset.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(constantSourceNode.offset);
+                    });
+
+                });
+
                 describe('automation', () => {
 
                     for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {

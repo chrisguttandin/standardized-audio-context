@@ -362,6 +362,54 @@ describe('AudioBufferSourceNode', () => {
                  * @todo     }).to.throw(TypeError);
                  * @todo });
                  * @todo
+                 * @todo describe('cancelScheduledValues()', () => {
+                 * @todo
+                 * @todo     it('should be chainable', () => {
+                 * @todo         expect(audioBufferSourceNode.detune.cancelScheduledValues(0)).to.equal(audioBufferSourceNode.detune);
+                 * @todo     });
+                 * @todo
+                 * @todo });
+                 * @todo
+                 * @todo describe('exponentialRampToValueAtTime()', () => {
+                 * @todo
+                 * @todo     it('should be chainable', () => {
+                 * @todo         expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
+                 * @todo     });
+                 * @todo
+                 * @todo });
+                 * @todo
+                 * @todo describe('linearRampToValueAtTime()', () => {
+                 * @todo
+                 * @todo     it('should be chainable', () => {
+                 * @todo         expect(audioBufferSourceNode.detune.linearRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
+                 * @todo     });
+                 * @todo
+                 * @todo });
+                 * @todo
+                 * @todo describe('setTargetAtTime()', () => {
+                 * @todo
+                 * @todo     it('should be chainable', () => {
+                 * @todo         expect(audioBufferSourceNode.detune.setTargetAtTime(1, 0, 0.1)).to.equal(audioBufferSourceNode.detune);
+                 * @todo     });
+                 * @todo
+                 * @todo });
+                 * @todo
+                 * @todo describe('setValueAtTime()', () => {
+                 * @todo
+                 * @todo     it('should be chainable', () => {
+                 * @todo         expect(audioBufferSourceNode.detune.setValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
+                 * @todo     });
+                 * @todo
+                 * @todo });
+                 * @todo
+                 * @todo describe('setValueCurveAtTime()', () => {
+                 * @todo
+                 * @todo     it('should be chainable', () => {
+                 * @todo         expect(audioBufferSourceNode.detune.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(audioBufferSourceNode.detune);
+                 * @todo     });
+                 * @todo
+                 * @todo });
+                 * @todo
                  * @todo describe('automation', () => {
                  * @todo
                  * @todo     let renderer;
@@ -568,6 +616,54 @@ describe('AudioBufferSourceNode', () => {
                     expect(() => {
                         audioBufferSourceNode.playbackRate = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.playbackRate.cancelScheduledValues(0)).to.equal(audioBufferSourceNode.playbackRate);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.playbackRate);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.playbackRate.linearRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.playbackRate);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.playbackRate.setTargetAtTime(1, 0, 0.1)).to.equal(audioBufferSourceNode.playbackRate);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.playbackRate.setValueAtTime(1, 0)).to.equal(audioBufferSourceNode.playbackRate);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.playbackRate.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(audioBufferSourceNode.playbackRate);
+                    });
+
                 });
 
                 // @todo animation

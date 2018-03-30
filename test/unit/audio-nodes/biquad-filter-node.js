@@ -291,6 +291,57 @@ describe('BiquadFilterNode', () => {
                     }).to.throw(TypeError);
                 });
 
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.detune.cancelScheduledValues(0)).to.equal(biquadFilterNode.detune);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                        biquadFilterNode.detune.value = 1;
+
+                        expect(biquadFilterNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.detune);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.detune.linearRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.detune);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.detune.setTargetAtTime(1, 0, 0.1)).to.equal(biquadFilterNode.detune);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.detune.setValueAtTime(1, 0)).to.equal(biquadFilterNode.detune);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.detune.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(biquadFilterNode.detune);
+                    });
+
+                });
+
                 // @todo automation
 
             });
@@ -322,6 +373,54 @@ describe('BiquadFilterNode', () => {
                     }).to.throw(TypeError);
                 });
 
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.frequency.cancelScheduledValues(0)).to.equal(biquadFilterNode.frequency);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.frequency.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.frequency);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.frequency.linearRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.frequency);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.frequency.setTargetAtTime(1, 0, 0.1)).to.equal(biquadFilterNode.frequency);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.frequency.setValueAtTime(1, 0)).to.equal(biquadFilterNode.frequency);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.frequency.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(biquadFilterNode.frequency);
+                    });
+
+                });
+
                 // @todo automation
 
             });
@@ -351,6 +450,57 @@ describe('BiquadFilterNode', () => {
                     expect(() => {
                         biquadFilterNode.gain = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.gain.cancelScheduledValues(0)).to.equal(biquadFilterNode.gain);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                        biquadFilterNode.gain.value = 1;
+
+                        expect(biquadFilterNode.gain.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.gain);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.gain.linearRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.gain);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.gain.setTargetAtTime(1, 0, 0.1)).to.equal(biquadFilterNode.gain);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.gain.setValueAtTime(1, 0)).to.equal(biquadFilterNode.gain);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.gain.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(biquadFilterNode.gain);
+                    });
+
                 });
 
                 // @todo automation
@@ -407,6 +557,54 @@ describe('BiquadFilterNode', () => {
                     expect(() => {
                         biquadFilterNode.Q = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.Q.cancelScheduledValues(0)).to.equal(biquadFilterNode.Q);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.Q.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.Q);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.Q.linearRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.Q);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.Q.setTargetAtTime(1, 0, 0.1)).to.equal(biquadFilterNode.Q);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.Q.setValueAtTime(1, 0)).to.equal(biquadFilterNode.Q);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.frequency.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(biquadFilterNode.frequency);
+                    });
+
                 });
 
                 // @todo automation
