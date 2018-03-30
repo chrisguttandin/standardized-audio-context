@@ -47,13 +47,14 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
         super(context, nativeNode, mergedOptions.channelCount);
 
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.detune, 'detune');
+        // Bug #73: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.playbackRate, 'playbackRate', 3.4028234663852886e38, -3.4028234663852886e38);
+
         if (isOfflineAudioContext(nativeContext)) {
             const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
 
             AUDIO_NODE_RENDERER_STORE.set(this, audioBufferSourceNodeRenderer);
-
-            audioParamWrapper.wrap(nativeNode, context, 'detune');
-            audioParamWrapper.wrap(nativeNode, context, 'playbackRate');
 
             this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
         } else {

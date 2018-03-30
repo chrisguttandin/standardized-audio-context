@@ -117,7 +117,6 @@ export class AudioWorkletNodeRenderer extends AudioNodeRenderer {
                 .all(Array
                     .from(this._proxy.parameters.values())
                     .map(async (audioParam) => {
-                        // @todo Support defaultValue = 0, maxValue = 3.4028235e38 and minValue = -3.4028235e38.
                         const constantSourceNode = createNativeConstantSourceNode(partialOfflineAudioContext);
 
                         await renderAutomation(partialOfflineAudioContext, audioParam, constantSourceNode.offset);

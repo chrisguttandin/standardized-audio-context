@@ -134,13 +134,114 @@ describe('audioContextConstructor', () => {
 
         describe('createBiquadFilter()', () => {
 
+            let biquadFilterNode;
+
+            beforeEach(() => {
+                biquadFilterNode = audioContext.createBiquadFilter();
+            });
+
             // bug #11
 
             it('should not be chainable', () => {
-                const biquadFilterNode = audioContext.createBiquadFilter();
                 const gainNode = audioContext.createGain();
 
                 expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
+            });
+
+            describe('detune', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #78
+
+                    it('should be 4800', () => {
+                        expect(biquadFilterNode.detune.maxValue).to.equal(4800);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #78
+
+                    it('should be -4800', () => {
+                        expect(biquadFilterNode.detune.minValue).to.equal(-4800);
+                    });
+
+                });
+
+            });
+
+            describe('frequency', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #77
+
+                    it('should be the nyquist frequency', () => {
+                        expect(biquadFilterNode.frequency.maxValue).to.equal(audioContext.sampleRate / 2);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #77
+
+                    it('should be 10', () => {
+                        expect(biquadFilterNode.frequency.minValue).to.equal(10);
+                    });
+
+                });
+
+            });
+
+            describe('gain', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #79
+
+                    it('should be 40', () => {
+                        expect(biquadFilterNode.gain.maxValue).to.equal(40);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #79
+
+                    it('should be -40', () => {
+                        expect(biquadFilterNode.gain.minValue).to.equal(-40);
+                    });
+
+                });
+
+            });
+
+            describe('Q', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #80
+
+                    it('should be 1000', () => {
+                        expect(biquadFilterNode.Q.maxValue).to.equal(1000);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #80
+
+                    it('should be 0.00009999999747378752', () => {
+                        expect(biquadFilterNode.Q.minValue).to.equal(0.00009999999747378752);
+                    });
+
+                });
+
             });
 
             describe('getFrequencyResponse()', () => {
@@ -148,7 +249,6 @@ describe('audioContextConstructor', () => {
                 // bug #22
 
                 it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
-                    const biquadFilterNode = audioContext.createBiquadFilter();
                     const magResponse = new Float32Array(5);
                     const phaseResponse = new Float32Array(5);
 
@@ -223,12 +323,40 @@ describe('audioContextConstructor', () => {
 
             describe('playbackRate', () => {
 
-                // bug #45
+                let bufferSourceNode;
 
-                it('should not throw any exception', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                beforeEach(() => {
+                    bufferSourceNode = audioContext.createBufferSource();
+                });
 
-                    bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                describe('maxValue', () => {
+
+                    // bug #73
+
+                    it('should be 1024', () => {
+                        expect(bufferSourceNode.playbackRate.maxValue).to.equal(1024);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #73
+
+                    it('should be -1024', () => {
+                        expect(bufferSourceNode.playbackRate.minValue).to.equal(-1024);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    // bug #45
+
+                    it('should not throw any exception', () => {
+                        bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                    });
+
                 });
 
             });
@@ -452,7 +580,7 @@ describe('audioContextConstructor', () => {
                 }, 500);
             });
 
-            describe('cancelAndHoldAtTime()', () => {
+            describe('gain', () => {
 
                 let gainNode;
 
@@ -460,10 +588,34 @@ describe('audioContextConstructor', () => {
                     gainNode = audioContext.createGain();
                 });
 
-                // bug #28
+                describe('maxValue', () => {
 
-                it('should not be implemented', () => {
-                    expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
+                    // bug #74
+
+                    it('should be 1', () => {
+                        expect(gainNode.gain.maxValue).to.equal(1);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #74
+
+                    it('should be 0', () => {
+                        expect(gainNode.gain.minValue).to.equal(0);
+                    });
+
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    // bug #28
+
+                    it('should not be implemented', () => {
+                        expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
+                    });
+
                 });
 
             });
@@ -489,6 +641,66 @@ describe('audioContextConstructor', () => {
                 const oscillatorNode = audioContext.createOscillator();
 
                 expect(oscillatorNode.connect(gainNode)).to.be.undefined;
+            });
+
+            describe('detune', () => {
+
+                let oscillatorNode;
+
+                beforeEach(() => {
+                    oscillatorNode = audioContext.createOscillator();
+                });
+
+                describe('maxValue', () => {
+
+                    // bug #81
+
+                    it('should be 4800', () => {
+                        expect(oscillatorNode.detune.maxValue).to.equal(4800);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #81
+
+                    it('should be -4800', () => {
+                        expect(oscillatorNode.detune.minValue).to.equal(-4800);
+                    });
+
+                });
+
+            });
+
+            describe('frequency', () => {
+
+                let oscillatorNode;
+
+                beforeEach(() => {
+                    oscillatorNode = audioContext.createOscillator();
+                });
+
+                describe('maxValue', () => {
+
+                    // bug #76
+
+                    it('should be 100000', () => {
+                        expect(oscillatorNode.frequency.maxValue).to.equal(100000);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #76
+
+                    it('should be 0', () => {
+                        expect(oscillatorNode.frequency.minValue).to.equal(0);
+                    });
+
+                });
+
             });
 
         });

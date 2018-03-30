@@ -5,7 +5,7 @@ import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '
 import { NOT_SUPPORTED_ERROR_FACTORY_PROVIDER, NotSupportedErrorFactory } from '../factories/not-supported-error';
 import { AUDIO_WORKLET_NODE_FAKER_PROVIDER, AudioWorkletNodeFaker } from '../fakers/audio-worklet-node';
 import { CONSTANT_SOURCE_NODE_FAKER_PROVIDER } from '../fakers/constant-source-node';
-import { AUDIO_NODE_RENDERER_STORE, AUDIO_PARAM_RENDERER_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
+import { AUDIO_NODE_RENDERER_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import {
@@ -22,7 +22,6 @@ import {
 } from '../providers/native-audio-worklet-node-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
 import { ReadOnlyMap } from '../read-only-map';
-import { AudioParamRenderer } from '../renderers/audio-param';
 import { AudioWorkletNodeRenderer } from '../renderers/audio-worklet-node';
 import {
     TAudioParamMap,
@@ -158,25 +157,20 @@ export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkl
 
         super(context, nativeNode, mergedOptions.channelCount);
 
+        const parameters: [ string, IAudioParam ][] = [ ];
+
+        nativeNode.parameters.forEach((nativeAudioParam, nm) => {
+            const audioParam = new AudioParam({ context, maxValue: null, minValue: null, nativeAudioParam });
+
+            parameters.push([ nm, audioParam ]);
+        });
+
+        this._parameters = new ReadOnlyMap(parameters);
+
         if (isOfflineAudioContext(nativeContext)) {
             const audioWorkletNodeRenderer = new AudioWorkletNodeRenderer(this, name, mergedOptions, processorDefinition);
 
             AUDIO_NODE_RENDERER_STORE.set(this, audioWorkletNodeRenderer);
-
-            const parameters: [ string, IAudioParam ][] = [ ];
-
-            nativeNode.parameters.forEach((nativeAudioParam, nm) => {
-                const audioParamRenderer = new AudioParamRenderer();
-                const audioParam = new AudioParam({ audioParamRenderer, context, nativeAudioParam });
-
-                AUDIO_PARAM_RENDERER_STORE.set(audioParam, audioParamRenderer);
-
-                parameters.push([ nm, audioParam ]);
-            });
-
-            this._parameters = new ReadOnlyMap(parameters);
-        } else {
-            this._parameters = null;
         }
     }
 

@@ -109,12 +109,113 @@ describe('audioContextConstructor', () => {
 
         describe('createBiquadFilter()', () => {
 
+            let biquadFilterNode;
+
+            beforeEach(() => {
+                biquadFilterNode = audioContext.createBiquadFilter();
+            });
+
+            describe('detune', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #78
+
+                    it('should be undefined', () => {
+                        expect(biquadFilterNode.detune.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #78
+
+                    it('should be undefined', () => {
+                        expect(biquadFilterNode.detune.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('frequency', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #77
+
+                    it('should be undefined', () => {
+                        expect(biquadFilterNode.frequency.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #77
+
+                    it('should be undefined', () => {
+                        expect(biquadFilterNode.frequency.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('gain', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #79
+
+                    it('should be undefined', () => {
+                        expect(biquadFilterNode.gain.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #79
+
+                    it('should be undefined', () => {
+                        expect(biquadFilterNode.gain.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('Q', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #80
+
+                    it('should be undefined', () => {
+                        expect(biquadFilterNode.Q.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #80
+
+                    it('should be undefined', () => {
+                        expect(biquadFilterNode.Q.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
             describe('getFrequencyResponse()', () => {
 
                 // bug #22
 
                 it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
-                    const biquadFilterNode = audioContext.createBiquadFilter();
                     const magResponse = new Float32Array(5);
                     const phaseResponse = new Float32Array(5);
 
@@ -146,14 +247,42 @@ describe('audioContextConstructor', () => {
 
             describe('playbackRate', () => {
 
-                // bug #45
+                let bufferSourceNode;
 
-                it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                beforeEach(() => {
+                    bufferSourceNode = audioContext.createBufferSource();
+                });
 
-                    expect(() => {
-                        bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
-                    }).to.throw('InvalidAccessError');
+                describe('maxValue', () => {
+
+                    // bug #73
+
+                    it('should be undefined', () => {
+                        expect(bufferSourceNode.playbackRate.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #73
+
+                    it('should be undefined', () => {
+                        expect(bufferSourceNode.playbackRate.minValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    // bug #45
+
+                    it('should throw a DOMException', () => {
+                        expect(() => {
+                            bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw('InvalidAccessError');
+                    });
+
                 });
 
             });
@@ -234,7 +363,7 @@ describe('audioContextConstructor', () => {
 
         describe('createGain()', () => {
 
-            describe('cancelAndHoldAtTime()', () => {
+            describe('gain', () => {
 
                 let gainNode;
 
@@ -242,10 +371,34 @@ describe('audioContextConstructor', () => {
                     gainNode = audioContext.createGain();
                 });
 
-                // bug #28
+                describe('maxValue', () => {
 
-                it('should not be implemented', () => {
-                    expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
+                    // bug #74
+
+                    it('should be undefined', () => {
+                        expect(gainNode.gain.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #74
+
+                    it('should be undefined', () => {
+                        expect(gainNode.gain.minValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    // bug #28
+
+                    it('should not be implemented', () => {
+                        expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
+                    });
+
                 });
 
             });
@@ -284,13 +437,61 @@ describe('audioContextConstructor', () => {
 
         describe('createOscillator()', () => {
 
-            describe('type', () => {
+            let oscillatorNode;
 
-                let oscillatorNode;
+            beforeEach(() => {
+                oscillatorNode = audioContext.createOscillator();
+            });
 
-                beforeEach(() => {
-                    oscillatorNode = audioContext.createOscillator();
+            describe('detune', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #81
+
+                    it('should be undefined', () => {
+                        expect(oscillatorNode.detune.maxValue).to.be.undefined;
+                    });
+
                 });
+
+                describe('minValue', () => {
+
+                    // bug #81
+
+                    it('should be undefined', () => {
+                        expect(oscillatorNode.detune.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('frequency', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #76
+
+                    it('should be undefined', () => {
+                        expect(oscillatorNode.frequency.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #76
+
+                    it('should be undefined', () => {
+                        expect(oscillatorNode.frequency.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('type', () => {
 
                 // bug #57
 

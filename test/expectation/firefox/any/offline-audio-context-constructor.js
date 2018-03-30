@@ -257,7 +257,7 @@ describe('offlineAudioContextConstructor', () => {
             // bug #28
 
             it('should not be implemented', () => {
-                expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
+                expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
             });
 
         });

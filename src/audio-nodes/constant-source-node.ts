@@ -41,12 +41,17 @@ export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstant
 
         super(context, nativeNode, mergedOptions.channelCount);
 
+        /*
+         * Bug #62 & #74: Edge & Safari do not support ConstantSourceNodes and do not export the correct values for maxValue and minValue
+         * for GainNodes.
+         * Bug #75: Firefox does not export the correct values for maxValue and minValue.
+         */
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.offset, 'offset', 3.4028234663852886e38, -3.4028234663852886e38);
+
         if (isOfflineAudioContext(nativeContext)) {
             const constantSourceNodeRenderer = new ConstantSourceNodeRenderer(this);
 
             AUDIO_NODE_RENDERER_STORE.set(this, constantSourceNodeRenderer);
-
-            audioParamWrapper.wrap(nativeNode, context, 'offset');
 
             this._constantSourceNodeRenderer = constantSourceNodeRenderer;
         } else {

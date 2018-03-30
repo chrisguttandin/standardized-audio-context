@@ -503,10 +503,9 @@ describe('AudioWorkletNode', () => {
                             expect(gain.defaultValue).to.equal(1);
                             expect(gain.exponentialRampToValueAtTime).to.be.a('function');
                             expect(gain.linearRampToValueAtTime).to.be.a('function');
-                            /*
-                             * @todo maxValue
-                             * @todo minValue
-                             */
+                            // Bug #82: Chrome's native implementation is a little different from other AudioParams.
+                            expect(gain.maxValue).to.be.at.least(3.402820018375656e+38);
+                            expect(gain.minValue).to.be.at.most(-3.402820018375656e+38);
                             expect(gain.setTargetAtTime).to.be.a('function');
                             // @todo setValueAtTime
                             expect(gain.setValueCurveAtTime).to.be.a('function');

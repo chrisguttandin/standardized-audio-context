@@ -278,10 +278,8 @@ describe('BiquadFilterNode', () => {
                     expect(biquadFilterNode.detune.defaultValue).to.equal(0);
                     expect(biquadFilterNode.detune.exponentialRampToValueAtTime).to.be.a('function');
                     expect(biquadFilterNode.detune.linearRampToValueAtTime).to.be.a('function');
-                    /*
-                     * @todo maxValue
-                     * @todo minValue
-                     */
+                    expect(biquadFilterNode.detune.maxValue).to.equal(3.4028234663852886e38);
+                    expect(biquadFilterNode.detune.minValue).to.equal(-3.4028234663852886e38);
                     expect(biquadFilterNode.detune.setTargetAtTime).to.be.a('function');
                     // @todo setValueAtTime
                     expect(biquadFilterNode.detune.setValueCurveAtTime).to.be.a('function');
@@ -312,10 +310,8 @@ describe('BiquadFilterNode', () => {
                     expect(biquadFilterNode.frequency.defaultValue).to.equal(350);
                     expect(biquadFilterNode.frequency.exponentialRampToValueAtTime).to.be.a('function');
                     expect(biquadFilterNode.frequency.linearRampToValueAtTime).to.be.a('function');
-                    /*
-                     * @todo maxValue
-                     * @todo minValue
-                     */
+                    expect(biquadFilterNode.frequency.maxValue).to.equal(3.4028234663852886e38);
+                    expect(biquadFilterNode.frequency.minValue).to.equal(-3.4028234663852886e38);
                     expect(biquadFilterNode.frequency.setTargetAtTime).to.be.a('function');
                     // @todo setValueAtTime
                     expect(biquadFilterNode.frequency.setValueCurveAtTime).to.be.a('function');
@@ -346,10 +342,8 @@ describe('BiquadFilterNode', () => {
                     expect(biquadFilterNode.gain.defaultValue).to.equal(0);
                     expect(biquadFilterNode.gain.exponentialRampToValueAtTime).to.be.a('function');
                     expect(biquadFilterNode.gain.linearRampToValueAtTime).to.be.a('function');
-                    /*
-                     * @todo maxValue
-                     * @todo minValue
-                     */
+                    expect(biquadFilterNode.gain.maxValue).to.equal(3.4028234663852886e38);
+                    expect(biquadFilterNode.gain.minValue).to.equal(-3.4028234663852886e38);
                     expect(biquadFilterNode.gain.setTargetAtTime).to.be.a('function');
                     // @todo setValueAtTime
                     expect(biquadFilterNode.gain.setValueCurveAtTime).to.be.a('function');
@@ -405,10 +399,8 @@ describe('BiquadFilterNode', () => {
                     expect(biquadFilterNode.Q.defaultValue).to.equal(1);
                     expect(biquadFilterNode.Q.exponentialRampToValueAtTime).to.be.a('function');
                     expect(biquadFilterNode.Q.linearRampToValueAtTime).to.be.a('function');
-                    /*
-                     * @todo maxValue
-                     * @todo minValue
-                     */
+                    expect(biquadFilterNode.Q.maxValue).to.equal(3.4028234663852886e38);
+                    expect(biquadFilterNode.Q.minValue).to.equal(-3.4028234663852886e38);
                     expect(biquadFilterNode.Q.setTargetAtTime).to.be.a('function');
                     // @todo setValueAtTime
                     expect(biquadFilterNode.Q.setValueCurveAtTime).to.be.a('function');

@@ -51,4 +51,19 @@ describe('AudioWorklet', () => {
 
     });
 
+    describe('without specified maxValue and minValue values', () => {
+
+        // bug #82
+
+        it('should be 3.402820018375656e+38 and -3.402820018375656e+38', async () => {
+            await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+
+            const audioWorkletNode = new AudioWorkletNode(audioContext, 'gain-processor'); // eslint-disable-line no-undef
+
+            expect(audioWorkletNode.parameters.get('gain').maxValue).to.equal(3.402820018375656e+38);
+            expect(audioWorkletNode.parameters.get('gain').minValue).to.equal(-3.402820018375656e+38);
+        });
+
+    });
+
 });

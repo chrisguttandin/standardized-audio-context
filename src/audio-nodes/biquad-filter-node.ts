@@ -40,15 +40,19 @@ export class BiquadFilterNode extends NoneAudioDestinationNode<TNativeBiquadFilt
 
         super(context, nativeNode, mergedOptions.channelCount);
 
+        // Bug #78: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.detune, 'detune', 3.4028234663852886e38, -3.4028234663852886e38);
+        // Bug #77: Chrome, Edge, Firefox, Opera & Safari do not export the correct values for maxValue and minValue.
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.frequency, 'frequency', 3.4028234663852886e38, -3.4028234663852886e38);
+        // Bug #79: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.gain, 'gain', 3.4028234663852886e38, -3.4028234663852886e38);
+        // Bug #80: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.Q, 'Q', 3.4028234663852886e38, -3.4028234663852886e38);
+
         if (isOfflineAudioContext(nativeContext)) {
             const biquadFilterNodeRenderer = new BiquadFilterNodeRenderer(this);
 
             AUDIO_NODE_RENDERER_STORE.set(this, biquadFilterNodeRenderer);
-
-            audioParamWrapper.wrap(nativeNode, context, 'Q');
-            audioParamWrapper.wrap(nativeNode, context, 'detune');
-            audioParamWrapper.wrap(nativeNode, context, 'frequency');
-            audioParamWrapper.wrap(nativeNode, context, 'gain');
         }
     }
 

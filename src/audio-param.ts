@@ -1,21 +1,36 @@
-import { AUDIO_PARAM_CONTEXT_STORE, AUDIO_PARAM_STORE } from './globals';
+import { AUDIO_PARAM_CONTEXT_STORE, AUDIO_PARAM_RENDERER_STORE, AUDIO_PARAM_STORE } from './globals';
+import { isOfflineAudioContext } from './helpers/is-offline-audio-context';
 import { IAudioParam, IAudioParamOptions, IAudioParamRenderer, IMinimalBaseAudioContext } from './interfaces';
+import { AudioParamRenderer } from './renderers/audio-param';
 import { TNativeAudioParam } from './types';
 
 export class AudioParam implements IAudioParam {
 
+    private _audioParamRenderer: null | IAudioParamRenderer;
+
     private _context: IMinimalBaseAudioContext;
+
+    private _maxValue: null | number;
+
+    private _minValue: null | number;
 
     private _nativeAudioParam: TNativeAudioParam;
 
-    private _audioParamRenderer: IAudioParamRenderer;
+    constructor ({ context, maxValue, minValue, nativeAudioParam }: IAudioParamOptions) {
+        const audioParamRenderer = (isOfflineAudioContext) ? new AudioParamRenderer() : null;
 
-    constructor ({ audioParamRenderer, context, nativeAudioParam }: IAudioParamOptions) {
         this._audioParamRenderer = audioParamRenderer;
         this._context = context;
+        this._maxValue = maxValue;
+        this._minValue = minValue;
         this._nativeAudioParam = nativeAudioParam;
 
         AUDIO_PARAM_CONTEXT_STORE.set(this, context);
+
+        if (audioParamRenderer !== null) {
+            AUDIO_PARAM_RENDERER_STORE.set(this, audioParamRenderer);
+        }
+
         AUDIO_PARAM_STORE.set(this, nativeAudioParam);
     }
 
@@ -24,13 +39,19 @@ export class AudioParam implements IAudioParam {
     }
 
     get maxValue () {
-        // @todo TypeScript does not yet know about the maxValue property.
-        return (<any> this._nativeAudioParam).maxValue;
+        if (this._maxValue === null) {
+            return this._nativeAudioParam.maxValue;
+        }
+
+        return this._maxValue;
     }
 
     get minValue () {
-        // @todo TypeScript does not yet know about the minValue property.
-        return (<any> this._nativeAudioParam).minValue;
+        if (this._minValue === null) {
+            return this._nativeAudioParam.minValue;
+        }
+
+        return this._minValue;
     }
 
     get value () {
@@ -39,7 +60,10 @@ export class AudioParam implements IAudioParam {
 
     set value (value) {
         this._nativeAudioParam.value = value;
-        this._audioParamRenderer.record({ startTime: this._context.currentTime, type: 'setValue', value });
+
+        if (this._audioParamRenderer !== null) {
+            this._audioParamRenderer.record({ startTime: this._context.currentTime, type: 'setValue', value });
+        }
     }
 
     public cancelAndHoldAtTime (cancelTime: number) {
@@ -56,28 +80,43 @@ export class AudioParam implements IAudioParam {
 
     public exponentialRampToValueAtTime (value: number, endTime: number) {
         this._nativeAudioParam.exponentialRampToValueAtTime(value, endTime);
-        this._audioParamRenderer.record({ endTime, type: 'exponentialRampToValue', value });
+
+        if (this._audioParamRenderer !== null) {
+            this._audioParamRenderer.record({ endTime, type: 'exponentialRampToValue', value });
+        }
     }
 
     public linearRampToValueAtTime (value: number, endTime: number) {
         this._nativeAudioParam.linearRampToValueAtTime(value, endTime);
-        this._audioParamRenderer.record({ endTime, type: 'linearRampToValue', value });
+
+        if (this._audioParamRenderer !== null) {
+            this._audioParamRenderer.record({ endTime, type: 'linearRampToValue', value });
+        }
     }
 
     public setTargetAtTime (target: number, startTime: number, timeConstant: number) {
         this._nativeAudioParam.setTargetAtTime(target, startTime, timeConstant);
-        this._audioParamRenderer.record({ startTime, target, timeConstant, type: 'setTarget' });
+
+        if (this._audioParamRenderer !== null) {
+            this._audioParamRenderer.record({ startTime, target, timeConstant, type: 'setTarget' });
+        }
     }
 
     public setValueAtTime (value: number, startTime: number) {
         this._nativeAudioParam.setValueAtTime(value, startTime);
-        this._audioParamRenderer.record({ startTime, type: 'setValue', value });
+
+        if (this._audioParamRenderer !== null) {
+            this._audioParamRenderer.record({ startTime, type: 'setValue', value });
+        }
     }
 
     public setValueCurveAtTime (values: Float32Array, startTime: number, duration: number) {
         // @todo TypeScript is expecting values to be an array of numbers.
         this._nativeAudioParam.setValueCurveAtTime(<any> values, startTime, duration);
-        this._audioParamRenderer.record({ duration, startTime, type: 'setValueCurve', values });
+
+        if (this._audioParamRenderer !== null) {
+            this._audioParamRenderer.record({ duration, startTime, type: 'setValueCurve', values });
+        }
     }
 
 }

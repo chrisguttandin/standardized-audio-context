@@ -86,9 +86,22 @@ export class AudioWorkletNodeFaker {
 
         const constantSourceNodes: INativeConstantSourceNode[] = [ ];
 
-        for (const _ of processorDefinition.parameterDescriptors) {
-            // @todo Support defaultValue = 0, maxValue = 3.4028235e38 and minValue = -3.4028235e38.
-            constantSourceNodes.push(createNativeConstantSourceNode(unpatchedAudioContext));
+        for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
+            const constantSourceNode = createNativeConstantSourceNode(unpatchedAudioContext);
+
+            Object.defineProperties(constantSourceNode.offset, {
+                defaultValue: {
+                    get: () => (defaultValue === undefined) ? 0 : defaultValue
+                },
+                maxValue: {
+                    get: () => (maxValue === undefined) ? 3.4028234663852886e38 : maxValue
+                },
+                minValue: {
+                    get: () => (minValue === undefined) ? -3.4028234663852886e38 : minValue
+                }
+            });
+
+            constantSourceNodes.push(constantSourceNode);
         }
 
         const inputChannelMergerNode = createNativeChannelMergerNode(unpatchedAudioContext, {

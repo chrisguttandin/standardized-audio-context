@@ -33,12 +33,13 @@ export class GainNode extends NoneAudioDestinationNode<TNativeGainNode> implemen
 
         super(context, nativeNode, mergedOptions.channelCount);
 
+        // Bug #74: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.gain, 'gain', 3.4028234663852886e38, -3.4028234663852886e38);
+
         if (isOfflineAudioContext(nativeContext)) {
             const gainNodeRenderer = new GainNodeRenderer(this);
 
             AUDIO_NODE_RENDERER_STORE.set(this, gainNodeRenderer);
-
-            audioParamWrapper.wrap(nativeNode, context, 'gain');
         }
     }
 

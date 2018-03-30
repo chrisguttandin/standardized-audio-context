@@ -16,7 +16,7 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioNode, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
 import { DISCONNECTING_SUPPORT_TESTER_PROVIDER, DisconnectingSupportTester } from '../support-testers/disconnecting';
-import { TNativeAudioNode, TNativeAudioParam, TUnpatchedAudioContext } from '../types';
+import { TNativeAudioNode, TUnpatchedAudioContext } from '../types';
 import { AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER, AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
 
 const injector = Injector.create({
@@ -206,8 +206,14 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
 
             renderer.wire(source, output);
         } else {
+            const nativeAudioParam = AUDIO_PARAM_STORE.get(destination);
+
+            if (nativeAudioParam === undefined) {
+                throw new Error('The associated nativeAudioParam is missing.');
+            }
+
             try {
-                this._nativeNode.connect(<TNativeAudioParam> (<any> destination), output);
+                this._nativeNode.connect(nativeAudioParam, output);
             } catch (err) {
                 // Bug #58: Only Firefox does throw an InvalidStateError yet.
                 if (err.code === 12) {

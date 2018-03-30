@@ -107,26 +107,6 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
-    describe('createGain()', () => {
-
-        let gainNode;
-
-        beforeEach(() => {
-            gainNode = offlineAudioContext.createGain();
-        });
-
-        describe('cancelAndHoldAtTime()', () => {
-
-            // bug #28
-
-            it('should not be implemented', () => {
-                expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
-            });
-
-        });
-
-    });
-
     describe('decodeAudioData()', () => {
 
         // bug #6

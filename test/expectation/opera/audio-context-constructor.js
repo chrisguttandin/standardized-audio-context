@@ -83,6 +83,40 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createBiquadFilter()', () => {
+
+        describe('frequency', () => {
+
+            let biquadFilterNode;
+
+            beforeEach(() => {
+                biquadFilterNode = audioContext.createBiquadFilter();
+            });
+
+            describe('maxValue', () => {
+
+                // bug #77
+
+                it('should be the nyquist frequency', () => {
+                    expect(biquadFilterNode.frequency.maxValue).to.equal(audioContext.sampleRate / 2);
+                });
+
+            });
+
+            describe('minValue', () => {
+
+                // bug #77
+
+                it('should be 0', () => {
+                    expect(biquadFilterNode.frequency.minValue).to.equal(0);
+                });
+
+            });
+
+        });
+
+    });
+
     describe('createBufferSource()', () => {
 
         describe('stop()', () => {
@@ -107,26 +141,6 @@ describe('audioContextConstructor', () => {
             const channelSplitterNode = audioContext.createChannelSplitter();
 
             channelSplitterNode.channelCountMode = 'explicit';
-        });
-
-    });
-
-    describe('createGain()', () => {
-
-        let gainNode;
-
-        beforeEach(() => {
-            gainNode = audioContext.createGain();
-        });
-
-        describe('cancelAndHoldAtTime()', () => {
-
-            // bug #28
-
-            it('should not be implemented', () => {
-                expect(gainNode.cancelAndHoldAtTime).to.be.undefined;
-            });
-
         });
 
     });

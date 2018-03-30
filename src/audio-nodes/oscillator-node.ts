@@ -41,13 +41,15 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
 
         super(context, nativeNode, mergedOptions.channelCount);
 
+        // Bug #81: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.detune, 'detune', 3.4028234663852886e38, -3.4028234663852886e38);
+        // Bug #76: Edge & Safari do not export the correct values for maxValue and minValue.
+        audioParamWrapper.wrap(nativeNode, context, nativeNode.frequency, 'frequency', context.sampleRate / 2, -(context.sampleRate / 2));
+
         if (isOfflineAudioContext(nativeContext)) {
             const oscillatorNodeRenderer = new OscillatorNodeRenderer(this);
 
             AUDIO_NODE_RENDERER_STORE.set(this, oscillatorNodeRenderer);
-
-            audioParamWrapper.wrap(nativeNode, context, 'detune');
-            audioParamWrapper.wrap(nativeNode, context, 'frequency');
 
             this._oscillatorNodeRenderer = oscillatorNodeRenderer;
         } else {
