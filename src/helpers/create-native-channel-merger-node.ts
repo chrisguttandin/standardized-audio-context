@@ -1,5 +1,4 @@
 import { Injector } from '@angular/core';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { IChannelMergerOptions } from '../interfaces';
 import { TNativeChannelMergerNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
@@ -7,8 +6,7 @@ import { CHANNEL_MERGER_NODE_WRAPPER_PROVIDER, ChannelMergerNodeWrapper } from '
 
 const injector = Injector.create({
     providers: [
-        CHANNEL_MERGER_NODE_WRAPPER_PROVIDER,
-        INVALID_STATE_ERROR_FACTORY_PROVIDER
+        CHANNEL_MERGER_NODE_WRAPPER_PROVIDER
     ]
 });
 

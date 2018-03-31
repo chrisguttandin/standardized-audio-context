@@ -1,25 +1,19 @@
-import { IErrorFactory } from '../interfaces';
+import { TDataCloneErrorFactory } from '../types';
 
 // @todo Remove this declaration again if TypeScript supports the DOMException constructor.
 declare const DOMException: {
     new (message: string, name: string): DOMException;
 };
 
-export class DataCloneErrorFactory implements IErrorFactory {
+export const createDataCloneError: TDataCloneErrorFactory = () => {
+    try {
+        return new DOMException('', 'DataCloneError');
+    } catch (err) {
+        const exception: any = new Error();
 
-    public create () {
-        try {
-            return new DOMException('', 'DataCloneError');
-        } catch (err) {
-            const exception: any = new Error();
+        exception.code = 25;
+        exception.name = 'DataCloneError';
 
-            exception.code = 25;
-            exception.name = 'DataCloneError';
-
-            return exception;
-        }
+        return exception;
     }
-
-}
-
-export const DATA_CLONE_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: DataCloneErrorFactory };
+};

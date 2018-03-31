@@ -1,25 +1,19 @@
-import { IErrorFactory } from '../interfaces';
+import { TInvalidStateErrorFactory } from '../types';
 
 // @todo Remove this declaration again if TypeScript supports the DOMException constructor.
 declare const DOMException: {
     new (message: string, name: string): DOMException;
 };
 
-export class InvalidStateErrorFactory implements IErrorFactory {
+export const createInvalidStateError: TInvalidStateErrorFactory = () => {
+    try {
+        return new DOMException('', 'InvalidStateError');
+    } catch (err) {
+        const exception: any = new Error();
 
-    public create () {
-        try {
-            return new DOMException('', 'InvalidStateError');
-        } catch (err) {
-            const exception: any = new Error();
+        exception.code = 11;
+        exception.name = 'InvalidStateError';
 
-            exception.code = 11;
-            exception.name = 'InvalidStateError';
-
-            return exception;
-        }
+        return exception;
     }
-
-}
-
-export const INVALID_STATE_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: InvalidStateErrorFactory };
+};

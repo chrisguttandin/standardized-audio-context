@@ -1,15 +1,6 @@
-import { Injector } from '@angular/core';
-import { INDEX_SIZE_ERROR_FACTORY_PROVIDER, IndexSizeErrorFactory } from '../factories/index-size-error';
+import { createIndexSizeError } from '../factories/index-size-error';
 import { isNativeAudioNode } from '../guards/native-audio-node';
 import { TNativeAudioNode, TNativeAudioParam } from '../types';
-
-const injector = Injector.create({
-    providers: [
-        INDEX_SIZE_ERROR_FACTORY_PROVIDER
-    ]
-});
-
-const indexSizeErrorFactory = injector.get(IndexSizeErrorFactory);
 
 export const connectMultipleOutputs = (
     outputAudioNodes: TNativeAudioNode[],
@@ -20,7 +11,7 @@ export const connectMultipleOutputs = (
     const outputAudioNode = outputAudioNodes[output];
 
     if (outputAudioNode === undefined) {
-        throw indexSizeErrorFactory.create();
+        throw createIndexSizeError();
     }
 
     if (isNativeAudioNode(destinationAudioNodeOrAudioParam)) {

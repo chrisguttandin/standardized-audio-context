@@ -1,25 +1,19 @@
-import { IErrorFactory } from '../interfaces';
+import { TNotSupportedErrorFactory } from '../types';
 
 // @todo Remove this declaration again if TypeScript supports the DOMException constructor.
 declare const DOMException: {
     new (message: string, name: string): DOMException;
 };
 
-export class NotSupportedErrorFactory implements IErrorFactory {
+export const createNotSupportedError: TNotSupportedErrorFactory = () => {
+    try {
+        return new DOMException('', 'NotSupportedError');
+    } catch (err) {
+        const exception: any = new Error();
 
-    public create () {
-        try {
-            return new DOMException('', 'NotSupportedError');
-        } catch (err) {
-            const exception: any = new Error();
+        exception.code = 9;
+        exception.name = 'NotSupportedError';
 
-            exception.code = 9;
-            exception.name = 'NotSupportedError';
-
-            return exception;
-        }
+        return exception;
     }
-
-}
-
-export const NOT_SUPPORTED_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: NotSupportedErrorFactory };
+};

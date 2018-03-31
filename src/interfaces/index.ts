@@ -29,7 +29,6 @@ export * from './channel-splitter-options';
 export * from './constant-source-node';
 export * from './constructor';
 export * from './constant-source-options';
-export * from './error-factory';
 export * from './exponential-ramp-to-value-automation';
 export * from './gain-node';
 export * from './gain-options';

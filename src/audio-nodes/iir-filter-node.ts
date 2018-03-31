@@ -1,7 +1,4 @@
 import { Injector } from '@angular/core';
-import { INVALID_ACCES_ERROR_FACTORY_PROVIDER } from '../factories/invalid-access-error';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
-import { NOT_SUPPORTED_ERROR_FACTORY_PROVIDER } from '../factories/not-supported-error';
 import { IIRFilterNodeFaker, IIR_FILTER_NODE_FAKER_PROVIDER } from '../fakers/iir-filter-node';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
@@ -30,11 +27,8 @@ const DEFAULT_OPTIONS: Partial<IIIRFilterOptions> = {
 
 const injector = Injector.create({
     providers: [
-        INVALID_ACCES_ERROR_FACTORY_PROVIDER,
-        INVALID_STATE_ERROR_FACTORY_PROVIDER,
         IIR_FILTER_NODE_FAKER_PROVIDER,
-        IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER,
-        NOT_SUPPORTED_ERROR_FACTORY_PROVIDER
+        IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER
     ]
 });
 

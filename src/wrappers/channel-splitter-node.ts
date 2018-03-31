@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { createInvalidStateError } from '../factories/invalid-state-error';
 
 @Injectable()
 export class ChannelSplitterNodeWrapper {
-
-    constructor (private _invalidStateErrorFactory: InvalidStateErrorFactory) { }
 
     public wrap (channelSplitterNode: ChannelSplitterNode) {
         channelSplitterNode.channelCountMode = 'explicit';
@@ -15,14 +13,14 @@ export class ChannelSplitterNodeWrapper {
         Object.defineProperty(channelSplitterNode, 'channelCount', {
             get: () => channelCount,
             set: () => {
-                throw this._invalidStateErrorFactory.create();
+                throw createInvalidStateError();
             }
         });
 
         Object.defineProperty(channelSplitterNode, 'channelCountMode', {
             get: () => 'explicit',
             set: () => {
-                throw this._invalidStateErrorFactory.create();
+                throw createInvalidStateError();
             }
         });
 
@@ -30,11 +28,11 @@ export class ChannelSplitterNodeWrapper {
         Object.defineProperty(channelSplitterNode, 'channelInterpretation', {
             get: () => 'discrete',
             set: () => {
-                throw this._invalidStateErrorFactory.create();
+                throw createInvalidStateError();
             }
         });
     }
 
 }
 
-export const CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER = { deps: [ InvalidStateErrorFactory ], provide: ChannelSplitterNodeWrapper };
+export const CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER = { deps: [ ], provide: ChannelSplitterNodeWrapper };

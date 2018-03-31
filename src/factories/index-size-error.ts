@@ -1,25 +1,19 @@
-import { IErrorFactory } from '../interfaces';
+import { TIndexSizeErrorFactory } from '../types';
 
 // @todo Remove this declaration again if TypeScript supports the DOMException constructor.
 declare const DOMException: {
     new (message: string, name: string): DOMException;
 };
 
-export class IndexSizeErrorFactory implements IErrorFactory {
+export const createIndexSizeError: TIndexSizeErrorFactory = () => {
+    try {
+        return new DOMException('', 'IndexSizeError');
+    } catch (err) {
+        const exception: any = new Error();
 
-    public create () {
-        try {
-            return new DOMException('', 'IndexSizeError');
-        } catch (err) {
-            const exception: any = new Error();
+        exception.code = 1;
+        exception.name = 'IndexSizeError';
 
-            exception.code = 1;
-            exception.name = 'IndexSizeError';
-
-            return exception;
-        }
+        return exception;
     }
-
-}
-
-export const INDEX_SIZE_ERROR_FACTORY_PROVIDER = { deps: [ ], provide: IndexSizeErrorFactory };
+};

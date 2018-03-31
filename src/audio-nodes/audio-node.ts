@@ -1,7 +1,6 @@
 import { Injector } from '@angular/core';
 import { EventTarget } from '../event-target';
-import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from '../factories/index-size-error';
-import { INVALID_ACCES_ERROR_FACTORY_PROVIDER, InvalidAccessErrorFactory } from '../factories/invalid-access-error';
+import { createInvalidAccessError } from '../factories/invalid-access-error';
 import {
     AUDIO_NODE_RENDERER_DESTINATIONS_STORE,
     AUDIO_NODE_RENDERER_STORE,
@@ -22,15 +21,12 @@ import { AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER, AudioNodeDisconnectMetho
 const injector = Injector.create({
     providers: [
         AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER,
-        DISCONNECTING_SUPPORT_TESTER_PROVIDER,
-        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
-        INVALID_ACCES_ERROR_FACTORY_PROVIDER
+        DISCONNECTING_SUPPORT_TESTER_PROVIDER
     ]
 });
 
 const audioNodeDisconnectMethodWrapper = injector.get(AudioNodeDisconnectMethodWrapper);
 const disconnectingSupportTester = injector.get(DisconnectingSupportTester);
-const invalidAccessErrorFactory = injector.get(InvalidAccessErrorFactory);
 
 export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> extends EventTarget implements IAudioNode {
 
@@ -126,7 +122,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
         if (isAudioNode(destination)) {
             // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
             if (this._context !== destination.context) {
-                throw invalidAccessErrorFactory.create();
+                throw createInvalidAccessError();
             }
 
             if (nativeContext === undefined) {
@@ -137,7 +133,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
                 const renderer = AUDIO_NODE_RENDERER_STORE.get(destination);
 
                 if (renderer === undefined) {
-                    throw invalidAccessErrorFactory.create();
+                    throw createInvalidAccessError();
                 }
 
                 const source = AUDIO_NODE_RENDERER_STORE.get(this);
@@ -177,7 +173,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
             const renderer = AUDIO_PARAM_RENDERER_STORE.get(destination);
 
             if (renderer === undefined) {
-                throw invalidAccessErrorFactory.create();
+                throw createInvalidAccessError();
             }
 
             const source = AUDIO_NODE_RENDERER_STORE.get(this);
@@ -198,7 +194,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
             } catch (err) {
                 // Bug #58: Only Firefox does throw an InvalidStateError yet.
                 if (err.code === 12) {
-                    throw invalidAccessErrorFactory.create();
+                    throw createInvalidAccessError();
                 }
 
                 throw err;
@@ -217,7 +213,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
             } catch (err) {
                 // Bug #58: Only Firefox does throw an InvalidStateError yet.
                 if (err.code === 12) {
-                    throw invalidAccessErrorFactory.create();
+                    throw createInvalidAccessError();
                 }
 
                 throw err;

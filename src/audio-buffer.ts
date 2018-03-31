@@ -1,5 +1,4 @@
 import { Injector } from '@angular/core';
-import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from './factories/index-size-error';
 import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer, IAudioBufferOptions } from './interfaces';
 import {
@@ -27,7 +26,6 @@ const injector = Injector.create({
         AUDIO_BUFFER_WRAPPER_PROVIDER,
         AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
         AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
-        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
         UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]

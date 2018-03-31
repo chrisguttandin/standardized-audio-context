@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { IndexSizeErrorFactory } from '../factories/index-size-error';
+import { createIndexSizeError } from '../factories/index-size-error';
 
 @Injectable()
 export class AudioBufferWrapper {
 
-    constructor (private _indexSizeErrorFactory: IndexSizeErrorFactory) { }
-
     public wrap (audioBuffer: AudioBuffer) {
         audioBuffer.copyFromChannel = (destination, channelNumber, startInChannel = 0) => {
             if (channelNumber >= audioBuffer.numberOfChannels || startInChannel >= audioBuffer.length) {
-                throw this._indexSizeErrorFactory.create();
+                throw createIndexSizeError();
             }
 
             const channelData = audioBuffer.getChannelData(channelNumber);
@@ -25,7 +23,7 @@ export class AudioBufferWrapper {
 
         audioBuffer.copyToChannel = (source, channelNumber, startInChannel = 0) => {
             if (channelNumber >= audioBuffer.numberOfChannels || startInChannel >= audioBuffer.length) {
-                throw this._indexSizeErrorFactory.create();
+                throw createIndexSizeError();
             }
 
             const channelData = audioBuffer.getChannelData(channelNumber);
@@ -42,4 +40,4 @@ export class AudioBufferWrapper {
 
 }
 
-export const AUDIO_BUFFER_WRAPPER_PROVIDER = { deps: [ IndexSizeErrorFactory ], provide: AudioBufferWrapper };
+export const AUDIO_BUFFER_WRAPPER_PROVIDER = { deps: [ ], provide: AudioBufferWrapper };

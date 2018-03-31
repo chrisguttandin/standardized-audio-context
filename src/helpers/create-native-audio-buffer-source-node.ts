@@ -1,5 +1,4 @@
 import { Injector } from '@angular/core';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER } from '../factories/invalid-state-error';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { IAudioBufferSourceOptions } from '../interfaces';
@@ -46,8 +45,7 @@ const injector = Injector.create({
         AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_CONSECUTIVE_CALLS_WRAPPER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-        AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
-        INVALID_STATE_ERROR_FACTORY_PROVIDER
+        AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER
     ]
 });
 

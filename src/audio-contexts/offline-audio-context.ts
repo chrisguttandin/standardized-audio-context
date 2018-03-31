@@ -1,5 +1,4 @@
 import { Injector } from '@angular/core';
-import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from '../factories/index-size-error';
 import { startRendering } from '../helpers/start-rendering';
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import {
@@ -14,7 +13,6 @@ import { BaseAudioContext } from './base-audio-context';
 const injector = Injector.create({
     providers: [
         AUDIO_BUFFER_WRAPPER_PROVIDER,
-        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
         UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]

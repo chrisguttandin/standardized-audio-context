@@ -1,5 +1,5 @@
 import { Injector } from '@angular/core';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
 import { getNativeContext } from '../helpers/get-native-context';
@@ -12,13 +12,11 @@ import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const injector = Injector.create({
     providers: [
-        AUDIO_PARAM_WRAPPER_PROVIDER,
-        INVALID_STATE_ERROR_FACTORY_PROVIDER
+        AUDIO_PARAM_WRAPPER_PROVIDER
     ]
 });
 
 const audioParamWrapper = injector.get(AudioParamWrapper);
-const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 
 const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     buffer: null,
@@ -89,7 +87,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
         // Bug #72: Only Chrome, Edge & Opera do not allow to reassign the buffer yet.
         if (value !== null) {
             if (this._isBufferSet) {
-                throw invalidStateErrorFactory.create();
+                throw createInvalidStateError();
             }
 
             this._isBufferSet = true;

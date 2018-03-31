@@ -1,8 +1,7 @@
 import { Injector } from '@angular/core';
 import { deallocate } from 'async-array-buffer';
-import { DATA_CLONE_ERROR_FACTORY_PROVIDER, DataCloneErrorFactory } from './factories/data-clone-error';
-import { ENCODING_ERROR_FACTORY_PROVIDER, EncodingErrorFactory } from './factories/encoding-error';
-import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from './factories/index-size-error';
+import { createDataCloneError } from './factories/data-clone-error';
+import { createEncodingError } from './factories/encoding-error';
 import { DETACHED_ARRAY_BUFFERS } from './globals';
 import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer } from './interfaces';
@@ -25,9 +24,6 @@ const injector = Injector.create({
         AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
         AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
         AUDIO_BUFFER_WRAPPER_PROVIDER,
-        DATA_CLONE_ERROR_FACTORY_PROVIDER,
-        ENCODING_ERROR_FACTORY_PROVIDER,
-        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
         PROMISE_SUPPORT_TESTER_PROVIDER,
         UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
@@ -37,8 +33,6 @@ const injector = Injector.create({
 const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyChannelMethodsSupportTester);
 const audioBufferCopyChannelMethodsWrapper = injector.get(AudioBufferCopyChannelMethodsWrapper);
 const audioBufferWrapper = injector.get<AudioBufferWrapper>(AudioBufferWrapper);
-const dataCloneErrorFactory = injector.get(DataCloneErrorFactory);
-const encodingErrorFactory = injector.get(EncodingErrorFactory);
 const promiseSupportTester = injector.get(PromiseSupportTester);
 
 const isSupportingCopyChannelMethods = (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => cacheTestResult(
@@ -57,7 +51,7 @@ export const decodeAudioData = (
 ): Promise<IAudioBuffer> => {
     // Bug #43: Only Chrome and Opera do throw a DataCloneError.
     if (DETACHED_ARRAY_BUFFERS.has(audioData)) {
-        const err = dataCloneErrorFactory.create();
+        const err = createDataCloneError();
 
         return Promise.reject(err);
     }
@@ -125,7 +119,7 @@ export const decodeAudioData = (
             }, (err: DOMException | Error) => {
                 // Bug #4: Safari returns null instead of an error.
                 if (err === null) {
-                    fail(encodingErrorFactory.create());
+                    fail(createEncodingError());
                 } else {
                     fail(err);
                 }

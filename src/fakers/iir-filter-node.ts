@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { InvalidAccessErrorFactory } from '../factories/invalid-access-error';
-import { InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { NotSupportedErrorFactory } from '../factories/not-supported-error';
+import { createInvalidAccessError } from '../factories/invalid-access-error';
+import { createInvalidStateError } from '../factories/invalid-state-error';
+import { createNotSupportedError } from '../factories/not-supported-error';
 import { filterBuffer } from '../helpers/filter-buffer';
 import { IIIRFilterOptions, INativeIIRFilterNodeFaker } from '../interfaces';
 import { TTypedArray, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
@@ -31,12 +31,6 @@ function evaluatePolynomial (coefficient: number[] | TTypedArray, z: [ number, n
 @Injectable()
 export class IIRFilterNodeFaker {
 
-    constructor (
-        private _invalidAccessErrorFactory: InvalidAccessErrorFactory,
-        private _invalidStateErrorFactory: InvalidStateErrorFactory,
-        private _notSupportedErrorFactory: NotSupportedErrorFactory
-    ) { }
-
     public fake (
         unpatchedAudioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
         { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }: IIIRFilterOptions
@@ -47,19 +41,19 @@ export class IIRFilterNodeFaker {
         const minLength = Math.min(feedbackLength, feedforwardLength);
 
         if (feedback.length === 0 || feedback.length > 20) {
-            throw this._notSupportedErrorFactory.create();
+            throw createNotSupportedError();
         }
 
         if (feedback[0] === 0) {
-            throw this._invalidStateErrorFactory.create();
+            throw createInvalidStateError();
         }
 
         if (feedforward.length === 0 || feedforward.length > 20) {
-            throw this._notSupportedErrorFactory.create();
+            throw createNotSupportedError();
         }
 
         if (feedforward[0] === 0) {
-            throw this._invalidStateErrorFactory.create();
+            throw createInvalidStateError();
         }
 
         if (feedback[0] !== 1) {
@@ -123,7 +117,6 @@ export class IIRFilterNodeFaker {
             }
         };
 
-        const invalidAccessErrorFactory = this._invalidAccessErrorFactory;
         const nyquist = unpatchedAudioContext.sampleRate / 2;
 
         return {
@@ -179,7 +172,7 @@ export class IIRFilterNodeFaker {
             },
             getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
                 if ((frequencyHz.length !== magResponse.length) || (magResponse.length !== phaseResponse.length)) {
-                    throw invalidAccessErrorFactory.create();
+                    throw createInvalidAccessError();
                 }
 
                 const length = frequencyHz.length;
@@ -203,7 +196,4 @@ export class IIRFilterNodeFaker {
 
 }
 
-export const IIR_FILTER_NODE_FAKER_PROVIDER = {
-    deps: [ InvalidAccessErrorFactory, InvalidStateErrorFactory, NotSupportedErrorFactory ],
-    provide: IIRFilterNodeFaker
-};
+export const IIR_FILTER_NODE_FAKER_PROVIDER = { deps: [ ], provide: IIRFilterNodeFaker };

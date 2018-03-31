@@ -1,21 +1,10 @@
-import { Injector } from '@angular/core';
-import { ABORT_ERROR_FACTORY_PROVIDER, AbortErrorFactory } from './factories/abort-error';
-import { NOT_SUPPORTED_ERROR_FACTORY_PROVIDER, NotSupportedErrorFactory } from './factories/not-supported-error';
+import { createAbortError } from './factories/abort-error';
+import { createNotSupportedError } from './factories/not-supported-error';
 import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from './globals';
 import { getNativeContext } from './helpers/get-native-context';
 import { isConstructible } from './helpers/is-constructible';
 import { IAudioWorkletProcessorConstructor, IMinimalBaseAudioContext, IWorkletOptions } from './interfaces';
 import { TNativeAudioWorklet } from './types';
-
-const injector = Injector.create({
-    providers: [
-        ABORT_ERROR_FACTORY_PROVIDER,
-        NOT_SUPPORTED_ERROR_FACTORY_PROVIDER
-    ]
-});
-
-const abortErrorFactory = injector.get(AbortErrorFactory);
-const notSupportedErrorFactory = injector.get(NotSupportedErrorFactory);
 
 const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessorConstructor['parameterDescriptors']) => {
     if (!Array.isArray(parameterDescriptors)) {
@@ -74,7 +63,7 @@ export const addAudioWorkletModule = (
                     return response.text();
                 }
 
-                throw abortErrorFactory.create();
+                throw createAbortError();
             })
             .then((source) => {
                 const fn = new Function(
@@ -108,14 +97,14 @@ export const addAudioWorkletModule = (
                     undefined,
                     function <T extends IAudioWorkletProcessorConstructor> (name: string, processorCtor: T) {
                         if (name.trim() === '') {
-                            throw notSupportedErrorFactory.create();
+                            throw createNotSupportedError();
                         }
 
                         const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
 
                         if (nodeNameToProcessorDefinitionMap !== undefined) {
                             if (nodeNameToProcessorDefinitionMap.has(name)) {
-                                throw notSupportedErrorFactory.create();
+                                throw createNotSupportedError();
                             }
 
                             verifyProcessorCtor(processorCtor);
@@ -136,7 +125,7 @@ export const addAudioWorkletModule = (
             })
             .catch((err) => {
                 if (err.name === 'SyntaxError') {
-                    throw abortErrorFactory.create();
+                    throw createAbortError();
                 }
 
                 throw err;

@@ -1,8 +1,7 @@
 import { Injector } from '@angular/core';
 import { AudioParam } from '../audio-param';
-import { INDEX_SIZE_ERROR_FACTORY_PROVIDER } from '../factories/index-size-error';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
-import { NOT_SUPPORTED_ERROR_FACTORY_PROVIDER, NotSupportedErrorFactory } from '../factories/not-supported-error';
+import { createInvalidStateError } from '../factories/invalid-state-error';
+import { createNotSupportedError } from '../factories/not-supported-error';
 import { AUDIO_WORKLET_NODE_FAKER_PROVIDER, AudioWorkletNodeFaker } from '../fakers/audio-worklet-node';
 import { CONSTANT_SOURCE_NODE_FAKER_PROVIDER } from '../fakers/constant-source-node';
 import { AUDIO_NODE_RENDERER_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
@@ -53,18 +52,13 @@ const injector = Injector.create({
         CHANNEL_MERGER_NODE_WRAPPER_PROVIDER,
         CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER,
         CONSTANT_SOURCE_NODE_FAKER_PROVIDER,
-        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
-        INVALID_STATE_ERROR_FACTORY_PROVIDER,
         NATIVE_AUDIO_WORKLET_NODE_CONSTRUCTOR_PROVIDER,
-        NOT_SUPPORTED_ERROR_FACTORY_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
 const audioWorkletNodeFaker = injector.get<AudioWorkletNodeFaker>(AudioWorkletNodeFaker);
-const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 const nativeAudioWorkletNodeConstructor = injector.get(ntvDWrkltNdCnstrctr);
-const notSupportedErrorFactory = injector.get(NotSupportedErrorFactory);
 
 const createChannelCount = (length: number): number[] => {
     const channelCount: number[] = [ ];
@@ -112,13 +106,13 @@ const createNativeAudioWorkletNode = (
                 channelCount: {
                     get: () => options.channelCount,
                     set: () => {
-                        throw invalidStateErrorFactory.create();
+                        throw createInvalidStateError();
                     }
                 },
                 channelCountMode: {
                     get: () => 'explicit',
                     set: () => {
-                        throw invalidStateErrorFactory.create();
+                        throw createInvalidStateError();
                     }
                 }
             });
@@ -127,7 +121,7 @@ const createNativeAudioWorkletNode = (
         } catch (err) {
             // Bug #60: Chrome Canary throws an InvalidStateError instead of a NotSupportedError.
             if (err.code === 11 && nativeContext.state !== 'closed') {
-                throw notSupportedErrorFactory.create();
+                throw createNotSupportedError();
             }
 
             throw err;
@@ -136,7 +130,7 @@ const createNativeAudioWorkletNode = (
 
     // Bug #61: Only Chrome Canary has an implementation of the AudioWorkletNode yet.
     if (processorDefinition === undefined) {
-        throw notSupportedErrorFactory.create();
+        throw createNotSupportedError();
     }
 
     return audioWorkletNodeFaker.fake(nativeContext, processorDefinition, options);

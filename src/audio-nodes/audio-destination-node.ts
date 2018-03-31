@@ -1,6 +1,5 @@
-import { Injector } from '@angular/core';
-import { INDEX_SIZE_ERROR_FACTORY_PROVIDER, IndexSizeErrorFactory } from '../factories/index-size-error';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { createIndexSizeError } from '../factories/index-size-error';
+import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { getNativeContext } from '../helpers/get-native-context';
@@ -8,16 +7,6 @@ import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioDestinationNode, IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioDestinationNodeRenderer } from '../renderers/audio-destination-node';
 import { AudioNode } from './audio-node';
-
-const injector = Injector.create({
-    providers: [
-        INDEX_SIZE_ERROR_FACTORY_PROVIDER,
-        INVALID_STATE_ERROR_FACTORY_PROVIDER
-    ]
-});
-
-const indexSizeErrorFactory = injector.get(IndexSizeErrorFactory);
-const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 
 export class AudioDestinationNode implements IAudioDestinationNode {
 
@@ -67,12 +56,12 @@ export class AudioDestinationNode implements IAudioDestinationNode {
         // Bug #52: Chrome, Edge, Opera & Safari do not throw an exception at all.
         // Bug #54: Firefox does throw an IndexSizeError.
         if (this._isOfflineAudioContext) {
-            throw invalidStateErrorFactory.create();
+            throw createInvalidStateError();
         }
 
         // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
         if (value > this._maxChannelCount) {
-            throw indexSizeErrorFactory.create();
+            throw createIndexSizeError();
         }
 
         this._audioNode.channelCount = value;
@@ -85,7 +74,7 @@ export class AudioDestinationNode implements IAudioDestinationNode {
     public set channelCountMode (value) {
         // Bug #53: No browser does throw an exception yet.
         if (this._isOfflineAudioContext) {
-            throw invalidStateErrorFactory.create();
+            throw createInvalidStateError();
         }
 
         this._audioNode.channelCountMode = value;

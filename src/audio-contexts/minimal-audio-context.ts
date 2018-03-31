@@ -1,5 +1,5 @@
 import { Injector } from '@angular/core';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { createInvalidStateError } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
 import {
@@ -12,13 +12,11 @@ import { MinimalBaseAudioContext } from './minimal-base-audio-context';
 
 const injector = Injector.create({
     providers: [
-        INVALID_STATE_ERROR_FACTORY_PROVIDER,
         UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
-const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 const unpatchedAudioContextConstructor = injector.get(nptchdDCntxtCnstrctr);
 
 export class MinimalAudioContext extends MinimalBaseAudioContext implements IMinimalAudioContext {
@@ -77,7 +75,7 @@ export class MinimalAudioContext extends MinimalBaseAudioContext implements IMin
             return this._unpatchedAudioContext
                 .close()
                 .then(() => {
-                    throw invalidStateErrorFactory.create();
+                    throw createInvalidStateError();
                 });
         }
 
@@ -96,7 +94,7 @@ export class MinimalAudioContext extends MinimalBaseAudioContext implements IMin
                 // Bug #55: Chrome, Edge and Opera do throw an InvalidAccessError instead of an InvalidStateError.
                 // Bug #56: Safari invokes the catch handler but without an error.
                 if (err === undefined || err.code === 15) {
-                    throw invalidStateErrorFactory.create();
+                    throw createInvalidStateError();
                 }
 
                 throw err;
@@ -109,7 +107,7 @@ export class MinimalAudioContext extends MinimalBaseAudioContext implements IMin
             .catch((err) => {
                 // Bug #56: Safari invokes the catch handler but without an error.
                 if (err === undefined) {
-                    throw invalidStateErrorFactory.create();
+                    throw createInvalidStateError();
                 }
 
                 throw err;

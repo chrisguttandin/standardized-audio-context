@@ -1,7 +1,7 @@
 import { Injector } from '@angular/core';
 import { MediaElementAudioSourceNode } from '../audio-nodes/media-element-audio-source-node';
 import { MediaStreamAudioSourceNode } from '../audio-nodes/media-stream-audio-source-node';
-import { INVALID_STATE_ERROR_FACTORY_PROVIDER, InvalidStateErrorFactory } from '../factories/invalid-state-error';
+import { createInvalidStateError } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContext, IAudioContextOptions } from '../interfaces';
 import {
@@ -14,13 +14,11 @@ import { BaseAudioContext } from './base-audio-context';
 
 const injector = Injector.create({
     providers: [
-        INVALID_STATE_ERROR_FACTORY_PROVIDER,
         UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
-const invalidStateErrorFactory = injector.get(InvalidStateErrorFactory);
 const unpatchedAudioContextConstructor = injector.get(nptchdDCntxtCnstrctr);
 
 export class AudioContext extends BaseAudioContext implements IAudioContext {
@@ -86,7 +84,7 @@ export class AudioContext extends BaseAudioContext implements IAudioContext {
             return this._unpatchedAudioContext
                 .close()
                 .then(() => {
-                    throw invalidStateErrorFactory.create();
+                    throw createInvalidStateError();
                 });
         }
 
@@ -105,7 +103,7 @@ export class AudioContext extends BaseAudioContext implements IAudioContext {
                 // Bug #55: Chrome, Edge and Opera do throw an InvalidAccessError instead of an InvalidStateError.
                 // Bug #56: Safari invokes the catch handler but without an error.
                 if (err === undefined || err.code === 15) {
-                    throw invalidStateErrorFactory.create();
+                    throw createInvalidStateError();
                 }
 
                 throw err;
@@ -118,7 +116,7 @@ export class AudioContext extends BaseAudioContext implements IAudioContext {
             .catch((err) => {
                 // Bug #56: Safari invokes the catch handler but without an error.
                 if (err === undefined) {
-                    throw invalidStateErrorFactory.create();
+                    throw createInvalidStateError();
                 }
 
                 throw err;
