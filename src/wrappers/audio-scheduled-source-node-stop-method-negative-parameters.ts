@@ -3,7 +3,7 @@ import { TNativeAudioBufferSourceNode, TNativeOscillatorNode } from '../types';
 
 export const wrapAudioScheduledSourceNodeStopMethodNegativeParameters = (
     audioScheduledSourceNode: TNativeAudioBufferSourceNode | INativeConstantSourceNode | TNativeOscillatorNode
-) => {
+): void => {
     audioScheduledSourceNode.stop = ((stop) => {
         return (when = 0) => {
             if (when < 0) {

@@ -30,9 +30,9 @@ export class AnalyserNodeRenderer extends AudioNodeRenderer {
             this._nativeNode = createNativeAnalyserNode(offlineAudioContext);
         }
 
-        await this._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode);
+        await this._connectSources(offlineAudioContext, this._nativeNode);
 
-        return <TNativeAudioNode> this._nativeNode;
+        return this._nativeNode;
     }
 
 }

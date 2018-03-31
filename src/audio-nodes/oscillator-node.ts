@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { AudioParam } from '../audio-param';
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeOscillatorNode } from '../helpers/create-native-oscillator-node';
@@ -7,16 +7,7 @@ import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOptions } from '../interfaces';
 import { OscillatorNodeRenderer } from '../renderers/oscillator-node';
 import { TChannelCountMode, TChannelInterpretation, TEndedEventHandler, TNativeOscillatorNode, TOscillatorType } from '../types';
-import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
-
-const injector = Injector.create({
-    providers: [
-        AUDIO_PARAM_WRAPPER_PROVIDER
-    ]
-});
-
-const audioParamWrapper = injector.get(AudioParamWrapper);
 
 // The DEFAULT_OPTIONS are only of type Partial<IOscillatorOptions> because there is no default value for periodicWave.
 const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
@@ -30,6 +21,10 @@ const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
 
 export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNode> implements IOscillatorNode {
 
+    private _detune: IAudioParam;
+
+    private _frequency: IAudioParam;
+
     private _oscillatorNodeRenderer: null | OscillatorNodeRenderer;
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
@@ -40,9 +35,19 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
         super(context, nativeNode, mergedOptions.channelCount);
 
         // Bug #81: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-        audioParamWrapper.wrap(nativeNode, context, nativeNode.detune, 'detune', 3.4028234663852886e38, -3.4028234663852886e38);
+        this._detune = new AudioParam({
+            context,
+            maxValue: 3.4028234663852886e38,
+            minValue: -3.4028234663852886e38,
+            nativeAudioParam: nativeNode.detune
+        });
         // Bug #76: Edge & Safari do not export the correct values for maxValue and minValue.
-        audioParamWrapper.wrap(nativeNode, context, nativeNode.frequency, 'frequency', context.sampleRate / 2, -(context.sampleRate / 2));
+        this._frequency = new AudioParam({
+            context,
+            maxValue: context.sampleRate / 2,
+            minValue: -(context.sampleRate / 2),
+            nativeAudioParam: nativeNode.frequency
+        });
 
         if (isOfflineAudioContext(nativeContext)) {
             const oscillatorNodeRenderer = new OscillatorNodeRenderer(this);
@@ -56,11 +61,11 @@ export class OscillatorNode extends NoneAudioDestinationNode<TNativeOscillatorNo
     }
 
     public get detune () {
-        return <IAudioParam> (<any> this._nativeNode.detune);
+        return this._detune;
     }
 
     public get frequency () {
-        return <IAudioParam> (<any> this._nativeNode.frequency);
+        return this._frequency;
     }
 
     public get onended () {

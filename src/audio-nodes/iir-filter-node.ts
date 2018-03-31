@@ -1,5 +1,4 @@
-import { Injector } from '@angular/core';
-import { IIRFilterNodeFaker, IIR_FILTER_NODE_FAKER_PROVIDER } from '../fakers/iir-filter-node';
+import { createNativeIIRFilterNodeFaker } from '../fakers/iir-filter-node';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
@@ -22,21 +21,13 @@ const DEFAULT_OPTIONS: Partial<IIIRFilterOptions> = {
     channelInterpretation: <TChannelInterpretation> 'speakers'
 };
 
-const injector = Injector.create({
-    providers: [
-        IIR_FILTER_NODE_FAKER_PROVIDER
-    ]
-});
-
-const iIRFilterNodeFaker = injector.get<IIRFilterNodeFaker>(IIRFilterNodeFaker);
-
 const createNativeNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
     options: IIIRFilterOptions
 ): TNativeIIRFilterNode => {
     // Bug #9: Safari does not support IIRFilterNodes.
     if (nativeContext.createIIRFilter === undefined) {
-        return iIRFilterNodeFaker.fake(nativeContext, options);
+        return createNativeIIRFilterNodeFaker(nativeContext, options);
     }
 
     const iIRFilterNode = nativeContext.createIIRFilter(<number[]> options.feedforward, <number[]> options.feedback);

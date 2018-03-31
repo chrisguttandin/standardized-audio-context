@@ -1,5 +1,5 @@
 import { Injector } from '@angular/core';
-import { CONSTANT_SOURCE_NODE_FAKER_PROVIDER, ConstantSourceNodeFaker } from '../fakers/constant-source-node';
+import { createNativeConstantSourceNodeFaker } from '../fakers/constant-source-node';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { IConstantSourceOptions, INativeConstantSourceNode } from '../interfaces';
@@ -30,12 +30,10 @@ const injector = Injector.create({
     providers: [
         AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-        CONSTANT_SOURCE_NODE_ACCURATE_SCHEDULING_SUPPORT_TESTER_PROVIDER,
-        CONSTANT_SOURCE_NODE_FAKER_PROVIDER
+        CONSTANT_SOURCE_NODE_ACCURATE_SCHEDULING_SUPPORT_TESTER_PROVIDER
     ]
 });
 
-const constantSourceNodeFaker = injector.get(ConstantSourceNodeFaker);
 const accurateSchedulingSupportTester = injector.get(ConstantSourceNodeAccurateSchedulingSupportTester);
 const startMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester);
 const stopMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester);
@@ -47,7 +45,7 @@ export const createNativeConstantSourceNode = (
     // Bug #62: Edge & Safari do not support ConstantSourceNodes.
     // @todo TypeScript doesn't know yet about createConstantSource().
     if ((<any> nativeContext).createConstantSource === undefined) {
-        return constantSourceNodeFaker.fake(nativeContext, options);
+        return createNativeConstantSourceNodeFaker(nativeContext, options);
     }
 
     const nativeNode = <INativeConstantSourceNode> (<any> nativeContext).createConstantSource();

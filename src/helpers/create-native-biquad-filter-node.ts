@@ -10,6 +10,10 @@ export const createNativeBiquadFilterNode = (
 
     assignNativeAudioNodeOptions(nativeNode, options);
 
+    if (options.Q !== undefined) {
+        nativeNode.Q.value = options.Q;
+    }
+
     if (options.detune !== undefined) {
         nativeNode.detune.value = options.detune;
     }
@@ -24,10 +28,6 @@ export const createNativeBiquadFilterNode = (
 
     if (options.type !== undefined) {
         nativeNode.type = options.type;
-    }
-
-    if (options.Q !== undefined) {
-        nativeNode.Q.value = options.Q;
     }
 
     return nativeNode;

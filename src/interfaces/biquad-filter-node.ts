@@ -4,13 +4,13 @@ import { IAudioParam } from './audio-param';
 
 export interface IBiquadFilterNode extends IAudioNode {
 
+    readonly Q: IAudioParam;
+
     readonly detune: IAudioParam;
 
     readonly frequency: IAudioParam;
 
     readonly gain: IAudioParam;
-
-    readonly Q: IAudioParam;
 
     type: TBiquadFilterType;
 

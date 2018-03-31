@@ -37,9 +37,9 @@ export class ChannelMergerNodeRenderer extends AudioNodeRenderer {
             this._nativeNode = createNativeChannelMergerNode(offlineAudioContext, options);
         }
 
-        await this._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode);
+        await this._connectSources(offlineAudioContext, this._nativeNode);
 
-        return <TNativeAudioNode> this._nativeNode;
+        return this._nativeNode;
     }
 
 }

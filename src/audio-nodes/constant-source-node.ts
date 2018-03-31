@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { AudioParam } from '../audio-param';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeConstantSourceNode } from '../helpers/create-native-constant-source-node';
 import { getNativeContext } from '../helpers/get-native-context';
@@ -12,16 +12,7 @@ import {
 } from '../interfaces';
 import { ConstantSourceNodeRenderer } from '../renderers/constant-source-node';
 import { TChannelCountMode, TChannelInterpretation, TEndedEventHandler } from '../types';
-import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
-
-const injector = Injector.create({
-    providers: [
-        AUDIO_PARAM_WRAPPER_PROVIDER
-    ]
-});
-
-const audioParamWrapper = injector.get(AudioParamWrapper);
 
 const DEFAULT_OPTIONS: IConstantSourceOptions = {
     channelCount: 2,
@@ -33,6 +24,8 @@ const DEFAULT_OPTIONS: IConstantSourceOptions = {
 export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstantSourceNode> implements IConstantSourceNode {
 
     private _constantSourceNodeRenderer: null | ConstantSourceNodeRenderer;
+
+    private _offset: IAudioParam;
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
@@ -46,7 +39,12 @@ export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstant
          * for GainNodes.
          * Bug #75: Firefox does not export the correct values for maxValue and minValue.
          */
-        audioParamWrapper.wrap(nativeNode, context, nativeNode.offset, 'offset', 3.4028234663852886e38, -3.4028234663852886e38);
+        this._offset = new AudioParam({
+            context,
+            maxValue: 3.4028234663852886e38,
+            minValue: -3.4028234663852886e38,
+            nativeAudioParam: nativeNode.offset
+        });
 
         if (isOfflineAudioContext(nativeContext)) {
             const constantSourceNodeRenderer = new ConstantSourceNodeRenderer(this);
@@ -60,7 +58,7 @@ export class ConstantSourceNode extends NoneAudioDestinationNode<INativeConstant
     }
 
     public get offset () {
-        return <IAudioParam> (<any> this._nativeNode.offset);
+        return this._offset;
     }
 
     public get onended () {

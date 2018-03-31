@@ -1,11 +1,10 @@
-import { AUDIO_PARAM_STORE } from '../globals';
 import { connectAudioParam } from '../helpers/connect-audio-param';
 import { createNativeConstantSourceNode } from '../helpers/create-native-constant-source-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
-import { IAudioParam, IConstantSourceNode, IConstantSourceOptions, INativeConstantSourceNode } from '../interfaces';
-import { TNativeAudioParam, TUnpatchedOfflineAudioContext } from '../types';
+import { IConstantSourceNode, IConstantSourceOptions, INativeConstantSourceNode } from '../interfaces';
+import { TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
 export class ConstantSourceNodeRenderer extends AudioNodeRenderer {
@@ -44,8 +43,6 @@ export class ConstantSourceNodeRenderer extends AudioNodeRenderer {
 
         // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
         if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
-            const offsetAudioParam = <IAudioParam> (<any> this._nativeNode.offset);
-
             const options: IConstantSourceOptions = {
                 channelCount: this._nativeNode.channelCount,
                 channelCountMode: this._nativeNode.channelCountMode,
@@ -55,7 +52,7 @@ export class ConstantSourceNodeRenderer extends AudioNodeRenderer {
 
             this._nativeNode = createNativeConstantSourceNode(offlineAudioContext, options);
 
-            await renderAutomation(offlineAudioContext, offsetAudioParam, this._nativeNode.offset);
+            await renderAutomation(offlineAudioContext, this._proxy.offset, this._nativeNode.offset);
 
             if (this._start !== null) {
                 this._nativeNode.start(this._start);
@@ -65,14 +62,12 @@ export class ConstantSourceNodeRenderer extends AudioNodeRenderer {
                 this._nativeNode.stop(this._stop);
             }
         } else {
-            const offsetNativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.offset);
-
-            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.offset), offsetNativeAudioParam);
+            await connectAudioParam(offlineAudioContext, this._proxy.offset);
         }
 
-        await this._connectSources(offlineAudioContext, <INativeConstantSourceNode> this._nativeNode);
+        await this._connectSources(offlineAudioContext, this._nativeNode);
 
-        return <INativeConstantSourceNode> this._nativeNode;
+        return this._nativeNode;
     }
 
 }

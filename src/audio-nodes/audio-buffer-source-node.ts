@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { AudioParam } from '../audio-param';
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
@@ -7,16 +7,7 @@ import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioBufferSourceNodeRenderer } from '../renderers/audio-buffer-source-node';
 import { TChannelCountMode, TChannelInterpretation, TEndedEventHandler, TNativeAudioBufferSourceNode } from '../types';
-import { AUDIO_PARAM_WRAPPER_PROVIDER, AudioParamWrapper } from '../wrappers/audio-param';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
-
-const injector = Injector.create({
-    providers: [
-        AUDIO_PARAM_WRAPPER_PROVIDER
-    ]
-});
-
-const audioParamWrapper = injector.get(AudioParamWrapper);
 
 const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     buffer: null,
@@ -34,9 +25,13 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
     private _audioBufferSourceNodeRenderer: null | AudioBufferSourceNodeRenderer;
 
+    private _detune: IAudioParam;
+
     private _isBufferNullified: boolean;
 
     private _isBufferSet: boolean;
+
+    private _playbackRate: IAudioParam;
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
@@ -45,9 +40,19 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
 
         super(context, nativeNode, mergedOptions.channelCount);
 
-        audioParamWrapper.wrap(nativeNode, context, nativeNode.detune, 'detune');
+        this._detune = new AudioParam({
+            context,
+            maxValue: null,
+            minValue: null,
+            nativeAudioParam: nativeNode.detune
+        });
         // Bug #73: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-        audioParamWrapper.wrap(nativeNode, context, nativeNode.playbackRate, 'playbackRate', 3.4028234663852886e38, -3.4028234663852886e38);
+        this._playbackRate = new AudioParam({
+            context,
+            maxValue: 3.4028234663852886e38,
+            minValue: -3.4028234663852886e38,
+            nativeAudioParam: nativeNode.playbackRate
+        });
 
         if (isOfflineAudioContext(nativeContext)) {
             const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
@@ -103,7 +108,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
     }
 
     public get detune () {
-        return <IAudioParam> (<any> this._nativeNode.detune);
+        return this._detune;
     }
 
     public get loop () {
@@ -131,7 +136,7 @@ export class AudioBufferSourceNode extends NoneAudioDestinationNode<TNativeAudio
     }
 
     public get playbackRate () {
-        return <IAudioParam> (<any> this._nativeNode.playbackRate);
+        return this._playbackRate;
     }
 
     public start (when = 0, offset = 0, duration?: number) {

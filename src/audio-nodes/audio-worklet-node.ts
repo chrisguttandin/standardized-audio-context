@@ -2,8 +2,7 @@ import { Injector } from '@angular/core';
 import { AudioParam } from '../audio-param';
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { createNotSupportedError } from '../factories/not-supported-error';
-import { AUDIO_WORKLET_NODE_FAKER_PROVIDER, AudioWorkletNodeFaker } from '../fakers/audio-worklet-node';
-import { CONSTANT_SOURCE_NODE_FAKER_PROVIDER } from '../fakers/constant-source-node';
+import { createNativeAudioWorkletNodeFaker } from '../fakers/audio-worklet-node';
 import { AUDIO_NODE_RENDERER_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
@@ -46,14 +45,11 @@ const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
 
 const injector = Injector.create({
     providers: [
-        AUDIO_WORKLET_NODE_FAKER_PROVIDER,
-        CONSTANT_SOURCE_NODE_FAKER_PROVIDER,
         NATIVE_AUDIO_WORKLET_NODE_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
-const audioWorkletNodeFaker = injector.get<AudioWorkletNodeFaker>(AudioWorkletNodeFaker);
 const nativeAudioWorkletNodeConstructor = injector.get(ntvDWrkltNdCnstrctr);
 
 const createChannelCount = (length: number): number[] => {
@@ -129,7 +125,7 @@ const createNativeAudioWorkletNode = (
         throw createNotSupportedError();
     }
 
-    return audioWorkletNodeFaker.fake(nativeContext, processorDefinition, options);
+    return createNativeAudioWorkletNodeFaker(nativeContext, processorDefinition, options);
 };
 
 export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkletNode> implements IAudioWorkletNode {

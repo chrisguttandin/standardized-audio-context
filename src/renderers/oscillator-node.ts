@@ -1,11 +1,10 @@
-import { AUDIO_PARAM_STORE } from '../globals';
 import { connectAudioParam } from '../helpers/connect-audio-param';
 import { createNativeOscillatorNode } from '../helpers/create-native-oscillator-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
-import { IAudioParam, IOscillatorNode, IOscillatorOptions } from '../interfaces';
-import { TNativeAudioNode, TNativeAudioParam, TNativeOscillatorNode, TUnpatchedOfflineAudioContext } from '../types';
+import { IOscillatorNode, IOscillatorOptions } from '../interfaces';
+import { TNativeAudioNode, TNativeOscillatorNode, TUnpatchedOfflineAudioContext } from '../types';
 import { AudioNodeRenderer } from './audio-node';
 
 export class OscillatorNodeRenderer extends AudioNodeRenderer {
@@ -44,9 +43,6 @@ export class OscillatorNodeRenderer extends AudioNodeRenderer {
 
         // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
         if (!isOwnedByContext(this._nativeNode, offlineAudioContext)) {
-            const detuneAudioParam = <IAudioParam> (<any> this._nativeNode.detune);
-            const frequencyAudioParam = <IAudioParam> (<any> this._nativeNode.frequency);
-
             const options: IOscillatorOptions = {
                 channelCount: this._nativeNode.channelCount,
                 channelCountMode: this._nativeNode.channelCountMode,
@@ -59,8 +55,8 @@ export class OscillatorNodeRenderer extends AudioNodeRenderer {
 
             this._nativeNode = createNativeOscillatorNode(offlineAudioContext, options);
 
-            await renderAutomation(offlineAudioContext, detuneAudioParam, this._nativeNode.detune);
-            await renderAutomation(offlineAudioContext, frequencyAudioParam, this._nativeNode.frequency);
+            await renderAutomation(offlineAudioContext, this._proxy.detune, this._nativeNode.detune);
+            await renderAutomation(offlineAudioContext, this._proxy.frequency, this._nativeNode.frequency);
 
             if (this._start !== null) {
                 this._nativeNode.start(this._start);
@@ -70,11 +66,8 @@ export class OscillatorNodeRenderer extends AudioNodeRenderer {
                 this._nativeNode.stop(this._stop);
             }
         } else {
-            const detuneNativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.detune);
-            const frequencyNativeAudioParam = <TNativeAudioParam> AUDIO_PARAM_STORE.get(this._proxy.frequency);
-
-            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.detune), detuneNativeAudioParam);
-            await connectAudioParam(offlineAudioContext, <IAudioParam> (<any> this._nativeNode.frequency), frequencyNativeAudioParam);
+            await connectAudioParam(offlineAudioContext, this._proxy.detune);
+            await connectAudioParam(offlineAudioContext, this._proxy.frequency);
         }
 
         await this._connectSources(offlineAudioContext, <TNativeAudioNode> this._nativeNode);
