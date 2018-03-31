@@ -3,6 +3,8 @@ import { AudioBuffer } from '../audio-buffer';
 import { AnalyserNode } from '../audio-nodes/analyser-node';
 import { AudioBufferSourceNode } from '../audio-nodes/audio-buffer-source-node';
 import { BiquadFilterNode } from '../audio-nodes/biquad-filter-node';
+import { ChannelMergerNode } from '../audio-nodes/channel-merger-node';
+import { ChannelSplitterNode } from '../audio-nodes/channel-splitter-node';
 import { ConstantSourceNode } from '../audio-nodes/constant-source-node';
 import { GainNode } from '../audio-nodes/gain-node';
 import { IIRFilterNode } from '../audio-nodes/iir-filter-node';
@@ -59,6 +61,14 @@ export class BaseAudioContext extends MinimalBaseAudioContext implements IBaseAu
 
     public createBufferSource (): IAudioBufferSourceNode {
         return new AudioBufferSourceNode(this);
+    }
+
+    public createChannelMerger (numberOfInputs = 6) {
+        return new ChannelMergerNode(this, { numberOfInputs });
+    }
+
+    public createChannelSplitter (numberOfOutputs = 6) {
+        return new ChannelSplitterNode(this, { numberOfOutputs });
     }
 
     public createConstantSource () {

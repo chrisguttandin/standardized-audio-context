@@ -1,14 +1,10 @@
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeChannelMergerNode } from '../helpers/create-native-channel-merger-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IChannelMergerOptions, IMinimalBaseAudioContext } from '../interfaces';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TNativeChannelMergerNode,
-    TUnpatchedAudioContext,
-    TUnpatchedOfflineAudioContext
-} from '../types';
+import { ChannelMergerNodeRenderer } from '../renderers/channel-merger-node';
+import { TChannelCountMode, TChannelInterpretation, TNativeChannelMergerNode } from '../types';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IChannelMergerOptions = {
@@ -18,23 +14,20 @@ const DEFAULT_OPTIONS: IChannelMergerOptions = {
     numberOfInputs: 6
 };
 
-const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfInputs: number) => {
-    // @todo Use this inside the AudioWorkletNodeFaker once it supports the OfflineAudioContext.
-    if (isOfflineAudioContext(nativeContext)) {
-        throw new Error('This is not yet supported.');
-    }
-
-    return createNativeChannelMergerNode(nativeContext, { numberOfInputs });
-};
-
 export class ChannelMergerNode extends NoneAudioDestinationNode<TNativeChannelMergerNode> {
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const { channelCount, numberOfInputs } = <IChannelMergerOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = createNativeNode(nativeContext, numberOfInputs);
+        const mergedOptions = <IChannelMergerOptions> { ...DEFAULT_OPTIONS, ...options };
+        const nativeNode = createNativeChannelMergerNode(nativeContext, mergedOptions);
 
-        super(context, nativeNode, channelCount);
+        super(context, nativeNode, mergedOptions.channelCount);
+
+        if (isOfflineAudioContext(nativeContext)) {
+            const channelMergerNodeRenderer = new ChannelMergerNodeRenderer(this);
+
+            AUDIO_NODE_RENDERER_STORE.set(this, channelMergerNodeRenderer);
+        }
     }
 
 }

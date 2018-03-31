@@ -1,14 +1,10 @@
+import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeChannelSplitterNode } from '../helpers/create-native-channel-splitter-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IChannelSplitterOptions, IMinimalBaseAudioContext } from '../interfaces';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TNativeChannelSplitterNode,
-    TUnpatchedAudioContext,
-    TUnpatchedOfflineAudioContext
-} from '../types';
+import { ChannelSplitterNodeRenderer } from '../renderers/channel-splitter-node';
+import { TChannelCountMode, TChannelInterpretation, TNativeChannelSplitterNode } from '../types';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IChannelSplitterOptions = {
@@ -18,24 +14,24 @@ const DEFAULT_OPTIONS: IChannelSplitterOptions = {
     numberOfOutputs: 6
 };
 
-const createNativeNode = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfOutputs: number) => {
-    // @todo Use this inside the AudioWorkletNodeFaker once it supports the OfflineAudioContext.
-    if (isOfflineAudioContext(nativeContext)) {
-        throw new Error('This is not yet supported.');
-    }
-
-    return createNativeChannelSplitterNode(nativeContext, { numberOfOutputs });
+const sanitizedOptions = (options: IChannelSplitterOptions) => {
+    return { ...options, channelCount: options.numberOfOutputs };
 };
 
 export class ChannelSplitterNode extends NoneAudioDestinationNode<TNativeChannelSplitterNode> {
 
     constructor (context: IMinimalBaseAudioContext, options: Partial<IChannelSplitterOptions> = DEFAULT_OPTIONS) {
         const nativeContext = getNativeContext(context);
-        const { numberOfOutputs } = <IChannelSplitterOptions> { ...DEFAULT_OPTIONS, ...options };
+        const mergedOptions = sanitizedOptions(<IChannelSplitterOptions> { ...DEFAULT_OPTIONS, ...options });
+        const nativeNode = createNativeChannelSplitterNode(nativeContext, mergedOptions);
 
-        const nativeNode = createNativeNode(nativeContext, numberOfOutputs);
+        super(context, nativeNode, mergedOptions.channelCount);
 
-        super(context, nativeNode, numberOfOutputs);
+        if (isOfflineAudioContext(nativeContext)) {
+            const channelSplitterNodeRenderer = new ChannelSplitterNodeRenderer(this);
+
+            AUDIO_NODE_RENDERER_STORE.set(this, channelSplitterNodeRenderer);
+        }
     }
 
 }

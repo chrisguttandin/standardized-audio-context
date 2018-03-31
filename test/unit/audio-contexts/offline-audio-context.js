@@ -562,6 +562,34 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('createChannelMerger()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createChannelMerger).to.be.a('function');
+        });
+
+    });
+
+    describe('createChannelSplitter()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createChannelSplitter).to.be.a('function');
+        });
+
+    });
+
     describe('createConstantSource()', () => {
 
         let offlineAudioContext;
@@ -572,20 +600,6 @@ describe('OfflineAudioContext', () => {
 
         it('should be a function', () => {
             expect(offlineAudioContext.createConstantSource).to.be.a('function');
-        });
-
-    });
-
-    describe('createOscillator()', () => {
-
-        let offlineAudioContext;
-
-        beforeEach(() => {
-            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
-        });
-
-        it('should be a function', () => {
-            expect(offlineAudioContext.createOscillator).to.be.a('function');
         });
 
     });
@@ -614,6 +628,20 @@ describe('OfflineAudioContext', () => {
 
         it('should be a function', () => {
             expect(offlineAudioContext.createIIRFilter).to.be.a('function');
+        });
+
+    });
+
+    describe('createOscillator()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createOscillator).to.be.a('function');
         });
 
     });
