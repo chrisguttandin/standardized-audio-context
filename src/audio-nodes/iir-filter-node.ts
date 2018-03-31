@@ -12,10 +12,7 @@ import {
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
-import {
-    IIRFilterNodeGetFrequencyResponseMethodWrapper,
-    IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER
-} from '../wrappers/iir-filter-node-get-frequency-response-method';
+import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 // The DEFAULT_OPTIONS are only of type Partial<IIIRFilterOptions> because there are no default values for feedback and feedforward.
@@ -27,14 +24,11 @@ const DEFAULT_OPTIONS: Partial<IIIRFilterOptions> = {
 
 const injector = Injector.create({
     providers: [
-        IIR_FILTER_NODE_FAKER_PROVIDER,
-        IIR_FILTER_NODE_GET_FREQUENCY_RESPONSE_METHOD_WRAPPER_PROVIDER
+        IIR_FILTER_NODE_FAKER_PROVIDER
     ]
 });
 
 const iIRFilterNodeFaker = injector.get<IIRFilterNodeFaker>(IIRFilterNodeFaker);
-const iIRFilterNodeGetFrequencyResponseMethodWrapper = injector
-    .get<IIRFilterNodeGetFrequencyResponseMethodWrapper>(IIRFilterNodeGetFrequencyResponseMethodWrapper);
 
 const createNativeNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
@@ -76,7 +70,7 @@ export class IIRFilterNode extends NoneAudioDestinationNode<TNativeIIRFilterNode
 
         // Bug #23 & #24: FirefoxDeveloper does not throw an InvalidAccessError.
         // @todo Write a test which allows other browsers to remain unpatched.
-        iIRFilterNodeGetFrequencyResponseMethodWrapper.wrap(nativeNode);
+        wrapIIRFilterNodeGetFrequencyResponseMethod(nativeNode);
 
         if (isOfflineAudioContext(nativeContext)) {
             const iirFilterNodeRenderer = new IIRFilterNodeRenderer(this, mergedOptions.feedback, mergedOptions.feedforward);

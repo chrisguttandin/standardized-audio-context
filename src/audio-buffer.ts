@@ -11,11 +11,8 @@ import {
     AudioBufferCopyChannelMethodsSupportTester
 } from './support-testers/audio-buffer-copy-channel-methods';
 import { TUnpatchedOfflineAudioContext } from './types';
-import { AUDIO_BUFFER_WRAPPER_PROVIDER, AudioBufferWrapper } from './wrappers/audio-buffer';
-import {
-    AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
-    AudioBufferCopyChannelMethodsWrapper
-} from './wrappers/audio-buffer-copy-channel-methods';
+import { wrapAudioBuffer } from './wrappers/audio-buffer';
+import { wrapAudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
@@ -23,17 +20,13 @@ const DEFAULT_OPTIONS = {
 
 const injector = Injector.create({
     providers: [
-        AUDIO_BUFFER_WRAPPER_PROVIDER,
         AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
-        AUDIO_BUFFER_COPY_CHANNEL_METHODS_WRAPPER_PROVIDER,
         UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
-const audioBufferWrapper = injector.get<AudioBufferWrapper>(AudioBufferWrapper);
 const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyChannelMethodsSupportTester);
-const audioBufferCopyChannelMethodsWrapper = injector.get(AudioBufferCopyChannelMethodsWrapper);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
 
 let unpatchedOfflineAudioContext: null | TUnpatchedOfflineAudioContext = null;
@@ -63,7 +56,7 @@ export class AudioBuffer implements IAudioBuffer {
 
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
         if (typeof audioBuffer.copyFromChannel !== 'function') {
-            audioBufferWrapper.wrap(audioBuffer);
+            wrapAudioBuffer(audioBuffer);
         // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
         } else if (
             !cacheTestResult(
@@ -74,7 +67,7 @@ export class AudioBuffer implements IAudioBuffer {
                 }
             )
         ) {
-            audioBufferCopyChannelMethodsWrapper.wrap(audioBuffer);
+            wrapAudioBufferCopyChannelMethodsWrapper(audioBuffer);
         }
 
         // This does violate all good pratices but it is necessary to allow this AudioBuffer to be used with native (Offline)AudioContexts.

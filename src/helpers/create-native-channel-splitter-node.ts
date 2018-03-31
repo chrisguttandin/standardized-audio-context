@@ -1,16 +1,7 @@
-import { Injector } from '@angular/core';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { IChannelSplitterOptions } from '../interfaces';
 import { TNativeChannelSplitterNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
-import { CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER, ChannelSplitterNodeWrapper } from '../wrappers/channel-splitter-node';
-
-const injector = Injector.create({
-    providers: [
-        CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER
-    ]
-});
-
-const channelSplitterNodeWrapper = injector.get<ChannelSplitterNodeWrapper>(ChannelSplitterNodeWrapper);
+import { wrapChannelSplitterNode } from '../wrappers/channel-splitter-node';
 
 export const createNativeChannelSplitterNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
@@ -21,7 +12,7 @@ export const createNativeChannelSplitterNode = (
     assignNativeAudioNodeOptions(nativeNode, options);
 
     // Bug #29 - #32: Only Chrome & Opera partially support the spec yet.
-    channelSplitterNodeWrapper.wrap(nativeNode);
+    wrapChannelSplitterNode(nativeNode);
 
     return nativeNode;
 };

@@ -7,19 +7,14 @@ import {
     AnalyserNodeGetFloatTimeDomainDataSupportTester
 } from '../support-testers/analyser-node-get-float-time-domain-data';
 import { TNativeAnalyserNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
-import {
-    ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_METHOD_WRAPPER_PROVIDER,
-    AnalyserNodeGetFloatTimeDomainDataMethodWrapper
-} from '../wrappers/analyser-node-get-float-time-domain-data-method';
+import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 
 const injector = Injector.create({
     providers: [
-        ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_METHOD_WRAPPER_PROVIDER,
         ANALYSER_NODE_GET_FLOAT_TIME_DOMAIN_DATA_SUPPORT_TESTER_PROVIDER
     ]
 });
 
-const analyserNodeGetFloatTimeDomainDataMethodWrapper = injector.get(AnalyserNodeGetFloatTimeDomainDataMethodWrapper);
 const analyserNodeGetFloatTimeDomainDataSupportTester = injector.get(AnalyserNodeGetFloatTimeDomainDataSupportTester);
 
 const isSupportingAnalyserNodeGetFloatTimeDomainData = (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => cacheTestResult(
@@ -58,7 +53,7 @@ export const createNativeAnalyserNode = (
 
     // Bug #36: Safari does not support getFloatTimeDomainData() yet.
     if (!isSupportingAnalyserNodeGetFloatTimeDomainData(nativeContext)) {
-        analyserNodeGetFloatTimeDomainDataMethodWrapper.wrap(nativeNode);
+        wrapAnalyserNodeGetFloatTimeDomainDataMethod(nativeNode);
     }
 
     return nativeNode;

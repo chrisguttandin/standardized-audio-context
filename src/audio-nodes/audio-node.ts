@@ -16,16 +16,14 @@ import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioNode, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
 import { DISCONNECTING_SUPPORT_TESTER_PROVIDER, DisconnectingSupportTester } from '../support-testers/disconnecting';
 import { TNativeAudioNode, TUnpatchedAudioContext } from '../types';
-import { AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER, AudioNodeDisconnectMethodWrapper } from '../wrappers/audio-node-disconnect-method';
+import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
 const injector = Injector.create({
     providers: [
-        AUDIO_NODE_DISCONNECT_METHOD_WRAPPER_PROVIDER,
         DISCONNECTING_SUPPORT_TESTER_PROVIDER
     ]
 });
 
-const audioNodeDisconnectMethodWrapper = injector.get(AudioNodeDisconnectMethodWrapper);
 const disconnectingSupportTester = injector.get(DisconnectingSupportTester);
 
 export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> extends EventTarget implements IAudioNode {
@@ -56,7 +54,7 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
         if (!isOfflineAudioContext(nativeContext) && true !== cacheTestResult(DisconnectingSupportTester, () => {
             return disconnectingSupportTester.test(<TUnpatchedAudioContext> nativeContext);
         })) {
-            audioNodeDisconnectMethodWrapper.wrap(nativeNode);
+            wrapAudioNodeDisconnectMethod(nativeNode);
         }
 
         AUDIO_NODE_STORE.set((parentNode === undefined) ? this : parentNode, nativeNode);

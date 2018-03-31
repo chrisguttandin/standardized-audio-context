@@ -17,37 +17,28 @@ import {
 } from '../support-testers/constant-source-node-accurate-scheduling';
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
-    AudioScheduledSourceNodeStartMethodNegativeParametersWrapper
+    wrapAudioScheduledSourceNodeStartMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-start-method-negative-parameters';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
-    AudioScheduledSourceNodeStopMethodNegativeParametersWrapper
+    wrapAudioScheduledSourceNodeStopMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
 import {
-    CONSTANT_SOURCE_NODE_ACCURATE_SCHEDULING_WRAPPER_PROVIDER,
-    ConstantSourceNodeAccurateSchedulingWrapper
+    wrapConstantSourceNodeAccurateScheduling
 } from '../wrappers/constant-source-node-accurate-scheduling';
 
 const injector = Injector.create({
     providers: [
         AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-        AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
         AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-        AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_WRAPPER_PROVIDER,
         CONSTANT_SOURCE_NODE_ACCURATE_SCHEDULING_SUPPORT_TESTER_PROVIDER,
-        CONSTANT_SOURCE_NODE_ACCURATE_SCHEDULING_WRAPPER_PROVIDER,
         CONSTANT_SOURCE_NODE_FAKER_PROVIDER
     ]
 });
 
 const constantSourceNodeFaker = injector.get(ConstantSourceNodeFaker);
 const accurateSchedulingSupportTester = injector.get(ConstantSourceNodeAccurateSchedulingSupportTester);
-const accurateSchedulingWrapper = injector.get(ConstantSourceNodeAccurateSchedulingWrapper);
 const startMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester);
-const startMethodNegativeParametersWrapper = injector.get(AudioScheduledSourceNodeStartMethodNegativeParametersWrapper);
 const stopMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester);
-const stopMethodNegativeParametersWrapper = injector.get(AudioScheduledSourceNodeStopMethodNegativeParametersWrapper);
 
 export const createNativeConstantSourceNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
@@ -77,7 +68,7 @@ export const createNativeConstantSourceNode = (
         AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester,
         () => startMethodNegativeParametersSupportTester.test(nativeContext)
     )) {
-        startMethodNegativeParametersWrapper.wrap(nativeNode);
+        wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeNode);
     }
 
     // Bug #44: No browser does throw a RangeError yet.
@@ -85,7 +76,7 @@ export const createNativeConstantSourceNode = (
         AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester,
         () => stopMethodNegativeParametersSupportTester.test(nativeContext)
     )) {
-        stopMethodNegativeParametersWrapper.wrap(nativeNode);
+        wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeNode);
     }
 
     // Bug #70: Firefox does not schedule ConstantSourceNodes accurately.
@@ -93,7 +84,7 @@ export const createNativeConstantSourceNode = (
         ConstantSourceNodeAccurateSchedulingSupportTester,
         () => accurateSchedulingSupportTester.test(nativeContext)
     )) {
-        accurateSchedulingWrapper.wrap(nativeNode, nativeContext);
+        wrapConstantSourceNodeAccurateScheduling(nativeNode, nativeContext);
     }
 
     return nativeNode;

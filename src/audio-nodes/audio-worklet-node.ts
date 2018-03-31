@@ -30,8 +30,6 @@ import {
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
-import { CHANNEL_MERGER_NODE_WRAPPER_PROVIDER } from '../wrappers/channel-merger-node';
-import { CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER } from '../wrappers/channel-splitter-node';
 import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
@@ -49,8 +47,6 @@ const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
 const injector = Injector.create({
     providers: [
         AUDIO_WORKLET_NODE_FAKER_PROVIDER,
-        CHANNEL_MERGER_NODE_WRAPPER_PROVIDER,
-        CHANNEL_SPLITTER_NODE_WRAPPER_PROVIDER,
         CONSTANT_SOURCE_NODE_FAKER_PROVIDER,
         NATIVE_AUDIO_WORKLET_NODE_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
