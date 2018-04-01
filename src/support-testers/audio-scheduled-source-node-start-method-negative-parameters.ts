@@ -1,22 +1,15 @@
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
-export class AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester {
+export const testAudioScheduledSourceNodeStartMethodNegativeParametersSupport = (
+    audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext
+): boolean => {
+    const audioBuffer = audioContext.createBufferSource();
 
-    public test (audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) {
-        const audioBuffer = audioContext.createBufferSource();
-
-        try {
-            audioBuffer.start(-1);
-        } catch (err) {
-            return (err instanceof RangeError);
-        }
-
-        return false;
+    try {
+        audioBuffer.start(-1);
+    } catch (err) {
+        return (err instanceof RangeError);
     }
 
-}
-
-export const AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER = {
-    deps: [ ],
-    provide: AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester
+    return false;
 };

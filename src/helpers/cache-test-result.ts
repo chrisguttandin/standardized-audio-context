@@ -1,25 +1,20 @@
-import { Injector } from '@angular/core';
-import { TEST_RESULTS_PROVIDER, testResultsToken } from '../providers/test-results';
+import { TEST_RESULTS } from '../globals';
 
 const ONGOING_TESTS: Map<object, Promise<boolean>> = new Map();
-
-const injector = Injector.create({
-    providers: [
-        TEST_RESULTS_PROVIDER
-    ]
-});
-
-const testResults = injector.get(testResultsToken);
 
 function cacheTestResult (tester: object, test: () => boolean): boolean;
 function cacheTestResult (tester: object, test: () => Promise<boolean>): boolean | Promise<boolean>;
 function cacheTestResult (tester: object, test: () => boolean | Promise<boolean>): boolean | Promise<boolean> {
-    if (testResults.has(tester)) {
-        return <boolean> testResults.get(tester);
+    const cachedTestResult = TEST_RESULTS.get(tester);
+
+    if (cachedTestResult !== undefined) {
+        return cachedTestResult;
     }
 
-    if (ONGOING_TESTS.has(tester)) {
-        return <Promise<boolean>> ONGOING_TESTS.get(tester);
+    const ongoingTest = ONGOING_TESTS.get(tester);
+
+    if (ongoingTest !== undefined) {
+        return ongoingTest;
     }
 
     const synchronousTestResult = test();
@@ -30,13 +25,13 @@ function cacheTestResult (tester: object, test: () => boolean | Promise<boolean>
         return synchronousTestResult
             .then((finalTestResult) => {
                 ONGOING_TESTS.delete(tester);
-                testResults.set(tester, finalTestResult);
+                TEST_RESULTS.set(tester, finalTestResult);
 
                 return finalTestResult;
             });
     }
 
-    testResults.set(tester, synchronousTestResult);
+    TEST_RESULTS.set(tester, synchronousTestResult);
 
     return synchronousTestResult;
 }

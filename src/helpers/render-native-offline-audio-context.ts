@@ -1,21 +1,12 @@
-import { Injector } from '@angular/core';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { createNativeGainNode } from '../helpers/create-native-gain-node';
 import { IOfflineAudioCompletionEvent } from '../interfaces';
-import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from '../support-testers/promise';
+import { testPromiseSupport } from '../support-testers/promise';
 import { TNativeAudioBuffer, TUnpatchedOfflineAudioContext } from '../types';
 
-const injector = Injector.create({
-    providers: [
-        PROMISE_SUPPORT_TESTER_PROVIDER
-    ]
-});
-
-const promiseSupportTester = injector.get(PromiseSupportTester);
-
 const isSupportingPromises = (context: TUnpatchedOfflineAudioContext) => cacheTestResult(
-    PromiseSupportTester,
-    () => promiseSupportTester.test(context)
+    testPromiseSupport,
+    () => testPromiseSupport(context)
 );
 
 export const renderNativeOfflineAudioContext = (nativeOfflineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioBuffer> => {

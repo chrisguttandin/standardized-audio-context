@@ -1,4 +1,3 @@
-import { Injector } from '@angular/core';
 import { EventTarget } from '../event-target';
 import { createInvalidAccessError } from '../factories/invalid-access-error';
 import {
@@ -14,17 +13,9 @@ import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IAudioNode, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
-import { DISCONNECTING_SUPPORT_TESTER_PROVIDER, DisconnectingSupportTester } from '../support-testers/disconnecting';
+import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
 import { TNativeAudioNode, TUnpatchedAudioContext } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
-
-const injector = Injector.create({
-    providers: [
-        DISCONNECTING_SUPPORT_TESTER_PROVIDER
-    ]
-});
-
-const disconnectingSupportTester = injector.get(DisconnectingSupportTester);
 
 export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> extends EventTarget implements IAudioNode {
 
@@ -51,8 +42,8 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
 
         // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
         // @todo Make sure this is not used with an OfflineAudioContext.
-        if (!isOfflineAudioContext(nativeContext) && true !== cacheTestResult(DisconnectingSupportTester, () => {
-            return disconnectingSupportTester.test(<TUnpatchedAudioContext> nativeContext);
+        if (!isOfflineAudioContext(nativeContext) && true !== cacheTestResult(testAudioNodeDisconnectMethodSupport, () => {
+            return testAudioNodeDisconnectMethodSupport(<TUnpatchedAudioContext> nativeContext);
         })) {
             wrapAudioNodeDisconnectMethod(nativeNode);
         }
@@ -159,7 +150,6 @@ export class AudioNode<T extends INativeAudioNodeFaker | TNativeAudioNode> exten
                 this._nativeNode.connect(nativeDestinationNode, output, input);
             }
 
-            // Bug #11: Safari does not support chaining yet. This can be tested with the ChainingSupportTester.
             return destination;
         }
 

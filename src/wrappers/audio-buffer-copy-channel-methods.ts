@@ -1,27 +1,36 @@
+import { createIndexSizeError } from '../factories/index-size-error';
 import { TNativeAudioBuffer } from '../types';
 
-export const wrapAudioBufferCopyChannelMethodsWrapper = (audioBuffer: TNativeAudioBuffer): void => {
-    audioBuffer.copyFromChannel = ((copyFromChannel) => {
-        return (destination: Float32Array, channelNumber: number, startInChannel = 0) => {
-            if (startInChannel < audioBuffer.length && audioBuffer.length - startInChannel < destination.length) {
-                return copyFromChannel.call(
-                    audioBuffer, destination.subarray(0, audioBuffer.length - startInChannel), channelNumber, startInChannel
-                );
-            }
+export const wrapAudioBufferCopyChannelMethods = (audioBuffer: TNativeAudioBuffer): void => {
+    audioBuffer.copyFromChannel = (destination, channelNumber, startInChannel = 0) => {
+        if (channelNumber >= audioBuffer.numberOfChannels || startInChannel >= audioBuffer.length) {
+            throw createIndexSizeError();
+        }
 
-            return copyFromChannel.call(audioBuffer, destination, channelNumber, startInChannel);
-        };
-    })(audioBuffer.copyFromChannel);
+        const channelData = audioBuffer.getChannelData(channelNumber);
 
-    audioBuffer.copyToChannel = ((copyToChannel) => {
-        return (source: Float32Array, channelNumber: number, startInChannel = 0) => {
-            if (startInChannel < audioBuffer.length && audioBuffer.length - startInChannel < source.length) {
-                return copyToChannel.call(
-                    audioBuffer, source.subarray(0, audioBuffer.length - startInChannel), channelNumber, startInChannel
-                );
-            }
+        const channelLength = channelData.length;
 
-            return copyToChannel.call(audioBuffer, source, channelNumber, startInChannel);
-        };
-    })(audioBuffer.copyToChannel);
+        const destinationLength = destination.length;
+
+        for (let i = 0; i + startInChannel < channelLength && i < destinationLength; i += 1) {
+            destination[i] = channelData[i + startInChannel];
+        }
+    };
+
+    audioBuffer.copyToChannel = (source, channelNumber, startInChannel = 0) => {
+        if (channelNumber >= audioBuffer.numberOfChannels || startInChannel >= audioBuffer.length) {
+            throw createIndexSizeError();
+        }
+
+        const channelData = audioBuffer.getChannelData(channelNumber);
+
+        const channelLength = channelData.length;
+
+        const sourceLength = source.length;
+
+        for (let i = 0; i + startInChannel < channelLength && i < sourceLength; i += 1) {
+            channelData[i + startInChannel] = source[i];
+        }
+    };
 };

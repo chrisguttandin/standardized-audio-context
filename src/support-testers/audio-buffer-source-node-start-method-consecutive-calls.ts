@@ -1,24 +1,17 @@
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
-export class AudioBufferSourceNodeStartMethodConsecutiveCallsSupportTester {
+export const testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport = (
+    audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext
+): boolean => {
+    const audioBuffer = audioContext.createBufferSource();
 
-    public test (audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) {
-        const audioBuffer = audioContext.createBufferSource();
+    audioBuffer.start();
 
+    try {
         audioBuffer.start();
-
-        try {
-            audioBuffer.start();
-        } catch (err) {
-            return true;
-        }
-
-        return false;
+    } catch (err) {
+        return true;
     }
 
-}
-
-export const AUDIO_BUFFER_SOURCE_NODE_START_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER = {
-    deps: [ ],
-    provide: AudioBufferSourceNodeStartMethodConsecutiveCallsSupportTester
+    return false;
 };

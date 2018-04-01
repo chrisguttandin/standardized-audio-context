@@ -1,6 +1,7 @@
 import { createIndexSizeError } from '../factories/index-size-error';
+import { TNativeAudioBuffer } from '../types';
 
-export const wrapAudioBuffer = (audioBuffer: AudioBuffer): void => {
+export const wrapAudioBufferCopyChannelMethods = (audioBuffer: TNativeAudioBuffer): void => {
     audioBuffer.copyFromChannel = (destination, channelNumber, startInChannel = 0) => {
         if (channelNumber >= audioBuffer.numberOfChannels || startInChannel >= audioBuffer.length) {
             throw createIndexSizeError();

@@ -1,23 +1,17 @@
-import { Injectable, InjectionToken } from '@angular/core';
-import { IUnpatchedAudioContextConstructor } from '../interfaces';
-import { unpatchedAudioContextConstructor } from '../providers/unpatched-audio-context-constructor';
+import { TTestChannelMergerNodeSupportFactory } from '../types';
 
 /**
  * Firefox up to version 44 had a bug which resulted in a misbehaving ChannelMergerNode. If one of
  * its channels would be unconnected the remaining channels were somehow upmixed to spread the
  * signal across all available channels.
  */
-@Injectable()
-export class MergingSupportTester {
-
-    constructor (private _unpatchedAudioContextConstructor: IUnpatchedAudioContextConstructor) { }
-
-    public test (): Promise<boolean> {
-        if (this._unpatchedAudioContextConstructor === null) {
+export const createTestChannelMergerNodeSupport: TTestChannelMergerNodeSupportFactory = (unpatchedAudioContextConstructor) => {
+    return () => {
+        if (unpatchedAudioContextConstructor === null) {
             return Promise.resolve(false);
         }
 
-        const audioContext = new this._unpatchedAudioContextConstructor();
+        const audioContext = new unpatchedAudioContextConstructor();
         const audioBufferSourceNode = audioContext.createBufferSource();
         const audioBuffer = audioContext.createBuffer(2, 2, audioContext.sampleRate);
         const channelMergerNode = audioContext.createChannelMerger(2);
@@ -72,11 +66,5 @@ export class MergingSupportTester {
 
                 return result;
             });
-    }
-
-}
-
-export const MERGE_SUPPORT_TESTER_PROVIDER = {
-    deps: [ <InjectionToken<IUnpatchedAudioContextConstructor>> unpatchedAudioContextConstructor ],
-    provide: MergingSupportTester
+    };
 };

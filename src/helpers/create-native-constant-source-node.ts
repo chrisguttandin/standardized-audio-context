@@ -1,20 +1,14 @@
-import { Injector } from '@angular/core';
 import { createNativeConstantSourceNodeFaker } from '../fakers/constant-source-node';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { IConstantSourceOptions, INativeConstantSourceNode } from '../interfaces';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-    AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester
+    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport
 } from '../support-testers/audio-scheduled-source-node-start-method-negative-parameters';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-    AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 } from '../support-testers/audio-scheduled-source-node-stop-method-negative-parameters';
-import {
-    CONSTANT_SOURCE_NODE_ACCURATE_SCHEDULING_SUPPORT_TESTER_PROVIDER,
-    ConstantSourceNodeAccurateSchedulingSupportTester
-} from '../support-testers/constant-source-node-accurate-scheduling';
+import { testConstantSourceNodeAccurateSchedulingSupport } from '../support-testers/constant-source-node-accurate-scheduling';
 import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 import {
     wrapAudioScheduledSourceNodeStartMethodNegativeParameters
@@ -22,21 +16,7 @@ import {
 import {
     wrapAudioScheduledSourceNodeStopMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
-import {
-    wrapConstantSourceNodeAccurateScheduling
-} from '../wrappers/constant-source-node-accurate-scheduling';
-
-const injector = Injector.create({
-    providers: [
-        AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-        AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-        CONSTANT_SOURCE_NODE_ACCURATE_SCHEDULING_SUPPORT_TESTER_PROVIDER
-    ]
-});
-
-const accurateSchedulingSupportTester = injector.get(ConstantSourceNodeAccurateSchedulingSupportTester);
-const startMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester);
-const stopMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester);
+import { wrapConstantSourceNodeAccurateScheduling } from '../wrappers/constant-source-node-accurate-scheduling';
 
 export const createNativeConstantSourceNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
@@ -63,24 +43,24 @@ export const createNativeConstantSourceNode = (
 
     // Bug #44: Only Chrome & Opera throw a RangeError yet.
     if (!cacheTestResult(
-        AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester,
-        () => startMethodNegativeParametersSupportTester.test(nativeContext)
+        testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
+        () => testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
     )) {
         wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeNode);
     }
 
     // Bug #44: No browser does throw a RangeError yet.
     if (!cacheTestResult(
-        AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester,
-        () => stopMethodNegativeParametersSupportTester.test(nativeContext)
+        testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
+        () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
     )) {
         wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeNode);
     }
 
     // Bug #70: Firefox does not schedule ConstantSourceNodes accurately.
     if (!cacheTestResult(
-        ConstantSourceNodeAccurateSchedulingSupportTester,
-        () => accurateSchedulingSupportTester.test(nativeContext)
+        testConstantSourceNodeAccurateSchedulingSupport,
+        () => testConstantSourceNodeAccurateSchedulingSupport(nativeContext)
     )) {
         wrapConstantSourceNodeAccurateScheduling(nativeNode, nativeContext);
     }

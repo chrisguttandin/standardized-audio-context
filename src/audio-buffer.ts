@@ -6,13 +6,10 @@ import {
     unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
 } from './providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from './providers/window';
-import {
-    AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
-    AudioBufferCopyChannelMethodsSupportTester
-} from './support-testers/audio-buffer-copy-channel-methods';
+import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
 import { TUnpatchedOfflineAudioContext } from './types';
-import { wrapAudioBuffer } from './wrappers/audio-buffer';
-import { wrapAudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
+import { wrapAudioBufferCopyChannelMethods } from './wrappers/audio-buffer-copy-channel-methods';
+import { wrapAudioBufferCopyChannelMethodsSubarray } from './wrappers/audio-buffer-copy-channel-methods-subarray';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
@@ -20,13 +17,11 @@ const DEFAULT_OPTIONS = {
 
 const injector = Injector.create({
     providers: [
-        AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
         UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
         WINDOW_PROVIDER
     ]
 });
 
-const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyChannelMethodsSupportTester);
 const unpatchedOfflineAudioContextConstructor = injector.get(nptchdFflnDCntxtCnstrctr);
 
 let unpatchedOfflineAudioContext: null | TUnpatchedOfflineAudioContext = null;
@@ -56,18 +51,13 @@ export class AudioBuffer implements IAudioBuffer {
 
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
         if (typeof audioBuffer.copyFromChannel !== 'function') {
-            wrapAudioBuffer(audioBuffer);
+            wrapAudioBufferCopyChannelMethods(audioBuffer);
         // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
-        } else if (
-            !cacheTestResult(
-                AudioBufferCopyChannelMethodsSupportTester,
-                () => {
-                    return (unpatchedOfflineAudioContext !== null &&
-                        audioBufferCopyChannelMethodsSupportTester.test(unpatchedOfflineAudioContext));
-                }
-            )
-        ) {
-            wrapAudioBufferCopyChannelMethodsWrapper(audioBuffer);
+        } else if (!cacheTestResult(
+            testAudioBufferCopyChannelMethodsSubarraySupport,
+            () => testAudioBufferCopyChannelMethodsSubarraySupport(audioBuffer)
+        )) {
+            wrapAudioBufferCopyChannelMethodsSubarray(audioBuffer);
         }
 
         // This does violate all good pratices but it is necessary to allow this AudioBuffer to be used with native (Offline)AudioContexts.

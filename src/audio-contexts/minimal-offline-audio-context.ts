@@ -7,7 +7,7 @@ import {
 } from '../providers/unpatched-offline-audio-context-constructor';
 import { WINDOW_PROVIDER } from '../providers/window';
 import { TUnpatchedOfflineAudioContext } from '../types';
-import { wrapAudioBuffer } from '../wrappers/audio-buffer';
+import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 import { MinimalBaseAudioContext } from './minimal-base-audio-context';
 
 const DEFAULT_OPTIONS = {
@@ -61,7 +61,7 @@ export class MinimalOfflineAudioContext extends MinimalBaseAudioContext implemen
             .then((audioBuffer) => {
                 // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                 if (typeof audioBuffer.copyFromChannel !== 'function') {
-                    wrapAudioBuffer(audioBuffer);
+                    wrapAudioBufferCopyChannelMethods(audioBuffer);
                 }
 
                 return <IAudioBuffer> audioBuffer;

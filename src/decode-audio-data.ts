@@ -1,41 +1,23 @@
-import { Injector } from '@angular/core';
 import { deallocate } from 'async-array-buffer';
 import { createDataCloneError } from './factories/data-clone-error';
 import { createEncodingError } from './factories/encoding-error';
 import { DETACHED_ARRAY_BUFFERS } from './globals';
 import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer } from './interfaces';
-import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER } from './providers/unpatched-offline-audio-context-constructor';
-import { WINDOW_PROVIDER } from './providers/window';
-import {
-    AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
-    AudioBufferCopyChannelMethodsSupportTester
-} from './support-testers/audio-buffer-copy-channel-methods';
-import { PROMISE_SUPPORT_TESTER_PROVIDER, PromiseSupportTester } from './support-testers/promise';
-import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from './types';
-import { wrapAudioBuffer } from './wrappers/audio-buffer';
-import { wrapAudioBufferCopyChannelMethodsWrapper } from './wrappers/audio-buffer-copy-channel-methods';
+import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
+import { testPromiseSupport } from './support-testers/promise';
+import { TNativeAudioBuffer, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from './types';
+import { wrapAudioBufferCopyChannelMethods } from './wrappers/audio-buffer-copy-channel-methods';
+import { wrapAudioBufferCopyChannelMethodsSubarray } from './wrappers/audio-buffer-copy-channel-methods-subarray';
 
-const injector = Injector.create({
-    providers: [
-        AUDIO_BUFFER_COPY_CHANNEL_METHODS_SUPPORT_TESTER_PROVIDER,
-        PROMISE_SUPPORT_TESTER_PROVIDER,
-        UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-        WINDOW_PROVIDER
-    ]
-});
-
-const audioBufferCopyChannelMethodsSupportTester = injector.get(AudioBufferCopyChannelMethodsSupportTester);
-const promiseSupportTester = injector.get(PromiseSupportTester);
-
-const isSupportingCopyChannelMethods = (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => cacheTestResult(
-    AudioBufferCopyChannelMethodsSupportTester,
-    () => audioBufferCopyChannelMethodsSupportTester.test(context)
+const isSupportingCopyChannelMethodsSubarray = (nativeAudioBuffer: TNativeAudioBuffer) => cacheTestResult(
+    testAudioBufferCopyChannelMethodsSubarraySupport,
+    () => testAudioBufferCopyChannelMethodsSubarraySupport(nativeAudioBuffer)
 );
 
 const isSupportingPromises = (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => cacheTestResult(
-    PromiseSupportTester,
-    () => promiseSupportTester.test(context)
+    testPromiseSupport,
+    () => testPromiseSupport(context)
 );
 
 export const decodeAudioData = (
@@ -102,10 +84,10 @@ export const decodeAudioData = (
             audioContext.decodeAudioData(audioData, (audioBuffer: AudioBuffer) => {
                 // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                 if (typeof audioBuffer.copyFromChannel !== 'function') {
-                    wrapAudioBuffer(audioBuffer);
+                    wrapAudioBufferCopyChannelMethods(audioBuffer);
                 // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
-                } else if (!isSupportingCopyChannelMethods(audioContext)) {
-                    wrapAudioBufferCopyChannelMethodsWrapper(audioBuffer);
+                } else if (!isSupportingCopyChannelMethodsSubarray(audioBuffer)) {
+                    wrapAudioBufferCopyChannelMethodsSubarray(audioBuffer);
                 }
 
                 succeed(audioBuffer);

@@ -30,3 +30,5 @@ export const NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS: WeakMap<
     TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
     Map<string, IAudioWorkletProcessorConstructor>
 > = new WeakMap();
+
+export const TEST_RESULTS: WeakMap<object, boolean> = new WeakMap();

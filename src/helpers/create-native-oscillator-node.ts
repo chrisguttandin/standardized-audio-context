@@ -1,18 +1,14 @@
-import { Injector } from '@angular/core';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { IOscillatorOptions } from '../interfaces';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-    AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester
+    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport
 } from '../support-testers/audio-scheduled-source-node-start-method-negative-parameters';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
-    AudioScheduledSourceNodeStopMethodConsecutiveCallsSupportTester
+    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport
 } from '../support-testers/audio-scheduled-source-node-stop-method-consecutive-calls';
 import {
-    AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-    AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 } from '../support-testers/audio-scheduled-source-node-stop-method-negative-parameters';
 import { TNativeOscillatorNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 import {
@@ -24,18 +20,6 @@ import {
 import {
     wrapAudioScheduledSourceNodeStopMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
-
-const injector = Injector.create({
-    providers: [
-        AUDIO_SCHEDULED_SOURCE_NODE_START_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER,
-        AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_CONSECUTIVE_CALLS_SUPPORT_TESTER_PROVIDER,
-        AUDIO_SCHEDULED_SOURCE_NODE_STOP_METHOD_NEGATIVE_PARAMETERS_SUPPORT_TESTER_PROVIDER
-    ]
-});
-
-const startMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester);
-const stopMethodConsecutiveCallsSupportTester = injector.get(AudioScheduledSourceNodeStopMethodConsecutiveCallsSupportTester);
-const stopMethodNegativeParametersSupportTester = injector.get(AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester);
 
 export const createNativeOscillatorNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
@@ -61,24 +45,24 @@ export const createNativeOscillatorNode = (
 
     // Bug #44: Only Chrome & Opera throw a RangeError yet.
     if (!cacheTestResult(
-        AudioScheduledSourceNodeStartMethodNegativeParametersSupportTester,
-        () => startMethodNegativeParametersSupportTester.test(nativeContext)
+        testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
+        () => testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
     )) {
         wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeNode);
     }
 
     // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
     if (!cacheTestResult(
-        AudioScheduledSourceNodeStopMethodConsecutiveCallsSupportTester,
-        () => stopMethodConsecutiveCallsSupportTester.test(nativeContext)
+        testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
+        () => testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(nativeContext)
     )) {
         wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(nativeNode, nativeContext);
     }
 
     // Bug #44: No browser does throw a RangeError yet.
     if (!cacheTestResult(
-        AudioScheduledSourceNodeStopMethodNegativeParametersSupportTester,
-        () => stopMethodNegativeParametersSupportTester.test(nativeContext)
+        testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
+        () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
     )) {
         wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeNode);
     }
