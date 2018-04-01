@@ -1,9 +1,7 @@
-import { AudioBuffer } from '../../src/audio-buffer';
+import { AudioBuffer, AudioContext, MinimalAudioContext } from '../../src/module';
 import { AudioBufferSourceNode } from '../../src/audio-nodes/audio-buffer-source-node';
-import { AudioContext } from '../../src/audio-contexts/audio-context';
 import { ChannelMergerNode } from '../../src/audio-nodes/channel-merger-node';
 import { GainNode } from '../../src/audio-nodes/gain-node';
-import { MinimalAudioContext } from '../../src/audio-contexts/minimal-audio-context';
 import { createScriptProcessor } from './create-script-processor';
 
 const createBufferNode = ({ audioNodes, context }) => {

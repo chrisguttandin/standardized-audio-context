@@ -1,4 +1,4 @@
-import { AudioBuffer } from '../../../src/audio-buffer';
+import { AudioBuffer } from '../../../src/module';
 import { AudioBufferSourceNode } from '../../../src/audio-nodes/audio-buffer-source-node';
 import { BiquadFilterNode } from '../../../src/audio-nodes/biquad-filter-node';
 import { GainNode } from '../../../src/audio-nodes/gain-node';

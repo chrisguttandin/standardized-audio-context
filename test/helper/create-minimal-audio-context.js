@@ -1,3 +1,3 @@
-import { MinimalAudioContext } from '../../src/audio-contexts/minimal-audio-context';
+import { MinimalAudioContext } from '../../src/module';
 
 export const createMinimalAudioContext = () => new MinimalAudioContext();

@@ -1,4 +1,4 @@
-import { AudioBuffer } from '../../../src/audio-buffer';
+import { AudioBuffer } from '../../../src/module';
 import { AudioBufferSourceNode } from '../../../src/audio-nodes/audio-buffer-source-node';
 import { ChannelMergerNode } from '../../../src/audio-nodes/channel-merger-node';
 import { GainNode } from '../../../src/audio-nodes/gain-node';

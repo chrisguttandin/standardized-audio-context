@@ -3,7 +3,7 @@ import {
     UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
     unpatchedAudioContextConstructor as nptchdDCntxtCnstrctr
 } from '../../../src/providers/unpatched-audio-context-constructor';
-import { AudioContext } from '../../../src/audio-contexts/audio-context';
+import { AudioContext } from '../../../src/module';
 import { ReflectiveInjector } from '@angular/core';
 import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
