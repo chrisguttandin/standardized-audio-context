@@ -1,4 +1,3 @@
-import { AudioParam } from '../audio-param';
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
@@ -26,6 +25,7 @@ const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
 };
 
 export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructorFactory = (
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -48,27 +48,22 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);
+            const isOffline = isNativeOfflineAudioContext(nativeContext);
 
             super(context, nativeNode);
 
-            this._detune = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: null,
-                minValue: null,
-                nativeAudioParam: nativeNode.detune
-            });
+            this._detune = createAudioParam(context, isOffline, nativeNode.detune);
             this._nativeNode = nativeNode;
             // Bug #73: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._playbackRate = new AudioParam({
+            this._playbackRate = createAudioParam(
                 context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: 3.4028234663852886e38,
-                minValue: -3.4028234663852886e38,
-                nativeAudioParam: nativeNode.playbackRate
-            });
+                isOffline,
+                nativeNode.playbackRate,
+                3.4028234663852886e38,
+                -3.4028234663852886e38
+            );
 
-            if (isNativeOfflineAudioContext(nativeContext)) {
+            if (isOffline) {
                 const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
 
                 AUDIO_NODE_RENDERER_STORE.set(this, audioBufferSourceNodeRenderer);

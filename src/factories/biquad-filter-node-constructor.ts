@@ -1,4 +1,3 @@
-import { AudioParam } from '../audio-param';
 import { createInvalidAccessError } from '../factories/invalid-access-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeBiquadFilterNode } from '../helpers/create-native-biquad-filter-node';
@@ -25,6 +24,7 @@ const DEFAULT_OPTIONS: IBiquadFilterOptions = {
 };
 
 export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFactory = (
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -45,44 +45,21 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IBiquadFilterOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeBiquadFilterNode(nativeContext, mergedOptions);
+            const isOffline = isNativeOfflineAudioContext(nativeContext);
 
             super(context, nativeNode);
 
             // Bug #80: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._Q = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: 3.4028234663852886e38,
-                minValue: -3.4028234663852886e38,
-                nativeAudioParam: nativeNode.Q
-            });
+            this._Q = createAudioParam(context, isOffline, nativeNode.Q, 3.4028234663852886e38, -3.4028234663852886e38);
             // Bug #78: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._detune = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: 3.4028234663852886e38,
-                minValue: -3.4028234663852886e38,
-                nativeAudioParam: nativeNode.detune
-            });
+            this._detune = createAudioParam(context, isOffline, nativeNode.detune, 3.4028234663852886e38, -3.4028234663852886e38);
             // Bug #77: Chrome, Edge, Firefox, Opera & Safari do not export the correct values for maxValue and minValue.
-            this._frequency = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: 3.4028234663852886e38,
-                minValue: -3.4028234663852886e38,
-                nativeAudioParam: nativeNode.frequency
-            });
+            this._frequency = createAudioParam(context, isOffline, nativeNode.frequency, 3.4028234663852886e38, -3.4028234663852886e38);
             // Bug #79: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._gain = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: 3.4028234663852886e38,
-                minValue: -3.4028234663852886e38,
-                nativeAudioParam: nativeNode.gain
-            });
+            this._gain = createAudioParam(context, isOffline, nativeNode.gain, 3.4028234663852886e38, -3.4028234663852886e38);
             this._nativeNode = nativeNode;
 
-            if (isNativeOfflineAudioContext(nativeContext)) {
+            if (isOffline) {
                 const biquadFilterNodeRenderer = new BiquadFilterNodeRenderer(this);
 
                 AUDIO_NODE_RENDERER_STORE.set(this, biquadFilterNodeRenderer);

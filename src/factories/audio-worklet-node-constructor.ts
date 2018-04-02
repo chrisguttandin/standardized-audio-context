@@ -1,4 +1,3 @@
-import { AudioParam } from '../audio-param';
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { createNotSupportedError } from '../factories/not-supported-error';
 import { createNativeAudioWorkletNodeFaker } from '../fakers/audio-worklet-node';
@@ -115,6 +114,7 @@ const createNativeAudioWorkletNode = (
 
 export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFactory = (
     audioWorkletNodeRendererConstructor,
+    createAudioParam,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
     noneAudioDestinationNodeConstructor
@@ -140,6 +140,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                 processorDefinition,
                 mergedOptions
             );
+            const isOffline = isNativeOfflineAudioContext(nativeContext);
 
             super(context, nativeNode);
 
@@ -148,20 +149,14 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             const parameters: [ string, IAudioParam ][] = [ ];
 
             nativeNode.parameters.forEach((nativeAudioParam, nm) => {
-                const audioParam = new AudioParam({
-                    context,
-                    isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                    maxValue: null,
-                    minValue: null,
-                    nativeAudioParam
-                });
+                const audioParam = createAudioParam(context, isOffline, nativeAudioParam);
 
                 parameters.push([ nm, audioParam ]);
             });
 
             this._parameters = new ReadOnlyMap(parameters);
 
-            if (isNativeOfflineAudioContext(nativeContext)) {
+            if (isOffline) {
                 const audioWorkletNodeRenderer = new audioWorkletNodeRendererConstructor(this, name, mergedOptions, processorDefinition);
 
                 AUDIO_NODE_RENDERER_STORE.set(this, audioWorkletNodeRenderer);

@@ -7,6 +7,7 @@ export * from './audio-context-latency-category';
 export * from './audio-context-state';
 export * from './audio-destination-node-constructor-factory';
 export * from './audio-node-constructor-factory';
+export * from './audio-param-factory';
 export * from './audio-param-map';
 export * from './audio-worklet-node-constructor-factory';
 export * from './audio-worklet-node-renderer-constructor-factory';

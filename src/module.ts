@@ -5,6 +5,7 @@ import { createAudioBufferSourceNodeConstructor } from './factories/audio-buffer
 import { createAudioContextConstructor } from './factories/audio-context-constructor';
 import { createAudioDestinationNodeConstructor } from './factories/audio-destination-node-constructor';
 import { createAudioNodeConstructor } from './factories/audio-node-constructor';
+import { createAudioParam } from './factories/audio-param';
 import { createAudioWorkletNodeConstructor } from './factories/audio-worklet-node-constructor';
 import { createAudioWorkletNodeRendererConstructor } from './factories/audio-worklet-node-renderer-constructor';
 import { createBaseAudioContextConstructor } from './factories/base-audio-context-constructor';
@@ -75,6 +76,7 @@ const audioBufferConstructor: IAudioBufferConstructor = createAudioBufferConstru
 export { audioBufferConstructor as AudioBuffer };
 
 const audioBufferSourceNodeConstructor: IAudioBufferSourceNodeConstructor = createAudioBufferSourceNodeConstructor(
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
@@ -83,6 +85,7 @@ export { audioBufferSourceNodeConstructor as AudioBufferSourceNode };
 
 const audioDestinationNodeConstructor = createAudioDestinationNodeConstructor(audioNodeConstructor, isNativeOfflineAudioContext);
 const biquadFilterNodeConstructor: IBiquadFilterNodeConstructor = createBiquadFilterNodeConstructor(
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
@@ -95,10 +98,12 @@ const channelSplitterNodeConstructor: IChannelSplitterNodeConstructor = createCh
     noneAudioDestinationNodeConstructor
 );
 const constantSourceNodeConstructor: IConstantSourceNodeConstructor = createConstantSourceNodeConstructor(
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
 const gainNodeConstructor: IGainNodeConstructor = createGainNodeConstructor(
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
@@ -110,6 +115,7 @@ const iIRFilterNodeConstructor: IIIRFilterNodeConstructor = createIIRFilterNodeC
 );
 const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(audioDestinationNodeConstructor);
 const oscillatorNodeConstructor: IOscillatorNodeConstructor = createOscillatorNodeConstructor(
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
@@ -149,6 +155,7 @@ const audioWorkletNodeRendererConstructor = createAudioWorkletNodeRendererConstr
 );
 const audioWorkletNodeConstructor: IAudioWorkletNodeConstructor = createAudioWorkletNodeConstructor(
     audioWorkletNodeRendererConstructor,
+    createAudioParam,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
     noneAudioDestinationNodeConstructor

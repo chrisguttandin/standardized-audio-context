@@ -1,4 +1,3 @@
-import { AudioParam } from '../audio-param';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeGainNode } from '../helpers/create-native-gain-node';
 import { getNativeContext } from '../helpers/get-native-context';
@@ -14,6 +13,7 @@ const DEFAULT_OPTIONS: IGainOptions = {
 };
 
 export const createGainNodeConstructor: TGainNodeConstructorFactory = (
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -26,17 +26,12 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IGainOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeGainNode(nativeContext, mergedOptions);
+            const isOffline = isNativeOfflineAudioContext(nativeContext);
 
             super(context, nativeNode);
 
             // Bug #74: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._gain = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: 3.4028234663852886e38,
-                minValue: -3.4028234663852886e38,
-                nativeAudioParam: nativeNode.gain
-            });
+            this._gain = createAudioParam(context, isOffline, nativeNode.gain, 3.4028234663852886e38, -3.4028234663852886e38);
 
             if (isNativeOfflineAudioContext(nativeContext)) {
                 const gainNodeRenderer = new GainNodeRenderer(this);

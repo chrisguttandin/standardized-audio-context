@@ -18,7 +18,6 @@ export * from './audio-node-options';
 export * from './audio-node-renderer';
 export * from './audio-param';
 export * from './audio-param-descriptor';
-export * from './audio-param-options';
 export * from './audio-param-renderer';
 export * from './audio-scheduled-source-node';
 export * from './audio-worklet';

@@ -1,4 +1,3 @@
-import { AudioParam } from '../audio-param';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeConstantSourceNode } from '../helpers/create-native-constant-source-node';
 import { getNativeContext } from '../helpers/get-native-context';
@@ -20,6 +19,7 @@ const DEFAULT_OPTIONS: IConstantSourceOptions = {
 };
 
 export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructorFactory = (
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -36,6 +36,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
+            const isOffline = isNativeOfflineAudioContext(nativeContext);
 
             super(context, nativeNode);
 
@@ -45,15 +46,9 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
              * minValue for GainNodes.
              * Bug #75: Firefox does not export the correct values for maxValue and minValue.
              */
-            this._offset = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: 3.4028234663852886e38,
-                minValue: -3.4028234663852886e38,
-                nativeAudioParam: nativeNode.offset
-            });
+            this._offset = createAudioParam(context, isOffline, nativeNode.offset, 3.4028234663852886e38, -3.4028234663852886e38);
 
-            if (isNativeOfflineAudioContext(nativeContext)) {
+            if (isOffline) {
                 const constantSourceNodeRenderer = new ConstantSourceNodeRenderer(this);
 
                 AUDIO_NODE_RENDERER_STORE.set(this, constantSourceNodeRenderer);

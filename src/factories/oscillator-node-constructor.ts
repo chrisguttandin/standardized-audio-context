@@ -1,4 +1,3 @@
-import { AudioParam } from '../audio-param';
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { createNativeOscillatorNode } from '../helpers/create-native-oscillator-node';
@@ -25,6 +24,7 @@ const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
 };
 
 export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory = (
+    createAudioParam,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -43,25 +43,14 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeOscillatorNode(nativeContext, mergedOptions);
+            const isOffline = isNativeOfflineAudioContext(nativeContext);
 
             super(context, nativeNode);
 
             // Bug #81: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._detune = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: 3.4028234663852886e38,
-                minValue: -3.4028234663852886e38,
-                nativeAudioParam: nativeNode.detune
-            });
+            this._detune = createAudioParam(context, isOffline, nativeNode.detune, 3.4028234663852886e38, -3.4028234663852886e38);
             // Bug #76: Edge & Safari do not export the correct values for maxValue and minValue.
-            this._frequency = new AudioParam({
-                context,
-                isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
-                maxValue: context.sampleRate / 2,
-                minValue: -(context.sampleRate / 2),
-                nativeAudioParam: nativeNode.frequency
-            });
+            this._frequency = createAudioParam(context, isOffline, nativeNode.frequency, context.sampleRate / 2, -(context.sampleRate / 2));
             this._nativeNode = nativeNode;
 
             if (isNativeOfflineAudioContext(nativeContext)) {
