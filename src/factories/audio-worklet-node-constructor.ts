@@ -14,7 +14,6 @@ import {
     INativeAudioWorkletNodeConstructor
 } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
-import { AudioWorkletNodeRenderer } from '../renderers/audio-worklet-node';
 import {
     TAudioParamMap,
     TAudioWorkletNodeConstructorFactory,
@@ -115,6 +114,7 @@ const createNativeAudioWorkletNode = (
 };
 
 export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFactory = (
+    audioWorkletNodeRendererConstructor,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
     noneAudioDestinationNodeConstructor
@@ -162,7 +162,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             this._parameters = new ReadOnlyMap(parameters);
 
             if (isNativeOfflineAudioContext(nativeContext)) {
-                const audioWorkletNodeRenderer = new AudioWorkletNodeRenderer(this, name, mergedOptions, processorDefinition);
+                const audioWorkletNodeRenderer = new audioWorkletNodeRendererConstructor(this, name, mergedOptions, processorDefinition);
 
                 AUDIO_NODE_RENDERER_STORE.set(this, audioWorkletNodeRenderer);
             }

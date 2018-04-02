@@ -1,11 +1,6 @@
-import 'core-js/es7/reflect';
-import {
-    UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-    unpatchedOfflineAudioContextConstructor as nptchdFflnDCntxtCnstrctr
-} from '../../../src/providers/unpatched-offline-audio-context-constructor';
 import { OfflineAudioContext } from '../../../src/module';
-import { ReflectiveInjector } from '@angular/core';
-import { WINDOW_PROVIDER } from '../../../src/providers/window';
+import { createUnpatchedOfflineAudioContextConstructor } from '../../../src/factories/unpatched-offline-audio-context-constructor';
+import { createWindow } from '../../../src/factories/window';
 import { loadFixture } from '../../helper/load-fixture';
 import { spy } from 'sinon';
 
@@ -405,12 +400,9 @@ describe('OfflineAudioContext', () => {
 
         it('should return an AudioBuffer which can be used with an unpatched AudioContext', () => {
             const audioBuffer = offlineAudioContext.createBuffer(2, 10, 44100);
-            const injector = ReflectiveInjector.resolveAndCreate([
-                UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                WINDOW_PROVIDER
-            ]);
-            const UnpatchedOfflineAudioContext = injector.get(nptchdFflnDCntxtCnstrctr);
-            const unpatchedOfflineAudioContext = new UnpatchedOfflineAudioContext(1, 1, 44100);
+            const window = createWindow();
+            const unpatchedOfflineAudioContextConstructor = createUnpatchedOfflineAudioContextConstructor(window);
+            const unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(1, 1, 44100); // eslint-disable-line new-cap
             const unpatchedAudioBufferSourceNode = unpatchedOfflineAudioContext.createBufferSource();
 
             unpatchedAudioBufferSourceNode.buffer = audioBuffer;

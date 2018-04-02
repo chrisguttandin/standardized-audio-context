@@ -1,11 +1,6 @@
-import 'core-js/es7/reflect';
-import {
-    UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-    unpatchedAudioContextConstructor as nptchdDCntxtCnstrctr
-} from '../../../src/providers/unpatched-audio-context-constructor';
 import { AudioContext } from '../../../src/module';
-import { ReflectiveInjector } from '@angular/core';
-import { WINDOW_PROVIDER } from '../../../src/providers/window';
+import { createUnpatchedAudioContextConstructor } from '../../../src/factories/unpatched-audio-context-constructor';
+import { createWindow } from '../../../src/factories/window';
 import { loadFixture } from '../../helper/load-fixture';
 import { spy } from 'sinon';
 
@@ -288,12 +283,9 @@ describe('AudioContext', () => {
 
             it('should return an AudioBuffer which can be used with an unpatched AudioContext', () => {
                 const audioBuffer = audioContext.createBuffer(2, 10, 44100);
-                const injector = ReflectiveInjector.resolveAndCreate([
-                    UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-                    WINDOW_PROVIDER
-                ]);
-                const UnpatchedAudioContext = injector.get(nptchdDCntxtCnstrctr);
-                const unpatchedAudioContext = new UnpatchedAudioContext();
+                const window = createWindow();
+                const unpatchedAudioContextConstructor = createUnpatchedAudioContextConstructor(window);
+                const unpatchedAudioContext = new unpatchedAudioContextConstructor(); // eslint-disable-line new-cap
                 const unpatchedAudioBufferSourceNode = unpatchedAudioContext.createBufferSource();
 
                 unpatchedAudioBufferSourceNode.buffer = audioBuffer;

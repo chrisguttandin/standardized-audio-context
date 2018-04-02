@@ -2,7 +2,6 @@ import { createNativeIIRFilterNodeFaker } from '../fakers/iir-filter-node';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { IIRFilterNodeRenderer } from '../renderers/iir-filter-node';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -47,6 +46,7 @@ const createNativeNode = (
 };
 
 export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = (
+    iIRFilterNodeRendererConstructor,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -70,7 +70,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             wrapIIRFilterNodeGetFrequencyResponseMethod(nativeNode);
 
             if (isNativeOfflineAudioContext(nativeContext)) {
-                const iirFilterNodeRenderer = new IIRFilterNodeRenderer(this, mergedOptions.feedback, mergedOptions.feedforward);
+                const iirFilterNodeRenderer = new iIRFilterNodeRendererConstructor(this, mergedOptions.feedback, mergedOptions.feedforward);
 
                 AUDIO_NODE_RENDERER_STORE.set(this, iirFilterNodeRenderer);
             }
