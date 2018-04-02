@@ -1,6 +1,4 @@
-import { AudioWorkletNode } from '../../../src/audio-nodes/audio-worklet-node';
-import { GainNode } from '../../../src/audio-nodes/gain-node';
-import { OscillatorNode } from '../../../src/audio-nodes/oscillator-node';
+import { AudioWorkletNode, GainNode, OscillatorNode } from '../../../src/module';
 import { addAudioWorkletModule } from '../../../src/add-audio-worklet-module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';

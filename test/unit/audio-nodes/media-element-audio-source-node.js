@@ -1,5 +1,4 @@
-import { GainNode } from '../../../src/audio-nodes/gain-node';
-import { MediaElementAudioSourceNode } from '../../../src/audio-nodes/media-element-audio-source-node';
+import { GainNode, MediaElementAudioSourceNode } from '../../../src/module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createRenderer } from '../../helper/create-renderer';

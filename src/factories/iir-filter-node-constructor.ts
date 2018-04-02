@@ -1,21 +1,20 @@
 import { createNativeIIRFilterNodeFaker } from '../fakers/iir-filter-node';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
-import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { IIRFilterNodeRenderer } from '../renderers/iir-filter-node';
 import {
     TChannelCountMode,
     TChannelInterpretation,
+    TIIRFilterNodeConstructorFactory,
     TNativeIIRFilterNode,
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
-import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 // The DEFAULT_OPTIONS are only of type Partial<IIIRFilterOptions> because there are no default values for feedback and feedforward.
-const DEFAULT_OPTIONS: Partial<IIIRFilterOptions> = {
+const DEFAULT_OPTIONS: Partial<AudioNodeOptions> = {
     channelCount: 2,
     channelCountMode: <TChannelCountMode> 'max',
     channelInterpretation: <TChannelInterpretation> 'speakers'
@@ -47,31 +46,42 @@ const createNativeNode = (
     return iIRFilterNode;
 };
 
-export class IIRFilterNode extends NoneAudioDestinationNode<TNativeIIRFilterNode> implements IIIRFilterNode {
+export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = (
+    isNativeOfflineAudioContext,
+    noneAudioDestinationNodeConstructor
+) => {
 
-    constructor (
-        context: IMinimalBaseAudioContext,
-        options: { feedback: IIIRFilterOptions['feedback']; feedforward: IIIRFilterOptions['feedforward'] } & Partial<IIIRFilterOptions>
-    ) {
-        const nativeContext = getNativeContext(context);
-        const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
-        const nativeNode = createNativeNode(nativeContext, mergedOptions);
+    return class IIRFilterNode extends noneAudioDestinationNodeConstructor implements IIIRFilterNode {
 
-        super(context, nativeNode, mergedOptions.channelCount);
+        private _nativeNode: TNativeIIRFilterNode;
 
-        // Bug #23 & #24: FirefoxDeveloper does not throw an InvalidAccessError.
-        // @todo Write a test which allows other browsers to remain unpatched.
-        wrapIIRFilterNodeGetFrequencyResponseMethod(nativeNode);
+        constructor (
+            context: IMinimalBaseAudioContext,
+            options: { feedback: IIIRFilterOptions['feedback']; feedforward: IIIRFilterOptions['feedforward'] } & Partial<IIIRFilterOptions>
+        ) {
+            const nativeContext = getNativeContext(context);
+            const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
+            const nativeNode = createNativeNode(nativeContext, mergedOptions);
 
-        if (isOfflineAudioContext(nativeContext)) {
-            const iirFilterNodeRenderer = new IIRFilterNodeRenderer(this, mergedOptions.feedback, mergedOptions.feedforward);
+            super(context, nativeNode);
 
-            AUDIO_NODE_RENDERER_STORE.set(this, iirFilterNodeRenderer);
+            // Bug #23 & #24: FirefoxDeveloper does not throw an InvalidAccessError.
+            // @todo Write a test which allows other browsers to remain unpatched.
+            wrapIIRFilterNodeGetFrequencyResponseMethod(nativeNode);
+
+            if (isNativeOfflineAudioContext(nativeContext)) {
+                const iirFilterNodeRenderer = new IIRFilterNodeRenderer(this, mergedOptions.feedback, mergedOptions.feedforward);
+
+                AUDIO_NODE_RENDERER_STORE.set(this, iirFilterNodeRenderer);
+            }
+
+            this._nativeNode = nativeNode;
         }
-    }
 
-    public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
-        return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
-    }
+        public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
+            return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+        }
 
-}
+    };
+
+};

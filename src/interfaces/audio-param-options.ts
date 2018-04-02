@@ -5,6 +5,8 @@ export interface IAudioParamOptions {
 
     context: IMinimalBaseAudioContext;
 
+    isAudioParamOfOfflineAudioContext: boolean;
+
     maxValue: null | number;
 
     minValue: null | number;

@@ -1,8 +1,4 @@
-import { AudioBuffer } from '../../../src/module';
-import { AudioBufferSourceNode } from '../../../src/audio-nodes/audio-buffer-source-node';
-import { AudioWorkletNode } from '../../../src/audio-nodes/audio-worklet-node';
-import { ConstantSourceNode } from '../../../src/audio-nodes/constant-source-node';
-import { GainNode } from '../../../src/audio-nodes/gain-node';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode } from '../../../src/module';
 import { addAudioWorkletModule } from '../../../src/add-audio-worklet-module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';

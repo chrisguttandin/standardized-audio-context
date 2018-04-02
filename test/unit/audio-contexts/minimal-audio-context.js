@@ -1,5 +1,4 @@
-import { GainNode } from '../../../src/audio-nodes/gain-node';
-import { MinimalAudioContext } from '../../../src/module';
+import { GainNode, MinimalAudioContext } from '../../../src/module';
 
 describe('MinimalAudioContext', () => {
 

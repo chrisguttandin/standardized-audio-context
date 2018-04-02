@@ -1,7 +1,4 @@
-import { AnalyserNode } from '../../../src/audio-nodes/analyser-node';
-import { AudioBuffer } from '../../../src/module';
-import { AudioBufferSourceNode } from '../../../src/audio-nodes/audio-buffer-source-node';
-import { GainNode } from '../../../src/audio-nodes/gain-node';
+import { AnalyserNode, AudioBuffer, AudioBufferSourceNode, GainNode } from '../../../src/module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';

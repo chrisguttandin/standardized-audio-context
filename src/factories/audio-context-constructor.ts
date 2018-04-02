@@ -1,5 +1,3 @@
-import { MediaElementAudioSourceNode } from '../audio-nodes/media-element-audio-source-node';
-import { MediaStreamAudioSourceNode } from '../audio-nodes/media-stream-audio-source-node';
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContext, IAudioContextOptions } from '../interfaces';
@@ -7,6 +5,8 @@ import { TAudioContextConstructorFactory, TUnpatchedAudioContext } from '../type
 
 export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     baseAudioContextConstructor,
+    mediaElementAudioSourceNodeConstructor,
+    mediaStreamAudioSourceNodeConstructor,
     unpatchedAudioContextConstructor
 ) => {
 
@@ -61,11 +61,11 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
         }
 
         public createMediaElementSource (mediaElement: HTMLMediaElement) {
-            return new MediaElementAudioSourceNode(this, { mediaElement });
+            return new mediaElementAudioSourceNodeConstructor(<any> this, { mediaElement });
         }
 
         public createMediaStreamSource (mediaStream: MediaStream) {
-            return new MediaStreamAudioSourceNode(this, { mediaStream });
+            return new mediaStreamAudioSourceNodeConstructor(<any> this, { mediaStream });
         }
 
         public close () {

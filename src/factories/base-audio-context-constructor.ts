@@ -1,13 +1,4 @@
 import { addAudioWorkletModule } from '../add-audio-worklet-module';
-import { AnalyserNode } from '../audio-nodes/analyser-node';
-import { AudioBufferSourceNode } from '../audio-nodes/audio-buffer-source-node';
-import { BiquadFilterNode } from '../audio-nodes/biquad-filter-node';
-import { ChannelMergerNode } from '../audio-nodes/channel-merger-node';
-import { ChannelSplitterNode } from '../audio-nodes/channel-splitter-node';
-import { ConstantSourceNode } from '../audio-nodes/constant-source-node';
-import { GainNode } from '../audio-nodes/gain-node';
-import { IIRFilterNode } from '../audio-nodes/iir-filter-node';
-import { OscillatorNode } from '../audio-nodes/oscillator-node';
 import { decodeAudioData } from '../decode-audio-data';
 import {
     IAnalyserNode,
@@ -31,8 +22,17 @@ import {
 } from '../types';
 
 export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFactory = (
+    analyserNodeConstructor,
     audioBufferConstructor,
-    minimalBaseAudioContextConstructor
+    audioBufferSourceNodeConstructor,
+    biquadFilterNodeConstructor,
+    channelMergerNodeConstructor,
+    channelSplitterNodeConstructor,
+    constantSourceNodeConstructor,
+    gainNodeConstructor,
+    iIRFilterNodeConstructor,
+    minimalBaseAudioContextConstructor,
+    oscillatorNodeConstructor
 ) => {
 
     return class BaseAudioContext extends minimalBaseAudioContextConstructor implements IBaseAudioContext {
@@ -55,11 +55,11 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
         }
 
         public createAnalyser (): IAnalyserNode {
-            return new AnalyserNode(this);
+            return new analyserNodeConstructor(<any> this);
         }
 
         public createBiquadFilter (): IBiquadFilterNode {
-            return new BiquadFilterNode(this);
+            return new biquadFilterNodeConstructor(<any> this);
         }
 
         public createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer {
@@ -67,31 +67,31 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
         }
 
         public createBufferSource (): IAudioBufferSourceNode {
-            return new AudioBufferSourceNode(this);
+            return new audioBufferSourceNodeConstructor(<any> this);
         }
 
         public createChannelMerger (numberOfInputs = 6) {
-            return new ChannelMergerNode(this, { numberOfInputs });
+            return new channelMergerNodeConstructor(<any> this, { numberOfInputs });
         }
 
         public createChannelSplitter (numberOfOutputs = 6) {
-            return new ChannelSplitterNode(this, { numberOfOutputs });
+            return new channelSplitterNodeConstructor(<any> this, { numberOfOutputs });
         }
 
         public createConstantSource () {
-            return new ConstantSourceNode(this);
+            return new constantSourceNodeConstructor(<any> this);
         }
 
         public createGain (): IGainNode {
-            return new GainNode(this);
+            return new gainNodeConstructor(<any> this);
         }
 
         public createIIRFilter (feedforward: number[] | TTypedArray, feedback: number[] | TTypedArray): IIIRFilterNode {
-            return new IIRFilterNode(this, { feedback, feedforward });
+            return new iIRFilterNodeConstructor(<any> this, { feedback, feedforward });
         }
 
         public createOscillator (): IOscillatorNode {
-            return new OscillatorNode(this);
+            return new oscillatorNodeConstructor(<any> this);
         }
 
         public decodeAudioData (

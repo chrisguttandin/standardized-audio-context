@@ -1,5 +1,4 @@
 import { AUDIO_PARAM_CONTEXT_STORE, AUDIO_PARAM_RENDERER_STORE, AUDIO_PARAM_STORE } from './globals';
-import { isOfflineAudioContext } from './helpers/is-offline-audio-context';
 import { IAudioParam, IAudioParamOptions, IAudioParamRenderer, IMinimalBaseAudioContext } from './interfaces';
 import { AudioParamRenderer } from './renderers/audio-param';
 import { TNativeAudioParam } from './types';
@@ -16,8 +15,8 @@ export class AudioParam implements IAudioParam {
 
     private _nativeAudioParam: TNativeAudioParam;
 
-    constructor ({ context, maxValue, minValue, nativeAudioParam }: IAudioParamOptions) {
-        const audioParamRenderer = (isOfflineAudioContext) ? new AudioParamRenderer() : null;
+    constructor ({ context, isAudioParamOfOfflineAudioContext, maxValue, minValue, nativeAudioParam }: IAudioParamOptions) {
+        const audioParamRenderer = (isAudioParamOfOfflineAudioContext) ? new AudioParamRenderer() : null;
 
         this._audioParamRenderer = audioParamRenderer;
         this._context = context;

@@ -1,8 +1,4 @@
-import { AudioBuffer } from '../../../src/module';
-import { AudioBufferSourceNode } from '../../../src/audio-nodes/audio-buffer-source-node';
-import { AudioWorkletNode } from '../../../src/audio-nodes/audio-worklet-node';
-import { GainNode } from '../../../src/audio-nodes/gain-node';
-import { IIRFilterNode } from '../../../src/audio-nodes/iir-filter-node';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode, IIRFilterNode } from '../../../src/module';
 import { addAudioWorkletModule } from '../../../src/add-audio-worklet-module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';

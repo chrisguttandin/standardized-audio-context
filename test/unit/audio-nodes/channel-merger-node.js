@@ -1,7 +1,4 @@
-import { AudioBuffer } from '../../../src/module';
-import { AudioBufferSourceNode } from '../../../src/audio-nodes/audio-buffer-source-node';
-import { ChannelMergerNode } from '../../../src/audio-nodes/channel-merger-node';
-import { GainNode } from '../../../src/audio-nodes/gain-node';
+import { AudioBuffer, AudioBufferSourceNode, ChannelMergerNode, GainNode } from '../../../src/module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';

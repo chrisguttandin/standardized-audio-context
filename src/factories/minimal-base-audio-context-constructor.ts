@@ -1,4 +1,3 @@
-import { AudioDestinationNode } from '../audio-nodes/audio-destination-node';
 import { EventTarget } from '../event-target';
 import { CONTEXT_STORE } from '../globals';
 import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
@@ -9,7 +8,7 @@ import {
     TUnpatchedOfflineAudioContext
 } from '../types';
 
-export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = () => {
+export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = (audioDestinationNodeConstructor) => {
 
     return class MinimalBaseAudioContext extends EventTarget implements IMinimalBaseAudioContext {
 
@@ -23,7 +22,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             CONTEXT_STORE.set(this, context);
 
             this._context = context;
-            this._destination = new AudioDestinationNode(this, numberOfChannels);
+            this._destination = new audioDestinationNodeConstructor(this, numberOfChannels);
         }
 
         public get currentTime () {

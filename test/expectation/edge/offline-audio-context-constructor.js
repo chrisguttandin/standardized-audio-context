@@ -53,7 +53,13 @@ describe('offlineAudioContextConstructor', () => {
         // bug #53
 
         it('should allow to change the value of the channelCountMode property', () => {
-            offlineAudioContext.destination.channelCountMode = 'max';
+            offlineAudioContext.destination.channelCountMode = 'explicit';
+        });
+
+        // bug #83
+
+        it('should have a channelCountMode of max', () => {
+            expect(offlineAudioContext.destination.channelCountMode).to.equal('max');
         });
 
         // bug #47

@@ -1,7 +1,4 @@
-import { AudioBuffer, AudioContext, MinimalAudioContext } from '../../src/module';
-import { AudioBufferSourceNode } from '../../src/audio-nodes/audio-buffer-source-node';
-import { ChannelMergerNode } from '../../src/audio-nodes/channel-merger-node';
-import { GainNode } from '../../src/audio-nodes/gain-node';
+import { AudioBuffer, AudioBufferSourceNode, AudioContext, ChannelMergerNode, GainNode, MinimalAudioContext } from '../../src/module';
 import { createScriptProcessor } from './create-script-processor';
 
 const createBufferNode = ({ audioNodes, context }) => {

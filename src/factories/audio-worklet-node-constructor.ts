@@ -1,35 +1,29 @@
-import { Injector } from '@angular/core';
 import { AudioParam } from '../audio-param';
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { createNotSupportedError } from '../factories/not-supported-error';
 import { createNativeAudioWorkletNodeFaker } from '../fakers/audio-worklet-node';
 import { AUDIO_NODE_RENDERER_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
-import { isOfflineAudioContext } from '../helpers/is-offline-audio-context';
 import {
     IAudioParam,
     IAudioWorkletNode,
     IAudioWorkletNodeOptions,
     IAudioWorkletProcessorConstructor,
     IMinimalBaseAudioContext,
-    INativeAudioWorkletNode
+    INativeAudioWorkletNode,
+    INativeAudioWorkletNodeConstructor
 } from '../interfaces';
-import {
-    NATIVE_AUDIO_WORKLET_NODE_CONSTRUCTOR_PROVIDER,
-    nativeAudioWorkletNodeConstructor as ntvDWrkltNdCnstrctr
-} from '../providers/native-audio-worklet-node-constructor';
-import { WINDOW_PROVIDER } from '../providers/window';
 import { ReadOnlyMap } from '../read-only-map';
 import { AudioWorkletNodeRenderer } from '../renderers/audio-worklet-node';
 import {
     TAudioParamMap,
+    TAudioWorkletNodeConstructorFactory,
     TChannelCountMode,
     TChannelInterpretation,
     TProcessorErrorEventHandler,
     TUnpatchedAudioContext,
     TUnpatchedOfflineAudioContext
 } from '../types';
-import { NoneAudioDestinationNode } from './none-audio-destination-node';
 
 const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
     channelCount: 2,
@@ -42,15 +36,6 @@ const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
     parameterData: { },
     processorOptions: null
 };
-
-const injector = Injector.create({
-    providers: [
-        NATIVE_AUDIO_WORKLET_NODE_CONSTRUCTOR_PROVIDER,
-        WINDOW_PROVIDER
-    ]
-});
-
-const nativeAudioWorkletNodeConstructor = injector.get(ntvDWrkltNdCnstrctr);
 
 const createChannelCount = (length: number): number[] => {
     const channelCount: number[] = [ ];
@@ -82,6 +67,7 @@ const sanitizedOptions = (options: IAudioWorkletNodeOptions): { outputChannelCou
 
 const createNativeAudioWorkletNode = (
     nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    nativeAudioWorkletNodeConstructor: null | INativeAudioWorkletNodeConstructor,
     name: string,
     processorDefinition: undefined | IAudioWorkletProcessorConstructor,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions
@@ -128,56 +114,80 @@ const createNativeAudioWorkletNode = (
     return createNativeAudioWorkletNodeFaker(nativeContext, processorDefinition, options);
 };
 
-export class AudioWorkletNode extends NoneAudioDestinationNode<INativeAudioWorkletNode> implements IAudioWorkletNode {
+export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFactory = (
+    isNativeOfflineAudioContext,
+    nativeAudioWorkletNodeConstructor,
+    noneAudioDestinationNodeConstructor
+) => {
 
-    private _parameters: null | TAudioParamMap;
+    return class AudioWorkletNode extends noneAudioDestinationNodeConstructor implements IAudioWorkletNode {
 
-    constructor (context: IMinimalBaseAudioContext, name: string, options: IAudioWorkletNodeOptions = DEFAULT_OPTIONS) {
-        const nativeContext = getNativeContext(context);
-        const mergedOptions = sanitizedOptions(<IAudioWorkletNodeOptions> { ...DEFAULT_OPTIONS, ...options });
-        const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
-        const processorDefinition = (nodeNameToProcessorDefinitionMap === undefined) ?
-            undefined :
-            nodeNameToProcessorDefinitionMap.get(name);
-        const nativeNode = createNativeAudioWorkletNode(nativeContext, name, processorDefinition, mergedOptions);
+        private _nativeNode: INativeAudioWorkletNode;
 
-        super(context, nativeNode, mergedOptions.channelCount);
+        private _parameters: null | TAudioParamMap;
 
-        const parameters: [ string, IAudioParam ][] = [ ];
+        constructor (context: IMinimalBaseAudioContext, name: string, options: IAudioWorkletNodeOptions = DEFAULT_OPTIONS) {
+            const nativeContext = getNativeContext(context);
+            const mergedOptions = sanitizedOptions(<IAudioWorkletNodeOptions> { ...DEFAULT_OPTIONS, ...options });
+            const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
+            const processorDefinition = (nodeNameToProcessorDefinitionMap === undefined) ?
+                undefined :
+                nodeNameToProcessorDefinitionMap.get(name);
+            const nativeNode = createNativeAudioWorkletNode(
+                nativeContext,
+                nativeAudioWorkletNodeConstructor,
+                name,
+                processorDefinition,
+                mergedOptions
+            );
 
-        nativeNode.parameters.forEach((nativeAudioParam, nm) => {
-            const audioParam = new AudioParam({ context, maxValue: null, minValue: null, nativeAudioParam });
+            super(context, nativeNode);
 
-            parameters.push([ nm, audioParam ]);
-        });
+            this._nativeNode = nativeNode;
 
-        this._parameters = new ReadOnlyMap(parameters);
+            const parameters: [ string, IAudioParam ][] = [ ];
 
-        if (isOfflineAudioContext(nativeContext)) {
-            const audioWorkletNodeRenderer = new AudioWorkletNodeRenderer(this, name, mergedOptions, processorDefinition);
+            nativeNode.parameters.forEach((nativeAudioParam, nm) => {
+                const audioParam = new AudioParam({
+                    context,
+                    isAudioParamOfOfflineAudioContext: isNativeOfflineAudioContext(nativeContext),
+                    maxValue: null,
+                    minValue: null,
+                    nativeAudioParam
+                });
 
-            AUDIO_NODE_RENDERER_STORE.set(this, audioWorkletNodeRenderer);
+                parameters.push([ nm, audioParam ]);
+            });
+
+            this._parameters = new ReadOnlyMap(parameters);
+
+            if (isNativeOfflineAudioContext(nativeContext)) {
+                const audioWorkletNodeRenderer = new AudioWorkletNodeRenderer(this, name, mergedOptions, processorDefinition);
+
+                AUDIO_NODE_RENDERER_STORE.set(this, audioWorkletNodeRenderer);
+            }
         }
-    }
 
-    public get onprocessorerror () {
-        return <TProcessorErrorEventHandler> (<any> this._nativeNode.onprocessorerror);
-    }
-
-    public set onprocessorerror (value) {
-        this._nativeNode.onprocessorerror = <any> value;
-    }
-
-    get parameters (): TAudioParamMap {
-        if (this._parameters === null) {
-            return <TAudioParamMap> (<any> this._nativeNode.parameters);
+        public get onprocessorerror () {
+            return <TProcessorErrorEventHandler> (<any> this._nativeNode.onprocessorerror);
         }
 
-        return this._parameters;
-    }
+        public set onprocessorerror (value) {
+            this._nativeNode.onprocessorerror = <any> value;
+        }
 
-    get port () {
-        return this._nativeNode.port;
-    }
+        get parameters (): TAudioParamMap {
+            if (this._parameters === null) {
+                return <TAudioParamMap> (<any> this._nativeNode.parameters);
+            }
 
-}
+            return this._parameters;
+        }
+
+        get port () {
+            return this._nativeNode.port;
+        }
+
+    };
+
+};
