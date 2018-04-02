@@ -1,31 +1,17 @@
-import 'core-js/es7/reflect';
-import { UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedAudioContextConstructor } from '../../../src/providers/unpatched-audio-context-constructor';
-import { ReflectiveInjector } from '@angular/core';
-import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
 
 describe('audioContextConstructor', () => {
 
     let audioContext;
-    let AudioContext;
 
     afterEach(() => audioContext.close());
-
-    beforeEach(() => {
-        const injector = ReflectiveInjector.resolveAndCreate([
-            UNPATCHED_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            WINDOW_PROVIDER
-        ]);
-
-        AudioContext = injector.get(unpatchedAudioContextConstructor);
-    });
 
     describe('without a constructed AudioContext', () => {
 
         // bug #51
 
         it('should allow to set the latencyHint to an unsupported value', () => {
-            audioContext = new AudioContext({ latencyHint: 'negative' });
+            audioContext = new webkitAudioContext({ latencyHint: 'negative' }); // eslint-disable-line new-cap, no-undef
         });
 
     });
@@ -33,7 +19,7 @@ describe('audioContextConstructor', () => {
     describe('with a constructed AudioContext', () => {
 
         beforeEach(() => {
-            audioContext = new AudioContext();
+            audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
         });
 
         it('should not provide an unprefixed constructor', () => {
@@ -85,7 +71,7 @@ describe('audioContextConstructor', () => {
 
             it('should throw a SyntaxError when calling connect() with a node of another AudioContext', (done) => {
                 const analyserNode = audioContext.createAnalyser();
-                const anotherAudioContext = new AudioContext();
+                const anotherAudioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
 
                 try {
                     analyserNode.connect(anotherAudioContext.destination);
@@ -103,7 +89,7 @@ describe('audioContextConstructor', () => {
 
             it('should throw a SyntaxError when calling connect() with an AudioParam of another AudioContext', (done) => {
                 const analyserNode = audioContext.createAnalyser();
-                const anotherAudioContext = new AudioContext();
+                const anotherAudioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
                 const gainNode = anotherAudioContext.createGain();
 
                 try {
@@ -716,7 +702,7 @@ describe('audioContextConstructor', () => {
                         audioContext.createGain();
 
                         // Create a closeable AudioContext to align the behaviour with other tests.
-                        audioContext = new AudioContext();
+                        audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
                     });
             });
 
@@ -822,7 +808,7 @@ describe('audioContextConstructor', () => {
 
             afterEach(() => {
                 // Create a closeable AudioContext to align the behaviour with other tests.
-                audioContext = new AudioContext();
+                audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
             });
 
             beforeEach(() => audioContext.close());
@@ -845,7 +831,7 @@ describe('audioContextConstructor', () => {
 
             afterEach(() => {
                 // Create a closeable AudioContext to align the behaviour with other tests.
-                audioContext = new AudioContext();
+                audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
             });
 
             beforeEach(() => audioContext.close());

@@ -1,23 +1,12 @@
-import { UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER, unpatchedOfflineAudioContextConstructor } from '../../../src/providers/unpatched-offline-audio-context-constructor';
 import { spy, stub } from 'sinon';
-import { ReflectiveInjector } from '@angular/core';
-import { WINDOW_PROVIDER } from '../../../src/providers/window';
 import { loadFixture } from '../../helper/load-fixture';
 
 describe('offlineAudioContextConstructor', () => {
 
     let offlineAudioContext;
-    let OfflineAudioContext;
 
     beforeEach(() => {
-        const injector = ReflectiveInjector.resolveAndCreate([
-            UNPATCHED_OFFLINE_AUDIO_CONTEXT_CONSTRUCTOR_PROVIDER,
-            WINDOW_PROVIDER
-        ]);
-
-        OfflineAudioContext = injector.get(unpatchedOfflineAudioContextConstructor);
-
-        offlineAudioContext = new OfflineAudioContext(1, 25600, 44100);
+        offlineAudioContext = new webkitOfflineAudioContext(1, 25600, 44100); // eslint-disable-line new-cap, no-undef
     });
 
     it('should not provide an unprefixed constructor', () => {
@@ -30,7 +19,7 @@ describe('offlineAudioContextConstructor', () => {
 
         it('should throw a TypeError', () => {
             expect(() => {
-                new OfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 });
+                new webkitOfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 }); // eslint-disable-line new-cap, no-undef
             }).to.throw(TypeError);
         });
 
@@ -109,7 +98,7 @@ describe('offlineAudioContextConstructor', () => {
 
         it('should transition directly from suspended to closed', (done) => {
             const runTest = (callback) => {
-                const offlineAudioContext = new OfflineAudioContext(1, 1, 44100);
+                const offlineAudioContext = new webkitOfflineAudioContext(1, 1, 44100); // eslint-disable-line new-cap, no-undef
 
                 let previousState = offlineAudioContext.state;
 
