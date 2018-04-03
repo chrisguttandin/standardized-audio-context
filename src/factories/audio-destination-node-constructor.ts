@@ -1,11 +1,11 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
+import { AUDIO_GRAPH } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
-import { AudioDestinationNodeRenderer } from '../renderers/audio-destination-node';
 import { TAudioDestinationNodeConstructorFactory, TNativeAudioDestinationNode } from '../types';
 
 export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstructorFactory = (
     audioNodeConstructor,
+    createAudioDestinationNodeRenderer,
     createIndexSizeError,
     createInvalidStateError,
     createNativeAudioDestinationNode,
@@ -20,19 +20,18 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
 
         constructor (context: IMinimalBaseAudioContext, channelCount: number) {
             const nativeContext = getNativeContext(context);
-            const isNodeOfNativeOfflineAudioContext = isNativeOfflineAudioContext(nativeContext);
-            const nativeNode = createNativeAudioDestinationNode(nativeContext, channelCount, isNodeOfNativeOfflineAudioContext);
+            const isOffline = isNativeOfflineAudioContext(nativeContext);
+            const nativeNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
+            const audioDestinationNodeRenderer = (isOffline) ? createAudioDestinationNodeRenderer() : null;
 
-            super(context, nativeNode);
-
-            this._isNodeOfNativeOfflineAudioContext = isNodeOfNativeOfflineAudioContext;
-            this._nativeNode = nativeNode;
-
-            if (isNodeOfNativeOfflineAudioContext) {
-                const audioDestinationNodeRenderer = new AudioDestinationNodeRenderer();
-
-                AUDIO_NODE_RENDERER_STORE.set(this, audioDestinationNodeRenderer);
+            if (isOffline) {
+                AUDIO_GRAPH.set(context, { nodes: new WeakMap(), params: new WeakMap() });
             }
+
+            super(context, nativeNode, audioDestinationNodeRenderer);
+
+            this._isNodeOfNativeOfflineAudioContext = isOffline;
+            this._nativeNode = nativeNode;
         }
 
         public get channelCount () {

@@ -1,11 +1,8 @@
 import { TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
+import { IAudioNode } from './audio-node';
 
 export interface IAudioNodeRenderer {
 
-    render (offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode>;
-
-    unwire (source: IAudioNodeRenderer): void;
-
-    wire (source: IAudioNodeRenderer, output: number, input: number): void;
+    render (proxy: IAudioNode, offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode>;
 
 }

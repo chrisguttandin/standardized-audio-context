@@ -1,7 +1,5 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { BiquadFilterNodeRenderer } from '../renderers/biquad-filter-node';
 import {
     TBiquadFilterNodeConstructorFactory,
     TBiquadFilterType,
@@ -23,6 +21,7 @@ const DEFAULT_OPTIONS: IBiquadFilterOptions = {
 
 export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFactory = (
     createAudioParam,
+    createBiquadFilterNodeRenderer,
     createInvalidAccessError,
     createNativeBiquadFilterNode,
     isNativeOfflineAudioContext,
@@ -46,8 +45,9 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             const mergedOptions = <IBiquadFilterOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeBiquadFilterNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
+            const biquadFilterNodeRenderer = (isOffline) ? createBiquadFilterNodeRenderer() : null;
 
-            super(context, nativeNode);
+            super(context, nativeNode, biquadFilterNodeRenderer);
 
             // Bug #80: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
             this._Q = createAudioParam(context, isOffline, nativeNode.Q, 3.4028234663852886e38, -3.4028234663852886e38);
@@ -58,12 +58,6 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             // Bug #79: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
             this._gain = createAudioParam(context, isOffline, nativeNode.gain, 3.4028234663852886e38, -3.4028234663852886e38);
             this._nativeNode = nativeNode;
-
-            if (isOffline) {
-                const biquadFilterNodeRenderer = new BiquadFilterNodeRenderer(this);
-
-                AUDIO_NODE_RENDERER_STORE.set(this, biquadFilterNodeRenderer);
-            }
         }
 
         public get Q () {

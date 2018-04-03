@@ -28,7 +28,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
             const mergedOptions = <IAudioNodeOptions & IMediaStreamAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = nativeContext.createMediaStreamSource(mergedOptions.mediaStream);
 
-            super(context, nativeNode);
+            super(context, nativeNode, null);
 
             // Bug #63: Edge & Firefox do not expose the mediaStream yet.
             this._mediaStream = mergedOptions.mediaStream;

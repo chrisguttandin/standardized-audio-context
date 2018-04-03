@@ -1,4 +1,3 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import {
     IAudioParam,
@@ -19,8 +18,8 @@ const DEFAULT_OPTIONS: IConstantSourceOptions = {
 
 export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructorFactory = (
     createAudioParam,
+    createConstantSourceNodeRendererFactory,
     createNativeConstantSourceNode,
-    constantSourceNodeRendererConstructor,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -38,9 +37,11 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
+            const constantSourceNodeRenderer = (isOffline) ? createConstantSourceNodeRendererFactory() : null;
 
-            super(context, nativeNode);
+            super(context, nativeNode, constantSourceNodeRenderer);
 
+            this._constantSourceNodeRenderer = constantSourceNodeRenderer;
             this._nativeNode = nativeNode;
             /*
              * Bug #62 & #74: Edge & Safari do not support ConstantSourceNodes and do not export the correct values for maxValue and
@@ -48,16 +49,6 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
              * Bug #75: Firefox does not export the correct values for maxValue and minValue.
              */
             this._offset = createAudioParam(context, isOffline, nativeNode.offset, 3.4028234663852886e38, -3.4028234663852886e38);
-
-            if (isOffline) {
-                const constantSourceNodeRenderer = new constantSourceNodeRendererConstructor(this);
-
-                AUDIO_NODE_RENDERER_STORE.set(this, constantSourceNodeRenderer);
-
-                this._constantSourceNodeRenderer = constantSourceNodeRenderer;
-            } else {
-                this._constantSourceNodeRenderer = null;
-            }
         }
 
         public get offset () {

@@ -1,4 +1,4 @@
-import { AUDIO_NODE_RENDERER_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
+import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import {
     IAudioParam,
@@ -57,8 +57,8 @@ const sanitizedOptions = (options: IAudioWorkletNodeOptions): { outputChannelCou
 };
 
 export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFactory = (
-    audioWorkletNodeRendererConstructor,
     createAudioParam,
+    createAudioWorkletNodeRenderer,
     createNativeAudioWorkletNode,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
@@ -86,10 +86,11 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                 mergedOptions
             );
             const isOffline = isNativeOfflineAudioContext(nativeContext);
+            const audioWorkletNodeRenderer = (isOffline) ?
+                createAudioWorkletNodeRenderer(name, mergedOptions, processorDefinition) :
+                null;
 
-            super(context, nativeNode);
-
-            this._nativeNode = nativeNode;
+            super(context, nativeNode, audioWorkletNodeRenderer);
 
             const parameters: [ string, IAudioParam ][] = [ ];
 
@@ -99,13 +100,8 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                 parameters.push([ nm, audioParam ]);
             });
 
+            this._nativeNode = nativeNode;
             this._parameters = new ReadOnlyMap(parameters);
-
-            if (isOffline) {
-                const audioWorkletNodeRenderer = new audioWorkletNodeRendererConstructor(this, name, mergedOptions, processorDefinition);
-
-                AUDIO_NODE_RENDERER_STORE.set(this, audioWorkletNodeRenderer);
-            }
         }
 
         public get onprocessorerror () {

@@ -1,17 +1,27 @@
-import { AUDIO_PARAM_RENDERER_STORE } from '../globals';
-import { IAudioParam } from '../interfaces';
+import { AUDIO_GRAPH } from '../globals';
+import { renderInputsOfAudioParam } from '../helpers/render-inputs-of-audio-param';
+import { IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { TNativeAudioParam, TUnpatchedOfflineAudioContext } from '../types';
 
 export const renderAutomation = (
+    context: IMinimalBaseAudioContext,
     nativeOfflineAudioContext: TUnpatchedOfflineAudioContext,
     audioParam: IAudioParam,
     nativeAudioParam: TNativeAudioParam
 ) => {
-    const audioParamRenderer = AUDIO_PARAM_RENDERER_STORE.get(audioParam);
+    const audioGraphOfContext = AUDIO_GRAPH.get(context);
 
-    if (audioParamRenderer === undefined) {
-        throw new Error('The associated renderer is missing.');
+    if (audioGraphOfContext === undefined) {
+        throw new Error('Missing the audio graph of the OfflineAudioContext.');
     }
 
-    return audioParamRenderer.render(nativeOfflineAudioContext, nativeAudioParam);
+    const entryOfAudioParam = audioGraphOfContext.params.get(audioParam);
+
+    if (entryOfAudioParam === undefined) {
+        throw new Error('Missing the entry of this AudioParam in the audio graph.');
+    }
+
+    entryOfAudioParam.renderer.replay(nativeAudioParam);
+
+    return renderInputsOfAudioParam(context, audioParam, nativeOfflineAudioContext, nativeAudioParam);
 };

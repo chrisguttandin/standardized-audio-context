@@ -1,7 +1,11 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
-import { AudioBufferSourceNodeRenderer } from '../renderers/audio-buffer-source-node';
+import {
+    IAudioBufferSourceNode,
+    IAudioBufferSourceNodeRenderer,
+    IAudioBufferSourceOptions,
+    IAudioParam,
+    IMinimalBaseAudioContext
+} from '../interfaces';
 import {
     TAudioBufferSourceNodeConstructorFactory,
     TChannelCountMode,
@@ -23,6 +27,7 @@ const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
 };
 
 export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructorFactory = (
+    createAudioBufferSourceNodeRenderer,
     createAudioParam,
     createInvalidStateError,
     createNativeAudioBufferSourceNode,
@@ -32,7 +37,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
     return class AudioBufferSourceNode extends noneAudioDestinationNodeConstructor implements IAudioBufferSourceNode {
 
-        private _audioBufferSourceNodeRenderer: null | AudioBufferSourceNodeRenderer;
+        private _audioBufferSourceNodeRenderer: null | IAudioBufferSourceNodeRenderer;
 
         private _detune: IAudioParam;
 
@@ -49,10 +54,14 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             const mergedOptions = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
+            const audioBufferSourceNodeRenderer = (isOffline) ? createAudioBufferSourceNodeRenderer() : null;
 
-            super(context, nativeNode);
+            super(context, nativeNode, audioBufferSourceNodeRenderer);
 
+            this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
             this._detune = createAudioParam(context, isOffline, nativeNode.detune);
+            this._isBufferNullified = false;
+            this._isBufferSet = false;
             this._nativeNode = nativeNode;
             // Bug #73: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
             this._playbackRate = createAudioParam(
@@ -62,20 +71,6 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
                 3.4028234663852886e38,
                 -3.4028234663852886e38
             );
-
-            if (isOffline) {
-                const audioBufferSourceNodeRenderer = new AudioBufferSourceNodeRenderer(this);
-
-                AUDIO_NODE_RENDERER_STORE.set(this, audioBufferSourceNodeRenderer);
-
-                this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
-            } else {
-                this._audioBufferSourceNodeRenderer = null;
-            }
-
-            this._isBufferNullified = false;
-            this._isBufferSet = false;
-            this._nativeNode = nativeNode;
         }
 
         public get buffer () {

@@ -1,4 +1,3 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import {
@@ -18,7 +17,7 @@ const DEFAULT_OPTIONS: Partial<AudioNodeOptions> = {
 
 export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = (
     createNativeIIRFilterNode,
-    iIRFilterNodeRendererConstructor,
+    createIIRFilterNodeRenderer,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -34,18 +33,15 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeIIRFilterNode(nativeContext, mergedOptions);
+            const iirFilterNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ?
+                createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward) :
+                null;
 
-            super(context, nativeNode);
+            super(context, nativeNode, iirFilterNodeRenderer);
 
             // Bug #23 & #24: FirefoxDeveloper does not throw an InvalidAccessError.
             // @todo Write a test which allows other browsers to remain unpatched.
             wrapIIRFilterNodeGetFrequencyResponseMethod(nativeNode);
-
-            if (isNativeOfflineAudioContext(nativeContext)) {
-                const iirFilterNodeRenderer = new iIRFilterNodeRendererConstructor(this, mergedOptions.feedback, mergedOptions.feedforward);
-
-                AUDIO_NODE_RENDERER_STORE.set(this, iirFilterNodeRenderer);
-            }
 
             this._nativeNode = nativeNode;
         }

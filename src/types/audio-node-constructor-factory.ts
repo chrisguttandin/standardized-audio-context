@@ -4,5 +4,5 @@ import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-
 
 export type TAudioNodeConstructorFactory = (
     createInvalidAccessError: TInvalidAccessErrorFactory,
-    isNativeOfflineAudioContextFunction: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
 ) => IAudioNodeConstructor;

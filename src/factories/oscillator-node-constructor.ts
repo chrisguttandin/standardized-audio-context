@@ -1,7 +1,5 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOptions } from '../interfaces';
-import { OscillatorNodeRenderer } from '../renderers/oscillator-node';
+import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorNodeRenderer, IOscillatorOptions } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -25,6 +23,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
     createAudioParam,
     createInvalidStateError,
     createNativeOscillatorNode,
+    createOscillatorNodeRenderer,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
@@ -37,31 +36,23 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _nativeNode: TNativeOscillatorNode;
 
-        private _oscillatorNodeRenderer: null | OscillatorNodeRenderer;
+        private _oscillatorNodeRenderer: null | IOscillatorNodeRenderer;
 
         constructor (context: IMinimalBaseAudioContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeOscillatorNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
+            const oscillatorNodeRenderer = (isOffline) ? createOscillatorNodeRenderer() : null;
 
-            super(context, nativeNode);
+            super(context, nativeNode, oscillatorNodeRenderer);
 
             // Bug #81: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
             this._detune = createAudioParam(context, isOffline, nativeNode.detune, 3.4028234663852886e38, -3.4028234663852886e38);
             // Bug #76: Edge & Safari do not export the correct values for maxValue and minValue.
             this._frequency = createAudioParam(context, isOffline, nativeNode.frequency, context.sampleRate / 2, -(context.sampleRate / 2));
             this._nativeNode = nativeNode;
-
-            if (isNativeOfflineAudioContext(nativeContext)) {
-                const oscillatorNodeRenderer = new OscillatorNodeRenderer(this);
-
-                AUDIO_NODE_RENDERER_STORE.set(this, oscillatorNodeRenderer);
-
-                this._oscillatorNodeRenderer = oscillatorNodeRenderer;
-            } else {
-                this._oscillatorNodeRenderer = null;
-            }
+            this._oscillatorNodeRenderer = oscillatorNodeRenderer;
         }
 
         public get detune () {

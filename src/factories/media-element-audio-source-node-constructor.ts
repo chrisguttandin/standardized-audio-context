@@ -28,7 +28,7 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
             const mergedOptions = <IAudioNodeOptions & IMediaElementAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = nativeContext.createMediaElementSource(mergedOptions.mediaElement);
 
-            super(context, nativeNode);
+            super(context, nativeNode, null);
 
             // Bug #63: Edge & Firefox do not expose the mediaElement yet.
             this._mediaElement = mergedOptions.mediaElement;

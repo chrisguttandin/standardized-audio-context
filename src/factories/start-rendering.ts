@@ -1,16 +1,22 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
+import { AUDIO_GRAPH } from '../globals';
 import { TStartRenderingFactory } from '../types';
 
 export const createStartRendering: TStartRenderingFactory = (renderNativeOfflineAudioContext) => {
     return (destination, unpatchedOfflineAudioContext) => {
-        const audioDestinationNodeRenderer = AUDIO_NODE_RENDERER_STORE.get(destination);
+        const audioGraphOfContext = AUDIO_GRAPH.get(destination.context);
 
-        if (audioDestinationNodeRenderer === undefined) {
-            throw new Error('Missing the associated renderer.');
+        if (audioGraphOfContext === undefined) {
+            throw new Error('Missing the audio graph of the OfflineAudioContext.');
         }
 
-        return audioDestinationNodeRenderer
-            .render(unpatchedOfflineAudioContext)
+        const entryOfDestination = audioGraphOfContext.nodes.get(destination);
+
+        if (entryOfDestination === undefined) {
+            throw new Error('Missing the entry of this AudioNode in the audio graph.');
+        }
+
+        return entryOfDestination.renderer
+            .render(destination, unpatchedOfflineAudioContext)
             .then(() => renderNativeOfflineAudioContext(unpatchedOfflineAudioContext));
     };
 };

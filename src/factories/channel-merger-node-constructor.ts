@@ -1,7 +1,5 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IChannelMergerOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { ChannelMergerNodeRenderer } from '../renderers/channel-merger-node';
 import { TChannelCountMode, TChannelInterpretation, TChannelMergerNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS: IChannelMergerOptions = {
@@ -12,6 +10,7 @@ const DEFAULT_OPTIONS: IChannelMergerOptions = {
 };
 
 export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFactory = (
+    createChannelMergerNodeRenderer,
     createNativeChannelMergerNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
@@ -23,14 +22,9 @@ export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFa
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IChannelMergerOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeChannelMergerNode(nativeContext, mergedOptions);
+            const channelMergerNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createChannelMergerNodeRenderer() : null;
 
-            super(context, nativeNode);
-
-            if (isNativeOfflineAudioContext(nativeContext)) {
-                const channelMergerNodeRenderer = new ChannelMergerNodeRenderer(this);
-
-                AUDIO_NODE_RENDERER_STORE.set(this, channelMergerNodeRenderer);
-            }
+            super(context, nativeNode, channelMergerNodeRenderer);
         }
 
     };

@@ -1,7 +1,5 @@
-import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { AnalyserNodeRenderer } from '../renderers/analyser-node';
 import { TAnalyserNodeConstructorFactory, TChannelCountMode, TChannelInterpretation, TNativeAnalyserNode } from '../types';
 
 const DEFAULT_OPTIONS: IAnalyserOptions = {
@@ -15,6 +13,7 @@ const DEFAULT_OPTIONS: IAnalyserOptions = {
 };
 
 export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
+    createAnalyserNodeRenderer,
     createNativeAnalyserNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
@@ -28,14 +27,9 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IAnalyserOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeAnalyserNode(nativeContext, mergedOptions);
+            const analyserNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createAnalyserNodeRenderer() : null;
 
-            super(context, nativeNode);
-
-            if (isNativeOfflineAudioContext(nativeContext)) {
-                const analyserNodeRenderer = new AnalyserNodeRenderer(this);
-
-                AUDIO_NODE_RENDERER_STORE.set(this, analyserNodeRenderer);
-            }
+            super(context, nativeNode, analyserNodeRenderer);
 
             this._nativeNode = nativeNode;
         }

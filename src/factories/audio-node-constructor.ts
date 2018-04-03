@@ -1,19 +1,137 @@
 import { EventTarget } from '../event-target';
-import {
-    AUDIO_NODE_RENDERER_DESTINATIONS_STORE,
-    AUDIO_NODE_RENDERER_STORE,
-    AUDIO_NODE_STORE,
-    AUDIO_PARAM_RENDERER_STORE,
-    AUDIO_PARAM_STORE,
-    CONTEXT_STORE
-} from '../globals';
+import { AUDIO_GRAPH, AUDIO_NODE_STORE, AUDIO_PARAM_STORE, CONTEXT_STORE } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioNode, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
+import { IAudioNode, IAudioNodeRenderer, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
 import { TAudioNodeConstructorFactory, TChannelCountMode, TNativeAudioNode, TUnpatchedAudioContext } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
+
+const addAudioNode = (context: IMinimalBaseAudioContext, audioNode: IAudioNode, audioNoderRender: IAudioNodeRenderer) => {
+    const audioGraphOfContext = AUDIO_GRAPH.get(context);
+
+    if (audioGraphOfContext === undefined) {
+        throw new Error('Missing the audio graph of the OfflineAudioContext.');
+    }
+
+    audioGraphOfContext.nodes.set(audioNode, { inputs: new Set(), outputs: new Set(), renderer: audioNoderRender });
+};
+
+const addConnectionToAudioNode = (
+    context: IMinimalBaseAudioContext,
+    source: IAudioNode,
+    destination: IAudioNode,
+    output: number,
+    input: number
+) => {
+    const audioGraphOfContext = AUDIO_GRAPH.get(context);
+
+    if (audioGraphOfContext === undefined) {
+        throw new Error('Missing the audio graph of the OfflineAudioContext.');
+    }
+
+    const entryOfSource = audioGraphOfContext.nodes.get(source);
+
+    if (entryOfSource === undefined) {
+        throw new Error('Missing the entry of this AudioNode in the audio graph.');
+    }
+
+    entryOfSource.outputs.add([ destination, output, input ]);
+
+    const entryOfDestination = audioGraphOfContext.nodes.get(destination);
+
+    if (entryOfDestination === undefined) {
+        throw new Error('Missing the entry of this AudioNode in the audio graph.');
+    }
+
+    entryOfDestination.inputs.add([ source, output, input ]);
+};
+
+const addConnectionToAudioParam = (context: IMinimalBaseAudioContext, source: IAudioNode, destination: IAudioParam, output: number) => {
+    const audioGraphOfContext = AUDIO_GRAPH.get(context);
+
+    if (audioGraphOfContext === undefined) {
+        throw new Error('Missing the audio graph of the OfflineAudioContext.');
+    }
+
+    const entryOfSource = audioGraphOfContext.nodes.get(source);
+
+    if (entryOfSource === undefined) {
+        throw new Error('Missing the entry of this AudioNode in the audio graph.');
+    }
+
+    entryOfSource.outputs.add([ destination, output ]);
+
+    const entryOfDestination = audioGraphOfContext.params.get(destination);
+
+    if (entryOfDestination === undefined) {
+        throw new Error('Missing the entry of this AudioNode in the audio graph.');
+    }
+
+    entryOfDestination.inputs.add([ source, output ]);
+};
+
+const removeAnyConnection = (context: IMinimalBaseAudioContext, source: IAudioNode) => {
+    const audioGraphOfContext = AUDIO_GRAPH.get(context);
+
+    if (audioGraphOfContext === undefined) {
+        throw new Error('Missing the audio graph of the OfflineAudioContext.');
+    }
+
+    const entryOfSource = audioGraphOfContext.nodes.get(source);
+
+    if (entryOfSource === undefined) {
+        throw new Error('Missing the entry of this AudioNode in the audio graph.');
+    }
+
+    for (const [ destination ] of Array.from(entryOfSource.outputs.values())) {
+        const entryOfDestination = audioGraphOfContext.nodes.get(<IAudioNode> destination);
+
+        if (entryOfDestination !== undefined) {
+            for (const connection of Array.from(entryOfDestination.inputs.values())) {
+                if (connection[0] === source) {
+                    entryOfDestination.inputs.delete(connection);
+                }
+            }
+        }
+
+    }
+
+    entryOfSource.outputs.clear();
+};
+
+const removeConnectionToAudioNode = (context: IMinimalBaseAudioContext, source: IAudioNode, destination: IAudioNode) => {
+    const audioGraphOfContext = AUDIO_GRAPH.get(context);
+
+    if (audioGraphOfContext === undefined) {
+        throw new Error('Missing the audio graph of the OfflineAudioContext.');
+    }
+
+    const entryOfSource = audioGraphOfContext.nodes.get(source);
+
+    if (entryOfSource === undefined) {
+        throw new Error('Missing the entry of this AudioNode in the audio graph.');
+    }
+
+    for (const connection of Array.from(entryOfSource.outputs.values())) {
+        if (connection[0] === destination) {
+            entryOfSource.outputs.delete(connection);
+        }
+    }
+
+    const entryOfDestination = audioGraphOfContext.nodes.get(destination);
+
+    if (entryOfDestination === undefined) {
+        throw new Error('Missing the entry of this AudioNode in the audio graph.');
+    }
+
+    for (const connection of Array.from(entryOfDestination.inputs.values())) {
+        if (connection[0] === source) {
+            entryOfDestination.inputs.delete(connection);
+        }
+    }
+};
 
 export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createInvalidAccessError, isNativeOfflineAudioContext) => {
 
@@ -23,7 +141,11 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
         private _nativeNode: INativeAudioNodeFaker | TNativeAudioNode;
 
-        constructor (context: IMinimalBaseAudioContext, nativeNode: INativeAudioNodeFaker | TNativeAudioNode) {
+        constructor (
+            context: IMinimalBaseAudioContext,
+            nativeNode: INativeAudioNodeFaker | TNativeAudioNode,
+            audioNodeRenderer: null | IAudioNodeRenderer
+        ) {
             super();
 
             this._context = context;
@@ -40,6 +162,10 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             }
 
             AUDIO_NODE_STORE.set(this, nativeNode);
+
+            if (audioNodeRenderer !== null) {
+                addAudioNode(context, this, audioNodeRenderer);
+            }
         }
 
         public get channelCount (): number {
@@ -102,19 +228,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
                 }
 
                 if (isNativeOfflineAudioContext(nativeContext)) {
-                    const renderer = AUDIO_NODE_RENDERER_STORE.get(destination);
-
-                    if (renderer === undefined) {
-                        throw createInvalidAccessError();
-                    }
-
-                    const source = AUDIO_NODE_RENDERER_STORE.get(this);
-
-                    if (source === undefined) {
-                        throw new Error('The associated renderer is missing.');
-                    }
-
-                    renderer.wire(source, output, input);
+                    addConnectionToAudioNode(this._context, this, destination, output, input);
 
                     return destination;
                 }
@@ -141,18 +255,6 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             }
 
             if (isNativeOfflineAudioContext(nativeContext)) {
-                const renderer = AUDIO_PARAM_RENDERER_STORE.get(destination);
-
-                if (renderer === undefined) {
-                    throw createInvalidAccessError();
-                }
-
-                const source = AUDIO_NODE_RENDERER_STORE.get(this);
-
-                if (source === undefined) {
-                    throw new Error('The associated renderer is missing.');
-                }
-
                 const nativeAudioParam = AUDIO_PARAM_STORE.get(destination);
 
                 if (nativeAudioParam === undefined) {
@@ -171,7 +273,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
                     throw err;
                 }
 
-                renderer.wire(source, output);
+                addConnectionToAudioParam(this._context, this, destination, output);
             } else {
                 const nativeAudioParam = AUDIO_PARAM_STORE.get(destination);
 
@@ -200,29 +302,13 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             }
 
             if (isNativeOfflineAudioContext(nativeContext)) {
-                const source = AUDIO_NODE_RENDERER_STORE.get(this);
-
-                if (source === undefined) {
-                    throw new Error('The associated renderer is missing.');
-                }
-
                 if (destination === undefined) {
-                    const renderers = AUDIO_NODE_RENDERER_DESTINATIONS_STORE.get(source);
-
-                    if (renderers === undefined) {
-                        return;
-                    }
-
-                    return renderers.forEach((rndrr) => rndrr.unwire(source));
+                    removeAnyConnection(this._context, this);
+                } else {
+                    removeConnectionToAudioNode(this._context, this, destination);
                 }
 
-                const renderer = AUDIO_NODE_RENDERER_STORE.get(destination);
-
-                if (renderer === undefined) {
-                    throw new Error('The associated renderer is missing.');
-                }
-
-                return renderer.unwire(source);
+                return;
             }
 
             if (destination === undefined) {
