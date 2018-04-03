@@ -1,4 +1,3 @@
-import { createNativeGainNode } from '../factories/native-gain-node';
 import { INativeConstantSourceNode } from '../interfaces';
 import {
     TNativeAudioBufferSourceNode,
@@ -13,7 +12,7 @@ export const wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls = (
     audioScheduledSourceNode: TNativeAudioBufferSourceNode | INativeConstantSourceNode | TNativeOscillatorNode,
     audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext
 ): void => {
-    const gainNode = createNativeGainNode(audioContext);
+    const gainNode = audioContext.createGain();
 
     audioScheduledSourceNode.connect(gainNode);
 

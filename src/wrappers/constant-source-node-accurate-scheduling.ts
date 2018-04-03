@@ -1,4 +1,3 @@
-import { createNativeGainNode } from '../factories/native-gain-node';
 import { INativeConstantSourceNode } from '../interfaces';
 import { TNativeAudioNode, TNativeAudioParam, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 
@@ -6,7 +5,7 @@ export const wrapConstantSourceNodeAccurateScheduling = (
     constantSourceNode: INativeConstantSourceNode,
     audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext
 ): void => {
-    const gainNode = createNativeGainNode(audioContext);
+    const gainNode = audioContext.createGain();
 
     constantSourceNode.connect(gainNode);
 
