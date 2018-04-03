@@ -1,4 +1,4 @@
-import { createNativeGainNode } from '../helpers/create-native-gain-node';
+import { createNativeGainNode } from '../factories/native-gain-node';
 import { INativeConstantSourceNode } from '../interfaces';
 import { TNativeAudioNode, TNativeAudioParam, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
 

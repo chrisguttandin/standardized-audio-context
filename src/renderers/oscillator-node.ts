@@ -1,5 +1,5 @@
+import { createNativeOscillatorNode } from '../factories/native-oscillator-node';
 import { connectAudioParam } from '../helpers/connect-audio-param';
-import { createNativeOscillatorNode } from '../helpers/create-native-oscillator-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';

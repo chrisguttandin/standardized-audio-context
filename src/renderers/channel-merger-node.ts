@@ -1,4 +1,4 @@
-import { createNativeChannelMergerNode } from '../helpers/create-native-channel-merger-node';
+import { createNativeChannelMergerNode } from '../factories/native-channel-merger-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNode, IChannelMergerOptions } from '../interfaces';

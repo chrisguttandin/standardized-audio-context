@@ -1,4 +1,3 @@
-import { createNativeIIRFilterNodeFaker } from '../fakers/iir-filter-node';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
@@ -6,9 +5,7 @@ import {
     TChannelCountMode,
     TChannelInterpretation,
     TIIRFilterNodeConstructorFactory,
-    TNativeIIRFilterNode,
-    TUnpatchedAudioContext,
-    TUnpatchedOfflineAudioContext
+    TNativeIIRFilterNode
 } from '../types';
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
 
@@ -19,33 +16,8 @@ const DEFAULT_OPTIONS: Partial<AudioNodeOptions> = {
     channelInterpretation: <TChannelInterpretation> 'speakers'
 };
 
-const createNativeNode = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    options: IIIRFilterOptions
-): TNativeIIRFilterNode => {
-    // Bug #9: Safari does not support IIRFilterNodes.
-    if (nativeContext.createIIRFilter === undefined) {
-        return createNativeIIRFilterNodeFaker(nativeContext, options);
-    }
-
-    const iIRFilterNode = nativeContext.createIIRFilter(<number[]> options.feedforward, <number[]> options.feedback);
-
-    if (options.channelCount !== undefined) {
-        iIRFilterNode.channelCount = options.channelCount;
-    }
-
-    if (options.channelCountMode !== undefined) {
-        iIRFilterNode.channelCountMode = options.channelCountMode;
-    }
-
-    if (options.channelInterpretation !== undefined) {
-        iIRFilterNode.channelInterpretation = options.channelInterpretation;
-    }
-
-    return iIRFilterNode;
-};
-
 export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = (
+    createNativeIIRFilterNode,
     iIRFilterNodeRendererConstructor,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
@@ -61,7 +33,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
         ) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = createNativeNode(nativeContext, mergedOptions);
+            const nativeNode = createNativeIIRFilterNode(nativeContext, mergedOptions);
 
             super(context, nativeNode);
 

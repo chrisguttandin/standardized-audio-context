@@ -1,6 +1,4 @@
-import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
-import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioBufferSourceNodeRenderer } from '../renderers/audio-buffer-source-node';
@@ -26,6 +24,8 @@ const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
 
 export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructorFactory = (
     createAudioParam,
+    createInvalidStateError,
+    createNativeAudioBufferSourceNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

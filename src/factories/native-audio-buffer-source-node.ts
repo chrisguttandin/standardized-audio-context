@@ -1,6 +1,8 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
-import { IOscillatorOptions } from '../interfaces';
+import {
+    testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport
+} from '../support-testers/audio-buffer-source-node-start-method-consecutive-calls';
 import {
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport
 } from '../support-testers/audio-scheduled-source-node-start-method-negative-parameters';
@@ -10,7 +12,8 @@ import {
 import {
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 } from '../support-testers/audio-scheduled-source-node-stop-method-negative-parameters';
-import { TNativeOscillatorNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioBufferSourceNodeFactory } from '../types';
+import { wrapAudioBufferSourceNodeStartMethodConsecutiveCalls } from '../wrappers/audio-buffer-source-node-start-method-consecutive-calls';
 import {
     wrapAudioScheduledSourceNodeStartMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-start-method-negative-parameters';
@@ -21,26 +24,42 @@ import {
     wrapAudioScheduledSourceNodeStopMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
 
-export const createNativeOscillatorNode = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    options: Partial<IOscillatorOptions> = { }
-): TNativeOscillatorNode => {
-    const nativeNode = nativeContext.createOscillator();
+export const createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFactory = (nativeContext, options = { }) => {
+    const nativeNode = nativeContext.createBufferSource();
 
     assignNativeAudioNodeOptions(nativeNode, options);
 
-    if (options.detune !== undefined) {
-        nativeNode.detune.value = options.detune;
+    // Bug #71: Edge does not allow to set the buffer to null.
+    if (options.buffer !== undefined && options.buffer !== null) {
+        nativeNode.buffer = options.buffer;
     }
 
-    if (options.frequency !== undefined) {
-        nativeNode.frequency.value = options.frequency;
+    // @todo if (options.detune !== undefined) {
+    // @todo    nativeNode.detune.value = options.detune;
+    // @todo }
+
+    if (options.loop !== undefined) {
+        nativeNode.loop = options.loop;
     }
 
-    // @todo periodicWave
+    if (options.loopEnd !== undefined) {
+        nativeNode.loopEnd = options.loopEnd;
+    }
 
-    if (options.type !== undefined) {
-        nativeNode.type = options.type;
+    if (options.loopStart !== undefined) {
+        nativeNode.loopStart = options.loopStart;
+    }
+
+    if (options.playbackRate !== undefined) {
+        nativeNode.playbackRate.value = options.playbackRate;
+    }
+
+    // Bug #69: Safari does allow calls to start() of an already scheduled AudioBufferSourceNode.
+    if (!cacheTestResult(
+        testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
+        () => testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(nativeContext)
+    )) {
+        wrapAudioBufferSourceNodeStartMethodConsecutiveCalls(nativeNode);
     }
 
     // Bug #44: Only Chrome & Opera throw a RangeError yet.

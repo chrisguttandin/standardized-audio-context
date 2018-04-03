@@ -39,6 +39,8 @@ export * from './channel-splitter-node-constructor';
 export * from './channel-splitter-options';
 export * from './constant-source-node';
 export * from './constant-source-node-constructor';
+export * from './constant-source-node-renderer';
+export * from './constant-source-node-renderer-constructor';
 export * from './constructor';
 export * from './constant-source-options';
 export * from './exponential-ramp-to-value-automation';

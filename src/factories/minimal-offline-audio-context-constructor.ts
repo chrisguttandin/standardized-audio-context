@@ -1,4 +1,3 @@
-import { startRendering } from '../helpers/start-rendering';
 import { IAudioBuffer, IMinimalOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import { TMinimalOfflineAudioContextConstructorFactory, TUnpatchedOfflineAudioContext } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
@@ -9,6 +8,7 @@ const DEFAULT_OPTIONS = {
 
 export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructorFactory = (
     minimalBaseAudioContextConstructor,
+    startRendering,
     unpatchedOfflineAudioContextConstructor
 ) => {
 

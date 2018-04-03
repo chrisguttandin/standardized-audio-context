@@ -1,16 +1,8 @@
 import { connectAudioParam } from '../helpers/connect-audio-param';
-import { connectMultipleOutputs } from '../helpers/connect-multiple-outputs';
-import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
-import { createNativeChannelMergerNode } from '../helpers/create-native-channel-merger-node';
-import { createNativeChannelSplitterNode } from '../helpers/create-native-channel-splitter-node';
-import { createNativeConstantSourceNode } from '../helpers/create-native-constant-source-node';
-import { createNativeGainNode } from '../helpers/create-native-gain-node';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
-import { disconnectMultipleOutputs } from '../helpers/disconnect-multiple-outputs';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
-import { renderNativeOfflineAudioContext } from '../helpers/render-native-offline-audio-context';
 import {
     IAudioWorkletNode,
     IAudioWorkletNodeOptions,
@@ -31,7 +23,15 @@ import {
 } from '../types';
 
 export const createAudioWorkletNodeRendererConstructor: TAudioWorkletNodeRendererConstructorFactory = (
+    connectMultipleOutputs,
+    createNativeAudioBufferSourceNode,
+    createNativeChannelMergerNode,
+    createNativeChannelSplitterNode,
+    createNativeConstantSourceNode,
+    createNativeGainNode,
+    disconnectMultipleOutputs,
     nativeAudioWorkletNodeConstructor,
+    renderNativeOfflineAudioContext,
     unpatchedOfflineAudioContextConstructor
 ) => {
 

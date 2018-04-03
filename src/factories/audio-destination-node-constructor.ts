@@ -1,7 +1,4 @@
-import { createIndexSizeError } from '../factories/index-size-error';
-import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
-import { createNativeAudioDestinationNode } from '../helpers/create-native-audio-destination-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
 import { AudioDestinationNodeRenderer } from '../renderers/audio-destination-node';
@@ -9,6 +6,9 @@ import { TAudioDestinationNodeConstructorFactory, TNativeAudioDestinationNode } 
 
 export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstructorFactory = (
     audioNodeConstructor,
+    createIndexSizeError,
+    createInvalidStateError,
+    createNativeAudioDestinationNode,
     isNativeOfflineAudioContext
 ) => {
 

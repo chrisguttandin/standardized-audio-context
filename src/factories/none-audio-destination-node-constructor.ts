@@ -1,8 +1,10 @@
-import { createInvalidStateError } from '../factories/invalid-state-error';
 import { IMinimalBaseAudioContext } from '../interfaces';
 import { TNativeAudioNode, TNoneAudioDestinationNodeConstructorFactory } from '../types';
 
-export const createNoneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructorFactory = (audioNodeConstructor) => {
+export const createNoneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructorFactory = (
+    audioNodeConstructor,
+    createInvalidStateError
+) => {
 
     return class NoneAudioDestinationNode extends audioNodeConstructor {
 

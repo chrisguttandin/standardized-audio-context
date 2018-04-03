@@ -1,4 +1,4 @@
-import { createNativeChannelSplitterNode } from '../helpers/create-native-channel-splitter-node';
+import { createNativeChannelSplitterNode } from '../factories/native-channel-splitter-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNode, IChannelSplitterOptions } from '../interfaces';

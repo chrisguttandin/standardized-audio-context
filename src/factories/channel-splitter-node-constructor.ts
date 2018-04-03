@@ -1,5 +1,4 @@
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
-import { createNativeChannelSplitterNode } from '../helpers/create-native-channel-splitter-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IChannelSplitterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { ChannelSplitterNodeRenderer } from '../renderers/channel-splitter-node';
@@ -17,6 +16,7 @@ const sanitizedOptions = (options: IChannelSplitterOptions) => {
 };
 
 export const createChannelSplitterNodeConstructor: TChannelSplitterNodeConstructorFactory = (
+    createNativeChannelSplitterNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

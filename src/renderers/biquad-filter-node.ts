@@ -1,5 +1,5 @@
+import { createNativeBiquadFilterNode } from '../factories/native-biquad-filter-node';
 import { connectAudioParam } from '../helpers/connect-audio-param';
-import { createNativeBiquadFilterNode } from '../helpers/create-native-biquad-filter-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';

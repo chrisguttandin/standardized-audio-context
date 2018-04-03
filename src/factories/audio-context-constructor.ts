@@ -1,10 +1,10 @@
-import { createInvalidStateError } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContext, IAudioContextOptions } from '../interfaces';
 import { TAudioContextConstructorFactory, TUnpatchedAudioContext } from '../types';
 
 export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     baseAudioContextConstructor,
+    createInvalidStateError,
     mediaElementAudioSourceNodeConstructor,
     mediaStreamAudioSourceNodeConstructor,
     unpatchedAudioContextConstructor

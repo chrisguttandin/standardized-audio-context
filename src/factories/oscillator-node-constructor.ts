@@ -1,6 +1,4 @@
-import { createInvalidStateError } from '../factories/invalid-state-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
-import { createNativeOscillatorNode } from '../helpers/create-native-oscillator-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOptions } from '../interfaces';
 import { OscillatorNodeRenderer } from '../renderers/oscillator-node';
@@ -25,6 +23,8 @@ const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
 
 export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory = (
     createAudioParam,
+    createInvalidStateError,
+    createNativeOscillatorNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

@@ -1,8 +1,7 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
-import { IAnalyserOptions } from '../interfaces';
 import { testAnalyserNodeGetFloatTimeDomainDataMethodSupport } from '../support-testers/analyser-node-get-float-time-domain-data-method';
-import { TNativeAnalyserNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAnalyserNode, TNativeAnalyserNodeFactory } from '../types';
 import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 
 const isSupportingAnalyserNodeGetFloatTimeDomainDataMethod = (nativeAnalyserNode: TNativeAnalyserNode) => cacheTestResult(
@@ -10,10 +9,7 @@ const isSupportingAnalyserNodeGetFloatTimeDomainDataMethod = (nativeAnalyserNode
     () => testAnalyserNodeGetFloatTimeDomainDataMethodSupport(nativeAnalyserNode)
 );
 
-export const createNativeAnalyserNode = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    options: Partial<IAnalyserOptions> = { }
-): TNativeAnalyserNode => {
+export const createNativeAnalyserNode: TNativeAnalyserNodeFactory = (nativeContext, options = { }) => {
     const nativeNode = nativeContext.createAnalyser();
 
     assignNativeAudioNodeOptions(nativeNode, options);

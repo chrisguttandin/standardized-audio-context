@@ -1,5 +1,4 @@
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
-import { createNativeAnalyserNode } from '../helpers/create-native-analyser-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { AnalyserNodeRenderer } from '../renderers/analyser-node';
@@ -16,6 +15,7 @@ const DEFAULT_OPTIONS: IAnalyserOptions = {
 };
 
 export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
+    createNativeAnalyserNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

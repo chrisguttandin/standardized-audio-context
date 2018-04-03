@@ -1,6 +1,4 @@
-import { createInvalidAccessError } from '../factories/invalid-access-error';
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
-import { createNativeBiquadFilterNode } from '../helpers/create-native-biquad-filter-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { BiquadFilterNodeRenderer } from '../renderers/biquad-filter-node';
@@ -25,6 +23,8 @@ const DEFAULT_OPTIONS: IBiquadFilterOptions = {
 
 export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFactory = (
     createAudioParam,
+    createInvalidAccessError,
+    createNativeBiquadFilterNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

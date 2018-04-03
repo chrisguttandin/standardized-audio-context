@@ -1,12 +1,8 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { IChannelMergerOptions } from '../interfaces';
-import { TNativeChannelMergerNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeChannelMergerNodeFactory } from '../types';
 import { wrapChannelMergerNode } from '../wrappers/channel-merger-node';
 
-export const createNativeChannelMergerNode = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    options: Partial<IChannelMergerOptions> = { }
-): TNativeChannelMergerNode => {
+export const createNativeChannelMergerNode: TNativeChannelMergerNodeFactory = (nativeContext, options = { }) => {
     const nativeNode = nativeContext.createChannelMerger((options.numberOfInputs === undefined) ? 6 : options.numberOfInputs);
 
     assignNativeAudioNodeOptions(nativeNode, options);

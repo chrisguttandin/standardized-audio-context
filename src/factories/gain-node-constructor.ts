@@ -1,5 +1,4 @@
 import { AUDIO_NODE_RENDERER_STORE } from '../globals';
-import { createNativeGainNode } from '../helpers/create-native-gain-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { GainNodeRenderer } from '../renderers/gain-node';
@@ -14,6 +13,7 @@ const DEFAULT_OPTIONS: IGainOptions = {
 
 export const createGainNodeConstructor: TGainNodeConstructorFactory = (
     createAudioParam,
+    createNativeGainNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

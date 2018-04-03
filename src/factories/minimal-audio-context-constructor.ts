@@ -1,9 +1,9 @@
-import { createInvalidStateError } from '../factories/invalid-state-error';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
 import { TMinimalAudioContextConstructorFactory, TUnpatchedAudioContext } from '../types';
 
 export const createMinimalAudioContextConstructor: TMinimalAudioContextConstructorFactory = (
+    createInvalidStateError,
     minimalBaseAudioContextConstructor,
     unpatchedAudioContextConstructor
 ) => {

@@ -1,4 +1,4 @@
-import { createNativeAudioBufferSourceNode } from '../helpers/create-native-audio-buffer-source-node';
+import { createNativeAudioBufferSourceNode } from '../factories/native-audio-buffer-source-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioBufferSourceNode, IAudioBufferSourceOptions } from '../interfaces';

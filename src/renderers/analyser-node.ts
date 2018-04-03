@@ -1,4 +1,4 @@
-import { createNativeAnalyserNode } from '../helpers/create-native-analyser-node';
+import { createNativeAnalyserNode } from '../factories/native-analyser-node';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAnalyserNode } from '../interfaces';

@@ -1,12 +1,8 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { IChannelSplitterOptions } from '../interfaces';
-import { TNativeChannelSplitterNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeChannelSplitterNodeFactory } from '../types';
 import { wrapChannelSplitterNode } from '../wrappers/channel-splitter-node';
 
-export const createNativeChannelSplitterNode = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    options: Partial<IChannelSplitterOptions> = { }
-): TNativeChannelSplitterNode => {
+export const createNativeChannelSplitterNode: TNativeChannelSplitterNodeFactory = (nativeContext, options = { }) => {
     const nativeNode = nativeContext.createChannelSplitter((options.numberOfOutputs === undefined) ? 6 : options.numberOfOutputs);
 
     assignNativeAudioNodeOptions(nativeNode, options);

@@ -1,11 +1,7 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { IBiquadFilterOptions } from '../interfaces';
-import { TNativeBiquadFilterNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeBiquadFilterNodeFactory } from '../types';
 
-export const createNativeBiquadFilterNode = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    options: Partial<IBiquadFilterOptions> = { }
-): TNativeBiquadFilterNode => {
+export const createNativeBiquadFilterNode: TNativeBiquadFilterNodeFactory = (nativeContext, options = { }) => {
     const nativeNode = nativeContext.createBiquadFilter();
 
     assignNativeAudioNodeOptions(nativeNode, options);

@@ -1,5 +1,4 @@
 import { EventTarget } from '../event-target';
-import { createInvalidAccessError } from '../factories/invalid-access-error';
 import {
     AUDIO_NODE_RENDERER_DESTINATIONS_STORE,
     AUDIO_NODE_RENDERER_STORE,
@@ -16,7 +15,7 @@ import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-n
 import { TAudioNodeConstructorFactory, TChannelCountMode, TNativeAudioNode, TUnpatchedAudioContext } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
-export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (isNativeOfflineAudioContext) => {
+export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createInvalidAccessError, isNativeOfflineAudioContext) => {
 
     return class AudioNode extends EventTarget implements IAudioNode {
 

@@ -1,10 +1,10 @@
-import { TNativeAudioDestinationNode, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioDestinationNodeFactory } from '../types';
 
-export const createNativeAudioDestinationNode = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
-    channelCount: number,
-    isNodeOfNativeOfflineAudioContext: boolean
-): TNativeAudioDestinationNode => {
+export const createNativeAudioDestinationNode: TNativeAudioDestinationNodeFactory = (
+    nativeContext,
+    channelCount,
+    isNodeOfNativeOfflineAudioContext
+) => {
     const nativeNode = nativeContext.destination;
 
     // @todo Which bug is that covering?
