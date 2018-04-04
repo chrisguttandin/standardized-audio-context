@@ -59,7 +59,12 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const inputChannelSplitterNodes = [ ];
 
         for (let i = 0; i < options.numberOfInputs; i += 1) {
-            gainNodes.push(createNativeGainNode(nativeAudioContext, options));
+            gainNodes.push(createNativeGainNode(nativeAudioContext, {
+                channelCount: options.channelCount,
+                channelCountMode: options.channelCountMode,
+                channelInterpretation: options.channelInterpretation,
+                gain: 1
+            }));
             inputChannelSplitterNodes.push(createNativeChannelSplitterNode(nativeAudioContext, {
                 numberOfOutputs: options.channelCount
             }));
@@ -68,7 +73,12 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const constantSourceNodes: INativeConstantSourceNode[] = [ ];
 
         for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
-            const constantSourceNode = createNativeConstantSourceNode(nativeAudioContext);
+            const constantSourceNode = createNativeConstantSourceNode(nativeAudioContext, {
+                channelCount: 1,
+                channelCountMode: 'explicit',
+                channelInterpretation: 'discrete',
+                offset: (defaultValue === undefined) ? 0 : defaultValue
+            });
 
             Object.defineProperties(constantSourceNode.offset, {
                 defaultValue: {

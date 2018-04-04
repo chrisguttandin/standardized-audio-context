@@ -18,7 +18,7 @@ import {
 import { wrapConstantSourceNodeAccurateScheduling } from '../wrappers/constant-source-node-accurate-scheduling';
 
 export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFactoryFactory = (createNativeConstantSourceNodeFaker) => {
-    return (nativeContext, options = { }) => {
+    return (nativeContext, options) => {
         // Bug #62: Edge & Safari do not support ConstantSourceNodes.
         // @todo TypeScript doesn't know yet about createConstantSource().
         if ((<any> nativeContext).createConstantSource === undefined) {
@@ -34,7 +34,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             nativeNode.channelCount = 2;
         }
 
-        if (options.offset !== undefined) {
+        if (options.offset !== nativeNode.offset.value) {
             nativeNode.offset.value = options.offset;
         }
 

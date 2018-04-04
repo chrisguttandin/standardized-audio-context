@@ -5,5 +5,6 @@ import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeChannelMergerNodeFactory = (
     nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
+    // @todo Do only accept the full IChannelMergerOptions dictionary.
     options?: Partial<IChannelMergerOptions>
 ) => TNativeChannelMergerNode;

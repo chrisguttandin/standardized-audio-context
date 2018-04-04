@@ -5,5 +5,5 @@ import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeAnalyserNodeFactory = (
     nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
-    options?: Partial<IAnalyserOptions>
+    options: IAnalyserOptions
 ) => TNativeAnalyserNode;

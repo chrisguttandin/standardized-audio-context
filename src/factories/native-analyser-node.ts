@@ -9,24 +9,24 @@ const isSupportingAnalyserNodeGetFloatTimeDomainDataMethod = (nativeAnalyserNode
     () => testAnalyserNodeGetFloatTimeDomainDataMethodSupport(nativeAnalyserNode)
 );
 
-export const createNativeAnalyserNode: TNativeAnalyserNodeFactory = (nativeContext, options = { }) => {
+export const createNativeAnalyserNode: TNativeAnalyserNodeFactory = (nativeContext, options) => {
     const nativeNode = nativeContext.createAnalyser();
 
     assignNativeAudioNodeOptions(nativeNode, options);
 
-    if (options.fftSize !== undefined) {
+    if (options.fftSize !== nativeNode.fftSize) {
         nativeNode.fftSize = options.fftSize;
     }
 
-    if (options.maxDecibels !== undefined) {
+    if (options.maxDecibels !== nativeNode.maxDecibels) {
         nativeNode.maxDecibels = options.maxDecibels;
     }
 
-    if (options.minDecibels !== undefined) {
+    if (options.minDecibels !== nativeNode.minDecibels) {
         nativeNode.minDecibels = options.minDecibels;
     }
 
-    if (options.smoothingTimeConstant !== undefined) {
+    if (options.smoothingTimeConstant !== nativeNode.smoothingTimeConstant) {
         nativeNode.smoothingTimeConstant = options.smoothingTimeConstant;
     }
 

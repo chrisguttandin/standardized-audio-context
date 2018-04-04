@@ -3,7 +3,7 @@ import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IGainNode } from '../interfaces';
+import { IGainNode, IGainOptions } from '../interfaces';
 import { TGainNodeRendererFactoryFactory, TNativeGainNode, TNativeOfflineAudioContext } from '../types';
 
 export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (createNativeGainNode) => {
@@ -20,7 +20,14 @@ export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (c
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
                 if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
-                    nativeNode = createNativeGainNode(offlineAudioContext);
+                    const options: IGainOptions = {
+                        channelCount: nativeNode.channelCount,
+                        channelCountMode: nativeNode.channelCountMode,
+                        channelInterpretation: nativeNode.channelInterpretation,
+                        gain: nativeNode.gain.value
+                    };
+
+                    nativeNode = createNativeGainNode(offlineAudioContext, options);
 
                     await renderAutomation(proxy.context, offlineAudioContext, proxy.gain, nativeNode.gain);
                 } else {

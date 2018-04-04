@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeIIRFilterNodeFactoryFactory } from '../types';
 
 export const createNativeIIRFilterNodeFactory: TNativeIIRFilterNodeFactoryFactory = (createNativeIIRFilterNodeFaker) => {
@@ -7,20 +8,10 @@ export const createNativeIIRFilterNodeFactory: TNativeIIRFilterNodeFactoryFactor
             return createNativeIIRFilterNodeFaker(nativeContext, options);
         }
 
-        const iIRFilterNode = nativeContext.createIIRFilter(<number[]> options.feedforward, <number[]> options.feedback);
+        const nativeNode = nativeContext.createIIRFilter(<number[]> options.feedforward, <number[]> options.feedback);
 
-        if (options.channelCount !== undefined) {
-            iIRFilterNode.channelCount = options.channelCount;
-        }
+        assignNativeAudioNodeOptions(nativeNode, options);
 
-        if (options.channelCountMode !== undefined) {
-            iIRFilterNode.channelCountMode = options.channelCountMode;
-        }
-
-        if (options.channelInterpretation !== undefined) {
-            iIRFilterNode.channelInterpretation = options.channelInterpretation;
-        }
-
-        return iIRFilterNode;
+        return nativeNode;
     };
 };

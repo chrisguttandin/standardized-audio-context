@@ -20,22 +20,22 @@ import {
     wrapAudioScheduledSourceNodeStopMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
 
-export const createNativeOscillatorNode: TNativeOscillatorNodeFactory = (nativeContext, options = { }) => {
+export const createNativeOscillatorNode: TNativeOscillatorNodeFactory = (nativeContext, options) => {
     const nativeNode = nativeContext.createOscillator();
 
     assignNativeAudioNodeOptions(nativeNode, options);
 
-    if (options.detune !== undefined) {
+    if (options.detune !== nativeNode.detune.value) {
         nativeNode.detune.value = options.detune;
     }
 
-    if (options.frequency !== undefined) {
+    if (options.frequency !== nativeNode.frequency.value) {
         nativeNode.frequency.value = options.frequency;
     }
 
     // @todo periodicWave
 
-    if (options.type !== undefined) {
+    if (options.type !== nativeNode.type) {
         nativeNode.type = options.type;
     }
 

@@ -1,24 +1,34 @@
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IAudioNode } from '../interfaces';
-import { TAnalyserNodeRendererFactoryFactory, TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
+import { IAnalyserNode, IAnalyserOptions } from '../interfaces';
+import { TAnalyserNodeRendererFactoryFactory, TNativeAnalyserNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFactory = (createNativeAnalyserNode) => {
     return () => {
-        let nativeNode: null | TNativeAudioNode = null;
+        let nativeNode: null | TNativeAnalyserNode = null;
 
         return {
-            render: async (proxy: IAudioNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
+            render: async (proxy: IAnalyserNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }
 
-                nativeNode = getNativeNode(proxy);
+                nativeNode = <TNativeAnalyserNode> getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
                 if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
-                    nativeNode = createNativeAnalyserNode(offlineAudioContext);
+                    const options: IAnalyserOptions = {
+                        channelCount: nativeNode.channelCount,
+                        channelCountMode: nativeNode.channelCountMode,
+                        channelInterpretation: nativeNode.channelInterpretation,
+                        fftSize: nativeNode.fftSize,
+                        maxDecibels: nativeNode.maxDecibels,
+                        minDecibels: nativeNode.minDecibels,
+                        smoothingTimeConstant: nativeNode.smoothingTimeConstant
+                    };
+
+                    nativeNode = createNativeAnalyserNode(offlineAudioContext, options);
                 }
 
                 await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);

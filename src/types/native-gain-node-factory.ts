@@ -5,5 +5,5 @@ import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeGainNodeFactory = (
     nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
-    options?: Partial<IGainOptions>
+    options: IGainOptions
 ) => TNativeGainNode;

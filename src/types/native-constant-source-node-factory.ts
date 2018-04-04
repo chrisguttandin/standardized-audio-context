@@ -4,5 +4,5 @@ import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeConstantSourceNodeFactory = (
     nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
-    options?: Partial<IConstantSourceOptions>
+    options: IConstantSourceOptions
 ) => INativeConstantSourceNode;

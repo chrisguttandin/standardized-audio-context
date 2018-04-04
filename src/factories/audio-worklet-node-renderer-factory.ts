@@ -155,7 +155,12 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     const inputChannelSplitterNodes = [ ];
 
                     for (let i = 0; i < options.numberOfInputs; i += 1) {
-                        gainNodes.push(createNativeGainNode(partialOfflineAudioContext, options));
+                        gainNodes.push(createNativeGainNode(partialOfflineAudioContext, {
+                            channelCount: options.channelCount,
+                            channelCountMode: options.channelCountMode,
+                            channelInterpretation: options.channelInterpretation,
+                            gain: 1
+                        }));
                         inputChannelSplitterNodes.push(createNativeChannelSplitterNode(partialOfflineAudioContext, {
                             numberOfOutputs: options.channelCount
                         }));
@@ -165,7 +170,12 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         .all(Array
                             .from(proxy.parameters.values())
                             .map(async (audioParam) => {
-                                const constantSourceNode = createNativeConstantSourceNode(partialOfflineAudioContext);
+                                const constantSourceNode = createNativeConstantSourceNode(partialOfflineAudioContext, {
+                                    channelCount: 1,
+                                    channelCountMode: 'explicit',
+                                    channelInterpretation: 'discrete',
+                                    offset: audioParam.value
+                                });
 
                                 await renderAutomation(proxy.context, partialOfflineAudioContext, audioParam, constantSourceNode.offset);
 

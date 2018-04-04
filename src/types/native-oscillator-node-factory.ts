@@ -5,5 +5,5 @@ import { TNativeOscillatorNode } from './native-oscillator-node';
 
 export type TNativeOscillatorNodeFactory = (
     nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
-    options?: Partial<IOscillatorOptions>
+    options: IOscillatorOptions
 ) => TNativeOscillatorNode;

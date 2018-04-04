@@ -5,5 +5,6 @@ import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeAudioBufferSourceNodeFactory = (
     nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
+    // @todo Do only accept the full IAudioBufferSourceOptions dictionary.
     options?: Partial<IAudioBufferSourceOptions>
 ) => TNativeAudioBufferSourceNode;
