@@ -2,7 +2,7 @@ import { AUDIO_GRAPH } from '../globals';
 import { TStartRenderingFactory } from '../types';
 
 export const createStartRendering: TStartRenderingFactory = (renderNativeOfflineAudioContext) => {
-    return (destination, unpatchedOfflineAudioContext) => {
+    return (destination, nativeOfflineAudioContext) => {
         const audioGraphOfContext = AUDIO_GRAPH.get(destination.context);
 
         if (audioGraphOfContext === undefined) {
@@ -16,7 +16,7 @@ export const createStartRendering: TStartRenderingFactory = (renderNativeOffline
         }
 
         return entryOfDestination.renderer
-            .render(destination, unpatchedOfflineAudioContext)
-            .then(() => renderNativeOfflineAudioContext(unpatchedOfflineAudioContext));
+            .render(destination, nativeOfflineAudioContext)
+            .then(() => renderNativeOfflineAudioContext(nativeOfflineAudioContext));
     };
 };

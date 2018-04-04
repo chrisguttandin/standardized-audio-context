@@ -4,14 +4,14 @@ import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IGainNode } from '../interfaces';
-import { TGainNodeRendererFactoryFactory, TNativeGainNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TGainNodeRendererFactoryFactory, TNativeGainNode, TNativeOfflineAudioContext } from '../types';
 
 export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (createNativeGainNode) => {
     return () => {
         let nativeNode: null | TNativeGainNode = null;
 
         return {
-            render: async (proxy: IGainNode, offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeGainNode> => {
+            render: async (proxy: IGainNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeGainNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }

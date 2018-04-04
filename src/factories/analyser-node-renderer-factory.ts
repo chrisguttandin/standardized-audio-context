@@ -2,14 +2,14 @@ import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IAudioNode } from '../interfaces';
-import { TAnalyserNodeRendererFactoryFactory, TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TAnalyserNodeRendererFactoryFactory, TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFactory = (createNativeAnalyserNode) => {
     return () => {
         let nativeNode: null | TNativeAudioNode = null;
 
         return {
-            render: async (proxy: IAudioNode, offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> => {
+            render: async (proxy: IAudioNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }

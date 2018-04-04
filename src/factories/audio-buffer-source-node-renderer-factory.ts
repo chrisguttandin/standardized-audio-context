@@ -2,7 +2,7 @@ import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IAudioBufferSourceNode, IAudioBufferSourceOptions } from '../interfaces';
-import { TAudioBufferSourceNodeRendererFactoryFactory, TNativeAudioBufferSourceNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TAudioBufferSourceNodeRendererFactoryFactory, TNativeAudioBufferSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeRendererFactoryFactory = (
     createNativeAudioBufferSourceNode
@@ -21,7 +21,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
             },
             render: async (
                 proxy: IAudioBufferSourceNode,
-                offlineAudioContext: TUnpatchedOfflineAudioContext
+                offlineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;

@@ -1,15 +1,15 @@
 import { TTestAudioContextOptionsSupportFactory } from '../types';
 
-export const createTestAudioContextOptionsSupport: TTestAudioContextOptionsSupportFactory = (unpatchedAudioContextConstructor) => {
+export const createTestAudioContextOptionsSupport: TTestAudioContextOptionsSupportFactory = (nativeAudioContextConstructor) => {
     return () => {
-        if (unpatchedAudioContextConstructor === null) {
+        if (nativeAudioContextConstructor === null) {
             return false;
         }
 
         let audioContext;
 
         try {
-            audioContext = new unpatchedAudioContextConstructor({ latencyHint: 'balanced' });
+            audioContext = new nativeAudioContextConstructor({ latencyHint: 'balanced' });
         } catch (err) {
             return false;
         }

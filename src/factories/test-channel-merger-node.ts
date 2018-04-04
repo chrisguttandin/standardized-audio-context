@@ -5,13 +5,13 @@ import { TTestChannelMergerNodeSupportFactory } from '../types';
  * its channels would be unconnected the remaining channels were somehow upmixed to spread the
  * signal across all available channels.
  */
-export const createTestChannelMergerNodeSupport: TTestChannelMergerNodeSupportFactory = (unpatchedAudioContextConstructor) => {
+export const createTestChannelMergerNodeSupport: TTestChannelMergerNodeSupportFactory = (nativeAudioContextConstructor) => {
     return () => {
-        if (unpatchedAudioContextConstructor === null) {
+        if (nativeAudioContextConstructor === null) {
             return Promise.resolve(false);
         }
 
-        const audioContext = new unpatchedAudioContextConstructor();
+        const audioContext = new nativeAudioContextConstructor();
         const audioBufferSourceNode = audioContext.createBufferSource();
         const audioBuffer = audioContext.createBuffer(2, 2, audioContext.sampleRate);
         const channelMergerNode = audioContext.createChannelMerger(2);

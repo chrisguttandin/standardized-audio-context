@@ -1,8 +1,8 @@
 import { IIIRFilterOptions, INativeIIRFilterNodeFaker } from '../interfaces';
-import { TUnpatchedAudioContext } from './unpatched-audio-context';
-import { TUnpatchedOfflineAudioContext } from './unpatched-offline-audio-context';
+import { TNativeAudioContext } from './native-audio-context';
+import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeIIRFilterNodeFakerFactory = (
-    unpatchedAudioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    nativeAudioContext: TNativeAudioContext | TNativeOfflineAudioContext,
     options: IIIRFilterOptions
 ) => INativeIIRFilterNodeFaker;

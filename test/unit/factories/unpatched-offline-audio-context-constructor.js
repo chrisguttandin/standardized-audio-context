@@ -1,6 +1,6 @@
-import { createUnpatchedOfflineAudioContextConstructor } from '../../../src/factories/unpatched-offline-audio-context-constructor';
+import { createNativeOfflineAudioContextConstructor } from '../../../src/factories/native-offline-audio-context-constructor';
 
-describe('createUnpatchedOfflineAudioContextConstructor()', () => {
+describe('createNativeOfflineAudioContextConstructor()', () => {
 
     let OfflineAudioContext;
     let webkitOfflineAudioContext;
@@ -13,25 +13,25 @@ describe('createUnpatchedOfflineAudioContextConstructor()', () => {
     it('should return null if there is no OfflineAudioContext', () => {
         const fakeWindow = { };
 
-        expect(createUnpatchedOfflineAudioContextConstructor(fakeWindow)).to.equal(null);
+        expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(null);
     });
 
     it('should return the prefixed OfflineAudioContext', () => {
         const fakeWindow = { webkitOfflineAudioContext };
 
-        expect(createUnpatchedOfflineAudioContextConstructor(fakeWindow)).to.equal(webkitOfflineAudioContext);
+        expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(webkitOfflineAudioContext);
     });
 
     it('should return the unprefixed OfflineAudioContext', () => {
         const fakeWindow = { OfflineAudioContext };
 
-        expect(createUnpatchedOfflineAudioContextConstructor(fakeWindow)).to.equal(OfflineAudioContext);
+        expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(OfflineAudioContext);
     });
 
     it('should return the unprefixed OfflineAudioContext even if there is a prefixed version as well', () => {
         const fakeWindow = { OfflineAudioContext, webkitOfflineAudioContext };
 
-        expect(createUnpatchedOfflineAudioContextConstructor(fakeWindow)).to.equal(OfflineAudioContext);
+        expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(OfflineAudioContext);
     });
 
 });

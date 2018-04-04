@@ -1,8 +1,8 @@
 import { createInvalidStateError } from '../factories/invalid-state-error';
-import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
 
 export const wrapChannelMergerNode = (
-    audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    audioContext: TNativeAudioContext | TNativeOfflineAudioContext,
     channelMergerNode: ChannelMergerNode
 ): void => {
     const audioBufferSourceNode = audioContext.createBufferSource();

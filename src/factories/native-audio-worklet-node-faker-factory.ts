@@ -20,7 +20,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
     createNotSupportedError,
     disconnectMultipleOutputs
 ) => {
-    return (unpatchedAudioContext, processorDefinition, options) => {
+    return (nativeAudioContext, processorDefinition, options) => {
         if (options.numberOfInputs === 0 && options.numberOfOutputs === 0) {
             throw createNotSupportedError();
         }
@@ -59,8 +59,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const inputChannelSplitterNodes = [ ];
 
         for (let i = 0; i < options.numberOfInputs; i += 1) {
-            gainNodes.push(createNativeGainNode(unpatchedAudioContext, options));
-            inputChannelSplitterNodes.push(createNativeChannelSplitterNode(unpatchedAudioContext, {
+            gainNodes.push(createNativeGainNode(nativeAudioContext, options));
+            inputChannelSplitterNodes.push(createNativeChannelSplitterNode(nativeAudioContext, {
                 numberOfOutputs: options.channelCount
             }));
         }
@@ -68,7 +68,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const constantSourceNodes: INativeConstantSourceNode[] = [ ];
 
         for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
-            const constantSourceNode = createNativeConstantSourceNode(unpatchedAudioContext);
+            const constantSourceNode = createNativeConstantSourceNode(nativeAudioContext);
 
             Object.defineProperties(constantSourceNode.offset, {
                 defaultValue: {
@@ -85,22 +85,22 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             constantSourceNodes.push(constantSourceNode);
         }
 
-        const inputChannelMergerNode = createNativeChannelMergerNode(unpatchedAudioContext, {
+        const inputChannelMergerNode = createNativeChannelMergerNode(nativeAudioContext, {
             numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
         });
         const bufferSize = 512;
-        const scriptProcessorNode = unpatchedAudioContext.createScriptProcessor(
+        const scriptProcessorNode = nativeAudioContext.createScriptProcessor(
             bufferSize,
             numberOfInputChannels + numberOfParameters,
             numberOfOutputChannels
         );
-        const outputChannelSplitterNode = createNativeChannelSplitterNode(unpatchedAudioContext, {
+        const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeAudioContext, {
             numberOfOutputs: Math.max(1, numberOfOutputChannels)
         });
         const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
 
         for (let i = 0; i < options.numberOfOutputs; i += 1) {
-            outputChannelMergerNodes.push(createNativeChannelMergerNode(unpatchedAudioContext, {
+            outputChannelMergerNodes.push(createNativeChannelMergerNode(nativeAudioContext, {
                numberOfInputs: options.outputChannelCount[i]
            }));
         }

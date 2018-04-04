@@ -1,8 +1,8 @@
-import { IMinimalAudioContextConstructor, IMinimalBaseAudioContextConstructor, IUnpatchedAudioContextConstructor } from '../interfaces';
+import { IMinimalAudioContextConstructor, IMinimalBaseAudioContextConstructor, INativeAudioContextConstructor } from '../interfaces';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
 
 export type TMinimalAudioContextConstructorFactory = (
     createInvalidStateError: TInvalidStateErrorFactory,
     minimalBaseAudioContextConstructor: IMinimalBaseAudioContextConstructor,
-    unpatchedAudioContextConstructor: null | IUnpatchedAudioContextConstructor
+    nativeAudioContextConstructor: null | INativeAudioContextConstructor
 ) => IMinimalAudioContextConstructor;

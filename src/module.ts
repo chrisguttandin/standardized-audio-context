@@ -39,6 +39,7 @@ import { createMinimalBaseAudioContextConstructor } from './factories/minimal-ba
 import { createMinimalOfflineAudioContextConstructor } from './factories/minimal-offline-audio-context-constructor';
 import { createNativeAnalyserNode } from './factories/native-analyser-node';
 import { createNativeAudioBufferSourceNode } from './factories/native-audio-buffer-source-node';
+import { createNativeAudioContextConstructor } from './factories/native-audio-context-constructor';
 import { createNativeAudioDestinationNode } from './factories/native-audio-destination-node';
 import { createNativeAudioWorkletNodeConstructor } from './factories/native-audio-worklet-node-constructor';
 import { createNativeAudioWorkletNodeFactory } from './factories/native-audio-worklet-node-factory';
@@ -51,6 +52,7 @@ import { createNativeConstantSourceNodeFakerFactory } from './factories/native-c
 import { createNativeGainNode } from './factories/native-gain-node';
 import { createNativeIIRFilterNodeFactory } from './factories/native-iir-filter-node-factory';
 import { createNativeIIRFilterNodeFakerFactory } from './factories/native-iir-filter-node-faker-factory';
+import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
 import { createNativeOscillatorNode } from './factories/native-oscillator-node';
 import { createNoneAudioDestinationNodeConstructor } from './factories/none-audio-destination-node-constructor';
 import { createNotSupportedError } from './factories/not-supported-error';
@@ -65,8 +67,6 @@ import {
 } from './factories/test-audio-context-decode-audio-data-method-type-error';
 import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options';
 import { createTestChannelMergerNodeSupport } from './factories/test-channel-merger-node';
-import { createUnpatchedAudioContextConstructor } from './factories/unpatched-audio-context-constructor';
-import { createUnpatchedOfflineAudioContextConstructor } from './factories/unpatched-offline-audio-context-constructor';
 import { createWindow } from './factories/window';
 import {
     IAnalyserNodeConstructor,
@@ -92,8 +92,8 @@ export * from './interfaces';
 export * from './types';
 
 const window = createWindow();
-const unpatchedOfflineAudioContextConstructor = createUnpatchedOfflineAudioContextConstructor(window);
-const isNativeOfflineAudioContext = createIsNativeOfflineAudioContext(unpatchedOfflineAudioContextConstructor);
+const nativeOfflineAudioContextConstructor = createNativeOfflineAudioContextConstructor(window);
+const isNativeOfflineAudioContext = createIsNativeOfflineAudioContext(nativeOfflineAudioContextConstructor);
 const audioNodeConstructor = createAudioNodeConstructor(createInvalidAccessError, isNativeOfflineAudioContext);
 const noneAudioDestinationNodeConstructor = createNoneAudioDestinationNodeConstructor(
     audioNodeConstructor,
@@ -109,7 +109,7 @@ const analyserNodeConstructor: IAnalyserNodeConstructor = createAnalyserNodeCons
 
 export { analyserNodeConstructor as AnalyserNode };
 
-const audioBufferConstructor: IAudioBufferConstructor = createAudioBufferConstructor(unpatchedOfflineAudioContextConstructor);
+const audioBufferConstructor: IAudioBufferConstructor = createAudioBufferConstructor(nativeOfflineAudioContextConstructor);
 
 export { audioBufferConstructor as AudioBuffer };
 
@@ -181,8 +181,8 @@ const gainNodeConstructor: IGainNodeConstructor = createGainNodeConstructor(
 const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(createNativeGainNode);
 const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(
     createNativeAudioBufferSourceNode,
-    renderNativeOfflineAudioContext,
-    unpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor,
+    renderNativeOfflineAudioContext
 );
 const createNativeIIRFilterNodeFaker = createNativeIIRFilterNodeFakerFactory(
     createInvalidAccessError,
@@ -225,13 +225,13 @@ const mediaElementAudioSourceNodeConstructor: IMediaElementAudioSourceNodeConstr
 const mediaStreamAudioSourceNodeConstructor: IMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
     noneAudioDestinationNodeConstructor
 );
-const unpatchedAudioContextConstructor = createUnpatchedAudioContextConstructor(window);
+const nativeAudioContextConstructor = createNativeAudioContextConstructor(window);
 const audioContextConstructor: IAudioContextConstructor = createAudioContextConstructor(
     baseAudioContextConstructor,
     createInvalidStateError,
     mediaElementAudioSourceNodeConstructor,
     mediaStreamAudioSourceNodeConstructor,
-    unpatchedAudioContextConstructor
+    nativeAudioContextConstructor
 );
 
 export { audioContextConstructor as AudioContext };
@@ -248,8 +248,8 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     createNativeGainNode,
     disconnectMultipleOutputs,
     nativeAudioWorkletNodeConstructor,
-    renderNativeOfflineAudioContext,
-    unpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor,
+    renderNativeOfflineAudioContext
 );
 const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFactory(
     connectMultipleOutputs,
@@ -293,7 +293,7 @@ export { iIRFilterNodeConstructor as IIRFilterNode };
 const minimalAudioContextConstructor: IMinimalAudioContextConstructor = createMinimalAudioContextConstructor(
     createInvalidStateError,
     minimalBaseAudioContextConstructor,
-    unpatchedAudioContextConstructor
+    nativeAudioContextConstructor
 );
 
 export { mediaElementAudioSourceNodeConstructor as MediaElementAudioSourceNode };
@@ -305,16 +305,16 @@ export { minimalAudioContextConstructor as MinimalAudioContext };
 const startRendering = createStartRendering(renderNativeOfflineAudioContext);
 const minimalOfflineAudioContextConstructor: IMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     minimalBaseAudioContextConstructor,
-    startRendering,
-    unpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor,
+    startRendering
 );
 
 export { minimalOfflineAudioContextConstructor as MinimalOfflineAudioContext };
 
 const offlineAudioContextConstructor: IOfflineAudioContextConstructor = createOfflineAudioContextConstructor(
     baseAudioContextConstructor,
-    startRendering,
-    unpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor,
+    startRendering
 );
 
 export { offlineAudioContextConstructor as OfflineAudioContext };
@@ -327,8 +327,8 @@ export { decodeAudioData } from './decode-audio-data';
 
 export const isSupported = () => createIsSupportedPromise(
     browsernizr,
-    createTestAudioContextCloseMethodSupport(unpatchedAudioContextConstructor),
-    createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(unpatchedOfflineAudioContextConstructor),
-    createTestAudioContextOptionsSupport(unpatchedAudioContextConstructor),
-    createTestChannelMergerNodeSupport(unpatchedAudioContextConstructor)
+    createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
+    createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
+    createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
+    createTestChannelMergerNodeSupport(nativeAudioContextConstructor)
 );

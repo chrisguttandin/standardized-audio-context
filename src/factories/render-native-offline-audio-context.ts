@@ -1,9 +1,9 @@
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { IOfflineAudioCompletionEvent } from '../interfaces';
 import { testPromiseSupport } from '../support-testers/promise';
-import { TNativeAudioBuffer, TRenderNativeOfflineAudioContextFactory, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioBuffer, TNativeOfflineAudioContext, TRenderNativeOfflineAudioContextFactory } from '../types';
 
-const isSupportingPromises = (context: TUnpatchedOfflineAudioContext) => cacheTestResult(
+const isSupportingPromises = (context: TNativeOfflineAudioContext) => cacheTestResult(
     testPromiseSupport,
     () => testPromiseSupport(context)
 );

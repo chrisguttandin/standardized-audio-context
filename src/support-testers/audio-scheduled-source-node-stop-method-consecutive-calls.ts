@@ -1,7 +1,7 @@
-import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
 
 export const testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport = (
-    audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext
+    audioContext: TNativeAudioContext | TNativeOfflineAudioContext
 ): boolean => {
     const audioBuffer = audioContext.createBuffer(1, 1, 44100);
     const audioBufferSourceNode = audioContext.createBufferSource();

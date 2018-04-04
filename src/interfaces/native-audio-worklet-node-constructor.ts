@@ -1,10 +1,10 @@
-import { TNativeAudioWorkletNodeOptions, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioContext, TNativeAudioWorkletNodeOptions, TNativeOfflineAudioContext } from '../types';
 import { INativeAudioWorkletNode } from './native-audio-worklet-node';
 
 export interface INativeAudioWorkletNodeConstructor {
 
     new (
-        context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+        context: TNativeAudioContext | TNativeOfflineAudioContext,
         name: string,
         options?: TNativeAudioWorkletNodeOptions
     ): INativeAudioWorkletNode;

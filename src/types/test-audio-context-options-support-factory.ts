@@ -1,5 +1,5 @@
-import { IUnpatchedAudioContextConstructor } from '../interfaces';
+import { INativeAudioContextConstructor } from '../interfaces';
 
 export type TTestAudioContextOptionsSupportFactory = (
-    unpatchedAudioContextConstructor: null | IUnpatchedAudioContextConstructor
+    nativeAudioContextConstructor: null | INativeAudioContextConstructor
 ) => () => boolean;

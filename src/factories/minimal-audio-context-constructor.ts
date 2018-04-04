@@ -1,25 +1,25 @@
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
-import { TMinimalAudioContextConstructorFactory, TUnpatchedAudioContext } from '../types';
+import { TMinimalAudioContextConstructorFactory, TNativeAudioContext } from '../types';
 
 export const createMinimalAudioContextConstructor: TMinimalAudioContextConstructorFactory = (
     createInvalidStateError,
     minimalBaseAudioContextConstructor,
-    unpatchedAudioContextConstructor
+    nativeAudioContextConstructor
 ) => {
 
     return class MinimalAudioContext extends minimalBaseAudioContextConstructor implements IMinimalAudioContext {
 
+        private _nativeAudioContext: TNativeAudioContext;
+
         private _state: null | 'suspended';
 
-        private _unpatchedAudioContext: TUnpatchedAudioContext;
-
         constructor (options: IAudioContextOptions = {}) {
-            if (unpatchedAudioContextConstructor === null) {
+            if (nativeAudioContextConstructor === null) {
                 throw new Error(); // @todo
             }
 
-            const unpatchedAudioContext = new unpatchedAudioContextConstructor(options);
+            const nativeAudioContext = new nativeAudioContextConstructor(options);
 
             // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.
             if (!isValidLatencyHint(options.latencyHint)) {
@@ -28,16 +28,16 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 );
             }
 
-            super(unpatchedAudioContext, unpatchedAudioContext.destination.channelCount);
+            super(nativeAudioContext, nativeAudioContext.destination.channelCount);
 
             this._state = null;
-            this._unpatchedAudioContext = unpatchedAudioContext;
+            this._nativeAudioContext = nativeAudioContext;
 
             /*
              * Bug #34: Chrome and Opera pretend to be running right away, but fire an onstatechange event when the state actually
              * changes to 'running'.
              */
-            if (unpatchedAudioContext.state === 'running') {
+            if (nativeAudioContext.state === 'running') {
                 this._state = 'suspended';
 
                 const revokeState = () => {
@@ -45,23 +45,23 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                         this._state = null;
                     }
 
-                    if (unpatchedAudioContext.removeEventListener) {
-                        unpatchedAudioContext.removeEventListener('statechange', revokeState);
+                    if (nativeAudioContext.removeEventListener) {
+                        nativeAudioContext.removeEventListener('statechange', revokeState);
                     }
                 };
 
-                unpatchedAudioContext.addEventListener('statechange', revokeState);
+                nativeAudioContext.addEventListener('statechange', revokeState);
             }
         }
 
         public get state () {
-            return (this._state !== null) ? this._state : this._unpatchedAudioContext.state;
+            return (this._state !== null) ? this._state : this._nativeAudioContext.state;
         }
 
         public close () {
             // Bug #35: Firefox does not throw an error if the AudioContext was closed before.
             if (this.state === 'closed') {
-                return this._unpatchedAudioContext
+                return this._nativeAudioContext
                     .close()
                     .then(() => {
                         throw createInvalidStateError();
@@ -73,11 +73,11 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 this._state = null;
             }
 
-            return this._unpatchedAudioContext.close();
+            return this._nativeAudioContext.close();
         }
 
         public resume () {
-            return this._unpatchedAudioContext
+            return this._nativeAudioContext
                 .resume()
                 .catch((err) => {
                     // Bug #55: Chrome, Edge and Opera do throw an InvalidAccessError instead of an InvalidStateError.
@@ -91,7 +91,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
         }
 
         public suspend () {
-            return this._unpatchedAudioContext
+            return this._nativeAudioContext
                 .suspend()
                 .catch((err) => {
                     // Bug #56: Safari invokes the catch handler but without an error.

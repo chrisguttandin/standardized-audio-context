@@ -1,5 +1,5 @@
-import { IUnpatchedOfflineAudioContextConstructor } from '../interfaces';
+import { INativeOfflineAudioContextConstructor } from '../interfaces';
 
 export type TTestAudioContextDecodeAudioDataMethodTypeErrorSupportFactory = (
-    unpatchedOfflineAudioContextConstructor: null | IUnpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor: null | INativeOfflineAudioContextConstructor
 ) => () => Promise<boolean>;

@@ -5,14 +5,14 @@ import { TTestAudioContextDecodeAudioDataMethodTypeErrorSupportFactory } from '.
  * did not refuse to decode invalid parameters with a TypeError.
  */
 export const createTestAudioContextDecodeAudioDataMethodTypeErrorSupport: TTestAudioContextDecodeAudioDataMethodTypeErrorSupportFactory = (
-    unpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor
 ) => {
     return () => {
-        if (unpatchedOfflineAudioContextConstructor === null) {
+        if (nativeOfflineAudioContextConstructor === null) {
             return Promise.resolve(false);
         }
 
-        const offlineAudioContext = new unpatchedOfflineAudioContextConstructor(1, 1, 44100);
+        const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
 
         // Bug #21: Safari does not support promises yet.
         return new Promise((resolve) => {

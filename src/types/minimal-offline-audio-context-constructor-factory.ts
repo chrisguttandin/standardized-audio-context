@@ -1,12 +1,12 @@
 import {
     IMinimalBaseAudioContextConstructor,
     IMinimalOfflineAudioContextConstructor,
-    IUnpatchedOfflineAudioContextConstructor
+    INativeOfflineAudioContextConstructor
 } from '../interfaces';
 import { TStartRenderingFunction } from './start-rendering-function';
 
 export type TMinimalOfflineAudioContextConstructorFactory = (
     minimalBaseAudioContextConstructor: IMinimalBaseAudioContextConstructor,
-    startRendering: TStartRenderingFunction,
-    unpatchedOfflineAudioContextConstructor: null | IUnpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor: null | INativeOfflineAudioContextConstructor,
+    startRendering: TStartRenderingFunction
 ) => IMinimalOfflineAudioContextConstructor;

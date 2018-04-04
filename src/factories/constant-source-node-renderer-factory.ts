@@ -4,7 +4,7 @@ import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IConstantSourceNode, IConstantSourceOptions, INativeConstantSourceNode } from '../interfaces';
-import { TConstantSourceNodeRendererFactoryFactory, TUnpatchedOfflineAudioContext } from '../types';
+import { TConstantSourceNodeRendererFactoryFactory, TNativeOfflineAudioContext } from '../types';
 
 export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendererFactoryFactory = (
     createNativeConstantSourceNode
@@ -23,7 +23,7 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
             },
             render: async (
                 proxy: IConstantSourceNode,
-                offlineAudioContext: TUnpatchedOfflineAudioContext
+                offlineAudioContext: TNativeOfflineAudioContext
             ): Promise<INativeConstantSourceNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;

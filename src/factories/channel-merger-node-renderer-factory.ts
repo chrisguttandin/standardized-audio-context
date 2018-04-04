@@ -2,14 +2,14 @@ import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IAudioNode, IChannelMergerOptions } from '../interfaces';
-import { TChannelMergerNodeRendererFactoryFactory, TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TChannelMergerNodeRendererFactoryFactory, TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
 
 export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererFactoryFactory = (createNativeChannelMergerNode) => {
     return () => {
         let nativeNode: null | TNativeAudioNode = null;
 
         return {
-            render: async (proxy: IAudioNode, offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> => {
+            render: async (proxy: IAudioNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }

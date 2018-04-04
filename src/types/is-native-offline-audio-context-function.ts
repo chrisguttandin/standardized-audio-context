@@ -1,4 +1,4 @@
-import { TUnpatchedAudioContext } from './unpatched-audio-context';
-import { TUnpatchedOfflineAudioContext } from './unpatched-offline-audio-context';
+import { TNativeAudioContext } from './native-audio-context';
+import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
-export type TIsNativeOfflineAudioContextFunction = (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => boolean;
+export type TIsNativeOfflineAudioContextFunction = (nativeContext: TNativeAudioContext | TNativeOfflineAudioContext) => boolean;

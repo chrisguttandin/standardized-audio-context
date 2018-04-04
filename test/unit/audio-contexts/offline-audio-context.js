@@ -1,5 +1,5 @@
 import { OfflineAudioContext } from '../../../src/module';
-import { createUnpatchedOfflineAudioContextConstructor } from '../../../src/factories/unpatched-offline-audio-context-constructor';
+import { createNativeOfflineAudioContextConstructor } from '../../../src/factories/native-offline-audio-context-constructor';
 import { createWindow } from '../../../src/factories/window';
 import { loadFixture } from '../../helper/load-fixture';
 import { spy } from 'sinon';
@@ -398,14 +398,14 @@ describe('OfflineAudioContext', () => {
             expect(audioBuffer.copyToChannel).to.be.a('function');
         });
 
-        it('should return an AudioBuffer which can be used with an unpatched AudioContext', () => {
+        it('should return an AudioBuffer which can be used with a native AudioContext', () => {
             const audioBuffer = offlineAudioContext.createBuffer(2, 10, 44100);
             const window = createWindow();
-            const unpatchedOfflineAudioContextConstructor = createUnpatchedOfflineAudioContextConstructor(window);
-            const unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(1, 1, 44100); // eslint-disable-line new-cap
-            const unpatchedAudioBufferSourceNode = unpatchedOfflineAudioContext.createBufferSource();
+            const nativeOfflineAudioContextConstructor = createNativeOfflineAudioContextConstructor(window);
+            const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100); // eslint-disable-line new-cap
+            const nativeAudioBufferSourceNode = nativeOfflineAudioContext.createBufferSource();
 
-            unpatchedAudioBufferSourceNode.buffer = audioBuffer;
+            nativeAudioBufferSourceNode.buffer = audioBuffer;
         });
 
         describe('copyFromChannel()', () => {

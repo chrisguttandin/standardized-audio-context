@@ -1,7 +1,7 @@
-import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
 
 export const testConstantSourceNodeAccurateSchedulingSupport = (
-    audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext
+    audioContext: TNativeAudioContext | TNativeOfflineAudioContext
 ): boolean => {
     // @todo TypeScript doesn't know yet about createConstantSource().
     const constantSourceNode = (<any> audioContext).createConstantSource();

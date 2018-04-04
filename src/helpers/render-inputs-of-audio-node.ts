@@ -1,10 +1,10 @@
 import { AUDIO_GRAPH } from '../globals';
 import { IAudioNode } from '../interfaces';
-import { TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
 
 export const renderInputsOfAudioNode = (
     audioNode: IAudioNode,
-    offlineAudioContext: TUnpatchedOfflineAudioContext,
+    offlineAudioContext: TNativeOfflineAudioContext,
     nativeAudioNode: TNativeAudioNode
 ) => {
     const audioGraphOfContext = AUDIO_GRAPH.get(audioNode.context);

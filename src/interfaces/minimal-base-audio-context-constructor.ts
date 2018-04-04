@@ -1,8 +1,8 @@
-import { TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
 import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
 export interface IMinimalBaseAudioContextConstructor {
 
-    new (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfChannels: number): IMinimalBaseAudioContext;
+    new (context: TNativeAudioContext | TNativeOfflineAudioContext, numberOfChannels: number): IMinimalBaseAudioContext;
 
 }

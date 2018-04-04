@@ -1,9 +1,9 @@
 import { IIIRFilterOptions } from '../interfaces';
+import { TNativeAudioContext } from './native-audio-context';
 import { TNativeIIRFilterNode } from './native-iir-filter-node';
-import { TUnpatchedAudioContext } from './unpatched-audio-context';
-import { TUnpatchedOfflineAudioContext } from './unpatched-offline-audio-context';
+import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeIIRFilterNodeFactory = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
     options: IIIRFilterOptions
 ) => TNativeIIRFilterNode;

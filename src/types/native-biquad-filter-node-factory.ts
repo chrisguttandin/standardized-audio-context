@@ -1,9 +1,9 @@
 import { IBiquadFilterOptions } from '../interfaces';
+import { TNativeAudioContext } from './native-audio-context';
 import { TNativeBiquadFilterNode } from './native-biquad-filter-node';
-import { TUnpatchedAudioContext } from './unpatched-audio-context';
-import { TUnpatchedOfflineAudioContext } from './unpatched-offline-audio-context';
+import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeBiquadFilterNodeFactory = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
     options?: Partial<IBiquadFilterOptions>
 ) => TNativeBiquadFilterNode;

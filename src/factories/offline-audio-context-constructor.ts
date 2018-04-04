@@ -1,5 +1,5 @@
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
-import { TOfflineAudioContextConstructorFactory, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeOfflineAudioContext, TOfflineAudioContextConstructorFactory } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 
 const DEFAULT_OPTIONS = {
@@ -8,20 +8,20 @@ const DEFAULT_OPTIONS = {
 
 export const createOfflineAudioContextConstructor: TOfflineAudioContextConstructorFactory = (
     baseAudioContextConstructor,
-    startRendering,
-    unpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor,
+    startRendering
 ) => {
 
     return class OfflineAudioContext extends baseAudioContextConstructor implements IOfflineAudioContext {
 
         private _length: number;
 
-        private _unpatchedOfflineAudioContext: TUnpatchedOfflineAudioContext;
+        private _nativeOfflineAudioContext: TNativeOfflineAudioContext;
 
         constructor (options: IOfflineAudioContextOptions);
         constructor (numberOfChannels: number, length: number, sampleRate: number);
         constructor (a: number | IOfflineAudioContextOptions, b?: number, c?: number) {
-            if (unpatchedOfflineAudioContextConstructor === null) {
+            if (nativeOfflineAudioContextConstructor === null) {
                 throw new Error(); // @todo
             }
 
@@ -40,25 +40,25 @@ export const createOfflineAudioContextConstructor: TOfflineAudioContextConstruct
                 ...options
             };
 
-            const unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
+            const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
 
-            super(unpatchedOfflineAudioContext, numberOfChannels);
+            super(nativeOfflineAudioContext, numberOfChannels);
 
             this._length = length;
-            this._unpatchedOfflineAudioContext = unpatchedOfflineAudioContext;
+            this._nativeOfflineAudioContext = nativeOfflineAudioContext;
         }
 
         public get length () {
             // Bug #17: Safari does not yet expose the length.
-            if (this._unpatchedOfflineAudioContext.length === undefined) {
+            if (this._nativeOfflineAudioContext.length === undefined) {
                 return this._length;
             }
 
-            return this._unpatchedOfflineAudioContext.length;
+            return this._nativeOfflineAudioContext.length;
         }
 
         public startRendering () {
-            return startRendering(this.destination, this._unpatchedOfflineAudioContext)
+            return startRendering(this.destination, this._nativeOfflineAudioContext)
                 .then((audioBuffer) => {
                     // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                     if (typeof audioBuffer.copyFromChannel !== 'function') {

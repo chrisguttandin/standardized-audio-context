@@ -3,20 +3,20 @@ import { CONTEXT_STORE } from '../globals';
 import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
 import {
     TMinimalBaseAudioContextConstructorFactory,
-    TStateChangeEventHandler,
-    TUnpatchedAudioContext,
-    TUnpatchedOfflineAudioContext
+    TNativeAudioContext,
+    TNativeOfflineAudioContext,
+    TStateChangeEventHandler
 } from '../types';
 
 export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = (audioDestinationNodeConstructor) => {
 
     return class MinimalBaseAudioContext extends EventTarget implements IMinimalBaseAudioContext {
 
-        private _context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext;
+        private _context: TNativeAudioContext | TNativeOfflineAudioContext;
 
         private _destination: IAudioDestinationNode;
 
-        constructor (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfChannels: number) {
+        constructor (context: TNativeAudioContext | TNativeOfflineAudioContext, numberOfChannels: number) {
             super();
 
             CONTEXT_STORE.set(this, context);

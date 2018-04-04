@@ -4,7 +4,7 @@ import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IBiquadFilterNode, IBiquadFilterOptions } from '../interfaces';
-import { TBiquadFilterNodeRendererFactoryFactory, TNativeBiquadFilterNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TBiquadFilterNodeRendererFactoryFactory, TNativeBiquadFilterNode, TNativeOfflineAudioContext } from '../types';
 
 export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFactoryFactory = (createNativeBiquadFilterNode) => {
     return () => {
@@ -13,7 +13,7 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
         return {
             render: async (
                 proxy: IBiquadFilterNode,
-                offlineAudioContext: TUnpatchedOfflineAudioContext
+                offlineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeBiquadFilterNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;

@@ -1,6 +1,6 @@
-import { TUnpatchedAudioContext } from '../types';
+import { TNativeAudioContext } from '../types';
 
-export const testAudioNodeDisconnectMethodSupport = (audioContext: TUnpatchedAudioContext): Promise<boolean> => {
+export const testAudioNodeDisconnectMethodSupport = (audioContext: TNativeAudioContext): Promise<boolean> => {
     return new Promise((resolve) => {
         const analyzer = audioContext.createScriptProcessor(256, 1, 1);
 

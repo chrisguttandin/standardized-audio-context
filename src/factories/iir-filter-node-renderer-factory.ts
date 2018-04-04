@@ -8,13 +8,13 @@ import {
     TNativeAudioBuffer,
     TNativeAudioBufferSourceNode,
     TNativeIIRFilterNode,
-    TTypedArray,
-    TUnpatchedOfflineAudioContext
+    TNativeOfflineAudioContext,
+    TTypedArray
 } from '../types';
 
 const filterFullBuffer = (
     renderedBuffer: TNativeAudioBuffer,
-    offlineAudioContext: TUnpatchedOfflineAudioContext,
+    offlineAudioContext: TNativeOfflineAudioContext,
     feedback: number[] | TTypedArray,
     feedforward: number[] | TTypedArray
 ) => {
@@ -62,8 +62,8 @@ const filterFullBuffer = (
 
 export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFactory = (
     createNativeAudioBufferSourceNode,
-    renderNativeOfflineAudioContext,
-    unpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor,
+    renderNativeOfflineAudioContext
 ) => {
     return (feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) => {
         let nativeNode: null | TNativeAudioBufferSourceNode | TNativeIIRFilterNode = null;
@@ -71,13 +71,13 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
         return {
             render: async (
                 proxy: IIIRFilterNode,
-                offlineAudioContext: TUnpatchedOfflineAudioContext
+                offlineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode | TNativeIIRFilterNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }
 
-                if (unpatchedOfflineAudioContextConstructor === null) {
+                if (nativeOfflineAudioContextConstructor === null) {
                     throw new Error(); // @todo
                 }
 
@@ -102,7 +102,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
 
                 // Bug #9: Safari does not support IIRFilterNodes.
                 } catch (err) {
-                   const partialOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(
+                   const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
                        // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
                        proxy.context.destination.channelCount,
                        // Bug #17: Safari does not yet expose the length.

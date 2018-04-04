@@ -16,9 +16,9 @@ import {
     TBaseAudioContextConstructorFactory,
     TDecodeErrorCallback,
     TDecodeSuccessCallback,
-    TTypedArray,
-    TUnpatchedAudioContext,
-    TUnpatchedOfflineAudioContext
+    TNativeAudioContext,
+    TNativeOfflineAudioContext,
+    TTypedArray
 } from '../types';
 
 export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFactory = (
@@ -39,9 +39,9 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         private _audioWorklet: IAudioWorklet;
 
-        private _context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext;
+        private _context: TNativeAudioContext | TNativeOfflineAudioContext;
 
-        constructor (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext, numberOfChannels: number) {
+        constructor (context: TNativeAudioContext | TNativeOfflineAudioContext, numberOfChannels: number) {
             super(context, numberOfChannels);
 
             this._audioWorklet = {

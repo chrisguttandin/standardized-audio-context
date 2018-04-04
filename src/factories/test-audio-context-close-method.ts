@@ -1,18 +1,18 @@
 import { TTestAudioContextCloseMethodSupportFactory } from '../types';
 
-export const createTestAudioContextCloseMethodSupport: TTestAudioContextCloseMethodSupportFactory = (unpatchedAudioContextConstructor) => {
+export const createTestAudioContextCloseMethodSupport: TTestAudioContextCloseMethodSupportFactory = (nativeAudioContextConstructor) => {
     return () => {
-        if (unpatchedAudioContextConstructor === null) {
+        if (nativeAudioContextConstructor === null) {
             return false;
         }
 
         // Try to check the prototype before constructing the AudioContext.
-        if (unpatchedAudioContextConstructor.prototype !== undefined &&
-                unpatchedAudioContextConstructor.prototype.close !== undefined) {
+        if (nativeAudioContextConstructor.prototype !== undefined &&
+                nativeAudioContextConstructor.prototype.close !== undefined) {
             return true;
         }
 
-        const audioContext = new unpatchedAudioContextConstructor();
+        const audioContext = new nativeAudioContextConstructor();
 
         const isAudioContextClosable = (audioContext.close !== undefined);
 

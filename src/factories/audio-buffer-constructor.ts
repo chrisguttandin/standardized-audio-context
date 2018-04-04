@@ -1,7 +1,7 @@
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from '../support-testers/audio-buffer-copy-channel-methods-subarray';
-import { TAudioBufferConstructorFactory, TUnpatchedOfflineAudioContext } from '../types';
+import { TAudioBufferConstructorFactory, TNativeOfflineAudioContext } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 import { wrapAudioBufferCopyChannelMethodsSubarray } from '../wrappers/audio-buffer-copy-channel-methods-subarray';
 
@@ -9,9 +9,9 @@ const DEFAULT_OPTIONS = {
     numberOfChannels: 1
 };
 
-export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (unpatchedOfflineAudioContextConstructor) => {
+export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (nativeOfflineAudioContextConstructor) => {
 
-    let unpatchedOfflineAudioContext: null | TUnpatchedOfflineAudioContext = null;
+    let nativeOfflineAudioContext: null | TNativeOfflineAudioContext = null;
 
     return class AudioBuffer implements IAudioBuffer {
 
@@ -24,7 +24,7 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (unp
         public sampleRate: number;
 
         constructor (options: IAudioBufferOptions) {
-            if (unpatchedOfflineAudioContextConstructor === null) {
+            if (nativeOfflineAudioContextConstructor === null) {
                 throw new Error(); // @todo
             }
 
@@ -33,11 +33,11 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (unp
                 ...options
             };
 
-            if (unpatchedOfflineAudioContext === null) {
-                unpatchedOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(1, 1, 44100);
+            if (nativeOfflineAudioContext === null) {
+                nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
             }
 
-            const audioBuffer = unpatchedOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+            const audioBuffer = nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
             if (typeof audioBuffer.copyFromChannel !== 'function') {

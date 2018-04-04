@@ -1,5 +1,5 @@
 import { AudioContext } from '../../../src/module';
-import { createUnpatchedAudioContextConstructor } from '../../../src/factories/unpatched-audio-context-constructor';
+import { createNativeAudioContextConstructor } from '../../../src/factories/native-audio-context-constructor';
 import { createWindow } from '../../../src/factories/window';
 import { loadFixture } from '../../helper/load-fixture';
 import { spy } from 'sinon';
@@ -281,14 +281,14 @@ describe('AudioContext', () => {
                 expect(audioBuffer.copyToChannel).to.be.a('function');
             });
 
-            it('should return an AudioBuffer which can be used with an unpatched AudioContext', () => {
+            it('should return an AudioBuffer which can be used with a native AudioContext', () => {
                 const audioBuffer = audioContext.createBuffer(2, 10, 44100);
                 const window = createWindow();
-                const unpatchedAudioContextConstructor = createUnpatchedAudioContextConstructor(window);
-                const unpatchedAudioContext = new unpatchedAudioContextConstructor(); // eslint-disable-line new-cap
-                const unpatchedAudioBufferSourceNode = unpatchedAudioContext.createBufferSource();
+                const nativeAudioContextConstructor = createNativeAudioContextConstructor(window);
+                const nativeAudioContext = new nativeAudioContextConstructor(); // eslint-disable-line new-cap
+                const nativeAudioBufferSourceNode = nativeAudioContext.createBufferSource();
 
-                unpatchedAudioBufferSourceNode.buffer = audioBuffer;
+                nativeAudioBufferSourceNode.buffer = audioBuffer;
             });
 
             describe('copyFromChannel()', () => {

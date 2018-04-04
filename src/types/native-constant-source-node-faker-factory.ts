@@ -1,8 +1,8 @@
 import { IConstantSourceOptions, INativeConstantSourceNodeFaker } from '../interfaces';
-import { TUnpatchedAudioContext } from './unpatched-audio-context';
-import { TUnpatchedOfflineAudioContext } from './unpatched-offline-audio-context';
+import { TNativeAudioContext } from './native-audio-context';
+import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeConstantSourceNodeFakerFactory = (
-    unpatchedAudioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    nativeAudioContext: TNativeAudioContext | TNativeOfflineAudioContext,
     options: Partial<IConstantSourceOptions>
 ) => INativeConstantSourceNodeFaker;

@@ -1,6 +1,6 @@
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IAudioDestinationNode } from '../interfaces';
-import { TAudioDestinationNodeRendererFactory, TNativeAudioDestinationNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TAudioDestinationNodeRendererFactory, TNativeAudioDestinationNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFactory = () => {
     let nativeNode: null | TNativeAudioDestinationNode = null;
@@ -8,7 +8,7 @@ export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFa
     return {
         render: async (
             proxy: IAudioDestinationNode,
-            offlineAudioContext: TUnpatchedOfflineAudioContext
+            offlineAudioContext: TNativeOfflineAudioContext
         ): Promise<TNativeAudioDestinationNode> => {
             if (nativeNode !== null) {
                 return nativeNode;

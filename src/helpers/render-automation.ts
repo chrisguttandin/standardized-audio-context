@@ -1,11 +1,11 @@
 import { AUDIO_GRAPH } from '../globals';
 import { renderInputsOfAudioParam } from '../helpers/render-inputs-of-audio-param';
 import { IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
-import { TNativeAudioParam, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
 
 export const renderAutomation = (
     context: IMinimalBaseAudioContext,
-    nativeOfflineAudioContext: TUnpatchedOfflineAudioContext,
+    nativeOfflineAudioContext: TNativeOfflineAudioContext,
     audioParam: IAudioParam,
     nativeAudioParam: TNativeAudioParam
 ) => {

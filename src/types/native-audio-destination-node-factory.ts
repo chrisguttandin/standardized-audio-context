@@ -1,9 +1,9 @@
+import { TNativeAudioContext } from './native-audio-context';
 import { TNativeAudioDestinationNode } from './native-audio-destination-node';
-import { TUnpatchedAudioContext } from './unpatched-audio-context';
-import { TUnpatchedOfflineAudioContext } from './unpatched-offline-audio-context';
+import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeAudioDestinationNodeFactory = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
     channelCount: number,
     isNodeOfNativeOfflineAudioContext: boolean
 ) => TNativeAudioDestinationNode;

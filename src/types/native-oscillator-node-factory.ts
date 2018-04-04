@@ -1,9 +1,9 @@
 import { IOscillatorOptions } from '../interfaces';
+import { TNativeAudioContext } from './native-audio-context';
+import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 import { TNativeOscillatorNode } from './native-oscillator-node';
-import { TUnpatchedAudioContext } from './unpatched-audio-context';
-import { TUnpatchedOfflineAudioContext } from './unpatched-offline-audio-context';
 
 export type TNativeOscillatorNodeFactory = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
     options?: Partial<IOscillatorOptions>
 ) => TNativeOscillatorNode;

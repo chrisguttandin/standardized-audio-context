@@ -6,7 +6,7 @@ import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer } from './interfaces';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
 import { testPromiseSupport } from './support-testers/promise';
-import { TNativeAudioBuffer, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from './types';
+import { TNativeAudioBuffer, TNativeAudioContext, TNativeOfflineAudioContext } from './types';
 import { wrapAudioBufferCopyChannelMethods } from './wrappers/audio-buffer-copy-channel-methods';
 import { wrapAudioBufferCopyChannelMethodsSubarray } from './wrappers/audio-buffer-copy-channel-methods-subarray';
 
@@ -15,13 +15,13 @@ const isSupportingCopyChannelMethodsSubarray = (nativeAudioBuffer: TNativeAudioB
     () => testAudioBufferCopyChannelMethodsSubarraySupport(nativeAudioBuffer)
 );
 
-const isSupportingPromises = (context: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext) => cacheTestResult(
+const isSupportingPromises = (context: TNativeAudioContext | TNativeOfflineAudioContext) => cacheTestResult(
     testPromiseSupport,
     () => testPromiseSupport(context)
 );
 
 export const decodeAudioData = (
-    audioContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    audioContext: TNativeAudioContext | TNativeOfflineAudioContext,
     audioData: ArrayBuffer
 ): Promise<IAudioBuffer> => {
     // Bug #43: Only Chrome and Opera do throw a DataCloneError.

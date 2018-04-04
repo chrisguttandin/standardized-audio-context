@@ -2,14 +2,14 @@ import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IAudioNode, IChannelSplitterOptions } from '../interfaces';
-import { TChannelSplitterNodeRendererFactoryFactory, TNativeAudioNode, TUnpatchedOfflineAudioContext } from '../types';
+import { TChannelSplitterNodeRendererFactoryFactory, TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
 
 export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRendererFactoryFactory = (createNativeChannelSplitterNode) => {
     return () => {
         let nativeNode: null | TNativeAudioNode = null;
 
         return {
-            render: async (proxy: IAudioNode, offlineAudioContext: TUnpatchedOfflineAudioContext): Promise<TNativeAudioNode> => {
+            render: async (proxy: IAudioNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }

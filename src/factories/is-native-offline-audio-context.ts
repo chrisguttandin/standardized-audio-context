@@ -1,11 +1,11 @@
-import { TIsNativeOfflineAudioContextFactory, TUnpatchedAudioContext, TUnpatchedOfflineAudioContext } from '../types';
+import { TIsNativeOfflineAudioContextFactory, TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
 
-export const createIsNativeOfflineAudioContext: TIsNativeOfflineAudioContextFactory = (unpatchedOfflineAudioContextConstructor) => {
-    return (nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext): boolean => {
-        if (unpatchedOfflineAudioContextConstructor === null) {
+export const createIsNativeOfflineAudioContext: TIsNativeOfflineAudioContextFactory = (nativeOfflineAudioContextConstructor) => {
+    return (nativeContext: TNativeAudioContext | TNativeOfflineAudioContext): boolean => {
+        if (nativeOfflineAudioContextConstructor === null) {
             throw new Error('The native OfflineAudioContext constructor is missing.');
         }
 
-        return nativeContext instanceof unpatchedOfflineAudioContextConstructor;
+        return nativeContext instanceof nativeOfflineAudioContextConstructor;
     };
 };

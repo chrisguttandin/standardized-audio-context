@@ -1,9 +1,9 @@
 import { IChannelMergerOptions } from '../interfaces';
+import { TNativeAudioContext } from './native-audio-context';
 import { TNativeChannelMergerNode } from './native-channel-merger-node';
-import { TUnpatchedAudioContext } from './unpatched-audio-context';
-import { TUnpatchedOfflineAudioContext } from './unpatched-offline-audio-context';
+import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeChannelMergerNodeFactory = (
-    nativeContext: TUnpatchedAudioContext | TUnpatchedOfflineAudioContext,
+    nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
     options?: Partial<IChannelMergerOptions>
 ) => TNativeChannelMergerNode;

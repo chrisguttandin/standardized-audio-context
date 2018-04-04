@@ -1,4 +1,4 @@
-import { INativeAudioWorkletNodeConstructor, IUnpatchedOfflineAudioContextConstructor } from '../interfaces';
+import { INativeAudioWorkletNodeConstructor, INativeOfflineAudioContextConstructor } from '../interfaces';
 import { TAudioWorkletNodeRendererFactory } from './audio-worklet-node-renderer-factory';
 import { TConnectMultipleOutputsFunction } from './connect-multiple-outputs-function';
 import { TDisconnectMultipleOutputsFunction } from './disconnect-multiple-outputs-function';
@@ -18,6 +18,6 @@ export type TAudioWorkletNodeRendererFactoryFactory = (
     createNativeGainNode: TNativeGainNodeFactory,
     disconnectMultipleOutputs: TDisconnectMultipleOutputsFunction,
     nativeAudioWorkletNodeConstructor: null | INativeAudioWorkletNodeConstructor,
-    renderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFunction,
-    unpatchedOfflineAudioContextConstructor: null | IUnpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor: null | INativeOfflineAudioContextConstructor,
+    renderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFunction
 ) => TAudioWorkletNodeRendererFactory;

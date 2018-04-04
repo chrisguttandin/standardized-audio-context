@@ -1,5 +1,4 @@
-import { AudioWorkletNode } from '../../src/module';
-import { addAudioWorkletModule } from '../../src/add-audio-worklet-module';
+import { AudioWorkletNode, addAudioWorkletModule } from '../../src/module';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';

@@ -1,5 +1,5 @@
-import { IAudioBufferConstructor, IUnpatchedOfflineAudioContextConstructor } from '../interfaces';
+import { IAudioBufferConstructor, INativeOfflineAudioContextConstructor } from '../interfaces';
 
 export type TAudioBufferConstructorFactory = (
-    unpatchedOfflineAudioContextConstructor: null | IUnpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor: null | INativeOfflineAudioContextConstructor
 ) => IAudioBufferConstructor;

@@ -18,13 +18,13 @@ import {
     TNativeAudioParam,
     TNativeChannelMergerNode,
     TNativeGainNode,
-    TUnpatchedOfflineAudioContext
+    TNativeOfflineAudioContext
 } from '../types';
 
 const processBuffer = (
     proxy: IAudioWorkletNode,
     renderedBuffer: TNativeAudioBuffer,
-    offlineAudioContext: TUnpatchedOfflineAudioContext,
+    offlineAudioContext: TNativeOfflineAudioContext,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
     processorDefinition: undefined | IAudioWorkletProcessorConstructor
 ): TNativeAudioBuffer => {
@@ -115,8 +115,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     createNativeGainNode,
     disconnectMultipleOutputs,
     nativeAudioWorkletNodeConstructor,
-    renderNativeOfflineAudioContext,
-    unpatchedOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor,
+    renderNativeOfflineAudioContext
 ) => {
     return (name, options, processorDefinition) => {
         let nativeNode: null | TNativeAudioBufferSourceNode | INativeAudioWorkletNode = null;
@@ -124,7 +124,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
         return {
             render: async (
                 proxy: IAudioWorkletNode,
-                offlineAudioContext: TUnpatchedOfflineAudioContext
+                offlineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode | INativeAudioWorkletNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
@@ -138,14 +138,14 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         throw new Error('Missing the processor definition.');
                     }
 
-                    if (unpatchedOfflineAudioContextConstructor === null) {
+                    if (nativeOfflineAudioContextConstructor === null) {
                         throw new Error('Missing the native (Offline)AudioContext constructor.');
                     }
 
                     // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
                     const numberOfInputChannels = proxy.channelCount * proxy.numberOfInputs;
                     const numberOfParameters = processorDefinition.parameterDescriptors.length;
-                    const partialOfflineAudioContext = new unpatchedOfflineAudioContextConstructor(
+                    const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
                         numberOfInputChannels + numberOfParameters,
                         // Bug #17: Safari does not yet expose the length.
                         (<IMinimalOfflineAudioContext> proxy.context).length,

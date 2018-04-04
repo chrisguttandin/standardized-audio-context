@@ -1,6 +1,6 @@
-import { TUnpatchedOfflineAudioContextConstructorFactory } from '../types';
+import { TNativeOfflineAudioContextConstructorFactory } from '../types';
 
-export const createUnpatchedOfflineAudioContextConstructor: TUnpatchedOfflineAudioContextConstructorFactory = (window) => {
+export const createNativeOfflineAudioContextConstructor: TNativeOfflineAudioContextConstructorFactory = (window) => {
     if (window === null) {
         return null;
     }

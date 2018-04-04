@@ -3,7 +3,7 @@ import {
     IBaseAudioContextConstructor,
     IMediaElementAudioSourceNodeConstructor,
     IMediaStreamAudioSourceNodeConstructor,
-    IUnpatchedAudioContextConstructor
+    INativeAudioContextConstructor
 } from '../interfaces';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
 
@@ -12,5 +12,5 @@ export type TAudioContextConstructorFactory = (
     createInvalidStateError: TInvalidStateErrorFactory,
     mediaElementAudioSourceNodeConstructor: IMediaElementAudioSourceNodeConstructor,
     mediaStreamAudioSourceNodeConstructor: IMediaStreamAudioSourceNodeConstructor,
-    unpatchedAudioContextConstructor: null | IUnpatchedAudioContextConstructor
+    nativeAudioContextConstructor: null | INativeAudioContextConstructor
 ) => IAudioContextConstructor;

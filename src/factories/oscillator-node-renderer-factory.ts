@@ -4,7 +4,7 @@ import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IOscillatorNode, IOscillatorOptions } from '../interfaces';
-import { TNativeOscillatorNode, TOscillatorNodeRendererFactoryFactory, TUnpatchedOfflineAudioContext } from '../types';
+import { TNativeOfflineAudioContext, TNativeOscillatorNode, TOscillatorNodeRendererFactoryFactory } from '../types';
 
 export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactoryFactory = (
     createNativeOscillatorNode
@@ -23,7 +23,7 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
             },
             render: async (
                 proxy: IOscillatorNode,
-                offlineAudioContext: TUnpatchedOfflineAudioContext
+                offlineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeOscillatorNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
