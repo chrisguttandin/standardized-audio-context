@@ -3,6 +3,6 @@ import { IAudioContextOptions } from './audio-context-options';
 
 export interface IAudioContextConstructor {
 
-    new (options: IAudioContextOptions): IAudioContext;
+    new (options?: IAudioContextOptions): IAudioContext;
 
 }
