@@ -54,4 +54,31 @@ describe('AudioWorklet', () => {
 
     });
 
+    describe('without any automation', () => {
+
+        // bug #85
+
+        it('should call process() with the full array of values for each parameter', (done) => {
+            audioContext.audioWorklet
+                .addModule('base/test/fixtures/inspector-processor.js')
+                .then(() => {
+                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor'); // eslint-disable-line no-undef
+                    const values = new Array(128);
+
+                    values.fill(1);
+
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        expect(Array.from(data.parameters.gain)).to.deep.equal(values);
+
+                        audioWorkletNode.port.onmessage = null;
+
+                        done();
+                    };
+
+                    audioWorkletNode.connect(audioContext.destination);
+                });
+        });
+
+    });
+
 });
