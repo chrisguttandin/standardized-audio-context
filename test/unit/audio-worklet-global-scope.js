@@ -1,4 +1,4 @@
-import { AudioWorkletNode, addAudioWorkletModule } from '../../src/module';
+import { AudioWorkletNode, GainNode, addAudioWorkletModule } from '../../src/module';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
@@ -162,6 +162,122 @@ describe('AudioWorkletGlobalScope', () => {
                     };
 
                     audioWorkletNode.port.postMessage(null);
+                });
+
+            });
+
+            describe('AudioWorkletProcessor', () => {
+
+                let audioWorkletNode;
+
+                beforeEach(async () => {
+                    await addAudioWorkletModule(context, 'inspector-processor');
+
+                    audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor', {
+                        channelCount: 1
+                    });
+                });
+
+                describe('process()', () => {
+
+                    describe('inputs', () => {
+
+                        describe('without any connected input', () => {
+
+                            it('should call process() with an empty array for each input', (done) => {
+                                audioWorkletNode.port.onmessage = ({ data }) => {
+                                    expect(data.inputs.length).to.equal(1);
+                                    expect(data.inputs[0].length).to.equal(1);
+                                    expect(data.inputs[0][0].length).to.equal(0);
+
+                                    audioWorkletNode.port.onmessage = null;
+
+                                    done();
+                                };
+
+                                audioWorkletNode.connect(context.destination);
+
+                                if (context.startRendering !== undefined) {
+                                    context.startRendering();
+                                }
+                            });
+
+                        });
+
+                        describe('with a connected input', () => {
+
+                            it('should call process() with the current inputs', (done) => {
+                                const gainNode = new GainNode(context);
+
+                                audioWorkletNode.port.onmessage = ({ data }) => {
+                                    expect(data.inputs.length).to.equal(1);
+                                    expect(data.inputs[0].length).to.equal(1);
+                                    expect(data.inputs[0][0].length).to.equal(128);
+
+                                    audioWorkletNode.port.onmessage = null;
+
+                                    done();
+                                };
+
+                                gainNode
+                                    .connect(audioWorkletNode)
+                                    .connect(context.destination);
+
+                                if (context.startRendering !== undefined) {
+                                    context.startRendering();
+                                }
+                            });
+
+                        });
+
+                    });
+
+                    describe('outputs', () => {
+
+                        it('should call process() with the current outputs', (done) => {
+                            audioWorkletNode.port.onmessage = ({ data }) => {
+                                expect(data.outputs.length).to.equal(1);
+                                expect(data.outputs[0].length).to.equal(1);
+                                expect(data.outputs[0][0].length).to.equal(128);
+
+                                audioWorkletNode.port.onmessage = null;
+
+                                done();
+                            };
+
+                            audioWorkletNode.connect(context.destination);
+
+                            if (context.startRendering !== undefined) {
+                                context.startRendering();
+                            }
+                        });
+
+                    });
+
+                    describe('parameters', () => {
+
+                        it('should call process() with the full array of values for each parameter', (done) => {
+                            const values = new Array(128);
+
+                            values.fill(1);
+
+                            audioWorkletNode.port.onmessage = ({ data }) => {
+                                expect(Array.from(data.parameters.gain)).to.deep.equal(values);
+
+                                audioWorkletNode.port.onmessage = null;
+
+                                done();
+                            };
+
+                            audioWorkletNode.connect(context.destination);
+
+                            if (context.startRendering !== undefined) {
+                                context.startRendering();
+                            }
+                        });
+
+                    });
+
                 });
 
             });

@@ -1,4 +1,5 @@
-import { AUDIO_GRAPH } from '../globals';
+import { getAudioNodeRenderer } from '../helpers/get-audio-node-renderer';
+import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
 import { IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 import { TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
 
@@ -8,29 +9,15 @@ export const renderInputsOfAudioParam = (
     offlineAudioContext: TNativeOfflineAudioContext,
     nativeAudioParam: TNativeAudioParam
 ) => {
-    const audioGraphOfContext = AUDIO_GRAPH.get(context);
-
-    if (audioGraphOfContext === undefined) {
-        throw new Error('Missing the audio graph of the OfflineAudioContext.');
-    }
-
-    const entryOfAudioParam = audioGraphOfContext.params.get(audioParam);
-
-    if (entryOfAudioParam === undefined) {
-        throw new Error('Missing the entry of this AudioParam in the audio graph.');
-    }
+    const audioParamConnections = getAudioParamConnections(context, audioParam);
 
     return Promise
         .all(Array
-            .from(entryOfAudioParam.inputs.values())
+            .from(audioParamConnections.inputs)
             .map(([ source, output ]) => {
-                const entryOfSource = audioGraphOfContext.nodes.get(source);
+                const audioNodeRenderer = getAudioNodeRenderer(source);
 
-                if (entryOfSource === undefined) {
-                    throw new Error('Missing the entry of this AudioParam in the audio graph.');
-                }
-
-                return entryOfSource.renderer
+                return audioNodeRenderer
                     .render(source, offlineAudioContext)
                     .then((node) => node.connect(nativeAudioParam, output));
             }));

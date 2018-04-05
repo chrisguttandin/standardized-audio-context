@@ -1,5 +1,6 @@
 import { connectAudioParam } from '../helpers/connect-audio-param';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
+import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
@@ -41,6 +42,7 @@ const processBuffer = (
         throw new Error();
     }
 
+    const audioNodeConnections = getAudioNodeConnections(proxy);
     const audioWorkletProcessor = new processorDefinition(options);
 
     const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
@@ -72,20 +74,22 @@ const processBuffer = (
         });
 
         try {
-            const activeSourceFlag = audioWorkletProcessor.process(inputs, outputs, parameters);
+            const potentiallyEmptyInputs = inputs
+                .map((input, index) => {
+                    if (audioNodeConnections.inputs[index].size === 0) {
+                        return input.map(() => new Float32Array());
+                    }
+
+                    return input;
+                });
+            const activeSourceFlag = audioWorkletProcessor.process(potentiallyEmptyInputs, outputs, parameters);
 
             for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
                 for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
                     // Bug #5: Safari does not support copyToChannel().
-                    if (i + 128 <= length) {
-                        processedBuffer
-                            .getChannelData(outputChannelSplitterNodeOutput + k)
-                            .set(outputs[j][k], i);
-                    } else {
-                        processedBuffer
-                            .getChannelData(outputChannelSplitterNodeOutput + k)
-                            .set(outputs[j][k].slice(0, length % 128), i);
-                    }
+                    processedBuffer
+                        .getChannelData(outputChannelSplitterNodeOutput + k)
+                        .set(outputs[j][k], i);
                 }
 
                 outputChannelSplitterNodeOutput += options.outputChannelCount[j];
@@ -147,8 +151,9 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     const numberOfParameters = processorDefinition.parameterDescriptors.length;
                     const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
                         numberOfInputChannels + numberOfParameters,
+                        // Ceil the length to the next full render quantum.
                         // Bug #17: Safari does not yet expose the length.
-                        (<IMinimalOfflineAudioContext> proxy.context).length,
+                        Math.ceil((<IMinimalOfflineAudioContext> proxy.context).length / 128) * 128,
                         offlineAudioContext.sampleRate
                     );
                     const gainNodes: TNativeGainNode[] = [ ];

@@ -1,4 +1,4 @@
-import { AUDIO_GRAPH } from '../globals';
+import { AUDIO_GRAPHS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioDestinationNodeConstructorFactory, TNativeAudioDestinationNode } from '../types';
@@ -24,9 +24,10 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             const nativeNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
             const audioDestinationNodeRenderer = (isOffline) ? createAudioDestinationNodeRenderer() : null;
 
-            if (isOffline) {
-                AUDIO_GRAPH.set(context, { nodes: new WeakMap(), params: new WeakMap() });
-            }
+            const audioGraph = { nodes: new WeakMap(), params: new WeakMap() };
+
+            AUDIO_GRAPHS.set(context, audioGraph);
+            AUDIO_GRAPHS.set(nativeContext, audioGraph);
 
             super(context, nativeNode, audioDestinationNodeRenderer);
 

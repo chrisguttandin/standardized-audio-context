@@ -1,13 +1,10 @@
-import { AUDIO_GRAPH, AUDIO_PARAM_STORE } from '../globals';
+import { AUDIO_PARAM_STORE } from '../globals';
+import { getAudioGraph } from '../helpers/get-audio-graph';
 import { IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioParamFactoryFactory } from '../types';
 
-const addAudioParam = (context: IMinimalBaseAudioContext, audioParam: IAudioParam, audioParamRenderer: IAudioParamRenderer) => {
-    const audioGraphOfContext = AUDIO_GRAPH.get(context);
-
-    if (audioGraphOfContext === undefined) {
-        throw new Error('Missing the audio graph of the OfflineAudioContext.');
-    }
+const addAudioParam = (context: IMinimalBaseAudioContext, audioParam: IAudioParam, audioParamRenderer: null | IAudioParamRenderer) => {
+    const audioGraphOfContext = getAudioGraph(context);
 
     audioGraphOfContext.params.set(audioParam, { inputs: new Set(), renderer: audioParamRenderer });
 };
@@ -90,11 +87,9 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
             }
         };
 
-        if (audioParamRenderer !== null) {
-            addAudioParam(context, audioParam, audioParamRenderer);
-        }
-
         AUDIO_PARAM_STORE.set(audioParam, nativeAudioParam);
+
+        addAudioParam(context, audioParam, audioParamRenderer);
 
         return audioParam;
     };

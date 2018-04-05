@@ -1,4 +1,4 @@
-import { AUDIO_NODE_STORE, CONTEXT_STORE } from '../../src/globals';
+import { AUDIO_GRAPHS, AUDIO_NODE_STORE, CONTEXT_STORE } from '../../src/globals';
 
 export const createScriptProcessor = (context, bufferSize, numberOfInputChannels, numberOfOutputChannels) => {
     const nativeContext = CONTEXT_STORE.get(context);
@@ -32,6 +32,17 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
     });
 
     AUDIO_NODE_STORE.set(scriptProcessorNodeProxy, scriptProcessorNode);
+
+    const audioGraphOfContext = AUDIO_GRAPHS.get(context);
+
+    if (audioGraphOfContext === undefined) {
+        throw new Error('Missing the audio graph of the given context.');
+    }
+
+    const audioNodeConnections = { inputs: [ new Set() ], outputs: new Set(), renderer: null };
+
+    audioGraphOfContext.nodes.set(scriptProcessorNode, audioNodeConnections);
+    audioGraphOfContext.nodes.set(scriptProcessorNodeProxy, audioNodeConnections);
 
     return scriptProcessorNodeProxy;
 };
