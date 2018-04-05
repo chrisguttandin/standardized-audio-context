@@ -103,6 +103,16 @@ describe('audioContextConstructor', () => {
 
             describe('detune', () => {
 
+                describe('automationRate', () => {
+
+                    // bug #84
+
+                    it('should not be implemented', () => {
+                        expect(biquadFilterNode.detune.automationRate).to.be.undefined;
+                    });
+
+                });
+
                 describe('maxValue', () => {
 
                     // bug #78

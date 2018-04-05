@@ -41,13 +41,27 @@ describe('audioContextConstructor', () => {
 
     describe('createBiquadFilter()', () => {
 
-        describe('frequency', () => {
+        let biquadFilterNode;
 
-            let biquadFilterNode;
+        beforeEach(() => {
+            biquadFilterNode = audioContext.createBiquadFilter();
+        });
 
-            beforeEach(() => {
-                biquadFilterNode = audioContext.createBiquadFilter();
+        describe('detune', () => {
+
+            describe('automationRate', () => {
+
+                // bug #84
+
+                it('should not be implemented', () => {
+                    expect(biquadFilterNode.detune.automationRate).to.be.undefined;
+                });
+
             });
+
+        });
+
+        describe('frequency', () => {
 
             describe('maxValue', () => {
 
