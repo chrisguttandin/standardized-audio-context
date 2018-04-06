@@ -69,22 +69,38 @@ import { createTestAudioContextOptionsSupport } from './factories/test-audio-con
 import { createTestChannelMergerNodeSupport } from './factories/test-channel-merger-node';
 import { createWindow } from './factories/window';
 import {
+    IAnalyserNode,
     IAnalyserNodeConstructor,
+    IAudioBuffer,
     IAudioBufferConstructor,
+    IAudioBufferSourceNode,
     IAudioBufferSourceNodeConstructor,
+    IAudioContext,
     IAudioContextConstructor,
+    IAudioNode,
+    IAudioWorkletNode,
     IAudioWorkletNodeConstructor,
+    IBiquadFilterNode,
     IBiquadFilterNodeConstructor,
     IChannelMergerNodeConstructor,
     IChannelSplitterNodeConstructor,
+    IConstantSourceNode,
     IConstantSourceNodeConstructor,
+    IGainNode,
     IGainNodeConstructor,
+    IIIRFilterNode,
     IIIRFilterNodeConstructor,
+    IMediaElementAudioSourceNode,
     IMediaElementAudioSourceNodeConstructor,
+    IMediaStreamAudioSourceNode,
     IMediaStreamAudioSourceNodeConstructor,
+    IMinimalAudioContext,
     IMinimalAudioContextConstructor,
+    IMinimalOfflineAudioContext,
     IMinimalOfflineAudioContextConstructor,
+    IOfflineAudioContext,
     IOfflineAudioContextConstructor,
+    IOscillatorNode,
     IOscillatorNodeConstructor
 } from './interfaces';
 
@@ -107,9 +123,13 @@ const analyserNodeConstructor: IAnalyserNodeConstructor = createAnalyserNodeCons
     noneAudioDestinationNodeConstructor
 );
 
+type analyserNodeConstructor = IAnalyserNode;
+
 export { analyserNodeConstructor as AnalyserNode };
 
 const audioBufferConstructor: IAudioBufferConstructor = createAudioBufferConstructor(nativeOfflineAudioContextConstructor);
+
+type audioBufferConstructor = IAudioBuffer;
 
 export { audioBufferConstructor as AudioBuffer };
 
@@ -123,6 +143,8 @@ const audioBufferSourceNodeConstructor: IAudioBufferSourceNodeConstructor = crea
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+
+type audioBufferSourceNodeConstructor = IAudioBufferSourceNode;
 
 export { audioBufferSourceNodeConstructor as AudioBufferSourceNode };
 
@@ -234,6 +256,8 @@ const audioContextConstructor: IAudioContextConstructor = createAudioContextCons
     nativeAudioContextConstructor
 );
 
+type audioContextConstructor = IAudioContext;
+
 export { audioContextConstructor as AudioContext };
 
 const connectMultipleOutputs = createConnectMultipleOutputs(createIndexSizeError);
@@ -276,19 +300,41 @@ const audioWorkletNodeConstructor: IAudioWorkletNodeConstructor = createAudioWor
     noneAudioDestinationNodeConstructor
 );
 
+type audioWorkletNodeConstructor = IAudioWorkletNode;
+
 export { audioWorkletNodeConstructor as AudioWorkletNode };
+
+type biquadFilterNodeConstructor = IBiquadFilterNode;
 
 export { biquadFilterNodeConstructor as BiquadFilterNode };
 
+type channelMergerNodeConstructor = IAudioNode;
+
 export { channelMergerNodeConstructor as ChannelMergerNode };
+
+type channelSplitterNodeConstructor = IAudioNode;
 
 export { channelSplitterNodeConstructor as ChannelSplitterNode };
 
+type constantSourceNodeConstructor = IConstantSourceNode;
+
 export { constantSourceNodeConstructor as ConstantSourceNode };
+
+type gainNodeConstructor = IGainNode;
 
 export { gainNodeConstructor as GainNode };
 
+type iIRFilterNodeConstructor = IIIRFilterNode;
+
 export { iIRFilterNodeConstructor as IIRFilterNode };
+
+type mediaElementAudioSourceNodeConstructor = IMediaElementAudioSourceNode;
+
+export { mediaElementAudioSourceNodeConstructor as MediaElementAudioSourceNode };
+
+type mediaStreamAudioSourceNodeConstructor = IMediaStreamAudioSourceNode;
+
+export { mediaStreamAudioSourceNodeConstructor as MediaStreamAudioSourceNode };
 
 const minimalAudioContextConstructor: IMinimalAudioContextConstructor = createMinimalAudioContextConstructor(
     createInvalidStateError,
@@ -296,9 +342,7 @@ const minimalAudioContextConstructor: IMinimalAudioContextConstructor = createMi
     nativeAudioContextConstructor
 );
 
-export { mediaElementAudioSourceNodeConstructor as MediaElementAudioSourceNode };
-
-export { mediaStreamAudioSourceNodeConstructor as MediaStreamAudioSourceNode };
+type minimalAudioContextConstructor = IMinimalAudioContext;
 
 export { minimalAudioContextConstructor as MinimalAudioContext };
 
@@ -309,6 +353,8 @@ const minimalOfflineAudioContextConstructor: IMinimalOfflineAudioContextConstruc
     startRendering
 );
 
+type minimalOfflineAudioContextConstructor = IMinimalOfflineAudioContext;
+
 export { minimalOfflineAudioContextConstructor as MinimalOfflineAudioContext };
 
 const offlineAudioContextConstructor: IOfflineAudioContextConstructor = createOfflineAudioContextConstructor(
@@ -317,7 +363,11 @@ const offlineAudioContextConstructor: IOfflineAudioContextConstructor = createOf
     startRendering
 );
 
+type offlineAudioContextConstructor = IOfflineAudioContext;
+
 export { offlineAudioContextConstructor as OfflineAudioContext };
+
+type oscillatorNodeConstructor = IOscillatorNode;
 
 export { oscillatorNodeConstructor as OscillatorNode };
 
