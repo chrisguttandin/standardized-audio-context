@@ -26,7 +26,7 @@
     "core-js": "^2.5.4",
     "cz-conventional-changelog": "^2.1.0",
     "eslint": "^4.19.1",
-    "eslint-config-holy-grail": "^26.0.0",
+    "eslint-config-holy-grail": "^26.0.1",
     "greenkeeper-lockfile": "^1.14.0",
     "grunt": "^1.0.2",
     "grunt-cli": "^1.2.0",
