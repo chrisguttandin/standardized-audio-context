@@ -271,6 +271,16 @@ describe('AudioWorkletNode', () => {
                             });
                     });
 
+                    it('should throw a DataCloneError when provided with an unclonable value', (done) => {
+                        createAudioWorkletNode(context, 'inspector-processor', { processorOptions: { fn: () => { } } })
+                            .catch((err) => {
+                                expect(err.code).to.equal(25);
+                                expect(err.name).to.equal('DataCloneError');
+
+                                done();
+                            });
+                    });
+
                     it('should pass on the processorOptions to the AudioWorkletProcessor', (done) => {
                         const processorOptions = { an: 'arbitrary', object: [ 'with', 'some', 'values' ] };
 

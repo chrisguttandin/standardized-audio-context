@@ -1,6 +1,7 @@
+import { createAudioWorkletProcessor } from '../helpers/create-audio-worklet-processor';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
-import { INativeAudioWorkletNode, INativeConstantSourceNode } from '../interfaces';
+import { IAudioWorkletProcessor, INativeAudioWorkletNode, INativeConstantSourceNode } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
     TNativeAudioParam,
@@ -55,7 +56,11 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         processorDefinition.prototype.port = messageChannel.port1;
 
-        const audioWorkletProcessor = new processorDefinition(options);
+        let audioWorkletProcessor: null | IAudioWorkletProcessor = null;
+
+        createAudioWorkletProcessor(processorDefinition, options)
+            .then((dWrkltPrcssr) => audioWorkletProcessor = dWrkltPrcssr);
+
         const gainNodes: TNativeGainNode[] = [ ];
         const inputChannelSplitterNodes = [ ];
 
@@ -232,62 +237,64 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         let isActive = true;
 
         scriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }: AudioProcessingEvent) => {
-            for (let i = 0; i < bufferSize; i += 128) {
-                for (let j = 0; j < options.numberOfInputs; j += 1) {
-                    for (let k = 0; k < options.channelCount; k += 1) {
-                        // Bug #5: Safari does not support copyFromChannel().
+            if (audioWorkletProcessor !== null) {
+                for (let i = 0; i < bufferSize; i += 128) {
+                    for (let j = 0; j < options.numberOfInputs; j += 1) {
+                        for (let k = 0; k < options.channelCount; k += 1) {
+                            // Bug #5: Safari does not support copyFromChannel().
+                            const slicedInputBuffer = inputBuffer
+                                .getChannelData(k)
+                                .slice(i, i + 128);
+
+                            inputs[j][k].set(slicedInputBuffer);
+                        }
+                    }
+
+                    processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
                         const slicedInputBuffer = inputBuffer
-                            .getChannelData(k)
+                            .getChannelData(numberOfInputChannels + index)
                             .slice(i, i + 128);
 
-                        inputs[j][k].set(slicedInputBuffer);
-                    }
-                }
+                        parameters[ name ].set(slicedInputBuffer);
+                    });
 
-                processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
-                    const slicedInputBuffer = inputBuffer
-                        .getChannelData(numberOfInputChannels + index)
-                        .slice(i, i + 128);
+                    try {
+                        const audioNodeConnections = getAudioNodeConnections(faker);
+                        const potentiallyEmptyInputs = inputs
+                            .map((input, index) => {
+                                if (audioNodeConnections.inputs[index].size === 0) {
+                                    return input.map(() => new Float32Array());
+                                }
 
-                    parameters[ name ].set(slicedInputBuffer);
-                });
+                                return input;
+                            });
+                        const activeSourceFlag = audioWorkletProcessor.process(potentiallyEmptyInputs, outputs, parameters);
 
-                try {
-                    const audioNodeConnections = getAudioNodeConnections(faker);
-                    const potentiallyEmptyInputs = inputs
-                        .map((input, index) => {
-                            if (audioNodeConnections.inputs[index].size === 0) {
-                                return input.map(() => new Float32Array());
+                        isActive = activeSourceFlag;
+
+                        for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
+                            for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
+                                // Bug #5: Safari does not support copyFromChannel().
+                                outputBuffer
+                                    .getChannelData(outputChannelSplitterNodeOutput + k)
+                                    .set(outputs[j][k], i);
                             }
 
-                            return input;
-                        });
-                    const activeSourceFlag = audioWorkletProcessor.process(potentiallyEmptyInputs, outputs, parameters);
-
-                    isActive = activeSourceFlag;
-
-                    for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
-                        for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
-                            // Bug #5: Safari does not support copyFromChannel().
-                            outputBuffer
-                                .getChannelData(outputChannelSplitterNodeOutput + k)
-                                .set(outputs[j][k], i);
+                            outputChannelSplitterNodeOutput += options.outputChannelCount[j];
                         }
+                    } catch (err) {
+                        isActive = false;
 
-                        outputChannelSplitterNodeOutput += options.outputChannelCount[j];
+                        if (onprocessorerror !== null) {
+                            onprocessorerror.call(<any> null, new ErrorEvent('processorerror'));
+                        }
                     }
-                } catch (err) {
-                    isActive = false;
 
-                    if (onprocessorerror !== null) {
-                        onprocessorerror.call(<any> null, new ErrorEvent('processorerror'));
+                    if (!isActive) {
+                        scriptProcessorNode.onaudioprocess = <any> null;
+
+                        break;
                     }
-                }
-
-                if (!isActive) {
-                    scriptProcessorNode.onaudioprocess = <any> null;
-
-                    break;
                 }
             }
         };

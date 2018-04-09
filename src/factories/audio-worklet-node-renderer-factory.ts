@@ -1,4 +1,5 @@
 import { connectAudioParam } from '../helpers/connect-audio-param';
+import { createAudioWorkletProcessor } from '../helpers/create-audio-worklet-processor';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getNativeNode } from '../helpers/get-native-node';
@@ -22,13 +23,13 @@ import {
     TNativeOfflineAudioContext
 } from '../types';
 
-const processBuffer = (
+const processBuffer = async (
     proxy: IAudioWorkletNode,
     renderedBuffer: TNativeAudioBuffer,
     offlineAudioContext: TNativeOfflineAudioContext,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
     processorDefinition: undefined | IAudioWorkletProcessorConstructor
-): TNativeAudioBuffer => {
+): Promise<TNativeAudioBuffer> => {
     const { length } = renderedBuffer;
     const numberOfInputChannels = options.channelCount * options.numberOfInputs;
     const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
@@ -43,7 +44,7 @@ const processBuffer = (
     }
 
     const audioNodeConnections = getAudioNodeConnections(proxy);
-    const audioWorkletProcessor = new processorDefinition(options);
+    const audioWorkletProcessor = await createAudioWorkletProcessor(processorDefinition, options);
 
     const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
     const outputs = createNestedArrays(options.numberOfInputs, options.outputChannelCount);
@@ -224,7 +225,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                                }));
                             }
 
-                            audioBufferSourceNode.buffer = processBuffer(
+                            audioBufferSourceNode.buffer = await processBuffer(
                                 proxy,
                                 renderedBuffer,
                                 offlineAudioContext,

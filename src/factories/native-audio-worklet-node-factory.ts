@@ -1,3 +1,4 @@
+import { testClonabilityOfAudioWorkletNodeOptions } from '../helpers/test-clonability-of-audio-worklet-node-options';
 import { TNativeAudioWorkletNodeFactoryFactory } from '../types';
 
 export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactoryFactory = (
@@ -44,6 +45,8 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
         if (processorDefinition === undefined) {
             throw createNotSupportedError();
         }
+
+        testClonabilityOfAudioWorkletNodeOptions(options);
 
         return createNativeAudioWorkletNodeFaker(nativeContext, processorDefinition, options);
     };
