@@ -151,6 +151,11 @@ isSupported()
 
 This package is written in [TypeScript](https://www.typescriptlang.org/) which means it can be used seamlessly in any TypeScript project. But that is entirely optional.
 
+In contrast to the Web Audio API types that TypeScript provides out of the box the types exported
+by  `standardized-audio-context` do actually match the concrete implementation. TypeScript
+generates its types from the [Web IDL](https://heycam.github.io/webidl) definition of the Web Audio
+API which does not always match the actually available implementations.
+
 ## Tests
 
 All implemented methods are covered by a large number of tests which are executed on a variety of browsers. Many thanks to [BrowserStack](https://www.browserstack.com) and [Sauce Labs](https://saucelabs.com) for allowing this module to be tested with their services.
