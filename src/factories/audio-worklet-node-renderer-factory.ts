@@ -29,11 +29,11 @@ const processBuffer = async (
     offlineAudioContext: TNativeOfflineAudioContext,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
     processorDefinition: undefined | IAudioWorkletProcessorConstructor
-): Promise<TNativeAudioBuffer> => {
+): Promise<null | TNativeAudioBuffer> => {
     const { length } = renderedBuffer;
     const numberOfInputChannels = options.channelCount * options.numberOfInputs;
     const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
-    const processedBuffer = offlineAudioContext.createBuffer(
+    const processedBuffer = (numberOfOutputChannels === 0) ? null : offlineAudioContext.createBuffer(
         numberOfOutputChannels,
         length,
         renderedBuffer.sampleRate
@@ -47,7 +47,7 @@ const processBuffer = async (
     const audioWorkletProcessor = await createAudioWorkletProcessor(processorDefinition, options);
 
     const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
-    const outputs = createNestedArrays(options.numberOfInputs, options.outputChannelCount);
+    const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
     const parameters: { [ name: string ]: Float32Array } = Array
         .from(proxy.parameters.keys())
         .reduce((prmtrs, name, index) => {
@@ -85,15 +85,17 @@ const processBuffer = async (
                 });
             const activeSourceFlag = audioWorkletProcessor.process(potentiallyEmptyInputs, outputs, parameters);
 
-            for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
-                for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
-                    // Bug #5: Safari does not support copyToChannel().
-                    processedBuffer
-                        .getChannelData(outputChannelSplitterNodeOutput + k)
-                        .set(outputs[j][k], i);
-                }
+            if (processedBuffer !== null) {
+                for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
+                    for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
+                        // Bug #5: Safari does not support copyToChannel().
+                        processedBuffer
+                            .getChannelData(outputChannelSplitterNodeOutput + k)
+                            .set(outputs[j][k], i);
+                    }
 
-                outputChannelSplitterNodeOutput += options.outputChannelCount[j];
+                    outputChannelSplitterNodeOutput += options.outputChannelCount[j];
+                }
             }
 
             if (!activeSourceFlag) {
@@ -225,15 +227,19 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                                }));
                             }
 
-                            audioBufferSourceNode.buffer = await processBuffer(
+                            const processedBuffer = await processBuffer(
                                 proxy,
                                 renderedBuffer,
                                 offlineAudioContext,
                                 options,
                                 processorDefinition
                             );
-                            audioBufferSourceNode.connect(outputChannelSplitterNode);
-                            audioBufferSourceNode.start(0);
+
+                            if (processedBuffer !== null) {
+                                audioBufferSourceNode.buffer = processedBuffer;
+                                audioBufferSourceNode.connect(outputChannelSplitterNode);
+                                audioBufferSourceNode.start(0);
+                            }
 
                             for (let i = 0, outputChannelSplitterNodeOutput = 0; i < proxy.numberOfOutputs; i += 1) {
                                 const outputChannelMergerNode = outputChannelMergerNodes[i];

@@ -39,7 +39,50 @@ export const addAudioWorkletModule = (
     // Bug #59: Only Chrome Canary does implement the audioWorklet property.
     // @todo Define the native interface as part of the native AudioContext.
     if ((<any> nativeContext).audioWorklet !== undefined) {
-        return (<TNativeAudioWorklet> (<any> nativeContext).audioWorklet).addModule(moduleURL, options);
+        return fetch(moduleURL)
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+
+                throw createAbortError();
+            })
+            .then((source) => {
+                /*
+                 * Bug #86: Chrome Canary does not invoke the process() function if the corresponding AudioWorkletNode has no output.
+                 *
+                 * This is the unminified version of the code used below:
+                 *
+                 * ```js
+                 * ((registerProcessor) => {${ source }})((name, processorCtor) => registerProcessor(name, class extends processorCtor {
+                 *
+                 *     constructor (options) {
+                 *         const { hasNoOutput, ...otherParameterData } = options.parameterData;
+                 *
+                 *         if (hasNoOutput === 1) {
+                 *             super({ ...options, numberOfOutputs: 0, outputChannelCount: [ ], parameterData: otherParameterData });
+                 *
+                 *             this._hasNoOutput = true;
+                 *         } else {
+                 *             super(options);
+                 *
+                 *             this._hasNoOutput = false;
+                 *         }
+                 *     }
+                 *
+                 *     process (inputs, outputs, parameters) {
+                 *         return super.process(inputs, (this._hasNoOutput) ? [ ] : outputs, parameters);
+                 *     }
+                 *
+                 * }))
+                 * ```
+                 */
+                const wrappedSource = `(registerProcessor=>{${ source }})((n,p)=>registerProcessor(n,class extends p{constructor(o){const{hasNoOutput,...q}=o.parameterData;if(hasNoOutput===1){super({...o,numberOfOutputs:0,outputChannelCount:[],parameterData:q});this._h=true}else{super(o);this._h=false}}process(i,o,p){return super.process(i,(this._h)?[]:o,p)}}))`; // tslint:disable-line:max-line-length
+                const blob = new Blob([ wrappedSource ], { type: 'application/javascript; charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+
+                return (<TNativeAudioWorklet> (<any> nativeContext).audioWorklet).addModule(url, options);
+            });
     } else {
         const resolvedRequestsOfContext = resolvedRequests.get(context);
 

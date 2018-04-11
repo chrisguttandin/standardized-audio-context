@@ -1,3 +1,5 @@
+import { spy } from 'sinon';
+
 describe('AudioWorklet', () => {
 
     let audioContext;
@@ -76,6 +78,33 @@ describe('AudioWorklet', () => {
                     };
 
                     audioWorkletNode.connect(audioContext.destination);
+                });
+        });
+
+    });
+
+    describe('without any outputs', () => {
+
+        // bug #86
+
+        it('should not call process()', (done) => {
+            audioContext.audioWorklet
+                .addModule('base/test/fixtures/inspector-processor.js')
+                .then(() => {
+                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor'); // eslint-disable-line no-undef
+                    const constantSourceNode = new ConstantSourceNode(audioContext);
+                    const listener = spy();
+
+                    audioWorkletNode.port.onmessage = listener;
+
+                    constantSourceNode.connect(audioWorkletNode);
+                    constantSourceNode.start();
+
+                    setTimeout(() => {
+                        expect(listener).to.have.not.been.called;
+
+                        done();
+                    }, 500);
                 });
         });
 

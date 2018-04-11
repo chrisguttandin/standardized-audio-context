@@ -108,7 +108,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const scriptProcessorNode = nativeAudioContext.createScriptProcessor(
             bufferSize,
             numberOfInputChannels + numberOfParameters,
-            numberOfOutputChannels
+            // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.
+            Math.max(1, numberOfOutputChannels)
         );
         const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeAudioContext, {
             numberOfOutputs: Math.max(1, numberOfOutputChannels)
@@ -142,7 +143,10 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         inputChannelMergerNode.connect(scriptProcessorNode);
 
-        if (options.numberOfOutputs > 0) {
+        // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.
+        if (options.numberOfOutputs === 0) {
+            scriptProcessorNode.connect(nativeAudioContext.destination);
+        } else {
             scriptProcessorNode.connect(outputChannelSplitterNode);
         }
 
@@ -230,7 +234,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         };
 
         const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
-        const outputs = createNestedArrays(options.numberOfInputs, options.outputChannelCount);
+        const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
         const parameters: { [ name: string ]: Float32Array } = processorDefinition.parameterDescriptors
             .reduce((prmtrs, { name }) => ({ ...prmtrs, [ name ]: new Float32Array(128) }), { });
 

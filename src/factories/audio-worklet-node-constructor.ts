@@ -102,6 +102,11 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
             this._nativeNode = nativeNode;
             this._parameters = new ReadOnlyMap(parameters);
+
+            // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.
+            if (nativeAudioWorkletNodeConstructor === null && options.numberOfOutputs === 0 && isOffline) {
+                this.connect(context.destination);
+            }
         }
 
         public get onprocessorerror () {

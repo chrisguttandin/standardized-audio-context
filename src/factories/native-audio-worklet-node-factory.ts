@@ -9,7 +9,23 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
     return (nativeContext, nativeAudioWorkletNodeConstructor, name, processorDefinition, options) => {
         if (nativeAudioWorkletNodeConstructor !== null) {
             try {
-                const nativeNode = new nativeAudioWorkletNodeConstructor(nativeContext, name, options);
+                // Bug #86: Chrome Canary does not invoke the process() function if the corresponding AudioWorkletNode has no output.
+                const nativeNode = (options.numberOfInputs !== 0 && options.numberOfOutputs === 0) ?
+                    new nativeAudioWorkletNodeConstructor(nativeContext, name, {
+                        ...options,
+                        numberOfOutputs: 1,
+                        outputChannelCount: [ 1 ],
+                        parameterData: { ...options.parameterData, hasNoOutput: 1 }
+                    }) :
+                    new nativeAudioWorkletNodeConstructor(nativeContext, name, options);
+
+                if (options.numberOfOutputs === 0) {
+                    nativeNode.connect(nativeContext.destination);
+
+                    Object.defineProperty(nativeNode, 'numberOfOutputs', {
+                        get: () => 0
+                    });
+                }
 
                 /*
                  * Bug #61: Overwriting the property accessors is necessary as long as some browsers have no native implementation to

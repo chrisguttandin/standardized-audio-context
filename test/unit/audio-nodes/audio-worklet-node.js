@@ -1,4 +1,4 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode } from '../../../src/module';
 import { addAudioWorkletModule } from '../../../src/add-audio-worklet-module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -362,6 +362,39 @@ describe('AudioWorkletNode', () => {
                     audioWorkletNode.channelInterpretation = channelInterpretation;
 
                     expect(audioWorkletNode.channelInterpretation).to.equal(channelInterpretation);
+                });
+
+            });
+
+            describe('numberOfOutputs', () => {
+
+                let audioWorkletNode;
+
+                beforeEach(async () => {
+                    audioWorkletNode = await createAudioWorkletNode(context, 'inspector-processor', {
+                        numberOfOutputs: 0
+                    });
+                });
+
+                it('should call process() even without any output', (done) => {
+                    audioWorkletNode.port.onmessage = ({ data: { inputs, outputs } }) => {
+                        if (inputs !== undefined) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(outputs.length).to.equal(0);
+
+                            done();
+                        }
+                    };
+
+                    const constantSourceNode = new ConstantSourceNode(context);
+
+                    constantSourceNode.connect(audioWorkletNode);
+                    constantSourceNode.start();
+
+                    if (context.startRendering !== undefined) {
+                        context.startRendering();
+                    }
                 });
 
             });

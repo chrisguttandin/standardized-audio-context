@@ -119,6 +119,33 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createScriptProcessor()', () => {
+
+        describe('without any output channels', () => {
+
+            // bug #87
+
+            it('should not fire any AudioProcessingEvent', () => {
+                const listener = spy();
+                const oscillatorNode = offlineAudioContext.createOscillator();
+                const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 0);
+
+                scriptProcessorNode.onaudioprocess = listener;
+
+                oscillatorNode.connect(scriptProcessorNode);
+                oscillatorNode.start();
+
+                return offlineAudioContext
+                    .startRendering()
+                    .then(() => {
+                        expect(listener).to.have.not.been.called;
+                    });
+            });
+
+        });
+
+    });
+
     describe('decodeAudioData()', () => {
 
         // bug #6
