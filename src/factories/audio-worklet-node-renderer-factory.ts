@@ -1,7 +1,7 @@
 import { connectAudioParam } from '../helpers/connect-audio-param';
-import { createAudioWorkletProcessor } from '../helpers/create-audio-worklet-processor';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
+import { getAudioWorkletProcessor } from '../helpers/get-audio-worklet-processor';
 import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
@@ -44,8 +44,7 @@ const processBuffer = async (
     }
 
     const audioNodeConnections = getAudioNodeConnections(proxy);
-    const audioWorkletProcessor = await createAudioWorkletProcessor(processorDefinition, options);
-
+    const audioWorkletProcessor = await getAudioWorkletProcessor(offlineAudioContext, proxy);
     const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
     const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
     const parameters: { [ name: string ]: Float32Array } = Array

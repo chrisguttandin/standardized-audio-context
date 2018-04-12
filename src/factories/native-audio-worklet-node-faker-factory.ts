@@ -53,14 +53,6 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         }
 
         const messageChannel = new MessageChannel();
-
-        processorDefinition.prototype.port = messageChannel.port1;
-
-        let audioWorkletProcessor: null | IAudioWorkletProcessor = null;
-
-        createAudioWorkletProcessor(processorDefinition, options)
-            .then((dWrkltPrcssr) => audioWorkletProcessor = dWrkltPrcssr);
-
         const gainNodes: TNativeGainNode[] = [ ];
         const inputChannelSplitterNodes = [ ];
 
@@ -232,6 +224,15 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 return gainNodes[0].removeEventListener(args[0], args[1], args[2]);
             }
         };
+
+        processorDefinition.prototype.port = messageChannel.port1;
+
+        let audioWorkletProcessor: null | IAudioWorkletProcessor = null;
+
+        const audioWorkletProcessorPromise = createAudioWorkletProcessor(nativeAudioContext, faker, processorDefinition, options);
+
+        audioWorkletProcessorPromise
+            .then((dWrkltPrcssr) => audioWorkletProcessor = dWrkltPrcssr);
 
         const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
         const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);

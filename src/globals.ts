@@ -2,9 +2,11 @@ import {
     IAudioGraph,
     IAudioNode,
     IAudioParam,
+    IAudioWorkletProcessor,
     IAudioWorkletProcessorConstructor,
     IMinimalBaseAudioContext,
-    INativeAudioNodeFaker
+    INativeAudioNodeFaker,
+    INativeAudioWorkletNode
 } from './interfaces';
 import { TNativeAudioContext, TNativeAudioNode, TNativeAudioParam, TNativeOfflineAudioContext } from './types';
 
@@ -25,6 +27,11 @@ export const DETACHED_ARRAY_BUFFERS: WeakSet<ArrayBuffer> = new WeakSet();
 export const NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS: WeakMap<
     TNativeAudioContext | TNativeOfflineAudioContext,
     Map<string, IAudioWorkletProcessorConstructor>
+> = new WeakMap();
+
+export const NODE_TO_PROCESSOR_MAPS: WeakMap<
+    TNativeAudioContext | TNativeOfflineAudioContext,
+    WeakMap<INativeAudioWorkletNode, Promise<IAudioWorkletProcessor>>
 > = new WeakMap();
 
 export const TEST_RESULTS: WeakMap<object, boolean> = new WeakMap();
