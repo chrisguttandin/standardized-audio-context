@@ -111,6 +111,7 @@ export const addAudioWorkletModule = (
             .then((source) => {
                 const fn = new Function(
                     'AudioWorkletProcessor',
+                    'currentFrame',
                     'currentTime',
                     'global',
                     'registerProcessor',
@@ -121,6 +122,11 @@ export const addAudioWorkletModule = (
                 );
 
                 const globalScope = Object.create(null, {
+                    currentFrame: {
+                        get () {
+                            return nativeContext.currentTime * nativeContext.sampleRate;
+                        }
+                    },
                     currentTime: {
                         get () {
                             return nativeContext.currentTime;
@@ -136,6 +142,7 @@ export const addAudioWorkletModule = (
                 // @todo Evaluating the given source code is a possible security problem.
                 fn(
                     class AudioWorkletProcessor { },
+                    globalScope.currentFrame,
                     globalScope.currentTime,
                     undefined,
                     function <T extends IAudioWorkletProcessorConstructor> (name: string, processorCtor: T) {

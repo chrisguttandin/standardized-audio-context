@@ -8,7 +8,7 @@ class InspectorProcessor extends AudioWorkletProcessor { // eslint-disable-line 
             const typeOfSelf = typeof self;
             const typeOfWindow = typeof window;
 
-            this.port.postMessage({ currentTime, options, sampleRate, typeOfGlobal, typeOfSelf, typeOfWindow }); // eslint-disable-line no-undef
+            this.port.postMessage({ currentFrame, currentTime, options, sampleRate, typeOfGlobal, typeOfSelf, typeOfWindow }); // eslint-disable-line no-undef
         };
     }
 

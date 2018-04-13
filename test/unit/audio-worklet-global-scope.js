@@ -56,6 +56,34 @@ describe('AudioWorkletGlobalScope', () => {
                 context = createContext();
             });
 
+            describe('currentFrame', () => {
+
+                let audioWorkletNode;
+
+                beforeEach(async () => {
+                    await addAudioWorkletModule(context, 'inspector-processor');
+
+                    audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
+                });
+
+                it('should expose the currentFrame of the context', (done) => {
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.currentFrame === undefined) {
+                            return;
+                        }
+
+                        audioWorkletNode.port.onmessage = null;
+
+                        expect(data.currentFrame).to.be.a('number');
+
+                        done();
+                    };
+
+                    audioWorkletNode.port.postMessage(null);
+                });
+
+            });
+
             describe('currentTime', () => {
 
                 let audioWorkletNode;
@@ -68,6 +96,12 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should expose the currentTime of the context', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.currentTime === undefined) {
+                            return;
+                        }
+
+                        audioWorkletNode.port.onmessage = null;
+
                         expect(data.currentTime).to.be.a('number');
 
                         done();
@@ -90,6 +124,12 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should not expose a global object', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.typeOfGlobal === undefined) {
+                            return;
+                        }
+
+                        audioWorkletNode.port.onmessage = null;
+
                         expect(data.typeOfGlobal).to.equal('undefined');
 
                         done();
@@ -112,6 +152,12 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should expose the sampleRate of the context', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.sampleRate === undefined) {
+                            return;
+                        }
+
+                        audioWorkletNode.port.onmessage = null;
+
                         expect(data.sampleRate).to.equal(context.sampleRate);
 
                         done();
@@ -134,6 +180,12 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should not expose a self object', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.typeOfSelf === undefined) {
+                            return;
+                        }
+
+                        audioWorkletNode.port.onmessage = null;
+
                         expect(data.typeOfSelf).to.equal('undefined');
 
                         done();
@@ -156,6 +208,12 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should not expose a window object', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.typeOfWindow === undefined) {
+                            return;
+                        }
+
+                        audioWorkletNode.port.onmessage = null;
+
                         expect(data.typeOfWindow).to.equal('undefined');
 
                         done();
@@ -186,11 +244,11 @@ describe('AudioWorkletGlobalScope', () => {
 
                             it('should call process() with an empty array for each input', (done) => {
                                 audioWorkletNode.port.onmessage = ({ data }) => {
+                                    audioWorkletNode.port.onmessage = null;
+
                                     expect(data.inputs.length).to.equal(1);
                                     expect(data.inputs[0].length).to.equal(1);
                                     expect(data.inputs[0][0].length).to.equal(0);
-
-                                    audioWorkletNode.port.onmessage = null;
 
                                     done();
                                 };
@@ -210,11 +268,11 @@ describe('AudioWorkletGlobalScope', () => {
                                 const gainNode = new GainNode(context);
 
                                 audioWorkletNode.port.onmessage = ({ data }) => {
+                                    audioWorkletNode.port.onmessage = null;
+
                                     expect(data.inputs.length).to.equal(1);
                                     expect(data.inputs[0].length).to.equal(1);
                                     expect(data.inputs[0][0].length).to.equal(128);
-
-                                    audioWorkletNode.port.onmessage = null;
 
                                     done();
                                 };
@@ -236,11 +294,11 @@ describe('AudioWorkletGlobalScope', () => {
 
                         it('should call process() with the current outputs', (done) => {
                             audioWorkletNode.port.onmessage = ({ data }) => {
+                                audioWorkletNode.port.onmessage = null;
+
                                 expect(data.outputs.length).to.equal(1);
                                 expect(data.outputs[0].length).to.equal(1);
                                 expect(data.outputs[0][0].length).to.equal(128);
-
-                                audioWorkletNode.port.onmessage = null;
 
                                 done();
                             };
@@ -262,9 +320,9 @@ describe('AudioWorkletGlobalScope', () => {
                             values.fill(1);
 
                             audioWorkletNode.port.onmessage = ({ data }) => {
-                                expect(Array.from(data.parameters.gain)).to.deep.equal(values);
-
                                 audioWorkletNode.port.onmessage = null;
+
+                                expect(Array.from(data.parameters.gain)).to.deep.equal(values);
 
                                 done();
                             };
