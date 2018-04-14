@@ -547,7 +547,7 @@ describe('AudioContext', () => {
                 let arrayBuffer;
 
                 beforeEach(function (done) {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     // PNG files are not supported by any browser :-)
                     loadFixture('one-pixel-of-transparency.png', (err, rrBffr) => {
@@ -601,7 +601,7 @@ describe('AudioContext', () => {
                 let arrayBuffer;
 
                 beforeEach((done) => {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     loadFixture('1000-frames-of-noise.wav', (err, rrBffr) => {
                         expect(err).to.be.null;

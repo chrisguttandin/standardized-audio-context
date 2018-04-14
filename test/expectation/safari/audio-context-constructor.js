@@ -737,7 +737,7 @@ describe('audioContextConstructor', () => {
             // bug #4
 
             it('should throw null when asked to decode an unsupported file', function (done) {
-                this.timeout(5000);
+                this.timeout(10000);
 
                 // PNG files are not supported by any browser :-)
                 loadFixture('one-pixel-of-transparency.png', (err, arrayBuffer) => {

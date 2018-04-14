@@ -343,7 +343,7 @@ describe('GainNode', () => {
                             describe('without any automation', () => {
 
                                 it('should not modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode }) {
@@ -360,7 +360,7 @@ describe('GainNode', () => {
                             describe('with a modified value', () => {
 
                                 it('should modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         prepare ({ gainNode }) {
@@ -380,7 +380,7 @@ describe('GainNode', () => {
                             describe('with a call to setValueAtTime()', () => {
 
                                 it('should modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, gainNode }) {
@@ -399,7 +399,7 @@ describe('GainNode', () => {
                             describe('with a call to setValueCurveAtTime()', () => {
 
                                 it('should modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, gainNode }) {
@@ -419,7 +419,7 @@ describe('GainNode', () => {
                             describe('with another AudioNode connected to the AudioParam', () => {
 
                                 it('should modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         prepare ({ gainNode }) {
@@ -557,7 +557,7 @@ describe('GainNode', () => {
                 });
 
                 it('should be possible to disconnect a destination', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ firstDummyGainNode, gainNode }) {
@@ -573,7 +573,7 @@ describe('GainNode', () => {
                 });
 
                 it('should be possible to disconnect another destination in isolation', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ gainNode, secondDummyGainNode }) {
@@ -589,7 +589,7 @@ describe('GainNode', () => {
                 });
 
                 it('should be possible to disconnect all destinations', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ gainNode }) {

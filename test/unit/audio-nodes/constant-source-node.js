@@ -338,7 +338,7 @@ describe('ConstantSourceNode', () => {
                             describe('without any automation', () => {
 
                                 it('should not modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         start (startTime, { constantSourceNode }) {
@@ -355,7 +355,7 @@ describe('ConstantSourceNode', () => {
                             describe('with a modified value', () => {
 
                                 it('should modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         prepare ({ constantSourceNode }) {
@@ -375,7 +375,7 @@ describe('ConstantSourceNode', () => {
                             describe('with a call to setValueAtTime()', () => {
 
                                 it('should modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         start (startTime, { constantSourceNode }) {
@@ -394,7 +394,7 @@ describe('ConstantSourceNode', () => {
                             describe('with a call to setValueCurveAtTime()', () => {
 
                                 it('should modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         start (startTime, { constantSourceNode }) {
@@ -414,7 +414,7 @@ describe('ConstantSourceNode', () => {
                             describe('with another AudioNode connected to the AudioParam', () => {
 
                                 it('should modify the signal', function () {
-                                    this.timeout(5000);
+                                    this.timeout(10000);
 
                                     return renderer({
                                         prepare ({ constantSourceNode }) {
@@ -598,7 +598,7 @@ describe('ConstantSourceNode', () => {
                 });
 
                 it('should be possible to disconnect a destination', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ constantSourceNode, firstDummyGainNode }) {
@@ -614,7 +614,7 @@ describe('ConstantSourceNode', () => {
                 });
 
                 it('should be possible to disconnect another destination in isolation', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ constantSourceNode, secondDummyGainNode }) {
@@ -630,7 +630,7 @@ describe('ConstantSourceNode', () => {
                 });
 
                 it('should be possible to disconnect all destinations', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ constantSourceNode }) {
@@ -795,7 +795,7 @@ describe('ConstantSourceNode', () => {
                             });
 
                             it('should apply the values from the last invocation', function () {
-                                this.timeout(5000);
+                                this.timeout(10000);
 
                                 return renderer({
                                     start (startTime, { constantSourceNode }) {
@@ -849,7 +849,7 @@ describe('ConstantSourceNode', () => {
                             });
 
                             it('should not play anything', function () {
-                                this.timeout(5000);
+                                this.timeout(10000);
 
                                 return renderer({
                                     start (startTime, { constantSourceNode }) {

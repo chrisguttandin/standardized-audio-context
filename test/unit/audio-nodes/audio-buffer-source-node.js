@@ -438,7 +438,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo     describe('without any automation', () => {
                  * @todo
                  * @todo         it('should not modify the signal', function () {
-                 * @todo             this.timeout(5000);
+                 * @todo             this.timeout(10000);
                  * @todo
                  * @todo             return renderer({
                  * @todo                 start (startTime, { audioBufferSourceNode }) {
@@ -455,7 +455,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo     describe('with a modified value', () => {
                  * @todo
                  * @todo         it('should modify the signal', function () {
-                 * @todo             this.timeout(5000);
+                 * @todo             this.timeout(10000);
                  * @todo
                  * @todo             return renderer({
                  * @todo                 prepare ({ audioBufferSourceNode }) {
@@ -475,7 +475,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo     describe('with a call to setValueAtTime()', () => {
                  * @todo
                  * @todo         it('should modify the signal', function () {
-                 * @todo             this.timeout(5000);
+                 * @todo             this.timeout(10000);
                  * @todo
                  * @todo             return renderer({
                  * @todo                 start (startTime, { audioBufferSourceNode }) {
@@ -494,7 +494,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo     describe('with a call to setValueCurveAtTime()', () => {
                  * @todo
                  * @todo         it('should modify the signal', function () {
-                 * @todo             this.timeout(5000);
+                 * @todo             this.timeout(10000);
                  * @todo
                  * @todo             return renderer({
                  * @todo                 start (startTime, { audioBufferSourceNode }) {
@@ -514,7 +514,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo     describe('with another AudioNode connected to the AudioParam', () => {
                  * @todo
                  * @todo         it('should modify the signal', function () {
-                 * @todo             this.timeout(5000);
+                 * @todo             this.timeout(10000);
                  * @todo
                  * @todo             return renderer({
                  * @todo                 prepare ({ audioBufferSourceNode }) {
@@ -802,7 +802,7 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 it('should be possible to disconnect a destination', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ audioBufferSourceNode, firstDummyGainNode }) {
@@ -818,7 +818,7 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 it('should be possible to disconnect another destination in isolation', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ audioBufferSourceNode, secondDummyGainNode }) {
@@ -834,7 +834,7 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 it('should be possible to disconnect all destinations', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ audioBufferSourceNode }) {
@@ -1006,7 +1006,7 @@ describe('AudioBufferSourceNode', () => {
                             });
 
                             it('should apply the values from the last invocation', function () {
-                                this.timeout(5000);
+                                this.timeout(10000);
 
                                 return renderer({
                                     start (startTime, { audioBufferSourceNode }) {
@@ -1064,7 +1064,7 @@ describe('AudioBufferSourceNode', () => {
                             });
 
                             it('should not play anything', function () {
-                                this.timeout(5000);
+                                this.timeout(10000);
 
                                 return renderer({
                                     start (startTime, { audioBufferSourceNode }) {

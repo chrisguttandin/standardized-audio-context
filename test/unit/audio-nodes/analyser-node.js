@@ -359,7 +359,7 @@ describe('AnalyserNode', () => {
                 });
 
                 it('should be possible to disconnect a destination', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ analyserNode, firstDummyGainNode }) {
@@ -375,7 +375,7 @@ describe('AnalyserNode', () => {
                 });
 
                 it('should be possible to disconnect another destination in isolation', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ analyserNode, secondDummyGainNode }) {
@@ -391,7 +391,7 @@ describe('AnalyserNode', () => {
                 });
 
                 it('should be possible to disconnect all destinations', function () {
-                    this.timeout(5000);
+                    this.timeout(10000);
 
                     return renderer({
                         prepare ({ analyserNode }) {
