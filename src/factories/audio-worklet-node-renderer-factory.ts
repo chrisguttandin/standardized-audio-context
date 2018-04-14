@@ -236,9 +236,10 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
                             if (processedBuffer !== null) {
                                 audioBufferSourceNode.buffer = processedBuffer;
-                                audioBufferSourceNode.connect(outputChannelSplitterNode);
                                 audioBufferSourceNode.start(0);
                             }
+
+                            audioBufferSourceNode.connect(outputChannelSplitterNode);
 
                             for (let i = 0, outputChannelSplitterNodeOutput = 0; i < proxy.numberOfOutputs; i += 1) {
                                 const outputChannelMergerNode = outputChannelMergerNodes[i];
@@ -250,11 +251,16 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                                 outputChannelSplitterNodeOutput += options.outputChannelCount[i];
                             }
 
+                            // Bug #87: Expose at least one output to make this node connectable.
+                            const outputAudioNodes = (options.numberOfOutputs === 0) ?
+                                [ outputChannelSplitterNode ] :
+                                outputChannelMergerNodes;
+
                             audioBufferSourceNode.connect = (...args: any[]) => {
-                                return <any> connectMultipleOutputs(outputChannelMergerNodes, args[0], args[1], args[2]);
+                                return <any> connectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
                             };
                             audioBufferSourceNode.disconnect = (...args: any[]) => {
-                                return <any> disconnectMultipleOutputs(outputChannelMergerNodes, args[0], args[1], args[2]);
+                                return <any> disconnectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
                             };
 
                             nativeNode = audioBufferSourceNode;

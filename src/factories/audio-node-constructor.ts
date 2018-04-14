@@ -211,8 +211,12 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             }
 
             try {
-                // @todo This is only needed to throw possible errors when context is an OfflineAudioContext.
                 this._nativeNode.connect(nativeAudioParam, output);
+
+                // @todo Calling connect() is only needed to throw possible errors when the nativeContext is an OfflineAudioContext.
+                if (isNativeOfflineAudioContext(nativeContext)) {
+                    this._nativeNode.disconnect(nativeAudioParam, output);
+                }
             } catch (err) {
                 // Bug #58: Only Firefox does throw an InvalidStateError yet.
                 if (err.code === 12) {

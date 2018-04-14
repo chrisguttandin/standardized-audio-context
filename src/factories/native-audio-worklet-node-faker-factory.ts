@@ -135,10 +135,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         inputChannelMergerNode.connect(scriptProcessorNode);
 
-        // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.
-        if (options.numberOfOutputs === 0) {
-            scriptProcessorNode.connect(nativeAudioContext.destination);
-        } else {
+        if (options.numberOfOutputs > 0) {
             scriptProcessorNode.connect(outputChannelSplitterNode);
         }
 
@@ -154,6 +151,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         let onprocessorerror: null | TProcessorErrorEventHandler = null;
 
+        // Bug #87: Expose at least one output to make this node connectable.
+        const outputAudioNodes = (options.numberOfOutputs === 0) ? [ scriptProcessorNode ] : outputChannelMergerNodes;
         const faker = {
             get bufferSize () {
                 return bufferSize;
@@ -212,10 +211,10 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 return gainNodes[0].addEventListener(args[0], args[1], args[2]);
             },
             connect (...args: any[]) {
-                return <any> connectMultipleOutputs(outputChannelMergerNodes, args[0], args[1], args[2]);
+                return <any> connectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
             },
             disconnect (...args: any[]) {
-                return <any> disconnectMultipleOutputs(outputChannelMergerNodes, args[0], args[1], args[2]);
+                return <any> disconnectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
             },
             dispatchEvent (...args: any[]) {
                 return gainNodes[0].dispatchEvent(args[0]);

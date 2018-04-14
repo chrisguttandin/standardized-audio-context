@@ -69,6 +69,8 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         private _nativeNode: INativeAudioWorkletNode;
 
+        private _numberOfOutputs: number;
+
         private _parameters: null | TAudioParamMap;
 
         constructor (context: IMinimalBaseAudioContext, name: string, options: IAudioWorkletNodeOptions = DEFAULT_OPTIONS) {
@@ -101,12 +103,18 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             });
 
             this._nativeNode = nativeNode;
+            // Bug #86 & #87: Every browser but Firefox needs to get an unused output which should not be exposed.
+            this._numberOfOutputs = (options.numberOfOutputs === 0) ? 0 : this._nativeNode.numberOfOutputs;
             this._parameters = new ReadOnlyMap(parameters);
 
-            // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.
-            if (nativeAudioWorkletNodeConstructor === null && options.numberOfOutputs === 0 && isOffline) {
+            // Bug #86 & #87: Every browser but Firefox needs an output to be connected.
+            if (options.numberOfOutputs === 0) {
                 this.connect(context.destination);
             }
+        }
+
+        public get numberOfOutputs () {
+            return this._numberOfOutputs;
         }
 
         public get onprocessorerror () {

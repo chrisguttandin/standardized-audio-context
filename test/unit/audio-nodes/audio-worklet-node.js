@@ -381,6 +381,10 @@ describe('AudioWorkletNode', () => {
                         if (inputs !== undefined) {
                             audioWorkletNode.port.onmessage = null;
 
+                            expect(inputs.length).to.equal(1);
+                            // @todo Test the number of inputs.
+                            expect(inputs[0][0].length).to.equal(128);
+
                             expect(outputs.length).to.equal(0);
 
                             done();

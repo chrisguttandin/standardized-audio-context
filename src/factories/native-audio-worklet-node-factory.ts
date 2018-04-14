@@ -19,14 +19,6 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                     }) :
                     new nativeAudioWorkletNodeConstructor(nativeContext, name, options);
 
-                if (options.numberOfOutputs === 0) {
-                    nativeNode.connect(nativeContext.destination);
-
-                    Object.defineProperty(nativeNode, 'numberOfOutputs', {
-                        get: () => 0
-                    });
-                }
-
                 /*
                  * Bug #61: Overwriting the property accessors is necessary as long as some browsers have no native implementation to
                  * achieve a consistent behavior.
