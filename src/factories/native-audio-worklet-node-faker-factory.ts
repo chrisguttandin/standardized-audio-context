@@ -1,13 +1,12 @@
 import { createAudioWorkletProcessor } from '../helpers/create-audio-worklet-processor';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
-import { IAudioWorkletProcessor, INativeAudioWorkletNode } from '../interfaces';
+import { IAudioWorkletProcessor, INativeAudioWorkletNode, INativeConstantSourceNode } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
     TNativeAudioParam,
     TNativeAudioWorkletNodeFakerFactoryFactory,
     TNativeChannelMergerNode,
-    TNativeConstantSourceNode,
     TNativeGainNode,
     TProcessorErrorEventHandler
 } from '../types';
@@ -69,7 +68,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }));
         }
 
-        const constantSourceNodes: TNativeConstantSourceNode[] = [ ];
+        const constantSourceNodes: INativeConstantSourceNode[] = [ ];
 
         for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
             const constantSourceNode = createNativeConstantSourceNode(nativeAudioContext, {

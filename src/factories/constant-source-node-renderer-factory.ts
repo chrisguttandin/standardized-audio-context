@@ -3,14 +3,14 @@ import { getNativeNode } from '../helpers/get-native-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IConstantSourceNode, IConstantSourceOptions } from '../interfaces';
-import { TConstantSourceNodeRendererFactoryFactory, TNativeConstantSourceNode, TNativeOfflineAudioContext } from '../types';
+import { IConstantSourceNode, IConstantSourceOptions, INativeConstantSourceNode } from '../interfaces';
+import { TConstantSourceNodeRendererFactoryFactory, TNativeOfflineAudioContext } from '../types';
 
 export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendererFactoryFactory = (
     createNativeConstantSourceNode
 ) => {
     return () => {
-        let nativeNode: null | TNativeConstantSourceNode = null;
+        let nativeNode: null | INativeConstantSourceNode = null;
         let start: null | number = null;
         let stop: null | number = null;
 
@@ -24,12 +24,12 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
             render: async (
                 proxy: IConstantSourceNode,
                 offlineAudioContext: TNativeOfflineAudioContext
-            ): Promise<TNativeConstantSourceNode> => {
+            ): Promise<INativeConstantSourceNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }
 
-                nativeNode = <TNativeConstantSourceNode> getNativeNode(proxy);
+                nativeNode = <INativeConstantSourceNode> getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
                 if (!isOwnedByContext(nativeNode, offlineAudioContext)) {

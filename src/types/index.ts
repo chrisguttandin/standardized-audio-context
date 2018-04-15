@@ -88,7 +88,6 @@ export * from './native-channel-merger-node';
 export * from './native-channel-merger-node-factory';
 export * from './native-channel-splitter-node';
 export * from './native-channel-splitter-node-factory';
-export * from './native-constant-source-node';
 export * from './native-constant-source-node-factory';
 export * from './native-constant-source-node-factory-factory';
 export * from './native-constant-source-node-faker-factory';

@@ -1,4 +1,5 @@
-import { TNativeConstantSourceNode, TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
+import { INativeConstantSourceNode } from '../interfaces';
+import { TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
 
 export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNodeFakerFactoryFactory = (
     createNativeAudioBufferSourceNode,
@@ -64,7 +65,7 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
                 return gainNode.gain;
             },
             get onended () {
-                return <TNativeConstantSourceNode['onended']> audioBufferSourceNode.onended;
+                return <INativeConstantSourceNode['onended']> audioBufferSourceNode.onended;
             },
             set onended (value) {
                 audioBufferSourceNode.onended = <any> value;
