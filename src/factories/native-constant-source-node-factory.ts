@@ -29,11 +29,6 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
 
         assignNativeAudioNodeOptions(nativeNode, options);
 
-        // Bug #67: Firefox initializes the ConstantSourceNode with a channelCount of 1 instead of 2.
-        if (nativeNode.channelCount === 1) {
-            nativeNode.channelCount = 2;
-        }
-
         if (options.offset !== nativeNode.offset.value) {
             nativeNode.offset.value = options.offset;
         }
