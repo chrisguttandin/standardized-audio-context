@@ -130,7 +130,7 @@ This is an implementation of the
 This is an implementation of the
 [`OscillatorNode`](https://webaudio.github.io/web-audio-api/#oscillatornode) constructor and the [`createOscillator()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createoscillator) factory method respectively.
 
-### isSupported
+### isSupported()
 
  `standardized-audio-context` is also exporting a promise which can be accessed by calling `isSupported()`. This promise resolves to a boolean which indicates if the functionality is supported within the currently used browser. This is not part of the specification.
 
