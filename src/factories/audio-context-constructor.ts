@@ -1,5 +1,5 @@
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
-import { IAudioContext, IAudioContextOptions } from '../interfaces';
+import { IAudioContext, IAudioContextOptions, IMediaElementAudioSourceNode, IMediaStreamAudioSourceNode } from '../interfaces';
 import { TAudioContextConstructorFactory, TNativeAudioContext } from '../types';
 
 export const createAudioContextConstructor: TAudioContextConstructorFactory = (
@@ -60,12 +60,12 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             return (this._state !== null) ? this._state : this._nativeAudioContext.state;
         }
 
-        public createMediaElementSource (mediaElement: HTMLMediaElement) {
-            return new mediaElementAudioSourceNodeConstructor(<any> this, { mediaElement });
+        public createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode {
+            return new mediaElementAudioSourceNodeConstructor(this, { mediaElement });
         }
 
-        public createMediaStreamSource (mediaStream: MediaStream) {
-            return new mediaStreamAudioSourceNodeConstructor(<any> this, { mediaStream });
+        public createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode {
+            return new mediaStreamAudioSourceNodeConstructor(this, { mediaStream });
         }
 
         public close () {

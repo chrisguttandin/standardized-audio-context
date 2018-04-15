@@ -36,8 +36,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
         }
 
         public get mediaStream () {
-            // @todo TypeScript is not yet aware of the mediaStream property.
-            return ((<any> this._nativeNode).mediaStream === undefined) ? this._mediaStream : (<any> this._nativeNode).mediaStream;
+            return (this._nativeNode.mediaStream === undefined) ? this._mediaStream : this._nativeNode.mediaStream;
         }
 
     };

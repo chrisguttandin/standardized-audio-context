@@ -4,10 +4,15 @@ import {
     IConstantSourceNode,
     IConstantSourceNodeRenderer,
     IConstantSourceOptions,
-    IMinimalBaseAudioContext,
-    INativeConstantSourceNode
+    IMinimalBaseAudioContext
 } from '../interfaces';
-import { TChannelCountMode, TChannelInterpretation, TConstantSourceNodeConstructorFactory, TEndedEventHandler } from '../types';
+import {
+    TChannelCountMode,
+    TChannelInterpretation,
+    TConstantSourceNodeConstructorFactory,
+    TEndedEventHandler,
+    TNativeConstantSourceNode
+} from '../types';
 
 const DEFAULT_OPTIONS: IConstantSourceOptions = {
     channelCount: 2,
@@ -28,7 +33,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         private _constantSourceNodeRenderer: null | IConstantSourceNodeRenderer;
 
-        private _nativeNode: INativeConstantSourceNode;
+        private _nativeNode: TNativeConstantSourceNode;
 
         private _offset: IAudioParam;
 

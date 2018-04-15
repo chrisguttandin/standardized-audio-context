@@ -6,7 +6,7 @@ export const createNativeAudioContextConstructor: TNativeAudioContextConstructor
     }
 
     if (window.hasOwnProperty('AudioContext')) {
-        return (<any> window).AudioContext;
+        return window.AudioContext;
     }
 
     return (window.hasOwnProperty('webkitAudioContext')) ? (<any> window).webkitAudioContext : null;

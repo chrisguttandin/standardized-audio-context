@@ -36,8 +36,7 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
         }
 
         public get mediaElement () {
-            // @todo TypeScript is not yet aware of the mediaElement property.
-            return ((<any> this._nativeNode).mediaElement === undefined) ? this._mediaElement : (<any> this._nativeNode).mediaElement;
+            return (this._nativeNode.mediaElement === undefined) ? this._mediaElement : this._nativeNode.mediaElement;
         }
 
     };

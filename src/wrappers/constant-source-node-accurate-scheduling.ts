@@ -1,8 +1,7 @@
-import { INativeConstantSourceNode } from '../interfaces';
-import { TNativeAudioContext, TNativeAudioNode, TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
+import { TNativeAudioContext, TNativeAudioNode, TNativeAudioParam, TNativeConstantSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const wrapConstantSourceNodeAccurateScheduling = (
-    constantSourceNode: INativeConstantSourceNode,
+    constantSourceNode: TNativeConstantSourceNode,
     audioContext: TNativeAudioContext | TNativeOfflineAudioContext
 ): void => {
     const gainNode = audioContext.createGain();

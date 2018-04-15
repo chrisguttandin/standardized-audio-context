@@ -10,8 +10,7 @@ export const cloneAudioWorkletNodeOptions = (audioWorkletNodeOptions: IAudioWork
 
             resolve(data);
         };
-        // @todo TypeScript doesn't know yet about onmessageerror.
-        (<any> port1).onmessageerror = ({ data }: MessageEvent) => {
+        port1.onmessageerror = ({ data }: MessageEvent) => {
             port1.close();
             port2.close();
 
