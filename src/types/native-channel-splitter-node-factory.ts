@@ -5,6 +5,5 @@ import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
 export type TNativeChannelSplitterNodeFactory = (
     nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
-    // @todo Do only accept the full IChannelSplitterOptions dictionary.
-    options?: Partial<IChannelSplitterOptions>
+    options: IChannelSplitterOptions
 ) => TNativeChannelSplitterNode;

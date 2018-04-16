@@ -64,6 +64,9 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 gain: 1
             }));
             inputChannelSplitterNodes.push(createNativeChannelSplitterNode(nativeAudioContext, {
+                channelCount: options.channelCount,
+                channelCountMode: 'explicit',
+                channelInterpretation: 'discrete',
                 numberOfOutputs: options.channelCount
             }));
         }
@@ -104,6 +107,9 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             Math.max(1, numberOfOutputChannels)
         );
         const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeAudioContext, {
+            channelCount: Math.max(1, numberOfOutputChannels),
+            channelCountMode: 'explicit',
+            channelInterpretation: 'discrete',
             numberOfOutputs: Math.max(1, numberOfOutputChannels)
         });
         const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];

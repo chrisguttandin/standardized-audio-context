@@ -169,6 +169,9 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             gain: 1
                         }));
                         inputChannelSplitterNodes.push(createNativeChannelSplitterNode(partialOfflineAudioContext, {
+                            channelCount: options.channelCount,
+                            channelCountMode: 'explicit',
+                            channelInterpretation: 'discrete',
                             numberOfOutputs: options.channelCount
                         }));
                     }
@@ -216,6 +219,9 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             const audioBufferSourceNode = createNativeAudioBufferSourceNode(offlineAudioContext);
                             const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
                             const outputChannelSplitterNode = createNativeChannelSplitterNode(offlineAudioContext, {
+                                channelCount: Math.max(1, numberOfOutputChannels),
+                                channelCountMode: 'explicit',
+                                channelInterpretation: 'discrete',
                                 numberOfOutputs: Math.max(1, numberOfOutputChannels)
                             });
                             const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
