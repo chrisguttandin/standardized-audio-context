@@ -58,8 +58,15 @@ module.exports = (config) => {
         config.set({
 
             browsers: [
-                'ChromeHeadless'
-            ]
+                'ChromeHeadlessWithNoRequiredUserGesture'
+            ],
+
+            customLaunchers: {
+                ChromeHeadlessWithNoRequiredUserGesture: {
+                    base: 'ChromeHeadless',
+                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
+                }
+            }
 
         });
 

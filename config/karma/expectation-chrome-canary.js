@@ -62,6 +62,7 @@ module.exports = (config) => {
                     flags: [ '--autoplay-policy=no-user-gesture-required' ]
                 }
             }
+
         });
 
     }
