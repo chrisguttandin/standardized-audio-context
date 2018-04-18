@@ -193,7 +193,7 @@ export const createRenderer = ({ context, create, length, prepare }) => {
             throw new Error('Running tests for longer than 128 samples is not yet possible.');
         }
 
-        return async ({ prepare: prepareBeforeStart, start }) => {
+        return async ({ prepare: prepareBeforeStart, start, verifyChannelData = true }) => {
             const MAX_RETRIES = 9;
 
             let channelData = null;
@@ -201,9 +201,27 @@ export const createRenderer = ({ context, create, length, prepare }) => {
 
             while (indexOfCurrentTry < MAX_RETRIES) {
                 try {
-                    channelData = await renderOnOnlineContext({ context, create, length, prepare, prepareBeforeStart, start });
+                    const newChannelData = await renderOnOnlineContext({ context, create, length, prepare, prepareBeforeStart, start });
 
-                    break;
+                    if (channelData === null) {
+                        channelData = newChannelData;
+
+                        if (!verifyChannelData) {
+                            break;
+                        }
+                    } else {
+                        for (let i = 0; i < length; i += 1) {
+                            if (channelData[i] !== newChannelData[i]) {
+                                channelData = null;
+                                // @todo Limit the number of retries in case of different results.
+                                indexOfCurrentTry = 0;
+
+                                throw new Error('Two consecutive recordings had a different result.');
+                            }
+                        }
+
+                        break;
+                    }
                 } catch (err) {
                     indexOfCurrentTry += 1;
 

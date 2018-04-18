@@ -318,7 +318,8 @@ describe('MediaElementAudioSourceNode', () => {
                     return renderer({
                         prepare ({ firstDummyGainNode, mediaElementAudioSourceNode }) {
                             mediaElementAudioSourceNode.disconnect(firstDummyGainNode);
-                        }
+                        },
+                        verifyChannelData: false
                     })
                         .then((channelData) => {
                             expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
@@ -331,7 +332,8 @@ describe('MediaElementAudioSourceNode', () => {
                     return renderer({
                         prepare ({ mediaElementAudioSourceNode, secondDummyGainNode }) {
                             mediaElementAudioSourceNode.disconnect(secondDummyGainNode);
-                        }
+                        },
+                        verifyChannelData: false
                     })
                         .then((channelData) => {
                             // @todo The mediaElement will just play a sine wave. Therefore it is okay to only test for non zero values.
@@ -345,7 +347,8 @@ describe('MediaElementAudioSourceNode', () => {
                     return renderer({
                         prepare ({ mediaElementAudioSourceNode }) {
                             mediaElementAudioSourceNode.disconnect();
-                        }
+                        },
+                        verifyChannelData: false
                     })
                         .then((channelData) => {
                             expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
