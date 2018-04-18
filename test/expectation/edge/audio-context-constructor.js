@@ -221,6 +221,12 @@ describe('audioContextConstructor', () => {
                     expect(Array.from(phaseResponse)).to.deep.equal([ -0.7254799008369446, -1.8217267990112305, -2.6273605823516846, -2.906902313232422, -3.0283825397491455 ]);
                 });
 
+                // bug #68
+
+                it('should throw no error', () => {
+                    biquadFilterNode.getFrequencyResponse(new Float32Array(), new Float32Array(1), new Float32Array(1));
+                });
+
             });
 
         });

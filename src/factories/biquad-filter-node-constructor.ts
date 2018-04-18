@@ -87,7 +87,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
         public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
             this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
 
-            // Bug #68: Chrome does not throw an error if the parameters differ in their length.
+            // Bug #68: Only Chrome does throw an error if the parameters differ in their length.
             if ((frequencyHz.length !== magResponse.length) || (magResponse.length !== phaseResponse.length)) {
                 throw createInvalidAccessError();
             }
