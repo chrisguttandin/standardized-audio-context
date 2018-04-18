@@ -498,7 +498,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo
                  * @todo             return renderer({
                  * @todo                 start (startTime, { audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, startTime + (5 / context.sampleRate));
+                 * @todo                     audioBufferSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, (6 / context.sampleRate));
                  * @todo
                  * @todo                     audioBufferSourceNode.start(startTime);
                  * @todo                 }
