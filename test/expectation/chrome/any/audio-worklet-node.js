@@ -70,9 +70,9 @@ describe('AudioWorklet', () => {
                     values.fill(1);
 
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        expect(Array.from(data.parameters.gain)).to.deep.equal(values);
-
                         audioWorkletNode.port.onmessage = null;
+
+                        expect(Array.from(data.parameters.gain)).to.deep.equal(values);
 
                         done();
                     };
@@ -83,7 +83,33 @@ describe('AudioWorklet', () => {
 
     });
 
-    describe('without any outputs', () => {
+    describe('without any connected inputs', () => {
+
+        // bug #88
+
+        it('should call process() with an nonempty array for each input', (done) => {
+            audioContext.audioWorklet
+                .addModule('base/test/fixtures/inspector-processor.js')
+                .then(() => {
+                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor'); // eslint-disable-line no-undef
+
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.inputs !== undefined) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.inputs[0].length).to.not.equal(0);
+
+                            done();
+                        }
+                    };
+
+                    audioWorkletNode.connect(audioContext.destination);
+                });
+        });
+
+    });
+
+    describe('without any connected outputs', () => {
 
         // bug #86
 

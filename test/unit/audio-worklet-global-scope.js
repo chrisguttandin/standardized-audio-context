@@ -242,23 +242,27 @@ describe('AudioWorkletGlobalScope', () => {
 
                         describe('without any connected input', () => {
 
-                            it('should call process() with an empty array for each input', (done) => {
-                                audioWorkletNode.port.onmessage = ({ data }) => {
-                                    audioWorkletNode.port.onmessage = null;
+                            // Bug #88: Chrome doesn't correctly handle that edge case.
+                            if (window.AudioWorkletNode === undefined) {
 
-                                    expect(data.inputs.length).to.equal(1);
-                                    expect(data.inputs[0].length).to.equal(1);
-                                    expect(data.inputs[0][0].length).to.equal(0);
+                                it('should call process() with an empty array for each input', (done) => {
+                                    audioWorkletNode.port.onmessage = ({ data }) => {
+                                        audioWorkletNode.port.onmessage = null;
 
-                                    done();
-                                };
+                                        expect(data.inputs.length).to.equal(1);
+                                        expect(data.inputs[0].length).to.equal(0);
 
-                                audioWorkletNode.connect(context.destination);
+                                        done();
+                                    };
 
-                                if (context.startRendering !== undefined) {
-                                    context.startRendering();
-                                }
-                            });
+                                    audioWorkletNode.connect(context.destination);
+
+                                    if (context.startRendering !== undefined) {
+                                        context.startRendering();
+                                    }
+                                });
+
+                            }
 
                         });
 
