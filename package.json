@@ -36,7 +36,7 @@
     "grunt-modernizr": "^1.0.2",
     "grunt-replace": "^1.0.1",
     "grunt-sh": "^0.2.0",
-    "grunt-tslint": "^5.0.0",
+    "grunt-tslint": "^5.0.2",
     "gruntify-eslint": "^4.0.0",
     "husky": "^0.14.3",
     "karma": "^2.0.0",
