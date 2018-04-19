@@ -71,7 +71,7 @@ module.exports = (config) => {
             browsers: [
                 'ChromeSauceLabs',
                 'EdgeBrowserStack',
-                'FirefoxSauceLabs'
+                'FirefoxBrowserStack'
                 /*
                  * @todo Enable Safari tests again.
                  * 'SafariBrowserStack'
@@ -92,10 +92,11 @@ module.exports = (config) => {
                     os: 'Windows',
                     os_version: '10' // eslint-disable-line camelcase
                 },
-                FirefoxSauceLabs: {
-                    base: 'SauceLabs',
-                    browserName: 'firefox',
-                    platform: 'OS X 10.11'
+                FirefoxBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'firefox',
+                    os: 'OS X',
+                    os_version: 'Sierra' // eslint-disable-line camelcase
                 },
                 SafariBrowserStack: {
                     base: 'BrowserStack',
