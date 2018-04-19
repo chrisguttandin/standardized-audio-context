@@ -10,7 +10,7 @@ export interface IAudioWorkletNodeConstructor {
     new (
         context: IAudioContext | IMinimalAudioContext | IMinimalOfflineAudioContext | IOfflineAudioContext,
         name: string,
-        options?: IAudioWorkletNodeOptions
+        options?: Partial<IAudioWorkletNodeOptions>
     ): IAudioWorkletNode;
 
 }

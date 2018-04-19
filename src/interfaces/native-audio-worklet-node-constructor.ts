@@ -6,7 +6,7 @@ export interface INativeAudioWorkletNodeConstructor {
     new (
         context: TNativeAudioContext | TNativeOfflineAudioContext,
         name: string,
-        options?: TNativeAudioWorkletNodeOptions
+        options?: Partial<TNativeAudioWorkletNodeOptions>
     ): INativeAudioWorkletNode;
 
 }
