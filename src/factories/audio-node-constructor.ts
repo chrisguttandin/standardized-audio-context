@@ -98,6 +98,10 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
     return class AudioNode extends EventTarget implements IAudioNode {
 
+        public channelCount: number;
+
+        public channelCountMode: TChannelCountMode;
+
         private _context: TContext;
 
         private _nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode;
@@ -125,22 +129,6 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             AUDIO_NODE_STORE.set(this, nativeAudioNode);
 
             addAudioNode(context, this, audioNodeRenderer, nativeAudioNode);
-        }
-
-        public get channelCount (): number {
-            throw new Error('This needs to implemented.');
-        }
-
-        public set channelCount (_: number) {
-            throw new Error('This needs to implemented.');
-        }
-
-        public get channelCountMode (): TChannelCountMode {
-            throw new Error('This needs to implemented.');
-        }
-
-        public set channelCountMode (_: TChannelCountMode) {
-            throw new Error('This needs to implemented.');
         }
 
         public get channelInterpretation () {
