@@ -4,7 +4,7 @@ import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from './globals';
 import { getNativeContext } from './helpers/get-native-context';
 import { isConstructible } from './helpers/is-constructible';
 import { IAudioWorkletProcessorConstructor, IWorkletOptions } from './interfaces';
-import { TNativeAudioWorklet, TStandardizedContext } from './types';
+import { TContext, TNativeAudioWorklet } from './types';
 
 const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessorConstructor['parameterDescriptors']) => {
     if (!Array.isArray(parameterDescriptors)) {
@@ -26,11 +26,11 @@ const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (proce
     }
 };
 
-const ongoingRequests: WeakMap<TStandardizedContext, Map<string, Promise<void>>> = new WeakMap();
-const resolvedRequests: WeakMap<TStandardizedContext, Set<string>> = new WeakMap();
+const ongoingRequests: WeakMap<TContext, Map<string, Promise<void>>> = new WeakMap();
+const resolvedRequests: WeakMap<TContext, Set<string>> = new WeakMap();
 
 export const addAudioWorkletModule = (
-    context: TStandardizedContext,
+    context: TContext,
     moduleURL: string,
     options: IWorkletOptions = { credentials: 'omit' }
 ): Promise<void> => {

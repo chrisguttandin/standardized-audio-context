@@ -5,8 +5,8 @@ import {
     TBiquadFilterType,
     TChannelCountMode,
     TChannelInterpretation,
-    TNativeBiquadFilterNode,
-    TStandardizedContext
+    TContext,
+    TNativeBiquadFilterNode
 } from '../types';
 
 const DEFAULT_OPTIONS: IBiquadFilterOptions = {
@@ -41,7 +41,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
         private _nativeBiquadFilterNode: TNativeBiquadFilterNode;
 
-        constructor (context: TStandardizedContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IBiquadFilterOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeBiquadFilterNode = createNativeBiquadFilterNode(nativeContext, mergedOptions);

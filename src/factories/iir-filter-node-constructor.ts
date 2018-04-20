@@ -3,9 +3,9 @@ import { IIIRFilterNode, IIIRFilterOptions } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
+    TContext,
     TIIRFilterNodeConstructorFactory,
-    TNativeIIRFilterNode,
-    TStandardizedContext
+    TNativeIIRFilterNode
 } from '../types';
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
 
@@ -28,7 +28,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
         private _nativeIIRFilterNode: TNativeIIRFilterNode;
 
         constructor (
-            context: TStandardizedContext,
+            context: TContext,
             options: { feedback: IIIRFilterOptions['feedback']; feedforward: IIIRFilterOptions['feedforward'] } & Partial<IIIRFilterOptions>
         ) {
             const nativeContext = getNativeContext(context);

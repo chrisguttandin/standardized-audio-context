@@ -3,11 +3,11 @@ import { IAudioParam, IOscillatorNode, IOscillatorNodeRenderer, IOscillatorOptio
 import {
     TChannelCountMode,
     TChannelInterpretation,
+    TContext,
     TEndedEventHandler,
     TNativeOscillatorNode,
     TOscillatorNodeConstructorFactory,
-    TOscillatorType,
-    TStandardizedContext
+    TOscillatorType
 } from '../types';
 
 // The DEFAULT_OPTIONS are only of type Partial<IOscillatorOptions> because there is no default value for periodicWave.
@@ -39,7 +39,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _oscillatorNodeRenderer: null | IOscillatorNodeRenderer;
 
-        constructor (context: TStandardizedContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeOscillatorNode = createNativeOscillatorNode(nativeContext, mergedOptions);

@@ -1,7 +1,7 @@
 import { AUDIO_GRAPHS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioDestinationNode } from '../interfaces';
-import { TAudioDestinationNodeConstructorFactory, TNativeAudioDestinationNode, TStandardizedContext } from '../types';
+import { TAudioDestinationNodeConstructorFactory, TContext, TNativeAudioDestinationNode } from '../types';
 
 export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstructorFactory = (
     audioNodeConstructor,
@@ -18,7 +18,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
 
         private _nativeAudioDestinationNode: TNativeAudioDestinationNode;
 
-        constructor (context: TStandardizedContext, channelCount: number) {
+        constructor (context: TContext, channelCount: number) {
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const nativeAudioDestinationNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);

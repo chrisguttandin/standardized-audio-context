@@ -7,8 +7,8 @@ import {
     TAudioWorkletNodeConstructorFactory,
     TChannelCountMode,
     TChannelInterpretation,
-    TProcessorErrorEventHandler,
-    TStandardizedContext
+    TContext,
+    TProcessorErrorEventHandler
 } from '../types';
 
 const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
@@ -68,7 +68,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         private _parameters: null | TAudioParamMap;
 
-        constructor (context: TStandardizedContext, name: string, options: Partial<IAudioWorkletNodeOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TContext, name: string, options: Partial<IAudioWorkletNodeOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = sanitizedOptions(<IAudioWorkletNodeOptions> { ...DEFAULT_OPTIONS, ...options });
             const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);

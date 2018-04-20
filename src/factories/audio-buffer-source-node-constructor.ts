@@ -4,9 +4,9 @@ import {
     TAudioBufferSourceNodeConstructorFactory,
     TChannelCountMode,
     TChannelInterpretation,
+    TContext,
     TEndedEventHandler,
-    TNativeAudioBufferSourceNode,
-    TStandardizedContext
+    TNativeAudioBufferSourceNode
 } from '../types';
 
 const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
@@ -44,7 +44,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         private _playbackRate: IAudioParam;
 
-        constructor (context: TStandardizedContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);

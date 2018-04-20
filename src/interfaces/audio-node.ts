@@ -1,9 +1,9 @@
-import { TChannelCountMode, TChannelInterpretation, TStandardizedContext } from '../types';
+import { TChannelCountMode, TChannelInterpretation, TContext } from '../types';
 import { IAudioParam } from './audio-param';
 
 export interface IAudioNode extends EventTarget {
 
-    readonly context: TStandardizedContext;
+    readonly context: TContext;
 
     channelCount: number;
 

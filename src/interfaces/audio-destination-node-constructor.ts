@@ -1,8 +1,8 @@
-import { TStandardizedContext } from '../types';
+import { TContext } from '../types';
 import { IAudioDestinationNode } from './audio-destination-node';
 
 export interface IAudioDestinationNodeConstructor {
 
-    new (context: TStandardizedContext, channelCount: number): IAudioDestinationNode;
+    new (context: TContext, channelCount: number): IAudioDestinationNode;
 
 }

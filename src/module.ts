@@ -111,10 +111,7 @@ const window = createWindow();
 const nativeOfflineAudioContextConstructor = createNativeOfflineAudioContextConstructor(window);
 const isNativeOfflineAudioContext = createIsNativeOfflineAudioContext(nativeOfflineAudioContextConstructor);
 const audioNodeConstructor = createAudioNodeConstructor(createInvalidAccessError, isNativeOfflineAudioContext);
-const noneAudioDestinationNodeConstructor = createNoneAudioDestinationNodeConstructor(
-    audioNodeConstructor,
-    createInvalidStateError
-);
+const noneAudioDestinationNodeConstructor = createNoneAudioDestinationNodeConstructor(audioNodeConstructor, createInvalidStateError);
 const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(createNativeAnalyserNode);
 const analyserNodeConstructor: IAnalyserNodeConstructor = createAnalyserNodeConstructor(
     createAnalyserNodeRenderer,

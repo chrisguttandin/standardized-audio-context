@@ -12,14 +12,14 @@ import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-n
 import {
     TAudioNodeConstructorFactory,
     TChannelCountMode,
+    TContext,
     TNativeAudioDestinationNode,
-    TNativeAudioNode,
-    TStandardizedContext
+    TNativeAudioNode
 } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
 const addAudioNode = (
-    context: TStandardizedContext,
+    context: TContext,
     audioNode: IAudioNode,
     audioNoderRender: null | IAudioNodeRenderer,
     nativeAudioNode: TNativeAudioNode
@@ -46,7 +46,7 @@ const addConnectionToAudioNode = (source: IAudioNode, destination: IAudioNode, o
     audioNodeConnectionsOfDestination.inputs[input].add([ source, output ]);
 };
 
-const addConnectionToAudioParam = (context: TStandardizedContext, source: IAudioNode, destination: IAudioParam, output: number) => {
+const addConnectionToAudioParam = (context: TContext, source: IAudioNode, destination: IAudioParam, output: number) => {
     const audioNodeConnections = getAudioNodeConnections(source);
     const audioParamConnections = getAudioParamConnections(context, destination);
 
@@ -97,12 +97,12 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
     return class AudioNode extends EventTarget implements IAudioNode {
 
-        private _context: TStandardizedContext;
+        private _context: TContext;
 
         private _nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode;
 
         constructor (
-            context: TStandardizedContext,
+            context: TContext,
             nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
             audioNodeRenderer: null | IAudioNodeRenderer
         ) {

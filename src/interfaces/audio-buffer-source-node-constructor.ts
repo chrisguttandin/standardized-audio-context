@@ -1,9 +1,9 @@
-import { TStandardizedContext } from '../types';
+import { TContext } from '../types';
 import { IAudioBufferSourceNode } from './audio-buffer-source-node';
 import { IAudioBufferSourceOptions } from './audio-buffer-source-options';
 
 export interface IAudioBufferSourceNodeConstructor {
 
-    new (context: TStandardizedContext, options?: Partial<IAudioBufferSourceOptions>): IAudioBufferSourceNode;
+    new (context: TContext, options?: Partial<IAudioBufferSourceOptions>): IAudioBufferSourceNode;
 
 }

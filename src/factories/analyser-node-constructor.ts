@@ -1,12 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAnalyserNode, IAnalyserOptions } from '../interfaces';
-import {
-    TAnalyserNodeConstructorFactory,
-    TChannelCountMode,
-    TChannelInterpretation,
-    TNativeAnalyserNode,
-    TStandardizedContext
-} from '../types';
+import { TAnalyserNodeConstructorFactory, TChannelCountMode, TChannelInterpretation, TContext, TNativeAnalyserNode } from '../types';
 
 const DEFAULT_OPTIONS: IAnalyserOptions = {
     channelCount: 2,
@@ -29,7 +23,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
 
         private _nativeAnalyserNode: TNativeAnalyserNode;
 
-        constructor (context: TStandardizedContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IAnalyserOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeAnalyserNode = createNativeAnalyserNode(nativeContext, mergedOptions);

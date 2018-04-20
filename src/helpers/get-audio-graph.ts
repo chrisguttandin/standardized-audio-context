@@ -1,8 +1,8 @@
 import { AUDIO_GRAPHS } from '../globals';
 import { IAudioGraph } from '../interfaces';
-import { TNativeContext, TStandardizedContext } from '../types';
+import { TContext, TNativeContext } from '../types';
 
-export function getAudioGraph (anyContext: TNativeContext | TStandardizedContext): IAudioGraph {
+export function getAudioGraph (anyContext: TContext | TNativeContext): IAudioGraph {
     const audioGraph = AUDIO_GRAPHS.get(anyContext);
 
     if (audioGraph === undefined) {

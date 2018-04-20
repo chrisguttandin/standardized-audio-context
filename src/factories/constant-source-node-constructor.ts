@@ -10,8 +10,8 @@ import {
     TChannelCountMode,
     TChannelInterpretation,
     TConstantSourceNodeConstructorFactory,
-    TEndedEventHandler,
-    TStandardizedContext
+    TContext,
+    TEndedEventHandler
 } from '../types';
 
 const DEFAULT_OPTIONS: IConstantSourceOptions = {
@@ -37,7 +37,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         private _offset: IAudioParam;
 
-        constructor (context: TStandardizedContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeConstantSourceNode = createNativeConstantSourceNode(nativeContext, mergedOptions);

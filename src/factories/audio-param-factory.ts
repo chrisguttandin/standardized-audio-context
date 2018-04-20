@@ -1,9 +1,9 @@
 import { AUDIO_PARAM_STORE } from '../globals';
 import { getAudioGraph } from '../helpers/get-audio-graph';
 import { IAudioParam, IAudioParamRenderer } from '../interfaces';
-import { TAudioParamFactoryFactory, TStandardizedContext } from '../types';
+import { TAudioParamFactoryFactory, TContext } from '../types';
 
-const addAudioParam = (context: TStandardizedContext, audioParam: IAudioParam, audioParamRenderer: null | IAudioParamRenderer) => {
+const addAudioParam = (context: TContext, audioParam: IAudioParam, audioParamRenderer: null | IAudioParamRenderer) => {
     const audioGraphOfContext = getAudioGraph(context);
 
     audioGraphOfContext.params.set(audioParam, { inputs: new Set(), renderer: audioParamRenderer });
