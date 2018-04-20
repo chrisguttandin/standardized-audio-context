@@ -1,11 +1,12 @@
 import { EventTarget } from '../event-target';
-import { AUDIO_NODE_STORE, AUDIO_PARAM_STORE, CONTEXT_STORE } from '../globals';
+import { AUDIO_NODE_STORE } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { getAudioGraph } from '../helpers/get-audio-graph';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
+import { getNativeAudioParam } from '../helpers/get-native-audio-param';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioNode, IAudioNodeRenderer, IAudioParam, INativeAudioNodeFaker } from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
@@ -173,16 +174,12 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
         public connect (destinationNode: IAudioNode, output?: number, input?: number): IAudioNode;
         public connect (destinationParam: IAudioParam, output?: number): void;
         public connect (destination: IAudioNode | IAudioParam, output = 0, input = 0): void | IAudioNode {
-            const nativeContext = CONTEXT_STORE.get(this._context);
+            const nativeContext = getNativeContext(this._context);
 
             if (isAudioNode(destination)) {
                 // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
                 if (this._context !== destination.context) {
                     throw createInvalidAccessError();
-                }
-
-                if (nativeContext === undefined) {
-                    throw new Error('The native (Offline)AudioContext is missing.');
                 }
 
                 if (!isNativeOfflineAudioContext(nativeContext)) {
@@ -203,15 +200,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
                 return destination;
             }
 
-            if (nativeContext === undefined) {
-                throw new Error('The native (Offline)AudioContext is missing.');
-            }
-
-            const nativeAudioParam = AUDIO_PARAM_STORE.get(destination);
-
-            if (nativeAudioParam === undefined) {
-                throw new Error('The associated nativeAudioParam is missing.');
-            }
+            const nativeAudioParam = getNativeAudioParam(destination);
 
             try {
                 this._nativeAudioNode.connect(nativeAudioParam, output);
@@ -233,11 +222,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
         }
 
         public disconnect (destination?: IAudioNode): void {
-            const nativeContext = CONTEXT_STORE.get(this._context);
-
-            if (nativeContext === undefined) {
-                throw new Error('The native (Offline)AudioContext is missing.');
-            }
+            const nativeContext = getNativeContext(this._context);
 
             if (!isNativeOfflineAudioContext(nativeContext)) {
                 if (destination === undefined) {

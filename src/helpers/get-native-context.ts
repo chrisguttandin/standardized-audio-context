@@ -1,7 +1,7 @@
 import { CONTEXT_STORE } from '../globals';
-import { TContext } from '../types';
+import { TContext, TNativeContext } from '../types';
 
-export const getNativeContext = (context: TContext) => {
+export const getNativeContext = (context: TContext): TNativeContext => {
     const nativeContext = CONTEXT_STORE.get(context);
 
     if (nativeContext === undefined) {
