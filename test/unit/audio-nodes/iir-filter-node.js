@@ -182,7 +182,7 @@ describe('IIRFilterNode', () => {
 
                 describe('with valid options', () => {
 
-                    it('should be an instance of the EventTarget interface', () => {
+                    it('should return an instance of the EventTarget interface', () => {
                         const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
 
                         expect(iIRFilterNode.addEventListener).to.be.a('function');
@@ -190,7 +190,7 @@ describe('IIRFilterNode', () => {
                         expect(iIRFilterNode.removeEventListener).to.be.a('function');
                     });
 
-                    it('should be an instance of the AudioNode interface', () => {
+                    it('should return an instance of the AudioNode interface', () => {
                         const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
 
                         expect(iIRFilterNode.channelCount).to.equal(2);

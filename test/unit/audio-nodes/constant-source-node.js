@@ -97,13 +97,13 @@ describe('ConstantSourceNode', () => {
                         constantSourceNode = createConstantSourceNode(context);
                     });
 
-                    it('should be an instance of the EventTarget interface', () => {
+                    it('should return an instance of the EventTarget interface', () => {
                         expect(constantSourceNode.addEventListener).to.be.a('function');
                         expect(constantSourceNode.dispatchEvent).to.be.a('function');
                         expect(constantSourceNode.removeEventListener).to.be.a('function');
                     });
 
-                    it('should be an instance of the AudioNode interface', () => {
+                    it('should return an instance of the AudioNode interface', () => {
                         expect(constantSourceNode.channelCount).to.equal(2);
                         expect(constantSourceNode.channelCountMode).to.equal('max');
                         expect(constantSourceNode.channelInterpretation).to.equal('speakers');

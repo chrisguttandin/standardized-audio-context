@@ -93,13 +93,13 @@ describe('ChannelMergerNode', () => {
                         channelMergerNode = createChannelMergerNode(context);
                     });
 
-                    it('should be an instance of the EventTarget interface', () => {
+                    it('should return an instance of the EventTarget interface', () => {
                         expect(channelMergerNode.addEventListener).to.be.a('function');
                         expect(channelMergerNode.dispatchEvent).to.be.a('function');
                         expect(channelMergerNode.removeEventListener).to.be.a('function');
                     });
 
-                    it('should be an instance of the AudioNode interface', () => {
+                    it('should return an instance of the AudioNode interface', () => {
                         expect(channelMergerNode.channelCount).to.equal(1);
                         expect(channelMergerNode.channelCountMode).to.equal('explicit');
                         expect(channelMergerNode.channelInterpretation).to.equal('speakers');

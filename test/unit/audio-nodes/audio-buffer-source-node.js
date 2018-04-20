@@ -119,13 +119,13 @@ describe('AudioBufferSourceNode', () => {
                         audioBufferSourceNode = createAudioBufferSourceNode(context);
                     });
 
-                    it('should be an instance of the EventTarget interface', () => {
+                    it('should return an instance of the EventTarget interface', () => {
                         expect(audioBufferSourceNode.addEventListener).to.be.a('function');
                         expect(audioBufferSourceNode.dispatchEvent).to.be.a('function');
                         expect(audioBufferSourceNode.removeEventListener).to.be.a('function');
                     });
 
-                    it('should be an instance of the AudioNode interface', () => {
+                    it('should return an instance of the AudioNode interface', () => {
                         expect(audioBufferSourceNode.channelCount).to.equal(2);
                         expect(audioBufferSourceNode.channelCountMode).to.equal('max');
                         expect(audioBufferSourceNode.channelInterpretation).to.equal('speakers');

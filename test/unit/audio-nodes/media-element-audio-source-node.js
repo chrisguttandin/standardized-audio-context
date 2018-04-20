@@ -71,7 +71,7 @@ describe('MediaElementAudioSourceNode', () => {
 
                 describe('with valid options', () => {
 
-                    it('should be an instance of the EventTarget interface', () => {
+                    it('should return an instance of the EventTarget interface', () => {
                         const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
 
                         expect(mediaElementAudioSourceNode.addEventListener).to.be.a('function');
@@ -79,7 +79,7 @@ describe('MediaElementAudioSourceNode', () => {
                         expect(mediaElementAudioSourceNode.removeEventListener).to.be.a('function');
                     });
 
-                    it('should be an instance of the AudioNode interface', () => {
+                    it('should return an instance of the AudioNode interface', () => {
                         const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
 
                         expect(mediaElementAudioSourceNode.channelCount).to.equal(2);

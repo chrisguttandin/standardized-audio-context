@@ -119,7 +119,7 @@ describe('BiquadFilterNode', () => {
                         expect(biquadFilterNode.removeEventListener).to.be.a('function');
                     });
 
-                    it('should be an instance of the AudioNode interface', () => {
+                    it('should return an instance of the AudioNode interface', () => {
                         expect(biquadFilterNode.channelCount).to.equal(2);
                         expect(biquadFilterNode.channelCountMode).to.equal('max');
                         expect(biquadFilterNode.channelInterpretation).to.equal('speakers');

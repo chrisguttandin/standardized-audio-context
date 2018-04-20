@@ -105,13 +105,13 @@ describe('OscillatorNode', () => {
                         oscillatorNode = createOscillatorNode(context);
                     });
 
-                    it('should be an instance of the EventTarget interface', () => {
+                    it('should return an instance of the EventTarget interface', () => {
                         expect(oscillatorNode.addEventListener).to.be.a('function');
                         expect(oscillatorNode.dispatchEvent).to.be.a('function');
                         expect(oscillatorNode.removeEventListener).to.be.a('function');
                     });
 
-                    it('should be an instance of the AudioNode interface', () => {
+                    it('should return an instance of the AudioNode interface', () => {
                         expect(oscillatorNode.channelCount).to.equal(2);
                         expect(oscillatorNode.channelCountMode).to.equal('max');
                         expect(oscillatorNode.channelInterpretation).to.equal('speakers');

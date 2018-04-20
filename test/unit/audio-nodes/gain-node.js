@@ -96,13 +96,13 @@ describe('GainNode', () => {
                         gainNode = createGainNode(context);
                     });
 
-                    it('should be an instance of the EventTarget interface', () => {
+                    it('should return an instance of the EventTarget interface', () => {
                         expect(gainNode.addEventListener).to.be.a('function');
                         expect(gainNode.dispatchEvent).to.be.a('function');
                         expect(gainNode.removeEventListener).to.be.a('function');
                     });
 
-                    it('should be an instance of the AudioNode interface', () => {
+                    it('should return an instance of the AudioNode interface', () => {
                         expect(gainNode.channelCount).to.equal(2);
                         expect(gainNode.channelCountMode).to.equal('max');
                         expect(gainNode.channelInterpretation).to.equal('speakers');
