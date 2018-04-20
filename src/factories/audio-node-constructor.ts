@@ -5,30 +5,37 @@ import { cacheTestResult } from '../helpers/cache-test-result';
 import { getAudioGraph } from '../helpers/get-audio-graph';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
+import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioNode, IAudioNodeRenderer, IAudioParam, INativeAudioNodeFaker } from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
-import { TAudioNodeConstructorFactory, TChannelCountMode, TNativeAudioNode, TStandardizedContext } from '../types';
+import {
+    TAudioNodeConstructorFactory,
+    TChannelCountMode,
+    TNativeAudioDestinationNode,
+    TNativeAudioNode,
+    TStandardizedContext
+} from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
 const addAudioNode = (
     context: TStandardizedContext,
     audioNode: IAudioNode,
     audioNoderRender: null | IAudioNodeRenderer,
-    nativeNode: TNativeAudioNode
+    nativeAudioNode: TNativeAudioNode
 ) => {
     const audioGraphOfContext = getAudioGraph(context);
 
     const inputs = [ ];
 
-    for (let i = 0; i < nativeNode.numberOfInputs; i += 1) {
+    for (let i = 0; i < nativeAudioNode.numberOfInputs; i += 1) {
         inputs.push(new Set());
     }
 
     const audioNodeConnections = { inputs, outputs: new Set(), renderer: audioNoderRender };
 
     audioGraphOfContext.nodes.set(audioNode, audioNodeConnections);
-    audioGraphOfContext.nodes.set(nativeNode, audioNodeConnections);
+    audioGraphOfContext.nodes.set(nativeAudioNode, audioNodeConnections);
 };
 
 const addConnectionToAudioNode = (source: IAudioNode, destination: IAudioNode, output: number, input: number) => {
@@ -92,17 +99,17 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
         private _context: TStandardizedContext;
 
-        private _nativeNode: INativeAudioNodeFaker | TNativeAudioNode;
+        private _nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode;
 
         constructor (
             context: TStandardizedContext,
-            nativeNode: INativeAudioNodeFaker | TNativeAudioNode,
+            nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
             audioNodeRenderer: null | IAudioNodeRenderer
         ) {
             super();
 
             this._context = context;
-            this._nativeNode = nativeNode;
+            this._nativeAudioNode = nativeAudioNode;
 
             const nativeContext = getNativeContext(context);
 
@@ -111,12 +118,12 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             if (!isNativeOfflineAudioContext(nativeContext) && true !== cacheTestResult(testAudioNodeDisconnectMethodSupport, () => {
                 return testAudioNodeDisconnectMethodSupport(nativeContext);
             })) {
-                wrapAudioNodeDisconnectMethod(nativeNode);
+                wrapAudioNodeDisconnectMethod(nativeAudioNode);
             }
 
-            AUDIO_NODE_STORE.set(this, nativeNode);
+            AUDIO_NODE_STORE.set(this, nativeAudioNode);
 
-            addAudioNode(context, this, audioNodeRenderer, nativeNode);
+            addAudioNode(context, this, audioNodeRenderer, nativeAudioNode);
         }
 
         public get channelCount (): number {
@@ -136,11 +143,11 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
         }
 
         public get channelInterpretation () {
-            return this._nativeNode.channelInterpretation;
+            return this._nativeAudioNode.channelInterpretation;
         }
 
         public set channelInterpretation (value) {
-            this._nativeNode.channelInterpretation = value;
+            this._nativeAudioNode.channelInterpretation = value;
         }
 
         public get context () {
@@ -148,11 +155,11 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
         }
 
         public get numberOfInputs () {
-            return this._nativeNode.numberOfInputs;
+            return this._nativeAudioNode.numberOfInputs;
         }
 
         public get numberOfOutputs () {
-            return this._nativeNode.numberOfOutputs;
+            return this._nativeAudioNode.numberOfOutputs;
         }
 
         public addEventListener (
@@ -160,7 +167,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             listener: any, // @todo EventListenerOrEventListenerObject | null = null,
             options?: boolean | AddEventListenerOptions
         ): void {
-            return this._nativeNode.addEventListener(type, listener, options);
+            return this._nativeAudioNode.addEventListener(type, listener, options);
         }
 
         public connect (destinationNode: IAudioNode, output?: number, input?: number): IAudioNode;
@@ -179,19 +186,15 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
                 }
 
                 if (!isNativeOfflineAudioContext(nativeContext)) {
-                    const nativeDestinationNode = AUDIO_NODE_STORE.get(destination);
-
-                    if (nativeDestinationNode === undefined) {
-                        throw new Error('The associated nativeNode is missing.');
-                    }
+                    const nativeDestinationNode = getNativeAudioNode<TNativeAudioDestinationNode>(destination);
 
                     if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
                         const inputs = <TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs;
                         const nativeInputDestinationNode = inputs[input];
 
-                        this._nativeNode.connect(nativeInputDestinationNode, output, input);
+                        this._nativeAudioNode.connect(nativeInputDestinationNode, output, input);
                     } else {
-                        this._nativeNode.connect(nativeDestinationNode, output, input);
+                        this._nativeAudioNode.connect(nativeDestinationNode, output, input);
                     }
                 }
 
@@ -211,11 +214,11 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             }
 
             try {
-                this._nativeNode.connect(nativeAudioParam, output);
+                this._nativeAudioNode.connect(nativeAudioParam, output);
 
                 // @todo Calling connect() is only needed to throw possible errors when the nativeContext is an OfflineAudioContext.
                 if (isNativeOfflineAudioContext(nativeContext)) {
-                    this._nativeNode.disconnect(nativeAudioParam, output);
+                    this._nativeAudioNode.disconnect(nativeAudioParam, output);
                 }
             } catch (err) {
                 // Bug #58: Only Firefox does throw an InvalidStateError yet.
@@ -238,21 +241,17 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
             if (!isNativeOfflineAudioContext(nativeContext)) {
                 if (destination === undefined) {
-                    return this._nativeNode.disconnect();
+                    return this._nativeAudioNode.disconnect();
                 }
 
-                const nativeDestinationNode = AUDIO_NODE_STORE.get(destination);
-
-                if (nativeDestinationNode === undefined) {
-                    throw new Error('The associated nativeNode is missing.');
-                }
+                const nativeDestinationNode = getNativeAudioNode<TNativeAudioDestinationNode>(destination);
 
                 if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
                     for (const input of (<TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs)) {
-                        this._nativeNode.disconnect(input);
+                        this._nativeAudioNode.disconnect(input);
                     }
                 } else {
-                    this._nativeNode.disconnect(nativeDestinationNode);
+                    this._nativeAudioNode.disconnect(nativeDestinationNode);
                 }
             }
 
@@ -268,7 +267,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             listener: any, // @todo EventListenerOrEventListenerObject | null = null,
             options?: EventListenerOptions | boolean
         ): void {
-            return this._nativeNode.removeEventListener(type, listener, options);
+            return this._nativeAudioNode.removeEventListener(type, listener, options);
         }
 
     };

@@ -16,12 +16,12 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
 
         private _isNodeOfNativeOfflineAudioContext: boolean;
 
-        private _nativeNode: TNativeAudioDestinationNode;
+        private _nativeAudioDestinationNode: TNativeAudioDestinationNode;
 
         constructor (context: TStandardizedContext, channelCount: number) {
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const nativeNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
+            const nativeAudioDestinationNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
             const audioDestinationNodeRenderer = (isOffline) ? createAudioDestinationNodeRenderer() : null;
 
             const audioGraph = { nodes: new WeakMap(), params: new WeakMap() };
@@ -29,14 +29,14 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             AUDIO_GRAPHS.set(context, audioGraph);
             AUDIO_GRAPHS.set(nativeContext, audioGraph);
 
-            super(context, nativeNode, audioDestinationNodeRenderer);
+            super(context, nativeAudioDestinationNode, audioDestinationNodeRenderer);
 
             this._isNodeOfNativeOfflineAudioContext = isOffline;
-            this._nativeNode = nativeNode;
+            this._nativeAudioDestinationNode = nativeAudioDestinationNode;
         }
 
         public get channelCount () {
-            return this._nativeNode.channelCount;
+            return this._nativeAudioDestinationNode.channelCount;
         }
 
         public set channelCount (value) {
@@ -47,15 +47,15 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             }
 
             // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
-            if (value > this._nativeNode.maxChannelCount) {
+            if (value > this._nativeAudioDestinationNode.maxChannelCount) {
                 throw createIndexSizeError();
             }
 
-            this._nativeNode.channelCount = value;
+            this._nativeAudioDestinationNode.channelCount = value;
         }
 
         public get channelCountMode () {
-            return this._nativeNode.channelCountMode;
+            return this._nativeAudioDestinationNode.channelCountMode;
         }
 
         public set channelCountMode (value) {
@@ -64,11 +64,11 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
                 throw createInvalidStateError();
             }
 
-            this._nativeNode.channelCountMode = value;
+            this._nativeAudioDestinationNode.channelCountMode = value;
         }
 
         public get maxChannelCount () {
-            return this._nativeNode.maxChannelCount;
+            return this._nativeAudioDestinationNode.maxChannelCount;
         }
 
     };

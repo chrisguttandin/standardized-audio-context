@@ -25,33 +25,33 @@ import {
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
 
 export const createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFactory = (nativeContext, options = { }) => {
-    const nativeNode = nativeContext.createBufferSource();
+    const nativeAudioBufferSourceNode = nativeContext.createBufferSource();
 
-    assignNativeAudioNodeOptions(nativeNode, options);
+    assignNativeAudioNodeOptions(nativeAudioBufferSourceNode, options);
 
     // Bug #71: Edge does not allow to set the buffer to null.
     if (options.buffer !== undefined && options.buffer !== null) {
-        nativeNode.buffer = options.buffer;
+        nativeAudioBufferSourceNode.buffer = options.buffer;
     }
 
     // @todo if (options.detune !== undefined) {
-    // @todo    nativeNode.detune.value = options.detune;
+    // @todo    nativeAudioBufferSourceNode.detune.value = options.detune;
     // @todo }
 
     if (options.loop !== undefined) {
-        nativeNode.loop = options.loop;
+        nativeAudioBufferSourceNode.loop = options.loop;
     }
 
     if (options.loopEnd !== undefined) {
-        nativeNode.loopEnd = options.loopEnd;
+        nativeAudioBufferSourceNode.loopEnd = options.loopEnd;
     }
 
     if (options.loopStart !== undefined) {
-        nativeNode.loopStart = options.loopStart;
+        nativeAudioBufferSourceNode.loopStart = options.loopStart;
     }
 
     if (options.playbackRate !== undefined) {
-        nativeNode.playbackRate.value = options.playbackRate;
+        nativeAudioBufferSourceNode.playbackRate.value = options.playbackRate;
     }
 
     // Bug #69: Safari does allow calls to start() of an already scheduled AudioBufferSourceNode.
@@ -59,7 +59,7 @@ export const createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFact
         testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
         () => testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(nativeContext)
     )) {
-        wrapAudioBufferSourceNodeStartMethodConsecutiveCalls(nativeNode);
+        wrapAudioBufferSourceNodeStartMethodConsecutiveCalls(nativeAudioBufferSourceNode);
     }
 
     // Bug #44: Only Chrome & Opera throw a RangeError yet.
@@ -67,7 +67,7 @@ export const createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFact
         testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
         () => testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
     )) {
-        wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeNode);
+        wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeAudioBufferSourceNode);
     }
 
     // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
@@ -75,7 +75,7 @@ export const createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFact
         testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
         () => testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(nativeContext)
     )) {
-        wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(nativeNode, nativeContext);
+        wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(nativeAudioBufferSourceNode, nativeContext);
     }
 
     // Bug #44: No browser does throw a RangeError yet.
@@ -83,8 +83,8 @@ export const createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFact
         testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
         () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
     )) {
-        wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeNode);
+        wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeAudioBufferSourceNode);
     }
 
-    return nativeNode;
+    return nativeAudioBufferSourceNode;
 };

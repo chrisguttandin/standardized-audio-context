@@ -2,13 +2,13 @@ import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-nod
 import { TNativeGainNodeFactory } from '../types';
 
 export const createNativeGainNode: TNativeGainNodeFactory = (nativeContext, options) => {
-    const nativeNode = nativeContext.createGain();
+    const nativeGainNode = nativeContext.createGain();
 
-    assignNativeAudioNodeOptions(nativeNode, options);
+    assignNativeAudioNodeOptions(nativeGainNode, options);
 
-    if (options.gain !== nativeNode.gain.value) {
-        nativeNode.gain.value = options.gain;
+    if (options.gain !== nativeGainNode.gain.value) {
+        nativeGainNode.gain.value = options.gain;
     }
 
-    return nativeNode;
+    return nativeGainNode;
 };

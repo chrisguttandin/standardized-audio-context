@@ -1,23 +1,23 @@
 import { TNativeAudioNode, TNativeAudioParam } from '../types';
 
-export const wrapAudioNodeDisconnectMethod = (audioNode: TNativeAudioNode): void => {
+export const wrapAudioNodeDisconnectMethod = (nativeAudioNode: TNativeAudioNode): void => {
     const destinations = new Map();
 
-    audioNode.connect = ((connect) => {
+    nativeAudioNode.connect = ((connect) => {
         return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0) => {
             destinations.set(destination, { input, output });
 
             if (destination instanceof AudioNode) {
-                return connect.call(audioNode, destination, output, input);
+                return connect.call(nativeAudioNode, destination, output, input);
             }
 
-            return connect.call(audioNode, destination, output);
+            return connect.call(nativeAudioNode, destination, output);
         };
-    })(audioNode.connect);
+    })(nativeAudioNode.connect);
 
-    audioNode.disconnect = ((disconnect) => {
+    nativeAudioNode.disconnect = ((disconnect) => {
         return (outputOrDestination?: number | TNativeAudioNode | TNativeAudioParam, _output?: number, _input?: number) => {
-            disconnect.apply(audioNode);
+            disconnect.apply(nativeAudioNode);
 
             if (outputOrDestination === undefined) {
                 destinations.clear();
@@ -25,9 +25,9 @@ export const wrapAudioNodeDisconnectMethod = (audioNode: TNativeAudioNode): void
                 destinations.delete(outputOrDestination);
 
                 destinations.forEach(({ input, output }, dstntn) => {
-                    audioNode.connect(dstntn, input, output);
+                    nativeAudioNode.connect(dstntn, input, output);
                 });
             }
         };
-    })(audioNode.disconnect);
+    })(nativeAudioNode.disconnect);
 };

@@ -8,33 +8,33 @@ export const createNoneAudioDestinationNodeConstructor: TNoneAudioDestinationNod
 
     return class NoneAudioDestinationNode extends audioNodeConstructor {
 
-        private _nativeNode: TNativeAudioNode;
+        private _nativeAudioNode: TNativeAudioNode;
 
-        constructor (context: TStandardizedContext, nativeNode: TNativeAudioNode, audioNodeRenderer: null | IAudioNodeRenderer) {
+        constructor (context: TStandardizedContext, nativeAudioNode: TNativeAudioNode, audioNodeRenderer: null | IAudioNodeRenderer) {
             // Bug #50 Safari does not throw an error when the context is already closed.
             if (context.state === 'closed') {
                 throw createInvalidStateError();
             }
 
-            super(context, nativeNode, audioNodeRenderer);
+            super(context, nativeAudioNode, audioNodeRenderer);
 
-            this._nativeNode = nativeNode;
+            this._nativeAudioNode = nativeAudioNode;
         }
 
         public get channelCount () {
-            return this._nativeNode.channelCount;
+            return this._nativeAudioNode.channelCount;
         }
 
         public set channelCount (value) {
-            this._nativeNode.channelCount = value;
+            this._nativeAudioNode.channelCount = value;
         }
 
         public get channelCountMode () {
-            return this._nativeNode.channelCountMode;
+            return this._nativeAudioNode.channelCountMode;
         }
 
         public set channelCountMode (value) {
-            this._nativeNode.channelCountMode = value;
+            this._nativeAudioNode.channelCountMode = value;
         }
 
     };

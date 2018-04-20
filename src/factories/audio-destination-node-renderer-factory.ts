@@ -3,22 +3,22 @@ import { IAudioDestinationNode } from '../interfaces';
 import { TAudioDestinationNodeRendererFactory, TNativeAudioDestinationNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFactory = () => {
-    let nativeNode: null | TNativeAudioDestinationNode = null;
+    let nativeAudioDestinationNode: null | TNativeAudioDestinationNode = null;
 
     return {
         render: async (
             proxy: IAudioDestinationNode,
             nativeOfflineAudioContext: TNativeOfflineAudioContext
         ): Promise<TNativeAudioDestinationNode> => {
-            if (nativeNode !== null) {
-                return nativeNode;
+            if (nativeAudioDestinationNode !== null) {
+                return nativeAudioDestinationNode;
             }
 
-            nativeNode = nativeOfflineAudioContext.destination;
+            nativeAudioDestinationNode = nativeOfflineAudioContext.destination;
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
 
-            return nativeNode;
+            return nativeAudioDestinationNode;
         }
     };
 };

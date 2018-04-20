@@ -35,24 +35,25 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _frequency: IAudioParam;
 
-        private _nativeNode: TNativeOscillatorNode;
+        private _nativeOscillatorNode: TNativeOscillatorNode;
 
         private _oscillatorNodeRenderer: null | IOscillatorNodeRenderer;
 
         constructor (context: TStandardizedContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = createNativeOscillatorNode(nativeContext, mergedOptions);
+            const nativeOscillatorNode = createNativeOscillatorNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const oscillatorNodeRenderer = (isOffline) ? createOscillatorNodeRenderer() : null;
+            const nyquist = context.sampleRate / 2;
 
-            super(context, nativeNode, oscillatorNodeRenderer);
+            super(context, nativeOscillatorNode, oscillatorNodeRenderer);
 
             // Bug #81: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._detune = createAudioParam(context, isOffline, nativeNode.detune, 3.4028234663852886e38, -3.4028234663852886e38);
+            this._detune = createAudioParam(context, isOffline, nativeOscillatorNode.detune, 3.4028234663852886e38, -3.4028234663852886e38);
             // Bug #76: Edge & Safari do not export the correct values for maxValue and minValue.
-            this._frequency = createAudioParam(context, isOffline, nativeNode.frequency, context.sampleRate / 2, -(context.sampleRate / 2));
-            this._nativeNode = nativeNode;
+            this._frequency = createAudioParam(context, isOffline, nativeOscillatorNode.frequency, nyquist, -nyquist);
+            this._nativeOscillatorNode = nativeOscillatorNode;
             this._oscillatorNodeRenderer = oscillatorNodeRenderer;
         }
 
@@ -65,19 +66,19 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
         }
 
         public get onended () {
-            return <TEndedEventHandler> (<any> this._nativeNode.onended);
+            return <TEndedEventHandler> (<any> this._nativeOscillatorNode.onended);
         }
 
         public set onended (value) {
-            this._nativeNode.onended = <any> value;
+            this._nativeOscillatorNode.onended = <any> value;
         }
 
         public get type () {
-            return this._nativeNode.type;
+            return this._nativeOscillatorNode.type;
         }
 
         public set type (value) {
-            this._nativeNode.type = value;
+            this._nativeOscillatorNode.type = value;
 
             // Bug #57: Edge will not throw an error when assigning the type to 'custom'. But it still will change the value.
             if (value === 'custom') {
@@ -86,11 +87,11 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
         }
 
         public setPeriodicWave (periodicWave: PeriodicWave) {
-            this._nativeNode.setPeriodicWave(periodicWave);
+            this._nativeOscillatorNode.setPeriodicWave(periodicWave);
         }
 
         public start (when = 0) {
-            this._nativeNode.start(when);
+            this._nativeOscillatorNode.start(when);
 
             if (this._oscillatorNodeRenderer !== null) {
                 this._oscillatorNodeRenderer.start = when;
@@ -98,7 +99,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
         }
 
         public stop (when = 0) {
-            this._nativeNode.stop(when);
+            this._nativeOscillatorNode.stop(when);
 
             if (this._oscillatorNodeRenderer !== null) {
                 this._oscillatorNodeRenderer.stop = when;

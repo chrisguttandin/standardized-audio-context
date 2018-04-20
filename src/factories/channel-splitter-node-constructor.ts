@@ -25,10 +25,10 @@ export const createChannelSplitterNodeConstructor: TChannelSplitterNodeConstruct
         constructor (context: TStandardizedContext, options: Partial<IChannelSplitterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = sanitizedOptions(<IChannelSplitterOptions> { ...DEFAULT_OPTIONS, ...options });
-            const nativeNode = createNativeChannelSplitterNode(nativeContext, mergedOptions);
+            const nativeChannelSplitterNode = createNativeChannelSplitterNode(nativeContext, mergedOptions);
             const channelSplitterNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createChannelSplitterNodeRenderer() : null;
 
-            super(context, nativeNode, channelSplitterNodeRenderer);
+            super(context, nativeChannelSplitterNode, channelSplitterNodeRenderer);
         }
 
     };

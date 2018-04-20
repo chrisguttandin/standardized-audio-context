@@ -5,11 +5,12 @@ const createBufferNode = ({ audioNodes, context }) => {
     const bufferSize = Object
         .values(audioNodes)
         .reduce((bufferSize, audioNode) => {
-            const bufferSizeOfAudioNode = (audioNode._nativeNode === undefined) ?
+            // @todo This is using a private property.
+            const bufferSizeOfAudioNode = (audioNode._nativeAudioNode === undefined) ?
                 0 :
-                (audioNode._nativeNode.bufferSize === undefined) ?
+                (audioNode._nativeAudioNode.bufferSize === undefined) ?
                     0 :
-                    audioNode._nativeNode.bufferSize;
+                    audioNode._nativeAudioNode.bufferSize;
 
             return bufferSize + bufferSizeOfAudioNode;
         }, 0);

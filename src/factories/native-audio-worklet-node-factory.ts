@@ -10,7 +10,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
         if (nativeAudioWorkletNodeConstructor !== null) {
             try {
                 // Bug #86: Chrome Canary does not invoke the process() function if the corresponding AudioWorkletNode has no output.
-                const nativeNode = (options.numberOfInputs !== 0 && options.numberOfOutputs === 0) ?
+                const nativeAudioWorkletNode = (options.numberOfInputs !== 0 && options.numberOfOutputs === 0) ?
                     new nativeAudioWorkletNodeConstructor(nativeContext, name, {
                         ...options,
                         numberOfOutputs: 1,
@@ -23,7 +23,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                  * Bug #61: Overwriting the property accessors is necessary as long as some browsers have no native implementation to
                  * achieve a consistent behavior.
                  */
-                Object.defineProperties(nativeNode, {
+                Object.defineProperties(nativeAudioWorkletNode, {
                     channelCount: {
                         get: () => options.channelCount,
                         set: () => {
@@ -38,7 +38,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                     }
                 });
 
-                return nativeNode;
+                return nativeAudioWorkletNode;
             } catch (err) {
                 // Bug #60: Chrome Canary throws an InvalidStateError instead of a NotSupportedError.
                 if (err.code === 11 && nativeContext.state !== 'closed') {

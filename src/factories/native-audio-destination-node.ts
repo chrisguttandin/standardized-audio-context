@@ -5,24 +5,24 @@ export const createNativeAudioDestinationNode: TNativeAudioDestinationNodeFactor
     channelCount,
     isNodeOfNativeOfflineAudioContext
 ) => {
-    const nativeNode = nativeContext.destination;
+    const nativeAudioDestinationNode = nativeContext.destination;
 
     // @todo Which bug is that covering?
-    if (nativeNode.channelCount !== channelCount) {
-        nativeNode.channelCount = channelCount;
+    if (nativeAudioDestinationNode.channelCount !== channelCount) {
+        nativeAudioDestinationNode.channelCount = channelCount;
     }
 
     // Bug #83: Edge & Safari do not have the correct channelCountMode.
-    if (isNodeOfNativeOfflineAudioContext && nativeNode.channelCountMode !== 'explicit') {
-        nativeNode.channelCountMode = 'explicit';
+    if (isNodeOfNativeOfflineAudioContext && nativeAudioDestinationNode.channelCountMode !== 'explicit') {
+        nativeAudioDestinationNode.channelCountMode = 'explicit';
     }
 
     // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
-    if (nativeNode.maxChannelCount === 0) {
-        Object.defineProperty(nativeNode, 'maxChannelCount', {
-            get: () => nativeNode.channelCount
+    if (nativeAudioDestinationNode.maxChannelCount === 0) {
+        Object.defineProperty(nativeAudioDestinationNode, 'maxChannelCount', {
+            get: () => nativeAudioDestinationNode.channelCount
         });
     }
 
-    return nativeNode;
+    return nativeAudioDestinationNode;
 };

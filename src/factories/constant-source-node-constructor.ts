@@ -33,27 +33,33 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         private _constantSourceNodeRenderer: null | IConstantSourceNodeRenderer;
 
-        private _nativeNode: INativeConstantSourceNode;
+        private _nativeConstantSourceNode: INativeConstantSourceNode;
 
         private _offset: IAudioParam;
 
         constructor (context: TStandardizedContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
+            const nativeConstantSourceNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const constantSourceNodeRenderer = (isOffline) ? createConstantSourceNodeRendererFactory() : null;
 
-            super(context, nativeNode, constantSourceNodeRenderer);
+            super(context, nativeConstantSourceNode, constantSourceNodeRenderer);
 
             this._constantSourceNodeRenderer = constantSourceNodeRenderer;
-            this._nativeNode = nativeNode;
+            this._nativeConstantSourceNode = nativeConstantSourceNode;
             /*
              * Bug #62 & #74: Edge & Safari do not support ConstantSourceNodes and do not export the correct values for maxValue and
              * minValue for GainNodes.
              * Bug #75: Firefox does not export the correct values for maxValue and minValue.
              */
-            this._offset = createAudioParam(context, isOffline, nativeNode.offset, 3.4028234663852886e38, -3.4028234663852886e38);
+            this._offset = createAudioParam(
+                context,
+                isOffline,
+                nativeConstantSourceNode.offset,
+                3.4028234663852886e38,
+                -3.4028234663852886e38
+            );
         }
 
         public get offset () {
@@ -61,15 +67,15 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
         }
 
         public get onended () {
-            return <TEndedEventHandler> (<any> this._nativeNode.onended);
+            return <TEndedEventHandler> (<any> this._nativeConstantSourceNode.onended);
         }
 
         public set onended (value) {
-            this._nativeNode.onended = <any> value;
+            this._nativeConstantSourceNode.onended = <any> value;
         }
 
         public start (when = 0) {
-            this._nativeNode.start(when);
+            this._nativeConstantSourceNode.start(when);
 
             if (this._constantSourceNodeRenderer !== null) {
                 this._constantSourceNodeRenderer.start = when;
@@ -77,7 +83,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
         }
 
         public stop (when = 0) {
-            this._nativeNode.stop(when);
+            this._nativeConstantSourceNode.stop(when);
 
             if (this._constantSourceNodeRenderer !== null) {
                 this._constantSourceNodeRenderer.stop = when;

@@ -2,7 +2,7 @@ import { connectAudioParam } from '../helpers/connect-audio-param';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioWorkletProcessor } from '../helpers/get-audio-worklet-processor';
-import { getNativeNode } from '../helpers/get-native-node';
+import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
@@ -125,18 +125,18 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     renderNativeOfflineAudioContext
 ) => {
     return (name, options, processorDefinition) => {
-        let nativeNode: null | TNativeAudioBufferSourceNode | INativeAudioWorkletNode = null;
+        let nativeAudioNode: null | TNativeAudioBufferSourceNode | INativeAudioWorkletNode = null;
 
         return {
             render: async (
                 proxy: IAudioWorkletNode,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode | INativeAudioWorkletNode> => {
-                if (nativeNode !== null) {
-                    return nativeNode;
+                if (nativeAudioNode !== null) {
+                    return nativeAudioNode;
                 }
 
-                nativeNode = <INativeAudioWorkletNode> getNativeNode(proxy);
+                nativeAudioNode = getNativeAudioNode<INativeAudioWorkletNode>(proxy);
 
                 // Bug #61: Only Chrome Canary has an implementation of the AudioWorkletNode yet.
                 if (nativeAudioWorkletNodeConstructor === null) {
@@ -269,15 +269,15 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                                 return <any> disconnectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
                             };
 
-                            nativeNode = audioBufferSourceNode;
+                            nativeAudioNode = audioBufferSourceNode;
 
-                            return nativeNode;
+                            return nativeAudioNode;
                         });
                 }
 
-                // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
-                    nativeNode = new nativeAudioWorkletNodeConstructor(nativeOfflineAudioContext, name);
+                // If the initially used nativeAudioNode was not constructed on the same OfflineAudioContext it needs to be created again.
+                if (!isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext)) {
+                    nativeAudioNode = new nativeAudioWorkletNodeConstructor(nativeOfflineAudioContext, name);
 
                     // @todo Using Array.from() is a lazy fix that should not be necessary forever.
                     for (const [ nm, audioParam ] of Array.from(proxy.parameters.entries())) {
@@ -285,7 +285,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             proxy.context,
                             nativeOfflineAudioContext,
                             audioParam,
-                            <TNativeAudioParam> nativeNode.parameters.get(nm)
+                            <TNativeAudioParam> nativeAudioNode.parameters.get(nm)
                         );
                     }
                 } else {
@@ -295,14 +295,14 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             proxy.context,
                             nativeOfflineAudioContext,
                             audioParam,
-                            <TNativeAudioParam> nativeNode.parameters.get(nm)
+                            <TNativeAudioParam> nativeAudioNode.parameters.get(nm)
                         );
                     }
                 }
 
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode);
 
-                return nativeNode;
+                return nativeAudioNode;
             }
         };
     };

@@ -1,4 +1,4 @@
-import { getNativeNode } from '../helpers/get-native-node';
+import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IAudioNode, IChannelMergerOptions } from '../interfaces';
@@ -6,31 +6,31 @@ import { TChannelMergerNodeRendererFactoryFactory, TNativeAudioNode, TNativeOffl
 
 export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererFactoryFactory = (createNativeChannelMergerNode) => {
     return () => {
-        let nativeNode: null | TNativeAudioNode = null;
+        let nativeAudioNode: null | TNativeAudioNode = null;
 
         return {
             render: async (proxy: IAudioNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
-                if (nativeNode !== null) {
-                    return nativeNode;
+                if (nativeAudioNode !== null) {
+                    return nativeAudioNode;
                 }
 
-                nativeNode = getNativeNode(proxy);
+                nativeAudioNode = getNativeAudioNode<TNativeAudioNode>(proxy);
 
-                // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
+                // If the initially used nativeAudioNode was not constructed on the same OfflineAudioContext it needs to be created again.
+                if (!isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext)) {
                     const options: IChannelMergerOptions = {
-                        channelCount: nativeNode.channelCount,
-                        channelCountMode: nativeNode.channelCountMode,
-                        channelInterpretation: nativeNode.channelInterpretation,
-                        numberOfInputs: nativeNode.numberOfInputs
+                        channelCount: nativeAudioNode.channelCount,
+                        channelCountMode: nativeAudioNode.channelCountMode,
+                        channelInterpretation: nativeAudioNode.channelInterpretation,
+                        numberOfInputs: nativeAudioNode.numberOfInputs
                     };
 
-                    nativeNode = createNativeChannelMergerNode(nativeOfflineAudioContext, options);
+                    nativeAudioNode = createNativeChannelMergerNode(nativeOfflineAudioContext, options);
                 }
 
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode);
 
-                return nativeNode;
+                return nativeAudioNode;
             }
         };
     };

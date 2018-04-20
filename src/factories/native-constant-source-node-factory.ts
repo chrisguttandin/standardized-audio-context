@@ -25,12 +25,12 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             return createNativeConstantSourceNodeFaker(nativeContext, options);
         }
 
-        const nativeNode = <INativeConstantSourceNode> (<any> nativeContext).createConstantSource();
+        const nativeConstantSourceNode = <INativeConstantSourceNode> (<any> nativeContext).createConstantSource();
 
-        assignNativeAudioNodeOptions(nativeNode, options);
+        assignNativeAudioNodeOptions(nativeConstantSourceNode, options);
 
-        if (options.offset !== nativeNode.offset.value) {
-            nativeNode.offset.value = options.offset;
+        if (options.offset !== nativeConstantSourceNode.offset.value) {
+            nativeConstantSourceNode.offset.value = options.offset;
         }
 
         // Bug #44: Only Chrome & Opera throw a RangeError yet.
@@ -38,7 +38,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
             () => testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
         )) {
-            wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeNode);
+            wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeConstantSourceNode);
         }
 
         // Bug #44: No browser does throw a RangeError yet.
@@ -46,7 +46,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
             () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
         )) {
-            wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeNode);
+            wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeConstantSourceNode);
         }
 
         // Bug #70: Firefox does not schedule ConstantSourceNodes accurately.
@@ -54,9 +54,9 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             testConstantSourceNodeAccurateSchedulingSupport,
             () => testConstantSourceNodeAccurateSchedulingSupport(nativeContext)
         )) {
-            wrapConstantSourceNodeAccurateScheduling(nativeNode, nativeContext);
+            wrapConstantSourceNodeAccurateScheduling(nativeConstantSourceNode, nativeContext);
         }
 
-        return nativeNode;
+        return nativeConstantSourceNode;
     };
 };

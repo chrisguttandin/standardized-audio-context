@@ -3,12 +3,12 @@ import { TNativeChannelSplitterNodeFactory } from '../types';
 import { wrapChannelSplitterNode } from '../wrappers/channel-splitter-node';
 
 export const createNativeChannelSplitterNode: TNativeChannelSplitterNodeFactory = (nativeContext, options) => {
-    const nativeNode = nativeContext.createChannelSplitter(options.numberOfOutputs);
+    const nativeChannelSplitterNode = nativeContext.createChannelSplitter(options.numberOfOutputs);
 
-    assignNativeAudioNodeOptions(nativeNode, options);
+    assignNativeAudioNodeOptions(nativeChannelSplitterNode, options);
 
     // Bug #29 - #32: Only Chrome & Opera partially support the spec yet.
-    wrapChannelSplitterNode(nativeNode);
+    wrapChannelSplitterNode(nativeChannelSplitterNode);
 
-    return nativeNode;
+    return nativeChannelSplitterNode;
 };

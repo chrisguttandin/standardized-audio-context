@@ -62,7 +62,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
     return class AudioWorkletNode extends noneAudioDestinationNodeConstructor implements IAudioWorkletNode {
 
-        private _nativeNode: INativeAudioWorkletNode;
+        private _nativeAudioWorkletNode: INativeAudioWorkletNode;
 
         private _numberOfOutputs: number;
 
@@ -75,7 +75,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             const processorDefinition = (nodeNameToProcessorDefinitionMap === undefined) ?
                 undefined :
                 nodeNameToProcessorDefinitionMap.get(name);
-            const nativeNode = createNativeAudioWorkletNode(
+            const nativeAudioWorkletNode = createNativeAudioWorkletNode(
                 nativeContext,
                 nativeAudioWorkletNodeConstructor,
                 name,
@@ -87,19 +87,19 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                 createAudioWorkletNodeRenderer(name, mergedOptions, processorDefinition) :
                 null;
 
-            super(context, nativeNode, audioWorkletNodeRenderer);
+            super(context, nativeAudioWorkletNode, audioWorkletNodeRenderer);
 
             const parameters: [ string, IAudioParam ][] = [ ];
 
-            nativeNode.parameters.forEach((nativeAudioParam, nm) => {
+            nativeAudioWorkletNode.parameters.forEach((nativeAudioParam, nm) => {
                 const audioParam = createAudioParam(context, isOffline, nativeAudioParam);
 
                 parameters.push([ nm, audioParam ]);
             });
 
-            this._nativeNode = nativeNode;
+            this._nativeAudioWorkletNode = nativeAudioWorkletNode;
             // Bug #86 & #87: Every browser but Firefox needs to get an unused output which should not be exposed.
-            this._numberOfOutputs = (options.numberOfOutputs === 0) ? 0 : this._nativeNode.numberOfOutputs;
+            this._numberOfOutputs = (options.numberOfOutputs === 0) ? 0 : this._nativeAudioWorkletNode.numberOfOutputs;
             this._parameters = new ReadOnlyMap(parameters);
 
             // Bug #86 & #87: Every browser but Firefox needs an output to be connected.
@@ -113,23 +113,23 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
         }
 
         public get onprocessorerror () {
-            return <TProcessorErrorEventHandler> (<any> this._nativeNode.onprocessorerror);
+            return <TProcessorErrorEventHandler> (<any> this._nativeAudioWorkletNode.onprocessorerror);
         }
 
         public set onprocessorerror (value) {
-            this._nativeNode.onprocessorerror = <any> value;
+            this._nativeAudioWorkletNode.onprocessorerror = <any> value;
         }
 
         get parameters (): TAudioParamMap {
             if (this._parameters === null) {
-                return <TAudioParamMap> (<any> this._nativeNode.parameters);
+                return <TAudioParamMap> (<any> this._nativeAudioWorkletNode.parameters);
             }
 
             return this._parameters;
         }
 
         get port () {
-            return this._nativeNode.port;
+            return this._nativeAudioWorkletNode.port;
         }
 
     };

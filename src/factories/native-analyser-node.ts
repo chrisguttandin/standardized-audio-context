@@ -10,35 +10,35 @@ const isSupportingAnalyserNodeGetFloatTimeDomainDataMethod = (nativeAnalyserNode
 );
 
 export const createNativeAnalyserNode: TNativeAnalyserNodeFactory = (nativeContext, options) => {
-    const nativeNode = nativeContext.createAnalyser();
+    const nativeAnalyserNode = nativeContext.createAnalyser();
 
-    assignNativeAudioNodeOptions(nativeNode, options);
+    assignNativeAudioNodeOptions(nativeAnalyserNode, options);
 
-    if (options.fftSize !== nativeNode.fftSize) {
-        nativeNode.fftSize = options.fftSize;
+    if (options.fftSize !== nativeAnalyserNode.fftSize) {
+        nativeAnalyserNode.fftSize = options.fftSize;
     }
 
-    if (options.maxDecibels !== nativeNode.maxDecibels) {
-        nativeNode.maxDecibels = options.maxDecibels;
+    if (options.maxDecibels !== nativeAnalyserNode.maxDecibels) {
+        nativeAnalyserNode.maxDecibels = options.maxDecibels;
     }
 
-    if (options.minDecibels !== nativeNode.minDecibels) {
-        nativeNode.minDecibels = options.minDecibels;
+    if (options.minDecibels !== nativeAnalyserNode.minDecibels) {
+        nativeAnalyserNode.minDecibels = options.minDecibels;
     }
 
-    if (options.smoothingTimeConstant !== nativeNode.smoothingTimeConstant) {
-        nativeNode.smoothingTimeConstant = options.smoothingTimeConstant;
+    if (options.smoothingTimeConstant !== nativeAnalyserNode.smoothingTimeConstant) {
+        nativeAnalyserNode.smoothingTimeConstant = options.smoothingTimeConstant;
     }
 
     // Bug #37: Only Edge and Safari create an AnalyserNode with the default properties.
-    if (nativeNode.channelCount === 1) {
-        nativeNode.channelCount = 2;
+    if (nativeAnalyserNode.channelCount === 1) {
+        nativeAnalyserNode.channelCount = 2;
     }
 
     // Bug #36: Safari does not support getFloatTimeDomainData() yet.
-    if (!isSupportingAnalyserNodeGetFloatTimeDomainDataMethod(nativeNode)) {
-        wrapAnalyserNodeGetFloatTimeDomainDataMethod(nativeNode);
+    if (!isSupportingAnalyserNodeGetFloatTimeDomainDataMethod(nativeAnalyserNode)) {
+        wrapAnalyserNodeGetFloatTimeDomainDataMethod(nativeAnalyserNode);
     }
 
-    return nativeNode;
+    return nativeAnalyserNode;
 };

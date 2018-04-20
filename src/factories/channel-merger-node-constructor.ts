@@ -21,10 +21,10 @@ export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFa
         constructor (context: TStandardizedContext, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IChannelMergerOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = createNativeChannelMergerNode(nativeContext, mergedOptions);
+            const nativeChannelMergerNode = createNativeChannelMergerNode(nativeContext, mergedOptions);
             const channelMergerNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createChannelMergerNodeRenderer() : null;
 
-            super(context, nativeNode, channelMergerNodeRenderer);
+            super(context, nativeChannelMergerNode, channelMergerNodeRenderer);
         }
 
     };

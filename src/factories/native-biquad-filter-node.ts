@@ -2,29 +2,29 @@ import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-nod
 import { TNativeBiquadFilterNodeFactory } from '../types';
 
 export const createNativeBiquadFilterNode: TNativeBiquadFilterNodeFactory = (nativeContext, options) => {
-    const nativeNode = nativeContext.createBiquadFilter();
+    const nativeBiquadFilterNode = nativeContext.createBiquadFilter();
 
-    assignNativeAudioNodeOptions(nativeNode, options);
+    assignNativeAudioNodeOptions(nativeBiquadFilterNode, options);
 
-    if (options.Q !== nativeNode.Q.value) {
-        nativeNode.Q.value = options.Q;
+    if (options.Q !== nativeBiquadFilterNode.Q.value) {
+        nativeBiquadFilterNode.Q.value = options.Q;
     }
 
-    if (options.detune !== nativeNode.detune.value) {
-        nativeNode.detune.value = options.detune;
+    if (options.detune !== nativeBiquadFilterNode.detune.value) {
+        nativeBiquadFilterNode.detune.value = options.detune;
     }
 
-    if (options.frequency !== nativeNode.frequency.value) {
-        nativeNode.frequency.value = options.frequency;
+    if (options.frequency !== nativeBiquadFilterNode.frequency.value) {
+        nativeBiquadFilterNode.frequency.value = options.frequency;
     }
 
-    if (options.gain !== nativeNode.gain.value) {
-        nativeNode.gain.value = options.gain;
+    if (options.gain !== nativeBiquadFilterNode.gain.value) {
+        nativeBiquadFilterNode.gain.value = options.gain;
     }
 
-    if (options.type !== nativeNode.type) {
-        nativeNode.type = options.type;
+    if (options.type !== nativeBiquadFilterNode.type) {
+        nativeBiquadFilterNode.type = options.type;
     }
 
-    return nativeNode;
+    return nativeBiquadFilterNode;
 };

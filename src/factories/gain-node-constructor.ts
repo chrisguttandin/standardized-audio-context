@@ -24,14 +24,14 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
         constructor (context: TStandardizedContext, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IGainOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = createNativeGainNode(nativeContext, mergedOptions);
+            const nativeGainNode = createNativeGainNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const gainNodeRenderer = (isOffline) ? createGainNodeRenderer() : null;
 
-            super(context, nativeNode, gainNodeRenderer);
+            super(context, nativeGainNode, gainNodeRenderer);
 
             // Bug #74: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._gain = createAudioParam(context, isOffline, nativeNode.gain, 3.4028234663852886e38, -3.4028234663852886e38);
+            this._gain = createAudioParam(context, isOffline, nativeGainNode.gain, 3.4028234663852886e38, -3.4028234663852886e38);
         }
 
         public get gain () {

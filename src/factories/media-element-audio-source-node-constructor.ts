@@ -21,22 +21,24 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
 
         private _mediaElement: HTMLMediaElement;
 
-        private _nativeNode: TNativeMediaElementAudioSourceNode;
+        private _nativeMediaElementAudioSourceNode: TNativeMediaElementAudioSourceNode;
 
         constructor (context: IMinimalAudioContext, options: IMediaElementAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IAudioNodeOptions & IMediaElementAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = nativeContext.createMediaElementSource(mergedOptions.mediaElement);
+            const nativeMediaElementAudioSourceNode = nativeContext.createMediaElementSource(mergedOptions.mediaElement);
 
-            super(context, nativeNode, null);
+            super(context, nativeMediaElementAudioSourceNode, null);
 
             // Bug #63: Edge & Firefox do not expose the mediaElement yet.
             this._mediaElement = mergedOptions.mediaElement;
-            this._nativeNode = nativeNode;
+            this._nativeMediaElementAudioSourceNode = nativeMediaElementAudioSourceNode;
         }
 
         public get mediaElement () {
-            return (this._nativeNode.mediaElement === undefined) ? this._mediaElement : this._nativeNode.mediaElement;
+            return (this._nativeMediaElementAudioSourceNode.mediaElement === undefined) ?
+                this._mediaElement :
+                this._nativeMediaElementAudioSourceNode.mediaElement;
         }
 
     };

@@ -21,22 +21,24 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
 
         private _mediaStream: MediaStream;
 
-        private _nativeNode: TNativeMediaStreamAudioSourceNode;
+        private _nativeMediaStreamAudioSourceNode: TNativeMediaStreamAudioSourceNode;
 
         constructor (context: IMinimalAudioContext, options: IMediaStreamAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IAudioNodeOptions & IMediaStreamAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = nativeContext.createMediaStreamSource(mergedOptions.mediaStream);
+            const nativeMediaStreamAudioSourceNode = nativeContext.createMediaStreamSource(mergedOptions.mediaStream);
 
-            super(context, nativeNode, null);
+            super(context, nativeMediaStreamAudioSourceNode, null);
 
             // Bug #63: Edge & Firefox do not expose the mediaStream yet.
             this._mediaStream = mergedOptions.mediaStream;
-            this._nativeNode = nativeNode;
+            this._nativeMediaStreamAudioSourceNode = nativeMediaStreamAudioSourceNode;
         }
 
         public get mediaStream () {
-            return (this._nativeNode.mediaStream === undefined) ? this._mediaStream : this._nativeNode.mediaStream;
+            return (this._nativeMediaStreamAudioSourceNode.mediaStream === undefined) ?
+                this._mediaStream :
+                this._nativeMediaStreamAudioSourceNode.mediaStream;
         }
 
     };

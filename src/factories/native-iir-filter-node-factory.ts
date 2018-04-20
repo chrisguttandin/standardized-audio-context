@@ -8,10 +8,10 @@ export const createNativeIIRFilterNodeFactory: TNativeIIRFilterNodeFactoryFactor
             return createNativeIIRFilterNodeFaker(nativeContext, options);
         }
 
-        const nativeNode = nativeContext.createIIRFilter(<number[]> options.feedforward, <number[]> options.feedback);
+        const nativeIIRFilterNode = nativeContext.createIIRFilter(<number[]> options.feedforward, <number[]> options.feedback);
 
-        assignNativeAudioNodeOptions(nativeNode, options);
+        assignNativeAudioNodeOptions(nativeIIRFilterNode, options);
 
-        return nativeNode;
+        return nativeIIRFilterNode;
     };
 };

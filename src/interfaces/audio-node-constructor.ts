@@ -4,6 +4,6 @@ import { IAudioNodeRenderer } from './audio-node-renderer';
 
 export interface IAudioNodeConstructor {
 
-    new (context: TStandardizedContext, nativeNode: TNativeAudioNode, audioNoderRenderer: null | IAudioNodeRenderer): IAudioNode;
+    new (context: TStandardizedContext, nativeAudioNode: TNativeAudioNode, audioNoderRenderer: null | IAudioNodeRenderer): IAudioNode;
 
 }

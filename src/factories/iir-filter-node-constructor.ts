@@ -25,7 +25,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
 
     return class IIRFilterNode extends noneAudioDestinationNodeConstructor implements IIIRFilterNode {
 
-        private _nativeNode: TNativeIIRFilterNode;
+        private _nativeIIRFilterNode: TNativeIIRFilterNode;
 
         constructor (
             context: TStandardizedContext,
@@ -33,22 +33,22 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
         ) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = createNativeIIRFilterNode(nativeContext, mergedOptions);
+            const nativeIIRFilterNode = createNativeIIRFilterNode(nativeContext, mergedOptions);
             const iirFilterNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ?
                 createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward) :
                 null;
 
-            super(context, nativeNode, iirFilterNodeRenderer);
+            super(context, nativeIIRFilterNode, iirFilterNodeRenderer);
 
             // Bug #23 & #24: FirefoxDeveloper does not throw an InvalidAccessError.
             // @todo Write a test which allows other browsers to remain unpatched.
-            wrapIIRFilterNodeGetFrequencyResponseMethod(nativeNode);
+            wrapIIRFilterNodeGetFrequencyResponseMethod(nativeIIRFilterNode);
 
-            this._nativeNode = nativeNode;
+            this._nativeIIRFilterNode = nativeIIRFilterNode;
         }
 
         public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
-            return this._nativeNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+            return this._nativeIIRFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
 
     };

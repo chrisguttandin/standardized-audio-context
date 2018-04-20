@@ -1,8 +1,8 @@
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { TNativeAudioBufferSourceNode } from '../types';
 
-export const wrapAudioBufferSourceNodeStartMethodConsecutiveCalls = (audioBufferSourceNode: TNativeAudioBufferSourceNode): void => {
-    audioBufferSourceNode.start = ((start) => {
+export const wrapAudioBufferSourceNodeStartMethodConsecutiveCalls = (nativeAudioBufferSourceNode: TNativeAudioBufferSourceNode): void => {
+    nativeAudioBufferSourceNode.start = ((start) => {
         let isScheduled = false;
 
         return (when = 0, offset = 0, duration?: number) => {
@@ -10,9 +10,9 @@ export const wrapAudioBufferSourceNodeStartMethodConsecutiveCalls = (audioBuffer
                 throw createInvalidStateError();
             }
 
-            start.call(audioBufferSourceNode, when, offset, duration);
+            start.call(nativeAudioBufferSourceNode, when, offset, duration);
 
             isScheduled = true;
         };
-    })(audioBufferSourceNode.start);
+    })(nativeAudioBufferSourceNode.start);
 };

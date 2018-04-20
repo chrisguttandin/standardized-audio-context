@@ -1,4 +1,4 @@
-import { getNativeNode } from '../helpers/get-native-node';
+import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IAudioBufferSourceNode, IAudioBufferSourceOptions } from '../interfaces';
@@ -8,7 +8,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
     createNativeAudioBufferSourceNode
 ) => {
     return () => {
-        let nativeNode: null | TNativeAudioBufferSourceNode = null;
+        let nativeAudioBufferSourceNode: null | TNativeAudioBufferSourceNode = null;
         let start: null | [ number, number ] | [ number, number, number ] = null;
         let stop: null | number = null;
 
@@ -23,40 +23,43 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
                 proxy: IAudioBufferSourceNode,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode> => {
-                if (nativeNode !== null) {
-                    return nativeNode;
+                if (nativeAudioBufferSourceNode !== null) {
+                    return nativeAudioBufferSourceNode;
                 }
 
-                nativeNode = <TNativeAudioBufferSourceNode> getNativeNode(proxy);
+                nativeAudioBufferSourceNode = <TNativeAudioBufferSourceNode> getNativeAudioNode(proxy);
 
-                // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
+                /*
+                 * If the initially used nativeAudioBufferSourceNode was not constructed on the same OfflineAudioContext it needs to be
+                 * created again.
+                 */
+                if (!isOwnedByContext(nativeAudioBufferSourceNode, nativeOfflineAudioContext)) {
                     const options: IAudioBufferSourceOptions = {
-                        buffer: nativeNode.buffer,
-                        channelCount: nativeNode.channelCount,
-                        channelCountMode: nativeNode.channelCountMode,
-                        channelInterpretation: nativeNode.channelInterpretation,
-                        detune: 0, // @todo nativeNode.detune.value,
-                        loop: nativeNode.loop,
-                        loopEnd: nativeNode.loopEnd,
-                        loopStart: nativeNode.loopStart,
-                        playbackRate: nativeNode.playbackRate.value
+                        buffer: nativeAudioBufferSourceNode.buffer,
+                        channelCount: nativeAudioBufferSourceNode.channelCount,
+                        channelCountMode: nativeAudioBufferSourceNode.channelCountMode,
+                        channelInterpretation: nativeAudioBufferSourceNode.channelInterpretation,
+                        detune: 0, // @todo nativeAudioBufferSourceNode.detune.value,
+                        loop: nativeAudioBufferSourceNode.loop,
+                        loopEnd: nativeAudioBufferSourceNode.loopEnd,
+                        loopStart: nativeAudioBufferSourceNode.loopStart,
+                        playbackRate: nativeAudioBufferSourceNode.playbackRate.value
                     };
 
-                    nativeNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext, options);
+                    nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext, options);
 
                     if (start !== null) {
-                        nativeNode.start(...start);
+                        nativeAudioBufferSourceNode.start(...start);
                     }
 
                     if (stop !== null) {
-                        nativeNode.stop(stop);
+                        nativeAudioBufferSourceNode.stop(stop);
                     }
                 }
 
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioBufferSourceNode);
 
-                return nativeNode;
+                return nativeAudioBufferSourceNode;
             }
         };
     };

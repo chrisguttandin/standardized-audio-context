@@ -27,69 +27,69 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
 
     return class AnalyserNode extends noneAudioDestinationNodeConstructor implements IAnalyserNode {
 
-        private _nativeNode: TNativeAnalyserNode;
+        private _nativeAnalyserNode: TNativeAnalyserNode;
 
         constructor (context: TStandardizedContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IAnalyserOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeNode = createNativeAnalyserNode(nativeContext, mergedOptions);
+            const nativeAnalyserNode = createNativeAnalyserNode(nativeContext, mergedOptions);
             const analyserNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createAnalyserNodeRenderer() : null;
 
-            super(context, nativeNode, analyserNodeRenderer);
+            super(context, nativeAnalyserNode, analyserNodeRenderer);
 
-            this._nativeNode = nativeNode;
+            this._nativeAnalyserNode = nativeAnalyserNode;
         }
 
         public get fftSize () {
-            return this._nativeNode.fftSize;
+            return this._nativeAnalyserNode.fftSize;
         }
 
         public set fftSize (value) {
-            this._nativeNode.fftSize = value;
+            this._nativeAnalyserNode.fftSize = value;
         }
 
         public get frequencyBinCount () {
-            return this._nativeNode.frequencyBinCount;
+            return this._nativeAnalyserNode.frequencyBinCount;
         }
 
         public get maxDecibels () {
-            return this._nativeNode.maxDecibels;
+            return this._nativeAnalyserNode.maxDecibels;
         }
 
         public set maxDecibels (value) {
-            this._nativeNode.maxDecibels = value;
+            this._nativeAnalyserNode.maxDecibels = value;
         }
 
         public get minDecibels () {
-            return this._nativeNode.minDecibels;
+            return this._nativeAnalyserNode.minDecibels;
         }
 
         public set minDecibels (value) {
-            this._nativeNode.minDecibels = value;
+            this._nativeAnalyserNode.minDecibels = value;
         }
 
         public get smoothingTimeConstant () {
-            return this._nativeNode.smoothingTimeConstant;
+            return this._nativeAnalyserNode.smoothingTimeConstant;
         }
 
         public set smoothingTimeConstant (value) {
-            this._nativeNode.smoothingTimeConstant = value;
+            this._nativeAnalyserNode.smoothingTimeConstant = value;
         }
 
         public getByteFrequencyData (array: Uint8Array) {
-            this._nativeNode.getByteFrequencyData(array);
+            this._nativeAnalyserNode.getByteFrequencyData(array);
         }
 
         public getByteTimeDomainData (array: Uint8Array) {
-            this._nativeNode.getByteTimeDomainData(array);
+            this._nativeAnalyserNode.getByteTimeDomainData(array);
         }
 
         public getFloatFrequencyData (array: Float32Array) {
-            this._nativeNode.getFloatFrequencyData(array);
+            this._nativeAnalyserNode.getFloatFrequencyData(array);
         }
 
         public getFloatTimeDomainData (array: Float32Array) {
-            this._nativeNode.getFloatTimeDomainData(array);
+            this._nativeAnalyserNode.getFloatTimeDomainData(array);
         }
 
     };

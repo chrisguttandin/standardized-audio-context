@@ -3,22 +3,22 @@ import { TNativeChannelMergerNodeFactory } from '../types';
 import { wrapChannelMergerNode } from '../wrappers/channel-merger-node';
 
 export const createNativeChannelMergerNode: TNativeChannelMergerNodeFactory = (nativeContext, options = { }) => {
-    const nativeNode = nativeContext.createChannelMerger((options.numberOfInputs === undefined) ? 6 : options.numberOfInputs);
+    const nativeChannelMergerNode = nativeContext.createChannelMerger((options.numberOfInputs === undefined) ? 6 : options.numberOfInputs);
 
-    assignNativeAudioNodeOptions(nativeNode, options);
+    assignNativeAudioNodeOptions(nativeChannelMergerNode, options);
 
     // Bug #15: Safari does not return the default properties.
-    if (nativeNode.channelCount !== 1 &&
-            nativeNode.channelCountMode !== 'explicit') {
-        wrapChannelMergerNode(nativeContext, nativeNode);
+    if (nativeChannelMergerNode.channelCount !== 1 &&
+            nativeChannelMergerNode.channelCountMode !== 'explicit') {
+        wrapChannelMergerNode(nativeContext, nativeChannelMergerNode);
     }
 
     // Bug #16: Firefox does not throw an error when setting a different channelCount or channelCountMode.
     try {
-        nativeNode.channelCount = (options.numberOfInputs === undefined) ? 6 : options.numberOfInputs;
+        nativeChannelMergerNode.channelCount = (options.numberOfInputs === undefined) ? 6 : options.numberOfInputs;
 
-        wrapChannelMergerNode(nativeContext, nativeNode);
+        wrapChannelMergerNode(nativeContext, nativeChannelMergerNode);
     } catch (err) {} // tslint:disable-line:no-empty
 
-    return nativeNode;
+    return nativeChannelMergerNode;
 };

@@ -1,5 +1,5 @@
 import { connectAudioParam } from '../helpers/connect-audio-param';
-import { getNativeNode } from '../helpers/get-native-node';
+import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
@@ -10,7 +10,7 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
     createNativeOscillatorNode
 ) => {
     return () => {
-        let nativeNode: null | TNativeOscillatorNode = null;
+        let nativeOscillatorNode: null | TNativeOscillatorNode = null;
         let start: null | number = null;
         let stop: null | number = null;
 
@@ -25,44 +25,47 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
                 proxy: IOscillatorNode,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeOscillatorNode> => {
-                if (nativeNode !== null) {
-                    return nativeNode;
+                if (nativeOscillatorNode !== null) {
+                    return nativeOscillatorNode;
                 }
 
-                nativeNode = <TNativeOscillatorNode> getNativeNode(proxy);
+                nativeOscillatorNode = getNativeAudioNode<TNativeOscillatorNode>(proxy);
 
-                // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
+                /*
+                 * If the initially used nativeOscillatorNode was not constructed on the same OfflineAudioContext it needs to be created
+                 * again.
+                 */
+                if (!isOwnedByContext(nativeOscillatorNode, nativeOfflineAudioContext)) {
                     const options: IOscillatorOptions = {
-                        channelCount: nativeNode.channelCount,
-                        channelCountMode: nativeNode.channelCountMode,
-                        channelInterpretation: nativeNode.channelInterpretation,
-                        detune: nativeNode.detune.value,
-                        frequency: nativeNode.frequency.value,
+                        channelCount: nativeOscillatorNode.channelCount,
+                        channelCountMode: nativeOscillatorNode.channelCountMode,
+                        channelInterpretation: nativeOscillatorNode.channelInterpretation,
+                        detune: nativeOscillatorNode.detune.value,
+                        frequency: nativeOscillatorNode.frequency.value,
                         // @todo periodicWave is not exposed by the native node.
-                        type: nativeNode.type
+                        type: nativeOscillatorNode.type
                     };
 
-                    nativeNode = createNativeOscillatorNode(nativeOfflineAudioContext, options);
+                    nativeOscillatorNode = createNativeOscillatorNode(nativeOfflineAudioContext, options);
 
                     if (start !== null) {
-                        nativeNode.start(start);
+                        nativeOscillatorNode.start(start);
                     }
 
                     if (stop !== null) {
-                        nativeNode.stop(stop);
+                        nativeOscillatorNode.stop(stop);
                     }
 
-                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.detune, nativeNode.detune);
-                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.frequency, nativeNode.frequency);
+                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
+                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
                 } else {
                     await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.detune);
                     await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.frequency);
                 }
 
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeOscillatorNode);
 
-                return nativeNode;
+                return nativeOscillatorNode;
             }
         };
     };

@@ -2,15 +2,15 @@ import { INativeConstantSourceNode } from '../interfaces';
 import { TNativeAudioBufferSourceNode, TNativeOscillatorNode } from '../types';
 
 export const wrapAudioScheduledSourceNodeStopMethodNegativeParameters = (
-    audioScheduledSourceNode: TNativeAudioBufferSourceNode | INativeConstantSourceNode | TNativeOscillatorNode
+    nativeAudioScheduledSourceNode: TNativeAudioBufferSourceNode | INativeConstantSourceNode | TNativeOscillatorNode
 ): void => {
-    audioScheduledSourceNode.stop = ((stop) => {
+    nativeAudioScheduledSourceNode.stop = ((stop) => {
         return (when = 0) => {
             if (when < 0) {
                 throw new RangeError("The parameter can't be negative.");
             }
 
-            stop.call(audioScheduledSourceNode, when);
+            stop.call(nativeAudioScheduledSourceNode, when);
         };
-    })(audioScheduledSourceNode.stop);
+    })(nativeAudioScheduledSourceNode.stop);
 };

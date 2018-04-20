@@ -21,22 +21,22 @@ import {
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
 
 export const createNativeOscillatorNode: TNativeOscillatorNodeFactory = (nativeContext, options) => {
-    const nativeNode = nativeContext.createOscillator();
+    const nativeOscillatorNode = nativeContext.createOscillator();
 
-    assignNativeAudioNodeOptions(nativeNode, options);
+    assignNativeAudioNodeOptions(nativeOscillatorNode, options);
 
-    if (options.detune !== nativeNode.detune.value) {
-        nativeNode.detune.value = options.detune;
+    if (options.detune !== nativeOscillatorNode.detune.value) {
+        nativeOscillatorNode.detune.value = options.detune;
     }
 
-    if (options.frequency !== nativeNode.frequency.value) {
-        nativeNode.frequency.value = options.frequency;
+    if (options.frequency !== nativeOscillatorNode.frequency.value) {
+        nativeOscillatorNode.frequency.value = options.frequency;
     }
 
     // @todo periodicWave
 
-    if (options.type !== nativeNode.type) {
-        nativeNode.type = options.type;
+    if (options.type !== nativeOscillatorNode.type) {
+        nativeOscillatorNode.type = options.type;
     }
 
     // Bug #44: Only Chrome & Opera throw a RangeError yet.
@@ -44,7 +44,7 @@ export const createNativeOscillatorNode: TNativeOscillatorNodeFactory = (nativeC
         testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
         () => testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
     )) {
-        wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeNode);
+        wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeOscillatorNode);
     }
 
     // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
@@ -52,7 +52,7 @@ export const createNativeOscillatorNode: TNativeOscillatorNodeFactory = (nativeC
         testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
         () => testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(nativeContext)
     )) {
-        wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(nativeNode, nativeContext);
+        wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(nativeOscillatorNode, nativeContext);
     }
 
     // Bug #44: No browser does throw a RangeError yet.
@@ -60,8 +60,8 @@ export const createNativeOscillatorNode: TNativeOscillatorNodeFactory = (nativeC
         testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
         () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
     )) {
-        wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeNode);
+        wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeOscillatorNode);
     }
 
-    return nativeNode;
+    return nativeOscillatorNode;
 };
