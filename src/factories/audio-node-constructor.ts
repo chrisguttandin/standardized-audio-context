@@ -6,13 +6,13 @@ import { getAudioGraph } from '../helpers/get-audio-graph';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioNode, IAudioNodeRenderer, IAudioParam, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
+import { IAudioNode, IAudioNodeRenderer, IAudioParam, INativeAudioNodeFaker } from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
-import { TAudioNodeConstructorFactory, TChannelCountMode, TNativeAudioContext, TNativeAudioNode } from '../types';
+import { TAudioNodeConstructorFactory, TChannelCountMode, TNativeAudioContext, TNativeAudioNode, TStandardizedContext } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
 const addAudioNode = (
-    context: IMinimalBaseAudioContext,
+    context: TStandardizedContext,
     audioNode: IAudioNode,
     audioNoderRender: null | IAudioNodeRenderer,
     nativeNode: TNativeAudioNode
@@ -39,7 +39,7 @@ const addConnectionToAudioNode = (source: IAudioNode, destination: IAudioNode, o
     audioNodeConnectionsOfDestination.inputs[input].add([ source, output ]);
 };
 
-const addConnectionToAudioParam = (context: IMinimalBaseAudioContext, source: IAudioNode, destination: IAudioParam, output: number) => {
+const addConnectionToAudioParam = (context: TStandardizedContext, source: IAudioNode, destination: IAudioParam, output: number) => {
     const audioNodeConnections = getAudioNodeConnections(source);
     const audioParamConnections = getAudioParamConnections(context, destination);
 
@@ -90,12 +90,12 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
     return class AudioNode extends EventTarget implements IAudioNode {
 
-        private _context: IMinimalBaseAudioContext;
+        private _context: TStandardizedContext;
 
         private _nativeNode: INativeAudioNodeFaker | TNativeAudioNode;
 
         constructor (
-            context: IMinimalBaseAudioContext,
+            context: TStandardizedContext,
             nativeNode: INativeAudioNodeFaker | TNativeAudioNode,
             audioNodeRenderer: null | IAudioNodeRenderer
         ) {

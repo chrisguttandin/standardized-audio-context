@@ -115,6 +115,7 @@ export * from './oscillator-type';
 export * from './processor-error-event-handler';
 export * from './render-native-offline-audio-context-factory';
 export * from './render-native-offline-audio-context-function';
+export * from './standardized-context';
 export * from './start-rendering-factory';
 export * from './start-rendering-function';
 export * from './state-change-event-handler';

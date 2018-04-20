@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TChannelCountMode, TChannelInterpretation, TGainNodeConstructorFactory } from '../types';
+import { IAudioParam, IGainNode, IGainOptions } from '../interfaces';
+import { TChannelCountMode, TChannelInterpretation, TGainNodeConstructorFactory, TStandardizedContext } from '../types';
 
 const DEFAULT_OPTIONS: IGainOptions = {
     channelCount: 2,
@@ -21,7 +21,7 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
 
         private _gain: IAudioParam;
 
-        constructor (context: IMinimalBaseAudioContext, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TStandardizedContext, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IGainOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeGainNode(nativeContext, mergedOptions);

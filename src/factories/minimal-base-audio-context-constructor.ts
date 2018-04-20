@@ -19,10 +19,10 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
         constructor (context: TNativeAudioContext | TNativeOfflineAudioContext, numberOfChannels: number) {
             super();
 
-            CONTEXT_STORE.set(this, context);
+            CONTEXT_STORE.set(<any> this, context);
 
             this._context = context;
-            this._destination = new audioDestinationNodeConstructor(this, numberOfChannels);
+            this._destination = new audioDestinationNodeConstructor(<any> this, numberOfChannels);
         }
 
         public get currentTime () {

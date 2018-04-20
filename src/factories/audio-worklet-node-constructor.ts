@@ -1,19 +1,14 @@
 import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
-import {
-    IAudioParam,
-    IAudioWorkletNode,
-    IAudioWorkletNodeOptions,
-    IMinimalBaseAudioContext,
-    INativeAudioWorkletNode
-} from '../interfaces';
+import { IAudioParam, IAudioWorkletNode, IAudioWorkletNodeOptions, INativeAudioWorkletNode } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
     TAudioParamMap,
     TAudioWorkletNodeConstructorFactory,
     TChannelCountMode,
     TChannelInterpretation,
-    TProcessorErrorEventHandler
+    TProcessorErrorEventHandler,
+    TStandardizedContext
 } from '../types';
 
 const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
@@ -73,7 +68,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         private _parameters: null | TAudioParamMap;
 
-        constructor (context: IMinimalBaseAudioContext, name: string, options: Partial<IAudioWorkletNodeOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TStandardizedContext, name: string, options: Partial<IAudioWorkletNodeOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = sanitizedOptions(<IAudioWorkletNodeOptions> { ...DEFAULT_OPTIONS, ...options });
             const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);

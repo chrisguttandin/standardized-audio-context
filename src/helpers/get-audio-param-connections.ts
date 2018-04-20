@@ -1,11 +1,11 @@
 import { getAudioGraph } from '../helpers/get-audio-graph';
-import { IAudioParam, IAudioParamConnections, IMinimalBaseAudioContext } from '../interfaces';
-import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { IAudioParam, IAudioParamConnections } from '../interfaces';
+import { TNativeAudioContext, TNativeOfflineAudioContext, TStandardizedContext } from '../types';
 
-export const getAudioParamConnections = (
-    anyContext: IMinimalBaseAudioContext | TNativeAudioContext | TNativeOfflineAudioContext,
+export function getAudioParamConnections (
+    anyContext: TNativeAudioContext | TNativeOfflineAudioContext | TStandardizedContext,
     audioParam: IAudioParam
-): IAudioParamConnections => {
+): IAudioParamConnections {
     const audioGraph = getAudioGraph(anyContext);
     const audioParamConnections = audioGraph.params.get(audioParam);
 
@@ -14,4 +14,4 @@ export const getAudioParamConnections = (
     }
 
     return audioParamConnections;
-};
+}

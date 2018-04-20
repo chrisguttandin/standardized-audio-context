@@ -1,11 +1,11 @@
 import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
-import { IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext } from '../interfaces';
-import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { IAudioParam, IAudioParamRenderer } from '../interfaces';
+import { TNativeAudioContext, TNativeOfflineAudioContext, TStandardizedContext } from '../types';
 
-export const getAudioParamRenderer = (
-    anyContext: IMinimalBaseAudioContext | TNativeAudioContext | TNativeOfflineAudioContext,
+export function getAudioParamRenderer (
+    anyContext: TNativeAudioContext | TNativeOfflineAudioContext | TStandardizedContext,
     audioParam: IAudioParam
-): IAudioParamRenderer => {
+): IAudioParamRenderer {
     const audioParamConnections = getAudioParamConnections(anyContext, audioParam);
 
     if (audioParamConnections.renderer === null) {
@@ -13,4 +13,4 @@ export const getAudioParamRenderer = (
     }
 
     return audioParamConnections.renderer;
-};
+}

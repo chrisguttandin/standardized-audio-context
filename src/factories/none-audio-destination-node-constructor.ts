@@ -1,5 +1,5 @@
-import { IAudioNodeRenderer, IMinimalBaseAudioContext } from '../interfaces';
-import { TNativeAudioNode, TNoneAudioDestinationNodeConstructorFactory } from '../types';
+import { IAudioNodeRenderer } from '../interfaces';
+import { TNativeAudioNode, TNoneAudioDestinationNodeConstructorFactory, TStandardizedContext } from '../types';
 
 export const createNoneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructorFactory = (
     audioNodeConstructor,
@@ -10,7 +10,7 @@ export const createNoneAudioDestinationNodeConstructor: TNoneAudioDestinationNod
 
         private _nativeNode: TNativeAudioNode;
 
-        constructor (context: IMinimalBaseAudioContext, nativeNode: TNativeAudioNode, audioNodeRenderer: null | IAudioNodeRenderer) {
+        constructor (context: TStandardizedContext, nativeNode: TNativeAudioNode, audioNodeRenderer: null | IAudioNodeRenderer) {
             // Bug #50 Safari does not throw an error when the context is already closed.
             if (context.state === 'closed') {
                 throw createInvalidStateError();

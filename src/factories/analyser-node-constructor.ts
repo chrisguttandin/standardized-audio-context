@@ -1,6 +1,12 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TAnalyserNodeConstructorFactory, TChannelCountMode, TChannelInterpretation, TNativeAnalyserNode } from '../types';
+import { IAnalyserNode, IAnalyserOptions } from '../interfaces';
+import {
+    TAnalyserNodeConstructorFactory,
+    TChannelCountMode,
+    TChannelInterpretation,
+    TNativeAnalyserNode,
+    TStandardizedContext
+} from '../types';
 
 const DEFAULT_OPTIONS: IAnalyserOptions = {
     channelCount: 2,
@@ -23,7 +29,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
 
         private _nativeNode: TNativeAnalyserNode;
 
-        constructor (context: IMinimalBaseAudioContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TStandardizedContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IAnalyserOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeAnalyserNode(nativeContext, mergedOptions);

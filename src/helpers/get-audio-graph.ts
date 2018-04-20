@@ -1,8 +1,8 @@
 import { AUDIO_GRAPHS } from '../globals';
-import { IAudioGraph, IMinimalBaseAudioContext } from '../interfaces';
-import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { IAudioGraph } from '../interfaces';
+import { TNativeAudioContext, TNativeOfflineAudioContext, TStandardizedContext } from '../types';
 
-export const getAudioGraph = (anyContext: IMinimalBaseAudioContext | TNativeAudioContext | TNativeOfflineAudioContext): IAudioGraph => {
+export function getAudioGraph (anyContext: TNativeAudioContext | TNativeOfflineAudioContext | TStandardizedContext): IAudioGraph {
     const audioGraph = AUDIO_GRAPHS.get(anyContext);
 
     if (audioGraph === undefined) {
@@ -10,4 +10,4 @@ export const getAudioGraph = (anyContext: IMinimalBaseAudioContext | TNativeAudi
     }
 
     return audioGraph;
-};
+}

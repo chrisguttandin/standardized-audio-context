@@ -1,10 +1,9 @@
-import { TNativeAudioNode } from '../types';
+import { TNativeAudioNode, TStandardizedContext } from '../types';
 import { IAudioNode } from './audio-node';
 import { IAudioNodeRenderer } from './audio-node-renderer';
-import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
 export interface INoneAudioDestinationNodeConstructor {
 
-    new (context: IMinimalBaseAudioContext, nativeNode: TNativeAudioNode, audioNoderRenderer: null | IAudioNodeRenderer): IAudioNode;
+    new (context: TStandardizedContext, nativeNode: TNativeAudioNode, audioNoderRenderer: null | IAudioNodeRenderer): IAudioNode;
 
 }

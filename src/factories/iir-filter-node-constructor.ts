@@ -1,10 +1,11 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IIIRFilterNode, IIIRFilterOptions } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
     TIIRFilterNodeConstructorFactory,
-    TNativeIIRFilterNode
+    TNativeIIRFilterNode,
+    TStandardizedContext
 } from '../types';
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
 
@@ -27,7 +28,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
         private _nativeNode: TNativeIIRFilterNode;
 
         constructor (
-            context: IMinimalBaseAudioContext,
+            context: TStandardizedContext,
             options: { feedback: IIIRFilterOptions['feedback']; feedforward: IIIRFilterOptions['feedforward'] } & Partial<IIIRFilterOptions>
         ) {
             const nativeContext = getNativeContext(context);

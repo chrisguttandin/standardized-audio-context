@@ -1,7 +1,7 @@
 import { CONTEXT_STORE } from '../globals';
-import { IMinimalBaseAudioContext } from '../interfaces';
+import { TStandardizedContext } from '../types';
 
-export const getNativeContext = (context: IMinimalBaseAudioContext) => {
+export const getNativeContext = (context: TStandardizedContext) => {
     const nativeContext = CONTEXT_STORE.get(context);
 
     if (nativeContext === undefined) {

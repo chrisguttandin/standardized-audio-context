@@ -3,8 +3,8 @@ import { createNotSupportedError } from './factories/not-supported-error';
 import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from './globals';
 import { getNativeContext } from './helpers/get-native-context';
 import { isConstructible } from './helpers/is-constructible';
-import { IAudioWorkletProcessorConstructor, IMinimalBaseAudioContext, IWorkletOptions } from './interfaces';
-import { TNativeAudioWorklet } from './types';
+import { IAudioWorkletProcessorConstructor, IWorkletOptions } from './interfaces';
+import { TNativeAudioWorklet, TStandardizedContext } from './types';
 
 const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessorConstructor['parameterDescriptors']) => {
     if (!Array.isArray(parameterDescriptors)) {
@@ -26,11 +26,11 @@ const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (proce
     }
 };
 
-const ongoingRequests: WeakMap<IMinimalBaseAudioContext, Map<string, Promise<void>>> = new WeakMap();
-const resolvedRequests: WeakMap<IMinimalBaseAudioContext, Set<string>> = new WeakMap();
+const ongoingRequests: WeakMap<TStandardizedContext, Map<string, Promise<void>>> = new WeakMap();
+const resolvedRequests: WeakMap<TStandardizedContext, Set<string>> = new WeakMap();
 
 export const addAudioWorkletModule = (
-    context: IMinimalBaseAudioContext,
+    context: TStandardizedContext,
     moduleURL: string,
     options: IWorkletOptions = { credentials: 'omit' }
 ): Promise<void> => {

@@ -45,7 +45,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
             super(context, numberOfChannels);
 
             this._audioWorklet = {
-                addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(this, moduleURL, options)
+                addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(<any> this, moduleURL, options)
             };
             this._context = context;
         }

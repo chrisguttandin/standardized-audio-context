@@ -1,10 +1,10 @@
 import { AUDIO_PARAM_STORE } from '../globals';
 import { renderInputsOfAudioParam } from '../helpers/render-inputs-of-audio-param';
-import { IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
-import { TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
+import { IAudioParam } from '../interfaces';
+import { TNativeAudioParam, TNativeOfflineAudioContext, TStandardizedContext } from '../types';
 
 export const connectAudioParam = (
-    context: IMinimalBaseAudioContext,
+    context: TStandardizedContext,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     audioParam: IAudioParam,
     nativeAudioParam: undefined | TNativeAudioParam = AUDIO_PARAM_STORE.get(audioParam)

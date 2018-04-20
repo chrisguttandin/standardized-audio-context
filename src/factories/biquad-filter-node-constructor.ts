@@ -1,11 +1,12 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions } from '../interfaces';
 import {
     TBiquadFilterNodeConstructorFactory,
     TBiquadFilterType,
     TChannelCountMode,
     TChannelInterpretation,
-    TNativeBiquadFilterNode
+    TNativeBiquadFilterNode,
+    TStandardizedContext
 } from '../types';
 
 const DEFAULT_OPTIONS: IBiquadFilterOptions = {
@@ -40,7 +41,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
         private _nativeNode: TNativeBiquadFilterNode;
 
-        constructor (context: IMinimalBaseAudioContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TStandardizedContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IBiquadFilterOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeBiquadFilterNode(nativeContext, mergedOptions);

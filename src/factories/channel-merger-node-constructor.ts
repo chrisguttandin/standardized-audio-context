@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IChannelMergerOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TChannelCountMode, TChannelInterpretation, TChannelMergerNodeConstructorFactory } from '../types';
+import { IChannelMergerOptions } from '../interfaces';
+import { TChannelCountMode, TChannelInterpretation, TChannelMergerNodeConstructorFactory, TStandardizedContext } from '../types';
 
 const DEFAULT_OPTIONS: IChannelMergerOptions = {
     channelCount: 1,
@@ -18,7 +18,7 @@ export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFa
 
     return class ChannelMergerNode extends noneAudioDestinationNodeConstructor {
 
-        constructor (context: IMinimalBaseAudioContext, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
+        constructor (context: TStandardizedContext, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IChannelMergerOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeNode = createNativeChannelMergerNode(nativeContext, mergedOptions);
