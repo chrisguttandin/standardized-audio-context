@@ -8,7 +8,7 @@ import { getAudioParamConnections } from '../helpers/get-audio-param-connections
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioNode, IAudioNodeRenderer, IAudioParam, INativeAudioNodeFaker } from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
-import { TAudioNodeConstructorFactory, TChannelCountMode, TNativeAudioContext, TNativeAudioNode, TStandardizedContext } from '../types';
+import { TAudioNodeConstructorFactory, TChannelCountMode, TNativeAudioNode, TStandardizedContext } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
 const addAudioNode = (
@@ -109,7 +109,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
             // @todo Make sure this is not used with an OfflineAudioContext.
             if (!isNativeOfflineAudioContext(nativeContext) && true !== cacheTestResult(testAudioNodeDisconnectMethodSupport, () => {
-                return testAudioNodeDisconnectMethodSupport(<TNativeAudioContext> nativeContext);
+                return testAudioNodeDisconnectMethodSupport(nativeContext);
             })) {
                 wrapAudioNodeDisconnectMethod(nativeNode);
             }

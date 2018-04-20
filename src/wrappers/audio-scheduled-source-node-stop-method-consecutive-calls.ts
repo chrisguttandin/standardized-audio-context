@@ -1,18 +1,17 @@
 import { INativeConstantSourceNode } from '../interfaces';
 import {
     TNativeAudioBufferSourceNode,
-    TNativeAudioContext,
     TNativeAudioNode,
     TNativeAudioParam,
-    TNativeOfflineAudioContext,
+    TNativeContext,
     TNativeOscillatorNode
 } from '../types';
 
 export const wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls = (
     audioScheduledSourceNode: TNativeAudioBufferSourceNode | INativeConstantSourceNode | TNativeOscillatorNode,
-    audioContext: TNativeAudioContext | TNativeOfflineAudioContext
+    nativeContext: TNativeContext
 ): void => {
-    const gainNode = audioContext.createGain();
+    const gainNode = nativeContext.createGain();
 
     audioScheduledSourceNode.connect(gainNode);
 

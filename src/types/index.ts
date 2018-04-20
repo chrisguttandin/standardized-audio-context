@@ -92,6 +92,7 @@ export * from './native-constant-source-node-factory';
 export * from './native-constant-source-node-factory-factory';
 export * from './native-constant-source-node-faker-factory';
 export * from './native-constant-source-node-faker-factory-factory';
+export * from './native-context';
 export * from './native-gain-node';
 export * from './native-gain-node-factory';
 export * from './native-iir-filter-node';

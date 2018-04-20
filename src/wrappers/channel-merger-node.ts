@@ -1,11 +1,8 @@
 import { createInvalidStateError } from '../factories/invalid-state-error';
-import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { TNativeContext } from '../types';
 
-export const wrapChannelMergerNode = (
-    audioContext: TNativeAudioContext | TNativeOfflineAudioContext,
-    channelMergerNode: ChannelMergerNode
-): void => {
-    const audioBufferSourceNode = audioContext.createBufferSource();
+export const wrapChannelMergerNode = (nativeContext: TNativeContext, channelMergerNode: ChannelMergerNode): void => {
+    const audioBufferSourceNode = nativeContext.createBufferSource();
 
     channelMergerNode.channelCount = 1;
     channelMergerNode.channelCountMode = 'explicit';

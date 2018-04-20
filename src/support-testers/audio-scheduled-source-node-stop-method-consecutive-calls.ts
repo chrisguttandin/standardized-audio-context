@@ -1,10 +1,8 @@
-import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { TNativeContext } from '../types';
 
-export const testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport = (
-    audioContext: TNativeAudioContext | TNativeOfflineAudioContext
-): boolean => {
-    const audioBuffer = audioContext.createBuffer(1, 1, 44100);
-    const audioBufferSourceNode = audioContext.createBufferSource();
+export const testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport = (nativeContext: TNativeContext): boolean => {
+    const audioBuffer = nativeContext.createBuffer(1, 1, 44100);
+    const audioBufferSourceNode = nativeContext.createBufferSource();
 
     audioBufferSourceNode.buffer = audioBuffer;
     audioBufferSourceNode.start();

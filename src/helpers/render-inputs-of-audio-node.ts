@@ -5,7 +5,7 @@ import { TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
 
 export const renderInputsOfAudioNode = (
     audioNode: IAudioNode,
-    offlineAudioContext: TNativeOfflineAudioContext,
+    nativeOfflineAudioContext: TNativeOfflineAudioContext,
     nativeAudioNode: TNativeAudioNode
 ) => {
     const audioNodeConnections = getAudioNodeConnections(audioNode);
@@ -15,7 +15,7 @@ export const renderInputsOfAudioNode = (
             .map((connections, input) => Array
                 .from(connections.values())
                 .map(([ source, output ]) => getAudioNodeRenderer(source)
-                    .render(source, offlineAudioContext)
+                    .render(source, nativeOfflineAudioContext)
                     .then((node) => node.connect(nativeAudioNode, output, input))))
             .reduce((allRenderingPromises, renderingPromises) => [ ...allRenderingPromises, ...renderingPromises ], [ ]));
 };

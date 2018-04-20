@@ -9,7 +9,7 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
         let nativeNode: null | TNativeAnalyserNode = null;
 
         return {
-            render: async (proxy: IAnalyserNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> => {
+            render: async (proxy: IAnalyserNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }
@@ -17,7 +17,7 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
                 nativeNode = <TNativeAnalyserNode> getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
+                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
                     const options: IAnalyserOptions = {
                         channelCount: nativeNode.channelCount,
                         channelCountMode: nativeNode.channelCountMode,
@@ -28,10 +28,10 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
                         smoothingTimeConstant: nativeNode.smoothingTimeConstant
                     };
 
-                    nativeNode = createNativeAnalyserNode(offlineAudioContext, options);
+                    nativeNode = createNativeAnalyserNode(nativeOfflineAudioContext, options);
                 }
 
-                await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
 
                 return nativeNode;
             }

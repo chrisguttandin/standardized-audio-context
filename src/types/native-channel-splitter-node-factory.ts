@@ -1,9 +1,8 @@
 import { IChannelSplitterOptions } from '../interfaces';
-import { TNativeAudioContext } from './native-audio-context';
 import { TNativeChannelSplitterNode } from './native-channel-splitter-node';
-import { TNativeOfflineAudioContext } from './native-offline-audio-context';
+import { TNativeContext } from './native-context';
 
 export type TNativeChannelSplitterNodeFactory = (
-    nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
+    nativeContext: TNativeContext,
     options: IChannelSplitterOptions
 ) => TNativeChannelSplitterNode;

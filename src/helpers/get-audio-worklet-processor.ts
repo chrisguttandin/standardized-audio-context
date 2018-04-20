@@ -4,10 +4,10 @@ import { IAudioNode, IAudioWorkletProcessor, INativeAudioWorkletNode } from '../
 import { TNativeOfflineAudioContext } from '../types';
 
 export const getAudioWorkletProcessor = (
-    offlineAudioContext: TNativeOfflineAudioContext,
+    nativeOfflineAudioContext: TNativeOfflineAudioContext,
     proxy: IAudioNode
 ): Promise<IAudioWorkletProcessor> => {
-    const nodeToProcessorMap = NODE_TO_PROCESSOR_MAPS.get(offlineAudioContext);
+    const nodeToProcessorMap = NODE_TO_PROCESSOR_MAPS.get(nativeOfflineAudioContext);
 
     if (nodeToProcessorMap === undefined) {
         throw new Error('Missing the processor map for the given OfflineAudioContext.');

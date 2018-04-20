@@ -1,9 +1,7 @@
-import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { TNativeContext } from '../types';
 
-export const testAudioScheduledSourceNodeStartMethodNegativeParametersSupport = (
-    audioContext: TNativeAudioContext | TNativeOfflineAudioContext
-): boolean => {
-    const audioBuffer = audioContext.createBufferSource();
+export const testAudioScheduledSourceNodeStartMethodNegativeParametersSupport = (nativeContext: TNativeContext): boolean => {
+    const audioBuffer = nativeContext.createBufferSource();
 
     try {
         audioBuffer.start(-1);

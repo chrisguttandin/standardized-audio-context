@@ -8,15 +8,15 @@ export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFa
     return {
         render: async (
             proxy: IAudioDestinationNode,
-            offlineAudioContext: TNativeOfflineAudioContext
+            nativeOfflineAudioContext: TNativeOfflineAudioContext
         ): Promise<TNativeAudioDestinationNode> => {
             if (nativeNode !== null) {
                 return nativeNode;
             }
 
-            nativeNode = offlineAudioContext.destination;
+            nativeNode = nativeOfflineAudioContext.destination;
 
-            await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
 
             return nativeNode;
         }

@@ -1,6 +1,6 @@
-import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { TNativeContext } from '../types';
 
-export const testPromiseSupport = (audioContext: TNativeAudioContext | TNativeOfflineAudioContext): boolean => {
+export const testPromiseSupport = (nativeContext: TNativeContext): boolean => {
     // This 12 numbers represent the 48 bytes of an empty WAVE file with a single sample.
     const uint32Array = new Uint32Array([
         1179011410,
@@ -19,7 +19,7 @@ export const testPromiseSupport = (audioContext: TNativeAudioContext | TNativeOf
 
     try {
         // Bug #1: Safari requires a successCallback.
-        const promise = audioContext.decodeAudioData(<ArrayBuffer> uint32Array.buffer, () => {
+        const promise = nativeContext.decodeAudioData(<ArrayBuffer> uint32Array.buffer, () => {
             // Ignore the success callback.
         });
 

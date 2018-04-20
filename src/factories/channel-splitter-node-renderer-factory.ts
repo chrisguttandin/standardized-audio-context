@@ -9,7 +9,7 @@ export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRende
         let nativeNode: null | TNativeAudioNode = null;
 
         return {
-            render: async (proxy: IAudioNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
+            render: async (proxy: IAudioNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }
@@ -17,7 +17,7 @@ export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRende
                 nativeNode = getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
+                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
                     const options: IChannelSplitterOptions = {
                         channelCount: nativeNode.channelCount,
                         channelCountMode: nativeNode.channelCountMode,
@@ -25,10 +25,10 @@ export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRende
                         numberOfOutputs: nativeNode.numberOfOutputs
                     };
 
-                    nativeNode = createNativeChannelSplitterNode(offlineAudioContext, options);
+                    nativeNode = createNativeChannelSplitterNode(nativeOfflineAudioContext, options);
                 }
 
-                await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
 
                 return nativeNode;
             }

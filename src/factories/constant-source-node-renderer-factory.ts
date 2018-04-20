@@ -23,7 +23,7 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
             },
             render: async (
                 proxy: IConstantSourceNode,
-                offlineAudioContext: TNativeOfflineAudioContext
+                nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<INativeConstantSourceNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
@@ -32,7 +32,7 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
                 nativeNode = <INativeConstantSourceNode> getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
+                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
                     const options: IConstantSourceOptions = {
                         channelCount: nativeNode.channelCount,
                         channelCountMode: nativeNode.channelCountMode,
@@ -40,7 +40,7 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
                         offset: nativeNode.offset.value
                     };
 
-                    nativeNode = createNativeConstantSourceNode(offlineAudioContext, options);
+                    nativeNode = createNativeConstantSourceNode(nativeOfflineAudioContext, options);
 
                     if (start !== null) {
                         nativeNode.start(start);
@@ -50,12 +50,12 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
                         nativeNode.stop(stop);
                     }
 
-                    await renderAutomation(proxy.context, offlineAudioContext, proxy.offset, nativeNode.offset);
+                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.offset, nativeNode.offset);
                 } else {
-                    await connectAudioParam(proxy.context, offlineAudioContext, proxy.offset);
+                    await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.offset);
                 }
 
-                await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
 
                 return nativeNode;
             }

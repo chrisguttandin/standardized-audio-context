@@ -21,7 +21,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
             },
             render: async (
                 proxy: IAudioBufferSourceNode,
-                offlineAudioContext: TNativeOfflineAudioContext
+                nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
@@ -30,7 +30,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
                 nativeNode = <TNativeAudioBufferSourceNode> getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
+                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
                     const options: IAudioBufferSourceOptions = {
                         buffer: nativeNode.buffer,
                         channelCount: nativeNode.channelCount,
@@ -43,7 +43,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
                         playbackRate: nativeNode.playbackRate.value
                     };
 
-                    nativeNode = createNativeAudioBufferSourceNode(offlineAudioContext, options);
+                    nativeNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext, options);
 
                     if (start !== null) {
                         nativeNode.start(...start);
@@ -54,7 +54,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
                     }
                 }
 
-                await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
 
                 return nativeNode;
             }

@@ -4,11 +4,10 @@ import {
     INativeAudioWorkletNode,
     INativeAudioWorkletNodeConstructor
 } from '../interfaces';
-import { TNativeAudioContext } from './native-audio-context';
-import { TNativeOfflineAudioContext } from './native-offline-audio-context';
+import { TNativeContext } from './native-context';
 
 export type TNativeAudioWorkletNodeFactory = (
-    nativeContext: TNativeAudioContext | TNativeOfflineAudioContext,
+    nativeContext: TNativeContext,
     nativeAudioWorkletNodeConstructor: null | INativeAudioWorkletNodeConstructor,
     name: string,
     processorDefinition: undefined | IAudioWorkletProcessorConstructor,

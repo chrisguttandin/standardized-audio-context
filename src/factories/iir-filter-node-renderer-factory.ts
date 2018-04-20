@@ -14,7 +14,7 @@ import {
 
 const filterFullBuffer = (
     renderedBuffer: TNativeAudioBuffer,
-    offlineAudioContext: TNativeOfflineAudioContext,
+    nativeOfflineAudioContext: TNativeOfflineAudioContext,
     feedback: number[] | TTypedArray,
     feedforward: number[] | TTypedArray
 ) => {
@@ -36,7 +36,7 @@ const filterFullBuffer = (
     const xBuffer = new Float32Array(bufferLength);
     const yBuffer = new Float32Array(bufferLength);
 
-    const filteredBuffer = offlineAudioContext.createBuffer(
+    const filteredBuffer = nativeOfflineAudioContext.createBuffer(
         renderedBuffer.numberOfChannels,
         renderedBuffer.length,
         renderedBuffer.sampleRate
@@ -71,7 +71,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
         return {
             render: async (
                 proxy: IIIRFilterNode,
-                offlineAudioContext: TNativeOfflineAudioContext
+                nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode | TNativeIIRFilterNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
@@ -86,18 +86,18 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                 try {
                     // Throw an error if the native factory method is not supported.
                     // @todo Use a simple if clause instead of throwing an error.
-                    if (offlineAudioContext.createIIRFilter === undefined) {
+                    if (nativeOfflineAudioContext.createIIRFilter === undefined) {
                         throw new Error();
                     }
 
                     nativeNode = <TNativeIIRFilterNode> getNativeNode(proxy);
 
                     // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                    if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
-                        nativeNode = offlineAudioContext.createIIRFilter(<number[]> feedforward, <number[]> feedback);
+                    if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
+                        nativeNode = nativeOfflineAudioContext.createIIRFilter(<number[]> feedforward, <number[]> feedback);
                     }
 
-                    return renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode)
+                    return renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode)
                         .then(() => <TNativeIIRFilterNode> nativeNode);
 
                 // Bug #9: Safari does not support IIRFilterNodes.
@@ -107,15 +107,20 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                        proxy.context.destination.channelCount,
                        // Bug #17: Safari does not yet expose the length.
                        (<IMinimalOfflineAudioContext> proxy.context).length,
-                       offlineAudioContext.sampleRate
+                       nativeOfflineAudioContext.sampleRate
                    );
 
                    return renderInputsOfAudioNode(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination)
                        .then(() => renderNativeOfflineAudioContext(partialOfflineAudioContext))
                        .then((renderedBuffer) => {
-                           const audioBufferSourceNode = createNativeAudioBufferSourceNode(offlineAudioContext);
+                           const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext);
 
-                           audioBufferSourceNode.buffer = filterFullBuffer(renderedBuffer, offlineAudioContext, feedback, feedforward);
+                           audioBufferSourceNode.buffer = filterFullBuffer(
+                               renderedBuffer,
+                               nativeOfflineAudioContext,
+                               feedback,
+                               feedforward
+                           );
                            audioBufferSourceNode.start(0);
 
                            nativeNode = audioBufferSourceNode;

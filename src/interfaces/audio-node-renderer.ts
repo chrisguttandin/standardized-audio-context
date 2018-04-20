@@ -3,6 +3,6 @@ import { IAudioNode } from './audio-node';
 
 export interface IAudioNodeRenderer {
 
-    render (proxy: IAudioNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode>;
+    render (proxy: IAudioNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode>;
 
 }

@@ -11,7 +11,7 @@ export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (c
         let nativeNode: null | TNativeGainNode = null;
 
         return {
-            render: async (proxy: IGainNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeGainNode> => {
+            render: async (proxy: IGainNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeGainNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }
@@ -19,7 +19,7 @@ export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (c
                 nativeNode = <TNativeGainNode> getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
+                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
                     const options: IGainOptions = {
                         channelCount: nativeNode.channelCount,
                         channelCountMode: nativeNode.channelCountMode,
@@ -27,14 +27,14 @@ export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (c
                         gain: nativeNode.gain.value
                     };
 
-                    nativeNode = createNativeGainNode(offlineAudioContext, options);
+                    nativeNode = createNativeGainNode(nativeOfflineAudioContext, options);
 
-                    await renderAutomation(proxy.context, offlineAudioContext, proxy.gain, nativeNode.gain);
+                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.gain, nativeNode.gain);
                 } else {
-                    await connectAudioParam(proxy.context, offlineAudioContext, proxy.gain);
+                    await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.gain);
                 }
 
-                await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
 
                 return nativeNode;
             }

@@ -9,7 +9,7 @@ export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererF
         let nativeNode: null | TNativeAudioNode = null;
 
         return {
-            render: async (proxy: IAudioNode, offlineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
+            render: async (proxy: IAudioNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
                 }
@@ -17,7 +17,7 @@ export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererF
                 nativeNode = getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
+                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
                     const options: IChannelMergerOptions = {
                         channelCount: nativeNode.channelCount,
                         channelCountMode: nativeNode.channelCountMode,
@@ -25,10 +25,10 @@ export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererF
                         numberOfInputs: nativeNode.numberOfInputs
                     };
 
-                    nativeNode = createNativeChannelMergerNode(offlineAudioContext, options);
+                    nativeNode = createNativeChannelMergerNode(nativeOfflineAudioContext, options);
                 }
 
-                await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
 
                 return nativeNode;
             }

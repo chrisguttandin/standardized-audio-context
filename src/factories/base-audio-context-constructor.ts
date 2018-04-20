@@ -12,14 +12,7 @@ import {
     IOscillatorNode,
     IWorkletOptions
 } from '../interfaces';
-import {
-    TBaseAudioContextConstructorFactory,
-    TDecodeErrorCallback,
-    TDecodeSuccessCallback,
-    TNativeAudioContext,
-    TNativeOfflineAudioContext,
-    TTypedArray
-} from '../types';
+import { TBaseAudioContextConstructorFactory, TDecodeErrorCallback, TDecodeSuccessCallback, TNativeContext, TTypedArray } from '../types';
 
 export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFactory = (
     analyserNodeConstructor,
@@ -39,15 +32,15 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         private _audioWorklet: IAudioWorklet;
 
-        private _context: TNativeAudioContext | TNativeOfflineAudioContext;
+        private _nativeContext: TNativeContext;
 
-        constructor (context: TNativeAudioContext | TNativeOfflineAudioContext, numberOfChannels: number) {
-            super(context, numberOfChannels);
+        constructor (nativeContext: TNativeContext, numberOfChannels: number) {
+            super(nativeContext, numberOfChannels);
 
             this._audioWorklet = {
                 addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(<any> this, moduleURL, options)
             };
-            this._context = context;
+            this._nativeContext = nativeContext;
         }
 
         get audioWorklet (): IAudioWorklet {
@@ -97,7 +90,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
         public decodeAudioData (
             audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback
         ): Promise<IAudioBuffer> {
-            return decodeAudioData(this._context, audioData)
+            return decodeAudioData(this._nativeContext, audioData)
                 .then((audioBuffer) => {
                     if (typeof successCallback === 'function') {
                         successCallback(audioBuffer);

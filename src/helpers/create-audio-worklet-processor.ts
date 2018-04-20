@@ -5,7 +5,7 @@ import {
     IAudioWorkletProcessorConstructor,
     INativeAudioWorkletNode
 } from '../interfaces';
-import { TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { TNativeContext } from '../types';
 import { cloneAudioWorkletNodeOptions } from './clone-audio-worklet-node-options';
 
 const createAudioWorkletProcessorPromise = async (
@@ -18,17 +18,17 @@ const createAudioWorkletProcessorPromise = async (
 };
 
 export const createAudioWorkletProcessor = (
-    nativeAudioContext: TNativeAudioContext | TNativeOfflineAudioContext,
+    nativeContext: TNativeContext,
     nativeAudioWorkletNode: INativeAudioWorkletNode,
     processorDefinition: IAudioWorkletProcessorConstructor,
     audioWorkletNodeOptions: IAudioWorkletNodeOptions
 ): Promise<IAudioWorkletProcessor> => {
-    let nodeToProcessorMap = NODE_TO_PROCESSOR_MAPS.get(nativeAudioContext);
+    let nodeToProcessorMap = NODE_TO_PROCESSOR_MAPS.get(nativeContext);
 
     if (nodeToProcessorMap === undefined) {
         nodeToProcessorMap = new WeakMap();
 
-        NODE_TO_PROCESSOR_MAPS.set(nativeAudioContext, nodeToProcessorMap);
+        NODE_TO_PROCESSOR_MAPS.set(nativeContext, nodeToProcessorMap);
     }
 
     const audioWorkletProcessorPromise = createAudioWorkletProcessorPromise(processorDefinition, audioWorkletNodeOptions);

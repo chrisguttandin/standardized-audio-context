@@ -6,7 +6,7 @@ import { TNativeAudioParam, TNativeOfflineAudioContext, TStandardizedContext } f
 export const renderInputsOfAudioParam = (
     context: TStandardizedContext,
     audioParam: IAudioParam,
-    offlineAudioContext: TNativeOfflineAudioContext,
+    nativeOfflineAudioContext: TNativeOfflineAudioContext,
     nativeAudioParam: TNativeAudioParam
 ) => {
     const audioParamConnections = getAudioParamConnections(context, audioParam);
@@ -18,7 +18,7 @@ export const renderInputsOfAudioParam = (
                 const audioNodeRenderer = getAudioNodeRenderer(source);
 
                 return audioNodeRenderer
-                    .render(source, offlineAudioContext)
+                    .render(source, nativeOfflineAudioContext)
                     .then((node) => node.connect(nativeAudioParam, output));
             }));
 };

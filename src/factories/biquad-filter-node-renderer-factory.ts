@@ -13,7 +13,7 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
         return {
             render: async (
                 proxy: IBiquadFilterNode,
-                offlineAudioContext: TNativeOfflineAudioContext
+                nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeBiquadFilterNode> => {
                 if (nativeNode !== null) {
                     return nativeNode;
@@ -22,7 +22,7 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
                 nativeNode = <TNativeBiquadFilterNode> getNativeNode(proxy);
 
                 // If the initially used nativeNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeNode, offlineAudioContext)) {
+                if (!isOwnedByContext(nativeNode, nativeOfflineAudioContext)) {
                     const options: IBiquadFilterOptions = {
                         Q: nativeNode.Q.value,
                         channelCount: nativeNode.channelCount,
@@ -34,20 +34,20 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
                         type: nativeNode.type
                     };
 
-                    nativeNode = createNativeBiquadFilterNode(offlineAudioContext, options);
+                    nativeNode = createNativeBiquadFilterNode(nativeOfflineAudioContext, options);
 
-                    await renderAutomation(proxy.context, offlineAudioContext, proxy.Q, nativeNode.Q);
-                    await renderAutomation(proxy.context, offlineAudioContext, proxy.detune, nativeNode.detune);
-                    await renderAutomation(proxy.context, offlineAudioContext, proxy.frequency, nativeNode.frequency);
-                    await renderAutomation(proxy.context, offlineAudioContext, proxy.gain, nativeNode.gain);
+                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.Q, nativeNode.Q);
+                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.detune, nativeNode.detune);
+                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.frequency, nativeNode.frequency);
+                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.gain, nativeNode.gain);
                 } else {
-                    await connectAudioParam(proxy.context, offlineAudioContext, proxy.Q);
-                    await connectAudioParam(proxy.context, offlineAudioContext, proxy.detune);
-                    await connectAudioParam(proxy.context, offlineAudioContext, proxy.frequency);
-                    await connectAudioParam(proxy.context, offlineAudioContext, proxy.gain);
+                    await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.Q);
+                    await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.detune);
+                    await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.frequency);
+                    await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.gain);
                 }
 
-                await renderInputsOfAudioNode(proxy, offlineAudioContext, nativeNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeNode);
 
                 return nativeNode;
             }

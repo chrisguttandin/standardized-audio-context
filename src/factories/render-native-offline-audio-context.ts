@@ -3,9 +3,9 @@ import { IOfflineAudioCompletionEvent } from '../interfaces';
 import { testPromiseSupport } from '../support-testers/promise';
 import { TNativeAudioBuffer, TNativeOfflineAudioContext, TRenderNativeOfflineAudioContextFactory } from '../types';
 
-const isSupportingPromises = (context: TNativeOfflineAudioContext) => cacheTestResult(
+const isSupportingPromises = (nativeOfflineAudioContext: TNativeOfflineAudioContext) => cacheTestResult(
     testPromiseSupport,
-    () => testPromiseSupport(context)
+    () => testPromiseSupport(nativeOfflineAudioContext)
 );
 
 export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFactory = (createNativeGainNode) => {

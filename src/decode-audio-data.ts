@@ -6,7 +6,7 @@ import { cacheTestResult } from './helpers/cache-test-result';
 import { IAudioBuffer } from './interfaces';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
 import { testPromiseSupport } from './support-testers/promise';
-import { TNativeAudioBuffer, TNativeAudioContext, TNativeOfflineAudioContext } from './types';
+import { TNativeAudioBuffer, TNativeContext } from './types';
 import { wrapAudioBufferCopyChannelMethods } from './wrappers/audio-buffer-copy-channel-methods';
 import { wrapAudioBufferCopyChannelMethodsSubarray } from './wrappers/audio-buffer-copy-channel-methods-subarray';
 
@@ -15,13 +15,13 @@ const isSupportingCopyChannelMethodsSubarray = (nativeAudioBuffer: TNativeAudioB
     () => testAudioBufferCopyChannelMethodsSubarraySupport(nativeAudioBuffer)
 );
 
-const isSupportingPromises = (context: TNativeAudioContext | TNativeOfflineAudioContext) => cacheTestResult(
+const isSupportingPromises = (nativeContext: TNativeContext) => cacheTestResult(
     testPromiseSupport,
-    () => testPromiseSupport(context)
+    () => testPromiseSupport(nativeContext)
 );
 
 export const decodeAudioData = (
-    audioContext: TNativeAudioContext | TNativeOfflineAudioContext,
+    nativeContext: TNativeContext,
     audioData: ArrayBuffer
 ): Promise<IAudioBuffer> => {
     // Bug #43: Only Chrome and Opera do throw a DataCloneError.
@@ -39,8 +39,8 @@ export const decodeAudioData = (
     }
 
     // Bug #21: Safari does not support promises yet.
-    if (isSupportingPromises(audioContext)) {
-        const promise = audioContext
+    if (isSupportingPromises(nativeContext)) {
+        const promise = nativeContext
             .decodeAudioData(audioData)
             .catch ((err: DOMException | Error) => {
                 // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
@@ -81,7 +81,7 @@ export const decodeAudioData = (
         // Bug #26: Safari throws a synchronous error.
         try {
             // Bug #1: Safari requires a successCallback.
-            audioContext.decodeAudioData(audioData, (audioBuffer: AudioBuffer) => {
+            nativeContext.decodeAudioData(audioData, (audioBuffer: AudioBuffer) => {
                 // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                 if (typeof audioBuffer.copyFromChannel !== 'function') {
                     wrapAudioBufferCopyChannelMethods(audioBuffer);
