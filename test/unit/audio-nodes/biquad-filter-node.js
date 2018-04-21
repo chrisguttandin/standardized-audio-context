@@ -695,7 +695,7 @@ describe('BiquadFilterNode', () => {
                         prepare (destination) {
                             const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const biquadFilterNode = createBiquadFilterNode(context, { frequency: context.sampleRate });
+                            const biquadFilterNode = createBiquadFilterNode(context, { frequency: context.sampleRate / 2 });
                             const firstDummyGainNode = new GainNode(context);
                             const secondDummyGainNode = new GainNode(context);
 

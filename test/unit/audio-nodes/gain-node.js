@@ -304,17 +304,17 @@ describe('GainNode', () => {
                             let renderer;
                             let values;
 
-                            beforeEach(() => {
+                            beforeEach(async () => {
                                 values = [ 1, 0.5, 0, -0.5, -1 ];
+
+                                if (withAnAppendedAudioWorklet) {
+                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                }
 
                                 renderer = createRenderer({
                                     context,
                                     length: (context.length === undefined) ? 5 : undefined,
-                                    prepare: async (destination) => {
-                                        if (withAnAppendedAudioWorklet) {
-                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                        }
-
+                                    prepare (destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;

@@ -976,15 +976,15 @@ describe('AudioBufferSourceNode', () => {
 
                             let renderer;
 
-                            beforeEach(() => {
+                            beforeEach(async () => {
+                                if (withAnAppendedAudioWorklet) {
+                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                }
+
                                 renderer = createRenderer({
                                     context,
                                     length: (context.length === undefined) ? 5 : undefined,
-                                    prepare: async (destination) => {
-                                        if (withAnAppendedAudioWorklet) {
-                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                        }
-
+                                    prepare (destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
                                         audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
@@ -1034,15 +1034,15 @@ describe('AudioBufferSourceNode', () => {
 
                             let renderer;
 
-                            beforeEach(() => {
+                            beforeEach(async () => {
+                                if (withAnAppendedAudioWorklet) {
+                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                }
+
                                 renderer = createRenderer({
                                     context,
                                     length: (context.length === undefined) ? 5 : undefined,
-                                    prepare: async (destination) => {
-                                        if (withAnAppendedAudioWorklet) {
-                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                        }
-
+                                    prepare (destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
                                         audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
