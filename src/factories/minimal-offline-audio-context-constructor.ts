@@ -1,10 +1,17 @@
+import { cacheTestResult } from '../helpers/cache-test-result';
 import { IAudioBuffer, IMinimalOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
+import { testPromiseSupport } from '../support-testers/promise';
 import { TAudioContextState, TMinimalOfflineAudioContextConstructorFactory, TNativeOfflineAudioContext } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
 };
+
+const isSupportingPromises = (nativeOfflineAudioContext: TNativeOfflineAudioContext) => cacheTestResult(
+    testPromiseSupport,
+    () => testPromiseSupport(nativeOfflineAudioContext)
+);
 
 export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructorFactory = (
     createInvalidStateError,
@@ -32,6 +39,28 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
             };
 
             const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
+
+            // #21 Safari does not support promises and therefore would fire the statechange event before the promise can be resolved.
+            if (!isSupportingPromises(nativeOfflineAudioContext)) {
+                nativeOfflineAudioContext.addEventListener('statechange', (() => {
+                    let i = 0;
+
+                    const delayStateChangeEvent = (event: Event) => {
+                        if (this._state === 'running') {
+                            if (i > 0) {
+                                nativeOfflineAudioContext.removeEventListener('statechange', delayStateChangeEvent);
+                                event.stopImmediatePropagation();
+
+                                this._waitForThePromiseToSettle(event);
+                            } else {
+                                i += 1;
+                            }
+                        }
+                    };
+
+                    return delayStateChangeEvent;
+                })());
+            }
 
             super(nativeOfflineAudioContext, numberOfChannels);
 
@@ -81,6 +110,14 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
 
                     throw err;
                 });
+        }
+
+        private _waitForThePromiseToSettle (event: Event) {
+            if (this._state === null) {
+                this._nativeOfflineAudioContext.dispatchEvent(event);
+            } else {
+                setTimeout(() => this._waitForThePromiseToSettle(event));
+            }
         }
 
     };
