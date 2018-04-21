@@ -1,3 +1,4 @@
+import { deleteAudioGraph } from '../helpers/delete-audio-graph';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
 import { TMinimalAudioContextConstructorFactory, TNativeAudioContext } from '../types';
@@ -58,7 +59,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
             return (this._state !== null) ? this._state : this._nativeAudioContext.state;
         }
 
-        public close () {
+        public close (): Promise<void> {
             // Bug #35: Firefox does not throw an error if the AudioContext was closed before.
             if (this.state === 'closed') {
                 return this._nativeAudioContext
@@ -73,7 +74,9 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 this._state = null;
             }
 
-            return this._nativeAudioContext.close();
+            return this._nativeAudioContext
+                .close()
+                .then(() => deleteAudioGraph(this, this._nativeAudioContext));
         }
 
         public resume () {

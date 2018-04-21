@@ -1,4 +1,5 @@
 import { cacheTestResult } from '../helpers/cache-test-result';
+import { deleteAudioGraph } from '../helpers/delete-audio-graph';
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import { testPromiseSupport } from '../support-testers/promise';
 import { TAudioContextState, TNativeOfflineAudioContext, TOfflineAudioContextConstructorFactory } from '../types';
@@ -114,11 +115,15 @@ export const createOfflineAudioContextConstructor: TOfflineAudioContextConstruct
 
                     this._state = null;
 
+                    deleteAudioGraph(this, this._nativeOfflineAudioContext);
+
                     return <IAudioBuffer> audioBuffer;
                 })
                 // @todo This could be written more elegantly when Promise.finally() becomes avalaible.
                 .catch((err) => {
                     this._state = null;
+
+                    deleteAudioGraph(this, this._nativeOfflineAudioContext);
 
                     throw err;
                 });
