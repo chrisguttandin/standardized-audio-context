@@ -185,6 +185,32 @@ describe('MinimalOfflineAudioContext', () => {
             expect(minimalOfflineAudioContext.onstatechange).to.be.null;
         });
 
+        it('should fire an Event of type statechange when starting to render', (done) => {
+            minimalOfflineAudioContext.onstatechange = (event) => {
+                minimalOfflineAudioContext.onstatechange = null;
+
+                expect(event.type).to.equal('statechange');
+
+                done();
+            };
+
+            minimalOfflineAudioContext.startRendering();
+        });
+
+        it('should fire an Event of type statechange when done with rendering', (done) => {
+            minimalOfflineAudioContext
+                .startRendering()
+                .then(() => {
+                    minimalOfflineAudioContext.onstatechange = (event) => {
+                        minimalOfflineAudioContext.onstatechange = null;
+
+                        expect(event.type).to.equal('statechange');
+
+                        done();
+                    };
+                });
+        });
+
     });
 
     describe('sampleRate', () => {
@@ -227,21 +253,11 @@ describe('MinimalOfflineAudioContext', () => {
             }).to.throw(TypeError);
         });
 
-        /*
-         * @todo This does currently not work because of bug #49.
-         * it('should be transitioned to running', (done) => {
-         *     minimalOfflineAudioContext.onstatechange = () => {
-         *         expect(minimalOfflineAudioContext.state).to.equal('running');
-         *
-         *         // Prevent consecutive calls.
-         *         minimalOfflineAudioContext.onstatechange = null;
-         *
-         *         done();
-         *     };
-         *
-         *     minimalOfflineAudioContext.startRendering();
-         * });
-         */
+        it('should be running when starting to render', () => {
+            minimalOfflineAudioContext.startRendering();
+
+            expect(minimalOfflineAudioContext.state).to.equal('running');
+        });
 
         it('should be closed after the buffer was rendered', () => {
             return minimalOfflineAudioContext
@@ -324,6 +340,19 @@ describe('MinimalOfflineAudioContext', () => {
                     expect(renderedBuffer.getChannelData).to.be.a('function');
                     expect(renderedBuffer.copyFromChannel).to.be.a('function');
                     expect(renderedBuffer.copyToChannel).to.be.a('function');
+                });
+        });
+
+        it('should throw an InvalidStateError if it was invoked before', (done) => {
+            minimalOfflineAudioContext.startRendering();
+
+            minimalOfflineAudioContext
+                .startRendering()
+                .catch((err) => {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    done();
                 });
         });
 

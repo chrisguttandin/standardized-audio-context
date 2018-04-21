@@ -59,7 +59,6 @@ describe('MinimalAudioContext', () => {
                 const now = minimalAudioContext.currentTime;
 
                 minimalAudioContext.onstatechange = () => {
-                    // Prevent consecutive calls.
                     minimalAudioContext.onstatechange = null;
 
                     setTimeout(() => {
@@ -147,6 +146,19 @@ describe('MinimalAudioContext', () => {
                 expect(minimalAudioContext.onstatechange).to.be.null;
             });
 
+            it('should fire an Event of type statechange', (done) => {
+                minimalAudioContext.onstatechange = (event) => {
+                    minimalAudioContext.onstatechange = null;
+
+                    expect(event.type).to.equal('statechange');
+
+                    done();
+                };
+
+                // Kick off the minimalAudioContext.
+                new GainNode(minimalAudioContext);
+            });
+
         });
 
         describe('sampleRate', () => {
@@ -177,10 +189,9 @@ describe('MinimalAudioContext', () => {
 
             it('should be transitioned to running', (done) => {
                 minimalAudioContext.onstatechange = () => {
-                    expect(minimalAudioContext.state).to.equal('running');
-
-                    // Prevent consecutive calls.
                     minimalAudioContext.onstatechange = null;
+
+                    expect(minimalAudioContext.state).to.equal('running');
 
                     done();
                 };
@@ -188,8 +199,6 @@ describe('MinimalAudioContext', () => {
                 // Kick off the minimalAudioContext.
                 new GainNode(minimalAudioContext);
             });
-
-            // closed is tested below
 
         });
 
@@ -214,8 +223,7 @@ describe('MinimalAudioContext', () => {
 
                             done();
                         });
-                    })
-                    .catch(done);
+                    });
             });
 
             describe('with a closed MinimalAudioContext', () => {
@@ -253,8 +261,7 @@ describe('MinimalAudioContext', () => {
 
                             done();
                         });
-                    })
-                    .catch(done);
+                    });
             });
 
             describe('with a closed MinimalAudioContext', () => {
@@ -307,8 +314,7 @@ describe('MinimalAudioContext', () => {
 
                             done();
                         });
-                    })
-                    .catch(done);
+                    });
             });
 
             describe('with a closed MinimalAudioContext', () => {

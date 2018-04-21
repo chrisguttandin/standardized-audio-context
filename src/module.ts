@@ -345,6 +345,7 @@ export { minimalAudioContextConstructor as MinimalAudioContext };
 
 const startRendering = createStartRendering(renderNativeOfflineAudioContext);
 const minimalOfflineAudioContextConstructor: IMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
+    createInvalidStateError,
     minimalBaseAudioContextConstructor,
     nativeOfflineAudioContextConstructor,
     startRendering
@@ -356,6 +357,7 @@ export { minimalOfflineAudioContextConstructor as MinimalOfflineAudioContext };
 
 const offlineAudioContextConstructor: IOfflineAudioContextConstructor = createOfflineAudioContextConstructor(
     baseAudioContextConstructor,
+    createInvalidStateError,
     nativeOfflineAudioContextConstructor,
     startRendering
 );

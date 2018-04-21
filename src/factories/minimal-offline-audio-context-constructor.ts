@@ -1,5 +1,5 @@
 import { IAudioBuffer, IMinimalOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
-import { TMinimalOfflineAudioContextConstructorFactory, TNativeOfflineAudioContext } from '../types';
+import { TAudioContextState, TMinimalOfflineAudioContextConstructorFactory, TNativeOfflineAudioContext } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 
 const DEFAULT_OPTIONS = {
@@ -7,6 +7,7 @@ const DEFAULT_OPTIONS = {
 };
 
 export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructorFactory = (
+    createInvalidStateError,
     minimalBaseAudioContextConstructor,
     nativeOfflineAudioContextConstructor,
     startRendering
@@ -17,6 +18,8 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
         private _length: number;
 
         private _nativeOfflineAudioContext: TNativeOfflineAudioContext;
+
+        private _state: null | TAudioContextState;
 
         constructor (options: IOfflineAudioContextOptions) {
             if (nativeOfflineAudioContextConstructor === null) {
@@ -34,6 +37,7 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
 
             this._length = length;
             this._nativeOfflineAudioContext = nativeOfflineAudioContext;
+            this._state = null;
         }
 
         public get length () {
@@ -45,7 +49,21 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
             return this._nativeOfflineAudioContext.length;
         }
 
+        public get state () {
+            return (this._state === null) ? this._nativeOfflineAudioContext.state : this._state;
+        }
+
         public startRendering () {
+            /*
+             * Bug #9 & #59: It is theoretically possible that startRendering() will first render a partialOfflineAudioContext. Therefore
+             * the state of the nativeOfflineAudioContext might no transition to running immediately.
+             */
+            if (this._state === 'running') {
+                return Promise.reject(createInvalidStateError());
+            }
+
+            this._state = 'running';
+
             return startRendering(this.destination, this._nativeOfflineAudioContext)
                 .then((audioBuffer) => {
                     // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
@@ -53,7 +71,15 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
                         wrapAudioBufferCopyChannelMethods(audioBuffer);
                     }
 
+                    this._state = null;
+
                     return <IAudioBuffer> audioBuffer;
+                })
+                // @todo This could be written more elegantly when Promise.finally() becomes avalaible.
+                .catch((err) => {
+                    this._state = null;
+
+                    throw err;
                 });
         }
 

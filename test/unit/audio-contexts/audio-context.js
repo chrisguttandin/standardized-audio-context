@@ -73,7 +73,6 @@ describe('AudioContext', () => {
                 const now = audioContext.currentTime;
 
                 audioContext.onstatechange = () => {
-                    // Prevent consecutive calls.
                     audioContext.onstatechange = null;
 
                     setTimeout(() => {
@@ -161,6 +160,19 @@ describe('AudioContext', () => {
                 expect(audioContext.onstatechange).to.be.null;
             });
 
+            it('should fire an Event of type statechange', (done) => {
+                audioContext.onstatechange = (event) => {
+                    audioContext.onstatechange = null;
+
+                    expect(event.type).to.equal('statechange');
+
+                    done();
+                };
+
+                // Kick off the audioContext.
+                audioContext.createGain();
+            });
+
         });
 
         describe('sampleRate', () => {
@@ -191,10 +203,9 @@ describe('AudioContext', () => {
 
             it('should be transitioned to running', (done) => {
                 audioContext.onstatechange = () => {
-                    expect(audioContext.state).to.equal('running');
-
-                    // Prevent consecutive calls.
                     audioContext.onstatechange = null;
+
+                    expect(audioContext.state).to.equal('running');
 
                     done();
                 };
@@ -202,8 +213,6 @@ describe('AudioContext', () => {
                 // Kick off the audioContext.
                 audioContext.createGain();
             });
-
-            // closed is tested below
 
         });
 

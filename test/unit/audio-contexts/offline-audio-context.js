@@ -259,6 +259,32 @@ describe('OfflineAudioContext', () => {
             expect(offlineAudioContext.onstatechange).to.be.null;
         });
 
+        it('should fire an Event of type statechange when starting to render', (done) => {
+            offlineAudioContext.onstatechange = (event) => {
+                offlineAudioContext.onstatechange = null;
+
+                expect(event.type).to.equal('statechange');
+
+                done();
+            };
+
+            offlineAudioContext.startRendering();
+        });
+
+        it('should fire an Event of type statechange when done with rendering', (done) => {
+            offlineAudioContext
+                .startRendering()
+                .then(() => {
+                    offlineAudioContext.onstatechange = (event) => {
+                        offlineAudioContext.onstatechange = null;
+
+                        expect(event.type).to.equal('statechange');
+
+                        done();
+                    };
+                });
+        });
+
     });
 
     describe('sampleRate', () => {
@@ -324,21 +350,11 @@ describe('OfflineAudioContext', () => {
             }).to.throw(TypeError);
         });
 
-        /*
-         * @todo This does currently not work because of bug #49.
-         * it('should be transitioned to running', (done) => {
-         *     offlineAudioContext.onstatechange = () => {
-         *         expect(offlineAudioContext.state).to.equal('running');
-         *
-         *         // Prevent consecutive calls.
-         *         offlineAudioContext.onstatechange = null;
-         *
-         *         done();
-         *     };
-         *
-         *     offlineAudioContext.startRendering();
-         * });
-         */
+        it('should be running when starting to render', () => {
+            offlineAudioContext.startRendering();
+
+            expect(offlineAudioContext.state).to.equal('running');
+        });
 
         it('should be closed after the buffer was rendered', () => {
             return offlineAudioContext
@@ -928,6 +944,19 @@ describe('OfflineAudioContext', () => {
                     expect(renderedBuffer.getChannelData).to.be.a('function');
                     expect(renderedBuffer.copyFromChannel).to.be.a('function');
                     expect(renderedBuffer.copyToChannel).to.be.a('function');
+                });
+        });
+
+        it('should throw an InvalidStateError if it was invoked before', (done) => {
+            offlineAudioContext.startRendering();
+
+            offlineAudioContext
+                .startRendering()
+                .catch((err) => {
+                    expect(err.code).to.equal(11);
+                    expect(err.name).to.equal('InvalidStateError');
+
+                    done();
                 });
         });
 
