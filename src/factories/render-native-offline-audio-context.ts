@@ -16,18 +16,21 @@ export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioCon
         }
 
         return new Promise<TNativeAudioBuffer>((resolve) => {
-            nativeOfflineAudioContext.oncomplete = (event: IOfflineAudioCompletionEvent) => {
-                resolve(event.renderedBuffer);
-            };
-
             // Bug #48: Safari does not render an OfflineAudioContext without any connected node.
-            createNativeGainNode(nativeOfflineAudioContext, {
+            const gainNode = createNativeGainNode(nativeOfflineAudioContext, {
                 channelCount: 1,
                 channelCountMode: 'explicit',
                 channelInterpretation: 'discrete',
                 gain: 0
-            })
-                .connect(nativeOfflineAudioContext.destination);
+            });
+
+            nativeOfflineAudioContext.oncomplete = (event: IOfflineAudioCompletionEvent) => {
+                gainNode.disconnect();
+
+                resolve(event.renderedBuffer);
+            };
+
+            gainNode.connect(nativeOfflineAudioContext.destination);
 
             nativeOfflineAudioContext.startRendering();
         });
