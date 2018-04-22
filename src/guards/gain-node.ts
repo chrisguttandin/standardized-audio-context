@@ -1,5 +1,5 @@
-import { IAudioNode, IBiquadFilterNode, IGainNode } from '../interfaces';
+import { IAudioNode, IGainNode } from '../interfaces';
 
 export const isGainNode = (audioNode: IAudioNode): audioNode is IGainNode => {
-    return ((<IBiquadFilterNode> audioNode).frequency === undefined && (<IGainNode> audioNode).gain !== undefined);
+    return (!audioNode.hasOwnProperty('frequency') && audioNode.hasOwnProperty('gain'));
 };
