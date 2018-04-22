@@ -70,8 +70,8 @@ const testCases = {
     }
 };
 
-// @todo Skip about 50% of the test cases in Firefox and Safari to prevent the browsers from crashing while running the tests.
-if ((!/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent)) || /Firefox/.test(navigator.userAgent)) {
+// @todo Skip about 50% of the test cases in Safari or when running on Travis to prevent the browsers from crashing while running the tests.
+if ((!/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent)) || process.env.TRAVIS) { // eslint-disable-line no-undef
     for (const description of Object.keys(testCases)) {
         if (Math.random() < 0.5) {
             delete testCases[ description ];
