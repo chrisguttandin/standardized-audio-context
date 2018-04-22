@@ -69,7 +69,7 @@ module.exports = (config) => {
             },
 
             browsers: [
-                'ChromeSauceLabs',
+                'ChromeBrowserStack',
                 'EdgeBrowserStack',
                 'FirefoxBrowserStack'
                 /*
@@ -81,10 +81,11 @@ module.exports = (config) => {
             captureTimeout: 120000,
 
             customLaunchers: {
-                ChromeSauceLabs: {
-                    base: 'SauceLabs',
-                    browserName: 'chrome',
-                    platform: 'OS X 10.11'
+                ChromeBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'chrome',
+                    os: 'OS X',
+                    os_version: 'Sierra' // eslint-disable-line camelcase
                 },
                 EdgeBrowserStack: {
                     base: 'BrowserStack',
