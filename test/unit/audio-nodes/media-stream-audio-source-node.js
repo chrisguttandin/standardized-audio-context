@@ -49,6 +49,12 @@ if ((!/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent)) 
 
 describe('MediaStreamAudioSourceNode', () => {
 
+    after(function (done) {
+        this.timeout(10000);
+
+        setTimeout(done, 5000);
+    });
+
     // Bug #65: Only Chrome & Opera implement captureStream() so far, which is why this test can't be executed in other browsers for now.
     if (/Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent)) {
 

@@ -64,6 +64,12 @@ if ((!/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent)) 
 
 describe('IIRFilterNode', () => {
 
+    after(function (done) {
+        this.timeout(10000);
+
+        setTimeout(done, 5000);
+    });
+
     for (const [ description, { createIIRFilterNode, createContext } ] of Object.entries(testCases)) {
 
         describe(`with the ${ description }`, () => {

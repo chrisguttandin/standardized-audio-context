@@ -49,6 +49,12 @@ if ((!/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent)) 
 
 describe('AudioWorkletNode', () => {
 
+    after(function (done) {
+        this.timeout(10000);
+
+        setTimeout(done, 5000);
+    });
+
     for (const [ description, { createAddAudioWorkletModule, createContext } ] of Object.entries(testCases)) {
 
         describe(`with the ${ description }`, () => {
