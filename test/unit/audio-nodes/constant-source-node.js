@@ -73,12 +73,6 @@ if ((!/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent)) 
 
 describe('ConstantSourceNode', () => {
 
-    after(function (done) {
-        this.timeout(10000);
-
-        setTimeout(done, 5000);
-    });
-
     for (const [ description, { createConstantSourceNode, createContext } ] of Object.entries(testCases)) {
 
         describe(`with ${ description }`, () => {

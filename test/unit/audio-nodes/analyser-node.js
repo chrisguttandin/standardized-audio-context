@@ -83,12 +83,6 @@ if ((!/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent)) 
 
 describe('AnalyserNode', () => {
 
-    after(function (done) {
-        this.timeout(10000);
-
-        setTimeout(done, 5000);
-    });
-
     for (const [ description, { createAnalyserNode, createContext } ] of Object.entries(testCases)) {
 
         describe(`with ${ description }`, () => {

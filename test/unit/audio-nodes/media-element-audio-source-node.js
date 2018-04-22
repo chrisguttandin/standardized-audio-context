@@ -49,12 +49,6 @@ if ((!/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent)) 
 
 describe('MediaElementAudioSourceNode', () => {
 
-    after(function (done) {
-        this.timeout(10000);
-
-        setTimeout(done, 5000);
-    });
-
     for (const [ description, { createContext, createMediaElementAudioSourceNode } ] of Object.entries(testCases)) {
 
         describe(`with the ${ description }`, () => {
