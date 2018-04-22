@@ -1,7 +1,7 @@
 const COMMON_TEST_TASKS = [
     'build',
     'karma:test',
-    'karma:test-chrome',
+    // @todo Run expectation tests in Chrome again when v66 becomes available on BrowserStack.
     'karma:test-edge',
     'karma:test-firefox',
     'karma:test-opera',
@@ -30,5 +30,5 @@ module.exports = {
     ],
     test: (process.env.TRAVIS)
         ? COMMON_TEST_TASKS
-        : [ ...COMMON_TEST_TASKS, 'karma:test-chrome-canary', 'karma:test-firefox-developer' ]
+        : [ ...COMMON_TEST_TASKS, 'karma:test-chrome', 'karma:test-chrome-canary', 'karma:test-firefox-developer' ]
 };
