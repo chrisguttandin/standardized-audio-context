@@ -8,6 +8,30 @@ describe('offlineAudioContextConstructor', () => {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('createBiquadFilter()', () => {
+
+        let biquadFilterNode;
+
+        beforeEach(() => {
+            biquadFilterNode = offlineAudioContext.createBiquadFilter();
+        });
+
+        describe('detune', () => {
+
+            describe('automationRate', () => {
+
+                // bug #84
+
+                it('should not be implemented', () => {
+                    expect(biquadFilterNode.detune.automationRate).to.be.undefined;
+                });
+
+            });
+
+        });
+
+    });
+
     describe('createBufferSource()', () => {
 
         // bug #14
