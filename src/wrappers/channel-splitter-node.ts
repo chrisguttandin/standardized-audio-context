@@ -1,10 +1,31 @@
 import { createInvalidStateError } from '../factories/invalid-state-error';
 
 export const wrapChannelSplitterNode = (channelSplitterNode: ChannelSplitterNode): void => {
-    channelSplitterNode.channelCountMode = 'explicit';
-    channelSplitterNode.channelInterpretation = 'discrete';
-
     const channelCount = channelSplitterNode.numberOfOutputs;
+
+    if (channelSplitterNode.channelCount !== channelCount) {
+        try {
+            channelSplitterNode.channelCount = channelCount;
+        } catch (_) {
+            // Bug #90: FirefoxDeveloper sets the wrong channelCount but does not allow to change it.
+        }
+    }
+
+    if (channelSplitterNode.channelCountMode !== 'explicit') {
+        try {
+            channelSplitterNode.channelCountMode = 'explicit';
+        } catch (_) {
+            // Bug #29: FirefoxDeveloper sets the wrong channelCountMode but does not allow to change it.
+        }
+    }
+
+    if (channelSplitterNode.channelInterpretation !== 'discrete') {
+        try {
+            channelSplitterNode.channelInterpretation = 'discrete';
+        } catch (_) {
+            // Bug #31: FirefoxDeveloper sets the wrong channelInterpretation but does not allow to change it.
+        }
+    }
 
     Object.defineProperty(channelSplitterNode, 'channelCount', {
         get: () => channelCount,
