@@ -1,8 +1,13 @@
+import { createIndexSizeError } from '../factories/index-size-error';
 import { TNativeAudioBuffer } from '../types';
 
 export const wrapAudioBufferCopyChannelMethodsSubarray = (audioBuffer: TNativeAudioBuffer): void => {
     audioBuffer.copyFromChannel = ((copyFromChannel) => {
         return (destination: Float32Array, channelNumber: number, startInChannel = 0) => {
+            if (channelNumber >= audioBuffer.numberOfChannels || startInChannel >= audioBuffer.length) {
+                throw createIndexSizeError();
+            }
+
             if (startInChannel < audioBuffer.length && audioBuffer.length - startInChannel < destination.length) {
                 return copyFromChannel.call(
                     audioBuffer, destination.subarray(0, audioBuffer.length - startInChannel), channelNumber, startInChannel
@@ -15,6 +20,10 @@ export const wrapAudioBufferCopyChannelMethodsSubarray = (audioBuffer: TNativeAu
 
     audioBuffer.copyToChannel = ((copyToChannel) => {
         return (source: Float32Array, channelNumber: number, startInChannel = 0) => {
+            if (channelNumber >= audioBuffer.numberOfChannels || startInChannel >= audioBuffer.length) {
+                throw createIndexSizeError();
+            }
+
             if (startInChannel < audioBuffer.length && audioBuffer.length - startInChannel < source.length) {
                 return copyToChannel.call(
                     audioBuffer, source.subarray(0, audioBuffer.length - startInChannel), channelNumber, startInChannel
