@@ -24,7 +24,7 @@ export const testAudioNodeDisconnectMethodSupport = (nativeAudioContext: TNative
         source.connect(dummy);
         source.disconnect(dummy);
 
-        analyzer.onaudioprocess = (event) => {
+        analyzer.onaudioprocess = (event) => { // tslint:disable-line:deprecation
             const chnnlDt = event.inputBuffer.getChannelData(0);
 
             if (Array.prototype.some.call(chnnlDt, (sample: number) => sample === 1)) {

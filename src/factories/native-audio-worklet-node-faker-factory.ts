@@ -246,7 +246,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         let isActive = true;
 
-        scriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }: AudioProcessingEvent) => {
+        scriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }: AudioProcessingEvent) => { // tslint:disable-line:deprecation
             if (audioWorkletProcessor !== null) {
                 for (let i = 0; i < bufferSize; i += 128) {
                     for (let j = 0; j < options.numberOfInputs; j += 1) {
@@ -301,7 +301,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }
 
                     if (!isActive) {
-                        scriptProcessorNode.onaudioprocess = <any> null;
+                        scriptProcessorNode.onaudioprocess = <any> null; // tslint:disable-line:deprecation
 
                         break;
                     }

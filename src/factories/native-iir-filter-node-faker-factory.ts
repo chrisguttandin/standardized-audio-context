@@ -85,7 +85,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
             yBuffers.push(yBuffer);
         }
 
-        scriptProcessorNode.onaudioprocess = (event: AudioProcessingEvent) => {
+        scriptProcessorNode.onaudioprocess = (event: AudioProcessingEvent) => { // tslint:disable-line:deprecation
             const inputBuffer = event.inputBuffer;
             const outputBuffer = event.outputBuffer;
 
