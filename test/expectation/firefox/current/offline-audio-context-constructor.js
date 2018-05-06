@@ -8,6 +8,42 @@ describe('offlineAudioContextConstructor', () => {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('createChannelSplitter()', () => {
+
+        // bug #30
+
+        it('should allow to set the channelCountMode', () => {
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
+
+            channelSplitterNode.channelCountMode = 'explicit';
+        });
+
+        // bug #32
+
+        it('should allow to set the channelInterpretation', () => {
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
+
+            channelSplitterNode.channelInterpretation = 'discrete';
+        });
+
+    });
+
+    describe('createConstantSource()', () => {
+
+        describe('channelCount', () => {
+
+            // bug #67
+
+            it('should have a channelCount of 1', () => {
+                const constantSourceNode = offlineAudioContext.createConstantSource();
+
+                expect(constantSourceNode.channelCount).to.equal(1);
+            });
+
+        });
+
+    });
+
     describe('decodeAudioData()', () => {
 
         // bug #43

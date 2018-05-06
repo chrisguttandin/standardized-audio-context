@@ -10,6 +10,46 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
+    describe('createChannelSplitter()', () => {
+
+        // bug #30
+
+        it('should allow to set the channelCountMode', () => {
+            const channelSplitterNode = audioContext.createChannelSplitter();
+
+            channelSplitterNode.channelCountMode = 'explicit';
+        });
+
+        // bug #32
+
+        it('should allow to set the channelInterpretation', () => {
+            const channelSplitterNode = audioContext.createChannelSplitter();
+
+            channelSplitterNode.channelInterpretation = 'discrete';
+        });
+
+    });
+
+    describe('createConstantSource()', () => {
+
+        let constantSourceNode;
+
+        beforeEach(() => {
+            constantSourceNode = audioContext.createConstantSource();
+        });
+
+        describe('channelCount()', () => {
+
+            // bug #67
+
+            it('should have a channelCount of 1', () => {
+                expect(constantSourceNode.channelCount).to.equal(1);
+            });
+
+        });
+
+    });
+
     describe('decodeAudioData()', () => {
 
         // bug #43
