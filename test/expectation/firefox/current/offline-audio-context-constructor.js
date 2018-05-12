@@ -8,6 +8,27 @@ describe('offlineAudioContextConstructor', () => {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
     });
 
+    describe('createBufferSource()', () => {
+
+        describe('start()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const bufferSourceNode = offlineAudioContext.createBufferSource();
+
+                expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
+
+                // A negative offset does not throw anything.
+                bufferSourceNode.start(0, -1);
+
+                expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
+            });
+
+        });
+
+    });
+
     describe('createChannelSplitter()', () => {
 
         // bug #30

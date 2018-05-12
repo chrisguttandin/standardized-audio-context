@@ -85,7 +85,7 @@ export const decodeAudioData = (
                 // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                 if (typeof audioBuffer.copyFromChannel !== 'function') {
                     wrapAudioBufferCopyChannelMethods(audioBuffer);
-                // Bug #42 & #89: Firefox does not yet fully support copyFromChannel() and copyToChannel().
+                // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
                 } else if (!isSupportingCopyChannelMethodsSubarray(audioBuffer)) {
                     wrapAudioBufferCopyChannelMethodsSubarray(audioBuffer);
                 }
