@@ -56,8 +56,15 @@ module.exports = (config) => {
         config.set({
 
             browsers: [
-                'Opera'
-            ]
+                'OperaWithNoRequiredUserGesture'
+            ],
+
+            customLaunchers: {
+                OperaWithNoRequiredUserGesture: {
+                    base: 'Opera',
+                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
+                }
+            }
 
         });
 

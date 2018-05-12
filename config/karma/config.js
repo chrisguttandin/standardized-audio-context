@@ -134,7 +134,7 @@ module.exports = (config) => {
                 'EdgeBrowserStack',
                 'FirefoxDeveloperHeadless',
                 'FirefoxHeadless',
-                'Opera',
+                'OperaWithNoRequiredUserGesture',
                 'Safari'
             ],
 
@@ -152,6 +152,10 @@ module.exports = (config) => {
                     browser: 'edge',
                     os: 'Windows',
                     os_version: '10' // eslint-disable-line camelcase
+                },
+                OperaWithNoRequiredUserGesture: {
+                    base: 'Opera',
+                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
                 }
             }
 
