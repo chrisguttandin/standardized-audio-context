@@ -10,16 +10,6 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    describe('audioWorklet', () => {
-
-        // bug #59
-
-        it('should not be implemented', () => {
-            expect(audioContext.audioWorklet).to.be.undefined;
-        });
-
-    });
-
     describe('outputLatency', () => {
 
         // bug #40
@@ -113,16 +103,6 @@ describe('audioContextConstructor', () => {
                     expect(biquadFilterNode.frequency.minValue).to.equal(0);
                 });
 
-            });
-
-        });
-
-        describe('getFrequencyResponse()', () => {
-
-            // bug #68
-
-            it('should throw no error', () => {
-                biquadFilterNode.getFrequencyResponse(new Float32Array(), new Float32Array(1), new Float32Array(1));
             });
 
         });

@@ -138,7 +138,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
                 nativeAudioNode = getNativeAudioNode<INativeAudioWorkletNode>(proxy);
 
-                // Bug #61: Only Chrome Canary has an implementation of the AudioWorkletNode yet.
+                // Bug #61: Only Chrome & Opera have an implementation of the AudioWorkletNode yet.
                 if (nativeAudioWorkletNodeConstructor === null) {
                     if (processorDefinition === undefined) {
                         throw new Error('Missing the processor definition.');

@@ -36,7 +36,7 @@ export const addAudioWorkletModule = (
 ): Promise<void> => {
     const nativeContext = getNativeContext(context);
 
-    // Bug #59: Only Chrome Canary does implement the audioWorklet property.
+    // Bug #59: Only Chrome & Opera do implement the audioWorklet property.
     // @todo Define the native interface as part of the native AudioContext.
     if ((<any> nativeContext).audioWorklet !== undefined) {
         return fetch(moduleURL)

@@ -49,7 +49,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
             }
         }
 
-        // Bug #61: Only Chrome Canary has an implementation of the AudioWorkletNode yet.
+        // Bug #61: Only Chrome & Opera have an implementation of the AudioWorkletNode yet.
         if (processorDefinition === undefined) {
             throw createNotSupportedError();
         }
