@@ -6,6 +6,17 @@ module.exports = (config) => {
 
     config.set({
 
+        browsers: [
+            'ChromeCanaryHeadlessWithNoRequiredUserGesture'
+        ],
+
+        customLaunchers: {
+            ChromeCanaryHeadlessWithNoRequiredUserGesture: {
+                base: 'ChromeCanaryHeadless',
+                flags: [ '--autoplay-policy=no-user-gesture-required' ]
+            }
+        },
+
         files: [
             'test/expectation/any/**/*.js',
             'test/expectation/chrome/any/**/*.js',
@@ -24,47 +35,5 @@ module.exports = (config) => {
         }
 
     });
-
-    if (process.env.TRAVIS) {
-
-        config.set({
-
-            browsers: [
-                'ChromeCanarySauceLabs'
-            ],
-
-            captureTimeout: 120000,
-
-            customLaunchers: {
-                ChromeCanarySauceLabs: {
-                    base: 'SauceLabs',
-                    browserName: 'chrome',
-                    platform: 'OS X 10.11',
-                    version: 'dev'
-                }
-            },
-
-            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
-
-        });
-
-    } else {
-
-        config.set({
-
-            browsers: [
-                'ChromeCanaryHeadlessWithNoRequiredUserGesture'
-            ],
-
-            customLaunchers: {
-                ChromeCanaryHeadlessWithNoRequiredUserGesture: {
-                    base: 'ChromeCanaryHeadless',
-                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
-                }
-            }
-
-        });
-
-    }
 
 };
