@@ -467,16 +467,16 @@ describe('audioContextConstructor', () => {
 
             describe('mediaElement', () => {
 
-                let mediaElementSourceNode;
+                let mediaElementAudioSourceNode;
 
                 beforeEach(() => {
-                    mediaElementSourceNode = audioContext.createMediaElementSource(new Audio());
+                    mediaElementAudioSourceNode = audioContext.createMediaElementSource(new Audio());
                 });
 
                 // bug #63
 
                 it('should not be implemented', () => {
-                    expect(mediaElementSourceNode.mediaElement).to.be.undefined;
+                    expect(mediaElementAudioSourceNode.mediaElement).to.be.undefined;
                 });
 
             });
