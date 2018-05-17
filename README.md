@@ -125,6 +125,16 @@ This is an implementation of the
 This is an implementation of the
 [`IIRFilterNode`](https://webaudio.github.io/web-audio-api/#iirfilternode) constructor and the [`createIIRFilter()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createiirfilter) factory method respectively. It has to be faked internally with a ScriptProcessorNode in Safari which means it is not as performant as in other browsers which support it natively.
 
+### MediaElementAudioSourceNode / createMediaElementSource()
+
+This is an implementation of the
+[`MediaElementAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediaelementaudiosourcenode) constructor and the [`createMediaElementSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediaelementsource) factory method respectively. It does only work with an AudioContext but not with an OfflineAudioContext.
+
+### MediaStreamSourceNode / createMediaStreamSource()
+
+This is an implementation of the
+[`MediaStreamAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediastreamaudiosourcenode) constructor and the [`createMediaStreamSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediastreamsource) factory method respectively. It does only work with an AudioContext but not with an OfflineAudioContext.
+
 ### OscillatorNode / createOscillator()
 
 This is an implementation of the
