@@ -85,6 +85,11 @@ This is an implementation of the
 This is an implementation of the
 [`AnalyserNode`](https://webaudio.github.io/web-audio-api/#analysernode) constructor and the [`createAnalyser()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createanalyser) factory method respectively.
 
+### BiquadFilterNode / createBiquadFilter()
+
+This is an implementation of the
+[`BiquadFilterNode`](https://webaudio.github.io/web-audio-api/#biquadfilternode) constructor and the [`createBiquadFilter()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbiquadfilter) factory method respectively.
+
 ### AudioBuffer / createBuffer()
 
 This is an implementation of the
@@ -94,11 +99,6 @@ This is an implementation of the
 
 This is an implementation of the
 [`AudioBufferSourceNode`](https://webaudio.github.io/web-audio-api/#AudioBufferSourceNode) constructor and the [`createBufferSource()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbuffersource) factory method respectively. It is currently missing the [detune AudioParam](https://webaudio.github.io/web-audio-api/#dom-audiobuffersourcenode-detune).
-
-### BiquadFilterNode / createBiquadFilter()
-
-This is an implementation of the
-[`BiquadFilterNode`](https://webaudio.github.io/web-audio-api/#biquadfilternode) constructor and the [`createBiquadFilter()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbiquadfilter) factory method respectively.
 
 ### ChannelMergerNode / createChannelMerger()
 
