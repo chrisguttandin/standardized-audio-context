@@ -82,7 +82,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
                 this._nativeAudioBufferSourceNode.buffer = value;
             } catch (err) {
                 if (value !== null || err.code !== 17) {
-                    throw err;
+                    throw err; // tslint:disable-line:rxjs-throw-error
                 }
 
                 // @todo Create a new internal nativeAudioBufferSourceNode.

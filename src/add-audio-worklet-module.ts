@@ -178,7 +178,7 @@ export const addAudioWorkletModule = (
                     throw createAbortError();
                 }
 
-                throw err;
+                throw err; // tslint:disable-line:rxjs-throw-error
             });
 
         if (ongoingRequestsOfContext === undefined) {

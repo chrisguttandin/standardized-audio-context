@@ -125,7 +125,7 @@ export const createOfflineAudioContextConstructor: TOfflineAudioContextConstruct
 
                     deleteAudioGraph(this, this._nativeOfflineAudioContext);
 
-                    throw err;
+                    throw err; // tslint:disable-line:rxjs-throw-error
                 });
         }
 

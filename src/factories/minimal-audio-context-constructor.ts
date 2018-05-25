@@ -89,7 +89,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                         throw createInvalidStateError();
                     }
 
-                    throw err;
+                    throw err; // tslint:disable-line:rxjs-throw-error
                 });
         }
 
@@ -102,7 +102,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                         throw createInvalidStateError();
                     }
 
-                    throw err;
+                    throw err; // tslint:disable-line:rxjs-throw-error
                 });
         }
 

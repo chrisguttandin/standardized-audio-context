@@ -203,7 +203,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
                     throw createInvalidAccessError();
                 }
 
-                throw err;
+                throw err; // tslint:disable-line:rxjs-throw-error
             }
 
             addConnectionToAudioParam(this._context, this, destination, output);

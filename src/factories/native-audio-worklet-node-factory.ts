@@ -45,7 +45,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                     throw createNotSupportedError();
                 }
 
-                throw err;
+                throw err; // tslint:disable-line:rxjs-throw-error
             }
         }
 
