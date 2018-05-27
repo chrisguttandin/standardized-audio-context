@@ -420,7 +420,9 @@ describe('AudioBufferSourceNode', () => {
                  * @todo
                  * @todo     let renderer;
                  * @todo
-                 * @todo     beforeEach(() => {
+                 * @todo     beforeEach(function () {
+                 * @todo         this.timeout(10000);
+                 * @todo
                  * @todo         renderer = createRenderer({
                  * @todo             context,
                  * @todo             length: (context.length === undefined) ? 5 : undefined,
@@ -774,7 +776,9 @@ describe('AudioBufferSourceNode', () => {
                 let renderer;
                 let values;
 
-                beforeEach(() => {
+                beforeEach(function () {
+                    this.timeout(10000);
+
                     values = [ 1, 1, 1, 1, 1 ];
 
                     renderer = createRenderer({
@@ -976,7 +980,9 @@ describe('AudioBufferSourceNode', () => {
 
                             let renderer;
 
-                            beforeEach(async () => {
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
                                 if (withAnAppendedAudioWorklet) {
                                     await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                 }
@@ -1034,7 +1040,9 @@ describe('AudioBufferSourceNode', () => {
 
                             let renderer;
 
-                            beforeEach(async () => {
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
                                 if (withAnAppendedAudioWorklet) {
                                     await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                 }

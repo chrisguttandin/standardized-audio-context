@@ -329,7 +329,9 @@ describe('AnalyserNode', () => {
                 let renderer;
                 let values;
 
-                beforeEach(() => {
+                beforeEach(function () {
+                    this.timeout(10000);
+
                     values = [ 1, 1, 1, 1, 1 ];
 
                     renderer = createRenderer({

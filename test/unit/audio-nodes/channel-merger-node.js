@@ -270,7 +270,9 @@ describe('ChannelMergerNode', () => {
 
                 let renderer;
 
-                beforeEach(() => {
+                beforeEach(function () {
+                    this.timeout(10000);
+
                     renderer = createRenderer({
                         context,
                         length: (context.length === undefined) ? 5 : undefined,

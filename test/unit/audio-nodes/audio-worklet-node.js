@@ -749,7 +749,9 @@ describe('AudioWorkletNode', () => {
                     let renderer;
                     let values;
 
-                    beforeEach(async () => {
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
                         values = [ 1, 0.5, 0, -0.5, -1 ];
 
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
@@ -986,7 +988,9 @@ describe('AudioWorkletNode', () => {
                 let renderer;
                 let values;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     values = [ 1, 1, 1, 1, 1 ];
 
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');

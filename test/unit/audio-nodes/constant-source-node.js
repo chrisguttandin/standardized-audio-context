@@ -310,7 +310,9 @@ describe('ConstantSourceNode', () => {
 
                             let renderer;
 
-                            beforeEach(async () => {
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
                                 if (withAnAppendedAudioWorklet) {
                                     await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                 }
@@ -577,7 +579,9 @@ describe('ConstantSourceNode', () => {
 
                 let renderer;
 
-                beforeEach(() => {
+                beforeEach(function () {
+                    this.timeout(10000);
+
                     renderer = createRenderer({
                         context,
                         length: (context.length === undefined) ? 5 : undefined,
@@ -769,7 +773,9 @@ describe('ConstantSourceNode', () => {
 
                             let renderer;
 
-                            beforeEach(async () => {
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
                                 if (withAnAppendedAudioWorklet) {
                                     await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                 }
@@ -823,7 +829,9 @@ describe('ConstantSourceNode', () => {
 
                             let renderer;
 
-                            beforeEach(async () => {
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
                                 if (withAnAppendedAudioWorklet) {
                                     await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                 }

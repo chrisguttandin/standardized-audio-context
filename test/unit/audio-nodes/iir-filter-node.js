@@ -253,7 +253,9 @@ describe('IIRFilterNode', () => {
 
                                 describe('with some filter coefficients', () => {
 
-                                    beforeEach(async () => {
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
+
                                         if (withAnAppendedAudioWorklet) {
                                             await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                         }
@@ -306,7 +308,9 @@ describe('IIRFilterNode', () => {
 
                                 describe('with some other filter coefficients', () => {
 
-                                    beforeEach(async () => {
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
+
                                         if (withAnAppendedAudioWorklet) {
                                             await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                         }
@@ -496,7 +500,9 @@ describe('IIRFilterNode', () => {
                 let renderer;
                 let values;
 
-                beforeEach(() => {
+                beforeEach(function () {
+                    this.timeout(10000);
+
                     values = [ 1, 1, 1, 1, 1 ];
 
                     renderer = createRenderer({

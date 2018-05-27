@@ -304,7 +304,9 @@ describe('GainNode', () => {
                             let renderer;
                             let values;
 
-                            beforeEach(async () => {
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
                                 values = [ 1, 0.5, 0, -0.5, -1 ];
 
                                 if (withAnAppendedAudioWorklet) {
@@ -527,7 +529,9 @@ describe('GainNode', () => {
                 let renderer;
                 let values;
 
-                beforeEach(() => {
+                beforeEach(function () {
+                    this.timeout(10000);
+
                     values = [ 1, 1, 1, 1, 1 ];
 
                     renderer = createRenderer({
