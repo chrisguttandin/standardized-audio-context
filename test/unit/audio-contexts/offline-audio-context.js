@@ -672,7 +672,9 @@ describe('OfflineAudioContext', () => {
 
         describe('without a valid arrayBuffer', () => {
 
-            it('should throw an error', (done) => {
+            it('should throw an error', function (done) {
+                this.timeout(10000);
+
                 offlineAudioContext
                     .decodeAudioData(null)
                     .catch((err) => {
@@ -682,7 +684,9 @@ describe('OfflineAudioContext', () => {
                     });
             });
 
-            it('should call the errorCallback with a TypeError', (done) => {
+            it('should call the errorCallback with a TypeError', function (done) {
+                this.timeout(10000);
+
                 offlineAudioContext
                     .decodeAudioData(null, () => {}, (err) => {
                         expect(err).to.be.an.instanceOf(TypeError);
@@ -693,7 +697,9 @@ describe('OfflineAudioContext', () => {
             });
 
             // The promise is rejected before but the errorCallback gets called synchronously.
-            it('should call the errorCallback before the promise gets rejected', (done) => {
+            it('should call the errorCallback before the promise gets rejected', function (done) {
+                this.timeout(10000);
+
                 const errorCallback = spy();
 
                 offlineAudioContext
@@ -724,7 +730,9 @@ describe('OfflineAudioContext', () => {
                 });
             });
 
-            it('should throw an error', (done) => {
+            it('should throw an error', function (done) {
+                this.timeout(10000);
+
                 offlineAudioContext
                     .decodeAudioData(arrayBuffer)
                     .catch((err) => {
@@ -735,7 +743,9 @@ describe('OfflineAudioContext', () => {
                     });
             });
 
-            it('should call the errorCallback with an error', (done) => {
+            it('should call the errorCallback with an error', function (done) {
+                this.timeout(10000);
+
                 offlineAudioContext
                     .decodeAudioData(arrayBuffer, () => {}, (err) => {
                         expect(err.code).to.equal(0);
@@ -747,7 +757,9 @@ describe('OfflineAudioContext', () => {
             });
 
             // The promise is rejected before but the errorCallback gets called synchronously.
-            it('should call the errorCallback before the promise gets rejected', (done) => {
+            it('should call the errorCallback before the promise gets rejected', function (done) {
+                this.timeout(10000);
+
                 const errorCallback = spy();
 
                 offlineAudioContext
@@ -777,7 +789,9 @@ describe('OfflineAudioContext', () => {
                 });
             });
 
-            it('should resolve to an instance of the AudioBuffer interface', () => {
+            it('should resolve to an instance of the AudioBuffer interface', function () {
+                this.timeout(10000);
+
                 return offlineAudioContext
                     .decodeAudioData(arrayBuffer)
                     .then((audioBuffer) => {
@@ -792,7 +806,9 @@ describe('OfflineAudioContext', () => {
                     });
             });
 
-            it('should call the successCallback with an instance of the AudioBuffer interface', (done) => {
+            it('should call the successCallback with an instance of the AudioBuffer interface', function (done) {
+                this.timeout(10000);
+
                 offlineAudioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
                     expect(audioBuffer.duration).to.be.closeTo(1000 / 44100, 0.001);
                     expect(audioBuffer.length).to.equal(1000);
@@ -808,7 +824,9 @@ describe('OfflineAudioContext', () => {
             });
 
             // The promise is resolved before but the successCallback gets called synchronously.
-            it('should call the successCallback before the promise gets resolved', () => {
+            it('should call the successCallback before the promise gets resolved', function () {
+                this.timeout(10000);
+
                 const successCallback = spy();
 
                 return offlineAudioContext
@@ -818,7 +836,9 @@ describe('OfflineAudioContext', () => {
                     });
             });
 
-            it('should throw a DataCloneError', (done) => {
+            it('should throw a DataCloneError', function (done) {
+                this.timeout(10000);
+
                 offlineAudioContext
                     .decodeAudioData(arrayBuffer)
                     .then(() => offlineAudioContext.decodeAudioData(arrayBuffer))
@@ -830,7 +850,9 @@ describe('OfflineAudioContext', () => {
                     });
             });
 
-            it('should neuter the arrayBuffer', (done) => {
+            it('should neuter the arrayBuffer', function (done) {
+                this.timeout(10000);
+
                 offlineAudioContext.decodeAudioData(arrayBuffer);
 
                 setTimeout(() => {
@@ -846,7 +868,9 @@ describe('OfflineAudioContext', () => {
                 });
             });
 
-            it('should resolve with a assignable AudioBuffer', () => {
+            it('should resolve with a assignable AudioBuffer', function () {
+                this.timeout(10000);
+
                 return offlineAudioContext
                     .decodeAudioData(arrayBuffer)
                     .then((audioBuffer) => {
