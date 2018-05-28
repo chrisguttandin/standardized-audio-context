@@ -56,13 +56,17 @@ module.exports = (config) => {
         config.set({
 
             browsers: [
-                'OperaWithNoRequiredUserGesture'
+                'OperaWithNoRequiredUserGestureAndNoThrottling'
             ],
 
             customLaunchers: {
-                OperaWithNoRequiredUserGesture: {
+                OperaWithNoRequiredUserGestureAndNoThrottling: {
                     base: 'Opera',
-                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
+                    flags: [
+                        '--autoplay-policy=no-user-gesture-required',
+                        '--disable-background-timer-throttling',
+                        '--disable-renderer-backgrounding'
+                    ]
                 }
             }
 
