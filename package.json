@@ -89,5 +89,5 @@
     "test": "grunt lint && grunt test"
   },
   "types": "build/esm/module.d.ts",
-  "version": "12.1.17"
+  "version": "12.1.18"
 }
