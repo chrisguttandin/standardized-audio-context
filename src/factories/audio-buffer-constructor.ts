@@ -15,13 +15,17 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (nat
 
     return class AudioBuffer implements IAudioBuffer {
 
-        public duration: number;
+        // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
+        public duration!: number;
 
-        public length: number;
+        // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
+        public length!: number;
 
-        public numberOfChannels: number;
+        // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
+        public numberOfChannels!: number;
 
-        public sampleRate: number;
+        // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
+        public sampleRate!: number;
 
         constructor (options: IAudioBufferOptions) {
             if (nativeOfflineAudioContextConstructor === null) {

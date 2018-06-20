@@ -10,13 +10,7 @@ import { getNativeAudioParam } from '../helpers/get-native-audio-param';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioNode, IAudioNodeRenderer, IAudioParam, INativeAudioNodeFaker } from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
-import {
-    TAudioNodeConstructorFactory,
-    TChannelCountMode,
-    TContext,
-    TNativeAudioDestinationNode,
-    TNativeAudioNode
-} from '../types';
+import { TAudioNodeConstructorFactory, TContext, TNativeAudioDestinationNode, TNativeAudioNode } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
 const addAudioNode = (
@@ -98,10 +92,6 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
     return class AudioNode extends EventTarget implements IAudioNode {
 
-        public channelCount: number;
-
-        public channelCountMode: TChannelCountMode;
-
         private _context: TContext;
 
         private _nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode;
@@ -129,6 +119,22 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             AUDIO_NODE_STORE.set(this, nativeAudioNode);
 
             addAudioNode(context, this, audioNodeRenderer, nativeAudioNode);
+        }
+
+        public get channelCount () {
+            return this._nativeAudioNode.channelCount;
+        }
+
+        public set channelCount (value) {
+            this._nativeAudioNode.channelCount = value;
+        }
+
+        public get channelCountMode () {
+            return this._nativeAudioNode.channelCountMode;
+        }
+
+        public set channelCountMode (value) {
+            this._nativeAudioNode.channelCountMode = value;
         }
 
         public get channelInterpretation () {
