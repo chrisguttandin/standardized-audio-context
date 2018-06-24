@@ -1,4 +1,4 @@
-class GainProcessor extends AudioWorkletProcessor { // eslint-disable-line no-undef
+class GainProcessor extends AudioWorkletProcessor {
 
     constructor () {
         super();
@@ -12,4 +12,4 @@ class GainProcessor extends AudioWorkletProcessor { // eslint-disable-line no-un
 
 GainProcessor.parameterDescriptors = [ ];
 
-registerProcessor('gain-processor', GainProcessor); // eslint-disable-line no-undef
+registerProcessor('gain-processor', GainProcessor);

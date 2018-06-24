@@ -1,4 +1,4 @@
-class EmptyStringProcessor extends AudioWorkletProcessor { // eslint-disable-line no-undef
+class EmptyStringProcessor extends AudioWorkletProcessor {
 
     constructor () {
         super();
@@ -12,4 +12,4 @@ class EmptyStringProcessor extends AudioWorkletProcessor { // eslint-disable-lin
 
 EmptyStringProcessor.parameterDescriptors = [ ];
 
-registerProcessor('', EmptyStringProcessor); // eslint-disable-line no-undef
+registerProcessor('', EmptyStringProcessor);

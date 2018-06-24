@@ -16,7 +16,7 @@ describe('AudioWorklet', () => {
 
         it('should throw an InvalidStateError', (done) => {
             try {
-                new AudioWorkletNode(audioContext, 'unknown-processor'); // eslint-disable-line no-undef
+                new AudioWorkletNode(audioContext, 'unknown-processor');
             } catch (err) {
                 expect(err.code).to.equal(11);
                 expect(err.name).to.equal('InvalidStateError');
@@ -35,7 +35,7 @@ describe('AudioWorklet', () => {
             await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
 
             expect(() => {
-                new AudioWorkletNode(audioContext, 'gain-processor', { processorOptions: null }); // eslint-disable-line no-undef
+                new AudioWorkletNode(audioContext, 'gain-processor', { processorOptions: null });
             }).to.throw(TypeError, "Failed to construct 'AudioWorkletNode': member processorOptions is not an object.");
         });
 
@@ -48,7 +48,7 @@ describe('AudioWorklet', () => {
         it('should be 3.402820018375656e+38 and -3.402820018375656e+38', async () => {
             await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
 
-            const audioWorkletNode = new AudioWorkletNode(audioContext, 'gain-processor'); // eslint-disable-line no-undef
+            const audioWorkletNode = new AudioWorkletNode(audioContext, 'gain-processor');
 
             expect(audioWorkletNode.parameters.get('gain').maxValue).to.equal(3.402820018375656e+38);
             expect(audioWorkletNode.parameters.get('gain').minValue).to.equal(-3.402820018375656e+38);
@@ -64,7 +64,7 @@ describe('AudioWorklet', () => {
             audioContext.audioWorklet
                 .addModule('base/test/fixtures/inspector-processor.js')
                 .then(() => {
-                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor'); // eslint-disable-line no-undef
+                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor');
                     const values = new Array(128);
 
                     values.fill(1);
@@ -91,7 +91,7 @@ describe('AudioWorklet', () => {
             audioContext.audioWorklet
                 .addModule('base/test/fixtures/inspector-processor.js')
                 .then(() => {
-                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor'); // eslint-disable-line no-undef
+                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor');
 
                     audioWorkletNode.port.onmessage = ({ data }) => {
                         if (data.inputs !== undefined) {
@@ -117,7 +117,7 @@ describe('AudioWorklet', () => {
             audioContext.audioWorklet
                 .addModule('base/test/fixtures/inspector-processor.js')
                 .then(() => {
-                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor'); // eslint-disable-line no-undef
+                    const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor');
                     const constantSourceNode = new ConstantSourceNode(audioContext);
                     const listener = spy();
 

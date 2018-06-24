@@ -1,6 +1,6 @@
 // This example is copied from this article: https://developers.google.com/web/updates/2017/12/audio-worklet
 
-class GainProcessor extends AudioWorkletProcessor { // eslint-disable-line no-undef
+class GainProcessor extends AudioWorkletProcessor {
 
     constructor () {
         super();
@@ -30,4 +30,4 @@ GainProcessor.parameterDescriptors = [ {
     name: 'gain'
 } ];
 
-registerProcessor('gain-processor', GainProcessor); // eslint-disable-line no-undef
+registerProcessor('gain-processor', GainProcessor);

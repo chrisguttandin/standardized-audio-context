@@ -1,4 +1,4 @@
-class InspectorProcessor extends AudioWorkletProcessor { // eslint-disable-line no-undef
+class InspectorProcessor extends AudioWorkletProcessor {
 
     constructor (options) {
         super();
@@ -25,4 +25,4 @@ InspectorProcessor.parameterDescriptors = [ {
     name: 'gain'
 } ];
 
-registerProcessor('inspector-processor', InspectorProcessor); // eslint-disable-line no-undef
+registerProcessor('inspector-processor', InspectorProcessor);

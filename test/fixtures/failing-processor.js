@@ -1,4 +1,4 @@
-class FailingProcessor extends AudioWorkletProcessor { // eslint-disable-line no-undef
+class FailingProcessor extends AudioWorkletProcessor {
 
     constructor () {
         super();
@@ -14,4 +14,4 @@ class FailingProcessor extends AudioWorkletProcessor { // eslint-disable-line no
 
 FailingProcessor.parameterDescriptors = [ ];
 
-registerProcessor('failing-processor', FailingProcessor); // eslint-disable-line no-undef
+registerProcessor('failing-processor', FailingProcessor);

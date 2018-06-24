@@ -1,4 +1,4 @@
-class ParamlessProcessor extends AudioWorkletProcessor { // eslint-disable-line no-undef
+class ParamlessProcessor extends AudioWorkletProcessor {
 
     constructor () {
         super();
@@ -10,4 +10,4 @@ class ParamlessProcessor extends AudioWorkletProcessor { // eslint-disable-line 
 
 }
 
-registerProcessor('paramless-processor', ParamlessProcessor); // eslint-disable-line no-undef
+registerProcessor('paramless-processor', ParamlessProcessor);
