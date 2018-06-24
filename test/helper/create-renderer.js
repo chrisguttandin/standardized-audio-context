@@ -179,7 +179,7 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
         thirdImpulseNode.start(impulseStartTime + ((startTimeOffset * 2) / sampleRate));
 
         if (typeof start === 'function') {
-            start(startTime, (newAudioNodes === undefined) ? audioNodes : Object.assign({ }, audioNodes, newAudioNodes));
+            start(startTime, (newAudioNodes === undefined) ? audioNodes : { ...audioNodes, ...newAudioNodes });
         }
     });
 };
@@ -256,7 +256,7 @@ export const createRenderer = ({ context, create, length, prepare }) => {
         const newAudioNodes = (typeof prepareBeforeStart !== 'function') ? undefined : prepareBeforeStart(audioNodes);
 
         if (typeof start === 'function') {
-            start(context.currentTime, (newAudioNodes === undefined) ? audioNodes : Object.assign({ }, audioNodes, newAudioNodes));
+            start(context.currentTime, (newAudioNodes === undefined) ? audioNodes : { ...audioNodes, ...newAudioNodes });
         }
 
         const channelData = new Float32Array(context.length);
