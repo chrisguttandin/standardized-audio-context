@@ -4,9 +4,9 @@ import { IAudioParam, IAudioParamRenderer } from '../interfaces';
 import { TAudioParamFactoryFactory, TContext } from '../types';
 
 const addAudioParam = (context: TContext, audioParam: IAudioParam, audioParamRenderer: null | IAudioParamRenderer) => {
-    const audioGraphOfContext = getAudioGraph(context);
+    const audioGraph = getAudioGraph(context);
 
-    audioGraphOfContext.params.set(audioParam, { inputs: new Set(), renderer: audioParamRenderer });
+    audioGraph.params.set(audioParam, { inputs: new Set(), renderer: audioParamRenderer });
 };
 
 export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioParamRenderer) => {

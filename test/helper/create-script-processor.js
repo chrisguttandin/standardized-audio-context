@@ -33,16 +33,16 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
 
     AUDIO_NODE_STORE.set(scriptProcessorNodeProxy, scriptProcessorNode);
 
-    const audioGraphOfContext = AUDIO_GRAPHS.get(context);
+    const audioGraph = AUDIO_GRAPHS.get(context);
 
-    if (audioGraphOfContext === undefined) {
+    if (audioGraph === undefined) {
         throw new Error('Missing the audio graph of the given context.');
     }
 
     const audioNodeConnections = { inputs: [ new Set() ], outputs: new Set(), renderer: null };
 
-    audioGraphOfContext.nodes.set(scriptProcessorNode, audioNodeConnections);
-    audioGraphOfContext.nodes.set(scriptProcessorNodeProxy, audioNodeConnections);
+    audioGraph.nodes.set(scriptProcessorNode, audioNodeConnections);
+    audioGraph.nodes.set(scriptProcessorNodeProxy, audioNodeConnections);
 
     return scriptProcessorNodeProxy;
 };

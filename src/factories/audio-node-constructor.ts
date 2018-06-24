@@ -19,7 +19,7 @@ const addAudioNode = (
     audioNoderRender: null | IAudioNodeRenderer,
     nativeAudioNode: TNativeAudioNode
 ) => {
-    const audioGraphOfContext = getAudioGraph(context);
+    const audioGraph = getAudioGraph(context);
 
     const inputs = [ ];
 
@@ -29,8 +29,8 @@ const addAudioNode = (
 
     const audioNodeConnections = { inputs, outputs: new Set(), renderer: audioNoderRender };
 
-    audioGraphOfContext.nodes.set(audioNode, audioNodeConnections);
-    audioGraphOfContext.nodes.set(nativeAudioNode, audioNodeConnections);
+    audioGraph.nodes.set(audioNode, audioNodeConnections);
+    audioGraph.nodes.set(nativeAudioNode, audioNodeConnections);
 };
 
 const addConnectionToAudioNode = (source: IAudioNode, destination: IAudioNode, output: number, input: number) => {

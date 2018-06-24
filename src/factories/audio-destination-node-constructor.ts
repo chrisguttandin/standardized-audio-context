@@ -24,7 +24,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             const nativeAudioDestinationNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
             const audioDestinationNodeRenderer = (isOffline) ? createAudioDestinationNodeRenderer() : null;
 
-            const audioGraph = { nodes: new WeakMap(), params: new WeakMap() };
+            const audioGraph = { audioWorkletGlobalScope: null, nodes: new WeakMap(), params: new WeakMap() };
 
             AUDIO_GRAPHS.set(context, audioGraph);
             AUDIO_GRAPHS.set(nativeContext, audioGraph);
