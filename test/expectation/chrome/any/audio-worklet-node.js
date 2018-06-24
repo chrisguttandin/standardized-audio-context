@@ -136,4 +136,29 @@ describe('AudioWorklet', () => {
 
     });
 
+    describe('with a module depending on another module', () => {
+
+        beforeEach(async () => {
+            await audioContext.audioWorklet.addModule('base/test/fixtures/library.js');
+            await audioContext.audioWorklet.addModule('base/test/fixtures/dependent-processor.js');
+        });
+
+        // bug #91
+
+        it('should not persist the scope across calls to addModule()', (done) => {
+            const audioWorkletNode = new AudioWorkletNode(audioContext, 'dependent-processor');
+
+            audioWorkletNode.port.onmessage = ({ data }) => {
+                audioWorkletNode.port.onmessage = null;
+
+                expect(data.typeOfLibrary).to.equal('undefined');
+
+                done();
+            };
+
+            audioWorkletNode.port.postMessage(null);
+        });
+
+    });
+
 });
