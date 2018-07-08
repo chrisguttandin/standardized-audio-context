@@ -179,8 +179,11 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
         thirdImpulseNode.start(impulseStartTime + ((startTimeOffset * 2) / sampleRate));
 
         if (typeof start === 'function') {
+            // @todo eslint at version 5.1.0 doesn't like to use Object.assign({ }, ...) directly.
+            const obj = { };
+
             // @todo Edge does not yet support the spread operator in objects.
-            start(startTime, (newAudioNodes === undefined) ? audioNodes : Object.assign({ }, audioNodes, newAudioNodes)); // eslint-disable-line prefer-object-spread
+            start(startTime, (newAudioNodes === undefined) ? audioNodes : Object.assign(obj, audioNodes, newAudioNodes));
         }
     });
 };
@@ -257,8 +260,11 @@ export const createRenderer = ({ context, create, length, prepare }) => {
         const newAudioNodes = (typeof prepareBeforeStart !== 'function') ? undefined : prepareBeforeStart(audioNodes);
 
         if (typeof start === 'function') {
+            // @todo eslint at version 5.1.0 doesn't like to use Object.assign({ }, ...) directly.
+            const obj = { };
+
             // @todo Edge does not yet support the spread operator in objects.
-            start(context.currentTime, (newAudioNodes === undefined) ? audioNodes : Object.assign({ }, audioNodes, newAudioNodes)); // eslint-disable-line prefer-object-spread
+            start(context.currentTime, (newAudioNodes === undefined) ? audioNodes : Object.assign(obj, audioNodes, newAudioNodes));
         }
 
         const channelData = new Float32Array(context.length);
