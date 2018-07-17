@@ -1,3 +1,4 @@
+const { env } = require('process');
 const common = require('./expectation.js');
 
 module.exports = (config) => {
@@ -25,7 +26,7 @@ module.exports = (config) => {
 
     });
 
-    if (process.env.TRAVIS) {
+    if (env.TRAVIS) {
 
         config.set({
 
@@ -44,7 +45,7 @@ module.exports = (config) => {
                 }
             },
 
-            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+            tunnelIdentifier: env.TRAVIS_JOB_NUMBER
 
         });
 

@@ -1,3 +1,4 @@
+const { env } = require('process');
 const common = require('./expectation.js');
 
 module.exports = (config) => {
@@ -23,15 +24,15 @@ module.exports = (config) => {
 
     });
 
-    if (process.env.TRAVIS) {
+    if (env.TRAVIS) {
 
         config.set({
 
             browserNoActivityTimeout: 20000,
 
             browserStack: {
-                accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
-                username: process.env.BROWSER_STACK_USERNAME
+                accessKey: env.BROWSER_STACK_ACCESS_KEY,
+                username: env.BROWSER_STACK_USERNAME
             },
 
             browsers: [
@@ -49,7 +50,7 @@ module.exports = (config) => {
                 }
             },
 
-            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+            tunnelIdentifier: env.TRAVIS_JOB_NUMBER
 
         });
 

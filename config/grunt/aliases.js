@@ -1,3 +1,6 @@
+const { env } = require('process');
+
+// eslint-disable-next-line padding-line-between-statements
 const COMMON_TEST_TASKS = [
     'build',
     'karma:test',
@@ -28,7 +31,7 @@ module.exports = {
         // @todo Use grunt-lint again when it support the type-check option.
         'sh:lint'
     ],
-    test: (process.env.TRAVIS)
+    test: (env.TRAVIS)
         ? COMMON_TEST_TASKS
         : [ ...COMMON_TEST_TASKS, 'karma:test-chrome', 'karma:test-chrome-canary', 'karma:test-firefox-developer' ]
 };
