@@ -38,7 +38,7 @@ import { createMinimalAudioContextConstructor } from './factories/minimal-audio-
 import { createMinimalBaseAudioContextConstructor } from './factories/minimal-base-audio-context-constructor';
 import { createMinimalOfflineAudioContextConstructor } from './factories/minimal-offline-audio-context-constructor';
 import { createNativeAnalyserNode } from './factories/native-analyser-node';
-import { createNativeAudioBufferSourceNode } from './factories/native-audio-buffer-source-node';
+import { createNativeAudioBufferSourceNodeFactory } from './factories/native-audio-buffer-source-node-factory';
 import { createNativeAudioContextConstructor } from './factories/native-audio-context-constructor';
 import { createNativeAudioDestinationNode } from './factories/native-audio-destination-node';
 import { createNativeAudioWorkletNodeConstructor } from './factories/native-audio-worklet-node-constructor';
@@ -61,6 +61,9 @@ import { createOscillatorNodeConstructor } from './factories/oscillator-node-con
 import { createOscillatorNodeRendererFactory } from './factories/oscillator-node-renderer-factory';
 import { createRenderNativeOfflineAudioContext } from './factories/render-native-offline-audio-context';
 import { createStartRendering } from './factories/start-rendering';
+import {
+    createTestAudioBufferSourceNodeStartMethodDurationParameterSupport
+} from './factories/test-audio-buffer-source-node-start-method-duration-parameter';
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method';
 import {
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport
@@ -130,6 +133,9 @@ type audioBufferConstructor = IAudioBuffer;
 
 export { audioBufferConstructor as AudioBuffer };
 
+const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFactory(
+    createTestAudioBufferSourceNodeStartMethodDurationParameterSupport(nativeOfflineAudioContextConstructor)
+);
 const createAudioBufferSourceNodeRenderer = createAudioBufferSourceNodeRendererFactory(createNativeAudioBufferSourceNode);
 const createAudioParam = createAudioParamFactory(createAudioParamRenderer);
 const audioBufferSourceNodeConstructor: IAudioBufferSourceNodeConstructor = createAudioBufferSourceNodeConstructor(
