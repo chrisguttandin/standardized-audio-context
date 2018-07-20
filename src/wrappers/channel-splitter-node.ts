@@ -15,7 +15,7 @@ export const wrapChannelSplitterNode = (channelSplitterNode: ChannelSplitterNode
         try {
             channelSplitterNode.channelCountMode = 'explicit';
         } catch (_) {
-            // Bug #29: FirefoxDeveloper sets the wrong channelCountMode but does not allow to change it.
+            // Bug #29: Firefox sets the wrong channelCountMode but does not allow to change it.
         }
     }
 
@@ -23,7 +23,7 @@ export const wrapChannelSplitterNode = (channelSplitterNode: ChannelSplitterNode
         try {
             channelSplitterNode.channelInterpretation = 'discrete';
         } catch (_) {
-            // Bug #31: FirefoxDeveloper sets the wrong channelInterpretation but does not allow to change it.
+            // Bug #31: Firefox sets the wrong channelInterpretation but does not allow to change it.
         }
     }
 

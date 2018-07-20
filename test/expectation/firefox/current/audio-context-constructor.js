@@ -21,8 +21,7 @@ describe('audioContextConstructor', () => {
 
                 expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
 
-                // A negative offset does not throw anything.
-                bufferSourceNode.start(0, -1);
+                expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
 
                 expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
             });
@@ -33,40 +32,28 @@ describe('audioContextConstructor', () => {
 
     describe('createChannelSplitter()', () => {
 
-        // bug #30
+        // bug #90
 
-        it('should allow to set the channelCountMode', () => {
+        it('should have a channelCount of 2', () => {
+            const channelSplitterNode = audioContext.createChannelSplitter(4);
+
+            expect(channelSplitterNode.channelCount).to.equal(2);
+        });
+
+        // bug #29
+
+        it('should have a channelCountMode of max', () => {
             const channelSplitterNode = audioContext.createChannelSplitter();
 
-            channelSplitterNode.channelCountMode = 'explicit';
+            expect(channelSplitterNode.channelCountMode).to.equal('max');
         });
 
-        // bug #32
+        // bug #31
 
-        it('should allow to set the channelInterpretation', () => {
+        it('should have a channelInterpretation of speakers', () => {
             const channelSplitterNode = audioContext.createChannelSplitter();
 
-            channelSplitterNode.channelInterpretation = 'discrete';
-        });
-
-    });
-
-    describe('createConstantSource()', () => {
-
-        let constantSourceNode;
-
-        beforeEach(() => {
-            constantSourceNode = audioContext.createConstantSource();
-        });
-
-        describe('channelCount()', () => {
-
-            // bug #67
-
-            it('should have a channelCount of 1', () => {
-                expect(constantSourceNode.channelCount).to.equal(1);
-            });
-
+            expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
         });
 
     });

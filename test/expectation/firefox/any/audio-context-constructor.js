@@ -323,34 +323,6 @@ describe('audioContextConstructor', () => {
 
         });
 
-        describe('createChannelSplitter()', () => {
-
-            // bug #90
-
-            it('should have a channelCount of 2', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter(4);
-
-                expect(channelSplitterNode.channelCount).to.equal(2);
-            });
-
-            // bug #29
-
-            it('should have a channelCountMode of max', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter();
-
-                expect(channelSplitterNode.channelCountMode).to.equal('max');
-            });
-
-            // bug #31
-
-            it('should have a channelInterpretation of speakers', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter();
-
-                expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
-            });
-
-        });
-
         describe('createConstantSource()', () => {
 
             let constantSourceNode;

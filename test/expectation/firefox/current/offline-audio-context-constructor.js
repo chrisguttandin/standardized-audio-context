@@ -19,8 +19,7 @@ describe('offlineAudioContextConstructor', () => {
 
                 expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
 
-                // A negative offset does not throw anything.
-                bufferSourceNode.start(0, -1);
+                expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
 
                 expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
             });
@@ -31,36 +30,28 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('createChannelSplitter()', () => {
 
-        // bug #30
+        // bug #90
 
-        it('should allow to set the channelCountMode', () => {
-            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
+        it('should have a channelCount of 2', () => {
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter(4);
 
-            channelSplitterNode.channelCountMode = 'explicit';
+            expect(channelSplitterNode.channelCount).to.equal(2);
         });
 
-        // bug #32
+        // bug #29
 
-        it('should allow to set the channelInterpretation', () => {
+        it('should have a channelCountMode of max', () => {
             const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
-            channelSplitterNode.channelInterpretation = 'discrete';
+            expect(channelSplitterNode.channelCountMode).to.equal('max');
         });
 
-    });
+        // bug #31
 
-    describe('createConstantSource()', () => {
+        it('should have a channelInterpretation of speakers', () => {
+            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
-        describe('channelCount', () => {
-
-            // bug #67
-
-            it('should have a channelCount of 1', () => {
-                const constantSourceNode = offlineAudioContext.createConstantSource();
-
-                expect(constantSourceNode.channelCount).to.equal(1);
-            });
-
+            expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
         });
 
     });
