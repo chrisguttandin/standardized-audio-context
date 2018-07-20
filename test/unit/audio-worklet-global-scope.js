@@ -318,24 +318,70 @@ describe('AudioWorkletGlobalScope', () => {
 
                     describe('parameters', () => {
 
-                        it('should call process() with the full array of values for each parameter', (done) => {
-                            const values = new Array(128);
+                        let values;
+
+                        beforeEach(() => {
+                            values = new Array(128);
 
                             values.fill(1);
+                        });
 
-                            audioWorkletNode.port.onmessage = ({ data }) => {
-                                audioWorkletNode.port.onmessage = null;
+                        describe('without a parameter value change', () => {
 
-                                expect(Array.from(data.parameters.gain)).to.deep.equal(values);
+                            it('should call process() with the full array of values or a single value array for each parameter', (done) => {
+                                audioWorkletNode.port.onmessage = ({ data }) => {
+                                    audioWorkletNode.port.onmessage = null;
 
-                                done();
-                            };
+                                    if (data.parameters.gain.length === 1) {
+                                        expect(Array.from(data.parameters.gain)).to.deep.equal([ values[0] ]);
+                                    } else {
+                                        expect(Array.from(data.parameters.gain)).to.deep.equal(values);
+                                    }
 
-                            audioWorkletNode.connect(context.destination);
+                                    done();
+                                };
 
-                            if (context.startRendering !== undefined) {
-                                context.startRendering();
-                            }
+                                audioWorkletNode.connect(context.destination);
+
+                                if (context.startRendering !== undefined) {
+                                    context.startRendering();
+                                }
+                            });
+
+                        });
+
+                        describe('with a parameter value change in the current render quantum', () => {
+
+                            it('should call process() with the full array of values for each parameter', (done) => {
+                                values[0] = 0;
+
+                                audioWorkletNode.port.onmessage = ({ data }) => {
+                                    if (data.parameters.gain[0] === 0) {
+                                        audioWorkletNode.port.onmessage = null;
+
+                                        expect(Array.from(data.parameters.gain)).to.deep.equal(values);
+
+                                        done();
+                                    }
+                                };
+
+                                const currentTime = context.currentTime;
+                                const renderQuantum = 128 / context.sampleRate;
+                                const sample = 1 / context.sampleRate;
+                                const gain = audioWorkletNode.parameters.get('gain');
+
+                                for (let i = 0; i < 50; i += 1) {
+                                    gain.setValueAtTime(0, currentTime + (renderQuantum * i));
+                                    gain.setValueAtTime(1, currentTime + (renderQuantum * i) + sample);
+                                }
+
+                                audioWorkletNode.connect(context.destination);
+
+                                if (context.startRendering !== undefined) {
+                                    context.startRendering();
+                                }
+                            });
+
                         });
 
                     });
