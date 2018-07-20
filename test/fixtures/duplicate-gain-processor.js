@@ -10,6 +10,4 @@ class GainProcessor extends AudioWorkletProcessor {
 
 }
 
-GainProcessor.parameterDescriptors = [ ];
-
 registerProcessor('gain-processor', GainProcessor);

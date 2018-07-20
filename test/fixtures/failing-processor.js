@@ -12,6 +12,4 @@ class FailingProcessor extends AudioWorkletProcessor {
 
 }
 
-FailingProcessor.parameterDescriptors = [ ];
-
 registerProcessor('failing-processor', FailingProcessor);

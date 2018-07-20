@@ -10,6 +10,4 @@ class EmptyStringProcessor extends AudioWorkletProcessor {
 
 }
 
-EmptyStringProcessor.parameterDescriptors = [ ];
-
 registerProcessor('', EmptyStringProcessor);

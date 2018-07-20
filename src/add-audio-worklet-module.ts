@@ -7,7 +7,7 @@ import { IAudioWorkletProcessorConstructor, IWorkletOptions } from './interfaces
 import { TContext, TNativeAudioWorklet } from './types';
 
 const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessorConstructor['parameterDescriptors']) => {
-    if (!Array.isArray(parameterDescriptors)) {
+    if (parameterDescriptors !== undefined && !Array.isArray(parameterDescriptors)) {
         throw new TypeError('The parameterDescriptors property of given value for processorCtor is not an array.');
     }
 };

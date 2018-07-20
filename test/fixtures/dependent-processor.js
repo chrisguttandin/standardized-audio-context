@@ -16,6 +16,4 @@ class DependentProcessor extends AudioWorkletProcessor {
 
 }
 
-DependentProcessor.parameterDescriptors = [ ];
-
 registerProcessor('dependent-processor', DependentProcessor);

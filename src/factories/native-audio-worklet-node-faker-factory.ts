@@ -45,7 +45,9 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         const numberOfInputChannels = options.channelCount * options.numberOfInputs;
         const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
-        const numberOfParameters = processorDefinition.parameterDescriptors.length;
+        const numberOfParameters = (processorDefinition.parameterDescriptors === undefined)
+            ? 0
+            : processorDefinition.parameterDescriptors.length;
 
         // Bug #61: This is not part of the standard but required for the faker to work.
         if (numberOfInputChannels + numberOfParameters > 6 || numberOfOutputChannels > 6) {
@@ -73,27 +75,29 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         const constantSourceNodes: INativeConstantSourceNode[] = [ ];
 
-        for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
-            const constantSourceNode = createNativeConstantSourceNode(nativeAudioContext, {
-                channelCount: 1,
-                channelCountMode: 'explicit',
-                channelInterpretation: 'discrete',
-                offset: (defaultValue === undefined) ? 0 : defaultValue
-            });
+        if (processorDefinition.parameterDescriptors !== undefined) {
+            for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
+                const constantSourceNode = createNativeConstantSourceNode(nativeAudioContext, {
+                    channelCount: 1,
+                    channelCountMode: 'explicit',
+                    channelInterpretation: 'discrete',
+                    offset: (defaultValue === undefined) ? 0 : defaultValue
+                });
 
-            Object.defineProperties(constantSourceNode.offset, {
-                defaultValue: {
-                    get: () => (defaultValue === undefined) ? 0 : defaultValue
-                },
-                maxValue: {
-                    get: () => (maxValue === undefined) ? 3.4028234663852886e38 : maxValue
-                },
-                minValue: {
-                    get: () => (minValue === undefined) ? -3.4028234663852886e38 : minValue
-                }
-            });
+                Object.defineProperties(constantSourceNode.offset, {
+                    defaultValue: {
+                        get: () => (defaultValue === undefined) ? 0 : defaultValue
+                    },
+                    maxValue: {
+                        get: () => (maxValue === undefined) ? 3.4028234663852886e38 : maxValue
+                    },
+                    minValue: {
+                        get: () => (minValue === undefined) ? -3.4028234663852886e38 : minValue
+                    }
+                });
 
-            constantSourceNodes.push(constantSourceNode);
+                constantSourceNodes.push(constantSourceNode);
+            }
         }
 
         const inputChannelMergerNode = createNativeChannelMergerNode(nativeAudioContext, {
@@ -129,15 +133,17 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         }
 
         const parameterMap = new ReadOnlyMap(
-            processorDefinition.parameterDescriptors
-                .map(({ name }, index) => {
-                    const constantSourceNode = constantSourceNodes[index];
+            (processorDefinition.parameterDescriptors === undefined)
+                ? [ ]
+                : processorDefinition.parameterDescriptors
+                    .map(({ name }, index) => {
+                        const constantSourceNode = constantSourceNodes[index];
 
-                    constantSourceNode.connect(inputChannelMergerNode, 0, numberOfInputChannels + index);
-                    constantSourceNode.start(0);
+                        constantSourceNode.connect(inputChannelMergerNode, 0, numberOfInputChannels + index);
+                        constantSourceNode.start(0);
 
-                    return <[ string, TNativeAudioParam ]> [ name, constantSourceNode.offset ];
-                }));
+                        return <[ string, TNativeAudioParam ]> [ name, constantSourceNode.offset ];
+                    }));
 
         inputChannelMergerNode.connect(scriptProcessorNode);
 
@@ -241,8 +247,10 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
         const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
-        const parameters: { [ name: string ]: Float32Array } = processorDefinition.parameterDescriptors
-            .reduce((prmtrs, { name }) => ({ ...prmtrs, [ name ]: new Float32Array(128) }), { });
+        const parameters: { [ name: string ]: Float32Array } = (processorDefinition.parameterDescriptors === undefined) ?
+            [ ] :
+            processorDefinition.parameterDescriptors
+                .reduce((prmtrs, { name }) => ({ ...prmtrs, [ name ]: new Float32Array(128) }), { });
 
         let isActive = true;
 
@@ -260,13 +268,15 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                         }
                     }
 
-                    processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
-                        const slicedInputBuffer = inputBuffer
-                            .getChannelData(numberOfInputChannels + index)
-                            .slice(i, i + 128);
+                    if (processorDefinition.parameterDescriptors !== undefined) {
+                        processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
+                            const slicedInputBuffer = inputBuffer
+                                .getChannelData(numberOfInputChannels + index)
+                                .slice(i, i + 128);
 
-                        parameters[ name ].set(slicedInputBuffer);
-                    });
+                            parameters[ name ].set(slicedInputBuffer);
+                        });
+                    }
 
                     try {
                         const audioNodeConnections = getAudioNodeConnections(faker);

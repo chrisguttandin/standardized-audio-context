@@ -488,13 +488,13 @@ describe('AudioWorkletGlobalScope', () => {
 
                 });
 
-                describe('with a processor without parameterDescriptors', () => {
+                describe('with a processor with an invalid parameterDescriptors property', () => {
 
                     // @todo Chrome Canary has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
                         it('should throw an error', (done) => {
-                            addAudioWorkletModule(context, 'paramless-processor')
+                            addAudioWorkletModule(context, 'invalid-parameter-descriptors-property-processor')
                                 .catch((err) => {
                                     expect(err).to.be.an.instanceOf(TypeError);
 

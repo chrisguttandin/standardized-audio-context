@@ -65,13 +65,15 @@ const processBuffer = async (
             }
         }
 
-        processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
-            const slicedRenderedBuffer = renderedBuffer
-                .getChannelData(numberOfInputChannels + index)
-                .slice(i, i + 128);
+        if (processorDefinition.parameterDescriptors !== undefined) {
+            processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
+                const slicedRenderedBuffer = renderedBuffer
+                    .getChannelData(numberOfInputChannels + index)
+                    .slice(i, i + 128);
 
-            parameters[ name ].set(slicedRenderedBuffer);
-        });
+                parameters[ name ].set(slicedRenderedBuffer);
+            });
+        }
 
         try {
             const potentiallyEmptyInputs = inputs
@@ -150,7 +152,9 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
                     // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
                     const numberOfInputChannels = proxy.channelCount * proxy.numberOfInputs;
-                    const numberOfParameters = processorDefinition.parameterDescriptors.length;
+                    const numberOfParameters = (processorDefinition.parameterDescriptors === undefined)
+                        ? 0
+                        : processorDefinition.parameterDescriptors.length;
                     const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
                         numberOfInputChannels + numberOfParameters,
                         // Ceil the length to the next full render quantum.
