@@ -12,12 +12,6 @@ module.exports = (config) => {
             'FirefoxBrowserStack'
         ],
 
-        client: {
-            mocha: {
-                bail: true
-            }
-        },
-
         concurrency: 2,
 
         customLaunchers: {
