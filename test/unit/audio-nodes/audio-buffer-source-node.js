@@ -674,7 +674,94 @@ describe('AudioBufferSourceNode', () => {
 
                 });
 
-                // @todo animation
+                describe('automation', () => {
+
+                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+
+                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+
+                            let renderer;
+
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
+                                if (withAnAppendedAudioWorklet) {
+                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                }
+
+                                renderer = createRenderer({
+                                    context,
+                                    length: (context.length === undefined) ? 5 : undefined,
+                                    prepare (destination) {
+                                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+
+                                        audioBuffer.copyToChannel(new Float32Array([ 1, 1, 0, 0, 0 ]), 0);
+
+                                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            audioBufferSourceNode
+                                                .connect(audioWorkletNode)
+                                                .connect(destination);
+                                        } else {
+                                            audioBufferSourceNode.connect(destination);
+                                        }
+
+                                        return { audioBufferSourceNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start (startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            // console.log('channelData', channelData);
+                                            expect(Array.from(channelData)).to.deep.equal([ 1, 1, 0, 0, 0 ]);
+                                        });
+                                });
+
+                            });
+
+                            describe('with a modified value', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        prepare ({ audioBufferSourceNode }) {
+                                            audioBufferSourceNode.playbackRate.value = 0.5;
+                                        },
+                                        start (startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(channelData[0]).to.closeTo(1, 0.2);
+                                            expect(channelData[1]).to.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.closeTo(1, 0.2);
+                                            expect(channelData[3]).to.closeTo(0.5, 0.5);
+                                            expect(channelData[4]).to.closeTo(0, 0.1);
+                                        });
+                                });
+
+                            });
+
+                            // @todo Test other automations as well.
+
+                        });
+
+                    }
+
+                });
 
             });
 
