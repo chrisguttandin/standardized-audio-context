@@ -26,6 +26,7 @@ module.exports = (config) => {
         ],
 
         frameworks: [
+            'parallel',
             'mocha',
             'sinon-chai'
         ],
