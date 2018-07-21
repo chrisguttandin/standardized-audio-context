@@ -297,12 +297,16 @@ describe('AudioWorkletGlobalScope', () => {
                     describe('outputs', () => {
 
                         it('should call process() with the current outputs', (done) => {
+                            const zeros = new Array(128);
+
+                            zeros.fill(0);
+
                             audioWorkletNode.port.onmessage = ({ data }) => {
                                 audioWorkletNode.port.onmessage = null;
 
                                 expect(data.outputs.length).to.equal(1);
                                 expect(data.outputs[0].length).to.equal(1);
-                                expect(data.outputs[0][0].length).to.equal(128);
+                                expect(Array.from(data.outputs[0][0])).to.deep.equal(zeros);
 
                                 done();
                             };
