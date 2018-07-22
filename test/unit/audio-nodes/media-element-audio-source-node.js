@@ -253,109 +253,114 @@ describe('MediaElementAudioSourceNode', () => {
 
             });
 
-            describe('disconnect()', () => {
+            // @todo There is currently now way to disable the autoplay policy on BrowserStack or Sauce Labs.
+            if (!process.env.TRAVIS) { // eslint-disable-line no-undef
 
-                let renderer;
+                describe('disconnect()', () => {
 
-                afterEach(() => {
-                    if (!mediaElement.paused) {
-                        return new Promise((resolve, reject) => {
-                            mediaElement.onerror = () => reject(mediaElement.error);
-                            mediaElement.onpause = resolve;
-                            mediaElement.pause();
-                        });
-                    }
-                });
+                    let renderer;
 
-                beforeEach(function () {
-                    this.timeout(10000);
-
-                    renderer = createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const firstDummyGainNode = new GainNode(context);
-                            const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
-                            const secondDummyGainNode = new GainNode(context);
-
-                            mediaElementAudioSourceNode
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
-
-                            mediaElementAudioSourceNode.connect(secondDummyGainNode);
-
-                            return { firstDummyGainNode, mediaElementAudioSourceNode, secondDummyGainNode };
+                    afterEach(() => {
+                        if (!mediaElement.paused) {
+                            return new Promise((resolve, reject) => {
+                                mediaElement.onerror = () => reject(mediaElement.error);
+                                mediaElement.onpause = resolve;
+                                mediaElement.pause();
+                            });
                         }
                     });
 
-                    /*
-                     * Muting the mediaElement seems to be crazy, but Safari only plays muted audio without any user interaction. However even
-                     * though the mediaElement is muted the audio gets routed into the audio graph.
-                     */
-                    mediaElement.muted = !/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent);
-                    mediaElement.loop = true;
-                    // Edge delivers far more consistent results when playing an MP3 file.
-                    mediaElement.src = (/Edge/.test(navigator.userAgent)) ?
-                        'base/test/fixtures/1000-hertz-for-ten-seconds.mp3' :
-                        'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
+                    beforeEach(function () {
+                        this.timeout(10000);
 
-                    // @todo Edge doesn't yet return a promise.
-                    const promise = mediaElement.play();
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const firstDummyGainNode = new GainNode(context);
+                                const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
+                                const secondDummyGainNode = new GainNode(context);
 
-                    if (promise === undefined) {
-                        return new Promise((resolve, reject) => {
-                            mediaElement.oncanplaythrough = resolve;
-                            mediaElement.onerror = () => reject(mediaElement.error);
+                                mediaElementAudioSourceNode
+                                    .connect(firstDummyGainNode)
+                                    .connect(destination);
+
+                                mediaElementAudioSourceNode.connect(secondDummyGainNode);
+
+                                return { firstDummyGainNode, mediaElementAudioSourceNode, secondDummyGainNode };
+                            }
                         });
-                    }
 
-                    return promise;
+                        /*
+                         * Muting the mediaElement seems to be crazy, but Safari only plays muted audio without any user interaction. However even
+                         * though the mediaElement is muted the audio gets routed into the audio graph.
+                         */
+                        mediaElement.muted = !/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent);
+                        mediaElement.loop = true;
+                        // Edge delivers far more consistent results when playing an MP3 file.
+                        mediaElement.src = (/Edge/.test(navigator.userAgent)) ?
+                            'base/test/fixtures/1000-hertz-for-ten-seconds.mp3' :
+                            'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
+
+                        // @todo Edge doesn't yet return a promise.
+                        const promise = mediaElement.play();
+
+                        if (promise === undefined) {
+                            return new Promise((resolve, reject) => {
+                                mediaElement.oncanplaythrough = resolve;
+                                mediaElement.onerror = () => reject(mediaElement.error);
+                            });
+                        }
+
+                        return promise;
+                    });
+
+                    it('should be possible to disconnect a destination', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            prepare ({ firstDummyGainNode, mediaElementAudioSourceNode }) {
+                                mediaElementAudioSourceNode.disconnect(firstDummyGainNode);
+                            },
+                            verifyChannelData: false
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                    it('should be possible to disconnect another destination in isolation', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            prepare ({ mediaElementAudioSourceNode, secondDummyGainNode }) {
+                                mediaElementAudioSourceNode.disconnect(secondDummyGainNode);
+                            },
+                            verifyChannelData: false
+                        })
+                            .then((channelData) => {
+                                // @todo The mediaElement will just play a sine wave. Therefore it is okay to only test for non zero values.
+                                expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                    it('should be possible to disconnect all destinations', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            prepare ({ mediaElementAudioSourceNode }) {
+                                mediaElementAudioSourceNode.disconnect();
+                            },
+                            verifyChannelData: false
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
                 });
 
-                it('should be possible to disconnect a destination', function () {
-                    this.timeout(10000);
-
-                    return renderer({
-                        prepare ({ firstDummyGainNode, mediaElementAudioSourceNode }) {
-                            mediaElementAudioSourceNode.disconnect(firstDummyGainNode);
-                        },
-                        verifyChannelData: false
-                    })
-                        .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                        });
-                });
-
-                it('should be possible to disconnect another destination in isolation', function () {
-                    this.timeout(10000);
-
-                    return renderer({
-                        prepare ({ mediaElementAudioSourceNode, secondDummyGainNode }) {
-                            mediaElementAudioSourceNode.disconnect(secondDummyGainNode);
-                        },
-                        verifyChannelData: false
-                    })
-                        .then((channelData) => {
-                            // @todo The mediaElement will just play a sine wave. Therefore it is okay to only test for non zero values.
-                            expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
-                        });
-                });
-
-                it('should be possible to disconnect all destinations', function () {
-                    this.timeout(10000);
-
-                    return renderer({
-                        prepare ({ mediaElementAudioSourceNode }) {
-                            mediaElementAudioSourceNode.disconnect();
-                        },
-                        verifyChannelData: false
-                    })
-                        .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                        });
-                });
-
-            });
+            }
 
         });
 
