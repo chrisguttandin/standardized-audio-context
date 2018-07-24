@@ -76,7 +76,8 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                      * }))
                      * ```
                      */
-                    const wrappedSource = `(registerProcessor=>{${ source }})((n,p)=>registerProcessor(n,class extends p{constructor(o){const{hasNoOutput,...q}=o.parameterData;if(hasNoOutput===1){super({...o,numberOfOutputs:0,outputChannelCount:[],parameterData:q});this._h=true}else{super(o);this._h=false}}process(i,o,p){return super.process(i,(this._h)?[]:o,p)}}))`; // tslint:disable-line:max-line-length
+                    const wrappedSource = `(registerProcessor=>{${ source }})
+                                           ((n,p)=>registerProcessor(n,class extends p{constructor(o){const{hasNoOutput,...q}=o.parameterData;if(hasNoOutput===1){super({...o,numberOfOutputs:0,outputChannelCount:[],parameterData:q});this._h=true}else{super(o);this._h=false}}process(i,o,p){return super.process(i,(this._h)?[]:o,p)}}))`; // tslint:disable-line:max-line-length
                     const blob = new Blob([ wrappedSource ], { type: 'application/javascript; charset=utf-8' });
                     const url = URL.createObjectURL(blob);
 
