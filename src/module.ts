@@ -70,28 +70,28 @@ import { createRenderNativeOfflineAudioContext } from './factories/render-native
 import { createStartRendering } from './factories/start-rendering';
 import {
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport
-} from './factories/test-audio-buffer-source-node-start-method-consecutive-calls';
+} from './factories/test-audio-buffer-source-node-start-method-consecutive-calls-support';
 import {
     createTestAudioBufferSourceNodeStartMethodDurationParameterSupport
-} from './factories/test-audio-buffer-source-node-start-method-duration-parameter';
-import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method';
+} from './factories/test-audio-buffer-source-node-start-method-duration-parameter-support';
+import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method-support';
 import {
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport
-} from './factories/test-audio-context-decode-audio-data-method-type-error';
-import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options';
+} from './factories/test-audio-context-decode-audio-data-method-type-error-support';
+import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options-support';
 import {
     createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport
-} from './factories/test-audio-scheduled-source-node-start-method-negative-parameters';
+} from './factories/test-audio-scheduled-source-node-start-method-negative-parameters-support';
 import {
     createTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport
-} from './factories/test-audio-scheduled-source-node-stop-method-consecutive-calls';
+} from './factories/test-audio-scheduled-source-node-stop-method-consecutive-calls-support';
 import {
     createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport
-} from './factories/test-audio-scheduled-source-node-stop-method-negative-parameters';
-import { createTestChannelMergerNodeSupport } from './factories/test-channel-merger-node';
+} from './factories/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
+import { createTestChannelMergerNodeSupport } from './factories/test-channel-merger-node-support';
 import {
     createTestConstantSourceNodeAccurateSchedulingSupport
-} from './factories/test-constant-source-node-accurate-scheduling';
+} from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createWindow } from './factories/window';
 import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
