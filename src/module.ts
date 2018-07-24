@@ -133,6 +133,7 @@ import {
     IOscillatorNode,
     IOscillatorNodeConstructor
 } from './interfaces';
+import { TAddAudioWorkletModuleFunction } from './types';
 
 export * from './interfaces';
 export * from './types';
@@ -306,7 +307,11 @@ const oscillatorNodeConstructor: IOscillatorNodeConstructor = createOscillatorNo
     noneAudioDestinationNodeConstructor
 );
 
-export const addAudioWorkletModule = createAddAudioWorkletModule(createAbortError, createNotSupportedError, getBackupNativeContext);
+export const addAudioWorkletModule: TAddAudioWorkletModuleFunction = createAddAudioWorkletModule(
+    createAbortError,
+    createNotSupportedError,
+    getBackupNativeContext
+);
 
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
     addAudioWorkletModule,
