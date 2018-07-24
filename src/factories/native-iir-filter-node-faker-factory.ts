@@ -29,7 +29,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
     createNativeScriptProcessorNode,
     createNotSupportedError
 ) => {
-    return (nativeAudioContext, { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }) => {
+    return (nativeContext, { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }) => {
         const bufferSize = 256;
         const feedbackLength = feedback.length;
         const feedforwardLength = feedforward.length;
@@ -61,7 +61,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
             }
         }
 
-        const scriptProcessorNode = createNativeScriptProcessorNode(nativeAudioContext, bufferSize, channelCount, channelCount);
+        const scriptProcessorNode = createNativeScriptProcessorNode(nativeContext, bufferSize, channelCount, channelCount);
 
         scriptProcessorNode.channelCount = channelCount;
         scriptProcessorNode.channelCountMode = channelCountMode;
@@ -112,7 +112,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
             }
         };
 
-        const nyquist = nativeAudioContext.sampleRate / 2;
+        const nyquist = nativeContext.sampleRate / 2;
 
         return {
             get bufferSize () {

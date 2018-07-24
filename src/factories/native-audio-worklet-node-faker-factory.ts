@@ -23,7 +23,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
     createNotSupportedError,
     disconnectMultipleOutputs
 ) => {
-    return (nativeAudioContext, processorDefinition, options) => {
+    return (nativeContext, processorDefinition, options) => {
         if (options.numberOfInputs === 0 && options.numberOfOutputs === 0) {
             throw createNotSupportedError();
         }
@@ -60,13 +60,13 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const inputChannelSplitterNodes = [ ];
 
         for (let i = 0; i < options.numberOfInputs; i += 1) {
-            gainNodes.push(createNativeGainNode(nativeAudioContext, {
+            gainNodes.push(createNativeGainNode(nativeContext, {
                 channelCount: options.channelCount,
                 channelCountMode: options.channelCountMode,
                 channelInterpretation: options.channelInterpretation,
                 gain: 1
             }));
-            inputChannelSplitterNodes.push(createNativeChannelSplitterNode(nativeAudioContext, {
+            inputChannelSplitterNodes.push(createNativeChannelSplitterNode(nativeContext, {
                 channelCount: options.channelCount,
                 channelCountMode: 'explicit',
                 channelInterpretation: 'discrete',
@@ -78,7 +78,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         if (processorDefinition.parameterDescriptors !== undefined) {
             for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
-                const constantSourceNode = createNativeConstantSourceNode(nativeAudioContext, {
+                const constantSourceNode = createNativeConstantSourceNode(nativeContext, {
                     channelCount: 1,
                     channelCountMode: 'explicit',
                     channelInterpretation: 'discrete',
@@ -101,18 +101,18 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         }
 
-        const inputChannelMergerNode = createNativeChannelMergerNode(nativeAudioContext, {
+        const inputChannelMergerNode = createNativeChannelMergerNode(nativeContext, {
             numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
         });
         const bufferSize = 512;
         const scriptProcessorNode = createNativeScriptProcessorNode(
-            nativeAudioContext,
+            nativeContext,
             bufferSize,
             numberOfInputChannels + numberOfParameters,
             // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.
             Math.max(1, numberOfOutputChannels)
         );
-        const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeAudioContext, {
+        const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeContext, {
             channelCount: Math.max(1, numberOfOutputChannels),
             channelCountMode: 'explicit',
             channelInterpretation: 'discrete',
@@ -121,7 +121,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
 
         for (let i = 0; i < options.numberOfOutputs; i += 1) {
-            outputChannelMergerNodes.push(createNativeChannelMergerNode(nativeAudioContext, {
+            outputChannelMergerNodes.push(createNativeChannelMergerNode(nativeContext, {
                numberOfInputs: options.outputChannelCount[i]
            }));
         }
@@ -242,7 +242,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         let audioWorkletProcessor: null | IAudioWorkletProcessor = null;
 
-        const audioWorkletProcessorPromise = createAudioWorkletProcessor(nativeAudioContext, faker, processorDefinition, options);
+        const audioWorkletProcessorPromise = createAudioWorkletProcessor(nativeContext, faker, processorDefinition, options);
 
         audioWorkletProcessorPromise
             .then((dWrkltPrcssr) => audioWorkletProcessor = dWrkltPrcssr);

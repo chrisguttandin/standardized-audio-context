@@ -5,16 +5,16 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
     createNativeAudioBufferSourceNode,
     createNativeGainNode
 ) => {
-    return (nativeAudioContext, { offset, ...audioNodeOptions }) => {
+    return (nativeContext, { offset, ...audioNodeOptions }) => {
         // @todo Safari does not play/loop 1 sample buffers. This should be covered by an expectation test.
-        const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeAudioContext);
+        const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext);
         /*
          * @todo Edge will throw a NotSupportedError when calling createBuffer() on a closed context. That's why the audioBuffer is created
          * after the audioBufferSourceNode in this case. If the context is closed createNativeAudioBufferSourceNode() will throw the
          * expected error and createBuffer() never gets called.
          */
-        const audioBuffer = nativeAudioContext.createBuffer(1, 2, nativeAudioContext.sampleRate);
-        const gainNode = createNativeGainNode(nativeAudioContext, { ...audioNodeOptions, gain: offset });
+        const audioBuffer = nativeContext.createBuffer(1, 2, nativeContext.sampleRate);
+        const gainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: offset });
 
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
         const channelData = audioBuffer.getChannelData(0);
