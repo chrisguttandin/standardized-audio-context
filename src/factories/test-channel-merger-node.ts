@@ -29,7 +29,7 @@ export const createTestChannelMergerNodeSupport: TTestChannelMergerNodeSupportFa
             audioBufferSourceNode.buffer = audioBuffer;
             audioBufferSourceNode.loop = true;
 
-            scriptProcessorNode.onaudioprocess = (event: AudioProcessingEvent) => {
+            scriptProcessorNode.onaudioprocess = (event: AudioProcessingEvent) => { // tslint:disable-line:deprecation
                 const channelData = event.inputBuffer.getChannelData(1);
 
                 const length = channelData.length;
