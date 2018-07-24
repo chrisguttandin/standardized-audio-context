@@ -399,7 +399,7 @@ describe('AudioWorkletGlobalScope', () => {
 
                 describe('with an empty string as name', () => {
 
-                    // @todo Chrome Canary has the only native implementation so far and it doesn't throw the expected error.
+                    // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
                         it('should throw an error', (done) => {
@@ -422,7 +422,7 @@ describe('AudioWorkletGlobalScope', () => {
                         await addAudioWorkletModule(context, 'gain-processor');
                     });
 
-                    // @todo Chrome Canary has the only native implementation so far and it doesn't throw the expected error.
+                    // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
                         it('should throw an error', (done) => {
@@ -441,7 +441,7 @@ describe('AudioWorkletGlobalScope', () => {
 
                 describe('with a processor without a valid constructor', () => {
 
-                    // @todo Chrome Canary has the only native implementation so far and it doesn't throw the expected error.
+                    // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
                         it('should throw an error', (done) => {
@@ -459,7 +459,7 @@ describe('AudioWorkletGlobalScope', () => {
 
                 describe('with a processor without a prototype', () => {
 
-                    // @todo Chrome Canary has the only native implementation so far and it doesn't throw the expected error.
+                    // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
                         it('should throw an error', (done) => {
@@ -477,7 +477,7 @@ describe('AudioWorkletGlobalScope', () => {
 
                 describe('with a processor without a process function', () => {
 
-                    // @todo Chrome Canary has the only native implementation so far and it doesn't throw the expected error.
+                    // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
                         it('should throw an error', (done) => {
@@ -495,7 +495,7 @@ describe('AudioWorkletGlobalScope', () => {
 
                 describe('with a processor with an invalid parameterDescriptors property', () => {
 
-                    // @todo Chrome Canary has the only native implementation so far and it doesn't throw the expected error.
+                    // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
                         it('should throw an error', (done) => {
