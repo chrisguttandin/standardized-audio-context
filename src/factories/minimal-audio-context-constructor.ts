@@ -1,4 +1,3 @@
-import { deleteAudioGraph } from '../helpers/delete-audio-graph';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
 import { TMinimalAudioContextConstructorFactory, TNativeAudioContext } from '../types';
@@ -74,9 +73,12 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 this._state = null;
             }
 
-            return this._nativeAudioContext
-                .close()
-                .then(() => deleteAudioGraph(this, this._nativeAudioContext));
+            return this._nativeAudioContext.close();
+
+            /*
+             * Bug #50: Deleting the AudioGraph is currently not possible anymore.
+             * ...then(() => deleteAudioGraph(this, this._nativeAudioContext));
+             */
         }
 
         public resume () {

@@ -12,8 +12,10 @@ import {
     IMinimalBaseAudioContextConstructor,
     IOscillatorNodeConstructor
 } from '../interfaces';
+import { TAddAudioWorkletModuleFunction } from './add-audio-worklet-module-function';
 
 export type TBaseAudioContextConstructorFactory = (
+    addAudioWorkletModule: TAddAudioWorkletModuleFunction,
     analyserNodeConstructor: IAnalyserNodeConstructor,
     audioBufferConstructor: IAudioBufferConstructor,
     audioBufferSourceNodeConstructor: IAudioBufferSourceNodeConstructor,

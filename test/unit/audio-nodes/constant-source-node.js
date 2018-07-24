@@ -1,5 +1,5 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode } from '../../../src/module';
-import { addAudioWorkletModule } from '../../../src/add-audio-worklet-module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule } from '../../../src/module';
+import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -89,87 +89,105 @@ describe('ConstantSourceNode', () => {
 
             describe('constructor()', () => {
 
-                describe('without any options', () => {
+                for (const audioContextState of [ 'closed', 'running' ]) {
 
-                    let constantSourceNode;
+                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
 
-                    beforeEach(() => {
-                        constantSourceNode = createConstantSourceNode(context);
-                    });
+                        afterEach(() => {
+                            if (audioContextState === 'closed') {
+                                const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                    it('should return an instance of the EventTarget interface', () => {
-                        expect(constantSourceNode.addEventListener).to.be.a('function');
-                        expect(constantSourceNode.dispatchEvent).to.be.a('function');
-                        expect(constantSourceNode.removeEventListener).to.be.a('function');
-                    });
+                                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
+                                    context = backupNativeContext;
+                                } else {
+                                    context.close = undefined;
+                                }
+                            }
+                        });
 
-                    it('should return an instance of the AudioNode interface', () => {
-                        expect(constantSourceNode.channelCount).to.equal(2);
-                        expect(constantSourceNode.channelCountMode).to.equal('max');
-                        expect(constantSourceNode.channelInterpretation).to.equal('speakers');
-                        expect(constantSourceNode.connect).to.be.a('function');
-                        expect(constantSourceNode.context).to.be.an.instanceOf(context.constructor);
-                        expect(constantSourceNode.disconnect).to.be.a('function');
-                        expect(constantSourceNode.numberOfInputs).to.equal(0);
-                        expect(constantSourceNode.numberOfOutputs).to.equal(1);
-                    });
+                        beforeEach(() => {
+                            if (audioContextState === 'closed') {
+                                if (context.close === undefined) {
+                                    return context.startRendering();
+                                }
 
-                    it('should return an instance of the AudioScheduledSourceNode interface', () => {
-                        expect(constantSourceNode.onended).to.be.null;
-                        expect(constantSourceNode.start).to.be.a('function');
-                        expect(constantSourceNode.stop).to.be.a('function');
-                    });
+                                return context.close();
+                            }
+                        });
 
-                    it('should return an instance of the ConstantSourceNode interface', () => {
-                        expect(constantSourceNode.offset).not.to.be.undefined;
-                    });
+                        describe('without any options', () => {
 
-                    it('should throw an error if the AudioContext is closed', (done) => {
-                        ((context.close === undefined) ? context.startRendering() : context.close())
-                            .then(() => createConstantSourceNode(context))
-                            .catch((err) => {
-                                expect(err.code).to.equal(11);
-                                expect(err.name).to.equal('InvalidStateError');
+                            let constantSourceNode;
 
-                                context.close = undefined;
-
-                                done();
+                            beforeEach(() => {
+                                constantSourceNode = createConstantSourceNode(context);
                             });
+
+                            it('should return an instance of the EventTarget interface', () => {
+                                expect(constantSourceNode.addEventListener).to.be.a('function');
+                                expect(constantSourceNode.dispatchEvent).to.be.a('function');
+                                expect(constantSourceNode.removeEventListener).to.be.a('function');
+                            });
+
+                            it('should return an instance of the AudioNode interface', () => {
+                                expect(constantSourceNode.channelCount).to.equal(2);
+                                expect(constantSourceNode.channelCountMode).to.equal('max');
+                                expect(constantSourceNode.channelInterpretation).to.equal('speakers');
+                                expect(constantSourceNode.connect).to.be.a('function');
+                                expect(constantSourceNode.context).to.be.an.instanceOf(context.constructor);
+                                expect(constantSourceNode.disconnect).to.be.a('function');
+                                expect(constantSourceNode.numberOfInputs).to.equal(0);
+                                expect(constantSourceNode.numberOfOutputs).to.equal(1);
+                            });
+
+                            it('should return an instance of the AudioScheduledSourceNode interface', () => {
+                                expect(constantSourceNode.onended).to.be.null;
+                                expect(constantSourceNode.start).to.be.a('function');
+                                expect(constantSourceNode.stop).to.be.a('function');
+                            });
+
+                            it('should return an instance of the ConstantSourceNode interface', () => {
+                                expect(constantSourceNode.offset).not.to.be.undefined;
+                            });
+
+                        });
+
+                        describe('with valid options', () => {
+
+                            it('should return an instance with the given channelCount', () => {
+                                const channelCount = 4;
+                                const constantSourceNode = createConstantSourceNode(context, { channelCount });
+
+                                expect(constantSourceNode.channelCount).to.equal(channelCount);
+                            });
+
+                            it('should return an instance with the given channelCountMode', () => {
+                                const channelCountMode = 'explicit';
+                                const constantSourceNode = createConstantSourceNode(context, { channelCountMode });
+
+                                expect(constantSourceNode.channelCountMode).to.equal(channelCountMode);
+                            });
+
+                            it('should return an instance with the given channelInterpretation', () => {
+                                const channelInterpretation = 'discrete';
+                                const constantSourceNode = createConstantSourceNode(context, { channelInterpretation });
+
+                                expect(constantSourceNode.channelInterpretation).to.equal(channelInterpretation);
+                            });
+
+                            it('should return an instance with the given initial value for offset', () => {
+                                const offset = 0.5;
+                                const constantSourceNode = createConstantSourceNode(context, { offset });
+
+                                expect(constantSourceNode.offset.value).to.equal(offset);
+                            });
+
+                        });
+
                     });
 
-                });
-
-                describe('with valid options', () => {
-
-                    it('should return an instance with the given channelCount', () => {
-                        const channelCount = 4;
-                        const constantSourceNode = createConstantSourceNode(context, { channelCount });
-
-                        expect(constantSourceNode.channelCount).to.equal(channelCount);
-                    });
-
-                    it('should return an instance with the given channelCountMode', () => {
-                        const channelCountMode = 'explicit';
-                        const constantSourceNode = createConstantSourceNode(context, { channelCountMode });
-
-                        expect(constantSourceNode.channelCountMode).to.equal(channelCountMode);
-                    });
-
-                    it('should return an instance with the given channelInterpretation', () => {
-                        const channelInterpretation = 'discrete';
-                        const constantSourceNode = createConstantSourceNode(context, { channelInterpretation });
-
-                        expect(constantSourceNode.channelInterpretation).to.equal(channelInterpretation);
-                    });
-
-                    it('should return an instance with the given initial value for offset', () => {
-                        const offset = 0.5;
-                        const constantSourceNode = createConstantSourceNode(context, { offset });
-
-                        expect(constantSourceNode.offset.value).to.equal(offset);
-                    });
-
-                });
+                }
 
             });
 

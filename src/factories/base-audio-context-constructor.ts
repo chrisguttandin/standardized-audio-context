@@ -1,4 +1,3 @@
-import { addAudioWorkletModule } from '../add-audio-worklet-module';
 import { decodeAudioData } from '../decode-audio-data';
 import {
     IAnalyserNode,
@@ -15,6 +14,7 @@ import {
 import { TBaseAudioContextConstructorFactory, TDecodeErrorCallback, TDecodeSuccessCallback, TNativeContext, TTypedArray } from '../types';
 
 export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFactory = (
+    addAudioWorkletModule,
     analyserNodeConstructor,
     audioBufferConstructor,
     audioBufferSourceNodeConstructor,

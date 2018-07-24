@@ -1,5 +1,4 @@
 import { cacheTestResult } from '../helpers/cache-test-result';
-import { deleteAudioGraph } from '../helpers/delete-audio-graph';
 import { IAudioBuffer, IMinimalOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import { testPromiseSupport } from '../support-testers/promise';
 import { TAudioContextState, TMinimalOfflineAudioContextConstructorFactory, TNativeOfflineAudioContext } from '../types';
@@ -103,7 +102,10 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
 
                     this._state = null;
 
-                    deleteAudioGraph(this, this._nativeOfflineAudioContext);
+                    /*
+                     * Bug #50: Deleting the AudioGraph is currently not possible anymore.
+                     * deleteAudioGraph(this, this._nativeOfflineAudioContext);
+                     */
 
                     return <IAudioBuffer> audioBuffer;
                 })
@@ -111,7 +113,10 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
                 .catch((err) => {
                     this._state = null;
 
-                    deleteAudioGraph(this, this._nativeOfflineAudioContext);
+                    /*
+                     * Bug #50: Deleting the AudioGraph is currently not possible anymore.
+                     * deleteAudioGraph(this, this._nativeOfflineAudioContext);
+                     */
 
                     throw err; // tslint:disable-line:rxjs-throw-error
                 });

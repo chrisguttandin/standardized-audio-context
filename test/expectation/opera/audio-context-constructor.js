@@ -30,6 +30,26 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('close()', () => {
+
+        // bug #50
+
+        it('should not allow to create AudioNodes on a closed context', (done) => {
+            audioContext
+                .close()
+                .then(() => {
+                    audioContext.createGain();
+                })
+                .catch(() => {
+                    // Create a closeable AudioContext to align the behaviour with other tests.
+                    audioContext = new AudioContext();
+
+                    done();
+                });
+        });
+
+    });
+
     describe('createAnalyser()', () => {
 
         // bug #37

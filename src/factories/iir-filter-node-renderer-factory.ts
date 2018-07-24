@@ -62,6 +62,7 @@ const filterFullBuffer = (
 
 export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFactory = (
     createNativeAudioBufferSourceNode,
+    createNativeAudioNode,
     nativeOfflineAudioContextConstructor,
     renderNativeOfflineAudioContext
 ) => {
@@ -95,7 +96,9 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                      * again.
                      */
                     if (!isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext)) {
-                        nativeAudioNode = nativeOfflineAudioContext.createIIRFilter(<number[]> feedforward, <number[]> feedback);
+                        nativeAudioNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => {
+                            return ntvCntxt.createIIRFilter(<number[]> feedforward, <number[]> feedback);
+                        });
                     }
 
                     return renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode)

@@ -1,17 +1,5 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
-import {
-    testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport
-} from '../support-testers/audio-buffer-source-node-start-method-consecutive-calls';
-import {
-    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport
-} from '../support-testers/audio-scheduled-source-node-start-method-negative-parameters';
-import {
-    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport
-} from '../support-testers/audio-scheduled-source-node-stop-method-consecutive-calls';
-import {
-    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
-} from '../support-testers/audio-scheduled-source-node-stop-method-negative-parameters';
 import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
 import { wrapAudioBufferSourceNodeStartMethodConsecutiveCalls } from '../wrappers/audio-buffer-source-node-start-method-consecutive-calls';
 import {
@@ -21,17 +9,20 @@ import {
     wrapAudioScheduledSourceNodeStartMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-start-method-negative-parameters';
 import {
-    wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
-} from '../wrappers/audio-scheduled-source-node-stop-method-consecutive-calls';
-import {
     wrapAudioScheduledSourceNodeStopMethodNegativeParameters
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
 
 export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceNodeFactoryFactory = (
-    testAudioBufferSourceNodeStartMethodDurationParameterSupport
+    createNativeAudioNode,
+    testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
+    testAudioBufferSourceNodeStartMethodDurationParameterSupport,
+    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
+    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
+    wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 ) => {
     return (nativeContext, options = { }) => {
-        const nativeAudioBufferSourceNode = nativeContext.createBufferSource();
+        const nativeAudioBufferSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createBufferSource());
 
         assignNativeAudioNodeOptions(nativeAudioBufferSourceNode, options);
 

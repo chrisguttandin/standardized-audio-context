@@ -1,4 +1,6 @@
 import browsernizr from './browsernizr';
+import { createAbortError } from './factories/abort-error';
+import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
 import { createAnalyserNodeConstructor } from './factories/analyser-node-constructor';
 import { createAnalyserNodeRendererFactory } from './factories/analyser-node-renderer-factory';
 import { createAudioBufferConstructor } from './factories/audio-buffer-constructor';
@@ -25,6 +27,7 @@ import { createConstantSourceNodeRendererFactory } from './factories/constant-so
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
 import { createGainNodeConstructor } from './factories/gain-node-constructor';
 import { createGainNodeRendererFactory } from './factories/gain-node-renderer-factory';
+import { createGetBackupNativeContext } from './factories/get-backup-native-context';
 import { createIIRFilterNodeConstructor } from './factories/iir-filter-node-constructor';
 import { createIIRFilterNodeRendererFactory } from './factories/iir-filter-node-renderer-factory';
 import { createIndexSizeError } from './factories/index-size-error';
@@ -37,23 +40,27 @@ import { createMediaStreamAudioSourceNodeConstructor } from './factories/media-s
 import { createMinimalAudioContextConstructor } from './factories/minimal-audio-context-constructor';
 import { createMinimalBaseAudioContextConstructor } from './factories/minimal-base-audio-context-constructor';
 import { createMinimalOfflineAudioContextConstructor } from './factories/minimal-offline-audio-context-constructor';
-import { createNativeAnalyserNode } from './factories/native-analyser-node';
+import { createNativeAnalyserNodeFactory } from './factories/native-analyser-node-factory';
 import { createNativeAudioBufferSourceNodeFactory } from './factories/native-audio-buffer-source-node-factory';
 import { createNativeAudioContextConstructor } from './factories/native-audio-context-constructor';
 import { createNativeAudioDestinationNode } from './factories/native-audio-destination-node';
+import { createNativeAudioNodeFactory } from './factories/native-audio-node-factory';
 import { createNativeAudioWorkletNodeConstructor } from './factories/native-audio-worklet-node-constructor';
 import { createNativeAudioWorkletNodeFactory } from './factories/native-audio-worklet-node-factory';
 import { createNativeAudioWorkletNodeFakerFactory } from './factories/native-audio-worklet-node-faker-factory';
-import { createNativeBiquadFilterNode } from './factories/native-biquad-filter-node';
-import { createNativeChannelMergerNode } from './factories/native-channel-merger-node';
-import { createNativeChannelSplitterNode } from './factories/native-channel-splitter-node';
+import { createNativeBiquadFilterNodeFactory } from './factories/native-biquad-filter-node-factory';
+import { createNativeChannelMergerNodeFactory } from './factories/native-channel-merger-node-factory';
+import { createNativeChannelSplitterNodeFactory } from './factories/native-channel-splitter-node-factory';
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConstantSourceNodeFakerFactory } from './factories/native-constant-source-node-faker-factory';
-import { createNativeGainNode } from './factories/native-gain-node';
+import { createNativeGainNodeFactory } from './factories/native-gain-node-factory';
 import { createNativeIIRFilterNodeFactory } from './factories/native-iir-filter-node-factory';
 import { createNativeIIRFilterNodeFakerFactory } from './factories/native-iir-filter-node-faker-factory';
+import { createNativeMediaElementAudioSourceNodeFactory } from './factories/native-media-element-audio-source-node-factory';
+import { createNativeMediaStreamAudioSourceNodeFactory } from './factories/native-media-stream-audio-source-node-factory';
 import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
-import { createNativeOscillatorNode } from './factories/native-oscillator-node';
+import { createNativeOscillatorNodeFactory } from './factories/native-oscillator-node-factory';
+import { createNativeScriptProcessorNodeFactory } from './factories/native-script-processor-node-factory';
 import { createNoneAudioDestinationNodeConstructor } from './factories/none-audio-destination-node-constructor';
 import { createNotSupportedError } from './factories/not-supported-error';
 import { createOfflineAudioContextConstructor } from './factories/offline-audio-context-constructor';
@@ -62,6 +69,9 @@ import { createOscillatorNodeRendererFactory } from './factories/oscillator-node
 import { createRenderNativeOfflineAudioContext } from './factories/render-native-offline-audio-context';
 import { createStartRendering } from './factories/start-rendering';
 import {
+    createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport
+} from './factories/test-audio-buffer-source-node-start-method-consecutive-calls';
+import {
     createTestAudioBufferSourceNodeStartMethodDurationParameterSupport
 } from './factories/test-audio-buffer-source-node-start-method-duration-parameter';
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method';
@@ -69,8 +79,25 @@ import {
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport
 } from './factories/test-audio-context-decode-audio-data-method-type-error';
 import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options';
+import {
+    createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport
+} from './factories/test-audio-scheduled-source-node-start-method-negative-parameters';
+import {
+    createTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport
+} from './factories/test-audio-scheduled-source-node-stop-method-consecutive-calls';
+import {
+    createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport
+} from './factories/test-audio-scheduled-source-node-stop-method-negative-parameters';
 import { createTestChannelMergerNodeSupport } from './factories/test-channel-merger-node';
+import {
+    createTestConstantSourceNodeAccurateSchedulingSupport
+} from './factories/test-constant-source-node-accurate-scheduling';
 import { createWindow } from './factories/window';
+import {
+    createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
+} from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
+import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
+import { createWrapConstantSourceNodeAccurateScheduling } from './factories/wrap-constant-source-node-accurate-scheduling';
 import {
     IAnalyserNode,
     IAnalyserNodeConstructor,
@@ -113,9 +140,17 @@ export * from './types';
 const window = createWindow();
 const nativeOfflineAudioContextConstructor = createNativeOfflineAudioContextConstructor(window);
 const isNativeOfflineAudioContext = createIsNativeOfflineAudioContext(nativeOfflineAudioContextConstructor);
-const audioNodeConstructor = createAudioNodeConstructor(createInvalidAccessError, isNativeOfflineAudioContext);
-const noneAudioDestinationNodeConstructor = createNoneAudioDestinationNodeConstructor(audioNodeConstructor, createInvalidStateError);
+const nativeAudioContextConstructor = createNativeAudioContextConstructor(window);
+const getBackupNativeContext = createGetBackupNativeContext(
+    isNativeOfflineAudioContext,
+    nativeAudioContextConstructor,
+    nativeOfflineAudioContextConstructor
+);
+const createNativeAudioNode = createNativeAudioNodeFactory(getBackupNativeContext);
+const createNativeAnalyserNode = createNativeAnalyserNodeFactory(createNativeAudioNode);
 const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(createNativeAnalyserNode);
+const audioNodeConstructor = createAudioNodeConstructor(createInvalidAccessError, isNativeOfflineAudioContext);
+const noneAudioDestinationNodeConstructor = createNoneAudioDestinationNodeConstructor(audioNodeConstructor);
 const analyserNodeConstructor: IAnalyserNodeConstructor = createAnalyserNodeConstructor(
     createAnalyserNodeRenderer,
     createNativeAnalyserNode,
@@ -133,8 +168,23 @@ type audioBufferConstructor = IAudioBuffer;
 
 export { audioBufferConstructor as AudioBuffer };
 
+const testAudioScheduledSourceNodeStartMethodNegativeParametersSupport =
+    createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport(createNativeAudioNode);
+const testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport =
+    createTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(createNativeAudioNode);
+const testAudioScheduledSourceNodeStopMethodNegativeParametersSupport =
+    createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport(createNativeAudioNode);
+const wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls = createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(
+    createNativeAudioNode
+);
 const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFactory(
-    createTestAudioBufferSourceNodeStartMethodDurationParameterSupport(nativeOfflineAudioContextConstructor)
+    createNativeAudioNode,
+    createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(createNativeAudioNode),
+    createTestAudioBufferSourceNodeStartMethodDurationParameterSupport(nativeOfflineAudioContextConstructor),
+    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
+    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
+    wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 );
 const createAudioBufferSourceNodeRenderer = createAudioBufferSourceNodeRendererFactory(createNativeAudioBufferSourceNode);
 const createAudioParam = createAudioParamFactory(createAudioParamRenderer);
@@ -159,6 +209,7 @@ const audioDestinationNodeConstructor = createAudioDestinationNodeConstructor(
     createNativeAudioDestinationNode,
     isNativeOfflineAudioContext
 );
+const createNativeBiquadFilterNode = createNativeBiquadFilterNodeFactory(createNativeAudioNode);
 const createBiquadFilterNodeRenderer = createBiquadFilterNodeRendererFactory(createNativeBiquadFilterNode);
 const biquadFilterNodeConstructor: IBiquadFilterNodeConstructor = createBiquadFilterNodeConstructor(
     createAudioParam,
@@ -168,6 +219,8 @@ const biquadFilterNodeConstructor: IBiquadFilterNodeConstructor = createBiquadFi
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const wrapChannelMergerNode = createWrapChannelMergerNode(createInvalidStateError, createNativeAudioNode);
+const createNativeChannelMergerNode = createNativeChannelMergerNodeFactory(createNativeAudioNode, wrapChannelMergerNode);
 const createChannelMergerNodeRenderer = createChannelMergerNodeRendererFactory(createNativeChannelMergerNode);
 const channelMergerNodeConstructor: IChannelMergerNodeConstructor = createChannelMergerNodeConstructor(
     createChannelMergerNodeRenderer,
@@ -175,6 +228,7 @@ const channelMergerNodeConstructor: IChannelMergerNodeConstructor = createChanne
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const createNativeChannelSplitterNode = createNativeChannelSplitterNodeFactory(createNativeAudioNode);
 const createChannelSplitterNodeRenderer = createChannelSplitterNodeRendererFactory(createNativeChannelSplitterNode);
 const channelSplitterNodeConstructor: IChannelSplitterNodeConstructor = createChannelSplitterNodeConstructor(
     createChannelSplitterNodeRenderer,
@@ -182,11 +236,21 @@ const channelSplitterNodeConstructor: IChannelSplitterNodeConstructor = createCh
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const createNativeGainNode = createNativeGainNodeFactory(createNativeAudioNode);
 const createNativeConstantSourceNodeFaker = createNativeConstantSourceNodeFakerFactory(
     createNativeAudioBufferSourceNode,
     createNativeGainNode
 );
-const createNativeConstantSourceNode = createNativeConstantSourceNodeFactory(createNativeConstantSourceNodeFaker);
+const testConstantSourceNodeAccurateSchedulingSupport = createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode);
+const wrapConstantSourceNodeAccurateScheduling = createWrapConstantSourceNodeAccurateScheduling(createNativeAudioNode);
+const createNativeConstantSourceNode = createNativeConstantSourceNodeFactory(
+    createNativeAudioNode,
+    createNativeConstantSourceNodeFaker,
+    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
+    testConstantSourceNodeAccurateSchedulingSupport,
+    wrapConstantSourceNodeAccurateScheduling
+);
 const createConstantSourceNodeRenderer = createConstantSourceNodeRendererFactory(createNativeConstantSourceNode);
 const constantSourceNodeConstructor: IConstantSourceNodeConstructor = createConstantSourceNodeConstructor(
     createAudioParam,
@@ -203,18 +267,21 @@ const gainNodeConstructor: IGainNodeConstructor = createGainNodeConstructor(
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(createNativeGainNode);
-const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(
-    createNativeAudioBufferSourceNode,
-    nativeOfflineAudioContextConstructor,
-    renderNativeOfflineAudioContext
-);
+const createNativeScriptProcessorNode = createNativeScriptProcessorNodeFactory(createNativeAudioNode);
 const createNativeIIRFilterNodeFaker = createNativeIIRFilterNodeFakerFactory(
     createInvalidAccessError,
     createInvalidStateError,
+    createNativeScriptProcessorNode,
     createNotSupportedError
 );
-const createNativeIIRFilterNode = createNativeIIRFilterNodeFactory(createNativeIIRFilterNodeFaker);
+const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(createNativeGainNode);
+const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(
+    createNativeAudioBufferSourceNode,
+    createNativeAudioNode,
+    nativeOfflineAudioContextConstructor,
+    renderNativeOfflineAudioContext
+);
+const createNativeIIRFilterNode = createNativeIIRFilterNodeFactory(createNativeAudioNode, createNativeIIRFilterNodeFaker);
 const iIRFilterNodeConstructor: IIIRFilterNodeConstructor = createIIRFilterNodeConstructor(
     createNativeIIRFilterNode,
     createIIRFilterNodeRenderer,
@@ -222,6 +289,13 @@ const iIRFilterNodeConstructor: IIIRFilterNodeConstructor = createIIRFilterNodeC
     noneAudioDestinationNodeConstructor
 );
 const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(audioDestinationNodeConstructor);
+const createNativeOscillatorNode = createNativeOscillatorNodeFactory(
+    createNativeAudioNode,
+    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
+    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
+    wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
+);
 const createOscillatorNodeRenderer = createOscillatorNodeRendererFactory(createNativeOscillatorNode);
 const oscillatorNodeConstructor: IOscillatorNodeConstructor = createOscillatorNodeConstructor(
     createAudioParam,
@@ -231,7 +305,11 @@ const oscillatorNodeConstructor: IOscillatorNodeConstructor = createOscillatorNo
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+
+export const addAudioWorkletModule = createAddAudioWorkletModule(createAbortError, createNotSupportedError, getBackupNativeContext);
+
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
+    addAudioWorkletModule,
     analyserNodeConstructor,
     audioBufferConstructor,
     audioBufferSourceNodeConstructor,
@@ -244,13 +322,16 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
     minimalBaseAudioContextConstructor,
     oscillatorNodeConstructor
 );
+const createNativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNodeFactory(createNativeAudioNode);
 const mediaElementAudioSourceNodeConstructor: IMediaElementAudioSourceNodeConstructor = createMediaElementAudioSourceNodeConstructor(
+    createNativeMediaElementAudioSourceNode,
     noneAudioDestinationNodeConstructor
 );
+const createNativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNodeFactory(createNativeAudioNode);
 const mediaStreamAudioSourceNodeConstructor: IMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
+    createNativeMediaStreamAudioSourceNode,
     noneAudioDestinationNodeConstructor
 );
-const nativeAudioContextConstructor = createNativeAudioContextConstructor(window);
 const audioContextConstructor: IAudioContextConstructor = createAudioContextConstructor(
     baseAudioContextConstructor,
     createInvalidStateError,
@@ -265,6 +346,24 @@ export { audioContextConstructor as AudioContext };
 
 const connectMultipleOutputs = createConnectMultipleOutputs(createIndexSizeError);
 const disconnectMultipleOutputs = createDisconnectMultipleOutputs(createIndexSizeError);
+const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFactory(
+    connectMultipleOutputs,
+    createIndexSizeError,
+    createInvalidStateError,
+    createNativeChannelMergerNode,
+    createNativeChannelSplitterNode,
+    createNativeConstantSourceNode,
+    createNativeGainNode,
+    createNativeScriptProcessorNode,
+    createNotSupportedError,
+    disconnectMultipleOutputs
+);
+const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
+    createInvalidStateError,
+    createNativeAudioNode,
+    createNativeAudioWorkletNodeFaker,
+    createNotSupportedError
+);
 const nativeAudioWorkletNodeConstructor = createNativeAudioWorkletNodeConstructor(window);
 const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     connectMultipleOutputs,
@@ -277,22 +376,6 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     nativeAudioWorkletNodeConstructor,
     nativeOfflineAudioContextConstructor,
     renderNativeOfflineAudioContext
-);
-const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFactory(
-    connectMultipleOutputs,
-    createIndexSizeError,
-    createInvalidStateError,
-    createNativeChannelMergerNode,
-    createNativeChannelSplitterNode,
-    createNativeConstantSourceNode,
-    createNativeGainNode,
-    createNotSupportedError,
-    disconnectMultipleOutputs
-);
-const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
-    createInvalidStateError,
-    createNativeAudioWorkletNodeFaker,
-    createNotSupportedError
 );
 const audioWorkletNodeConstructor: IAudioWorkletNodeConstructor = createAudioWorkletNodeConstructor(
     createAudioParam,
@@ -375,8 +458,6 @@ export { offlineAudioContextConstructor as OfflineAudioContext };
 type oscillatorNodeConstructor = IOscillatorNode;
 
 export { oscillatorNodeConstructor as OscillatorNode };
-
-export { addAudioWorkletModule } from './add-audio-worklet-module';
 
 export { decodeAudioData } from './decode-audio-data';
 

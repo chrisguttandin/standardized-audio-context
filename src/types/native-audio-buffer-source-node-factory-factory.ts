@@ -1,5 +1,16 @@
 import { TNativeAudioBufferSourceNodeFactory } from './native-audio-buffer-source-node-factory';
+import { TNativeAudioNodeFactory } from './native-audio-node-factory';
+import { TNativeContext } from './native-context';
+import {
+    TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFunction
+} from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-function';
 
 export type TNativeAudioBufferSourceNodeFactoryFactory = (
-    testAudioBufferSourceNodeStartMethodDurationParameterSupport: () => Promise<boolean>
+    createNativeAudioNode: TNativeAudioNodeFactory,
+    testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport: (nativeContext: TNativeContext) => boolean,
+    testAudioBufferSourceNodeStartMethodDurationParameterSupport: () => Promise<boolean>,
+    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean,
+    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport: (nativeContext: TNativeContext) => boolean,
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean,
+    wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls: TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFunction
 ) => TNativeAudioBufferSourceNodeFactory;

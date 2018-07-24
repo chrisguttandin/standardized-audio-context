@@ -1,6 +1,7 @@
 import { createInvalidStateError } from '../factories/invalid-state-error';
+import { TNativeChannelSplitterNode } from '../types';
 
-export const wrapChannelSplitterNode = (channelSplitterNode: ChannelSplitterNode): void => {
+export const wrapChannelSplitterNode = (channelSplitterNode: TNativeChannelSplitterNode): void => {
     const channelCount = channelSplitterNode.numberOfOutputs;
 
     if (channelSplitterNode.channelCount !== channelCount) {

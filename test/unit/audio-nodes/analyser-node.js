@@ -1,4 +1,5 @@
 import { AnalyserNode, AudioBuffer, AudioBufferSourceNode, GainNode } from '../../../src/module';
+import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -99,110 +100,128 @@ describe('AnalyserNode', () => {
 
             describe('constructor()', () => {
 
-                describe('without any options', () => {
+                for (const audioContextState of [ 'closed', 'running' ]) {
 
-                    let analyserNode;
+                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
 
-                    beforeEach(() => {
-                        analyserNode = createAnalyserNode(context);
-                    });
+                        afterEach(() => {
+                            if (audioContextState === 'closed') {
+                                const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                    it('should return an instance of the EventTarget interface', () => {
-                        expect(analyserNode.addEventListener).to.be.a('function');
-                        expect(analyserNode.dispatchEvent).to.be.a('function');
-                        expect(analyserNode.removeEventListener).to.be.a('function');
-                    });
+                                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
+                                    context = backupNativeContext;
+                                } else {
+                                    context.close = undefined;
+                                }
+                            }
+                        });
 
-                    it('should return an instance of the AudioNode interface', () => {
-                        expect(analyserNode.channelCount).to.equal(2);
-                        expect(analyserNode.channelCountMode).to.equal('max');
-                        expect(analyserNode.channelInterpretation).to.equal('speakers');
-                        expect(analyserNode.connect).to.be.a('function');
-                        expect(analyserNode.context).to.be.an.instanceOf(context.constructor);
-                        expect(analyserNode.disconnect).to.be.a('function');
-                        expect(analyserNode.numberOfInputs).to.equal(1);
-                        expect(analyserNode.numberOfOutputs).to.equal(1);
-                    });
+                        beforeEach(() => {
+                            if (audioContextState === 'closed') {
+                                if (context.close === undefined) {
+                                    return context.startRendering();
+                                }
 
-                    it('should return an instance of the AnalyserNode interface', () => {
-                        expect(analyserNode.fftSize).to.equal(2048);
-                        expect(analyserNode.frequencyBinCount).to.equal(1024);
-                        expect(analyserNode.getByteFrequencyData).to.be.a('function');
-                        expect(analyserNode.getByteTimeDomainData).to.be.a('function');
-                        expect(analyserNode.getFloatFrequencyData).to.be.a('function');
-                        expect(analyserNode.getFloatTimeDomainData).to.be.a('function');
-                        expect(analyserNode.maxDecibels).to.equal(-30);
-                        expect(analyserNode.minDecibels).to.equal(-100);
-                        expect(analyserNode.smoothingTimeConstant).to.closeTo(0.8, 0.0000001);
-                    });
+                                return context.close();
+                            }
+                        });
 
-                    it('should throw an error if the AudioContext is closed', (done) => {
-                        ((context.close === undefined) ? context.startRendering() : context.close())
-                            .then(() => createAnalyserNode(context))
-                            .catch((err) => {
-                                expect(err.code).to.equal(11);
-                                expect(err.name).to.equal('InvalidStateError');
+                        describe('without any options', () => {
 
-                                context.close = undefined;
+                            let analyserNode;
 
-                                done();
+                            beforeEach(() => {
+                                analyserNode = createAnalyserNode(context);
                             });
+
+                            it('should return an instance of the EventTarget interface', () => {
+                                expect(analyserNode.addEventListener).to.be.a('function');
+                                expect(analyserNode.dispatchEvent).to.be.a('function');
+                                expect(analyserNode.removeEventListener).to.be.a('function');
+                            });
+
+                            it('should return an instance of the AudioNode interface', () => {
+                                expect(analyserNode.channelCount).to.equal(2);
+                                expect(analyserNode.channelCountMode).to.equal('max');
+                                expect(analyserNode.channelInterpretation).to.equal('speakers');
+                                expect(analyserNode.connect).to.be.a('function');
+                                expect(analyserNode.context).to.be.an.instanceOf(context.constructor);
+                                expect(analyserNode.disconnect).to.be.a('function');
+                                expect(analyserNode.numberOfInputs).to.equal(1);
+                                expect(analyserNode.numberOfOutputs).to.equal(1);
+                            });
+
+                            it('should return an instance of the AnalyserNode interface', () => {
+                                expect(analyserNode.fftSize).to.equal(2048);
+                                expect(analyserNode.frequencyBinCount).to.equal(1024);
+                                expect(analyserNode.getByteFrequencyData).to.be.a('function');
+                                expect(analyserNode.getByteTimeDomainData).to.be.a('function');
+                                expect(analyserNode.getFloatFrequencyData).to.be.a('function');
+                                expect(analyserNode.getFloatTimeDomainData).to.be.a('function');
+                                expect(analyserNode.maxDecibels).to.equal(-30);
+                                expect(analyserNode.minDecibels).to.equal(-100);
+                                expect(analyserNode.smoothingTimeConstant).to.closeTo(0.8, 0.0000001);
+                            });
+
+                        });
+
+                        describe('with valid options', () => {
+
+                            it('should return an instance with the given channelCount', () => {
+                                const channelCount = 4;
+                                const analyserNode = createAnalyserNode(context, { channelCount });
+
+                                expect(analyserNode.channelCount).to.equal(channelCount);
+                            });
+
+                            it('should return an instance with the given channelCountMode', () => {
+                                const channelCountMode = 'explicit';
+                                const analyserNode = createAnalyserNode(context, { channelCountMode });
+
+                                expect(analyserNode.channelCountMode).to.equal(channelCountMode);
+                            });
+
+                            it('should return an instance with the given channelInterpretation', () => {
+                                const channelInterpretation = 'discrete';
+                                const analyserNode = createAnalyserNode(context, { channelInterpretation });
+
+                                expect(analyserNode.channelInterpretation).to.equal(channelInterpretation);
+                            });
+
+                            it('should return an instance with the given fftSize', () => {
+                                const fftSize = 1024;
+                                const analyserNode = createAnalyserNode(context, { fftSize });
+
+                                expect(analyserNode.fftSize).to.equal(fftSize);
+                            });
+
+                            it('should return an instance with the given maxDecibels', () => {
+                                const maxDecibels = -20;
+                                const analyserNode = createAnalyserNode(context, { maxDecibels });
+
+                                expect(analyserNode.maxDecibels).to.equal(maxDecibels);
+                            });
+
+                            it('should return an instance with the given minDecibels', () => {
+                                const minDecibels = -90;
+                                const analyserNode = createAnalyserNode(context, { minDecibels });
+
+                                expect(analyserNode.minDecibels).to.equal(minDecibels);
+                            });
+
+                            it('should return an instance with the given smoothingTimeConstant', () => {
+                                const smoothingTimeConstant = 0.5;
+                                const analyserNode = createAnalyserNode(context, { smoothingTimeConstant });
+
+                                expect(analyserNode.smoothingTimeConstant).to.equal(smoothingTimeConstant);
+                            });
+
+                        });
+
                     });
 
-                });
-
-                describe('with valid options', () => {
-
-                    it('should return an instance with the given channelCount', () => {
-                        const channelCount = 4;
-                        const analyserNode = createAnalyserNode(context, { channelCount });
-
-                        expect(analyserNode.channelCount).to.equal(channelCount);
-                    });
-
-                    it('should return an instance with the given channelCountMode', () => {
-                        const channelCountMode = 'explicit';
-                        const analyserNode = createAnalyserNode(context, { channelCountMode });
-
-                        expect(analyserNode.channelCountMode).to.equal(channelCountMode);
-                    });
-
-                    it('should return an instance with the given channelInterpretation', () => {
-                        const channelInterpretation = 'discrete';
-                        const analyserNode = createAnalyserNode(context, { channelInterpretation });
-
-                        expect(analyserNode.channelInterpretation).to.equal(channelInterpretation);
-                    });
-
-                    it('should return an instance with the given fftSize', () => {
-                        const fftSize = 1024;
-                        const analyserNode = createAnalyserNode(context, { fftSize });
-
-                        expect(analyserNode.fftSize).to.equal(fftSize);
-                    });
-
-                    it('should return an instance with the given maxDecibels', () => {
-                        const maxDecibels = -20;
-                        const analyserNode = createAnalyserNode(context, { maxDecibels });
-
-                        expect(analyserNode.maxDecibels).to.equal(maxDecibels);
-                    });
-
-                    it('should return an instance with the given minDecibels', () => {
-                        const minDecibels = -90;
-                        const analyserNode = createAnalyserNode(context, { minDecibels });
-
-                        expect(analyserNode.minDecibels).to.equal(minDecibels);
-                    });
-
-                    it('should return an instance with the given smoothingTimeConstant', () => {
-                        const smoothingTimeConstant = 0.5;
-                        const analyserNode = createAnalyserNode(context, { smoothingTimeConstant });
-
-                        expect(analyserNode.smoothingTimeConstant).to.equal(smoothingTimeConstant);
-                    });
-
-                });
+                }
 
             });
 

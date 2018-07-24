@@ -1,0 +1,19 @@
+import { TTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupportFactory } from '../types';
+
+export const createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport:
+    TTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupportFactory =
+(
+    createNativeAudioNode
+) => {
+    return (nativeContext) => {
+        const nativeAudioBufferSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createBufferSource());
+
+        try {
+            nativeAudioBufferSourceNode.stop(-1);
+        } catch (err) {
+            return (err instanceof RangeError);
+        }
+
+        return false;
+    };
+};

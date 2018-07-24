@@ -1,4 +1,5 @@
 import { AudioBuffer, AudioBufferSourceNode, BiquadFilterNode, GainNode } from '../../../src/module';
+import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -105,114 +106,132 @@ describe('BiquadFilterNode', () => {
 
             describe('constructor()', () => {
 
-                describe('without any options', () => {
+                for (const audioContextState of [ 'closed', 'running' ]) {
 
-                    let biquadFilterNode;
+                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
 
-                    beforeEach(() => {
-                        biquadFilterNode = createBiquadFilterNode(context);
-                    });
+                        afterEach(() => {
+                            if (audioContextState === 'closed') {
+                                const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                    it('should return an instance of the EventTarget interface', () => {
-                        expect(biquadFilterNode.addEventListener).to.be.a('function');
-                        expect(biquadFilterNode.dispatchEvent).to.be.a('function');
-                        expect(biquadFilterNode.removeEventListener).to.be.a('function');
-                    });
+                                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
+                                    context = backupNativeContext;
+                                } else {
+                                    context.close = undefined;
+                                }
+                            }
+                        });
 
-                    it('should return an instance of the AudioNode interface', () => {
-                        expect(biquadFilterNode.channelCount).to.equal(2);
-                        expect(biquadFilterNode.channelCountMode).to.equal('max');
-                        expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
-                        expect(biquadFilterNode.connect).to.be.a('function');
-                        expect(biquadFilterNode.context).to.be.an.instanceOf(context.constructor);
-                        expect(biquadFilterNode.disconnect).to.be.a('function');
-                        expect(biquadFilterNode.numberOfInputs).to.equal(1);
-                        expect(biquadFilterNode.numberOfOutputs).to.equal(1);
-                    });
+                        beforeEach(() => {
+                            if (audioContextState === 'closed') {
+                                if (context.close === undefined) {
+                                    return context.startRendering();
+                                }
 
-                    it('should return an instance of the BiquadFilterNode interface', () => {
-                        expect(biquadFilterNode.detune).not.to.be.undefined;
-                        expect(biquadFilterNode.frequency).not.to.be.undefined;
-                        expect(biquadFilterNode.gain).not.to.be.undefined;
-                        expect(biquadFilterNode.getFrequencyResponse).to.be.a('function');
-                        expect(biquadFilterNode.Q).not.to.be.undefined;
-                        expect(biquadFilterNode.type).to.be.a('string');
-                    });
+                                return context.close();
+                            }
+                        });
 
-                    it('should throw an error if the AudioContext is closed', (done) => {
-                        ((context.close === undefined) ? context.startRendering() : context.close())
-                            .then(() => createBiquadFilterNode(context))
-                            .catch((err) => {
-                                expect(err.code).to.equal(11);
-                                expect(err.name).to.equal('InvalidStateError');
+                        describe('without any options', () => {
 
-                                context.close = undefined;
+                            let biquadFilterNode;
 
-                                done();
+                            beforeEach(() => {
+                                biquadFilterNode = createBiquadFilterNode(context);
                             });
+
+                            it('should return an instance of the EventTarget interface', () => {
+                                expect(biquadFilterNode.addEventListener).to.be.a('function');
+                                expect(biquadFilterNode.dispatchEvent).to.be.a('function');
+                                expect(biquadFilterNode.removeEventListener).to.be.a('function');
+                            });
+
+                            it('should return an instance of the AudioNode interface', () => {
+                                expect(biquadFilterNode.channelCount).to.equal(2);
+                                expect(biquadFilterNode.channelCountMode).to.equal('max');
+                                expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
+                                expect(biquadFilterNode.connect).to.be.a('function');
+                                expect(biquadFilterNode.context).to.be.an.instanceOf(context.constructor);
+                                expect(biquadFilterNode.disconnect).to.be.a('function');
+                                expect(biquadFilterNode.numberOfInputs).to.equal(1);
+                                expect(biquadFilterNode.numberOfOutputs).to.equal(1);
+                            });
+
+                            it('should return an instance of the BiquadFilterNode interface', () => {
+                                expect(biquadFilterNode.detune).not.to.be.undefined;
+                                expect(biquadFilterNode.frequency).not.to.be.undefined;
+                                expect(biquadFilterNode.gain).not.to.be.undefined;
+                                expect(biquadFilterNode.getFrequencyResponse).to.be.a('function');
+                                expect(biquadFilterNode.Q).not.to.be.undefined;
+                                expect(biquadFilterNode.type).to.be.a('string');
+                            });
+
+                        });
+
+                        describe('with valid options', () => {
+
+                            it('should return an instance with the given channelCount', () => {
+                                const channelCount = 4;
+                                const biquadFilterNode = createBiquadFilterNode(context, { channelCount });
+
+                                expect(biquadFilterNode.channelCount).to.equal(channelCount);
+                            });
+
+                            it('should return an instance with the given channelCountMode', () => {
+                                const channelCountMode = 'explicit';
+                                const biquadFilterNode = createBiquadFilterNode(context, { channelCountMode });
+
+                                expect(biquadFilterNode.channelCountMode).to.equal(channelCountMode);
+                            });
+
+                            it('should return an instance with the given channelInterpretation', () => {
+                                const channelInterpretation = 'discrete';
+                                const biquadFilterNode = createBiquadFilterNode(context, { channelInterpretation });
+
+                                expect(biquadFilterNode.channelInterpretation).to.equal(channelInterpretation);
+                            });
+
+                            it('should return an instance with the given initial value for detune', () => {
+                                const detune = 0.5;
+                                const biquadFilterNode = createBiquadFilterNode(context, { detune });
+
+                                expect(biquadFilterNode.detune.value).to.equal(detune);
+                            });
+
+                            it('should return an instance with the given initial value for frequency', () => {
+                                const frequency = 1000;
+                                const biquadFilterNode = createBiquadFilterNode(context, { frequency });
+
+                                expect(biquadFilterNode.frequency.value).to.equal(frequency);
+                            });
+
+                            it('should return an instance with the given initial value for gain', () => {
+                                const gain = 0.5;
+                                const biquadFilterNode = createBiquadFilterNode(context, { gain });
+
+                                expect(biquadFilterNode.gain.value).to.equal(gain);
+                            });
+
+                            it('should return an instance with the given type', () => {
+                                const type = 'peaking';
+                                const biquadFilterNode = createBiquadFilterNode(context, { type });
+
+                                expect(biquadFilterNode.type).to.equal(type);
+                            });
+
+                            it('should return an instance with the given initial value for Q', () => {
+                                const Q = 2;
+                                const biquadFilterNode = createBiquadFilterNode(context, { Q });
+
+                                expect(biquadFilterNode.Q.value).to.equal(Q);
+                            });
+
+                        });
+
                     });
 
-                });
-
-                describe('with valid options', () => {
-
-                    it('should return an instance with the given channelCount', () => {
-                        const channelCount = 4;
-                        const biquadFilterNode = createBiquadFilterNode(context, { channelCount });
-
-                        expect(biquadFilterNode.channelCount).to.equal(channelCount);
-                    });
-
-                    it('should return an instance with the given channelCountMode', () => {
-                        const channelCountMode = 'explicit';
-                        const biquadFilterNode = createBiquadFilterNode(context, { channelCountMode });
-
-                        expect(biquadFilterNode.channelCountMode).to.equal(channelCountMode);
-                    });
-
-                    it('should return an instance with the given channelInterpretation', () => {
-                        const channelInterpretation = 'discrete';
-                        const biquadFilterNode = createBiquadFilterNode(context, { channelInterpretation });
-
-                        expect(biquadFilterNode.channelInterpretation).to.equal(channelInterpretation);
-                    });
-
-                    it('should return an instance with the given initial value for detune', () => {
-                        const detune = 0.5;
-                        const biquadFilterNode = createBiquadFilterNode(context, { detune });
-
-                        expect(biquadFilterNode.detune.value).to.equal(detune);
-                    });
-
-                    it('should return an instance with the given initial value for frequency', () => {
-                        const frequency = 1000;
-                        const biquadFilterNode = createBiquadFilterNode(context, { frequency });
-
-                        expect(biquadFilterNode.frequency.value).to.equal(frequency);
-                    });
-
-                    it('should return an instance with the given initial value for gain', () => {
-                        const gain = 0.5;
-                        const biquadFilterNode = createBiquadFilterNode(context, { gain });
-
-                        expect(biquadFilterNode.gain.value).to.equal(gain);
-                    });
-
-                    it('should return an instance with the given type', () => {
-                        const type = 'peaking';
-                        const biquadFilterNode = createBiquadFilterNode(context, { type });
-
-                        expect(biquadFilterNode.type).to.equal(type);
-                    });
-
-                    it('should return an instance with the given initial value for Q', () => {
-                        const Q = 2;
-                        const biquadFilterNode = createBiquadFilterNode(context, { Q });
-
-                        expect(biquadFilterNode.Q.value).to.equal(Q);
-                    });
-
-                });
+                }
 
             });
 

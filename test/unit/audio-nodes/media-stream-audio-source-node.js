@@ -1,4 +1,5 @@
 import { GainNode, MediaStreamAudioSourceNode } from '../../../src/module';
+import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
@@ -74,49 +75,67 @@ describe('MediaStreamAudioSourceNode', () => {
 
                 describe('constructor()', () => {
 
-                    describe('with valid options', () => {
+                    for (const audioContextState of [ 'closed', 'running' ]) {
 
-                        it('should return an instance of the EventTarget interface', () => {
-                            const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+                        describe(`with an audioContextState of "${ audioContextState }"`, () => {
 
-                            expect(mediaStreamAudioSourceNode.addEventListener).to.be.a('function');
-                            expect(mediaStreamAudioSourceNode.dispatchEvent).to.be.a('function');
-                            expect(mediaStreamAudioSourceNode.removeEventListener).to.be.a('function');
-                        });
+                            afterEach(() => {
+                                if (audioContextState === 'closed') {
+                                    const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                        it('should return an instance of the AudioNode interface', () => {
-                            const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+                                    // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                    if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
+                                        context = backupNativeContext;
+                                    } else {
+                                        context.close = undefined;
+                                    }
+                                }
+                            });
 
-                            expect(mediaStreamAudioSourceNode.channelCount).to.equal(2);
-                            expect(mediaStreamAudioSourceNode.channelCountMode).to.equal('max');
-                            expect(mediaStreamAudioSourceNode.channelInterpretation).to.equal('speakers');
-                            expect(mediaStreamAudioSourceNode.connect).to.be.a('function');
-                            expect(mediaStreamAudioSourceNode.context).to.be.an.instanceOf(context.constructor);
-                            expect(mediaStreamAudioSourceNode.disconnect).to.be.a('function');
-                            expect(mediaStreamAudioSourceNode.numberOfInputs).to.equal(0);
-                            expect(mediaStreamAudioSourceNode.numberOfOutputs).to.equal(1);
-                        });
+                            beforeEach(() => {
+                                if (audioContextState === 'closed') {
+                                    if (context.close === undefined) {
+                                        return context.startRendering();
+                                    }
 
-                        it('should return an instance of the MediaStreamAudioSourceNode interface', () => {
-                            const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+                                    return context.close();
+                                }
+                            });
 
-                            expect(mediaStreamAudioSourceNode.mediaStream).to.be.an.instanceOf(MediaStream);
-                        });
+                            describe('with valid options', () => {
 
-                        it('should throw an error if the AudioContext is closed', (done) => {
-                            ((context.close === undefined) ? context.startRendering() : context.close())
-                                .then(() => createMediaStreamAudioSourceNode(context, { mediaStream }))
-                                .catch((err) => {
-                                    expect(err.code).to.equal(11);
-                                    expect(err.name).to.equal('InvalidStateError');
+                                it('should return an instance of the EventTarget interface', () => {
+                                    const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
 
-                                    context.close = undefined;
-
-                                    done();
+                                    expect(mediaStreamAudioSourceNode.addEventListener).to.be.a('function');
+                                    expect(mediaStreamAudioSourceNode.dispatchEvent).to.be.a('function');
+                                    expect(mediaStreamAudioSourceNode.removeEventListener).to.be.a('function');
                                 });
+
+                                it('should return an instance of the AudioNode interface', () => {
+                                    const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+
+                                    expect(mediaStreamAudioSourceNode.channelCount).to.equal(2);
+                                    expect(mediaStreamAudioSourceNode.channelCountMode).to.equal('max');
+                                    expect(mediaStreamAudioSourceNode.channelInterpretation).to.equal('speakers');
+                                    expect(mediaStreamAudioSourceNode.connect).to.be.a('function');
+                                    expect(mediaStreamAudioSourceNode.context).to.be.an.instanceOf(context.constructor);
+                                    expect(mediaStreamAudioSourceNode.disconnect).to.be.a('function');
+                                    expect(mediaStreamAudioSourceNode.numberOfInputs).to.equal(0);
+                                    expect(mediaStreamAudioSourceNode.numberOfOutputs).to.equal(1);
+                                });
+
+                                it('should return an instance of the MediaStreamAudioSourceNode interface', () => {
+                                    const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+
+                                    expect(mediaStreamAudioSourceNode.mediaStream).to.be.an.instanceOf(MediaStream);
+                                });
+
+                            });
+
                         });
 
-                    });
+                    }
 
                 });
 

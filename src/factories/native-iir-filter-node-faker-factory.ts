@@ -26,6 +26,7 @@ function evaluatePolynomial (coefficient: number[] | TTypedArray, z: [ number, n
 export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFactoryFactory = (
     createInvalidAccessError,
     createInvalidStateError,
+    createNativeScriptProcessorNode,
     createNotSupportedError
 ) => {
     return (nativeAudioContext, { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }) => {
@@ -60,7 +61,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
             }
         }
 
-        const scriptProcessorNode = nativeAudioContext.createScriptProcessor(bufferSize, channelCount, channelCount);
+        const scriptProcessorNode = createNativeScriptProcessorNode(nativeAudioContext, bufferSize, channelCount, channelCount);
 
         scriptProcessorNode.channelCount = channelCount;
         scriptProcessorNode.channelCountMode = channelCountMode;

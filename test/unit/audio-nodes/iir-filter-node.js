@@ -1,5 +1,5 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode, IIRFilterNode } from '../../../src/module';
-import { addAudioWorkletModule } from '../../../src/add-audio-worklet-module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode, IIRFilterNode, addAudioWorkletModule } from '../../../src/module';
+import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -86,294 +86,317 @@ describe('IIRFilterNode', () => {
 
             describe('constructor()', () => {
 
-                describe('with invalid options', () => {
+                for (const audioContextState of [ 'closed', 'running' ]) {
 
-                    describe('without any feedback coefficients', () => {
+                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
 
-                        it('should throw an NotSupportedError', (done) => {
-                            try {
-                                createIIRFilterNode(context, { feedback: [ ], feedforward });
-                            } catch (err) {
-                                expect(err.code).to.equal(9);
-                                expect(err.name).to.equal('NotSupportedError');
+                        afterEach(() => {
+                            if (audioContextState === 'closed') {
+                                const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                                done();
+                                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
+                                    context = backupNativeContext;
+                                } else {
+                                    context.close = undefined;
+                                }
                             }
                         });
 
-                    });
+                        beforeEach(() => {
+                            if (audioContextState === 'closed') {
+                                if (context.close === undefined) {
+                                    return context.startRendering();
+                                }
 
-                    describe('with feedback coefficients beginning with zero', () => {
-
-                        it('should throw an InvalidStateError', (done) => {
-                            try {
-                                createIIRFilterNode(context, { feedback: [ 0, 1 ], feedforward });
-                            } catch (err) {
-                                expect(err.code).to.equal(11);
-                                expect(err.name).to.equal('InvalidStateError');
-
-                                done();
+                                return context.close();
                             }
                         });
 
-                    });
+                        describe('with invalid options', () => {
 
-                    describe('with too many feedback coefficients', () => {
+                            describe('without any feedback coefficients', () => {
 
-                        it('should throw an NotSupportedError', (done) => {
-                            try {
-                                createIIRFilterNode(context, { feedback: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ], feedforward });
-                            } catch (err) {
-                                expect(err.code).to.equal(9);
-                                expect(err.name).to.equal('NotSupportedError');
+                                it('should throw an NotSupportedError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback: [ ], feedforward });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
 
-                                done();
-                            }
-                        });
-
-                    });
-
-                    describe('without any feedforward coefficients', () => {
-
-                        it('should throw an NotSupportedError', (done) => {
-                            try {
-                                createIIRFilterNode(context, { feedback, feedforward: [ ] });
-                            } catch (err) {
-                                expect(err.code).to.equal(9);
-                                expect(err.name).to.equal('NotSupportedError');
-
-                                done();
-                            }
-                        });
-
-                    });
-
-                    describe('with feedforward coefficients of only zero', () => {
-
-                        it('should throw an InvalidStateError', (done) => {
-                            try {
-                                createIIRFilterNode(context, { feedback, feedforward: [ 0 ] });
-                            } catch (err) {
-                                expect(err.code).to.equal(11);
-                                expect(err.name).to.equal('InvalidStateError');
-
-                                done();
-                            }
-                        });
-
-                    });
-
-                    describe('with too many feedforward coefficients', () => {
-
-                        it('should throw an NotSupportedError', (done) => {
-                            try {
-                                createIIRFilterNode(context, { feedback, feedforward: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ] });
-                            } catch (err) {
-                                expect(err.code).to.equal(9);
-                                expect(err.name).to.equal('NotSupportedError');
-
-                                done();
-                            }
-                        });
-
-                    });
-
-                });
-
-                describe('with valid options', () => {
-
-                    it('should return an instance of the EventTarget interface', () => {
-                        const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
-
-                        expect(iIRFilterNode.addEventListener).to.be.a('function');
-                        expect(iIRFilterNode.dispatchEvent).to.be.a('function');
-                        expect(iIRFilterNode.removeEventListener).to.be.a('function');
-                    });
-
-                    it('should return an instance of the AudioNode interface', () => {
-                        const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
-
-                        expect(iIRFilterNode.channelCount).to.equal(2);
-                        expect(iIRFilterNode.channelCountMode).to.equal('max');
-                        expect(iIRFilterNode.channelInterpretation).to.equal('speakers');
-                        expect(iIRFilterNode.connect).to.be.a('function');
-                        expect(iIRFilterNode.context).to.be.an.instanceOf(context.constructor);
-                        expect(iIRFilterNode.disconnect).to.be.a('function');
-                        expect(iIRFilterNode.numberOfInputs).to.equal(1);
-                        expect(iIRFilterNode.numberOfOutputs).to.equal(1);
-                    });
-
-                    it('should return an instance of the IIRFilterNode interface', () => {
-                        const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
-
-                        expect(iIRFilterNode.getFrequencyResponse).to.be.a('function');
-                    });
-
-                    it('should throw an error if the AudioContext is closed', (done) => {
-                        ((context.close === undefined) ? context.startRendering() : context.close())
-                            .then(() => createIIRFilterNode(context, { feedback, feedforward }))
-                            .catch((err) => {
-                                expect(err.code).to.equal(11);
-                                expect(err.name).to.equal('InvalidStateError');
-
-                                context.close = undefined;
-
-                                done();
-                            });
-                    });
-
-                    it('should return an instance with the given channelCount', () => {
-                        const channelCount = 4;
-                        const iIRFilterNode = createIIRFilterNode(context, { channelCount, feedback, feedforward });
-
-                        expect(iIRFilterNode.channelCount).to.equal(channelCount);
-                    });
-
-                    it('should return an instance with the given channelCountMode', () => {
-                        const channelCountMode = 'explicit';
-                        const iIRFilterNode = createIIRFilterNode(context, { channelCountMode, feedback, feedforward });
-
-                        expect(iIRFilterNode.channelCountMode).to.equal(channelCountMode);
-                    });
-
-                    it('should return an instance with the given channelInterpretation', () => {
-                        const channelInterpretation = 'discrete';
-                        const iIRFilterNode = createIIRFilterNode(context, { channelInterpretation, feedback, feedforward });
-
-                        expect(iIRFilterNode.channelInterpretation).to.equal(channelInterpretation);
-                    });
-
-                    describe('rendering', () => {
-
-                        for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
-
-                            describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
-                                let renderer;
-
-                                describe('with some filter coefficients', () => {
-
-                                    beforeEach(async function () {
-                                        this.timeout(10000);
-
-                                        if (withAnAppendedAudioWorklet) {
-                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                        }
-
-                                        renderer = createRenderer({
-                                            context,
-                                            length: (context.length === undefined) ? 5 : undefined,
-                                            prepare (destination) {
-                                                const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
-                                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                                const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
-                                                const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1, -0.5 ], feedforward: [ 1, -1 ] });
-
-                                                audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0, 0, 0 ]), 0);
-                                                // @todo Render a second channel with the following values: 0, 1, 1 ...
-
-                                                audioBufferSourceNode.buffer = audioBuffer;
-
-                                                if (withAnAppendedAudioWorklet) {
-                                                    audioBufferSourceNode
-                                                        .connect(iIRFilterNode)
-                                                        .connect(audioWorkletNode)
-                                                        .connect(destination);
-                                                } else {
-                                                    audioBufferSourceNode
-                                                        .connect(iIRFilterNode)
-                                                        .connect(destination);
-                                                }
-
-                                                return { audioBufferSourceNode, iIRFilterNode };
-                                            }
-                                        });
-                                    });
-
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            start (startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        })
-                                            .then((channelData) => {
-                                                expect(Array.from(channelData)).to.deep.equal([ 1, -0.5, -0.25, -0.125, -0.0625 ]);
-                                                // @todo The second channel should be 0, 1, 0.5 ...
-                                            });
-                                    });
-
-                                });
-
-                                describe('with some other filter coefficients', () => {
-
-                                    beforeEach(async function () {
-                                        this.timeout(10000);
-
-                                        if (withAnAppendedAudioWorklet) {
-                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                        }
-
-                                        renderer = createRenderer({
-                                            context,
-                                            length: (context.length === undefined) ? 5 : undefined,
-                                            prepare (destination) {
-                                                const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
-                                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                                const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
-                                                const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1, 0.5 ], feedforward: [ 0.5, -1 ] });
-
-                                                audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
-                                                /*
-                                                 * @todo Render a second channel with the following values: 1, 0, 0 ...
-                                                 * @todo Render a third channel with the following values: 0, 1, 1 ...
-                                                 */
-
-                                                audioBufferSourceNode.buffer = audioBuffer;
-
-                                                if (withAnAppendedAudioWorklet) {
-                                                    audioBufferSourceNode
-                                                        .connect(iIRFilterNode)
-                                                        .connect(audioWorkletNode)
-                                                        .connect(destination);
-                                                } else {
-                                                    audioBufferSourceNode
-                                                        .connect(iIRFilterNode)
-                                                        .connect(destination);
-                                                }
-
-                                                return { audioBufferSourceNode, iIRFilterNode };
-                                            }
-                                        });
-                                    });
-
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            start (startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        })
-                                            .then((channelData) => {
-                                                expect(Array.from(channelData)).to.deep.equal([ 0.5, -0.75, -0.125, -0.4375, -0.28125 ]);
-                                                /*
-                                                 * @todo The second channel should be 0.5, -1.25, 0.625 ...
-                                                 * @todo The third channel should be 0, 0.5, -0.75 ...
-                                                 */
-                                            });
-                                    });
-
+                                        done();
+                                    }
                                 });
 
                             });
 
-                        }
+                            describe('with feedback coefficients beginning with zero', () => {
+
+                                it('should throw an InvalidStateError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback: [ 0, 1 ], feedforward });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(11);
+                                        expect(err.name).to.equal('InvalidStateError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with too many feedback coefficients', () => {
+
+                                it('should throw an NotSupportedError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ], feedforward });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('without any feedforward coefficients', () => {
+
+                                it('should throw an NotSupportedError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback, feedforward: [ ] });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with feedforward coefficients of only zero', () => {
+
+                                it('should throw an InvalidStateError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback, feedforward: [ 0 ] });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(11);
+                                        expect(err.name).to.equal('InvalidStateError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with too many feedforward coefficients', () => {
+
+                                it('should throw an NotSupportedError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback, feedforward: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ] });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                        });
+
+                        describe('with valid options', () => {
+
+                            it('should return an instance of the EventTarget interface', () => {
+                                const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
+
+                                expect(iIRFilterNode.addEventListener).to.be.a('function');
+                                expect(iIRFilterNode.dispatchEvent).to.be.a('function');
+                                expect(iIRFilterNode.removeEventListener).to.be.a('function');
+                            });
+
+                            it('should return an instance of the AudioNode interface', () => {
+                                const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
+
+                                expect(iIRFilterNode.channelCount).to.equal(2);
+                                expect(iIRFilterNode.channelCountMode).to.equal('max');
+                                expect(iIRFilterNode.channelInterpretation).to.equal('speakers');
+                                expect(iIRFilterNode.connect).to.be.a('function');
+                                expect(iIRFilterNode.context).to.be.an.instanceOf(context.constructor);
+                                expect(iIRFilterNode.disconnect).to.be.a('function');
+                                expect(iIRFilterNode.numberOfInputs).to.equal(1);
+                                expect(iIRFilterNode.numberOfOutputs).to.equal(1);
+                            });
+
+                            it('should return an instance of the IIRFilterNode interface', () => {
+                                const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
+
+                                expect(iIRFilterNode.getFrequencyResponse).to.be.a('function');
+                            });
+
+                            it('should return an instance with the given channelCount', () => {
+                                const channelCount = 4;
+                                const iIRFilterNode = createIIRFilterNode(context, { channelCount, feedback, feedforward });
+
+                                expect(iIRFilterNode.channelCount).to.equal(channelCount);
+                            });
+
+                            it('should return an instance with the given channelCountMode', () => {
+                                const channelCountMode = 'explicit';
+                                const iIRFilterNode = createIIRFilterNode(context, { channelCountMode, feedback, feedforward });
+
+                                expect(iIRFilterNode.channelCountMode).to.equal(channelCountMode);
+                            });
+
+                            it('should return an instance with the given channelInterpretation', () => {
+                                const channelInterpretation = 'discrete';
+                                const iIRFilterNode = createIIRFilterNode(context, { channelInterpretation, feedback, feedforward });
+
+                                expect(iIRFilterNode.channelInterpretation).to.equal(channelInterpretation);
+                            });
+
+                            // @todo Test that at least the plumbing works with a closed AudioContext.
+                            if (audioContextState !== 'closed') {
+
+                                describe('rendering', () => {
+
+                                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+
+                                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+
+                                            let renderer;
+
+                                            describe('with some filter coefficients', () => {
+
+                                                beforeEach(async function () {
+                                                    this.timeout(10000);
+
+                                                    if (withAnAppendedAudioWorklet) {
+                                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                                    }
+
+                                                    renderer = createRenderer({
+                                                        context,
+                                                        length: (context.length === undefined) ? 5 : undefined,
+                                                        prepare (destination) {
+                                                            const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
+                                                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                                            const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                                            const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1, -0.5 ], feedforward: [ 1, -1 ] });
+
+                                                            audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0, 0, 0 ]), 0);
+                                                            // @todo Render a second channel with the following values: 0, 1, 1 ...
+
+                                                            audioBufferSourceNode.buffer = audioBuffer;
+
+                                                            if (withAnAppendedAudioWorklet) {
+                                                                audioBufferSourceNode
+                                                                    .connect(iIRFilterNode)
+                                                                    .connect(audioWorkletNode)
+                                                                    .connect(destination);
+                                                            } else {
+                                                                audioBufferSourceNode
+                                                                    .connect(iIRFilterNode)
+                                                                    .connect(destination);
+                                                            }
+
+                                                            return { audioBufferSourceNode, iIRFilterNode };
+                                                        }
+                                                    });
+                                                });
+
+                                                it('should modify the signal', function () {
+                                                    this.timeout(10000);
+
+                                                    return renderer({
+                                                        start (startTime, { audioBufferSourceNode }) {
+                                                            audioBufferSourceNode.start(startTime);
+                                                        }
+                                                    })
+                                                        .then((channelData) => {
+                                                            expect(Array.from(channelData)).to.deep.equal([ 1, -0.5, -0.25, -0.125, -0.0625 ]);
+                                                            // @todo The second channel should be 0, 1, 0.5 ...
+                                                        });
+                                                });
+
+                                            });
+
+                                            describe('with some other filter coefficients', () => {
+
+                                                beforeEach(async function () {
+                                                    this.timeout(10000);
+
+                                                    if (withAnAppendedAudioWorklet) {
+                                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                                    }
+
+                                                    renderer = createRenderer({
+                                                        context,
+                                                        length: (context.length === undefined) ? 5 : undefined,
+                                                        prepare (destination) {
+                                                            const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
+                                                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                                            const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                                            const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1, 0.5 ], feedforward: [ 0.5, -1 ] });
+
+                                                            audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+                                                            /*
+                                                             * @todo Render a second channel with the following values: 1, 0, 0 ...
+                                                             * @todo Render a third channel with the following values: 0, 1, 1 ...
+                                                             */
+
+                                                            audioBufferSourceNode.buffer = audioBuffer;
+
+                                                            if (withAnAppendedAudioWorklet) {
+                                                                audioBufferSourceNode
+                                                                    .connect(iIRFilterNode)
+                                                                    .connect(audioWorkletNode)
+                                                                    .connect(destination);
+                                                            } else {
+                                                                audioBufferSourceNode
+                                                                    .connect(iIRFilterNode)
+                                                                    .connect(destination);
+                                                            }
+
+                                                            return { audioBufferSourceNode, iIRFilterNode };
+                                                        }
+                                                    });
+                                                });
+
+                                                it('should modify the signal', function () {
+                                                    this.timeout(10000);
+
+                                                    return renderer({
+                                                        start (startTime, { audioBufferSourceNode }) {
+                                                            audioBufferSourceNode.start(startTime);
+                                                        }
+                                                    })
+                                                        .then((channelData) => {
+                                                            expect(Array.from(channelData)).to.deep.equal([ 0.5, -0.75, -0.125, -0.4375, -0.28125 ]);
+                                                            /*
+                                                             * @todo The second channel should be 0.5, -1.25, 0.625 ...
+                                                             * @todo The third channel should be 0, 0.5, -0.75 ...
+                                                             */
+                                                        });
+                                                });
+
+                                            });
+
+                                        });
+
+                                    }
+
+                                });
+
+                            }
+
+                        });
 
                     });
 
-                });
+                }
 
             });
 

@@ -19,6 +19,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
     createNativeChannelSplitterNode,
     createNativeConstantSourceNode,
     createNativeGainNode,
+    createNativeScriptProcessorNode,
     createNotSupportedError,
     disconnectMultipleOutputs
 ) => {
@@ -104,7 +105,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
         });
         const bufferSize = 512;
-        const scriptProcessorNode = nativeAudioContext.createScriptProcessor(
+        const scriptProcessorNode = createNativeScriptProcessorNode(
+            nativeAudioContext,
             bufferSize,
             numberOfInputChannels + numberOfParameters,
             // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.

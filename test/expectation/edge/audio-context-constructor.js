@@ -52,6 +52,43 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('sampleRate', () => {
+
+            // bug #93
+
+            it('should set the sampleRate to zero when the AudioContext is closed', async () => {
+                await audioContext.close();
+
+                try {
+                    expect(audioContext.sampleRate).to.equal(0);
+                } finally {
+                    // Create a closeable AudioContext to align the behaviour with other tests.
+                    audioContext = new AudioContext();
+                }
+            });
+
+        });
+
+        describe('close()', () => {
+
+            // bug #50
+
+            it('should not allow to create AudioNodes on a closed context', (done) => {
+                audioContext
+                    .close()
+                    .then(() => {
+                        audioContext.createGain();
+                    })
+                    .catch(() => {
+                        // Create a closeable AudioContext to align the behaviour with other tests.
+                        audioContext = new AudioContext();
+
+                        done();
+                    });
+            });
+
+        });
+
         describe('createAnalyser()', () => {
 
             // bug #41

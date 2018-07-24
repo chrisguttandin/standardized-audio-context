@@ -1,4 +1,5 @@
 import { AudioBuffer, AudioBufferSourceNode, ChannelSplitterNode, GainNode } from '../../../src/module';
+import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -85,56 +86,74 @@ describe('ChannelSplitterNode', () => {
 
             describe('constructor()', () => {
 
-                describe('without any options', () => {
+                for (const audioContextState of [ 'closed', 'running' ]) {
 
-                    let channelSplitterNode;
+                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
 
-                    beforeEach(() => {
-                        channelSplitterNode = createChannelSplitterNode(context);
-                    });
+                        afterEach(() => {
+                            if (audioContextState === 'closed') {
+                                const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                    it('should return an instance of the EventTarget interface', () => {
-                        expect(channelSplitterNode.addEventListener).to.be.a('function');
-                        expect(channelSplitterNode.dispatchEvent).to.be.a('function');
-                        expect(channelSplitterNode.removeEventListener).to.be.a('function');
-                    });
+                                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
+                                    context = backupNativeContext;
+                                } else {
+                                    context.close = undefined;
+                                }
+                            }
+                        });
 
-                    it('should return an instance of the AudioNode interface', () => {
-                        expect(channelSplitterNode.channelCount).to.equal(6);
-                        expect(channelSplitterNode.channelCountMode).to.equal('explicit');
-                        expect(channelSplitterNode.channelInterpretation).to.equal('discrete');
-                        expect(channelSplitterNode.connect).to.be.a('function');
-                        expect(channelSplitterNode.context).to.be.an.instanceOf(context.constructor);
-                        expect(channelSplitterNode.disconnect).to.be.a('function');
-                        expect(channelSplitterNode.numberOfInputs).to.equal(1);
-                        expect(channelSplitterNode.numberOfOutputs).to.equal(6);
-                    });
+                        beforeEach(() => {
+                            if (audioContextState === 'closed') {
+                                if (context.close === undefined) {
+                                    return context.startRendering();
+                                }
 
-                    it('should throw an error if the AudioContext is closed', (done) => {
-                        ((context.close === undefined) ? context.startRendering() : context.close())
-                            .then(() => createChannelSplitterNode(context))
-                            .catch((err) => {
-                                expect(err.code).to.equal(11);
-                                expect(err.name).to.equal('InvalidStateError');
+                                return context.close();
+                            }
+                        });
 
-                                context.close = undefined;
+                        describe('without any options', () => {
 
-                                done();
+                            let channelSplitterNode;
+
+                            beforeEach(() => {
+                                channelSplitterNode = createChannelSplitterNode(context);
                             });
+
+                            it('should return an instance of the EventTarget interface', () => {
+                                expect(channelSplitterNode.addEventListener).to.be.a('function');
+                                expect(channelSplitterNode.dispatchEvent).to.be.a('function');
+                                expect(channelSplitterNode.removeEventListener).to.be.a('function');
+                            });
+
+                            it('should return an instance of the AudioNode interface', () => {
+                                expect(channelSplitterNode.channelCount).to.equal(6);
+                                expect(channelSplitterNode.channelCountMode).to.equal('explicit');
+                                expect(channelSplitterNode.channelInterpretation).to.equal('discrete');
+                                expect(channelSplitterNode.connect).to.be.a('function');
+                                expect(channelSplitterNode.context).to.be.an.instanceOf(context.constructor);
+                                expect(channelSplitterNode.disconnect).to.be.a('function');
+                                expect(channelSplitterNode.numberOfInputs).to.equal(1);
+                                expect(channelSplitterNode.numberOfOutputs).to.equal(6);
+                            });
+
+                        });
+
+                        describe('with valid options', () => {
+
+                            it('should return an instance with the given numberOfOutputs', () => {
+                                const numberOfOutputs = 2;
+                                const channelMergerNode = createChannelSplitterNode(context, { numberOfOutputs });
+
+                                expect(channelMergerNode.numberOfOutputs).to.equal(numberOfOutputs);
+                            });
+
+                        });
+
                     });
 
-                });
-
-                describe('with valid options', () => {
-
-                    it('should return an instance with the given numberOfOutputs', () => {
-                        const numberOfOutputs = 2;
-                        const channelMergerNode = createChannelSplitterNode(context, { numberOfOutputs });
-
-                        expect(channelMergerNode.numberOfOutputs).to.equal(numberOfOutputs);
-                    });
-
-                });
+                }
 
             });
 

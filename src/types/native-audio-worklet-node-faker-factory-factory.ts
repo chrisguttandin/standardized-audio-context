@@ -7,6 +7,7 @@ import { TNativeChannelMergerNodeFactory } from './native-channel-merger-node-fa
 import { TNativeChannelSplitterNodeFactory } from './native-channel-splitter-node-factory';
 import { TNativeConstantSourceNodeFactory } from './native-constant-source-node-factory';
 import { TNativeGainNodeFactory } from './native-gain-node-factory';
+import { TNativeScriptProcessorNodeFactory } from './native-script-processor-node-factory';
 import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 
 export type TNativeAudioWorkletNodeFakerFactoryFactory = (
@@ -17,6 +18,7 @@ export type TNativeAudioWorkletNodeFakerFactoryFactory = (
     createNativeChannelSplitterNode: TNativeChannelSplitterNodeFactory,
     createNativeConstantSourceNode: TNativeConstantSourceNodeFactory,
     createNativeGainNode: TNativeGainNodeFactory,
+    createNativeScriptProcessorNode: TNativeScriptProcessorNodeFactory,
     createNotSupportedError: TNotSupportedErrorFactory,
     disconnectMultipleOutputs: TDisconnectMultipleOutputsFunction
 ) => TNativeAudioWorkletNodeFakerFactory;

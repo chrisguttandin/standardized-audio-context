@@ -1,5 +1,5 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode } from '../../../src/module';
-import { addAudioWorkletModule } from '../../../src/add-audio-worklet-module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode, addAudioWorkletModule } from '../../../src/module';
+import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -111,129 +111,147 @@ describe('AudioBufferSourceNode', () => {
 
             describe('constructor()', () => {
 
-                describe('without any options', () => {
+                for (const audioContextState of [ 'closed', 'running' ]) {
 
-                    let audioBufferSourceNode;
+                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
 
-                    beforeEach(() => {
-                        audioBufferSourceNode = createAudioBufferSourceNode(context);
-                    });
+                        afterEach(() => {
+                            if (audioContextState === 'closed') {
+                                const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                    it('should return an instance of the EventTarget interface', () => {
-                        expect(audioBufferSourceNode.addEventListener).to.be.a('function');
-                        expect(audioBufferSourceNode.dispatchEvent).to.be.a('function');
-                        expect(audioBufferSourceNode.removeEventListener).to.be.a('function');
-                    });
+                                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
+                                    context = backupNativeContext;
+                                } else {
+                                    context.close = undefined;
+                                }
+                            }
+                        });
 
-                    it('should return an instance of the AudioNode interface', () => {
-                        expect(audioBufferSourceNode.channelCount).to.equal(2);
-                        expect(audioBufferSourceNode.channelCountMode).to.equal('max');
-                        expect(audioBufferSourceNode.channelInterpretation).to.equal('speakers');
-                        expect(audioBufferSourceNode.connect).to.be.a('function');
-                        expect(audioBufferSourceNode.context).to.be.an.instanceOf(context.constructor);
-                        expect(audioBufferSourceNode.disconnect).to.be.a('function');
-                        expect(audioBufferSourceNode.numberOfInputs).to.equal(0);
-                        expect(audioBufferSourceNode.numberOfOutputs).to.equal(1);
-                    });
+                        beforeEach(() => {
+                            if (audioContextState === 'closed') {
+                                if (context.close === undefined) {
+                                    return context.startRendering();
+                                }
 
-                    it('should return an instance of the AudioScheduledSourceNode interface', () => {
-                        expect(audioBufferSourceNode.onended).to.be.null;
-                        expect(audioBufferSourceNode.start).to.be.a('function');
-                        expect(audioBufferSourceNode.stop).to.be.a('function');
-                    });
+                                return context.close();
+                            }
+                        });
 
-                    it('should return an instance of the AudioBufferSourceNode interface', () => {
-                        expect(audioBufferSourceNode.buffer).to.be.null;
-                        // expect(audioBufferSourceNode.detune).not.to.be.undefined;
-                        expect(audioBufferSourceNode.loop).to.be.false;
-                        expect(audioBufferSourceNode.loopEnd).to.equal(0);
-                        expect(audioBufferSourceNode.loopStart).to.equal(0);
-                        expect(audioBufferSourceNode.playbackRate).not.to.be.undefined;
-                    });
+                        describe('without any options', () => {
 
-                    it('should throw an error if the AudioContext is closed', (done) => {
-                        ((context.close === undefined) ? context.startRendering() : context.close())
-                            .then(() => createAudioBufferSourceNode(context))
-                            .catch((err) => {
-                                expect(err.code).to.equal(11);
-                                expect(err.name).to.equal('InvalidStateError');
+                            let audioBufferSourceNode;
 
-                                context.close = undefined;
-
-                                done();
+                            beforeEach(() => {
+                                audioBufferSourceNode = createAudioBufferSourceNode(context);
                             });
+
+                            it('should return an instance of the EventTarget interface', () => {
+                                expect(audioBufferSourceNode.addEventListener).to.be.a('function');
+                                expect(audioBufferSourceNode.dispatchEvent).to.be.a('function');
+                                expect(audioBufferSourceNode.removeEventListener).to.be.a('function');
+                            });
+
+                            it('should return an instance of the AudioNode interface', () => {
+                                expect(audioBufferSourceNode.channelCount).to.equal(2);
+                                expect(audioBufferSourceNode.channelCountMode).to.equal('max');
+                                expect(audioBufferSourceNode.channelInterpretation).to.equal('speakers');
+                                expect(audioBufferSourceNode.connect).to.be.a('function');
+                                expect(audioBufferSourceNode.context).to.be.an.instanceOf(context.constructor);
+                                expect(audioBufferSourceNode.disconnect).to.be.a('function');
+                                expect(audioBufferSourceNode.numberOfInputs).to.equal(0);
+                                expect(audioBufferSourceNode.numberOfOutputs).to.equal(1);
+                            });
+
+                            it('should return an instance of the AudioScheduledSourceNode interface', () => {
+                                expect(audioBufferSourceNode.onended).to.be.null;
+                                expect(audioBufferSourceNode.start).to.be.a('function');
+                                expect(audioBufferSourceNode.stop).to.be.a('function');
+                            });
+
+                            it('should return an instance of the AudioBufferSourceNode interface', () => {
+                                expect(audioBufferSourceNode.buffer).to.be.null;
+                                // expect(audioBufferSourceNode.detune).not.to.be.undefined;
+                                expect(audioBufferSourceNode.loop).to.be.false;
+                                expect(audioBufferSourceNode.loopEnd).to.equal(0);
+                                expect(audioBufferSourceNode.loopStart).to.equal(0);
+                                expect(audioBufferSourceNode.playbackRate).not.to.be.undefined;
+                            });
+
+                        });
+
+                        describe('with valid options', () => {
+
+                            it('should return an instance with the given channelCount', () => {
+                                const channelCount = 4;
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { channelCount });
+
+                                expect(audioBufferSourceNode.channelCount).to.equal(channelCount);
+                            });
+
+                            it('should return an instance with the given channelCountMode', () => {
+                                const channelCountMode = 'explicit';
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { channelCountMode });
+
+                                expect(audioBufferSourceNode.channelCountMode).to.equal(channelCountMode);
+                            });
+
+                            it('should return an instance with the given channelInterpretation', () => {
+                                const channelInterpretation = 'discrete';
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { channelInterpretation });
+
+                                expect(audioBufferSourceNode.channelInterpretation).to.equal(channelInterpretation);
+                            });
+
+                            it('should return an instance with the given buffer', () => {
+                                const audioBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+
+                                expect(audioBufferSourceNode.buffer).to.equal(audioBuffer);
+                            });
+
+                            /*
+                             * @todo it('should return an instance with the given initial value for detune', () => {
+                             * @todo     const detune = 0.5;
+                             * @todo     const audioBufferSourceNode = createAudioBufferSourceNode(context, { detune });
+                             * @todo
+                             * @todo     expect(audioBufferSourceNode.detune.value).to.equal(detune);
+                             * @todo });
+                             */
+
+                            it('should return an instance with the given loop', () => {
+                                const loop = true;
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { loop });
+
+                                expect(audioBufferSourceNode.loop).to.equal(loop);
+                            });
+
+                            it('should return an instance with the given loopEnd', () => {
+                                const loopEnd = 10;
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { loopEnd });
+
+                                expect(audioBufferSourceNode.loopEnd).to.equal(loopEnd);
+                            });
+
+                            it('should return an instance with the given loopStart', () => {
+                                const loopStart = 2;
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { loopStart });
+
+                                expect(audioBufferSourceNode.loopStart).to.equal(loopStart);
+                            });
+
+                            it('should return an instance with the given initial value for playbackRate', () => {
+                                const playbackRate = 2;
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { playbackRate });
+
+                                expect(audioBufferSourceNode.playbackRate.value).to.equal(playbackRate);
+                            });
+
+                        });
+
                     });
 
-                });
-
-                describe('with valid options', () => {
-
-                    it('should return an instance with the given channelCount', () => {
-                        const channelCount = 4;
-                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { channelCount });
-
-                        expect(audioBufferSourceNode.channelCount).to.equal(channelCount);
-                    });
-
-                    it('should return an instance with the given channelCountMode', () => {
-                        const channelCountMode = 'explicit';
-                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { channelCountMode });
-
-                        expect(audioBufferSourceNode.channelCountMode).to.equal(channelCountMode);
-                    });
-
-                    it('should return an instance with the given channelInterpretation', () => {
-                        const channelInterpretation = 'discrete';
-                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { channelInterpretation });
-
-                        expect(audioBufferSourceNode.channelInterpretation).to.equal(channelInterpretation);
-                    });
-
-                    it('should return an instance with the given buffer', () => {
-                        const audioBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
-                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-
-                        expect(audioBufferSourceNode.buffer).to.equal(audioBuffer);
-                    });
-
-                    /*
-                     * @todo it('should return an instance with the given initial value for detune', () => {
-                     * @todo     const detune = 0.5;
-                     * @todo     const audioBufferSourceNode = createAudioBufferSourceNode(context, { detune });
-                     * @todo
-                     * @todo     expect(audioBufferSourceNode.detune.value).to.equal(detune);
-                     * @todo });
-                     */
-
-                    it('should return an instance with the given loop', () => {
-                        const loop = true;
-                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { loop });
-
-                        expect(audioBufferSourceNode.loop).to.equal(loop);
-                    });
-
-                    it('should return an instance with the given loopEnd', () => {
-                        const loopEnd = 10;
-                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { loopEnd });
-
-                        expect(audioBufferSourceNode.loopEnd).to.equal(loopEnd);
-                    });
-
-                    it('should return an instance with the given loopStart', () => {
-                        const loopStart = 2;
-                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { loopStart });
-
-                        expect(audioBufferSourceNode.loopStart).to.equal(loopStart);
-                    });
-
-                    it('should return an instance with the given initial value for playbackRate', () => {
-                        const playbackRate = 2;
-                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { playbackRate });
-
-                        expect(audioBufferSourceNode.playbackRate.value).to.equal(playbackRate);
-                    });
-
-                });
+                }
 
             });
 

@@ -102,8 +102,13 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             this._numberOfOutputs = (options.numberOfOutputs === 0) ? 0 : this._nativeAudioWorkletNode.numberOfOutputs;
             this._parameters = new ReadOnlyMap(parameters);
 
-            // Bug #86 & #87: Every browser but Firefox needs an output to be connected.
-            if (options.numberOfOutputs === 0) {
+            /*
+             * Bug #86 & #87: Every browser but Firefox needs an output to be connected.
+             *
+             * Bug #50: Only Safari does yet allow to create AudioNodes on a closed AudioContext. Therefore this is currently faked by
+             * using another AudioContext. And that is the reason why this will fail in case of a closed AudioContext.
+             */
+            if (options.numberOfOutputs === 0 && this.context.state !== 'closed') {
                 this.connect(context.destination);
             }
         }

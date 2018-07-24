@@ -707,23 +707,6 @@ describe('audioContextConstructor', () => {
 
         });
 
-        describe('close()', () => {
-
-            // bug #50
-
-            it('should allow to create nodes on a closed context', () => {
-                return audioContext
-                    .close()
-                    .then(() => {
-                        audioContext.createGain();
-
-                        // Create a closeable AudioContext to align the behaviour with other tests.
-                        audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
-                    });
-            });
-
-        });
-
         describe('decodeAudioData()', () => {
 
             // bug #1
