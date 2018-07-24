@@ -26,15 +26,15 @@ const createMediaElementAudioSourceNodeWithFactoryFunction = (context, options) 
     return mediaElementAudioSourceNode;
 };
 const testCases = {
-    'constructor with AudioContext': {
-        createContext: createAudioContext,
-        createMediaElementAudioSourceNode: createMediaElementAudioSourceNodeWithConstructor
-    },
-    'constructor with MinimalAudioContext': {
+    'constructor with a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createMediaElementAudioSourceNode: createMediaElementAudioSourceNodeWithConstructor
     },
-    'factory function of AudioContext': {
+    'constructor with an AudioContext': {
+        createContext: createAudioContext,
+        createMediaElementAudioSourceNode: createMediaElementAudioSourceNodeWithConstructor
+    },
+    'factory function of an AudioContext': {
         createContext: createAudioContext,
         createMediaElementAudioSourceNode: createMediaElementAudioSourceNodeWithFactoryFunction
     }

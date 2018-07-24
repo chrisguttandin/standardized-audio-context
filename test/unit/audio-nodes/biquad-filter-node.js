@@ -52,27 +52,27 @@ const createBiquadFilterNodeWithFactoryFunction = (context, options = null) => {
     return biquadFilterNode;
 };
 const testCases = {
-    'constructor with AudioContext': {
-        createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
-        createContext: createAudioContext
-    },
-    'constructor with MinimalAudioContext': {
+    'constructor with a MinimalAudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with MinimalOfflineAudioContext': {
+    'constructor with a MinimalOfflineAudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with OfflineAudioContext': {
+    'constructor with an AudioContext': {
+        createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
+        createContext: createAudioContext
+    },
+    'constructor with an OfflineAudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
         createContext: createOfflineAudioContext
     },
-    'factory function of AudioContext': {
+    'factory function of an AudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithFactoryFunction,
         createContext: createAudioContext
     },
-    'factory function of OfflineAudioContext': {
+    'factory function of an OfflineAudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithFactoryFunction,
         createContext: createOfflineAudioContext
     }
@@ -91,7 +91,7 @@ describe('BiquadFilterNode', () => {
 
     for (const [ description, { createBiquadFilterNode, createContext } ] of Object.entries(testCases)) {
 
-        describe(`with ${ description }`, () => {
+        describe(`with the ${ description }`, () => {
 
             let context;
 

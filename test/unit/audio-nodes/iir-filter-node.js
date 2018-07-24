@@ -28,27 +28,27 @@ const createIIRFilterNodeWithFactoryFunction = (context, options) => {
     return iIRFilterNode;
 };
 const testCases = {
-    'constructor with AudioContext': {
-        createContext: createAudioContext,
-        createIIRFilterNode: createIIRFilterNodeWithConstructor
-    },
-    'constructor with MinimalAudioContext': {
+    'constructor with a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createIIRFilterNode: createIIRFilterNodeWithConstructor
     },
-    'constructor with MinimalOfflineAudioContext': {
+    'constructor with a MinimalOfflineAudioContext': {
         createContext: createMinimalOfflineAudioContext,
         createIIRFilterNode: createIIRFilterNodeWithConstructor
     },
-    'constructor with OfflineAudioContext': {
+    'constructor with an AudioContext': {
+        createContext: createAudioContext,
+        createIIRFilterNode: createIIRFilterNodeWithConstructor
+    },
+    'constructor with an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createIIRFilterNode: createIIRFilterNodeWithConstructor
     },
-    'factory function of AudioContext': {
+    'factory function of an AudioContext': {
         createContext: createAudioContext,
         createIIRFilterNode: createIIRFilterNodeWithFactoryFunction
     },
-    'factory function of OfflineAudioContext': {
+    'factory function of an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createIIRFilterNode: createIIRFilterNodeWithFactoryFunction
     }

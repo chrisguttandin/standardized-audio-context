@@ -37,27 +37,27 @@ const createConstantSourceNodeWithFactoryFunction = (context, options = null) =>
     return constantSourceNode;
 };
 const testCases = {
-    'constructor with AudioContext': {
-        createConstantSourceNode: createConstantSourceNodeWithConstructor,
-        createContext: createAudioContext
-    },
-    'constructor with MinimalAudioContext': {
+    'constructor with a MinimalAudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with MinimalOfflineAudioContext': {
+    'constructor with a MinimalOfflineAudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with OfflineAudioContext': {
+    'constructor with an AudioContext': {
+        createConstantSourceNode: createConstantSourceNodeWithConstructor,
+        createContext: createAudioContext
+    },
+    'constructor with an OfflineAudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithConstructor,
         createContext: createOfflineAudioContext
     },
-    'factory function of AudioContext': {
+    'factory function of an AudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithFactoryFunction,
         createContext: createAudioContext
     },
-    'factory function of OfflineAudioContext': {
+    'factory function of an OfflineAudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithFactoryFunction,
         createContext: createOfflineAudioContext
     }
@@ -76,7 +76,7 @@ describe('ConstantSourceNode', () => {
 
     for (const [ description, { createConstantSourceNode, createContext } ] of Object.entries(testCases)) {
 
-        describe(`with ${ description }`, () => {
+        describe(`with the ${ description }`, () => {
 
             let context;
 

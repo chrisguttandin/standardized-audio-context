@@ -12,19 +12,19 @@ const createAddAudioWorkletModuleWithGlobalAudioWorklet = (context) => {
     return addAudioWorkletModule.bind(null, context);
 };
 const testCases = {
-    'addAudioWorkletModule() with MinimalAudioContext': {
+    'addAudioWorkletModule() with a MinimalAudioContext': {
         createAddAudioWorkletModule: createAddAudioWorkletModuleWithGlobalAudioWorklet,
         createContext: createMinimalAudioContext
     },
-    'addAudioWorkletModule() with MinimalOfflineAudioContext': {
+    'addAudioWorkletModule() with a MinimalOfflineAudioContext': {
         createAddAudioWorkletModule: createAddAudioWorkletModuleWithGlobalAudioWorklet,
         createContext: createMinimalOfflineAudioContext
     },
-    'audioWorklet.addModule() with AudioContext': {
+    'audioWorklet.addModule() with an AudioContext': {
         createAddAudioWorkletModule: createAddAudioWorkletModuleWithAudioWorkletOfContext,
         createContext: createAudioContext
     },
-    'audioWorklet.addModule() with OfflineAudioContext': {
+    'audioWorklet.addModule() with an OfflineAudioContext': {
         createAddAudioWorkletModule: createAddAudioWorkletModuleWithAudioWorkletOfContext,
         createContext: createOfflineAudioContext
     }

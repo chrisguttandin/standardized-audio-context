@@ -36,27 +36,27 @@ const createGainNodeWithFactoryFunction = (context, options = null) => {
     return gainNode;
 };
 const testCases = {
-    'constructor with AudioContext': {
-        createContext: createAudioContext,
-        createGainNode: createGainNodeWithConstructor
-    },
-    'constructor with MinimalAudioContext': {
+    'constructor with a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createGainNode: createGainNodeWithConstructor
     },
-    'constructor with MinimalOfflineAudioContext': {
+    'constructor with a MinimalOfflineAudioContext': {
         createContext: createMinimalOfflineAudioContext,
         createGainNode: createGainNodeWithConstructor
     },
-    'constructor with OfflineAudioContext': {
+    'constructor with an AudioContext': {
+        createContext: createAudioContext,
+        createGainNode: createGainNodeWithConstructor
+    },
+    'constructor with an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createGainNode: createGainNodeWithConstructor
     },
-    'factory function of AudioContext': {
+    'factory function of an AudioContext': {
         createContext: createAudioContext,
         createGainNode: createGainNodeWithFactoryFunction
     },
-    'factory function of OfflineAudioContext': {
+    'factory function of an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createGainNode: createGainNodeWithFactoryFunction
     }

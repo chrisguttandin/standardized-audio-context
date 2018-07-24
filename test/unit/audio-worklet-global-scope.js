@@ -12,19 +12,19 @@ const addAudioWorkletModuleWithGlobalAudioWorklet = (context, filename) => {
     return addAudioWorkletModule(context, `base/test/fixtures/${ filename }.js`);
 };
 const testCases = {
-    'addAudioWorkletModule() with MinimalAudioContext': {
+    'addAudioWorkletModule() with a MinimalAudioContext': {
         addAudioWorkletModule: addAudioWorkletModuleWithGlobalAudioWorklet,
         createContext: createMinimalAudioContext
     },
-    'addAudioWorkletModule() with MinimalOfflineAudioContext': {
+    'addAudioWorkletModule() with a MinimalOfflineAudioContext': {
         addAudioWorkletModule: addAudioWorkletModuleWithGlobalAudioWorklet,
         createContext: createMinimalOfflineAudioContext
     },
-    'audioWorklet.addModule() with AudioContext': {
+    'audioWorklet.addModule() with an AudioContext': {
         addAudioWorkletModule: addAudioWorkletModuleWithAudioWorkletOfContext,
         createContext: createAudioContext
     },
-    'audioWorklet.addModule() with OfflineAudioContext': {
+    'audioWorklet.addModule() with an OfflineAudioContext': {
         addAudioWorkletModule: addAudioWorkletModuleWithAudioWorkletOfContext,
         createContext: createOfflineAudioContext
     }

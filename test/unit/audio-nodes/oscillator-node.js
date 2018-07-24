@@ -45,27 +45,27 @@ const createOscillatorNodeWithFactoryFunction = (context, options = null) => {
     return oscillatorNode;
 };
 const testCases = {
-    'constructor with AudioContext': {
-        createContext: createAudioContext,
-        createOscillatorNode: createOscillatorNodeWithConstructor
-    },
-    'constructor with MinimalAudioContext': {
+    'constructor with a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createOscillatorNode: createOscillatorNodeWithConstructor
     },
-    'constructor with MinimalOfflineAudioContext': {
+    'constructor with a MinimalOfflineAudioContext': {
         createContext: createMinimalOfflineAudioContext,
         createOscillatorNode: createOscillatorNodeWithConstructor
     },
-    'constructor with OfflineAudioContext': {
+    'constructor with an AudioContext': {
+        createContext: createAudioContext,
+        createOscillatorNode: createOscillatorNodeWithConstructor
+    },
+    'constructor with an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createOscillatorNode: createOscillatorNodeWithConstructor
     },
-    'factory function of AudioContext': {
+    'factory function of an AudioContext': {
         createContext: createAudioContext,
         createOscillatorNode: createOscillatorNodeWithFactoryFunction
     },
-    'factory function of OfflineAudioContext': {
+    'factory function of an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createOscillatorNode: createOscillatorNodeWithFactoryFunction
     }

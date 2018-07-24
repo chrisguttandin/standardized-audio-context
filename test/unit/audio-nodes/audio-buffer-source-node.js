@@ -59,27 +59,27 @@ const createAudioBufferSourceNodeWithFactoryFunction = (context, options = null)
     return audioBufferSourceNode;
 };
 const testCases = {
-    'constructor with AudioContext': {
-        createAudioBufferSourceNode: createAudioBufferSourceNodeWithConstructor,
-        createContext: createAudioContext
-    },
-    'constructor with MinimalAudioContext': {
+    'constructor with a MinimalAudioContext': {
         createAudioBufferSourceNode: createAudioBufferSourceNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with MinimalOfflineAudioContext': {
+    'constructor with a MinimalOfflineAudioContext': {
         createAudioBufferSourceNode: createAudioBufferSourceNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with OfflineAudioContext': {
+    'constructor with an AudioContext': {
+        createAudioBufferSourceNode: createAudioBufferSourceNodeWithConstructor,
+        createContext: createAudioContext
+    },
+    'constructor with an OfflineAudioContext': {
         createAudioBufferSourceNode: createAudioBufferSourceNodeWithConstructor,
         createContext: createOfflineAudioContext
     },
-    'factory function of AudioContext': {
+    'factory function of an AudioContext': {
         createAudioBufferSourceNode: createAudioBufferSourceNodeWithFactoryFunction,
         createContext: createAudioContext
     },
-    'factory function of OfflineAudioContext': {
+    'factory function of an OfflineAudioContext': {
         createAudioBufferSourceNode: createAudioBufferSourceNodeWithFactoryFunction,
         createContext: createOfflineAudioContext
     }

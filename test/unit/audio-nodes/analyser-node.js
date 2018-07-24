@@ -48,27 +48,27 @@ const createAnalyserNodeWithFactoryFunction = (context, options = null) => {
     return analyserNode;
 };
 const testCases = {
-    'constructor with AudioContext': {
-        createAnalyserNode: createAnalyserNodeWithConstructor,
-        createContext: createAudioContext
-    },
-    'constructor with MinimalAudioContext': {
+    'constructor with a MinimalAudioContext': {
         createAnalyserNode: createAnalyserNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with MinimalOfflineAudioContext': {
+    'constructor with a MinimalOfflineAudioContext': {
         createAnalyserNode: createAnalyserNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with OfflineAudioContext': {
+    'constructor with an AudioContext': {
+        createAnalyserNode: createAnalyserNodeWithConstructor,
+        createContext: createAudioContext
+    },
+    'constructor with an OfflineAudioContext': {
         createAnalyserNode: createAnalyserNodeWithConstructor,
         createContext: createOfflineAudioContext
     },
-    'factory function of AudioContext': {
+    'factory function of an AudioContext': {
         createAnalyserNode: createAnalyserNodeWithFactoryFunction,
         createContext: createAudioContext
     },
-    'factory function of OfflineAudioContext': {
+    'factory function of an OfflineAudioContext': {
         createAnalyserNode: createAnalyserNodeWithFactoryFunction,
         createContext: createOfflineAudioContext
     }
@@ -87,7 +87,7 @@ describe('AnalyserNode', () => {
 
     for (const [ description, { createAnalyserNode, createContext } ] of Object.entries(testCases)) {
 
-        describe(`with ${ description }`, () => {
+        describe(`with the ${ description }`, () => {
 
             let context;
 
