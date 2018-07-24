@@ -1,3 +1,4 @@
+import '../../helper/play-silence';
 import { TEST_RESULTS } from '../../../src/globals';
 import { createIsSupportedPromise } from '../../../src/factories/is-supported-promise';
 

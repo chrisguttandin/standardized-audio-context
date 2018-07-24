@@ -1,3 +1,4 @@
+import '../../helper/play-silence';
 import { GainNode, MediaStreamAudioSourceNode } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';

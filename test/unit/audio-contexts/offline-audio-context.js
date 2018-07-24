@@ -1,3 +1,4 @@
+import '../../helper/play-silence';
 import { OfflineAudioContext } from '../../../src/module';
 import { createNativeOfflineAudioContextConstructor } from '../../../src/factories/native-offline-audio-context-constructor';
 import { createWindow } from '../../../src/factories/window';

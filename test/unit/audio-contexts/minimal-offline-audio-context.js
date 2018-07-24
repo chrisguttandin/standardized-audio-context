@@ -1,3 +1,4 @@
+import '../../helper/play-silence';
 import { AudioBuffer, AudioBufferSourceNode, MinimalOfflineAudioContext } from '../../../src/module';
 
 describe('MinimalOfflineAudioContext', () => {

@@ -1,3 +1,4 @@
+import '../helper/play-silence';
 import browsernizr from '../../src/browsernizr';
 
 describe('browsernizr', () => {

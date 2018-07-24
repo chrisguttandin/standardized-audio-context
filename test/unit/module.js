@@ -1,3 +1,4 @@
+import '../helper/play-silence';
 import { AudioContext, OfflineAudioContext, addAudioWorkletModule, decodeAudioData, isSupported } from '../../src/module';
 
 describe('module', () => {

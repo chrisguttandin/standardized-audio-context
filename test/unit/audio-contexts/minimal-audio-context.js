@@ -1,3 +1,4 @@
+import '../../helper/play-silence';
 import { GainNode, MinimalAudioContext } from '../../../src/module';
 
 describe('MinimalAudioContext', () => {
