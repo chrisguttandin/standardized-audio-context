@@ -370,8 +370,8 @@ describe('AudioWorkletGlobalScope', () => {
                                     }
                                 };
 
-                                const currentTime = context.currentTime;
                                 const renderQuantum = 128 / context.sampleRate;
+                                const currentTime = Math.ceil(context.currentTime / renderQuantum) * renderQuantum;
                                 const sample = 1 / context.sampleRate;
                                 const gain = audioWorkletNode.parameters.get('gain');
 
