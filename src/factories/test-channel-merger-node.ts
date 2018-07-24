@@ -15,7 +15,7 @@ export const createTestChannelMergerNodeSupport: TTestChannelMergerNodeSupportFa
         const audioBufferSourceNode = audioContext.createBufferSource();
         const audioBuffer = audioContext.createBuffer(2, 2, audioContext.sampleRate);
         const channelMergerNode = audioContext.createChannelMerger(2);
-        const scriptProcessorNode = (<any> audioContext).createScriptProcessor(256);
+        const scriptProcessorNode = audioContext.createScriptProcessor(256);
 
         return new Promise<boolean>((resolve) => {
             let startTime: number;
