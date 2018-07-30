@@ -122,6 +122,14 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             });
 
+            describe('with a module which ends with a comment', () => {
+
+                it('should return a resolving promise', () => {
+                    return addAudioWorkletModule('base/test/fixtures/gain-processor-with-comment.js');
+                });
+
+            });
+
         });
 
     }

@@ -53,7 +53,8 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                      * This is the unminified version of the code used below:
                      *
                      * ```js
-                     * ((registerProcessor) => {${ source }})((name, processorCtor) => registerProcessor(name, class extends processorCtor {
+                     * `((registerProcessor) => {${ source }
+                     * })((name, processorCtor) => registerProcessor(name, class extends processorCtor {
                      *
                      *     constructor (options) {
                      *         const { hasNoOutput, ...otherParameterData } = options.parameterData;
@@ -73,10 +74,11 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                      *         return super.process(inputs, (this._hasNoOutput) ? [ ] : outputs, parameters);
                      *     }
                      *
-                     * }))
+                     * }))`
                      * ```
                      */
-                    const wrappedSource = `(registerProcessor=>{${ source }})((n,p)=>registerProcessor(n,class extends p{constructor(o){const{hasNoOutput,...q}=o.parameterData;if(hasNoOutput===1){super({...o,numberOfOutputs:0,outputChannelCount:[],parameterData:q});this._h=true}else{super(o);this._h=false}}process(i,o,p){return super.process(i,(this._h)?[]:o,p)}}))`; // tslint:disable-line:max-line-length
+                    const wrappedSource = `(registerProcessor=>{${ source }
+})((n,p)=>registerProcessor(n,class extends p{constructor(o){const{hasNoOutput,...q}=o.parameterData;if(hasNoOutput===1){super({...o,numberOfOutputs:0,outputChannelCount:[],parameterData:q});this._h=true}else{super(o);this._h=false}}process(i,o,p){return super.process(i,(this._h)?[]:o,p)}}))`; // tslint:disable-line:max-line-length
                     const blob = new Blob([ wrappedSource ], { type: 'application/javascript; charset=utf-8' });
                     const url = URL.createObjectURL(blob);
 
