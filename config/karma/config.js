@@ -9,7 +9,7 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 240000,
 
-        concurrency: 2,
+        concurrency: 1,
 
         files: [
             {
