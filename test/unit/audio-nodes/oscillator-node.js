@@ -286,8 +286,8 @@ describe('OscillatorNode', () => {
                     expect(oscillatorNode.detune.defaultValue).to.equal(0);
                     expect(oscillatorNode.detune.exponentialRampToValueAtTime).to.be.a('function');
                     expect(oscillatorNode.detune.linearRampToValueAtTime).to.be.a('function');
-                    expect(oscillatorNode.detune.maxValue).to.equal(3.4028234663852886e38);
-                    expect(oscillatorNode.detune.minValue).to.equal(-3.4028234663852886e38);
+                    expect(oscillatorNode.detune.maxValue).to.equal(1200 * Math.log2(context.sampleRate));
+                    expect(oscillatorNode.detune.minValue).to.equal(-1200 * Math.log2(context.sampleRate));
                     expect(oscillatorNode.detune.setTargetAtTime).to.be.a('function');
                     expect(oscillatorNode.detune.setValueAtTime).to.be.a('function');
                     expect(oscillatorNode.detune.setValueCurveAtTime).to.be.a('function');

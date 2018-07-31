@@ -40,6 +40,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
         private _oscillatorNodeRenderer: null | IOscillatorNodeRenderer;
 
         constructor (context: TContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
+            const absoluteValue = 1200 * Math.log2(context.sampleRate);
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeOscillatorNode = createNativeOscillatorNode(nativeContext, mergedOptions);
@@ -50,7 +51,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             super(context, nativeOscillatorNode, oscillatorNodeRenderer);
 
             // Bug #81: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
-            this._detune = createAudioParam(context, isOffline, nativeOscillatorNode.detune, 3.4028234663852886e38, -3.4028234663852886e38);
+            this._detune = createAudioParam(context, isOffline, nativeOscillatorNode.detune, absoluteValue, -absoluteValue);
             // Bug #76: Edge & Safari do not export the correct values for maxValue and minValue.
             this._frequency = createAudioParam(context, isOffline, nativeOscillatorNode.frequency, nyquist, -nyquist);
             this._nativeOscillatorNode = nativeOscillatorNode;
