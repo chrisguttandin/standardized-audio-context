@@ -620,13 +620,9 @@ describe('AudioBufferSourceNode', () => {
 
             describe('playbackRate', () => {
 
-                let audioBufferSourceNode;
-
-                beforeEach(() => {
-                    audioBufferSourceNode = createAudioBufferSourceNode(context);
-                });
-
                 it('should return an instance of the AudioParam interface', () => {
+                    const audioBufferSourceNode = createAudioBufferSourceNode(context);
+
                     expect(audioBufferSourceNode.playbackRate.cancelScheduledValues).to.be.a('function');
                     expect(audioBufferSourceNode.playbackRate.defaultValue).to.equal(1);
                     expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime).to.be.a('function');
@@ -640,12 +636,20 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 it('should be readonly', () => {
+                    const audioBufferSourceNode = createAudioBufferSourceNode(context);
+
                     expect(() => {
                         audioBufferSourceNode.playbackRate = 'anything';
                     }).to.throw(TypeError);
                 });
 
                 describe('cancelScheduledValues()', () => {
+
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(audioBufferSourceNode.playbackRate.cancelScheduledValues(0)).to.equal(audioBufferSourceNode.playbackRate);
@@ -655,6 +659,12 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('exponentialRampToValueAtTime()', () => {
 
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.playbackRate);
                     });
@@ -662,6 +672,12 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
+
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(audioBufferSourceNode.playbackRate.linearRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.playbackRate);
@@ -671,6 +687,12 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('setTargetAtTime()', () => {
 
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(audioBufferSourceNode.playbackRate.setTargetAtTime(1, 0, 0.1)).to.equal(audioBufferSourceNode.playbackRate);
                     });
@@ -679,6 +701,12 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('setValueAtTime()', () => {
 
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(audioBufferSourceNode.playbackRate.setValueAtTime(1, 0)).to.equal(audioBufferSourceNode.playbackRate);
                     });
@@ -686,6 +714,12 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
+
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(audioBufferSourceNode.playbackRate.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(audioBufferSourceNode.playbackRate);
@@ -996,15 +1030,13 @@ describe('AudioBufferSourceNode', () => {
 
             describe('start()', () => {
 
-                let audioBufferSourceNode;
-
-                beforeEach(() => {
-                    audioBufferSourceNode = createAudioBufferSourceNode(context);
-                });
-
                 describe('with a previous call to start()', () => {
 
+                    let audioBufferSourceNode;
+
                     beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+
                         audioBufferSourceNode.start();
                     });
 
@@ -1023,7 +1055,11 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('with a previous call to stop()', () => {
 
+                    let audioBufferSourceNode;
+
                     beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+
                         // @todo Safari needs a buffer to start() an AudioBufferSourceNode.
                         audioBufferSourceNode.buffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                         audioBufferSourceNode.start();
@@ -1045,6 +1081,12 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('with a negative value as first parameter', () => {
 
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
+
                     it('should throw an RangeError', () => {
                         expect(() => {
                             audioBufferSourceNode.start(-1);
@@ -1055,6 +1097,12 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('with a negative value as second parameter', () => {
 
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
+
                     it('should throw an RangeError', () => {
                         expect(() => {
                             audioBufferSourceNode.start(0, -1);
@@ -1064,6 +1112,12 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 describe('with a negative value as third parameter', () => {
+
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
 
                     it('should throw an RangeError', () => {
                         expect(() => {

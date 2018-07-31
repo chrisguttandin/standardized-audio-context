@@ -241,13 +241,9 @@ describe('GainNode', () => {
 
             describe('gain', () => {
 
-                let gainNode;
-
-                beforeEach(() => {
-                    gainNode = createGainNode(context);
-                });
-
                 it('should return an instance of the AudioParam interface', () => {
+                    const gainNode = createGainNode(context);
+
                     expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
                     expect(gainNode.gain.defaultValue).to.equal(1);
                     expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
@@ -261,12 +257,20 @@ describe('GainNode', () => {
                 });
 
                 it('should be readonly', () => {
+                    const gainNode = createGainNode(context);
+
                     expect(() => {
                         gainNode.gain = 'anything';
                     }).to.throw(TypeError);
                 });
 
                 describe('cancelScheduledValues()', () => {
+
+                    let gainNode;
+
+                    beforeEach(() => {
+                        gainNode = createGainNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(gainNode.gain.cancelScheduledValues(0)).to.equal(gainNode.gain);
@@ -276,6 +280,12 @@ describe('GainNode', () => {
 
                 describe('exponentialRampToValueAtTime()', () => {
 
+                    let gainNode;
+
+                    beforeEach(() => {
+                        gainNode = createGainNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(gainNode.gain.exponentialRampToValueAtTime(1, 0)).to.equal(gainNode.gain);
                     });
@@ -283,6 +293,12 @@ describe('GainNode', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
+
+                    let gainNode;
+
+                    beforeEach(() => {
+                        gainNode = createGainNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(gainNode.gain.linearRampToValueAtTime(1, 0)).to.equal(gainNode.gain);
@@ -292,6 +308,12 @@ describe('GainNode', () => {
 
                 describe('setTargetAtTime()', () => {
 
+                    let gainNode;
+
+                    beforeEach(() => {
+                        gainNode = createGainNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(gainNode.gain.setTargetAtTime(1, 0, 0.1)).to.equal(gainNode.gain);
                     });
@@ -300,6 +322,12 @@ describe('GainNode', () => {
 
                 describe('setValueAtTime()', () => {
 
+                    let gainNode;
+
+                    beforeEach(() => {
+                        gainNode = createGainNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(gainNode.gain.setValueAtTime(1, 0)).to.equal(gainNode.gain);
                     });
@@ -307,6 +335,12 @@ describe('GainNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
+
+                    let gainNode;
+
+                    beforeEach(() => {
+                        gainNode = createGainNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(gainNode.gain.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(gainNode.gain);

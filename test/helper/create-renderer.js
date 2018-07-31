@@ -4,7 +4,7 @@ import { createScriptProcessor } from './create-script-processor';
 const createBufferNode = ({ audioNodes, context }) => {
     const bufferSize = Object
         .values(audioNodes)
-        .reduce((bufferSize, audioNode) => {
+        .reduce((accumulator, audioNode) => {
             // @todo This is using a private property.
             const bufferSizeOfAudioNode = (audioNode._nativeAudioNode === undefined) ?
                 0 :
@@ -12,7 +12,7 @@ const createBufferNode = ({ audioNodes, context }) => {
                     0 :
                     audioNode._nativeAudioNode.bufferSize;
 
-            return bufferSize + bufferSizeOfAudioNode;
+            return accumulator + bufferSizeOfAudioNode;
         }, 0);
 
     if (bufferSize === 0) {

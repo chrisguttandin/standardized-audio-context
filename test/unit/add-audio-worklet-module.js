@@ -1,5 +1,5 @@
 import '../helper/play-silence';
-import { AudioWorkletNode, addAudioWorkletModule } from '../../src/module';
+import { AudioWorkletNode, addAudioWorkletModule as ddDWrkltMdl } from '../../src/module';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
@@ -9,7 +9,7 @@ const createAddAudioWorkletModuleWithAudioWorkletOfContext = (context) => {
     return context.audioWorklet.addModule;
 };
 const createAddAudioWorkletModuleWithGlobalAudioWorklet = (context) => {
-    return addAudioWorkletModule.bind(null, context);
+    return ddDWrkltMdl.bind(null, context);
 };
 const testCases = {
     'addAudioWorkletModule() with a MinimalAudioContext': {

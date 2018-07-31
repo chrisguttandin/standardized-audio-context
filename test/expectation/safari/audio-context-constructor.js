@@ -560,9 +560,9 @@ describe('audioContextConstructor', () => {
                 candidate.disconnect(dummy);
 
                 analyzer.onaudioprocess = (event) => {
-                    const channelData = event.inputBuffer.getChannelData(0);
+                    const chnnlDt = event.inputBuffer.getChannelData(0);
 
-                    if (Array.prototype.some.call(channelData, (sample) => sample === 1)) {
+                    if (Array.prototype.some.call(chnnlDt, (sample) => sample === 1)) {
                         done('should never happen');
                     }
                 };
@@ -732,8 +732,8 @@ describe('audioContextConstructor', () => {
                 loadFixture('one-pixel-of-transparency.png', (err, arrayBuffer) => {
                     expect(err).to.be.null;
 
-                    audioContext.decodeAudioData(arrayBuffer, () => {}, (err) => {
-                        expect(err).to.be.null;
+                    audioContext.decodeAudioData(arrayBuffer, () => {}, (rr) => {
+                        expect(rr).to.be.null;
 
                         done();
                     });

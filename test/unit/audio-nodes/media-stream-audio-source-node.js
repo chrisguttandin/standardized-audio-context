@@ -302,7 +302,6 @@ describe('MediaStreamAudioSourceNode', () => {
                             length: (context.length === undefined) ? 5 : undefined,
                             prepare (destination) {
                                 const firstDummyGainNode = new GainNode(context);
-                                const mediaStream = audioElement.captureStream();
                                 const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
                                 const secondDummyGainNode = new GainNode(context);
 

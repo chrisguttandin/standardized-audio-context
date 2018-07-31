@@ -239,11 +239,11 @@ describe('offlineAudioContextConstructor', () => {
             return offlineAudioContext
                 .startRendering()
                 .then((buffer) => {
-                    const channelData = new Float32Array(scriptProcessorNode.bufferSize * 100);
+                    const chnnlDt = new Float32Array(scriptProcessorNode.bufferSize * 100);
 
-                    buffer.copyFromChannel(channelData, 0, 256);
+                    buffer.copyFromChannel(chnnlDt, 0, 256);
 
-                    expect(Array.from(channelData)).to.not.contain(1);
+                    expect(Array.from(chnnlDt)).to.not.contain(1);
                 });
         });
 

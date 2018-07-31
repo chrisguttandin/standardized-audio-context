@@ -1,5 +1,5 @@
 import '../helper/play-silence';
-import { AudioWorkletNode, GainNode, addAudioWorkletModule } from '../../src/module';
+import { AudioWorkletNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../src/module';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
@@ -9,7 +9,7 @@ const addAudioWorkletModuleWithAudioWorkletOfContext = (context, filename) => {
     return context.audioWorklet.addModule(`base/test/fixtures/${ filename }.js`);
 };
 const addAudioWorkletModuleWithGlobalAudioWorklet = (context, filename) => {
-    return addAudioWorkletModule(context, `base/test/fixtures/${ filename }.js`);
+    return ddDWrkltMdl(context, `base/test/fixtures/${ filename }.js`);
 };
 const testCases = {
     'addAudioWorkletModule() with a MinimalAudioContext': {

@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -11,7 +11,7 @@ const createAddAudioWorkletModuleWithAudioWorkletOfContext = (context) => {
     return context.audioWorklet.addModule;
 };
 const createAddAudioWorkletModuleWithGlobalAudioWorklet = (context) => {
-    return addAudioWorkletModule.bind(null, context);
+    return ddDWrkltMdl.bind(null, context);
 };
 const createAudioWorkletNode = (context, filename, options = null) => {
     if (options === null) {

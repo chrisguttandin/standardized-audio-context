@@ -98,7 +98,7 @@ describe('offlineAudioContextConstructor', () => {
 
         it('should transition directly from suspended to closed', (done) => {
             const runTest = (callback) => {
-                const offlineAudioContext = new webkitOfflineAudioContext(1, 1, 44100); // eslint-disable-line new-cap, no-undef
+                offlineAudioContext = new webkitOfflineAudioContext(1, 1, 44100); // eslint-disable-line new-cap, no-undef
 
                 let previousState = offlineAudioContext.state;
 
@@ -593,8 +593,8 @@ describe('offlineAudioContextConstructor', () => {
             loadFixture('one-pixel-of-transparency.png', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
-                offlineAudioContext.decodeAudioData(arrayBuffer, () => {}, (err) => {
-                    expect(err).to.be.null;
+                offlineAudioContext.decodeAudioData(arrayBuffer, () => {}, (rr) => {
+                    expect(rr).to.be.null;
 
                     done();
                 });

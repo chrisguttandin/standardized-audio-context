@@ -248,13 +248,9 @@ describe('ConstantSourceNode', () => {
 
             describe('offset', () => {
 
-                let constantSourceNode;
-
-                beforeEach(() => {
-                    constantSourceNode = createConstantSourceNode(context);
-                });
-
                 it('should return an instance of the AudioParam interface', () => {
+                    const constantSourceNode = createConstantSourceNode(context);
+
                     expect(constantSourceNode.offset.cancelScheduledValues).to.be.a('function');
                     expect(constantSourceNode.offset.defaultValue).to.equal(1);
                     expect(constantSourceNode.offset.exponentialRampToValueAtTime).to.be.a('function');
@@ -268,12 +264,20 @@ describe('ConstantSourceNode', () => {
                 });
 
                 it('should be readonly', () => {
+                    const constantSourceNode = createConstantSourceNode(context);
+
                     expect(() => {
                         constantSourceNode.offset = 'anything';
                     }).to.throw(TypeError);
                 });
 
                 describe('cancelScheduledValues()', () => {
+
+                    let constantSourceNode;
+
+                    beforeEach(() => {
+                        constantSourceNode = createConstantSourceNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.cancelScheduledValues(0)).to.equal(constantSourceNode.offset);
@@ -283,6 +287,12 @@ describe('ConstantSourceNode', () => {
 
                 describe('exponentialRampToValueAtTime()', () => {
 
+                    let constantSourceNode;
+
+                    beforeEach(() => {
+                        constantSourceNode = createConstantSourceNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.exponentialRampToValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
                     });
@@ -290,6 +300,12 @@ describe('ConstantSourceNode', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
+
+                    let constantSourceNode;
+
+                    beforeEach(() => {
+                        constantSourceNode = createConstantSourceNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.linearRampToValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
@@ -299,6 +315,12 @@ describe('ConstantSourceNode', () => {
 
                 describe('setTargetAtTime()', () => {
 
+                    let constantSourceNode;
+
+                    beforeEach(() => {
+                        constantSourceNode = createConstantSourceNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.setTargetAtTime(1, 0, 0.1)).to.equal(constantSourceNode.offset);
                     });
@@ -307,6 +329,12 @@ describe('ConstantSourceNode', () => {
 
                 describe('setValueAtTime()', () => {
 
+                    let constantSourceNode;
+
+                    beforeEach(() => {
+                        constantSourceNode = createConstantSourceNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.setValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
                     });
@@ -314,6 +342,12 @@ describe('ConstantSourceNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
+
+                    let constantSourceNode;
+
+                    beforeEach(() => {
+                        constantSourceNode = createConstantSourceNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(constantSourceNode.offset);
