@@ -1,8 +1,8 @@
 import { IMediaStreamAudioSourceOptions } from '../interfaces';
-import { TNativeContext } from './native-context';
+import { TNativeAudioContext } from './native-audio-context';
 import { TNativeMediaStreamAudioSourceNode } from './native-media-stream-audio-source-node';
 
 export type TNativeMediaStreamAudioSourceNodeFactory = (
-    nativeContext: TNativeContext,
+    nativeAudioContext: TNativeAudioContext,
     options: IMediaStreamAudioSourceOptions
 ) => TNativeMediaStreamAudioSourceNode;

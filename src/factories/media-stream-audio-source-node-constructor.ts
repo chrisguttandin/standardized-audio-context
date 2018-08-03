@@ -1,4 +1,4 @@
-import { getNativeContext } from '../helpers/get-native-context';
+import { getNativeAudioContext } from '../helpers/get-native-audio-context';
 import { IAudioNodeOptions, IMediaStreamAudioSourceNode, IMediaStreamAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
 import {
     TChannelCountMode,
@@ -25,7 +25,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
         private _nativeMediaStreamAudioSourceNode: TNativeMediaStreamAudioSourceNode;
 
         constructor (context: IMinimalAudioContext, options: IMediaStreamAudioSourceOptions) {
-            const nativeContext = getNativeContext(context);
+            const nativeContext = getNativeAudioContext(context);
             const mergedOptions = <IAudioNodeOptions & IMediaStreamAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, mergedOptions);
 

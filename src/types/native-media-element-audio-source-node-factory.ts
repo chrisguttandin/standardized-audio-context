@@ -1,8 +1,8 @@
 import { IMediaElementAudioSourceOptions } from '../interfaces';
-import { TNativeContext } from './native-context';
+import { TNativeAudioContext } from './native-audio-context';
 import { TNativeMediaElementAudioSourceNode } from './native-media-element-audio-source-node';
 
 export type TNativeMediaElementAudioSourceNodeFactory = (
-    nativeContext: TNativeContext,
+    nativeAudioContext: TNativeAudioContext,
     options: IMediaElementAudioSourceOptions
 ) => TNativeMediaElementAudioSourceNode;

@@ -1,12 +1,12 @@
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../globals';
-import { TGetBackupNativeContextFactory } from '../types';
+import { TGetBackupNativeContextFactory, TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
 
 export const createGetBackupNativeContext: TGetBackupNativeContextFactory = (
     isNativeOfflineAudioContext,
     nativeAudioContextConstructor,
     nativeOfflineAudioContextConstructor
 ) => {
-    return (nativeContext) => {
+    return <T extends TNativeAudioContext | TNativeOfflineAudioContext>(nativeContext: T): null | T => {
         /*
          * Bug #50: Only Safari does currently allow to create AudioNodes on a closed context yet which is why there needs to be no
          * backupNativeContext in that case.
@@ -16,7 +16,7 @@ export const createGetBackupNativeContext: TGetBackupNativeContextFactory = (
                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(nativeContext);
 
                 if (backupNativeContext !== undefined) {
-                    return backupNativeContext;
+                    return <T> backupNativeContext;
                 }
 
                 if (nativeOfflineAudioContextConstructor !== null) {
@@ -25,13 +25,13 @@ export const createGetBackupNativeContext: TGetBackupNativeContextFactory = (
 
                     BACKUP_NATIVE_CONTEXT_STORE.set(nativeContext, bckpNtveCntxt);
 
-                    return bckpNtveCntxt;
+                    return <T> bckpNtveCntxt;
                 }
             } else {
                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(nativeContext);
 
                 if (backupNativeContext !== undefined) {
-                    return backupNativeContext;
+                    return <T> backupNativeContext;
                 }
 
                 if (nativeAudioContextConstructor !== null) {
@@ -40,7 +40,7 @@ export const createGetBackupNativeContext: TGetBackupNativeContextFactory = (
 
                     BACKUP_NATIVE_CONTEXT_STORE.set(nativeContext, bckpNtveCntxt);
 
-                    return bckpNtveCntxt;
+                    return <T> bckpNtveCntxt;
                 }
             }
         }
