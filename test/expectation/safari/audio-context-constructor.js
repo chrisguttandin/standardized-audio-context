@@ -435,7 +435,7 @@ describe('audioContextConstructor', () => {
                 // Bug #95: Safari does not play/loop one sample buffers.
                 const audioBuffer = audioContext.createBuffer(1, 2, sampleRate);
 
-                // @todo Safari does not support copyToChannel().
+                // Bug #5: Safari does not support copyFromChannel().
                 audioBuffer.getChannelData(0)[0] = 1;
                 audioBuffer.getChannelData(0)[1] = 1;
 

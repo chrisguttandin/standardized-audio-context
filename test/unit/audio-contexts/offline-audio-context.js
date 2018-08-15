@@ -932,7 +932,7 @@ describe('OfflineAudioContext', () => {
                 .then((renderedBuffer) => {
                     expect(renderedBuffer.length).to.equal(audioBuffer.length);
 
-                    // @todo Use copyFromChannel() when possible.
+                    // Bug #5: Safari does not support copyFromChannel().
                     const channelData = renderedBuffer.getChannelData(0);
 
                     for (let i = 0; i < audioBuffer.length; i += 1) {
