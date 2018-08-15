@@ -838,7 +838,7 @@ describe('AudioWorkletNode', () => {
 
                             return renderer({
                                 start (startTime, { audioBufferSourceNode, audioWorkletNode }) {
-                                    audioWorkletNode.parameters.get('gain').setValueAtTime(0.5, startTime + (2 / context.sampleRate));
+                                    audioWorkletNode.parameters.get('gain').setValueAtTime(0.5, startTime + (1.9 / context.sampleRate));
 
                                     audioBufferSourceNode.start(startTime);
                                 }

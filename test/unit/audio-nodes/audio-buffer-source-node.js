@@ -500,7 +500,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo
                  * @todo             return renderer({
                  * @todo                 start (startTime, { audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.offset.setValueAtTime(0.5, startTime + (2 / context.sampleRate));
+                 * @todo                     audioBufferSourceNode.offset.setValueAtTime(0.5, startTime + (1.9 / context.sampleRate));
                  * @todo
                  * @todo                     audioBufferSourceNode.start(startTime);
                  * @todo                 }
@@ -1275,8 +1275,8 @@ describe('AudioBufferSourceNode', () => {
                                 return renderer({
                                     start (startTime, { audioBufferSourceNode }) {
                                         audioBufferSourceNode.start(startTime);
-                                        audioBufferSourceNode.stop(startTime + (5 / context.sampleRate));
-                                        audioBufferSourceNode.stop(startTime + (3 / context.sampleRate));
+                                        audioBufferSourceNode.stop(startTime + (4.9 / context.sampleRate));
+                                        audioBufferSourceNode.stop(startTime + (2.9 / context.sampleRate));
                                     }
                                 })
                                     .then((channelData) => {
@@ -1334,8 +1334,8 @@ describe('AudioBufferSourceNode', () => {
 
                                 return renderer({
                                     start (startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime + (3 / context.sampleRate));
-                                        audioBufferSourceNode.stop(startTime + (1 / context.sampleRate));
+                                        audioBufferSourceNode.start(startTime + (2.9 / context.sampleRate));
+                                        audioBufferSourceNode.stop(startTime + (0.9 / context.sampleRate));
                                     }
                                 })
                                     .then((channelData) => {

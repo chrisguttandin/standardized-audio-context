@@ -439,7 +439,7 @@ describe('GainNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, gainNode }) {
-                                            gainNode.gain.setValueAtTime(0.5, startTime + (2 / context.sampleRate));
+                                            gainNode.gain.setValueAtTime(0.5, startTime + (1.9 / context.sampleRate));
 
                                             audioBufferSourceNode.start(startTime);
                                         }

@@ -831,8 +831,8 @@ describe('OscillatorNode', () => {
                                 return renderer({
                                     start (startTime, { oscillatorNode }) {
                                         oscillatorNode.start(startTime);
-                                        oscillatorNode.stop(startTime + (5 / context.sampleRate));
-                                        oscillatorNode.stop(startTime + (3 / context.sampleRate));
+                                        oscillatorNode.stop(startTime + (4.9 / context.sampleRate));
+                                        oscillatorNode.stop(startTime + (2.9 / context.sampleRate));
                                     }
                                 })
                                     .then((channelData) => {
@@ -890,8 +890,8 @@ describe('OscillatorNode', () => {
 
                                 return renderer({
                                     start (startTime, { oscillatorNode }) {
-                                        oscillatorNode.start(startTime + (3 / context.sampleRate));
-                                        oscillatorNode.stop(startTime + (1 / context.sampleRate));
+                                        oscillatorNode.start(startTime + (2.9 / context.sampleRate));
+                                        oscillatorNode.stop(startTime + (0.9 / context.sampleRate));
                                     }
                                 })
                                     .then((channelData) => {

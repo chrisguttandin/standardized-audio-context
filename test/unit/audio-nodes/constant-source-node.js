@@ -434,7 +434,7 @@ describe('ConstantSourceNode', () => {
 
                                     return renderer({
                                         start (startTime, { constantSourceNode }) {
-                                            constantSourceNode.offset.setValueAtTime(0.5, startTime + (2 / context.sampleRate));
+                                            constantSourceNode.offset.setValueAtTime(0.5, startTime + (1.9 / context.sampleRate));
 
                                             constantSourceNode.start(startTime);
                                         }
@@ -859,8 +859,8 @@ describe('ConstantSourceNode', () => {
                                 return renderer({
                                     start (startTime, { constantSourceNode }) {
                                         constantSourceNode.start(startTime);
-                                        constantSourceNode.stop(startTime + (5 / context.sampleRate));
-                                        constantSourceNode.stop(startTime + (3 / context.sampleRate));
+                                        constantSourceNode.stop(startTime + (4.9 / context.sampleRate));
+                                        constantSourceNode.stop(startTime + (2.9 / context.sampleRate));
                                     }
                                 })
                                     .then((channelData) => {
@@ -914,8 +914,8 @@ describe('ConstantSourceNode', () => {
 
                                 return renderer({
                                     start (startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime + (3 / context.sampleRate));
-                                        constantSourceNode.stop(startTime + (1 / context.sampleRate));
+                                        constantSourceNode.start(startTime + (2.9 / context.sampleRate));
+                                        constantSourceNode.stop(startTime + (0.9 / context.sampleRate));
                                     }
                                 })
                                     .then((channelData) => {
