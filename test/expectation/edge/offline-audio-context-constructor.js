@@ -155,11 +155,11 @@ describe('offlineAudioContextConstructor', () => {
             // bug #44
 
             it('should throw a DOMException', () => {
-                const bufferSourceNode = offlineAudioContext.createBufferSource();
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => bufferSourceNode.start(-1)).to.throw('InvalidAccessError');
-                expect(() => bufferSourceNode.start(0, -1)).to.throw('InvalidStateError');
-                expect(() => bufferSourceNode.start(0, 0, -1)).to.throw('InvalidStateError');
+                expect(() => audioBufferSourceNode.start(-1)).to.throw('InvalidAccessError');
+                expect(() => audioBufferSourceNode.start(0, -1)).to.throw('InvalidStateError');
+                expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw('InvalidStateError');
             });
 
             // bug #92
@@ -192,9 +192,9 @@ describe('offlineAudioContextConstructor', () => {
             // bug #44
 
             it('should throw a DOMException', () => {
-                const bufferSourceNode = offlineAudioContext.createBufferSource();
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => bufferSourceNode.stop(-1)).to.throw('InvalidStateError');
+                expect(() => audioBufferSourceNode.stop(-1)).to.throw('InvalidStateError');
             });
 
         });

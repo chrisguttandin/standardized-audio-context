@@ -257,20 +257,20 @@ describe('audioContextConstructor', () => {
                 // bug #72
 
                 it('should allow to assign the buffer multiple times', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    bufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
-                    bufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
+                    audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
+                    audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
                 });
 
             });
 
             describe('playbackRate', () => {
 
-                let bufferSourceNode;
+                let audioBufferSourceNode;
 
                 beforeEach(() => {
-                    bufferSourceNode = audioContext.createBufferSource();
+                    audioBufferSourceNode = audioContext.createBufferSource();
                 });
 
                 describe('maxValue', () => {
@@ -278,7 +278,7 @@ describe('audioContextConstructor', () => {
                     // bug #73
 
                     it('should be positive infinity', () => {
-                        expect(bufferSourceNode.playbackRate.maxValue).to.equal(Number.POSITIVE_INFINITY);
+                        expect(audioBufferSourceNode.playbackRate.maxValue).to.equal(Number.POSITIVE_INFINITY);
                     });
 
                 });
@@ -288,7 +288,7 @@ describe('audioContextConstructor', () => {
                     // bug #73
 
                     it('should be negative infinity', () => {
-                        expect(bufferSourceNode.playbackRate.minValue).to.equal(Number.NEGATIVE_INFINITY);
+                        expect(audioBufferSourceNode.playbackRate.minValue).to.equal(Number.NEGATIVE_INFINITY);
                     });
 
                 });
@@ -299,7 +299,7 @@ describe('audioContextConstructor', () => {
 
                     it('should throw a DOMException', () => {
                         expect(() => {
-                            bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                            audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
                         }).to.throw(DOMException);
                     });
 
@@ -312,9 +312,9 @@ describe('audioContextConstructor', () => {
                 // bug #44
 
                 it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
+                    expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
                 });
 
             });

@@ -12,8 +12,8 @@ export const createTestChannelMergerNodeSupport: TTestChannelMergerNodeSupportFa
         }
 
         const audioContext = new nativeAudioContextConstructor();
-        const audioBufferSourceNode = audioContext.createBufferSource();
         const audioBuffer = audioContext.createBuffer(2, 2, audioContext.sampleRate);
+        const audioBufferSourceNode = audioContext.createBufferSource();
         const channelMergerNode = audioContext.createChannelMerger(2);
         const scriptProcessorNode = audioContext.createScriptProcessor(256);
 

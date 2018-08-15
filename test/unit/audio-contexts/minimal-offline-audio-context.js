@@ -284,8 +284,8 @@ describe('MinimalOfflineAudioContext', () => {
 
         it('should resolve with the renderedBuffer', () => {
             const audioBuffer = new AudioBuffer({ length: 10, numberOfChannels: 1, sampleRate: 44100 });
+            const audioBufferSourceNode = new AudioBufferSourceNode(minimalOfflineAudioContext);
             const buffer = new Float32Array(10);
-            const bufferSourceNode = new AudioBufferSourceNode(minimalOfflineAudioContext);
 
             for (let i = 0; i < buffer.length; i += 1) {
                 buffer[i] = i;
@@ -293,11 +293,11 @@ describe('MinimalOfflineAudioContext', () => {
 
             audioBuffer.copyToChannel(buffer, 0, 0);
 
-            bufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.buffer = audioBuffer;
 
-            bufferSourceNode.connect(minimalOfflineAudioContext.destination);
+            audioBufferSourceNode.connect(minimalOfflineAudioContext.destination);
 
-            bufferSourceNode.start(0);
+            audioBufferSourceNode.start(0);
 
             return minimalOfflineAudioContext
                 .startRendering()
@@ -315,8 +315,8 @@ describe('MinimalOfflineAudioContext', () => {
 
         it('should resolve to an instance of the AudioBuffer interface', () => {
             const audioBuffer = new AudioBuffer({ length: 10, numberOfChannels: 1, sampleRate: 44100 });
+            const audioBufferSourceNode = new AudioBufferSourceNode(minimalOfflineAudioContext);
             const buffer = new Float32Array(10);
-            const bufferSourceNode = new AudioBufferSourceNode(minimalOfflineAudioContext);
 
             for (let i = 0; i < buffer.length; i += 1) {
                 buffer[i] = i;
@@ -324,11 +324,11 @@ describe('MinimalOfflineAudioContext', () => {
 
             audioBuffer.copyToChannel(buffer, 0, 0);
 
-            bufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.buffer = audioBuffer;
 
-            bufferSourceNode.connect(minimalOfflineAudioContext.destination);
+            audioBufferSourceNode.connect(minimalOfflineAudioContext.destination);
 
-            bufferSourceNode.start(0);
+            audioBufferSourceNode.start(0);
 
             return minimalOfflineAudioContext
                 .startRendering()

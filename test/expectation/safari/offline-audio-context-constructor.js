@@ -286,31 +286,31 @@ describe('offlineAudioContextConstructor', () => {
             // bug #72
 
             it('should allow to assign the buffer multiple times', () => {
-                const bufferSourceNode = offlineAudioContext.createBufferSource();
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                bufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
-                bufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
+                audioBufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
+                audioBufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
             });
 
             // bug #95
 
             it('should not play a buffer with only one sample', (done) => {
-                const bufferSourceNode = offlineAudioContext.createBufferSource();
                 const audioBuffer = offlineAudioContext.createBuffer(1, 1, 44100);
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
                 audioBuffer.getChannelData(0)[0] = 1;
 
-                bufferSourceNode.buffer = audioBuffer;
+                audioBufferSourceNode.buffer = audioBuffer;
 
-                bufferSourceNode.connect(offlineAudioContext.destination);
-                bufferSourceNode.start();
+                audioBufferSourceNode.connect(offlineAudioContext.destination);
+                audioBufferSourceNode.start();
 
                 offlineAudioContext.oncomplete = (event) => {
                     const channelData = event.renderedBuffer.getChannelData(0);
 
                     expect(channelData[0]).to.equal(0);
 
-                    bufferSourceNode.disconnect(offlineAudioContext.destination);
+                    audioBufferSourceNode.disconnect(offlineAudioContext.destination);
 
                     done();
                 };
@@ -324,11 +324,11 @@ describe('offlineAudioContextConstructor', () => {
             // bug #44
 
             it('should throw a DOMException', () => {
-                const bufferSourceNode = offlineAudioContext.createBufferSource();
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
-                expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
-                expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.start(-1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.start(0, -1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
             });
 
         });
@@ -338,9 +338,9 @@ describe('offlineAudioContextConstructor', () => {
             // bug #44
 
             it('should throw a DOMException', () => {
-                const bufferSourceNode = offlineAudioContext.createBufferSource();
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
             });
 
             // bug #69

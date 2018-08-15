@@ -275,10 +275,10 @@ describe('audioContextConstructor', () => {
                 // bug #71
 
                 it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
                     expect(() => {
-                        bufferSourceNode.buffer = null;
+                        audioBufferSourceNode.buffer = null;
                     }).to.throw('TypeMismatchError');
                 });
 
@@ -286,10 +286,10 @@ describe('audioContextConstructor', () => {
 
             describe('playbackRate', () => {
 
-                let bufferSourceNode;
+                let audioBufferSourceNode;
 
                 beforeEach(() => {
-                    bufferSourceNode = audioContext.createBufferSource();
+                    audioBufferSourceNode = audioContext.createBufferSource();
                 });
 
                 describe('maxValue', () => {
@@ -297,7 +297,7 @@ describe('audioContextConstructor', () => {
                     // bug #73
 
                     it('should be undefined', () => {
-                        expect(bufferSourceNode.playbackRate.maxValue).to.be.undefined;
+                        expect(audioBufferSourceNode.playbackRate.maxValue).to.be.undefined;
                     });
 
                 });
@@ -307,7 +307,7 @@ describe('audioContextConstructor', () => {
                     // bug #73
 
                     it('should be undefined', () => {
-                        expect(bufferSourceNode.playbackRate.minValue).to.be.undefined;
+                        expect(audioBufferSourceNode.playbackRate.minValue).to.be.undefined;
                     });
 
                 });
@@ -318,7 +318,7 @@ describe('audioContextConstructor', () => {
 
                     it('should throw a DOMException', () => {
                         expect(() => {
-                            bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                            audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
                         }).to.throw('InvalidAccessError');
                     });
 
@@ -331,11 +331,11 @@ describe('audioContextConstructor', () => {
                 // bug #44
 
                 it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => bufferSourceNode.start(-1)).to.throw('InvalidAccessError');
-                    expect(() => bufferSourceNode.start(0, -1)).to.throw('InvalidStateError');
-                    expect(() => bufferSourceNode.start(0, 0, -1)).to.throw('InvalidStateError');
+                    expect(() => audioBufferSourceNode.start(-1)).to.throw('InvalidAccessError');
+                    expect(() => audioBufferSourceNode.start(0, -1)).to.throw('InvalidStateError');
+                    expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw('InvalidStateError');
                 });
 
             });
@@ -345,9 +345,9 @@ describe('audioContextConstructor', () => {
                 // bug #44
 
                 it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => bufferSourceNode.stop(-1)).to.throw('InvalidStateError');
+                    expect(() => audioBufferSourceNode.stop(-1)).to.throw('InvalidStateError');
                 });
 
             });

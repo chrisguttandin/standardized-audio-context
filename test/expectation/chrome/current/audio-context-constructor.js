@@ -37,9 +37,9 @@ describe('audioContextConstructor', () => {
             // bug #44
 
             it('should throw a DOMException', () => {
-                const bufferSourceNode = audioContext.createBufferSource();
+                const audioBufferSourceNode = audioContext.createBufferSource();
 
-                expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
             });
 
         });

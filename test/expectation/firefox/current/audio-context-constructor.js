@@ -17,13 +17,13 @@ describe('audioContextConstructor', () => {
             // bug #44
 
             it('should throw a DOMException', () => {
-                const bufferSourceNode = audioContext.createBufferSource();
+                const audioBufferSourceNode = audioContext.createBufferSource();
 
-                expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.start(-1)).to.throw(DOMException);
 
-                expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.start(0, -1)).to.throw(DOMException);
 
-                expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
             });
 
         });

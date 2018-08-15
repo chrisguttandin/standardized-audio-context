@@ -12,8 +12,8 @@ export const createTestAudioBufferSourceNodeStartMethodDurationParameterSupport:
         }
 
         const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
-        const audioBufferSourceNode = offlineAudioContext.createBufferSource();
         const audioBuffer = offlineAudioContext.createBuffer(1, 1, offlineAudioContext.sampleRate);
+        const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
         audioBuffer.getChannelData(0)[0] = 1;
 

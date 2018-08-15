@@ -315,20 +315,20 @@ describe('audioContextConstructor', () => {
                 // bug #72
 
                 it('should allow to assign the buffer multiple times', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    bufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
-                    bufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
+                    audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
+                    audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
                 });
 
             });
 
             describe('playbackRate', () => {
 
-                let bufferSourceNode;
+                let audioBufferSourceNode;
 
                 beforeEach(() => {
-                    bufferSourceNode = audioContext.createBufferSource();
+                    audioBufferSourceNode = audioContext.createBufferSource();
                 });
 
                 describe('maxValue', () => {
@@ -336,7 +336,7 @@ describe('audioContextConstructor', () => {
                     // bug #73
 
                     it('should be 1024', () => {
-                        expect(bufferSourceNode.playbackRate.maxValue).to.equal(1024);
+                        expect(audioBufferSourceNode.playbackRate.maxValue).to.equal(1024);
                     });
 
                 });
@@ -346,7 +346,7 @@ describe('audioContextConstructor', () => {
                     // bug #73
 
                     it('should be -1024', () => {
-                        expect(bufferSourceNode.playbackRate.minValue).to.equal(-1024);
+                        expect(audioBufferSourceNode.playbackRate.minValue).to.equal(-1024);
                     });
 
                 });
@@ -356,7 +356,7 @@ describe('audioContextConstructor', () => {
                     // bug #45
 
                     it('should not throw any exception', () => {
-                        bufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                        audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
                     });
 
                 });
@@ -368,11 +368,11 @@ describe('audioContextConstructor', () => {
                 // bug #44
 
                 it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => bufferSourceNode.start(-1)).to.throw(DOMException);
-                    expect(() => bufferSourceNode.start(0, -1)).to.throw(DOMException);
-                    expect(() => bufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
+                    expect(() => audioBufferSourceNode.start(-1)).to.throw(DOMException);
+                    expect(() => audioBufferSourceNode.start(0, -1)).to.throw(DOMException);
+                    expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
                 });
 
                 // bug #69
@@ -391,9 +391,9 @@ describe('audioContextConstructor', () => {
                 // bug #44
 
                 it('should throw a DOMException', () => {
-                    const bufferSourceNode = audioContext.createBufferSource();
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => bufferSourceNode.stop(-1)).to.throw(DOMException);
+                    expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
                 });
 
             });
@@ -428,12 +428,12 @@ describe('audioContextConstructor', () => {
             // bug #20
 
             it('should not handle unconnected channels as silence', (done) => {
-                const audioBufferSourceNode = audioContext.createBufferSource();
-                const channelMergerNode = audioContext.createChannelMerger();
-                const scriptProcessorNode = audioContext.createScriptProcessor(256, 2, 2);
                 const sampleRate = audioContext.sampleRate;
                 // Bug #95: Safari does not play/loop one sample buffers.
                 const audioBuffer = audioContext.createBuffer(1, 2, sampleRate);
+                const audioBufferSourceNode = audioContext.createBufferSource();
+                const channelMergerNode = audioContext.createChannelMerger();
+                const scriptProcessorNode = audioContext.createScriptProcessor(256, 2, 2);
 
                 // Bug #5: Safari does not support copyFromChannel().
                 audioBuffer.getChannelData(0)[0] = 1;
