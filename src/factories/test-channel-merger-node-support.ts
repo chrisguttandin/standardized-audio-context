@@ -20,7 +20,7 @@ export const createTestChannelMergerNodeSupport: TTestChannelMergerNodeSupportFa
         return new Promise<boolean>((resolve) => {
             let startTime: number;
 
-            // @todo Safari does not play/loop 1 sample buffers. This should be patched.
+            // Bug #95: Safari does not play/loop one sample buffers.
             audioBuffer.getChannelData(0)[0] = 1;
             audioBuffer.getChannelData(0)[1] = 1;
             audioBuffer.getChannelData(1)[0] = 1;

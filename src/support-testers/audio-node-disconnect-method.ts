@@ -6,7 +6,7 @@ export const testAudioNodeDisconnectMethodSupport = (nativeAudioContext: TNative
 
         const dummy = nativeAudioContext.createGain();
 
-        // Safari does not play buffers which contain just one frame.
+        // Bug #95: Safari does not play one sample buffers.
         const ones = nativeAudioContext.createBuffer(1, 2, 44100);
 
         const channelData = ones.getChannelData(0);

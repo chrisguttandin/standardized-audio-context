@@ -292,6 +292,31 @@ describe('offlineAudioContextConstructor', () => {
                 bufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
             });
 
+            // bug #95
+
+            it('should not play a buffer with only one sample', (done) => {
+                const bufferSourceNode = offlineAudioContext.createBufferSource();
+                const audioBuffer = offlineAudioContext.createBuffer(1, 1, 44100);
+
+                audioBuffer.getChannelData(0)[0] = 1;
+
+                bufferSourceNode.buffer = audioBuffer;
+
+                bufferSourceNode.connect(offlineAudioContext.destination);
+                bufferSourceNode.start();
+
+                offlineAudioContext.oncomplete = (event) => {
+                    const channelData = event.renderedBuffer.getChannelData(0);
+
+                    expect(channelData[0]).to.equal(0);
+
+                    bufferSourceNode.disconnect(offlineAudioContext.destination);
+
+                    done();
+                };
+                offlineAudioContext.startRendering();
+            });
+
         });
 
         describe('start()', () => {
@@ -429,7 +454,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should not allow to disconnect a specific destination', (done) => {
             const candidate = offlineAudioContext.createGain();
             const dummy = offlineAudioContext.createGain();
-            // Safari does not play buffers which contain just one frame.
+            // Bug #95: Safari does not play/loop one sample buffers.
             const ones = offlineAudioContext.createBuffer(1, 2, 44100);
 
             ones.getChannelData(0)[0] = 1;

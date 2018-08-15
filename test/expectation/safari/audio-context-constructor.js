@@ -432,7 +432,7 @@ describe('audioContextConstructor', () => {
                 const channelMergerNode = audioContext.createChannelMerger();
                 const scriptProcessorNode = audioContext.createScriptProcessor(256, 2, 2);
                 const sampleRate = audioContext.sampleRate;
-                // @todo Safari does not play 1 sample buffers.
+                // Bug #95: Safari does not play/loop one sample buffers.
                 const audioBuffer = audioContext.createBuffer(1, 2, sampleRate);
 
                 // @todo Safari does not support copyToChannel().
@@ -541,7 +541,7 @@ describe('audioContextConstructor', () => {
                 const analyzer = audioContext.createScriptProcessor(256, 1, 1);
                 const candidate = audioContext.createGain();
                 const dummy = audioContext.createGain();
-                // Safari does not play buffers which contain just one frame.
+                // Bug #95: Safari does not play/loop one sample buffers.
                 const ones = audioContext.createBuffer(1, 2, 44100);
                 const channelData = ones.getChannelData(0);
 
