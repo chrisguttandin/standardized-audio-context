@@ -34,6 +34,7 @@ import { createIndexSizeError } from './factories/index-size-error';
 import { createInvalidAccessError } from './factories/invalid-access-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
 import { createIsNativeOfflineAudioContext } from './factories/is-native-offline-audio-context';
+import { createIsSecureContext } from './factories/is-secure-context';
 import { createIsSupportedPromise } from './factories/is-supported-promise';
 import { createMediaElementAudioSourceNodeConstructor } from './factories/media-element-audio-source-node-constructor';
 import { createMediaStreamAudioSourceNodeConstructor } from './factories/media-stream-audio-source-node-constructor';
@@ -92,6 +93,7 @@ import { createTestChannelMergerNodeSupport } from './factories/test-channel-mer
 import {
     createTestConstantSourceNodeAccurateSchedulingSupport
 } from './factories/test-constant-source-node-accurate-scheduling-support';
+import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
 import { createWindow } from './factories/window';
 import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
@@ -306,12 +308,16 @@ const oscillatorNodeConstructor: IOscillatorNodeConstructor = createOscillatorNo
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const isSecureContext = createIsSecureContext(window);
 
-export const addAudioWorkletModule: TAddAudioWorkletModuleFunction = createAddAudioWorkletModule(
-    createAbortError,
-    createNotSupportedError,
-    getBackupNativeContext
-);
+// The addAudioWorkletModule() function is only available in a SecureContext.
+export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction = (isSecureContext) ?
+    createAddAudioWorkletModule(
+        createAbortError,
+        createNotSupportedError,
+        getBackupNativeContext
+    ) :
+    undefined;
 
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
     addAudioWorkletModule,
@@ -382,16 +388,20 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     nativeOfflineAudioContextConstructor,
     renderNativeOfflineAudioContext
 );
-const audioWorkletNodeConstructor: IAudioWorkletNodeConstructor = createAudioWorkletNodeConstructor(
-    createAudioParam,
-    createAudioWorkletNodeRenderer,
-    createNativeAudioWorkletNode,
-    isNativeOfflineAudioContext,
-    nativeAudioWorkletNodeConstructor,
-    noneAudioDestinationNodeConstructor
-);
 
-type audioWorkletNodeConstructor = IAudioWorkletNode;
+// The AudioWorkletNode constructor is only available in a SecureContext.
+const audioWorkletNodeConstructor: undefined | IAudioWorkletNodeConstructor = (isSecureContext) ?
+    createAudioWorkletNodeConstructor(
+        createAudioParam,
+        createAudioWorkletNodeRenderer,
+        createNativeAudioWorkletNode,
+        isNativeOfflineAudioContext,
+        nativeAudioWorkletNodeConstructor,
+        noneAudioDestinationNodeConstructor
+    ) :
+    undefined;
+
+type audioWorkletNodeConstructor = undefined | IAudioWorkletNode;
 
 export { audioWorkletNodeConstructor as AudioWorkletNode };
 
@@ -471,5 +481,6 @@ export const isSupported = () => createIsSupportedPromise(
     createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
-    createTestChannelMergerNodeSupport(nativeAudioContextConstructor)
+    createTestChannelMergerNodeSupport(nativeAudioContextConstructor),
+    createTestIsSecureContextSupport(window)
 );

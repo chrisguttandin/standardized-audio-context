@@ -30,20 +30,20 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
     return class BaseAudioContext extends minimalBaseAudioContextConstructor implements IBaseAudioContext {
 
-        private _audioWorklet: IAudioWorklet;
+        private _audioWorklet: undefined | IAudioWorklet;
 
         private _nativeContext: TNativeContext;
 
         constructor (nativeContext: TNativeContext, numberOfChannels: number) {
             super(nativeContext, numberOfChannels);
 
-            this._audioWorklet = {
-                addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(<any> this, moduleURL, options)
-            };
+            this._audioWorklet = (addAudioWorkletModule === undefined) ?
+                undefined :
+                { addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(<any> this, moduleURL, options) };
             this._nativeContext = nativeContext;
         }
 
-        get audioWorklet (): IAudioWorklet {
+        get audioWorklet (): undefined | IAudioWorklet {
             return this._audioWorklet;
         }
 

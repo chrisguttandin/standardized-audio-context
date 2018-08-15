@@ -14,7 +14,8 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
 
     // @todo listener
 
-    audioWorklet: IAudioWorklet;
+    // The audioWorklet property is only available in a SecureContext.
+    readonly audioWorklet?: IAudioWorklet;
 
     createAnalyser (): IAnalyserNode;
 

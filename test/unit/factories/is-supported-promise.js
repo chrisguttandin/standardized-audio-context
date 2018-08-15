@@ -9,12 +9,14 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport;
     let fakeTestAudioContextOptionsSupport;
     let fakeTestChannelMergerNodeSupport;
+    let fakeTestIsSecureContextSupport;
 
     afterEach(() => {
         TEST_RESULTS.delete(fakeTestAudioContextCloseMethodSupport);
         TEST_RESULTS.delete(fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport);
         TEST_RESULTS.delete(fakeTestAudioContextOptionsSupport);
         TEST_RESULTS.delete(fakeTestChannelMergerNodeSupport);
+        TEST_RESULTS.delete(fakeTestIsSecureContextSupport);
     });
 
     beforeEach(() => {
@@ -23,6 +25,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.resolve(true);
         fakeTestAudioContextOptionsSupport = () => true;
         fakeTestChannelMergerNodeSupport = () => Promise.resolve(true);
+        fakeTestIsSecureContextSupport = () => true;
     });
 
     it('should resolve to true if all test pass', async () => {
@@ -31,7 +34,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
         );
 
         expect(isSupported).to.be.true;
@@ -45,7 +49,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
         );
 
         expect(isSupported).to.be.false;
@@ -59,7 +64,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
         );
 
         expect(isSupported).to.be.false;
@@ -73,7 +79,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
         );
 
         expect(isSupported).to.be.false;
@@ -87,7 +94,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
         );
 
         expect(isSupported).to.be.false;
@@ -101,7 +109,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
         );
 
         expect(isSupported).to.be.false;
@@ -115,7 +124,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
         );
 
         expect(isSupported).to.be.false;
@@ -129,7 +139,23 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for isSecureContext support fails', async () => {
+        fakeTestIsSecureContextSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            fakeBrowsernizr,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestChannelMergerNodeSupport,
+            fakeTestIsSecureContextSupport
         );
 
         expect(isSupported).to.be.false;

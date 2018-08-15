@@ -6,13 +6,15 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testAudioContextCloseMethodSupport,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
     testAudioContextOptionsSupport,
-    testChannelMergerNodeSupport
+    testChannelMergerNodeSupport,
+    testIsSecureContextSupport
 ) => {
     if (browsernizr.promises &&
             browsernizr.typedarrays &&
             browsernizr.webaudio &&
             cacheTestResult(testAudioContextCloseMethodSupport, () => testAudioContextCloseMethodSupport()) &&
-            cacheTestResult(testAudioContextOptionsSupport, () => testAudioContextOptionsSupport())) {
+            cacheTestResult(testAudioContextOptionsSupport, () => testAudioContextOptionsSupport()) &&
+            cacheTestResult(testIsSecureContextSupport, () => testIsSecureContextSupport())) {
         return Promise
             .all([
                 cacheTestResult(testAudioContextDecodeAudioDataMethodTypeErrorSupport, () => {

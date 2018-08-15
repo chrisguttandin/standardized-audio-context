@@ -15,7 +15,7 @@ import {
 import { TAddAudioWorkletModuleFunction } from './add-audio-worklet-module-function';
 
 export type TBaseAudioContextConstructorFactory = (
-    addAudioWorkletModule: TAddAudioWorkletModuleFunction,
+    addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction,
     analyserNodeConstructor: IAnalyserNodeConstructor,
     audioBufferConstructor: IAudioBufferConstructor,
     audioBufferSourceNodeConstructor: IAudioBufferSourceNodeConstructor,

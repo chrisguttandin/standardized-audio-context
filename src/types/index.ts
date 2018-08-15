@@ -62,6 +62,7 @@ export * from './invalid-access-error-factory';
 export * from './invalid-state-error-factory';
 export * from './is-native-offline-audio-context-factory';
 export * from './is-native-offline-audio-context-function';
+export * from './is-secure-context-factory';
 export * from './is-supported-promise-factory';
 export * from './media-element-audio-source-node-constructor-factory';
 export * from './media-stream-audio-source-node-constructor-factory';
@@ -149,6 +150,7 @@ export * from './test-audio-scheduled-source-node-start-method-consecutive-calls
 export * from './test-audio-scheduled-source-node-stop-method-consecutive-calls-support-factory';
 export * from './test-channel-merger-node-support-factory';
 export * from './test-constant-source-node-accurate-scheduling-support-factory';
+export * from './test-is-secure-context-support-factory';
 export * from './typed-array';
 export * from './window-factory';
 export * from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-factory';
