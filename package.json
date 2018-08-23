@@ -89,6 +89,6 @@
     "prepublishOnly": "grunt build",
     "test": "grunt lint && grunt test"
   },
-  "types": "build/esm/module.d.ts",
+  "types": "build/es2015/module.d.ts",
   "version": "14.0.2"
 }
