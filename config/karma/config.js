@@ -117,6 +117,10 @@ module.exports = (config) => {
                 }
             },
 
+            reporters: [
+                'dots'
+            ],
+
             tunnelIdentifier: env.TRAVIS_JOB_NUMBER
 
         });
