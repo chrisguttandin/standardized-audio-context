@@ -31,8 +31,6 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
     return class BiquadFilterNode extends noneAudioDestinationNodeConstructor implements IBiquadFilterNode {
 
-        private _Q: IAudioParam;
-
         private _detune: IAudioParam;
 
         private _frequency: IAudioParam;
@@ -40,6 +38,8 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
         private _gain: IAudioParam;
 
         private _nativeBiquadFilterNode: TNativeBiquadFilterNode;
+
+        private _Q: IAudioParam;
 
         constructor (context: TContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);

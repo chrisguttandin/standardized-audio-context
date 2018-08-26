@@ -3,13 +3,13 @@ import { IAudioParam } from './audio-param';
 
 export interface IAudioNode extends EventTarget {
 
-    readonly context: TContext;
-
     channelCount: number;
 
     channelCountMode: TChannelCountMode;
 
     channelInterpretation: TChannelInterpretation;
+
+    readonly context: TContext;
 
     readonly numberOfInputs: number;
 

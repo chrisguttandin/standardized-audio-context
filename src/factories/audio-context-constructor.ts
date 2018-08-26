@@ -60,14 +60,6 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             return (this._state !== null) ? this._state : this._nativeAudioContext.state;
         }
 
-        public createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode {
-            return new mediaElementAudioSourceNodeConstructor(this, { mediaElement });
-        }
-
-        public createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode {
-            return new mediaStreamAudioSourceNodeConstructor(this, { mediaStream });
-        }
-
         public close (): Promise<void> {
             // Bug #35: Firefox does not throw an error if the AudioContext was closed before.
             if (this.state === 'closed') {
@@ -89,6 +81,14 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
              * Bug #50: Deleting the AudioGraph is currently not possible anymore.
              * ...then(() => deleteAudioGraph(this, this._nativeAudioContext));
              */
+        }
+
+        public createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode {
+            return new mediaElementAudioSourceNodeConstructor(this, { mediaElement });
+        }
+
+        public createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode {
+            return new mediaStreamAudioSourceNodeConstructor(this, { mediaStream });
         }
 
         public resume () {

@@ -7,9 +7,9 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
     return class MinimalBaseAudioContext extends EventTarget implements IMinimalBaseAudioContext {
 
-        private _nativeContext: TNativeContext;
-
         private _destination: IAudioDestinationNode;
+
+        private _nativeContext: TNativeContext;
 
         constructor (nativeContext: TNativeContext, numberOfChannels: number) {
             super();

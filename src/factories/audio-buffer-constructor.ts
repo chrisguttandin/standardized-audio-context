@@ -62,15 +62,15 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (nat
         }
 
         // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-        public getChannelData (_: number): Float32Array {
-            return new Float32Array(0);
-        }
-
-        // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public copyFromChannel (_1: Float32Array, _2: number, _3 = 0): void { } // tslint:disable-line:no-empty
 
         // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public copyToChannel (_1: Float32Array, _2: number, _3 = 0): void { } // tslint:disable-line:no-empty
+
+        // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
+        public getChannelData (_: number): Float32Array {
+            return new Float32Array(0);
+        }
 
     };
 
