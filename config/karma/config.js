@@ -31,6 +31,10 @@ module.exports = (config) => {
             'sinon-chai'
         ],
 
+        parallelOptions: {
+            executors: 6
+        },
+
         preprocessors: {
             'test/unit/**/*.js': 'webpack'
         },
