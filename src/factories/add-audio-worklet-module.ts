@@ -83,12 +83,11 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                     const url = URL.createObjectURL(blob);
 
                     const backupNativeContext = getBackupNativeContext(nativeContext);
+                    const nativeContextOrBackupNativeContext = (backupNativeContext !== null) ? backupNativeContext : nativeContext;
 
-                    if (backupNativeContext !== null) {
-                        return (<TNativeAudioWorklet> (<any> backupNativeContext).audioWorklet).addModule(url, options);
-                    }
-
-                    return (<TNativeAudioWorklet> (<any> nativeContext).audioWorklet).addModule(url, options);
+                    return (<TNativeAudioWorklet> (<any> nativeContextOrBackupNativeContext).audioWorklet)
+                        .addModule(url, options)
+                        .then(() => URL.revokeObjectURL(url));
                 });
         } else {
             const resolvedRequestsOfContext = resolvedRequests.get(context);
