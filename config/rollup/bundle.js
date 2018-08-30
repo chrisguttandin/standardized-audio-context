@@ -11,16 +11,12 @@ export default {
         babel({
             exclude: 'node_modules/**',
             plugins: [
-                'external-helpers',
-                [
-                    'transform-runtime', {
-                        polyfill: false
-                    }
-                ]
+                '@babel/plugin-external-helpers',
+                '@babel/plugin-transform-runtime'
             ],
             presets: [
                 [
-                    'es2015',
+                    '@babel/preset-env',
                     {
                         modules: false
                     }
