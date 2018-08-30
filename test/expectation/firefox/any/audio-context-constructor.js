@@ -112,26 +112,6 @@ describe('audioContextConstructor', () => {
 
                 });
 
-                describe('maxValue', () => {
-
-                    // bug #78
-
-                    it('should be positive infinity', () => {
-                        expect(biquadFilterNode.detune.maxValue).to.equal(Number.POSITIVE_INFINITY);
-                    });
-
-                });
-
-                describe('minValue', () => {
-
-                    // bug #78
-
-                    it('should be negative infinity', () => {
-                        expect(biquadFilterNode.detune.minValue).to.equal(Number.NEGATIVE_INFINITY);
-                    });
-
-                });
-
             });
 
             describe('frequency', () => {
@@ -152,54 +132,6 @@ describe('audioContextConstructor', () => {
 
                     it('should be the negative nyquist frequency', () => {
                         expect(biquadFilterNode.frequency.minValue).to.equal(-(audioContext.sampleRate / 2));
-                    });
-
-                });
-
-            });
-
-            describe('gain', () => {
-
-                describe('maxValue', () => {
-
-                    // bug #79
-
-                    it('should be positive infinity', () => {
-                        expect(biquadFilterNode.gain.maxValue).to.equal(Number.POSITIVE_INFINITY);
-                    });
-
-                });
-
-                describe('minValue', () => {
-
-                    // bug #79
-
-                    it('should be negative infinity', () => {
-                        expect(biquadFilterNode.gain.minValue).to.equal(Number.NEGATIVE_INFINITY);
-                    });
-
-                });
-
-            });
-
-            describe('Q', () => {
-
-                describe('maxValue', () => {
-
-                    // bug #80
-
-                    it('should be positive infinity', () => {
-                        expect(biquadFilterNode.Q.maxValue).to.equal(Number.POSITIVE_INFINITY);
-                    });
-
-                });
-
-                describe('minValue', () => {
-
-                    // bug #80
-
-                    it('should be negative infinity', () => {
-                        expect(biquadFilterNode.Q.minValue).to.equal(Number.NEGATIVE_INFINITY);
                     });
 
                 });
@@ -273,26 +205,6 @@ describe('audioContextConstructor', () => {
                     audioBufferSourceNode = audioContext.createBufferSource();
                 });
 
-                describe('maxValue', () => {
-
-                    // bug #73
-
-                    it('should be positive infinity', () => {
-                        expect(audioBufferSourceNode.playbackRate.maxValue).to.equal(Number.POSITIVE_INFINITY);
-                    });
-
-                });
-
-                describe('minValue', () => {
-
-                    // bug #73
-
-                    it('should be negative infinity', () => {
-                        expect(audioBufferSourceNode.playbackRate.minValue).to.equal(Number.NEGATIVE_INFINITY);
-                    });
-
-                });
-
                 describe('exponentialRampToValueAtTime()', () => {
 
                     // bug #45
@@ -347,30 +259,6 @@ describe('audioContextConstructor', () => {
                 constantSourceNode = audioContext.createConstantSource();
             });
 
-            describe('offset', () => {
-
-                describe('maxValue', () => {
-
-                    // bug #75
-
-                    it('should be positive infinity', () => {
-                        expect(constantSourceNode.offset.maxValue).to.equal(Number.POSITIVE_INFINITY);
-                    });
-
-                });
-
-                describe('minValue', () => {
-
-                    // bug #75
-
-                    it('should be negative infinity', () => {
-                        expect(constantSourceNode.offset.minValue).to.equal(Number.NEGATIVE_INFINITY);
-                    });
-
-                });
-
-            });
-
             describe('start()', () => {
 
                 // bug #44
@@ -401,26 +289,6 @@ describe('audioContextConstructor', () => {
 
                 beforeEach(() => {
                     gainNode = audioContext.createGain();
-                });
-
-                describe('maxValue', () => {
-
-                    // bug #74
-
-                    it('should be positive infinity', () => {
-                        expect(gainNode.gain.maxValue).to.equal(Number.POSITIVE_INFINITY);
-                    });
-
-                });
-
-                describe('minValue', () => {
-
-                    // bug #74
-
-                    it('should be negative infinity', () => {
-                        expect(gainNode.gain.minValue).to.equal(Number.NEGATIVE_INFINITY);
-                    });
-
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
@@ -465,40 +333,6 @@ describe('audioContextConstructor', () => {
 
                 it('should not be implemented', () => {
                     expect(mediaElementAudioSourceNode.mediaElement).to.be.undefined;
-                });
-
-            });
-
-        });
-
-        describe('createOscillator()', () => {
-
-            describe('detune', () => {
-
-                let oscillatorNode;
-
-                beforeEach(() => {
-                    oscillatorNode = audioContext.createOscillator();
-                });
-
-                describe('maxValue', () => {
-
-                    // bug #81
-
-                    it('should be positive infinity', () => {
-                        expect(oscillatorNode.detune.maxValue).to.equal(Number.POSITIVE_INFINITY);
-                    });
-
-                });
-
-                describe('minValue', () => {
-
-                    // bug #81
-
-                    it('should be negative infinity', () => {
-                        expect(oscillatorNode.detune.minValue).to.equal(Number.NEGATIVE_INFINITY);
-                    });
-
                 });
 
             });
