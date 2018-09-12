@@ -1,8 +1,6 @@
 addons:
   chrome: stable
-after_script: greenkeeper-lockfile-upload
 before_install: npm install npm@latest --global
-before_script: greenkeeper-lockfile-update
 cache:
   directories:
     - $HOME/.npm
