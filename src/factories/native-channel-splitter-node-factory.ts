@@ -7,7 +7,7 @@ export const createNativeChannelSplitterNodeFactory: TNativeChannelSplitterNodeF
             return ntvCntxt.createChannelSplitter(options.numberOfOutputs);
         });
 
-        // Bug #29, #30, #31 & #32: Only Chrome, Firefox & Opera partially support the spec yet.
+        // Bug #29, #30, #31, #32, #96 & #97: Only Chrome, Firefox & Opera partially support the spec yet.
         wrapChannelSplitterNode(nativeChannelSplitterNode);
 
         return nativeChannelSplitterNode;

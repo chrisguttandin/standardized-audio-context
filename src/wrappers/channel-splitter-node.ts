@@ -4,49 +4,48 @@ import { TNativeChannelSplitterNode } from '../types';
 export const wrapChannelSplitterNode = (channelSplitterNode: TNativeChannelSplitterNode): void => {
     const channelCount = channelSplitterNode.numberOfOutputs;
 
+    // Bug #96: Safari does not have the correct channelCount.
     if (channelSplitterNode.channelCount !== channelCount) {
-        try {
-            channelSplitterNode.channelCount = channelCount;
-        } catch (_) {
-            // Bug #90: FirefoxDeveloper sets the wrong channelCount but does not allow to change it.
-        }
+        channelSplitterNode.channelCount = channelCount;
     }
 
+    // Bug #29: Edge & Safari do not have the correct channelCountMode.
     if (channelSplitterNode.channelCountMode !== 'explicit') {
-        try {
-            channelSplitterNode.channelCountMode = 'explicit';
-        } catch (_) {
-            // Bug #29: Firefox sets the wrong channelCountMode but does not allow to change it.
-        }
+        channelSplitterNode.channelCountMode = 'explicit';
     }
 
+    // Bug #31: Edge & Safari do not have the correct channelInterpretation.
     if (channelSplitterNode.channelInterpretation !== 'discrete') {
-        try {
-            channelSplitterNode.channelInterpretation = 'discrete';
-        } catch (_) {
-            // Bug #31: Firefox sets the wrong channelInterpretation but does not allow to change it.
-        }
+        channelSplitterNode.channelInterpretation = 'discrete';
     }
 
+    // Bug #97: Safari does not throw an error when attempting to change the channelCount to something other than its initial value.
     Object.defineProperty(channelSplitterNode, 'channelCount', {
         get: () => channelCount,
-        set: () => {
-            throw createInvalidStateError();
+        set: (value) => {
+            if (value !== channelCount) {
+                throw createInvalidStateError();
+            }
         }
     });
 
+    // Bug #30: Only Firefox & Opera throw an error when attempting to change the channelCountMode to something other than explicit.
     Object.defineProperty(channelSplitterNode, 'channelCountMode', {
         get: () => 'explicit',
-        set: () => {
-            throw createInvalidStateError();
+        set: (value) => {
+            if (value !== 'explicit') {
+                throw createInvalidStateError();
+            }
         }
     });
 
-    // Bug #31: Only Chrome & Opera have the correct channelInterpretation.
+    // Bug #32: Only Opera throws an error when attempting to change the channelInterpretation to something other than discrete.
     Object.defineProperty(channelSplitterNode, 'channelInterpretation', {
         get: () => 'discrete',
-        set: () => {
-            throw createInvalidStateError();
+        set: (value) => {
+            if (value !== 'discrete') {
+                throw createInvalidStateError();
+            }
         }
     });
 };

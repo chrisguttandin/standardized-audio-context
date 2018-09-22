@@ -9,6 +9,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport;
     let fakeTestAudioContextOptionsSupport;
     let fakeTestChannelMergerNodeSupport;
+    let fakeTestChannelSplitterNodeChannelCountSupport;
     let fakeTestIsSecureContextSupport;
 
     afterEach(() => {
@@ -16,6 +17,7 @@ describe('createIsSupportedPromise()', () => {
         TEST_RESULTS.delete(fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport);
         TEST_RESULTS.delete(fakeTestAudioContextOptionsSupport);
         TEST_RESULTS.delete(fakeTestChannelMergerNodeSupport);
+        TEST_RESULTS.delete(fakeTestChannelSplitterNodeChannelCountSupport);
         TEST_RESULTS.delete(fakeTestIsSecureContextSupport);
     });
 
@@ -25,6 +27,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.resolve(true);
         fakeTestAudioContextOptionsSupport = () => true;
         fakeTestChannelMergerNodeSupport = () => Promise.resolve(true);
+        fakeTestChannelSplitterNodeChannelCountSupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
     });
 
@@ -35,6 +38,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -50,6 +54,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -65,6 +70,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -80,6 +86,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -95,6 +102,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -110,6 +118,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -125,6 +134,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -140,6 +150,23 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestIsSecureContextSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for ChannelSplitterNode channelCount support fails', async () => {
+        fakeTestChannelSplitterNodeChannelCountSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            fakeBrowsernizr,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -155,6 +182,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestIsSecureContextSupport
         );
 
