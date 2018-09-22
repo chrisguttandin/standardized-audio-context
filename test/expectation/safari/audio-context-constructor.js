@@ -480,6 +480,23 @@ describe('audioContextConstructor', () => {
                 expect(channelSplitterNode.connect(gainNode)).to.be.undefined;
             });
 
+            // bug #96
+
+            it('should have a wrong channelCount', () => {
+                const channelSplitterNode = audioContext.createChannelSplitter(6);
+
+                expect(channelSplitterNode.channelCount).to.equal(2);
+            });
+
+            // bug #97
+
+            it('should allow to set the channelCount', () => {
+                const channelSplitterNode = audioContext.createChannelSplitter();
+
+                channelSplitterNode.channelCount = 6;
+                channelSplitterNode.channelCount = 2;
+            });
+
             // bug #29
 
             it('should have a wrong channelCountMode', () => {
