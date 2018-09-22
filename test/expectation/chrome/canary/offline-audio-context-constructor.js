@@ -45,26 +45,6 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
-    describe('createChannelSplitter()', () => {
-
-        // bug #30
-
-        it('should allow to set the channelCountMode', () => {
-            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
-
-            channelSplitterNode.channelCountMode = 'explicit';
-        });
-
-        // bug #32
-
-        it('should allow to set the channelInterpretation', () => {
-            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
-
-            channelSplitterNode.channelInterpretation = 'discrete';
-        });
-
-    });
-
     describe('decodeAudioData()', () => {
 
         // bug #6
