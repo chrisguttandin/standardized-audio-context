@@ -52,7 +52,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should allow to set the channelCountMode', () => {
             const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
-            channelSplitterNode.channelCountMode = 'explicit';
+            channelSplitterNode.channelCountMode = 'max';
         });
 
         // bug #32
@@ -60,7 +60,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should allow to set the channelInterpretation', () => {
             const channelSplitterNode = offlineAudioContext.createChannelSplitter();
 
-            channelSplitterNode.channelInterpretation = 'discrete';
+            channelSplitterNode.channelInterpretation = 'speakers';
         });
 
     });

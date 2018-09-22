@@ -53,7 +53,7 @@ describe('audioContextConstructor', () => {
         it('should allow to set the channelCountMode', () => {
             const channelSplitterNode = audioContext.createChannelSplitter();
 
-            channelSplitterNode.channelCountMode = 'explicit';
+            channelSplitterNode.channelCountMode = 'max';
         });
 
         // bug #32
@@ -61,7 +61,7 @@ describe('audioContextConstructor', () => {
         it('should allow to set the channelInterpretation', () => {
             const channelSplitterNode = audioContext.createChannelSplitter();
 
-            channelSplitterNode.channelInterpretation = 'discrete';
+            channelSplitterNode.channelInterpretation = 'speakers';
         });
 
     });

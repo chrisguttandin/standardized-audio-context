@@ -494,6 +494,7 @@ describe('audioContextConstructor', () => {
                 const channelSplitterNode = audioContext.createChannelSplitter();
 
                 channelSplitterNode.channelCountMode = 'explicit';
+                channelSplitterNode.channelCountMode = 'max';
             });
 
             // bug #31
@@ -510,6 +511,7 @@ describe('audioContextConstructor', () => {
                 const channelSplitterNode = audioContext.createChannelSplitter();
 
                 channelSplitterNode.channelInterpretation = 'discrete';
+                channelSplitterNode.channelInterpretation = 'speakers';
             });
 
         });
