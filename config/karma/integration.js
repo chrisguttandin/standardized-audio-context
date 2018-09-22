@@ -18,7 +18,7 @@ module.exports = (config) => {
             FirefoxBrowserStack: {
                 base: 'BrowserStack',
                 browser: 'firefox',
-                browser_version: '54', // eslint-disable-line camelcase
+                browser_version: '61', // eslint-disable-line camelcase
                 os: 'OS X',
                 os_version: 'Sierra' // eslint-disable-line camelcase
             }
