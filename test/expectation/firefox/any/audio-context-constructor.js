@@ -197,28 +197,6 @@ describe('audioContextConstructor', () => {
 
             });
 
-            describe('playbackRate', () => {
-
-                let audioBufferSourceNode;
-
-                beforeEach(() => {
-                    audioBufferSourceNode = audioContext.createBufferSource();
-                });
-
-                describe('exponentialRampToValueAtTime()', () => {
-
-                    // bug #45
-
-                    it('should throw a DOMException', () => {
-                        expect(() => {
-                            audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(DOMException);
-                    });
-
-                });
-
-            });
-
             describe('stop()', () => {
 
                 // bug #44

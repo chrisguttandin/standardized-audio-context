@@ -122,6 +122,18 @@ describe('audioContextConstructor', () => {
 
             });
 
+            describe('exponentialRampToValueAtTime()', () => {
+
+                // bug #45
+
+                it('should throw a DOMException', () => {
+                    expect(() => {
+                        audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                    }).to.throw(DOMException);
+                });
+
+            });
+
         });
 
         describe('start()', () => {
