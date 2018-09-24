@@ -28,9 +28,8 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
             set value (value) {
                 nativeAudioParam.value = value;
 
-                if (audioParamRenderer !== null) {
-                    audioParamRenderer.record({ startTime: context.currentTime, type: 'setValue', value });
-                }
+                // Bug #98: Edge, Firefox & Safari do not yet treat the value setter like a call to setValueAtTime().
+                audioParam.setValueAtTime(value, context.currentTime);
             },
             cancelScheduledValues (cancelTime: number): IAudioParam {
                 nativeAudioParam.cancelScheduledValues(cancelTime);

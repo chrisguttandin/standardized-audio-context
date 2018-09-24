@@ -251,6 +251,60 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('createGain()', () => {
 
+        describe('gain', () => {
+
+            describe('value', () => {
+
+                // bug #98
+
+                it('should ignore the value setter while an automation is running', function () {
+                    this.timeout(10000);
+
+                    const audioBuffer = offlineAudioContext.createBuffer(1, 0.5 * offlineAudioContext.sampleRate, offlineAudioContext.sampleRate);
+                    const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+                    const gainNode = offlineAudioContext.createGain();
+                    const ones = new Float32Array(0.5 * offlineAudioContext.sampleRate);
+
+                    ones.fill(1);
+
+                    audioBuffer.copyToChannel(ones, 0);
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+
+                    gainNode.gain.setValueAtTime(-1, 0);
+                    gainNode.gain.linearRampToValueAtTime(1, 0.5);
+
+                    audioBufferSourceNode.connect(gainNode);
+                    gainNode.connect(offlineAudioContext.destination);
+
+                    audioBufferSourceNode.start();
+
+                    offlineAudioContext
+                        .suspend(128 / offlineAudioContext.sampleRate)
+                        .then(() => {
+                            gainNode.gain.value = 100;
+
+                            offlineAudioContext.resume();
+                        });
+
+                    return offlineAudioContext
+                        .startRendering()
+                        .then((renderedBuffer) => {
+                            const channelData = new Float32Array(0.5 * offlineAudioContext.sampleRate);
+
+                            renderedBuffer.copyFromChannel(channelData, 0);
+
+                            for (let i = 0; i < channelData.length; i += 1) {
+                                expect(channelData[i]).to.be.at.least(-1);
+                                expect(channelData[i]).to.be.at.most(1);
+                            }
+                        });
+                });
+
+            });
+
+        });
+
         describe('cancelAndHoldAtTime()', () => {
 
             let gainNode;

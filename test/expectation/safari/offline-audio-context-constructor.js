@@ -503,6 +503,54 @@ describe('offlineAudioContextConstructor', () => {
             offlineAudioContext.startRendering();
         });
 
+        describe('gain', () => {
+
+            describe('value', () => {
+
+                // bug #98
+
+                it('should ignore the value setter while an automation is running', function (done) {
+                    this.timeout(10000);
+
+                    const audioBuffer = offlineAudioContext.createBuffer(1, 0.5 * offlineAudioContext.sampleRate, offlineAudioContext.sampleRate);
+                    const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+                    const gainNode = offlineAudioContext.createGain();
+
+                    // Bug #5: Safari does not support copyToChannel().
+                    for (let i = 0; i < 0.5 * offlineAudioContext.sampleRate; i += 1) {
+                        audioBuffer.getChannelData(0)[i] = 1;
+                    }
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+
+                    gainNode.gain.setValueAtTime(-1, 0);
+                    gainNode.gain.linearRampToValueAtTime(1, 0.5);
+
+                    gainNode.gain.value = 100;
+
+                    audioBufferSourceNode.connect(gainNode);
+                    gainNode.connect(offlineAudioContext.destination);
+
+                    audioBufferSourceNode.start();
+
+                    offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
+                        // Bug #5: Safari does not support copyFromChannel().
+                        const channelData = renderedBuffer.getChannelData(0);
+
+                        for (let i = 0; i < channelData.length; i += 1) {
+                            expect(channelData[i]).to.be.at.least(-1);
+                            expect(channelData[i]).to.be.at.most(1);
+                        }
+
+                        done();
+                    };
+                    offlineAudioContext.startRendering();
+                });
+
+            });
+
+        });
+
         describe('cancelAndHoldAtTime()', () => {
 
             let gainNode;
