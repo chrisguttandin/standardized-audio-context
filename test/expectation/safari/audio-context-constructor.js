@@ -264,6 +264,47 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createBuffer()', () => {
+
+            // bug #99
+
+            describe('with zero as the numberOfChannels', () => {
+
+                it('should throw no error', () => {
+                    audioContext.createBuffer(0, 10, 44100);
+                });
+
+            });
+
+            describe('getChannelData()', () => {
+
+                let audioBuffer;
+
+                beforeEach(() => {
+                    audioBuffer = audioContext.createBuffer(2, 10, 44100);
+                });
+
+                describe('with an index of an unexisting channel', () => {
+
+                    // bug #100
+
+                    it('should throw an SyntaxError', (done) => {
+                        try {
+                            audioBuffer.getChannelData(2);
+                        } catch (err) {
+                            expect(err.code).to.equal(12);
+                            expect(err.name).to.equal('SyntaxError');
+
+                            done();
+                        }
+                    });
+
+                });
+
+            });
+
+        });
+
         describe('createBufferSource()', () => {
 
             // bug #11

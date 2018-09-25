@@ -9,7 +9,12 @@ const DEFAULT_OPTIONS = {
     numberOfChannels: 1
 };
 
-export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (nativeOfflineAudioContextConstructor) => {
+export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
+    createNotSupportedError,
+    nativeAudioBufferConstructor,
+    nativeOfflineAudioContextConstructor,
+    testNativeAudioBufferConstructorSupport
+) => {
 
     let nativeOfflineAudioContext: null | TNativeOfflineAudioContext = null;
 
@@ -41,7 +46,14 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (nat
                 nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
             }
 
-            const audioBuffer = nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+            /*
+             * Bug #99: Firefox does not throw a NotSupportedError when the numberOfChannels is zero. But it only does it when using the
+             * factory function. But since Firefox also supports the constructor everything should be fine.
+             */
+            const audioBuffer = (nativeAudioBufferConstructor !== null &&
+                    cacheTestResult(testNativeAudioBufferConstructorSupport, () => testNativeAudioBufferConstructorSupport())) ?
+                new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate }) :
+                nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
             if (typeof audioBuffer.copyFromChannel !== 'function') {
@@ -52,6 +64,11 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (nat
                 () => testAudioBufferCopyChannelMethodsSubarraySupport(audioBuffer)
             )) {
                 wrapAudioBufferCopyChannelMethodsSubarray(audioBuffer);
+            }
+
+            // Bug #99: Safari does not throw an error when the numberOfChannels is zero.
+            if (audioBuffer.numberOfChannels === 0) {
+                throw createNotSupportedError();
             }
 
             /*

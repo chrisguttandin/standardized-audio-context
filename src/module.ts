@@ -42,6 +42,7 @@ import { createMinimalAudioContextConstructor } from './factories/minimal-audio-
 import { createMinimalBaseAudioContextConstructor } from './factories/minimal-base-audio-context-constructor';
 import { createMinimalOfflineAudioContextConstructor } from './factories/minimal-offline-audio-context-constructor';
 import { createNativeAnalyserNodeFactory } from './factories/native-analyser-node-factory';
+import { createNativeAudioBufferConstructor } from './factories/native-audio-buffer-constructor';
 import { createNativeAudioBufferSourceNodeFactory } from './factories/native-audio-buffer-source-node-factory';
 import { createNativeAudioContextConstructor } from './factories/native-audio-context-constructor';
 import { createNativeAudioDestinationNode } from './factories/native-audio-destination-node';
@@ -69,6 +70,7 @@ import { createOscillatorNodeConstructor } from './factories/oscillator-node-con
 import { createOscillatorNodeRendererFactory } from './factories/oscillator-node-renderer-factory';
 import { createRenderNativeOfflineAudioContext } from './factories/render-native-offline-audio-context';
 import { createStartRendering } from './factories/start-rendering';
+import { createTestAudioBufferConstructorSupport } from './factories/test-audio-buffer-constructor-support';
 import {
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport
 } from './factories/test-audio-buffer-source-node-start-method-consecutive-calls-support';
@@ -166,7 +168,14 @@ type analyserNodeConstructor = IAnalyserNode;
 
 export { analyserNodeConstructor as AnalyserNode };
 
-const audioBufferConstructor: IAudioBufferConstructor = createAudioBufferConstructor(nativeOfflineAudioContextConstructor);
+const nativeAudioBufferConstructor = createNativeAudioBufferConstructor(window);
+
+const audioBufferConstructor: IAudioBufferConstructor = createAudioBufferConstructor(
+    createNotSupportedError,
+    nativeAudioBufferConstructor,
+    nativeOfflineAudioContextConstructor,
+    createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor)
+);
 
 type audioBufferConstructor = IAudioBuffer;
 

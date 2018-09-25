@@ -65,6 +65,7 @@ export * from './minimal-base-audio-context';
 export * from './minimal-base-audio-context-constructor';
 export * from './minimal-offline-audio-context';
 export * from './minimal-offline-audio-context-constructor';
+export * from './native-audio-buffer-constructor';
 export * from './native-audio-context-constructor';
 export * from './native-audio-node-faker';
 export * from './native-audio-worklet-node';
