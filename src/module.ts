@@ -24,7 +24,10 @@ import { createChannelSplitterNodeRendererFactory } from './factories/channel-sp
 import { createConnectMultipleOutputs } from './factories/connect-multiple-outputs';
 import { createConstantSourceNodeConstructor } from './factories/constant-source-node-constructor';
 import { createConstantSourceNodeRendererFactory } from './factories/constant-source-node-renderer-factory';
+import { createDataCloneError } from './factories/data-clone-error';
+import { createDecodeAudioData } from './factories/decode-audio-data';
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
+import { createEncodingError } from './factories/encoding-error';
 import { createGainNodeConstructor } from './factories/gain-node-constructor';
 import { createGainNodeRendererFactory } from './factories/gain-node-renderer-factory';
 import { createGetBackupNativeContext } from './factories/get-backup-native-context';
@@ -138,6 +141,8 @@ import {
     IOscillatorNode,
     IOscillatorNodeConstructor
 } from './interfaces';
+import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
+import { testPromiseSupport } from './support-testers/promise';
 import { TAddAudioWorkletModuleFunction } from './types';
 
 export * from './interfaces';
@@ -329,6 +334,15 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
     ) :
     undefined;
 
+export const decodeAudioData = createDecodeAudioData(
+    createDataCloneError,
+    createEncodingError,
+    nativeOfflineAudioContextConstructor,
+    isNativeOfflineAudioContext,
+    testAudioBufferCopyChannelMethodsSubarraySupport,
+    testPromiseSupport
+);
+
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
     addAudioWorkletModule,
     analyserNodeConstructor,
@@ -338,6 +352,7 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
     channelMergerNodeConstructor,
     channelSplitterNodeConstructor,
     constantSourceNodeConstructor,
+    decodeAudioData,
     gainNodeConstructor,
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
@@ -483,8 +498,6 @@ export { offlineAudioContextConstructor as OfflineAudioContext };
 type oscillatorNodeConstructor = IOscillatorNode;
 
 export { oscillatorNodeConstructor as OscillatorNode };
-
-export { decodeAudioData } from './decode-audio-data';
 
 export const isSupported = () => createIsSupportedPromise(
     browsernizr,

@@ -1,4 +1,3 @@
-import { decodeAudioData } from '../decode-audio-data';
 import {
     IAnalyserNode,
     IAudioBuffer,
@@ -22,6 +21,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
     channelMergerNodeConstructor,
     channelSplitterNodeConstructor,
     constantSourceNodeConstructor,
+    decodeAudioData,
     gainNodeConstructor,
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,

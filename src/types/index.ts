@@ -43,6 +43,8 @@ export * from './constant-source-node-renderer-factory';
 export * from './constant-source-node-renderer-factory-factory';
 export * from './context';
 export * from './data-clone-error-factory';
+export * from './decode-audio-data-factory';
+export * from './decode-audio-data-function';
 export * from './decode-error-callback';
 export * from './decode-success-callback';
 export * from './disconnect-multiple-outputs-factory';
