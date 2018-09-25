@@ -1,14 +1,95 @@
 import '../helper/play-silence';
-import { AudioContext, OfflineAudioContext, addAudioWorkletModule, decodeAudioData, isSupported } from '../../src/module';
+import {
+    AnalyserNode,
+    AudioBuffer,
+    AudioBufferSourceNode,
+    AudioContext,
+    AudioWorkletNode,
+    BiquadFilterNode,
+    ChannelMergerNode,
+    ChannelSplitterNode,
+    ConstantSourceNode,
+    GainNode,
+    IIRFilterNode,
+    MediaElementAudioSourceNode,
+    MediaStreamAudioSourceNode,
+    MinimalAudioContext,
+    MinimalOfflineAudioContext,
+    OfflineAudioContext,
+    OscillatorNode,
+    addAudioWorkletModule,
+    decodeAudioData,
+    isSupported
+} from '../../src/module';
 
 describe('module', () => {
+
+    it('should export the AnalyserNode constructor', () => {
+        expect(AnalyserNode).to.be.a('function');
+    });
+
+    it('should export the AudioBuffer constructor', () => {
+        expect(AudioBuffer).to.be.a('function');
+    });
+
+    it('should export the AudioBufferSourceNode constructor', () => {
+        expect(AudioBufferSourceNode).to.be.a('function');
+    });
 
     it('should export the AudioContext constructor', () => {
         expect(AudioContext).to.be.a('function');
     });
 
+    it('should export the AudioWorkletNode constructor', () => {
+        expect(AudioWorkletNode).to.be.a('function');
+    });
+
+    it('should export the BiquadFilterNode constructor', () => {
+        expect(BiquadFilterNode).to.be.a('function');
+    });
+
+    it('should export the ChannelMergerNode constructor', () => {
+        expect(ChannelMergerNode).to.be.a('function');
+    });
+
+    it('should export the ChannelSplitterNode constructor', () => {
+        expect(ChannelSplitterNode).to.be.a('function');
+    });
+
+    it('should export the ConstantSourceNode constructor', () => {
+        expect(ConstantSourceNode).to.be.a('function');
+    });
+
+    it('should export the GainNode constructor', () => {
+        expect(GainNode).to.be.a('function');
+    });
+
+    it('should export the IIRFilterNode constructor', () => {
+        expect(IIRFilterNode).to.be.a('function');
+    });
+
+    it('should export the MediaElementAudioSourceNode constructor', () => {
+        expect(MediaElementAudioSourceNode).to.be.a('function');
+    });
+
+    it('should export the MediaStreamAudioSourceNode constructor', () => {
+        expect(MediaStreamAudioSourceNode).to.be.a('function');
+    });
+
+    it('should export the MinimalAudioContext constructor', () => {
+        expect(MinimalAudioContext).to.be.a('function');
+    });
+
+    it('should export the MinimalOfflineAudioContext constructor', () => {
+        expect(MinimalOfflineAudioContext).to.be.a('function');
+    });
+
     it('should export the OfflineAudioContext constructor', () => {
         expect(OfflineAudioContext).to.be.a('function');
+    });
+
+    it('should export the OscillatorNode constructor', () => {
+        expect(OscillatorNode).to.be.a('function');
     });
 
     it('should export the addAudioWorkletModule function', () => {
