@@ -324,6 +324,43 @@ describe('AudioBuffer', () => {
 
             });
 
+            describe('getChannelData()', () => {
+
+                let audioBuffer;
+
+                beforeEach(async () => {
+                    audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                });
+
+                describe('with an index of an existing channel', () => {
+
+                    it('should return a Float32Array', () => {
+                        const channelData = audioBuffer.getChannelData(0);
+                        const length = (description.startsWith('decodeAudioData')) ? 1000 : 10;
+
+                        expect(channelData).to.be.an.instanceOf(Float32Array);
+                        expect(channelData.length).to.equal(length);
+                    });
+
+                });
+
+                describe('with an index of an unexisting channel', () => {
+
+                    it('should throw an IndexSizeError', (done) => {
+                        try {
+                            audioBuffer.getChannelData(2);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
+                        }
+                    });
+
+                });
+
+            });
+
             describe('copyFromChannel()', () => {
 
                 let audioBuffer;

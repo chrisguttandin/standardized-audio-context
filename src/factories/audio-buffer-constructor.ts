@@ -4,6 +4,7 @@ import { testAudioBufferCopyChannelMethodsSubarraySupport } from '../support-tes
 import { TAudioBufferConstructorFactory, TNativeOfflineAudioContext } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 import { wrapAudioBufferCopyChannelMethodsSubarray } from '../wrappers/audio-buffer-copy-channel-methods-subarray';
+import { wrapAudioBufferGetChannelDataMethod } from '../wrappers/audio-buffer-get-channel-data-method';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
@@ -56,8 +57,10 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
                 nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
+            // Bug #100: Safari does throw a wrong error when calling getChannelData() with an out-of-bounds value.
             if (typeof audioBuffer.copyFromChannel !== 'function') {
                 wrapAudioBufferCopyChannelMethods(audioBuffer);
+                wrapAudioBufferGetChannelDataMethod(audioBuffer);
             // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
             } else if (!cacheTestResult(
                 testAudioBufferCopyChannelMethodsSubarraySupport,
