@@ -472,7 +472,7 @@ type minimalAudioContextConstructor = IMinimalAudioContext;
 
 export { minimalAudioContextConstructor as MinimalAudioContext };
 
-const startRendering = createStartRendering(renderNativeOfflineAudioContext);
+const startRendering = createStartRendering(renderNativeOfflineAudioContext, testAudioBufferCopyChannelMethodsSubarraySupport);
 const minimalOfflineAudioContextConstructor: IMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     createInvalidStateError,
     minimalBaseAudioContextConstructor,

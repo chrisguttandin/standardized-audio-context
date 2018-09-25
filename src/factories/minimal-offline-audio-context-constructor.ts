@@ -2,7 +2,6 @@ import { cacheTestResult } from '../helpers/cache-test-result';
 import { IAudioBuffer, IMinimalOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import { testPromiseSupport } from '../support-testers/promise';
 import { TAudioContextState, TMinimalOfflineAudioContextConstructorFactory, TNativeOfflineAudioContext } from '../types';
-import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
@@ -95,11 +94,6 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
 
             return startRendering(this.destination, this._nativeOfflineAudioContext)
                 .then((audioBuffer) => {
-                    // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-                    if (typeof audioBuffer.copyFromChannel !== 'function') {
-                        wrapAudioBufferCopyChannelMethods(audioBuffer);
-                    }
-
                     this._state = null;
 
                     /*

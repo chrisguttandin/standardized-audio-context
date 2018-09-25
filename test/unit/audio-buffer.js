@@ -1,7 +1,8 @@
 import '../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode } from '../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, MinimalOfflineAudioContext, OfflineAudioContext } from '../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../src/globals';
 import { createAudioContext } from '../helper/create-audio-context';
+import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
 import { createNativeAudioContextConstructor } from '../../src/factories/native-audio-context-constructor';
 import { createNativeOfflineAudioContextConstructor } from '../../src/factories/native-offline-audio-context-constructor';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
@@ -38,6 +39,13 @@ const createAudioBufferWithConstructor = (_, numberOfChannels, length, sampleRat
 const createAudioBufferWithFactoryFunction = (context, numberOfChannels, length, sampleRate) => {
     return Promise.resolve(context.createBuffer(numberOfChannels, length, sampleRate));
 };
+const createAudioBufferWithStartRenderingFunction = (context, numberOfChannels, length, sampleRate) => {
+    if (context instanceof MinimalOfflineAudioContext) {
+        return (new MinimalOfflineAudioContext({ length, numberOfChannels, sampleRate })).startRendering();
+    }
+
+    return (new OfflineAudioContext({ length, numberOfChannels, sampleRate })).startRendering();
+};
 const testCases = {
     'constructor': {
         createAudioBuffer: createAudioBufferWithConstructor,
@@ -65,6 +73,14 @@ const testCases = {
     },
     'factory function of an OfflineAudioContext': {
         createAudioBuffer: createAudioBufferWithFactoryFunction,
+        createContext: createOfflineAudioContext
+    },
+    'startRendering function of a MinimalOfflineAudioContext': {
+        createAudioBuffer: createAudioBufferWithStartRenderingFunction,
+        createContext: createMinimalOfflineAudioContext
+    },
+    'startRendering function of an OfflineAudioContext': {
+        createAudioBuffer: createAudioBufferWithStartRenderingFunction,
         createContext: createOfflineAudioContext
     }
 };
@@ -185,7 +201,7 @@ describe('AudioBuffer', () => {
 
                         });
 
-                        if (!description.startsWith('decodeAudioData')) {
+                        if (!description.startsWith('decodeAudioData') && !description.startsWith('startRendering')) {
 
                             describe('with invalid options', () => {
 
