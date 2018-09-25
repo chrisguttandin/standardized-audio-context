@@ -1,13 +1,8 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { testAnalyserNodeGetFloatTimeDomainDataMethodSupport } from '../support-testers/analyser-node-get-float-time-domain-data-method';
-import { TNativeAnalyserNode, TNativeAnalyserNodeFactoryFactory } from '../types';
+import { TNativeAnalyserNodeFactoryFactory } from '../types';
 import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../wrappers/analyser-node-get-float-time-domain-data-method';
-
-const isSupportingAnalyserNodeGetFloatTimeDomainDataMethod = (nativeAnalyserNode: TNativeAnalyserNode) => cacheTestResult(
-    testAnalyserNodeGetFloatTimeDomainDataMethodSupport,
-    () => testAnalyserNodeGetFloatTimeDomainDataMethodSupport(nativeAnalyserNode)
-);
 
 export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory = (createNativeAudioNode) => {
     return (nativeContext, options) => {
@@ -37,7 +32,10 @@ export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory 
         }
 
         // Bug #36: Safari does not support getFloatTimeDomainData() yet.
-        if (!isSupportingAnalyserNodeGetFloatTimeDomainDataMethod(nativeAnalyserNode)) {
+        if (!cacheTestResult(
+            testAnalyserNodeGetFloatTimeDomainDataMethodSupport,
+            () => testAnalyserNodeGetFloatTimeDomainDataMethodSupport(nativeAnalyserNode)
+        )) {
             wrapAnalyserNodeGetFloatTimeDomainDataMethod(nativeAnalyserNode);
         }
 

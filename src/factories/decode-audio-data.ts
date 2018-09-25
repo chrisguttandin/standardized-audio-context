@@ -1,7 +1,7 @@
 import { deallocate } from 'async-array-buffer';
 import { DETACHED_ARRAY_BUFFERS } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
-import { TDecodeAudioDataFactory, TNativeAudioBuffer, TNativeContext } from '../types';
+import { TDecodeAudioDataFactory } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 import { wrapAudioBufferCopyChannelMethodsSubarray } from '../wrappers/audio-buffer-copy-channel-methods-subarray';
 import { wrapAudioBufferGetChannelDataMethod } from '../wrappers/audio-buffer-get-channel-data-method';
@@ -14,16 +14,6 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     testAudioBufferCopyChannelMethodsSubarraySupport,
     testPromiseSupport
 ) => {
-    const isSupportingCopyChannelMethodsSubarray = (nativeAudioBuffer: TNativeAudioBuffer) => cacheTestResult(
-        testAudioBufferCopyChannelMethodsSubarraySupport,
-        () => testAudioBufferCopyChannelMethodsSubarraySupport(nativeAudioBuffer)
-    );
-
-    const isSupportingPromises = (nativeContext: TNativeContext) => cacheTestResult(
-        testPromiseSupport,
-        () => testPromiseSupport(nativeContext)
-    );
-
     return (nativeContext, audioData) => {
         // Bug #43: Only Chrome and Opera do throw a DataCloneError.
         if (DETACHED_ARRAY_BUFFERS.has(audioData)) {
@@ -40,7 +30,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
         }
 
         // Bug #21: Safari does not support promises yet.
-        if (isSupportingPromises(nativeContext)) {
+        if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeContext))) {
             // Bug #101: Edge does not decode something on a closed OfflineAudioContext.
             const nativeContextOrBackupNativeContext = (nativeContext.state === 'closed' &&
                     nativeOfflineAudioContextConstructor !== null &&
@@ -68,7 +58,10 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             return promise
                 .then((audioBuffer) => {
                     // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
-                    if (!isSupportingCopyChannelMethodsSubarray(audioBuffer)) {
+                    if (!cacheTestResult(
+                        testAudioBufferCopyChannelMethodsSubarraySupport,
+                        () => testAudioBufferCopyChannelMethodsSubarraySupport(audioBuffer)
+                    )) {
                         wrapAudioBufferCopyChannelMethodsSubarray(audioBuffer);
                     }
 

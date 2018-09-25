@@ -7,11 +7,6 @@ const DEFAULT_OPTIONS = {
     numberOfChannels: 1
 };
 
-const isSupportingPromises = (nativeOfflineAudioContext: TNativeOfflineAudioContext) => cacheTestResult(
-    testPromiseSupport,
-    () => testPromiseSupport(nativeOfflineAudioContext)
-);
-
 export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructorFactory = (
     createInvalidStateError,
     minimalBaseAudioContextConstructor,
@@ -40,7 +35,10 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
             const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(numberOfChannels, length, sampleRate);
 
             // #21 Safari does not support promises and therefore would fire the statechange event before the promise can be resolved.
-            if (!isSupportingPromises(nativeOfflineAudioContext)) {
+            if (!cacheTestResult(
+                testPromiseSupport,
+                () => testPromiseSupport(nativeOfflineAudioContext)
+            )) {
                 nativeOfflineAudioContext.addEventListener('statechange', (() => {
                     let i = 0;
 

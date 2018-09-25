@@ -1,17 +1,12 @@
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { IOfflineAudioCompletionEvent } from '../interfaces';
 import { testPromiseSupport } from '../support-testers/promise';
-import { TNativeAudioBuffer, TNativeOfflineAudioContext, TRenderNativeOfflineAudioContextFactory } from '../types';
-
-const isSupportingPromises = (nativeOfflineAudioContext: TNativeOfflineAudioContext) => cacheTestResult(
-    testPromiseSupport,
-    () => testPromiseSupport(nativeOfflineAudioContext)
-);
+import { TNativeAudioBuffer, TRenderNativeOfflineAudioContextFactory } from '../types';
 
 export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFactory = (createNativeGainNode) => {
     return (nativeOfflineAudioContext) => {
         // Bug #21: Safari does not support promises yet.
-        if (isSupportingPromises(nativeOfflineAudioContext)) {
+        if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeOfflineAudioContext))) {
             return nativeOfflineAudioContext.startRendering();
         }
 
