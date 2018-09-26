@@ -10,7 +10,8 @@ import {
     IGainNodeConstructor,
     IIIRFilterNodeConstructor,
     IMinimalBaseAudioContextConstructor,
-    IOscillatorNodeConstructor
+    IOscillatorNodeConstructor,
+    IWaveShaperNodeConstructor
 } from '../interfaces';
 import { TAddAudioWorkletModuleFunction } from './add-audio-worklet-module-function';
 import { TDecodeAudioDataFunction } from './decode-audio-data-function';
@@ -28,5 +29,6 @@ export type TBaseAudioContextConstructorFactory = (
     gainNodeConstructor: IGainNodeConstructor,
     iIRFilterNodeConstructor: IIIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor: IMinimalBaseAudioContextConstructor,
-    oscillatorNodeConstructor: IOscillatorNodeConstructor
+    oscillatorNodeConstructor: IOscillatorNodeConstructor,
+    waveShaperNodeConstructor: IWaveShaperNodeConstructor
 ) => IBaseAudioContextConstructor;

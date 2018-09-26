@@ -66,6 +66,7 @@ import { createNativeMediaStreamAudioSourceNodeFactory } from './factories/nativ
 import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
 import { createNativeOscillatorNodeFactory } from './factories/native-oscillator-node-factory';
 import { createNativeScriptProcessorNodeFactory } from './factories/native-script-processor-node-factory';
+import { createNativeWaveShaperNodeFactory } from './factories/native-wave-shaper-node-factory';
 import { createNoneAudioDestinationNodeConstructor } from './factories/none-audio-destination-node-constructor';
 import { createNotSupportedError } from './factories/not-supported-error';
 import { createOfflineAudioContextConstructor } from './factories/offline-audio-context-constructor';
@@ -100,6 +101,8 @@ import {
     createTestConstantSourceNodeAccurateSchedulingSupport
 } from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
+import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
+import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-node-renderer-factory';
 import { createWindow } from './factories/window';
 import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
@@ -139,7 +142,9 @@ import {
     IOfflineAudioContext,
     IOfflineAudioContextConstructor,
     IOscillatorNode,
-    IOscillatorNodeConstructor
+    IOscillatorNodeConstructor,
+    IWaveShaperNode,
+    IWaveShaperNodeConstructor
 } from './interfaces';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
 import { testPromiseSupport } from './support-testers/promise';
@@ -323,6 +328,15 @@ const oscillatorNodeConstructor: IOscillatorNodeConstructor = createOscillatorNo
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(createInvalidStateError, createNativeAudioNode);
+const createWaveShaperNodeRenderer = createWaveShaperNodeRendererFactory(createNativeWaveShaperNode);
+const waveShaperNodeConstructor: IWaveShaperNodeConstructor = createWaveShaperNodeConstructor(
+    createInvalidStateError,
+    createNativeWaveShaperNode,
+    createWaveShaperNodeRenderer,
+    isNativeOfflineAudioContext,
+    noneAudioDestinationNodeConstructor
+);
 const isSecureContext = createIsSecureContext(window);
 
 // The addAudioWorkletModule() function is only available in a SecureContext.
@@ -356,7 +370,8 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
     gainNodeConstructor,
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
-    oscillatorNodeConstructor
+    oscillatorNodeConstructor,
+    waveShaperNodeConstructor
 );
 const createNativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNodeFactory(createNativeAudioNode);
 const mediaElementAudioSourceNodeConstructor: IMediaElementAudioSourceNodeConstructor = createMediaElementAudioSourceNodeConstructor(
@@ -498,6 +513,10 @@ export { offlineAudioContextConstructor as OfflineAudioContext };
 type oscillatorNodeConstructor = IOscillatorNode;
 
 export { oscillatorNodeConstructor as OscillatorNode };
+
+type waveShaperNodeConstructor = IWaveShaperNode;
+
+export { waveShaperNodeConstructor as WaveShaperNode };
 
 export const isSupported = () => createIsSupportedPromise(
     browsernizr,

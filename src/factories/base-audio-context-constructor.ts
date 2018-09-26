@@ -8,6 +8,7 @@ import {
     IGainNode,
     IIIRFilterNode,
     IOscillatorNode,
+    IWaveShaperNode,
     IWorkletOptions
 } from '../interfaces';
 import { TBaseAudioContextConstructorFactory, TDecodeErrorCallback, TDecodeSuccessCallback, TNativeContext, TTypedArray } from '../types';
@@ -25,7 +26,8 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
     gainNodeConstructor,
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
-    oscillatorNodeConstructor
+    oscillatorNodeConstructor,
+    waveShaperNodeConstructor
 ) => {
 
     return class BaseAudioContext extends minimalBaseAudioContextConstructor implements IBaseAudioContext {
@@ -85,6 +87,10 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         public createOscillator (): IOscillatorNode {
             return new oscillatorNodeConstructor(<any> this);
+        }
+
+        public createWaveShaper (): IWaveShaperNode {
+            return new waveShaperNodeConstructor(<any> this);
         }
 
         public decodeAudioData (

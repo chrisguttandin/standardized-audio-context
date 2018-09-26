@@ -93,6 +93,29 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createWaveShaper()', () => {
+
+        describe('curve', () => {
+
+            // bug #104
+
+            it('should throw an InvalidAccessError when assigning a curve with less than two samples', (done) => {
+                const waveShaperNode = audioContext.createWaveShaper();
+
+                try {
+                    waveShaperNode.curve = new Float32Array([ 1 ]);
+                } catch (err) {
+                    expect(err.code).to.equal(15);
+                    expect(err.name).to.equal('InvalidAccessError');
+
+                    done();
+                }
+            });
+
+        });
+
+    });
+
     describe('resume()', () => {
 
         afterEach(() => {

@@ -355,6 +355,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createWaveShaper()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createWaveShaper).to.be.a('function');
+            });
+
+        });
+
         describe('decodeAudioData()', () => {
 
             it('should return a promise', () => {

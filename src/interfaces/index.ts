@@ -89,4 +89,7 @@ export * from './read-only-map';
 export * from './set-target-automation';
 export * from './set-value-automation';
 export * from './set-value-curve-automation';
+export * from './wave-shaper-node-constructor';
+export * from './wave-shaper-node';
+export * from './wave-shaper-options';
 export * from './worklet-options';

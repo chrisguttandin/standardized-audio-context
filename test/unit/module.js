@@ -17,6 +17,7 @@ import {
     MinimalOfflineAudioContext,
     OfflineAudioContext,
     OscillatorNode,
+    WaveShaperNode,
     addAudioWorkletModule,
     decodeAudioData,
     isSupported
@@ -90,6 +91,10 @@ describe('module', () => {
 
     it('should export the OscillatorNode constructor', () => {
         expect(OscillatorNode).to.be.a('function');
+    });
+
+    it('should export the WaveShaperNode constructor', () => {
+        expect(WaveShaperNode).to.be.a('function');
     });
 
     it('should export the addAudioWorkletModule function', () => {
