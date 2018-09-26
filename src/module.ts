@@ -143,7 +143,7 @@ import {
 } from './interfaces';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
 import { testPromiseSupport } from './support-testers/promise';
-import { TAddAudioWorkletModuleFunction } from './types';
+import { TAddAudioWorkletModuleFunction, TDecodeAudioDataFunction } from './types';
 
 export * from './interfaces';
 export * from './types';
@@ -334,7 +334,7 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
     ) :
     undefined;
 
-export const decodeAudioData = createDecodeAudioData(
+export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     createDataCloneError,
     createEncodingError,
     nativeOfflineAudioContextConstructor,
