@@ -304,7 +304,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
                             outputChannelSplitterNodeOutput += options.outputChannelCount[j];
                         }
-                    } catch (err) {
+                    } catch {
                         isActive = false;
 
                         if (onprocessorerror !== null) {

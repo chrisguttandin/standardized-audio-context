@@ -32,8 +32,8 @@ export const testPromiseSupport = (nativeContext: TNativeContext): boolean => {
         });
 
         return true;
-    } catch (err) {
-        // Ignore thrown errors.
+    } catch {
+        // Ignore errors.
     }
 
     return false;

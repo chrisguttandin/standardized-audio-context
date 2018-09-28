@@ -10,7 +10,7 @@ export const createTestAudioContextOptionsSupport: TTestAudioContextOptionsSuppo
 
         try {
             audioContext = new nativeAudioContextConstructor({ latencyHint: 'balanced' });
-        } catch (err) {
+        } catch {
             return false;
         }
 

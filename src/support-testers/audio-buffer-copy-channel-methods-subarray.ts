@@ -9,7 +9,7 @@ export const testAudioBufferCopyChannelMethodsSubarraySupport = (nativeAudioBuff
          * methods is enough to know if the other one it supported as well.
          */
         nativeAudioBuffer.copyToChannel(source, 0, nativeAudioBuffer.length - 1);
-    } catch (err) {
+    } catch {
         return false;
     }
 

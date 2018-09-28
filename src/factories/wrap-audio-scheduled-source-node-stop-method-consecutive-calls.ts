@@ -42,7 +42,7 @@ export const createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls:
                 if (isStopped) {
                     try {
                         stop.call(nativeAudioScheduledSourceNode, when);
-                    } catch (err) {
+                    } catch {
                         nativeGainNode.gain.setValueAtTime(0, when);
                     }
                 } else {

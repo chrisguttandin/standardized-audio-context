@@ -102,7 +102,7 @@ const processBuffer = async (
             if (!activeSourceFlag) {
                 break;
             }
-        } catch (err) {
+        } catch {
             if (proxy.onprocessorerror !== null) {
                 proxy.onprocessorerror.call(<any> null, new ErrorEvent('processorerror'));
             }

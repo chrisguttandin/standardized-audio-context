@@ -11,7 +11,7 @@ export const isConstructible = (constructible: IConstructor): boolean => {
         const proxy = new Proxy(constructible, handler);
 
         new proxy(); // tslint:disable-line:no-unused-expression
-    } catch (err) {
+    } catch {
         return false;
     }
 

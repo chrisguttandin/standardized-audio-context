@@ -23,7 +23,7 @@ export const createNativeChannelMergerNodeFactory: TNativeChannelMergerNodeFacto
             nativeChannelMergerNode.channelCount = (options.numberOfInputs === undefined) ? 6 : options.numberOfInputs;
 
             wrapChannelMergerNode(nativeContext, nativeChannelMergerNode);
-        } catch (err) {} // tslint:disable-line:no-empty
+        } catch { /* Ignore errors. */ } // tslint:disable-line:no-empty
 
         return nativeChannelMergerNode;
     };

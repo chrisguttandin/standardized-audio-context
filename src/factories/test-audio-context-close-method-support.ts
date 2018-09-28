@@ -18,7 +18,7 @@ export const createTestAudioContextCloseMethodSupport: TTestAudioContextCloseMet
 
         try {
             audioContext.close();
-        } catch (err) {
+        } catch {
             // Ignore errors.
         }
 

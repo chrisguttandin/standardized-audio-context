@@ -25,7 +25,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
         // The audioData parameter maybe of a type which can't be added to a WeakSet.
         try {
             DETACHED_ARRAY_BUFFERS.add(audioData);
-        } catch (err) {
+        } catch {
             // Ignore errors.
         }
 
@@ -52,7 +52,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             setTimeout(() => {
                 try {
                     deallocate(audioData);
-                } catch (err) { /* Ignore errors. */ }
+                } catch { /* Ignore errors. */ }
             });
 
             return promise
@@ -74,7 +74,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             const complete = () => {
                 try {
                     deallocate(audioData);
-                } catch (err) { /* Ignore errors. */ }
+                } catch { /* Ignore errors. */ }
             };
 
             const fail = (err: DOMException | Error) => {
