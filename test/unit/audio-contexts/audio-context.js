@@ -355,6 +355,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createStereoPanner()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createStereoPanner).to.be.a('function');
+            });
+
+        });
+
         describe('createWaveShaper()', () => {
 
             it('should be a function', () => {

@@ -8,6 +8,7 @@ import {
     IGainNode,
     IIIRFilterNode,
     IOscillatorNode,
+    IStereoPannerNode,
     IWaveShaperNode,
     IWorkletOptions
 } from '../interfaces';
@@ -27,6 +28,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
     oscillatorNodeConstructor,
+    stereoPannerNodeConstructor,
     waveShaperNodeConstructor
 ) => {
 
@@ -87,6 +89,10 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         public createOscillator (): IOscillatorNode {
             return new oscillatorNodeConstructor(<any> this);
+        }
+
+        public createStereoPanner (): IStereoPannerNode {
+            return new stereoPannerNodeConstructor(<any> this);
         }
 
         public createWaveShaper (): IWaveShaperNode {

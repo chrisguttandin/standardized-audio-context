@@ -66,6 +66,8 @@ import { createNativeMediaStreamAudioSourceNodeFactory } from './factories/nativ
 import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
 import { createNativeOscillatorNodeFactory } from './factories/native-oscillator-node-factory';
 import { createNativeScriptProcessorNodeFactory } from './factories/native-script-processor-node-factory';
+import { createNativeStereoPannerNodeFactory } from './factories/native-stereo-panner-node-factory';
+import { createNativeStereoPannerNodeFakerFactory } from './factories/native-stereo-panner-node-faker-factory';
 import { createNativeWaveShaperNodeFactory } from './factories/native-wave-shaper-node-factory';
 import { createNoneAudioDestinationNodeConstructor } from './factories/none-audio-destination-node-constructor';
 import { createNotSupportedError } from './factories/not-supported-error';
@@ -74,6 +76,8 @@ import { createOscillatorNodeConstructor } from './factories/oscillator-node-con
 import { createOscillatorNodeRendererFactory } from './factories/oscillator-node-renderer-factory';
 import { createRenderNativeOfflineAudioContext } from './factories/render-native-offline-audio-context';
 import { createStartRendering } from './factories/start-rendering';
+import { createStereoPannerNodeConstructor } from './factories/stereo-panner-node-constructor';
+import { createStereoPannerNodeRendererFactory } from './factories/stereo-panner-node-renderer-factory';
 import { createTestAudioBufferConstructorSupport } from './factories/test-audio-buffer-constructor-support';
 import {
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport
@@ -143,6 +147,8 @@ import {
     IOfflineAudioContextConstructor,
     IOscillatorNode,
     IOscillatorNodeConstructor,
+    IStereoPannerNode,
+    IStereoPannerNodeConstructor,
     IWaveShaperNode,
     IWaveShaperNodeConstructor
 } from './interfaces';
@@ -329,6 +335,26 @@ const oscillatorNodeConstructor: IOscillatorNodeConstructor = createOscillatorNo
     noneAudioDestinationNodeConstructor
 );
 const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(createInvalidStateError, createNativeAudioNode);
+const nativeStereoPannerNodeFakerFactory = createNativeStereoPannerNodeFakerFactory(
+    createNativeChannelMergerNode,
+    createNativeChannelSplitterNode,
+    createNativeGainNode,
+    createNativeWaveShaperNode,
+    createNotSupportedError
+);
+const createNativeStereoPannerNode = createNativeStereoPannerNodeFactory(
+    createNativeAudioNode,
+    nativeStereoPannerNodeFakerFactory,
+    createNotSupportedError
+);
+const createStereoPannerNodeRenderer = createStereoPannerNodeRendererFactory(createNativeStereoPannerNode);
+const stereoPannerNodeConstructor: IStereoPannerNodeConstructor = createStereoPannerNodeConstructor(
+    createAudioParam,
+    createNativeStereoPannerNode,
+    createStereoPannerNodeRenderer,
+    isNativeOfflineAudioContext,
+    noneAudioDestinationNodeConstructor
+);
 const createWaveShaperNodeRenderer = createWaveShaperNodeRendererFactory(createNativeWaveShaperNode);
 const waveShaperNodeConstructor: IWaveShaperNodeConstructor = createWaveShaperNodeConstructor(
     createInvalidStateError,
@@ -371,6 +397,7 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
     oscillatorNodeConstructor,
+    stereoPannerNodeConstructor,
     waveShaperNodeConstructor
 );
 const createNativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNodeFactory(createNativeAudioNode);
@@ -513,6 +540,10 @@ export { offlineAudioContextConstructor as OfflineAudioContext };
 type oscillatorNodeConstructor = IOscillatorNode;
 
 export { oscillatorNodeConstructor as OscillatorNode };
+
+type stereoPannerNodeConstructor = IStereoPannerNode;
+
+export { stereoPannerNodeConstructor as StereoPannerNode };
 
 type waveShaperNodeConstructor = IWaveShaperNode;
 

@@ -505,6 +505,20 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('createStereoPanner()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createStereoPanner).to.be.a('function');
+        });
+
+    });
+
     describe('createWaveShaper()', () => {
 
         let offlineAudioContext;

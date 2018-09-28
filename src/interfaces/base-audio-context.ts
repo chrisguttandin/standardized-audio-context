@@ -9,6 +9,7 @@ import { IGainNode } from './gain-node';
 import { IIIRFilterNode } from './iir-filter-node';
 import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 import { IOscillatorNode } from './oscillator-node';
+import { IStereoPannerNode } from './stereo-panner-node';
 import { IWaveShaperNode } from './wave-shaper-node';
 
 export interface IBaseAudioContext extends IMinimalBaseAudioContext {
@@ -37,6 +38,8 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
     createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode;
 
     createOscillator (): IOscillatorNode;
+
+    createStereoPanner (): IStereoPannerNode;
 
     createWaveShaper (): IWaveShaperNode;
 

@@ -767,6 +767,16 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createStereoPanner()', () => {
+
+            // bug #105
+
+            it('should not be implemented', () => {
+                expect(audioContext.createStereoPanner).to.be.undefined;
+            });
+
+        });
+
         describe('createWaveShaper()', () => {
 
             describe('curve', () => {

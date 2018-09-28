@@ -222,6 +222,31 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createStereoPanner()', () => {
+
+        // bug #107
+
+        it('should not modify the signal', () => {
+            const constantSourceNode = new ConstantSourceNode(offlineAudioContext, { channelCount: 1, offset: 1 });
+            const stereoPanner = new StereoPannerNode(offlineAudioContext, { channelCount: 1 });
+
+            constantSourceNode.start();
+
+            constantSourceNode
+                .connect(stereoPanner)
+                .connect(offlineAudioContext.destination);
+
+            return offlineAudioContext
+                .startRendering()
+                .then((buffer) => {
+                    const channelData = buffer.getChannelData(0);
+
+                    expect(channelData[0]).to.equal(1);
+                });
+        });
+
+    });
+
     describe('createScriptProcessor()', () => {
 
         // bug #13

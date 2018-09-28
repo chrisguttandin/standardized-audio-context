@@ -11,6 +11,7 @@ import {
     IIIRFilterNodeConstructor,
     IMinimalBaseAudioContextConstructor,
     IOscillatorNodeConstructor,
+    IStereoPannerNodeConstructor,
     IWaveShaperNodeConstructor
 } from '../interfaces';
 import { TAddAudioWorkletModuleFunction } from './add-audio-worklet-module-function';
@@ -30,5 +31,6 @@ export type TBaseAudioContextConstructorFactory = (
     iIRFilterNodeConstructor: IIIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor: IMinimalBaseAudioContextConstructor,
     oscillatorNodeConstructor: IOscillatorNodeConstructor,
+    stereoPannerNodeConstructor: IStereoPannerNodeConstructor,
     waveShaperNodeConstructor: IWaveShaperNodeConstructor
 ) => IBaseAudioContextConstructor;

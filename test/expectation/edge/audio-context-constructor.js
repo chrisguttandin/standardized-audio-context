@@ -546,6 +546,40 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createStereoPanner()', () => {
+
+            let stereoPannerNode;
+
+            beforeEach(() => {
+                stereoPannerNode = audioContext.createStereoPanner();
+            });
+
+            describe('pan', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #106
+
+                    it('should be undefined', () => {
+                        expect(stereoPannerNode.pan.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #106
+
+                    it('should be undefined', () => {
+                        expect(stereoPannerNode.pan.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+        });
+
         describe('decodeAudioData()', () => {
 
             // bug #27
