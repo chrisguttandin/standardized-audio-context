@@ -9,11 +9,9 @@ export const createIndexSizeError: TIndexSizeErrorFactory = () => {
     try {
         return new DOMException('', 'IndexSizeError');
     } catch (err) {
-        const exception: any = new Error();
+        err.code = 1;
+        err.name = 'IndexSizeError';
 
-        exception.code = 1;
-        exception.name = 'IndexSizeError';
-
-        return exception;
+        return err;
     }
 };

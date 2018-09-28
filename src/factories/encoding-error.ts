@@ -9,11 +9,9 @@ export const createEncodingError: TEncodingErrorFactory = () => {
     try {
         return new DOMException('', 'EncodingError');
     } catch (err) {
-        const exception: any = new Error();
+        err.code = 0;
+        err.name = 'EncodingError';
 
-        exception.code = 0;
-        exception.name = 'EncodingError';
-
-        return exception;
+        return err;
     }
 };

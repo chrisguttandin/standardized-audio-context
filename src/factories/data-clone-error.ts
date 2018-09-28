@@ -9,11 +9,9 @@ export const createDataCloneError: TDataCloneErrorFactory = () => {
     try {
         return new DOMException('', 'DataCloneError');
     } catch (err) {
-        const exception: any = new Error();
+        err.code = 25;
+        err.name = 'DataCloneError';
 
-        exception.code = 25;
-        exception.name = 'DataCloneError';
-
-        return exception;
+        return err;
     }
 };

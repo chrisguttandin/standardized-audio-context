@@ -9,11 +9,9 @@ export const createInvalidStateError: TInvalidStateErrorFactory = () => {
     try {
         return new DOMException('', 'InvalidStateError');
     } catch (err) {
-        const exception: any = new Error();
+        err.code = 11;
+        err.name = 'InvalidStateError';
 
-        exception.code = 11;
-        exception.name = 'InvalidStateError';
-
-        return exception;
+        return err;
     }
 };

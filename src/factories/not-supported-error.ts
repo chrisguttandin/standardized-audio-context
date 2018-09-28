@@ -9,11 +9,9 @@ export const createNotSupportedError: TNotSupportedErrorFactory = () => {
     try {
         return new DOMException('', 'NotSupportedError');
     } catch (err) {
-        const exception: any = new Error();
+        err.code = 9;
+        err.name = 'NotSupportedError';
 
-        exception.code = 9;
-        exception.name = 'NotSupportedError';
-
-        return exception;
+        return err;
     }
 };

@@ -9,11 +9,9 @@ export const createAbortError: TAbortErrorFactory = () => {
     try {
         return new DOMException('', 'AbortError');
     } catch (err) {
-        const exception: any = new Error();
+        err.code = 20;
+        err.name = 'AbortError';
 
-        exception.code = 20;
-        exception.name = 'AbortError';
-
-        return exception;
+        return err;
     }
 };

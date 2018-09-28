@@ -9,11 +9,9 @@ export const createInvalidAccessError: TInvalidAccessErrorFactory = () => {
     try {
         return new DOMException('', 'InvalidAccessError');
     } catch (err) {
-        const exception: any = new Error();
+        err.code = 15;
+        err.name = 'InvalidAccessError';
 
-        exception.code = 15;
-        exception.name = 'InvalidAccessError';
-
-        return exception;
+        return err;
     }
 };
