@@ -140,6 +140,14 @@ This is an implementation of the
 This is an implementation of the
 [`OscillatorNode`](https://webaudio.github.io/web-audio-api/#oscillatornode) constructor and the [`createOscillator()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createoscillator) factory method respectively.
 
+### StereoPannerNode / createStereoPanner()
+
+This is an implementation of the [`StereoPannerNode`](https://webaudio.github.io/web-audio-api/#stereopannernode) constructor and the [`createStereoPanner()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createstereopanner) factory method respectively. The channelCountMode can only be `'explicit'` unless Safari comes up with a native implementation.
+
+### WaveShaperNode / createWaveShaper()
+
+This is an implementation of the [`WaveShaperNode`](https://webaudio.github.io/web-audio-api/#waveshapernode) constructor and the [`createWaveShaper()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createwaveshaper) factory method respectively.
+
 ### isSupported()
 
  `standardized-audio-context` is also exporting a promise which can be accessed by calling `isSupported()`. This promise resolves to a boolean which indicates if the functionality is supported within the currently used browser. This is not part of the specification.
