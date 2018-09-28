@@ -777,7 +777,6 @@ describe('AudioBufferSourceNode', () => {
                                         }
                                     })
                                         .then((channelData) => {
-                                            // console.log('channelData', channelData);
                                             expect(Array.from(channelData)).to.deep.equal([ 1, 1, 0, 0, 0 ]);
                                         });
                                 });
