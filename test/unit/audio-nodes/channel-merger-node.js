@@ -275,7 +275,7 @@ describe('ChannelMergerNode', () => {
                     const gainNode = new GainNode(context);
 
                     try {
-                        gainNode.connect(gainNode.gain, -1);
+                        channelMergerNode.connect(gainNode.gain, -1);
                     } catch (err) {
                         expect(err.code).to.equal(1);
                         expect(err.name).to.equal('IndexSizeError');
