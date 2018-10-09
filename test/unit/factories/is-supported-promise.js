@@ -5,6 +5,7 @@ import { createIsSupportedPromise } from '../../../src/factories/is-supported-pr
 describe('createIsSupportedPromise()', () => {
 
     let fakeBrowsernizr;
+    let fakeTestAsyncArrayBufferSupport;
     let fakeTestAudioContextCloseMethodSupport;
     let fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport;
     let fakeTestAudioContextOptionsSupport;
@@ -13,6 +14,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestIsSecureContextSupport;
 
     afterEach(() => {
+        TEST_RESULTS.delete(fakeTestAsyncArrayBufferSupport);
         TEST_RESULTS.delete(fakeTestAudioContextCloseMethodSupport);
         TEST_RESULTS.delete(fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport);
         TEST_RESULTS.delete(fakeTestAudioContextOptionsSupport);
@@ -23,6 +25,7 @@ describe('createIsSupportedPromise()', () => {
 
     beforeEach(() => {
         fakeBrowsernizr = { promises: true, typedarrays: true, webaudio: true };
+        fakeTestAsyncArrayBufferSupport = () => true;
         fakeTestAudioContextCloseMethodSupport = () => true;
         fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.resolve(true);
         fakeTestAudioContextOptionsSupport = () => true;
@@ -34,6 +37,7 @@ describe('createIsSupportedPromise()', () => {
     it('should resolve to true if all test pass', async () => {
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -50,6 +54,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -66,6 +71,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -82,6 +88,24 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestIsSecureContextSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for async-array-buffer support fails', async () => {
+        fakeTestAsyncArrayBufferSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -98,6 +122,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -114,6 +139,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -130,6 +156,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -146,6 +173,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -162,6 +190,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -178,6 +207,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,

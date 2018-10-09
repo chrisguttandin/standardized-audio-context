@@ -3,6 +3,7 @@ import { TIsSupportedPromiseFactory } from '../types';
 
 export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     browsernizr,
+    testAsyncArrayBufferSupport,
     testAudioContextCloseMethodSupport,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
     testAudioContextOptionsSupport,
@@ -19,13 +20,14 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
             cacheTestResult(testIsSecureContextSupport, () => testIsSecureContextSupport())) {
         return Promise
             .all([
+                cacheTestResult(testAsyncArrayBufferSupport, () => testAsyncArrayBufferSupport()),
                 cacheTestResult(testAudioContextDecodeAudioDataMethodTypeErrorSupport, () => {
                     return testAudioContextDecodeAudioDataMethodTypeErrorSupport();
                 }),
                 cacheTestResult(testChannelMergerNodeSupport, () => testChannelMergerNodeSupport())
             ])
-            .then(([ audioContextDecodeAudioDataMethodTypeErrorSupport, channelMergerNodeSupport ]) => {
-                return audioContextDecodeAudioDataMethodTypeErrorSupport && channelMergerNodeSupport;
+            .then(([ asyncArrayBufferSupport, audioContextDecodeAudioDataMethodTypeErrorSupport, channelMergerNodeSupport ]) => {
+                return asyncArrayBufferSupport && audioContextDecodeAudioDataMethodTypeErrorSupport && channelMergerNodeSupport;
             });
     }
 

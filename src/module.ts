@@ -1,3 +1,4 @@
+import { isSupported as testAsyncArrayBufferSupport } from 'async-array-buffer';
 import browsernizr from './browsernizr';
 import { createAbortError } from './factories/abort-error';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
@@ -551,6 +552,7 @@ export { waveShaperNodeConstructor as WaveShaperNode };
 
 export const isSupported = () => createIsSupportedPromise(
     browsernizr,
+    testAsyncArrayBufferSupport,
     createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),

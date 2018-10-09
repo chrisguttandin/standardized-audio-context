@@ -2,6 +2,7 @@ import { TBrowsernizr } from './browsernizr';
 
 export type TIsSupportedPromiseFactory = (
     browsernizr: TBrowsernizr,
+    testAsyncArrayBufferSupport: () => Promise<boolean>,
     testAudioContextCloseMethodSupport: () => boolean,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: () => Promise<boolean>,
     testAudioContextOptionsSupport: () => boolean,
