@@ -1,7 +1,7 @@
 import babel from 'rollup-plugin-babel';
 
 export default {
-    input: 'build/es2015/module.js',
+    input: 'build/es2018/module.js',
     output: {
         file: 'build/es5/bundle.js',
         format: 'umd',
