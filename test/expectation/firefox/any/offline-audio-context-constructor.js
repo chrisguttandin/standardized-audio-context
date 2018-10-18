@@ -90,18 +90,6 @@ describe('offlineAudioContextConstructor', () => {
 
         });
 
-        describe('stop()', () => {
-
-            // bug #44
-
-            it('should throw a DOMException', () => {
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
-            });
-
-        });
-
     });
 
     describe('createChannelMerger()', () => {
@@ -118,34 +106,6 @@ describe('offlineAudioContextConstructor', () => {
             const channelMergerNode = offlineAudioContext.createChannelMerger();
 
             channelMergerNode.channelCountMode = 'max';
-        });
-
-    });
-
-    describe('createConstantSource()', () => {
-
-        describe('start()', () => {
-
-            // bug #44
-
-            it('should throw a DOMException', () => {
-                const constantSourceNode = offlineAudioContext.createConstantSource();
-
-                expect(() => constantSourceNode.start(-1)).to.throw(DOMException);
-            });
-
-        });
-
-        describe('stop()', () => {
-
-            // bug #44
-
-            it('should throw a DOMException', () => {
-                const constantSourceNode = offlineAudioContext.createConstantSource();
-
-                expect(() => constantSourceNode.stop(-1)).to.throw(DOMException);
-            });
-
         });
 
     });

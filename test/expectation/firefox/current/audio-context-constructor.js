@@ -150,6 +150,16 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('stop()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
+            });
+
+        });
+
     });
 
     describe('createConstantSource()', () => {
@@ -180,6 +190,26 @@ describe('audioContextConstructor', () => {
                     expect(constantSourceNode.offset.minValue).to.equal(Number.NEGATIVE_INFINITY);
                 });
 
+            });
+
+        });
+
+        describe('start()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                expect(() => constantSourceNode.start(-1)).to.throw(DOMException);
+            });
+
+        });
+
+        describe('stop()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                expect(() => constantSourceNode.stop(-1)).to.throw(DOMException);
             });
 
         });

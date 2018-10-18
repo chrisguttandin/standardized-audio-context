@@ -10,13 +10,17 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('createBufferSource()', () => {
 
+        let audioBufferSourceNode;
+
+        beforeEach(() => {
+            audioBufferSourceNode = offlineAudioContext.createBufferSource();
+        });
+
         describe('start()', () => {
 
             // bug #44
 
             it('should throw a DOMException', () => {
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
                 expect(() => audioBufferSourceNode.start(-1)).to.throw(DOMException);
 
                 expect(() => audioBufferSourceNode.start(0, -1)).to.throw(DOMException);
@@ -26,17 +30,31 @@ describe('offlineAudioContextConstructor', () => {
 
         });
 
+        describe('stop()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
+            });
+
+        });
+
     });
 
     describe('createConstantSource()', () => {
+
+        let constantSourceNode;
+
+        beforeEach(() => {
+            constantSourceNode = offlineAudioContext.createConstantSource();
+        });
 
         describe('start()', () => {
 
             // bug #70
 
             it('should start it with a maximum accurary of 128 samples', () => {
-                const constantSourceNode = offlineAudioContext.createConstantSource();
-
                 constantSourceNode.connect(offlineAudioContext.destination);
                 constantSourceNode.start(127 / offlineAudioContext.sampleRate);
 
@@ -51,6 +69,12 @@ describe('offlineAudioContextConstructor', () => {
                     });
             });
 
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                expect(() => constantSourceNode.start(-1)).to.throw(DOMException);
+            });
+
         });
 
         describe('stop()', () => {
@@ -58,8 +82,6 @@ describe('offlineAudioContextConstructor', () => {
             // bug #70
 
             it('should stop it with a maximum accurary of 128 samples', () => {
-                const constantSourceNode = offlineAudioContext.createConstantSource();
-
                 constantSourceNode.connect(offlineAudioContext.destination);
                 constantSourceNode.start();
                 constantSourceNode.stop(1 / offlineAudioContext.sampleRate);
@@ -73,6 +95,12 @@ describe('offlineAudioContextConstructor', () => {
 
                         expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
                     });
+            });
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                expect(() => constantSourceNode.stop(-1)).to.throw(DOMException);
             });
 
         });

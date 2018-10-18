@@ -214,18 +214,6 @@ describe('audioContextConstructor', () => {
 
             });
 
-            describe('stop()', () => {
-
-                // bug #44
-
-                it('should throw a DOMException', () => {
-                    const audioBufferSourceNode = audioContext.createBufferSource();
-
-                    expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
-                });
-
-            });
-
         });
 
         describe('createChannelMerger()', () => {
@@ -242,36 +230,6 @@ describe('audioContextConstructor', () => {
                 const channelMergerNode = audioContext.createChannelMerger();
 
                 channelMergerNode.channelCountMode = 'max';
-            });
-
-        });
-
-        describe('createConstantSource()', () => {
-
-            let constantSourceNode;
-
-            beforeEach(() => {
-                constantSourceNode = audioContext.createConstantSource();
-            });
-
-            describe('start()', () => {
-
-                // bug #44
-
-                it('should throw a DOMException', () => {
-                    expect(() => constantSourceNode.start(-1)).to.throw(DOMException);
-                });
-
-            });
-
-            describe('stop()', () => {
-
-                // bug #44
-
-                it('should throw a DOMException', () => {
-                    expect(() => constantSourceNode.stop(-1)).to.throw(DOMException);
-                });
-
             });
 
         });
