@@ -167,7 +167,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         // Bug #87: Expose at least one output to make this node connectable.
         const outputAudioNodes = (options.numberOfOutputs === 0) ? [ scriptProcessorNode ] : outputChannelMergerNodes;
-        const faker = {
+        const nativeAudioWorkletNodeFaker = {
             get bufferSize () {
                 return bufferSize;
             },
@@ -242,7 +242,12 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         let audioWorkletProcessor: null | IAudioWorkletProcessor = null;
 
-        const audioWorkletProcessorPromise = createAudioWorkletProcessor(nativeContext, faker, processorDefinition, options);
+        const audioWorkletProcessorPromise = createAudioWorkletProcessor(
+            nativeContext,
+            nativeAudioWorkletNodeFaker,
+            processorDefinition,
+            options
+        );
 
         audioWorkletProcessorPromise
             .then((dWrkltPrcssr) => audioWorkletProcessor = dWrkltPrcssr);
@@ -281,7 +286,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }
 
                     try {
-                        const audioNodeConnections = getAudioNodeConnections(faker);
+                        const audioNodeConnections = getAudioNodeConnections(nativeAudioWorkletNodeFaker);
                         const potentiallyEmptyInputs = inputs
                             .map((input, index) => {
                                 if (audioNodeConnections.inputs[index].size === 0) {
@@ -321,6 +326,6 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         };
 
-        return faker;
+        return nativeAudioWorkletNodeFaker;
     };
 };
