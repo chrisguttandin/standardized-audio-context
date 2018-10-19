@@ -1,4 +1,5 @@
-import { TNativeAudioNode, TNativeAudioParam, TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFactory } from '../types';
+import { interceptConnections } from '../helpers/intercept-connections';
+import { TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFactory } from '../types';
 
 export const createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls:
     TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFactory =
@@ -19,21 +20,7 @@ export const createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls:
 
         (<any> nativeAudioScheduledSourceNode).addEventListener('ended', disconnectGainNode);
 
-        nativeAudioScheduledSourceNode.connect = ((destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0) => {
-            if (destination instanceof AudioNode) {
-                nativeGainNode.connect.call(nativeGainNode, destination, output, input);
-
-                // Bug #11: Safari does not support chaining yet.
-                return destination;
-            }
-
-            // @todo This return statement is necessary to satisfy TypeScript.
-            return nativeGainNode.connect.call(nativeGainNode, destination, output);
-        });
-
-        nativeAudioScheduledSourceNode.disconnect = function () {
-            nativeGainNode.disconnect.apply(nativeGainNode, arguments);
-        };
+        interceptConnections(nativeAudioScheduledSourceNode, nativeGainNode);
 
         nativeAudioScheduledSourceNode.stop = ((stop) => {
             let isStopped = false;

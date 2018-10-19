@@ -1,4 +1,5 @@
 import { filterBuffer } from '../helpers/filter-buffer';
+import { interceptConnections } from '../helpers/intercept-connections';
 import { TNativeIIRFilterNodeFakerFactoryFactory, TTypedArray } from '../types';
 
 function divide (a: [ number, number ], b: [ number, number ]): [ number, number ] {
@@ -114,7 +115,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
 
         const nyquist = nativeContext.sampleRate / 2;
 
-        return {
+        const nativeIIRFilterNodeFaker = {
             get bufferSize () {
                 return bufferSize;
             },
@@ -152,16 +153,6 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
                 // @todo Dissallow adding an audioprocess listener.
                 return scriptProcessorNode.addEventListener(args[0], args[1], args[2]);
             },
-            connect (...args: any[]) {
-                if (args[2] === undefined) {
-                    return scriptProcessorNode.connect.call(scriptProcessorNode, args[0], args[1]);
-                }
-
-                return scriptProcessorNode.connect.call(scriptProcessorNode, args[0], args[1], args[2]);
-            },
-            disconnect (...args: any[]) {
-                return scriptProcessorNode.disconnect.call(scriptProcessorNode, args[0], args[1], args[2]);
-            },
             dispatchEvent (...args: any[]) {
                 return scriptProcessorNode.dispatchEvent(args[0]);
             },
@@ -187,5 +178,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
                 return scriptProcessorNode.removeEventListener(args[0], args[1], args[2]);
             }
         };
+
+        return interceptConnections(nativeIIRFilterNodeFaker, scriptProcessorNode);
     };
 };

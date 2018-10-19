@@ -1,3 +1,4 @@
+import { interceptConnections } from '../helpers/intercept-connections';
 import { INativeConstantSourceNode } from '../interfaces';
 import { TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
 
@@ -27,7 +28,7 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
 
         audioBufferSourceNode.connect(gainNode);
 
-        return {
+        const nativeConstantSourceNodeFaker = {
             get bufferSize () {
                 return undefined;
             },
@@ -73,16 +74,6 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
             addEventListener (...args: any[]) {
                 return audioBufferSourceNode.addEventListener(args[0], args[1], args[2]);
             },
-            connect (...args: any[]) {
-                if (args[2] === undefined) {
-                    return gainNode.connect.call(gainNode, args[0], args[1]);
-                }
-
-                return gainNode.connect.call(gainNode, args[0], args[1], args[2]);
-            },
-            disconnect (...args: any[]) {
-                return gainNode.disconnect.call(gainNode, args[0], args[1], args[2]);
-            },
             dispatchEvent (...args: any[]) {
                 return audioBufferSourceNode.dispatchEvent(args[0]);
             },
@@ -96,5 +87,7 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
                 audioBufferSourceNode.stop.call(audioBufferSourceNode, when);
             }
         };
+
+        return interceptConnections(nativeConstantSourceNodeFaker, gainNode);
     };
 };

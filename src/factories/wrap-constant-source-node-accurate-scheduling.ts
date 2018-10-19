@@ -1,4 +1,5 @@
-import { TNativeAudioNode, TNativeAudioParam, TWrapConstantSourceNodeAccurateSchedulingFactory } from '../types';
+import { interceptConnections } from '../helpers/intercept-connections';
+import { TWrapConstantSourceNodeAccurateSchedulingFactory } from '../types';
 
 export const createWrapConstantSourceNodeAccurateScheduling: TWrapConstantSourceNodeAccurateSchedulingFactory = (
     createNativeAudioNode
@@ -17,19 +18,7 @@ export const createWrapConstantSourceNodeAccurateScheduling: TWrapConstantSource
 
         nativeConstantSourceNode.addEventListener('ended', disconnectGainNode);
 
-        nativeConstantSourceNode.connect = ((destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0) => {
-            if (destination instanceof AudioNode) {
-                // Bug #11: Safari does not support chaining yet, but that wrapper should not be used in Safari.
-                return nativeGainNode.connect.call(nativeGainNode, destination, output, input);
-            }
-
-            // @todo This return statement is necessary to satisfy TypeScript.
-            return nativeGainNode.connect.call(nativeGainNode, destination, output);
-        });
-
-        nativeConstantSourceNode.disconnect = function () {
-            nativeGainNode.disconnect.apply(nativeGainNode, arguments);
-        };
+        interceptConnections(nativeConstantSourceNode, nativeGainNode);
 
         let startTime = 0;
         let stopTime: null | number = null;

@@ -1,3 +1,4 @@
+import { interceptConnections } from '../helpers/intercept-connections';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -204,7 +205,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
         const panAudioParam = Object.defineProperties(panGainNode.gain, { defaultValue: { get: () => 0 } });
 
-        return {
+        const nativeStereoPannerNodeFakerFactory = {
             get bufferSize () {
                 return undefined;
             },
@@ -255,16 +256,6 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             addEventListener (...args: any[]) {
                 return inputGainNode.addEventListener(args[0], args[1], args[2]);
             },
-            connect (...args: any[]) {
-                if (args[2] === undefined) {
-                    return channelMergerNode.connect.call(channelMergerNode, args[0], args[1]);
-                }
-
-                return channelMergerNode.connect.call(channelMergerNode, args[0], args[1], args[2]);
-            },
-            disconnect (...args: any[]) {
-                return channelMergerNode.disconnect.call(channelMergerNode, args[0], args[1], args[2]);
-            },
             dispatchEvent (...args: any[]) {
                 return inputGainNode.dispatchEvent(args[0]);
             },
@@ -272,5 +263,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
                 return inputGainNode.removeEventListener(args[0], args[1], args[2]);
             }
         };
+
+        return interceptConnections(nativeStereoPannerNodeFakerFactory, channelMergerNode);
     };
 };
