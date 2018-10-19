@@ -130,6 +130,14 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             });
 
+            describe('with a module which contains an import statement', () => {
+
+                it('should return a resolving promise', () => {
+                    return addAudioWorkletModule('base/test/fixtures/gibberish-processor.js');
+                });
+
+            });
+
         });
 
     }

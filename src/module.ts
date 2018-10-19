@@ -29,6 +29,7 @@ import { createDataCloneError } from './factories/data-clone-error';
 import { createDecodeAudioData } from './factories/decode-audio-data';
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
 import { createEncodingError } from './factories/encoding-error';
+import { createFetchSource } from './factories/fetch-source';
 import { createGainNodeConstructor } from './factories/gain-node-constructor';
 import { createGainNodeRendererFactory } from './factories/gain-node-renderer-factory';
 import { createGetBackupNativeContext } from './factories/get-backup-native-context';
@@ -371,6 +372,7 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
     createAddAudioWorkletModule(
         createAbortError,
         createNotSupportedError,
+        createFetchSource(createAbortError),
         getBackupNativeContext
     ) :
     undefined;

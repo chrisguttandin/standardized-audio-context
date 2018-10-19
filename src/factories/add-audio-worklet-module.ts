@@ -1,8 +1,10 @@
 import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
+import { evaluateSource } from '../helpers/evaluate-source';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isConstructible } from '../helpers/is-constructible';
+import { splitImportStatements } from '../helpers/split-import-statements';
 import { IAudioWorkletProcessorConstructor } from '../interfaces';
-import { TAddAudioWorkletModuleFactory, TContext, TNativeAudioWorklet } from '../types';
+import { TAddAudioWorkletModuleFactory, TContext, TEvaluateAudioWorkletGlobalScopeFunction, TNativeAudioWorklet } from '../types';
 
 const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessorConstructor['parameterDescriptors']) => {
     if (parameterDescriptors !== undefined && !Array.isArray(parameterDescriptors)) {
@@ -30,30 +32,27 @@ const resolvedRequests: WeakMap<TContext, Set<string>> = new WeakMap();
 export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     createAbortError,
     createNotSupportedError,
+    fetchSource,
     getBackupNativeContext
 ) => {
     return (context, moduleURL, options = { credentials: 'omit' }) => {
         const nativeContext = getNativeContext(context);
+        const absoluteUrl = (new URL(moduleURL, location.href)).toString();
 
         // Bug #59: Only Chrome & Opera do implement the audioWorklet property.
         // @todo Define the native interface as part of the native AudioContext.
         if ((<any> nativeContext).audioWorklet !== undefined) {
-            return fetch(moduleURL)
-                .then((response) => {
-                    if (response.ok) {
-                        return response.text();
-                    }
-
-                    throw createAbortError();
-                })
+            return fetchSource(moduleURL)
                 .then((source) => {
+                    const [ importStatements, sourceWithoutImportStatements ] = splitImportStatements(source, absoluteUrl);
                     /*
                      * Bug #86: Chrome Canary does not invoke the process() function if the corresponding AudioWorkletNode has no output.
                      *
                      * This is the unminified version of the code used below:
                      *
                      * ```js
-                     * `((registerProcessor) => {${ source }
+                     * `${ importStatements };
+                     * ((registerProcessor) => {${ sourceWithoutImportStatements }
                      * })((name, processorCtor) => registerProcessor(name, class extends processorCtor {
                      *
                      *     constructor (options) {
@@ -77,7 +76,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                      * }))`
                      * ```
                      */
-                    const wrappedSource = `(registerProcessor=>{${ source }
+                    const wrappedSource = `${ importStatements };(registerProcessor=>{${ sourceWithoutImportStatements }
 })((n,p)=>registerProcessor(n,class extends p{constructor(o){const{hasNoOutput,...q}=o.parameterData;if(hasNoOutput===1){super({...o,numberOfOutputs:0,outputChannelCount:[],parameterData:q});this._h=true}else{super(o);this._h=false}}process(i,o,p){return super.process(i,(this._h)?[]:o,p)}}))`; // tslint:disable-line:max-line-length
                     const blob = new Blob([ wrappedSource ], { type: 'application/javascript; charset=utf-8' });
                     const url = URL.createObjectURL(blob);
@@ -106,52 +105,62 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 }
             }
 
-            const promise = fetch(moduleURL)
-                .then((response) => {
-                    if (response.ok) {
-                        return response.text();
-                    }
-
-                    throw createAbortError();
-                })
+            const promise = fetchSource(moduleURL)
                 .then((source) => {
-                    const fn = new Function(
-                        'AudioWorkletProcessor',
-                        'currentFrame',
-                        'currentTime',
-                        'global',
-                        'registerProcessor',
-                        'sampleRate',
-                        'self',
-                        'window',
-                        source
-                    );
+                    const [ importStatements, sourceWithoutImportStatements ] = splitImportStatements(source, absoluteUrl);
 
+                    /*
+                     * This is the unminified version of the code used below:
+                     *
+                     * ```js
+                     * ${ importStatements };
+                     * ((a, b) => {
+                     *     (a[b] = a[b] || [ ]).push(
+                     *         (AudioWorkletProcessor, currentFrame, currentTime, global, egisterProcessor, sampleRate, self, window) => {
+                     *             ${ sourceWithoutImportStatements }
+                     *         }
+                     *     );
+                     * })(window, '_AWGS');
+                     * ```
+                     */
+                    // tslint:disable-next-line:max-line-length
+                    const wrappedSource = `${ importStatements };((a,b)=>{(a[b]=a[b]||[]).push((AudioWorkletProcessor,currentFrame,currentTime,global,registerProcessor,sampleRate,self,window)=>{${ sourceWithoutImportStatements }
+})})(window,'_AWGS')`;
+
+                    // @todo Evaluating the given source code is a possible security problem.
+                    return evaluateSource(wrappedSource);
+                })
+                .then(() => {
                     const globalScope = Object.create(null, {
                         currentFrame: {
-                            get () {
+                            get: () => {
                                 return nativeContext.currentTime * nativeContext.sampleRate;
                             }
                         },
                         currentTime: {
-                            get () {
+                            get: () => {
                                 return nativeContext.currentTime;
                             }
                         },
                         sampleRate: {
-                            get () {
+                            get: () => {
                                 return nativeContext.sampleRate;
                             }
                         }
                     });
 
-                    // @todo Evaluating the given source code is a possible security problem.
-                    fn(
+                    const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]> (<any> window)._AWGS).pop();
+
+                    if (evaluateAudioWorkletGlobalScope === undefined) {
+                        throw new SyntaxError();
+                    }
+
+                    evaluateAudioWorkletGlobalScope(
                         class AudioWorkletProcessor { },
                         globalScope.currentFrame,
                         globalScope.currentTime,
                         undefined,
-                        function <T extends IAudioWorkletProcessorConstructor> (name: string, processorCtor: T) {
+                        (name, processorCtor) => {
                             if (name.trim() === '') {
                                 throw createNotSupportedError();
                             }
