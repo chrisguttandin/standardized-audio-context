@@ -86,7 +86,13 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
 
                     return (<TNativeAudioWorklet> (<any> nativeContextOrBackupNativeContext).audioWorklet)
                         .addModule(url, options)
-                        .then(() => URL.revokeObjectURL(url));
+                        .then(() => URL.revokeObjectURL(url))
+                        // @todo This could be written more elegantly when Promise.finally() becomes avalaible.
+                        .catch((err) => {
+                            URL.revokeObjectURL(url);
+
+                            throw err; // tslint:disable-line:rxjs-throw-error
+                        });
                 });
         } else {
             const resolvedRequestsOfContext = resolvedRequests.get(context);
