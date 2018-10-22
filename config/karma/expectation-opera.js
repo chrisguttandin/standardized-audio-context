@@ -44,7 +44,7 @@ module.exports = (config) => {
                     base: 'BrowserStack',
                     browser: 'opera',
                     os: 'OS X',
-                    os_version: 'Sierra' // eslint-disable-line camelcase
+                    os_version: 'High Sierra' // eslint-disable-line camelcase
                 }
             },
 

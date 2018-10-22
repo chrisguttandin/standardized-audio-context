@@ -20,7 +20,7 @@ module.exports = (config) => {
                 browser: 'firefox',
                 browser_version: '61', // eslint-disable-line camelcase
                 os: 'OS X',
-                os_version: 'Sierra' // eslint-disable-line camelcase
+                os_version: 'High Sierra' // eslint-disable-line camelcase
             }
         },
 
