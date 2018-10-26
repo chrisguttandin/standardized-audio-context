@@ -13,9 +13,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
     createNativeAudioNode,
     createNativeConstantSourceNodeFaker,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
-    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
-    testConstantSourceNodeAccurateSchedulingSupport,
-    wrapConstantSourceNodeAccurateScheduling
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 ) => {
     return (nativeContext, options) => {
         // Bug #62: Edge & Safari do not support ConstantSourceNodes.
@@ -48,14 +46,6 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
         )) {
             wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeConstantSourceNode);
-        }
-
-        // Bug #70: Firefox does not schedule ConstantSourceNodes accurately.
-        if (!cacheTestResult(
-            testConstantSourceNodeAccurateSchedulingSupport,
-            () => testConstantSourceNodeAccurateSchedulingSupport(nativeContext)
-        )) {
-            wrapConstantSourceNodeAccurateScheduling(nativeConstantSourceNode, nativeContext);
         }
 
         return nativeConstantSourceNode;

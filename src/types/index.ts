@@ -180,5 +180,3 @@ export * from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-
 export * from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-function';
 export * from './wrap-channel-merger-node-factory';
 export * from './wrap-channel-merger-node-function';
-export * from './wrap-constant-source-node-accurate-scheduling-factory';
-export * from './wrap-constant-source-node-accurate-scheduling-function';

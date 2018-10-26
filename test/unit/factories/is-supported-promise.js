@@ -11,6 +11,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestAudioContextOptionsSupport;
     let fakeTestChannelMergerNodeSupport;
     let fakeTestChannelSplitterNodeChannelCountSupport;
+    let fakeTestConstantSourceNodeAccurateSchedulingSupport;
     let fakeTestIsSecureContextSupport;
 
     afterEach(() => {
@@ -20,6 +21,7 @@ describe('createIsSupportedPromise()', () => {
         TEST_RESULTS.delete(fakeTestAudioContextOptionsSupport);
         TEST_RESULTS.delete(fakeTestChannelMergerNodeSupport);
         TEST_RESULTS.delete(fakeTestChannelSplitterNodeChannelCountSupport);
+        TEST_RESULTS.delete(fakeTestConstantSourceNodeAccurateSchedulingSupport);
         TEST_RESULTS.delete(fakeTestIsSecureContextSupport);
     });
 
@@ -31,6 +33,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestAudioContextOptionsSupport = () => true;
         fakeTestChannelMergerNodeSupport = () => Promise.resolve(true);
         fakeTestChannelSplitterNodeChannelCountSupport = () => true;
+        fakeTestConstantSourceNodeAccurateSchedulingSupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
     });
 
@@ -43,6 +46,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -60,6 +64,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -77,6 +82,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -94,6 +100,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -111,6 +118,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -128,6 +136,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -145,6 +154,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -162,6 +172,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -179,6 +190,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -196,6 +208,25 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestIsSecureContextSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for accurate scheduling of a ConstantSourceNode support fails', async () => {
+        fakeTestConstantSourceNodeAccurateSchedulingSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 
@@ -213,6 +244,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport
         );
 

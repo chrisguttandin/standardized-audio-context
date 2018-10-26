@@ -58,7 +58,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             this._isBufferNullified = false;
             this._isBufferSet = false;
             this._nativeAudioBufferSourceNode = nativeAudioBufferSourceNode;
-            // Bug #73: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
+            // Bug #73: Edge & Safari do not export the correct values for maxValue and minValue.
             this._playbackRate = createAudioParam(
                 context,
                 isOffline,

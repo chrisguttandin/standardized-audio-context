@@ -9,6 +9,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testAudioContextOptionsSupport,
     testChannelMergerNodeSupport,
     testChannelSplitterNodeChannelCountSupport,
+    testConstantSourceNodeAccurateSchedulingSupport,
     testIsSecureContextSupport
 ) => {
     if (browsernizr.promises &&
@@ -17,6 +18,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
             cacheTestResult(testAudioContextCloseMethodSupport, () => testAudioContextCloseMethodSupport()) &&
             cacheTestResult(testAudioContextOptionsSupport, () => testAudioContextOptionsSupport()) &&
             cacheTestResult(testChannelSplitterNodeChannelCountSupport, () => testChannelSplitterNodeChannelCountSupport()) &&
+            cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, () => testConstantSourceNodeAccurateSchedulingSupport()) &&
             cacheTestResult(testIsSecureContextSupport, () => testIsSecureContextSupport())) {
         return Promise
             .all([

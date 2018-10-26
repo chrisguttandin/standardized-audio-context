@@ -8,5 +8,6 @@ export type TIsSupportedPromiseFactory = (
     testAudioContextOptionsSupport: () => boolean,
     testChannelMergerNodeSupport: () => Promise<boolean>,
     testChannelSplitterNodeChannelCountSupport: () => boolean,
+    testConstantSourceNodeAccurateSchedulingSupport: () => boolean,
     testIsSecureContextSupport: () => boolean
 ) => Promise<boolean>;

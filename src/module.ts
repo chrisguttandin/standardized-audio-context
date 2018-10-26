@@ -114,7 +114,6 @@ import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
-import { createWrapConstantSourceNodeAccurateScheduling } from './factories/wrap-constant-source-node-accurate-scheduling';
 import {
     IAnalyserNode,
     IAnalyserNodeConstructor,
@@ -272,15 +271,11 @@ const createNativeConstantSourceNodeFaker = createNativeConstantSourceNodeFakerF
     createNativeAudioBufferSourceNode,
     createNativeGainNode
 );
-const testConstantSourceNodeAccurateSchedulingSupport = createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode);
-const wrapConstantSourceNodeAccurateScheduling = createWrapConstantSourceNodeAccurateScheduling(createNativeAudioNode);
 const createNativeConstantSourceNode = createNativeConstantSourceNodeFactory(
     createNativeAudioNode,
     createNativeConstantSourceNodeFaker,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
-    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
-    testConstantSourceNodeAccurateSchedulingSupport,
-    wrapConstantSourceNodeAccurateScheduling
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 );
 const createConstantSourceNodeRenderer = createConstantSourceNodeRendererFactory(createNativeConstantSourceNode);
 const constantSourceNodeConstructor: IConstantSourceNodeConstructor = createConstantSourceNodeConstructor(
@@ -560,5 +555,6 @@ export const isSupported = () => createIsSupportedPromise(
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
     createTestChannelMergerNodeSupport(nativeAudioContextConstructor),
     createTestChannelSplitterNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
+    createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
     createTestIsSecureContextSupport(window)
 );
