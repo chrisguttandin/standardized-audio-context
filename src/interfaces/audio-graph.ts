@@ -6,8 +6,8 @@ import { IAudioParamConnections } from './audio-param-connections';
 
 export interface IAudioGraph {
 
-    nodes: WeakMap<IAudioNode | TNativeAudioNode, IAudioNodeConnections>;
+    nodes: WeakMap<IAudioNode | TNativeAudioNode, Readonly<IAudioNodeConnections>>;
 
-    params: WeakMap<IAudioParam, IAudioParamConnections>;
+    params: WeakMap<IAudioParam, Readonly<IAudioParamConnections>>;
 
 }
