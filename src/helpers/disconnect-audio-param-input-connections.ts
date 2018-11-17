@@ -10,11 +10,8 @@ export const disconnectAudioParamInputConnections = (
     if (audioParamConnections !== undefined) {
         audioParamConnections
             .inputs
-            .forEach(([ source ]) => {
-                /*
-                 * @todo Disconnect the AudioParam.
-                 * source.disconnect(audioParam);
-                 */
+            .forEach(([ source, output ]) => {
+                source.disconnect(audioParam, output);
 
                 disconnectAudioNodeInputConnections(audioGraph, source);
             });

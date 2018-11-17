@@ -41,50 +41,94 @@ const addConnectionToAudioNode = (source: IAudioNode, destination: IAudioNode, o
     audioNodeConnectionsOfDestination.inputs[input].add([ source, output ]);
 };
 
-const addConnectionToAudioParam = (context: TContext, source: IAudioNode, destination: IAudioParam, output: number) => {
+const addConnectionToAudioParam = (source: IAudioNode, destination: IAudioParam, output: number) => {
     const audioNodeConnections = getAudioNodeConnections(source);
-    const audioParamConnections = getAudioParamConnections(context, destination);
+    const audioParamConnections = getAudioParamConnections(source.context, destination);
 
     audioNodeConnections.outputs.add([ destination, output ]);
     audioParamConnections.inputs.add([ source, output ]);
 };
 
-const removeAnyConnection = (source: IAudioNode) => {
-    const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
+const deleteInputsOfAudioNode = (source: IAudioNode, destination: IAudioNode, output?: number, input?: number) => {
+    const { inputs } = getAudioNodeConnections(destination);
+    const length = inputs.length;
 
-    for (const [ destination ] of Array.from(audioNodeConnectionsOfSource.outputs.values())) {
-        if (isAudioNode(destination)) {
-            const audioNodeConnectionsOfDestination = getAudioNodeConnections(destination);
+    for (let i = 0; i < length; i += 1) {
+        if (input === undefined || input === i) {
+            const connectionsToInput = inputs[i];
 
-            for (const connectionsToInput of audioNodeConnectionsOfDestination.inputs) {
-                for (const connection of Array.from(connectionsToInput.values())) {
-                    if (connection[0] === source) {
-                        connectionsToInput.delete(connection);
-                    }
+            for (const connection of connectionsToInput.values()) {
+                if (connection[0] === source && (output === undefined || connection[1] === output)) {
+                    connectionsToInput.delete(connection);
                 }
             }
+        }
+    }
+};
+
+const deleteInputsOfAudioParam = (source: IAudioNode, destination: IAudioParam, output?: number) => {
+    const audioParamConnections = getAudioParamConnections(source.context, destination);
+
+    for (const connection of audioParamConnections.inputs) {
+        if (connection[0] === source && (output === undefined || connection[1] === output)) {
+            audioParamConnections.inputs.delete(connection);
+        }
+    }
+};
+
+const deleteOutputsOfAudioNode = (source: IAudioNode, destination: IAudioNode | IAudioParam, output?: number, input?: number) => {
+    const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
+
+    for (const connection of audioNodeConnectionsOfSource.outputs.values()) {
+        if (connection[0] === destination
+            && (output === undefined || connection[1] === output)
+            && (input === undefined || connection[2] === input)
+        ) {
+            audioNodeConnectionsOfSource.outputs.delete(connection);
+        }
+    }
+};
+
+const deleteAnyConnection = (source: IAudioNode) => {
+    const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
+
+    for (const [ destination ] of audioNodeConnectionsOfSource.outputs) {
+        if (isAudioNode(destination)) {
+            deleteInputsOfAudioNode(source, destination);
+        } else {
+            deleteInputsOfAudioParam(source, destination);
         }
     }
 
     audioNodeConnectionsOfSource.outputs.clear();
 };
 
-const removeConnectionToAudioNode = (source: IAudioNode, destination: IAudioNode) => {
+const deleteConnectionAtOutput = (source: IAudioNode, output: number) => {
     const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
-    const audioNodeConnectionsOfDestination = getAudioNodeConnections(destination);
 
-    for (const connection of Array.from(audioNodeConnectionsOfSource.outputs.values())) {
-        if (connection[0] === destination) {
-            audioNodeConnectionsOfSource.outputs.delete(connection);
-        }
-    }
+    Array
+        .from(audioNodeConnectionsOfSource.outputs)
+        .filter((connection) => connection[1] === output)
+        .forEach((connection) => {
+            const [ destination ] = connection;
 
-    for (const connectionsToInput of audioNodeConnectionsOfDestination.inputs) {
-        for (const connection of Array.from(connectionsToInput.values())) {
-            if (connection[0] === source) {
-                connectionsToInput.delete(connection);
+            if (isAudioNode(destination)) {
+                deleteInputsOfAudioNode(source, destination, connection[1], <number> connection[2]);
+            } else {
+                deleteInputsOfAudioParam(source, destination, connection[1]);
             }
-        }
+
+            audioNodeConnectionsOfSource.outputs.delete(connection);
+        });
+};
+
+const deleteConnectionToDestination = (source: IAudioNode, destination: IAudioNode | IAudioParam, output?: number, input?: number) => {
+    deleteOutputsOfAudioNode(source, destination, output, input);
+
+    if (isAudioNode(destination)) {
+        deleteInputsOfAudioNode(source, destination, output, input);
+    } else {
+        deleteInputsOfAudioParam(source, destination, output);
     }
 };
 
@@ -181,9 +225,8 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
                     if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
                         const inputs = <TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs;
-                        const nativeInputDestinationNode = inputs[input];
 
-                        this._nativeAudioNode.connect(nativeInputDestinationNode, output, input);
+                        this._nativeAudioNode.connect(inputs[input], output, 0);
                     } else {
                         this._nativeAudioNode.connect(nativeDestinationNode, output, input);
                     }
@@ -212,32 +255,62 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
                 throw err; // tslint:disable-line:rxjs-throw-error
             }
 
-            addConnectionToAudioParam(this._context, this, destination, output);
+            addConnectionToAudioParam(this, destination, output);
         }
 
-        public disconnect (destination?: IAudioNode): void {
+        public disconnect (output?: number): void;
+        public disconnect (destinationNode: IAudioNode, output?: number, input?: number): void;
+        public disconnect (destinationParam: IAudioParam, output?: number): void;
+        public disconnect (destinationOrOutput?: number | IAudioNode | IAudioParam, output?: number, input?: number): void {
             const nativeContext = getNativeContext(this._context);
 
             if (!isNativeOfflineAudioContext(nativeContext)) {
-                if (destination === undefined) {
-                    return this._nativeAudioNode.disconnect();
-                }
+                if (destinationOrOutput === undefined) {
+                    this._nativeAudioNode.disconnect();
+                } else if (typeof destinationOrOutput === 'number') {
+                    this._nativeAudioNode.disconnect(destinationOrOutput);
+                } else if (isAudioNode(destinationOrOutput)) {
+                    const nativeDestinationNode = getNativeAudioNode<TNativeAudioDestinationNode>(destinationOrOutput);
 
-                const nativeDestinationNode = getNativeAudioNode<TNativeAudioDestinationNode>(destination);
+                    if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
+                        const inputs = <TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs;
+                        const numberOfInputs = inputs.length;
 
-                if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
-                    for (const input of (<TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs)) {
-                        this._nativeAudioNode.disconnect(input);
+                        for (let i = 0; i < numberOfInputs; i += 1) {
+                            if (input === undefined || input === i) {
+                                if (output === undefined) {
+                                    this._nativeAudioNode.disconnect(inputs[i]);
+                                } else {
+                                    this._nativeAudioNode.disconnect(inputs[i], output);
+                                }
+                            }
+                        }
+                    } else {
+                        if (output === undefined) {
+                            this._nativeAudioNode.disconnect(nativeDestinationNode);
+                        } else if (input === undefined) {
+                            this._nativeAudioNode.disconnect(nativeDestinationNode, output);
+                        } else {
+                            this._nativeAudioNode.disconnect(nativeDestinationNode, output, input);
+                        }
                     }
                 } else {
-                    this._nativeAudioNode.disconnect(nativeDestinationNode);
+                    const nativeAudioParam = getNativeAudioParam(destinationOrOutput);
+
+                    if (output === undefined) {
+                        this._nativeAudioNode.disconnect(nativeAudioParam);
+                    } else {
+                        this._nativeAudioNode.disconnect(nativeAudioParam, output);
+                    }
                 }
             }
 
-            if (destination === undefined) {
-                removeAnyConnection(this);
+            if (destinationOrOutput === undefined) {
+                deleteAnyConnection(this);
+            } else if (typeof destinationOrOutput === 'number') {
+                deleteConnectionAtOutput(this, destinationOrOutput);
             } else {
-                removeConnectionToAudioNode(this, destination);
+                deleteConnectionToDestination(this, destinationOrOutput, output, input);
             }
         }
 

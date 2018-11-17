@@ -18,7 +18,8 @@ export interface IAudioNode extends EventTarget {
     connect (destinationNode: IAudioNode, output?: number, input?: number): IAudioNode;
     connect (destinationParam: IAudioParam, output?: number): void;
 
-    // @todo Consider all possible variations.
-    disconnect (destination?: IAudioNode): void;
+    disconnect (output?: number): void;
+    disconnect (destinationNode: IAudioNode, output?: number, input?: number): void;
+    disconnect (destinationParam: IAudioParam, output?: number): void;
 
 }

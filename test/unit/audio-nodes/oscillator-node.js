@@ -652,6 +652,22 @@ describe('OscillatorNode', () => {
                         });
                 });
 
+                it('should be possible to disconnect all destinations by specifying the output', function () {
+                    this.timeout(10000);
+
+                    return renderer({
+                        prepare ({ oscillatorNode }) {
+                            oscillatorNode.disconnect(0);
+                        },
+                        start (startTime, { oscillatorNode }) {
+                            oscillatorNode.start(startTime);
+                        }
+                    })
+                        .then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                        });
+                });
+
                 it('should be possible to disconnect all destinations', function () {
                     this.timeout(10000);
 

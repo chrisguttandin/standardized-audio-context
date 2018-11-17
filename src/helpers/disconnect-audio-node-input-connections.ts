@@ -17,9 +17,8 @@ export const disconnectAudioNodeInputConnections = (audioGraph: IAudioGraph, aud
         for (let i = 0; i < numberOfInputs; i += 1) {
             const connections = audioNodeConnections.inputs[i];
 
-            for (const [ source ] of Array.from(connections)) {
-                // @todo Disconnect the exact connection with its output and input parameters.
-                source.disconnect(audioNode);
+            for (const [ source, output ] of connections) {
+                source.disconnect(audioNode, output, i);
 
                 disconnectAudioNodeInputConnections(audioGraph, source);
             }
