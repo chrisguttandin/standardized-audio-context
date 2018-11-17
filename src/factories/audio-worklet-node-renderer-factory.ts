@@ -208,7 +208,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         }
                     }
 
-                    for (const [ index, constantSourceNode ] of Array.from(constantSourceNodes.entries())) {
+                    for (const [ index, constantSourceNode ] of constantSourceNodes.entries()) {
                         constantSourceNode.connect(inputChannelMergerNode, 0, numberOfInputChannels + index);
                         constantSourceNode.start(0);
                     }
@@ -283,8 +283,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 if (!isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext)) {
                     nativeAudioNode = new nativeAudioWorkletNodeConstructor(nativeOfflineAudioContext, name);
 
-                    // @todo Using Array.from() is a lazy fix that should not be necessary forever.
-                    for (const [ nm, audioParam ] of Array.from(proxy.parameters.entries())) {
+                    for (const [ nm, audioParam ] of proxy.parameters.entries()) {
                         await renderAutomation(
                             proxy.context,
                             nativeOfflineAudioContext,
@@ -293,8 +292,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         );
                     }
                 } else {
-                    // @todo Using Array.from() is a lazy fix that should not be necessary forever.
-                    for (const [ nm, audioParam ] of Array.from(proxy.parameters.entries())) {
+                    for (const [ nm, audioParam ] of proxy.parameters.entries()) {
                         await connectAudioParam(
                             proxy.context,
                             nativeOfflineAudioContext,
