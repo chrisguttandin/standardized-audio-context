@@ -25,27 +25,24 @@ export const disconnectAudioNodeInputConnections = (audioGraph: IAudioGraph, aud
             }
         }
 
-        if (isAudioBufferSourceNode(audioNode)) {
-            // @todo disconnectAudioParamInputConnections(audioGraph, audioNode.detune, disconnectAudioNodeInputConnections);
-            disconnectAudioParamInputConnections(audioGraph, audioNode.playbackRate, disconnectAudioNodeInputConnections);
-        } else if (isAudioWorkletNode(audioNode)) {
-            for (const audioParam of Array.from(audioNode.parameters.values())) {
-                disconnectAudioParamInputConnections(audioGraph, audioParam, disconnectAudioNodeInputConnections);
-            }
-        } else if (isBiquadFilterNode(audioNode)) {
-            disconnectAudioParamInputConnections(audioGraph, audioNode.Q, disconnectAudioNodeInputConnections);
-            disconnectAudioParamInputConnections(audioGraph, audioNode.detune, disconnectAudioNodeInputConnections);
-            disconnectAudioParamInputConnections(audioGraph, audioNode.frequency, disconnectAudioNodeInputConnections);
-            disconnectAudioParamInputConnections(audioGraph, audioNode.gain, disconnectAudioNodeInputConnections);
-        } else if (isConstantSourceNode(audioNode)) {
-            disconnectAudioParamInputConnections(audioGraph, audioNode.offset, disconnectAudioNodeInputConnections);
-        } else if (isGainNode(audioNode)) {
-            disconnectAudioParamInputConnections(audioGraph, audioNode.gain, disconnectAudioNodeInputConnections);
-        } else if (isOscillatorNode(audioNode)) {
-            disconnectAudioParamInputConnections(audioGraph, audioNode.detune, disconnectAudioNodeInputConnections);
-            disconnectAudioParamInputConnections(audioGraph, audioNode.frequency, disconnectAudioNodeInputConnections);
-        } else if (isStereoPannerNode(audioNode)) {
-            disconnectAudioParamInputConnections(audioGraph, audioNode.pan, disconnectAudioNodeInputConnections);
+        const audioParams = (isAudioBufferSourceNode(audioNode))
+            ? [ /* @todo audioNode.detune, */ audioNode.playbackRate ]
+            : (isAudioWorkletNode(audioNode))
+                ? Array.from(audioNode.parameters.values())
+                : (isBiquadFilterNode(audioNode))
+                    ? [ audioNode.Q, audioNode.detune, audioNode.frequency, audioNode.gain ]
+                    : (isConstantSourceNode(audioNode))
+                        ? [ audioNode.offset ]
+                        : (isGainNode(audioNode))
+                            ? [ audioNode.gain ]
+                            : (isOscillatorNode(audioNode))
+                                ? [ audioNode.detune, audioNode.frequency ]
+                                : (isStereoPannerNode(audioNode))
+                                    ? [ audioNode.pan ]
+                                    : [ ];
+
+        for (const audioParam of audioParams) {
+            disconnectAudioParamInputConnections(audioGraph, audioParam, disconnectAudioNodeInputConnections);
         }
     }
 };
