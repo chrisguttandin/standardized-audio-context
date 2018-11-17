@@ -4,6 +4,7 @@ import { isBiquadFilterNode } from '../guards/biquad-filter-node';
 import { isConstantSourceNode } from '../guards/constant-source-node';
 import { isGainNode } from '../guards/gain-node';
 import { isOscillatorNode } from '../guards/oscillator-node';
+import { isStereoPannerNode } from '../guards/stereo-panner-node';
 import { IAudioGraph, IAudioNode } from '../interfaces';
 import { disconnectAudioParamInputConnections } from './disconnect-audio-param-input-connections';
 
@@ -43,6 +44,8 @@ export const disconnectAudioNodeInputConnections = (audioGraph: IAudioGraph, aud
         } else if (isOscillatorNode(audioNode)) {
             disconnectAudioParamInputConnections(audioGraph, audioNode.detune, disconnectAudioNodeInputConnections);
             disconnectAudioParamInputConnections(audioGraph, audioNode.frequency, disconnectAudioNodeInputConnections);
+        } else if (isStereoPannerNode(audioNode)) {
+            disconnectAudioParamInputConnections(audioGraph, audioNode.pan, disconnectAudioNodeInputConnections);
         }
     }
 };
