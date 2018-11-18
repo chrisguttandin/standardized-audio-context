@@ -1,6 +1,5 @@
 import { interceptConnections } from '../helpers/intercept-connections';
-import { INativeConstantSourceNode } from '../interfaces';
-import { TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
+import { TNativeAudioBufferSourceNode, TNativeConstantSourceNode, TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
 
 export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNodeFakerFactoryFactory = (
     createNativeAudioBufferSourceNode,
@@ -38,19 +37,19 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
             set channelCount (value) {
                 gainNode.channelCount = value;
             },
-            get channelCountMode (): INativeConstantSourceNode['channelCountMode'] {
+            get channelCountMode (): TNativeConstantSourceNode['channelCountMode'] {
                 return gainNode.channelCountMode;
             },
             set channelCountMode (value) {
                 gainNode.channelCountMode = value;
             },
-            get channelInterpretation (): INativeConstantSourceNode['channelInterpretation'] {
+            get channelInterpretation (): TNativeConstantSourceNode['channelInterpretation'] {
                 return gainNode.channelInterpretation;
             },
             set channelInterpretation (value) {
                 gainNode.channelInterpretation = value;
             },
-            get context (): INativeConstantSourceNode['context'] {
+            get context (): TNativeConstantSourceNode['context'] {
                 return gainNode.context;
             },
             get inputs (): undefined {
@@ -62,14 +61,14 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
             get numberOfOutputs (): number {
                 return gainNode.numberOfOutputs;
             },
-            get offset (): INativeConstantSourceNode['offset'] {
+            get offset (): TNativeConstantSourceNode['offset'] {
                 return gainNode.gain;
             },
-            get onended (): INativeConstantSourceNode['onended'] {
-                return <INativeConstantSourceNode['onended']> audioBufferSourceNode.onended;
+            get onended (): TNativeConstantSourceNode['onended'] {
+                return audioBufferSourceNode.onended;
             },
             set onended (value) {
-                audioBufferSourceNode.onended = <any> value;
+                audioBufferSourceNode.onended = <TNativeAudioBufferSourceNode['onended']> value;
             },
             addEventListener (...args: any[]): void {
                 return audioBufferSourceNode.addEventListener(args[0], args[1], args[2]);

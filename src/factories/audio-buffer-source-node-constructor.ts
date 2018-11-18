@@ -110,7 +110,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         }
 
         public set onended (value) {
-            this._nativeAudioBufferSourceNode.onended = <any> value;
+            this._nativeAudioBufferSourceNode.onended = <TNativeAudioBufferSourceNode['onended']> value;
         }
 
         public get detune (): IAudioParam {

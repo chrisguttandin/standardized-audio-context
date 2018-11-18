@@ -71,7 +71,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
         }
 
         public set onended (value) {
-            this._nativeOscillatorNode.onended = <any> value;
+            this._nativeOscillatorNode.onended = <TNativeOscillatorNode['onended']> value;
         }
 
         public get type (): TOscillatorType {

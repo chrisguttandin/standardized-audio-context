@@ -1,7 +1,7 @@
 import { NODE_TO_PROCESSOR_MAPS } from '../globals';
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
-import { IAudioNode, IAudioWorkletProcessor, INativeAudioWorkletNode } from '../interfaces';
-import { TNativeOfflineAudioContext } from '../types';
+import { IAudioNode, IAudioWorkletProcessor } from '../interfaces';
+import { TNativeAudioWorkletNode, TNativeOfflineAudioContext } from '../types';
 
 export const getAudioWorkletProcessor = (
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
@@ -13,7 +13,7 @@ export const getAudioWorkletProcessor = (
         throw new Error('Missing the processor map for the given OfflineAudioContext.');
     }
 
-    const nativeAudioWorkletNode = getNativeAudioNode<INativeAudioWorkletNode>(proxy);
+    const nativeAudioWorkletNode = getNativeAudioNode<TNativeAudioWorkletNode>(proxy);
     const audioWorkletProcessorPromise = nodeToProcessorMap.get(nativeAudioWorkletNode);
 
     if (audioWorkletProcessorPromise === undefined) {

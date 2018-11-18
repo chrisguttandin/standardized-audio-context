@@ -14,11 +14,11 @@ export const createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls:
         const disconnectGainNode = ((disconnect) => {
             return () => {
                 disconnect.call(nativeAudioScheduledSourceNode, nativeGainNode);
-                (<any> nativeAudioScheduledSourceNode).removeEventListener('ended', disconnectGainNode);
+                nativeAudioScheduledSourceNode.removeEventListener('ended', disconnectGainNode);
             };
         })(nativeAudioScheduledSourceNode.disconnect);
 
-        (<any> nativeAudioScheduledSourceNode).addEventListener('ended', disconnectGainNode);
+        nativeAudioScheduledSourceNode.addEventListener('ended', disconnectGainNode);
 
         interceptConnections(nativeAudioScheduledSourceNode, nativeGainNode);
 

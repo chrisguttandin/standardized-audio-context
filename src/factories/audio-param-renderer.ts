@@ -29,8 +29,11 @@ export const createAudioParamRenderer: TAudioParamRendererFactory = () => {
                 } else if (automation.type === 'setValueCurve') {
                     const { duration, startTime, values } = automation;
 
-                    // @todo TypeScript is expecting values to be an array of numbers.
-                    (<any> audioParam).setValueCurveAtTime(values, startTime, duration);
+                    /*
+                     * @todo TypeScript can't combine the call signatures of setValueCurveAtTime() of IAudioParam and TNativeAudioParam as
+                     * their return types are incompatible.
+                     */
+                    (<IAudioParam> audioParam).setValueCurveAtTime(values, startTime, duration);
                 } else {
                     throw new Error("Can't apply an unkown automation.");
                 }

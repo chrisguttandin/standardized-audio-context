@@ -1,8 +1,7 @@
-import { TNativeAudioWorkletNodeOptions, TNativeContext } from '../types';
-import { INativeAudioWorkletNode } from './native-audio-worklet-node';
+import { TNativeAudioWorkletNode, TNativeAudioWorkletNodeOptions, TNativeContext } from '../types';
 
 export interface INativeAudioWorkletNodeConstructor {
 
-    new (nativeContext: TNativeContext, name: string, options?: Partial<TNativeAudioWorkletNodeOptions>): INativeAudioWorkletNode;
+    new (nativeContext: TNativeContext, name: string, options?: Partial<TNativeAudioWorkletNodeOptions>): TNativeAudioWorkletNode;
 
 }

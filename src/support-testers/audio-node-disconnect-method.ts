@@ -35,7 +35,7 @@ export const testAudioNodeDisconnectMethodSupport = (nativeAudioContext: TNative
 
             source.stop();
 
-            (<any> analyzer).onaudioprocess = null;
+            analyzer.onaudioprocess = null; // tslint:disable-line:deprecation
 
             source.disconnect(analyzer);
             analyzer.disconnect(nativeAudioContext.destination);

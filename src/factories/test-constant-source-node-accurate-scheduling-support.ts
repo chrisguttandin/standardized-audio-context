@@ -1,4 +1,3 @@
-import { INativeConstantSourceNode } from '../interfaces';
 import { TTestConstantSourceNodeAccurateSchedulingSupportFactory } from '../types';
 
 export const createTestConstantSourceNodeAccurateSchedulingSupport:
@@ -13,10 +12,7 @@ export const createTestConstantSourceNodeAccurateSchedulingSupport:
         }
 
         const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
-        // @todo TypeScript doesn't know yet about createConstantSource().
-        const nativeConstantSourceNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => {
-            return <INativeConstantSourceNode> (<any> ntvCntxt).createConstantSource();
-        });
+        const nativeConstantSourceNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => ntvCntxt.createConstantSource());
 
         /*
          * @todo This is using bug #75 to detect bug #70. That works because both bugs were unique to

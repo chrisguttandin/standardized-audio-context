@@ -1,6 +1,5 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
-import { INativeConstantSourceNode } from '../interfaces';
 import { TNativeConstantSourceNodeFactoryFactory } from '../types';
 import {
     wrapAudioScheduledSourceNodeStartMethodNegativeParameters
@@ -17,13 +16,12 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
 ) => {
     return (nativeContext, options) => {
         // Bug #62: Edge & Safari do not support ConstantSourceNodes.
-        // @todo TypeScript doesn't know yet about createConstantSource().
-        if ((<any> nativeContext).createConstantSource === undefined) {
+        if (nativeContext.createConstantSource === undefined) {
             return createNativeConstantSourceNodeFaker(nativeContext, options);
         }
 
         const nativeConstantSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
-            return <INativeConstantSourceNode> (<any> ntvCntxt).createConstantSource();
+            return ntvCntxt.createConstantSource();
         });
 
         assignNativeAudioNodeOptions(nativeConstantSourceNode, options);

@@ -1,15 +1,16 @@
 import { createAudioWorkletProcessor } from '../helpers/create-audio-worklet-processor';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
-import { IAudioWorkletProcessor, INativeAudioWorkletNode, INativeConstantSourceNode } from '../interfaces';
+import { IAudioWorkletProcessor } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
     TNativeAudioNode,
     TNativeAudioParam,
+    TNativeAudioWorkletNode,
     TNativeAudioWorkletNodeFakerFactoryFactory,
     TNativeChannelMergerNode,
-    TNativeGainNode,
-    TProcessorErrorEventHandler
+    TNativeConstantSourceNode,
+    TNativeGainNode
 } from '../types';
 
 export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFakerFactoryFactory = (
@@ -75,7 +76,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }));
         }
 
-        const constantSourceNodes: INativeConstantSourceNode[] = [ ];
+        const constantSourceNodes: TNativeConstantSourceNode[] = [ ];
 
         if (processorDefinition.parameterDescriptors !== undefined) {
             for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
@@ -164,7 +165,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             outputChannelSplitterNodeOutput += options.outputChannelCount[i];
         }
 
-        let onprocessorerror: null | TProcessorErrorEventHandler = null;
+        let onprocessorerror: TNativeAudioWorkletNode['onprocessorerror'] = null;
 
         // Bug #87: Expose at least one output to make this node connectable.
         const outputAudioNodes = (options.numberOfOutputs === 0) ? [ scriptProcessorNode ] : outputChannelMergerNodes;
@@ -179,14 +180,14 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 // Bug #61: This is not part of the standard but required for the faker to work.
                 throw createInvalidStateError();
             },
-            get channelCountMode (): INativeAudioWorkletNode['channelCountMode'] {
+            get channelCountMode (): TNativeAudioWorkletNode['channelCountMode'] {
                 return options.channelCountMode;
             },
             set channelCountMode (_) {
                 // Bug #61: This is not part of the standard but required for the faker to work.
                 throw createInvalidStateError();
             },
-            get channelInterpretation (): INativeAudioWorkletNode['channelInterpretation'] {
+            get channelInterpretation (): TNativeAudioWorkletNode['channelInterpretation'] {
                 return gainNodes[0].channelInterpretation;
             },
             set channelInterpretation (value) {
@@ -194,7 +195,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     gainNode.channelInterpretation = value;
                 }
             },
-            get context (): INativeAudioWorkletNode['context'] {
+            get context (): TNativeAudioWorkletNode['context'] {
                 return gainNodes[0].context;
             },
             get inputs (): TNativeAudioNode[] {
@@ -206,20 +207,16 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             get numberOfOutputs (): number {
                 return options.numberOfOutputs;
             },
-            get onprocessorerror (): INativeAudioWorkletNode['onprocessorerror'] {
-                return <INativeAudioWorkletNode['onprocessorerror']> onprocessorerror;
+            get onprocessorerror (): TNativeAudioWorkletNode['onprocessorerror'] {
+                return onprocessorerror;
             },
             set onprocessorerror (value) {
-                if (value === null || typeof value === 'function') {
-                    onprocessorerror = <any> value;
-                } else {
-                    onprocessorerror = null;
-                }
+                onprocessorerror = (typeof value === 'function') ? value : null;
             },
-            get parameters (): INativeAudioWorkletNode['parameters'] {
+            get parameters (): TNativeAudioWorkletNode['parameters'] {
                 return parameterMap;
             },
-            get port (): INativeAudioWorkletNode['port'] {
+            get port (): TNativeAudioWorkletNode['port'] {
                 return messageChannel.port2;
             },
             addEventListener (...args: any[]): void {
@@ -314,12 +311,12 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                         isActive = false;
 
                         if (onprocessorerror !== null) {
-                            onprocessorerror.call(<any> null, new ErrorEvent('processorerror'));
+                            onprocessorerror.call(null, new ErrorEvent('processorerror'));
                         }
                     }
 
                     if (!isActive) {
-                        scriptProcessorNode.onaudioprocess = <any> null; // tslint:disable-line:deprecation
+                        scriptProcessorNode.onaudioprocess = null; // tslint:disable-line:deprecation
 
                         break;
                     }

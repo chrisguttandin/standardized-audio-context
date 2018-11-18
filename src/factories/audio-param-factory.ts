@@ -75,8 +75,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
                 return audioParam;
             },
             setValueCurveAtTime (values: Float32Array, startTime: number, duration: number): IAudioParam {
-                // @todo TypeScript is expecting values to be an array of numbers.
-                nativeAudioParam.setValueCurveAtTime(<any> values, startTime, duration);
+                nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
 
                 if (audioParamRenderer !== null) {
                     audioParamRenderer.record({ duration, startTime, type: 'setValueCurve', values });

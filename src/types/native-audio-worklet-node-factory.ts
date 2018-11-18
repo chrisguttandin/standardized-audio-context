@@ -1,9 +1,5 @@
-import {
-    IAudioWorkletNodeOptions,
-    IAudioWorkletProcessorConstructor,
-    INativeAudioWorkletNode,
-    INativeAudioWorkletNodeConstructor
-} from '../interfaces';
+import { IAudioWorkletNodeOptions, IAudioWorkletProcessorConstructor, INativeAudioWorkletNodeConstructor } from '../interfaces';
+import { TNativeAudioWorkletNode } from './native-audio-worklet-node';
 import { TNativeContext } from './native-context';
 
 export type TNativeAudioWorkletNodeFactory = (
@@ -12,4 +8,4 @@ export type TNativeAudioWorkletNodeFactory = (
     name: string,
     processorDefinition: undefined | IAudioWorkletProcessorConstructor,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions
-) => INativeAudioWorkletNode;
+) => TNativeAudioWorkletNode;

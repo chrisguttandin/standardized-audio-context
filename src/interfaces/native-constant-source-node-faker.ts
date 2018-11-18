@@ -1,7 +1,7 @@
-import { INativeConstantSourceNode } from './native-constant-source-node';
+import { TNativeConstantSourceNode } from '../types';
 
 // @todo This does kind of implement the INativeAudioNodeFaker interface.
-export interface INativeConstantSourceNodeFaker extends INativeConstantSourceNode {
+export interface INativeConstantSourceNodeFaker extends TNativeConstantSourceNode {
 
     bufferSize: undefined;
 

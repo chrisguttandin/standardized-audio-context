@@ -40,7 +40,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
         }
 
         public set onstatechange (value) {
-            this._nativeContext.onstatechange = <any> value;
+            this._nativeContext.onstatechange = <TNativeContext['onstatechange']> value;
         }
 
         public get sampleRate (): number {

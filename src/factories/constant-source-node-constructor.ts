@@ -1,17 +1,12 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import {
-    IAudioParam,
-    IConstantSourceNode,
-    IConstantSourceNodeRenderer,
-    IConstantSourceOptions,
-    INativeConstantSourceNode
-} from '../interfaces';
+import { IAudioParam, IConstantSourceNode, IConstantSourceNodeRenderer, IConstantSourceOptions } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
     TConstantSourceNodeConstructorFactory,
     TContext,
-    TEndedEventHandler
+    TEndedEventHandler,
+    TNativeConstantSourceNode
 } from '../types';
 
 const DEFAULT_OPTIONS: IConstantSourceOptions = {
@@ -33,7 +28,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         private _constantSourceNodeRenderer: null | IConstantSourceNodeRenderer;
 
-        private _nativeConstantSourceNode: INativeConstantSourceNode;
+        private _nativeConstantSourceNode: TNativeConstantSourceNode;
 
         private _offset: IAudioParam;
 
@@ -70,7 +65,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
         }
 
         public set onended (value) {
-            this._nativeConstantSourceNode.onended = <any> value;
+            this._nativeConstantSourceNode.onended = <TNativeConstantSourceNode['onended']> value;
         }
 
         public start (when = 0): void {

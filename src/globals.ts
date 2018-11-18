@@ -4,10 +4,9 @@ import {
     IAudioParam,
     IAudioWorkletProcessor,
     IAudioWorkletProcessorConstructor,
-    INativeAudioNodeFaker,
-    INativeAudioWorkletNode
+    INativeAudioNodeFaker
 } from './interfaces';
-import { TContext, TNativeAudioNode, TNativeAudioParam, TNativeContext } from './types';
+import { TContext, TNativeAudioNode, TNativeAudioParam, TNativeAudioWorkletNode, TNativeContext } from './types';
 
 export const AUDIO_NODE_STORE: WeakMap<IAudioNode, TNativeAudioNode | INativeAudioNodeFaker> = new WeakMap();
 
@@ -29,7 +28,7 @@ export const NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS: WeakMap<
 
 export const NODE_TO_PROCESSOR_MAPS: WeakMap<
     TNativeContext,
-    WeakMap<INativeAudioWorkletNode, Promise<IAudioWorkletProcessor>>
+    WeakMap<TNativeAudioWorkletNode, Promise<IAudioWorkletProcessor>>
 > = new WeakMap();
 
 export const TEST_RESULTS: WeakMap<object, boolean> = new WeakMap();

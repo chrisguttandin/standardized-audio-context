@@ -11,13 +11,14 @@ import {
     IAudioWorkletNodeOptions,
     IAudioWorkletProcessorConstructor,
     IMinimalOfflineAudioContext,
-    INativeAudioWorkletNode
+    IReadOnlyMap
 } from '../interfaces';
 import {
     TAudioWorkletNodeRendererFactoryFactory,
     TNativeAudioBuffer,
     TNativeAudioBufferSourceNode,
     TNativeAudioParam,
+    TNativeAudioWorkletNode,
     TNativeChannelMergerNode,
     TNativeGainNode,
     TNativeOfflineAudioContext
@@ -104,7 +105,7 @@ const processBuffer = async (
             }
         } catch {
             if (proxy.onprocessorerror !== null) {
-                proxy.onprocessorerror.call(<any> null, new ErrorEvent('processorerror'));
+                proxy.onprocessorerror.call(null, new ErrorEvent('processorerror'));
             }
 
             break;
@@ -127,18 +128,18 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     renderNativeOfflineAudioContext
 ) => {
     return (name, options, processorDefinition) => {
-        let nativeAudioNode: null | TNativeAudioBufferSourceNode | INativeAudioWorkletNode = null;
+        let nativeAudioNode: null | TNativeAudioBufferSourceNode | TNativeAudioWorkletNode = null;
 
         return {
             render: async (
                 proxy: IAudioWorkletNode,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
-            ): Promise<TNativeAudioBufferSourceNode | INativeAudioWorkletNode> => {
+            ): Promise<TNativeAudioBufferSourceNode | TNativeAudioWorkletNode> => {
                 if (nativeAudioNode !== null) {
                     return nativeAudioNode;
                 }
 
-                nativeAudioNode = getNativeAudioNode<INativeAudioWorkletNode>(proxy);
+                nativeAudioNode = getNativeAudioNode<TNativeAudioWorkletNode>(proxy);
 
                 // Bug #61: Only Chrome & Opera have an implementation of the AudioWorkletNode yet.
                 if (nativeAudioWorkletNodeConstructor === null) {
@@ -288,7 +289,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             proxy.context,
                             nativeOfflineAudioContext,
                             audioParam,
-                            <TNativeAudioParam> nativeAudioNode.parameters.get(nm)
+                            // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
+                            <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioNode.parameters).get(nm)
                         );
                     }
                 } else {
@@ -297,7 +299,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             proxy.context,
                             nativeOfflineAudioContext,
                             audioParam,
-                            <TNativeAudioParam> nativeAudioNode.parameters.get(nm)
+                            // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
+                            <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioNode.parameters).get(nm)
                         );
                     }
                 }

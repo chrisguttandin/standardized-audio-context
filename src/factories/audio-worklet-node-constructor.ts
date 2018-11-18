@@ -1,6 +1,6 @@
 import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IAudioWorkletNode, IAudioWorkletNodeOptions, INativeAudioWorkletNode } from '../interfaces';
+import { IAudioParam, IAudioWorkletNode, IAudioWorkletNodeOptions, IReadOnlyMap } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
     TAudioParamMap,
@@ -8,6 +8,8 @@ import {
     TChannelCountMode,
     TChannelInterpretation,
     TContext,
+    TNativeAudioParam,
+    TNativeAudioWorkletNode,
     TProcessorErrorEventHandler
 } from '../types';
 
@@ -62,7 +64,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
     return class AudioWorkletNode extends noneAudioDestinationNodeConstructor implements IAudioWorkletNode {
 
-        private _nativeAudioWorkletNode: INativeAudioWorkletNode;
+        private _nativeAudioWorkletNode: TNativeAudioWorkletNode;
 
         private _numberOfOutputs: number;
 
@@ -122,12 +124,13 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
         }
 
         public set onprocessorerror (value) {
-            this._nativeAudioWorkletNode.onprocessorerror = <any> value;
+            this._nativeAudioWorkletNode.onprocessorerror = <TNativeAudioWorkletNode['onprocessorerror']> value;
         }
 
         get parameters (): TAudioParamMap {
             if (this._parameters === null) {
-                return this._nativeAudioWorkletNode.parameters;
+                // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
+                return <IReadOnlyMap<string, TNativeAudioParam>> this._nativeAudioWorkletNode.parameters;
             }
 
             return this._parameters;

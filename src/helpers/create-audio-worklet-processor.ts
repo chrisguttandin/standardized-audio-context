@@ -1,11 +1,6 @@
 import { NODE_TO_PROCESSOR_MAPS } from '../globals';
-import {
-    IAudioWorkletNodeOptions,
-    IAudioWorkletProcessor,
-    IAudioWorkletProcessorConstructor,
-    INativeAudioWorkletNode
-} from '../interfaces';
-import { TNativeContext } from '../types';
+import { IAudioWorkletNodeOptions, IAudioWorkletProcessor, IAudioWorkletProcessorConstructor } from '../interfaces';
+import { TNativeAudioWorkletNode, TNativeContext } from '../types';
 import { cloneAudioWorkletNodeOptions } from './clone-audio-worklet-node-options';
 
 const createAudioWorkletProcessorPromise = async (
@@ -19,7 +14,7 @@ const createAudioWorkletProcessorPromise = async (
 
 export const createAudioWorkletProcessor = (
     nativeContext: TNativeContext,
-    nativeAudioWorkletNode: INativeAudioWorkletNode,
+    nativeAudioWorkletNode: TNativeAudioWorkletNode,
     processorDefinition: IAudioWorkletProcessorConstructor,
     audioWorkletNodeOptions: IAudioWorkletNodeOptions
 ): Promise<IAudioWorkletProcessor> => {

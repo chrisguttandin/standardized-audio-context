@@ -4,7 +4,7 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { isConstructible } from '../helpers/is-constructible';
 import { splitImportStatements } from '../helpers/split-import-statements';
 import { IAudioWorkletProcessorConstructor } from '../interfaces';
-import { TAddAudioWorkletModuleFactory, TContext, TEvaluateAudioWorkletGlobalScopeFunction, TNativeAudioWorklet } from '../types';
+import { TAddAudioWorkletModuleFactory, TContext, TEvaluateAudioWorkletGlobalScopeFunction } from '../types';
 
 const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessorConstructor['parameterDescriptors']) => {
     if (parameterDescriptors !== undefined && !Array.isArray(parameterDescriptors)) {
@@ -40,8 +40,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
         const absoluteUrl = (new URL(moduleURL, location.href)).toString();
 
         // Bug #59: Only Chrome & Opera do implement the audioWorklet property.
-        // @todo Define the native interface as part of the native AudioContext.
-        if ((<any> nativeContext).audioWorklet !== undefined) {
+        if (nativeContext.audioWorklet !== undefined) {
             return fetchSource(moduleURL)
                 .then((source) => {
                     const [ importStatements, sourceWithoutImportStatements ] = splitImportStatements(source, absoluteUrl);
@@ -84,7 +83,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                     const backupNativeContext = getBackupNativeContext(nativeContext);
                     const nativeContextOrBackupNativeContext = (backupNativeContext !== null) ? backupNativeContext : nativeContext;
 
-                    return (<TNativeAudioWorklet> (<any> nativeContextOrBackupNativeContext).audioWorklet)
+                    return nativeContextOrBackupNativeContext.audioWorklet
                         .addModule(url, options)
                         .then(() => URL.revokeObjectURL(url))
                         // @todo This could be written more elegantly when Promise.finally() becomes avalaible.
