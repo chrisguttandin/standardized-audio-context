@@ -20,7 +20,7 @@ export const interceptConnections = <T extends Object> (
         return interceptor.connect.call(interceptor, destination, output);
     });
 
-    (<T & { disconnect: TNativeAudioNode['disconnect'] }> original).disconnect = function () {
+    (<T & { disconnect: TNativeAudioNode['disconnect'] }> original).disconnect = function (): void {
         interceptor.disconnect.apply(interceptor, arguments);
     };
 

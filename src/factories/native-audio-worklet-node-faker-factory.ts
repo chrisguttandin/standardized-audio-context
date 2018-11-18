@@ -4,6 +4,7 @@ import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { IAudioWorkletProcessor, INativeAudioWorkletNode, INativeConstantSourceNode } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
+    TNativeAudioNode,
     TNativeAudioParam,
     TNativeAudioWorkletNodeFakerFactoryFactory,
     TNativeChannelMergerNode,
@@ -168,24 +169,24 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         // Bug #87: Expose at least one output to make this node connectable.
         const outputAudioNodes = (options.numberOfOutputs === 0) ? [ scriptProcessorNode ] : outputChannelMergerNodes;
         const nativeAudioWorkletNodeFaker = {
-            get bufferSize () {
+            get bufferSize (): number {
                 return bufferSize;
             },
-            get channelCount () {
+            get channelCount (): number {
                 return options.channelCount;
             },
             set channelCount (_) {
                 // Bug #61: This is not part of the standard but required for the faker to work.
                 throw createInvalidStateError();
             },
-            get channelCountMode () {
+            get channelCountMode (): INativeAudioWorkletNode['channelCountMode'] {
                 return options.channelCountMode;
             },
             set channelCountMode (_) {
                 // Bug #61: This is not part of the standard but required for the faker to work.
                 throw createInvalidStateError();
             },
-            get channelInterpretation () {
+            get channelInterpretation (): INativeAudioWorkletNode['channelInterpretation'] {
                 return gainNodes[0].channelInterpretation;
             },
             set channelInterpretation (value) {
@@ -193,19 +194,19 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     gainNode.channelInterpretation = value;
                 }
             },
-            get context () {
+            get context (): INativeAudioWorkletNode['context'] {
                 return gainNodes[0].context;
             },
-            get inputs () {
+            get inputs (): TNativeAudioNode[] {
                 return gainNodes;
             },
-            get numberOfInputs () {
+            get numberOfInputs (): number {
                 return options.numberOfInputs;
             },
-            get numberOfOutputs () {
+            get numberOfOutputs (): number {
                 return options.numberOfOutputs;
             },
-            get onprocessorerror () {
+            get onprocessorerror (): INativeAudioWorkletNode['onprocessorerror'] {
                 return <INativeAudioWorkletNode['onprocessorerror']> onprocessorerror;
             },
             set onprocessorerror (value) {
@@ -215,25 +216,25 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     onprocessorerror = null;
                 }
             },
-            get parameters () {
+            get parameters (): INativeAudioWorkletNode['parameters'] {
                 return parameterMap;
             },
-            get port () {
+            get port (): INativeAudioWorkletNode['port'] {
                 return messageChannel.port2;
             },
-            addEventListener (...args: any[]) {
+            addEventListener (...args: any[]): void {
                 return gainNodes[0].addEventListener(args[0], args[1], args[2]);
             },
-            connect (...args: any[]) {
+            connect (...args: any[]): any {
                 return <any> connectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
             },
-            disconnect (...args: any[]) {
+            disconnect (...args: any[]): void {
                 return <any> disconnectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]) {
+            dispatchEvent (...args: any[]): boolean {
                 return gainNodes[0].dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]) {
+            removeEventListener (...args: any[]): void {
                 return gainNodes[0].removeEventListener(args[0], args[1], args[2]);
             }
         };

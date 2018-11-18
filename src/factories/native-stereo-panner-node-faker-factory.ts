@@ -2,9 +2,11 @@ import { interceptConnections } from '../helpers/intercept-connections';
 import {
     TChannelCountMode,
     TChannelInterpretation,
+    TNativeAudioNode,
     TNativeChannelMergerNode,
     TNativeContext,
     TNativeGainNode,
+    TNativeStereoPannerNode,
     TNativeStereoPannerNodeFakerFactoryFactory,
     TOverSampleType
 } from '../types';
@@ -206,10 +208,10 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
         const panAudioParam = Object.defineProperties(panGainNode.gain, { defaultValue: { get: () => 0 } });
 
         const nativeStereoPannerNodeFakerFactory = {
-            get bufferSize () {
+            get bufferSize (): undefined {
                 return undefined;
             },
-            get channelCount () {
+            get channelCount (): number {
                 return inputGainNode.channelCount;
             },
             set channelCount (value) {
@@ -222,7 +224,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
                 inputGainNode.channelCount = value;
             },
-            get channelCountMode () {
+            get channelCountMode (): TNativeStereoPannerNode['channelCountMode'] {
                 return inputGainNode.channelCountMode;
             },
             set channelCountMode (value) {
@@ -232,34 +234,34 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
                 inputGainNode.channelCountMode = value;
             },
-            get channelInterpretation () {
+            get channelInterpretation (): TNativeStereoPannerNode['channelInterpretation'] {
                 return inputGainNode.channelInterpretation;
             },
             set channelInterpretation (value) {
                 inputGainNode.channelInterpretation = value;
             },
-            get context () {
+            get context (): TNativeStereoPannerNode['context'] {
                 return inputGainNode.context;
             },
-            get inputs () {
+            get inputs (): TNativeAudioNode[] {
                 return [ inputGainNode ];
             },
-            get numberOfInputs () {
+            get numberOfInputs (): number {
                 return inputGainNode.numberOfInputs;
             },
-            get numberOfOutputs () {
+            get numberOfOutputs (): number {
                 return inputGainNode.numberOfOutputs;
             },
-            get pan () {
+            get pan (): TNativeStereoPannerNode['pan'] {
                 return panAudioParam;
             },
-            addEventListener (...args: any[]) {
+            addEventListener (...args: any[]): void {
                 return inputGainNode.addEventListener(args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]) {
+            dispatchEvent (...args: any[]): boolean {
                 return inputGainNode.dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]) {
+            removeEventListener (...args: any[]): void {
                 return inputGainNode.removeEventListener(args[0], args[1], args[2]);
             }
         };

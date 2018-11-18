@@ -29,61 +29,61 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
         audioBufferSourceNode.connect(gainNode);
 
         const nativeConstantSourceNodeFaker = {
-            get bufferSize () {
+            get bufferSize (): undefined {
                 return undefined;
             },
-            get channelCount () {
+            get channelCount (): number {
                 return gainNode.channelCount;
             },
             set channelCount (value) {
                 gainNode.channelCount = value;
             },
-            get channelCountMode () {
+            get channelCountMode (): INativeConstantSourceNode['channelCountMode'] {
                 return gainNode.channelCountMode;
             },
             set channelCountMode (value) {
                 gainNode.channelCountMode = value;
             },
-            get channelInterpretation () {
+            get channelInterpretation (): INativeConstantSourceNode['channelInterpretation'] {
                 return gainNode.channelInterpretation;
             },
             set channelInterpretation (value) {
                 gainNode.channelInterpretation = value;
             },
-            get context () {
+            get context (): INativeConstantSourceNode['context'] {
                 return gainNode.context;
             },
-            get inputs () {
+            get inputs (): undefined {
                 return undefined;
             },
-            get numberOfInputs () {
+            get numberOfInputs (): number {
                 return audioBufferSourceNode.numberOfInputs;
             },
-            get numberOfOutputs () {
+            get numberOfOutputs (): number {
                 return gainNode.numberOfOutputs;
             },
-            get offset () {
+            get offset (): INativeConstantSourceNode['offset'] {
                 return gainNode.gain;
             },
-            get onended () {
+            get onended (): INativeConstantSourceNode['onended'] {
                 return <INativeConstantSourceNode['onended']> audioBufferSourceNode.onended;
             },
             set onended (value) {
                 audioBufferSourceNode.onended = <any> value;
             },
-            addEventListener (...args: any[]) {
+            addEventListener (...args: any[]): void {
                 return audioBufferSourceNode.addEventListener(args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]) {
+            dispatchEvent (...args: any[]): boolean {
                 return audioBufferSourceNode.dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]) {
+            removeEventListener (...args: any[]): void {
                 return audioBufferSourceNode.removeEventListener(args[0], args[1], args[2]);
             },
-            start (when = 0) {
+            start (when = 0): void {
                 audioBufferSourceNode.start.call(audioBufferSourceNode, when);
             },
-            stop (when = 0) {
+            stop (when = 0): void {
                 audioBufferSourceNode.stop.call(audioBufferSourceNode, when);
             }
         };

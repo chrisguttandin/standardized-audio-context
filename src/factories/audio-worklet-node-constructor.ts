@@ -113,12 +113,12 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             }
         }
 
-        public get numberOfOutputs () {
+        public get numberOfOutputs (): number {
             return this._numberOfOutputs;
         }
 
-        public get onprocessorerror () {
-            return <TProcessorErrorEventHandler> (<any> this._nativeAudioWorkletNode.onprocessorerror);
+        public get onprocessorerror (): null | TProcessorErrorEventHandler {
+            return <null | TProcessorErrorEventHandler> this._nativeAudioWorkletNode.onprocessorerror;
         }
 
         public set onprocessorerror (value) {
@@ -127,13 +127,13 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         get parameters (): TAudioParamMap {
             if (this._parameters === null) {
-                return <TAudioParamMap> (<any> this._nativeAudioWorkletNode.parameters);
+                return this._nativeAudioWorkletNode.parameters;
             }
 
             return this._parameters;
         }
 
-        get port () {
+        get port (): MessagePort {
             return this._nativeAudioWorkletNode.port;
         }
 

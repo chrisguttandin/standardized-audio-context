@@ -34,7 +34,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             this._nativeWaveShaperNode = nativeWaveShaperNode;
         }
 
-        public get curve () {
+        public get curve (): null | Float32Array {
             if (this._isCurveNullified) {
                 return null;
             }
@@ -58,7 +58,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             }
         }
 
-        public get oversample () {
+        public get oversample (): TOverSampleType {
             return this._nativeWaveShaperNode.oversample;
         }
 

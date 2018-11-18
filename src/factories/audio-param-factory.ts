@@ -13,16 +13,16 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
     return (context, isAudioParamOfOfflineAudioContext, nativeAudioParam, maxValue = null, minValue = null) => {
         const audioParamRenderer = (isAudioParamOfOfflineAudioContext) ? createAudioParamRenderer() : null;
         const audioParam = {
-            get defaultValue () {
+            get defaultValue (): number {
                 return nativeAudioParam.defaultValue;
             },
-            get maxValue () {
+            get maxValue (): number {
                 return (maxValue === null) ? nativeAudioParam.maxValue : maxValue;
             },
-            get minValue () {
+            get minValue (): number {
                 return (minValue === null) ? nativeAudioParam.minValue : minValue;
             },
-            get value () {
+            get value (): number {
                 return nativeAudioParam.value;
             },
             set value (value) {

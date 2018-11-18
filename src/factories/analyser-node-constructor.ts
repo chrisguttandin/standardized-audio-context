@@ -34,7 +34,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             this._nativeAnalyserNode = nativeAnalyserNode;
         }
 
-        public get fftSize () {
+        public get fftSize (): number {
             return this._nativeAnalyserNode.fftSize;
         }
 
@@ -42,11 +42,11 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             this._nativeAnalyserNode.fftSize = value;
         }
 
-        public get frequencyBinCount () {
+        public get frequencyBinCount (): number {
             return this._nativeAnalyserNode.frequencyBinCount;
         }
 
-        public get maxDecibels () {
+        public get maxDecibels (): number {
             return this._nativeAnalyserNode.maxDecibels;
         }
 
@@ -54,7 +54,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             this._nativeAnalyserNode.maxDecibels = value;
         }
 
-        public get minDecibels () {
+        public get minDecibels (): number {
             return this._nativeAnalyserNode.minDecibels;
         }
 
@@ -62,7 +62,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             this._nativeAnalyserNode.minDecibels = value;
         }
 
-        public get smoothingTimeConstant () {
+        public get smoothingTimeConstant (): number {
             return this._nativeAnalyserNode.smoothingTimeConstant;
         }
 
@@ -70,19 +70,19 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             this._nativeAnalyserNode.smoothingTimeConstant = value;
         }
 
-        public getByteFrequencyData (array: Uint8Array) {
+        public getByteFrequencyData (array: Uint8Array): void {
             this._nativeAnalyserNode.getByteFrequencyData(array);
         }
 
-        public getByteTimeDomainData (array: Uint8Array) {
+        public getByteTimeDomainData (array: Uint8Array): void {
             this._nativeAnalyserNode.getByteTimeDomainData(array);
         }
 
-        public getFloatFrequencyData (array: Float32Array) {
+        public getFloatFrequencyData (array: Float32Array): void {
             this._nativeAnalyserNode.getFloatFrequencyData(array);
         }
 
-        public getFloatTimeDomainData (array: Float32Array) {
+        public getFloatTimeDomainData (array: Float32Array): void {
             this._nativeAnalyserNode.getFloatTimeDomainData(array);
         }
 

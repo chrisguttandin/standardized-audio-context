@@ -1,7 +1,7 @@
 import { EventTarget } from '../event-target';
 import { CONTEXT_STORE } from '../globals';
 import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
-import { TMinimalBaseAudioContextConstructorFactory, TNativeContext, TStateChangeEventHandler } from '../types';
+import { TAudioContextState, TMinimalBaseAudioContextConstructorFactory, TNativeContext, TStateChangeEventHandler } from '../types';
 
 export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = (audioDestinationNodeConstructor) => {
 
@@ -27,27 +27,27 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             this._destination = new audioDestinationNodeConstructor(<any> this, numberOfChannels);
         }
 
-        public get currentTime () {
+        public get currentTime (): number {
             return this._nativeContext.currentTime;
         }
 
-        public get destination () {
+        public get destination (): IAudioDestinationNode {
             return this._destination;
         }
 
-        public get onstatechange () {
-            return <TStateChangeEventHandler> (<any> this._nativeContext.onstatechange);
+        public get onstatechange (): null | TStateChangeEventHandler {
+            return <null | TStateChangeEventHandler> this._nativeContext.onstatechange;
         }
 
         public set onstatechange (value) {
             this._nativeContext.onstatechange = <any> value;
         }
 
-        public get sampleRate () {
+        public get sampleRate (): number {
             return this._nativeContext.sampleRate;
         }
 
-        public get state () {
+        public get state (): TAudioContextState {
             return this._nativeContext.state;
         }
 

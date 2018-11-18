@@ -47,7 +47,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             this._nativeIIRFilterNode = nativeIIRFilterNode;
         }
 
-        public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
+        public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void  {
             return this._nativeIIRFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
 

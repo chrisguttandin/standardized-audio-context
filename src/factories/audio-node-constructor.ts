@@ -10,7 +10,14 @@ import { getNativeAudioParam } from '../helpers/get-native-audio-param';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioNode, IAudioNodeRenderer, IAudioParam, INativeAudioNodeFaker } from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
-import { TAudioNodeConstructorFactory, TContext, TNativeAudioDestinationNode, TNativeAudioNode } from '../types';
+import {
+    TAudioNodeConstructorFactory,
+    TChannelCountMode,
+    TChannelInterpretation,
+    TContext,
+    TNativeAudioDestinationNode,
+    TNativeAudioNode
+} from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
 const addAudioNode = (
@@ -165,7 +172,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             addAudioNode(context, this, audioNodeRenderer, nativeAudioNode);
         }
 
-        public get channelCount () {
+        public get channelCount (): number {
             return this._nativeAudioNode.channelCount;
         }
 
@@ -173,7 +180,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             this._nativeAudioNode.channelCount = value;
         }
 
-        public get channelCountMode () {
+        public get channelCountMode (): TChannelCountMode {
             return this._nativeAudioNode.channelCountMode;
         }
 
@@ -181,7 +188,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             this._nativeAudioNode.channelCountMode = value;
         }
 
-        public get channelInterpretation () {
+        public get channelInterpretation (): TChannelInterpretation {
             return this._nativeAudioNode.channelInterpretation;
         }
 
@@ -189,15 +196,15 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             this._nativeAudioNode.channelInterpretation = value;
         }
 
-        public get context () {
+        public get context (): TContext {
             return this._context;
         }
 
-        public get numberOfInputs () {
+        public get numberOfInputs (): number {
             return this._nativeAudioNode.numberOfInputs;
         }
 
-        public get numberOfOutputs () {
+        public get numberOfOutputs (): number {
             return this._nativeAudioNode.numberOfOutputs;
         }
 

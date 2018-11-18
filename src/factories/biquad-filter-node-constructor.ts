@@ -73,23 +73,23 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             this._nativeBiquadFilterNode = nativeBiquadFilterNode;
         }
 
-        public get Q () {
+        public get Q (): IAudioParam {
             return this._Q;
         }
 
-        public get detune () {
+        public get detune (): IAudioParam {
             return this._detune;
         }
 
-        public get frequency () {
+        public get frequency (): IAudioParam {
             return this._frequency;
         }
 
-        public get gain () {
+        public get gain (): IAudioParam {
             return this._gain;
         }
 
-        public get type () {
+        public get type (): TBiquadFilterType {
             return this._nativeBiquadFilterNode.type;
         }
 
@@ -97,7 +97,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             this._nativeBiquadFilterNode.type = value;
         }
 
-        public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
+        public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void {
             this._nativeBiquadFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
 
             // Bug #68: Only Chrome & Opera do throw an error if the parameters differ in their length.

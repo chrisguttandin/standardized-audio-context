@@ -61,19 +61,19 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             );
         }
 
-        public get offset () {
+        public get offset (): IAudioParam {
             return this._offset;
         }
 
-        public get onended () {
-            return <TEndedEventHandler> (<any> this._nativeConstantSourceNode.onended);
+        public get onended (): null | TEndedEventHandler {
+            return <null | TEndedEventHandler> this._nativeConstantSourceNode.onended;
         }
 
         public set onended (value) {
             this._nativeConstantSourceNode.onended = <any> value;
         }
 
-        public start (when = 0) {
+        public start (when = 0): void {
             this._nativeConstantSourceNode.start(when);
 
             if (this._constantSourceNodeRenderer !== null) {
@@ -81,7 +81,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             }
         }
 
-        public stop (when = 0) {
+        public stop (when = 0): void {
             this._nativeConstantSourceNode.stop(when);
 
             if (this._constantSourceNodeRenderer !== null) {

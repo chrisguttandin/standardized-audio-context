@@ -36,7 +36,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
             this._nativeMediaStreamAudioSourceNode = nativeMediaStreamAudioSourceNode;
         }
 
-        public get mediaStream () {
+        public get mediaStream (): MediaStream {
             return (this._nativeMediaStreamAudioSourceNode.mediaStream === undefined) ?
                 this._mediaStream :
                 this._nativeMediaStreamAudioSourceNode.mediaStream;

@@ -1,6 +1,6 @@
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
-import { TMinimalAudioContextConstructorFactory, TNativeAudioContext } from '../types';
+import { TAudioContextState, TMinimalAudioContextConstructorFactory, TNativeAudioContext } from '../types';
 
 export const createMinimalAudioContextConstructor: TMinimalAudioContextConstructorFactory = (
     createInvalidStateError,
@@ -54,7 +54,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
             }
         }
 
-        public get state () {
+        public get state (): TAudioContextState {
             return (this._state !== null) ? this._state : this._nativeAudioContext.state;
         }
 
@@ -81,7 +81,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
              */
         }
 
-        public resume () {
+        public resume (): Promise<void> {
             return this._nativeAudioContext
                 .resume()
                 .catch((err) => {
@@ -95,7 +95,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 });
         }
 
-        public suspend () {
+        public suspend (): Promise<void> {
             return this._nativeAudioContext
                 .suspend()
                 .catch((err) => {

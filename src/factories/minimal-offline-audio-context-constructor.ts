@@ -66,7 +66,7 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
             this._state = null;
         }
 
-        public get length () {
+        public get length (): number {
             // Bug #17: Safari does not yet expose the length.
             if (this._nativeOfflineAudioContext.length === undefined) {
                 return this._length;
@@ -75,11 +75,11 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
             return this._nativeOfflineAudioContext.length;
         }
 
-        public get state () {
+        public get state (): TAudioContextState {
             return (this._state === null) ? this._nativeOfflineAudioContext.state : this._state;
         }
 
-        public startRendering () {
+        public startRendering (): Promise<IAudioBuffer> {
             /*
              * Bug #9 & #59: It is theoretically possible that startRendering() will first render a partialOfflineAudioContext. Therefore
              * the state of the nativeOfflineAudioContext might no transition to running immediately.
@@ -114,7 +114,7 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
                 });
         }
 
-        private _waitForThePromiseToSettle (event: Event) {
+        private _waitForThePromiseToSettle (event: Event): void {
             if (this._state === null) {
                 this._nativeOfflineAudioContext.dispatchEvent(event);
             } else {

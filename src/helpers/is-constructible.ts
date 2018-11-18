@@ -1,7 +1,7 @@
 import { IConstructor } from '../interfaces';
 
 const handler = {
-    construct () {
+    construct (): any {
         return handler;
     }
 };

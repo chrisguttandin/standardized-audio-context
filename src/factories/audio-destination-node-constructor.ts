@@ -1,7 +1,7 @@
 import { AUDIO_GRAPHS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioDestinationNode } from '../interfaces';
-import { TAudioDestinationNodeConstructorFactory, TContext, TNativeAudioDestinationNode } from '../types';
+import { TAudioDestinationNodeConstructorFactory, TChannelCountMode, TContext, TNativeAudioDestinationNode } from '../types';
 
 export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstructorFactory = (
     audioNodeConstructor,
@@ -35,7 +35,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             this._nativeAudioDestinationNode = nativeAudioDestinationNode;
         }
 
-        public get channelCount () {
+        public get channelCount (): number {
             return this._nativeAudioDestinationNode.channelCount;
         }
 
@@ -54,7 +54,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             this._nativeAudioDestinationNode.channelCount = value;
         }
 
-        public get channelCountMode () {
+        public get channelCountMode (): TChannelCountMode {
             return this._nativeAudioDestinationNode.channelCountMode;
         }
 
@@ -67,7 +67,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             this._nativeAudioDestinationNode.channelCountMode = value;
         }
 
-        public get maxChannelCount () {
+        public get maxChannelCount (): number {
             return this._nativeAudioDestinationNode.maxChannelCount;
         }
 

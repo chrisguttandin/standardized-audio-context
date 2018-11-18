@@ -1,5 +1,11 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioBufferSourceNode, IAudioBufferSourceNodeRenderer, IAudioBufferSourceOptions, IAudioParam } from '../interfaces';
+import {
+    IAudioBuffer,
+    IAudioBufferSourceNode,
+    IAudioBufferSourceNodeRenderer,
+    IAudioBufferSourceOptions,
+    IAudioParam
+} from '../interfaces';
 import {
     TAudioBufferSourceNodeConstructorFactory,
     TChannelCountMode,
@@ -68,7 +74,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             );
         }
 
-        public get buffer () {
+        public get buffer (): null | IAudioBuffer {
             if (this._isBufferNullified) {
                 return null;
             }
@@ -99,19 +105,19 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             }
         }
 
-        public get onended () {
-            return <TEndedEventHandler> (<any> this._nativeAudioBufferSourceNode.onended);
+        public get onended (): null | TEndedEventHandler {
+            return <null | TEndedEventHandler> this._nativeAudioBufferSourceNode.onended;
         }
 
         public set onended (value) {
             this._nativeAudioBufferSourceNode.onended = <any> value;
         }
 
-        public get detune () {
+        public get detune (): IAudioParam {
             return this._detune;
         }
 
-        public get loop () {
+        public get loop (): boolean {
             return this._nativeAudioBufferSourceNode.loop;
         }
 
@@ -119,7 +125,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             this._nativeAudioBufferSourceNode.loop = value;
         }
 
-        public get loopEnd () {
+        public get loopEnd (): number {
             return this._nativeAudioBufferSourceNode.loopEnd;
         }
 
@@ -127,7 +133,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             this._nativeAudioBufferSourceNode.loopEnd = value;
         }
 
-        public get loopStart () {
+        public get loopStart (): number {
             return this._nativeAudioBufferSourceNode.loopStart;
         }
 
@@ -135,11 +141,11 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             this._nativeAudioBufferSourceNode.loopStart = value;
         }
 
-        public get playbackRate () {
+        public get playbackRate (): IAudioParam {
             return this._playbackRate;
         }
 
-        public start (when = 0, offset = 0, duration?: number) {
+        public start (when = 0, offset = 0, duration?: number): void {
             this._nativeAudioBufferSourceNode.start(when, offset, duration);
 
             if (this._audioBufferSourceNodeRenderer !== null) {
@@ -147,7 +153,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             }
         }
 
-        public stop (when = 0) {
+        public stop (when = 0): void {
             this._nativeAudioBufferSourceNode.stop(when);
 
             if (this._audioBufferSourceNodeRenderer !== null) {

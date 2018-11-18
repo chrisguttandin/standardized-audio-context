@@ -1,6 +1,6 @@
 import { filterBuffer } from '../helpers/filter-buffer';
 import { interceptConnections } from '../helpers/intercept-connections';
-import { TNativeIIRFilterNodeFakerFactoryFactory, TTypedArray } from '../types';
+import { TNativeAudioNode, TNativeIIRFilterNode, TNativeIIRFilterNodeFakerFactoryFactory, TTypedArray } from '../types';
 
 function divide (a: [ number, number ], b: [ number, number ]): [ number, number ] {
     const denominator = (b[0] * b[0]) + (b[1] * b[1]);
@@ -12,7 +12,7 @@ function multiply (a: [ number, number ], b: [ number, number ]): [ number, numb
     return [ ((a[0] * b[0]) - (a[1] * b[1])), ((a[0] * b[1]) + (a[1] * b[0])) ];
 }
 
-function evaluatePolynomial (coefficient: number[] | TTypedArray, z: [ number, number ]) {
+function evaluatePolynomial (coefficient: number[] | TTypedArray, z: [ number, number ]): [ number, number ] {
     let result: [ number, number ] = [ 0, 0 ];
 
     for (let i = coefficient.length - 1; i >= 0; i -= 1) {
@@ -116,47 +116,47 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
         const nyquist = nativeContext.sampleRate / 2;
 
         const nativeIIRFilterNodeFaker = {
-            get bufferSize () {
+            get bufferSize (): number {
                 return bufferSize;
             },
-            get channelCount () {
+            get channelCount (): number {
                 return scriptProcessorNode.channelCount;
             },
             set channelCount (value) {
                 scriptProcessorNode.channelCount = value;
             },
-            get channelCountMode () {
+            get channelCountMode (): TNativeIIRFilterNode['channelCountMode'] {
                 return scriptProcessorNode.channelCountMode;
             },
             set channelCountMode (value) {
                 scriptProcessorNode.channelCountMode = value;
             },
-            get channelInterpretation () {
+            get channelInterpretation (): TNativeIIRFilterNode['channelInterpretation'] {
                 return scriptProcessorNode.channelInterpretation;
             },
             set channelInterpretation (value) {
                 scriptProcessorNode.channelInterpretation = value;
             },
-            get context () {
+            get context (): TNativeIIRFilterNode['context'] {
                 return scriptProcessorNode.context;
             },
-            get inputs () {
+            get inputs (): TNativeAudioNode[] {
                 return [ scriptProcessorNode ];
             },
-            get numberOfInputs () {
+            get numberOfInputs (): number {
                 return scriptProcessorNode.numberOfInputs;
             },
-            get numberOfOutputs () {
+            get numberOfOutputs (): number {
                 return scriptProcessorNode.numberOfOutputs;
             },
-            addEventListener (...args: any[]) {
+            addEventListener (...args: any[]): void {
                 // @todo Dissallow adding an audioprocess listener.
                 return scriptProcessorNode.addEventListener(args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]) {
+            dispatchEvent (...args: any[]): boolean {
                 return scriptProcessorNode.dispatchEvent(args[0]);
             },
-            getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array) {
+            getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void {
                 if ((frequencyHz.length !== magResponse.length) || (magResponse.length !== phaseResponse.length)) {
                     throw createInvalidAccessError();
                 }
@@ -174,7 +174,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
                     phaseResponse[i] = Math.atan2(response[1], response[0]);
                 }
             },
-            removeEventListener (...args: any[]) {
+            removeEventListener (...args: any[]): void {
                 return scriptProcessorNode.removeEventListener(args[0], args[1], args[2]);
             }
         };

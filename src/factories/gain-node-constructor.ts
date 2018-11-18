@@ -34,7 +34,7 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
             this._gain = createAudioParam(context, isOffline, nativeGainNode.gain, 3.4028234663852886e38, -3.4028234663852886e38);
         }
 
-        public get gain () {
+        public get gain (): IAudioParam {
             return this._gain;
         }
 

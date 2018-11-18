@@ -58,23 +58,23 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             this._oscillatorNodeRenderer = oscillatorNodeRenderer;
         }
 
-        public get detune () {
+        public get detune (): IAudioParam {
             return this._detune;
         }
 
-        public get frequency () {
+        public get frequency (): IAudioParam {
             return this._frequency;
         }
 
-        public get onended () {
-            return <TEndedEventHandler> (<any> this._nativeOscillatorNode.onended);
+        public get onended (): null | TEndedEventHandler {
+            return <null | TEndedEventHandler> this._nativeOscillatorNode.onended;
         }
 
         public set onended (value) {
             this._nativeOscillatorNode.onended = <any> value;
         }
 
-        public get type () {
+        public get type (): TOscillatorType {
             return this._nativeOscillatorNode.type;
         }
 
@@ -87,11 +87,11 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             }
         }
 
-        public setPeriodicWave (periodicWave: PeriodicWave) {
+        public setPeriodicWave (periodicWave: PeriodicWave): void {
             this._nativeOscillatorNode.setPeriodicWave(periodicWave);
         }
 
-        public start (when = 0) {
+        public start (when = 0): void {
             this._nativeOscillatorNode.start(when);
 
             if (this._oscillatorNodeRenderer !== null) {
@@ -99,7 +99,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             }
         }
 
-        public stop (when = 0) {
+        public stop (when = 0): void {
             this._nativeOscillatorNode.stop(when);
 
             if (this._oscillatorNodeRenderer !== null) {

@@ -2,9 +2,11 @@ import {
     IAnalyserNode,
     IAudioBuffer,
     IAudioBufferSourceNode,
+    IAudioNode,
     IAudioWorklet,
     IBaseAudioContext,
     IBiquadFilterNode,
+    IConstantSourceNode,
     IGainNode,
     IIIRFilterNode,
     IOscillatorNode,
@@ -67,15 +69,15 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
             return new audioBufferSourceNodeConstructor(<any> this);
         }
 
-        public createChannelMerger (numberOfInputs = 6) {
+        public createChannelMerger (numberOfInputs = 6): IAudioNode {
             return new channelMergerNodeConstructor(<any> this, { numberOfInputs });
         }
 
-        public createChannelSplitter (numberOfOutputs = 6) {
+        public createChannelSplitter (numberOfOutputs = 6): IAudioNode {
             return new channelSplitterNodeConstructor(<any> this, { numberOfOutputs });
         }
 
-        public createConstantSource () {
+        public createConstantSource (): IConstantSourceNode {
             return new constantSourceNodeConstructor(<any> this);
         }
 
