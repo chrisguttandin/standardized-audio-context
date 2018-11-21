@@ -918,7 +918,22 @@ describe('AudioWorkletNode', () => {
                     audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                 });
 
-                it('should echo any message', (done) => {
+                it('should echo any message when using addEventListener', (done) => {
+                    const message = { a: 'simple', test: 'message' };
+                    const listener = ({ data }) => {
+                        audioWorkletNode.port.removeEventListener('message', listener);
+
+                        expect(data).to.deep.equal(message);
+
+                        done();
+                    };
+
+                    audioWorkletNode.port.addEventListener('message', listener);
+                    audioWorkletNode.port.start();
+                    audioWorkletNode.port.postMessage(message);
+                });
+
+                it('should echo any message when using onmessage', (done) => {
                     const message = { a: 'simple', test: 'message' };
 
                     audioWorkletNode.port.onmessage = ({ data }) => {
