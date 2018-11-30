@@ -9,7 +9,8 @@ export const wrapAudioScheduledSourceNodeStartMethodNegativeParameters = (
                 throw new RangeError("The parameters can't be negative.");
             }
 
-            start.call(nativeAudioScheduledSourceNode, when, offset, duration);
+            // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
+            (<any> start).call(nativeAudioScheduledSourceNode, when, offset, duration);
         };
     })(nativeAudioScheduledSourceNode.start);
 };

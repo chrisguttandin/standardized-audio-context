@@ -8,7 +8,8 @@ export const wrapAudioNodeDisconnectMethod = (nativeAudioNode: TNativeAudioNode)
             destinations.set(destination, { input, output });
 
             if (destination instanceof AudioNode) {
-                return connect.call(nativeAudioNode, destination, output, input);
+                // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
+                return (<any> connect).call(nativeAudioNode, destination, output, input);
             }
 
             return connect.call(nativeAudioNode, destination, output);

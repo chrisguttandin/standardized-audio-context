@@ -13,7 +13,8 @@ export const createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls:
 
         const disconnectGainNode = ((disconnect) => {
             return () => {
-                disconnect.call(nativeAudioScheduledSourceNode, nativeGainNode);
+                // @todo TypeScript cannot infer the overloaded signature with 1 argument yet.
+                (<any> disconnect).call(nativeAudioScheduledSourceNode, nativeGainNode);
                 nativeAudioScheduledSourceNode.removeEventListener('ended', disconnectGainNode);
             };
         })(nativeAudioScheduledSourceNode.disconnect);

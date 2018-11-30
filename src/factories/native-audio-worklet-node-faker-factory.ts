@@ -311,7 +311,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                         isActive = false;
 
                         if (onprocessorerror !== null) {
-                            onprocessorerror.call(null, new ErrorEvent('processorerror'));
+                            onprocessorerror.call(nativeAudioWorkletNodeFaker, new ErrorEvent('processorerror'));
                         }
                     }
 
