@@ -13,6 +13,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestChannelSplitterNodeChannelCountSupport;
     let fakeTestConstantSourceNodeAccurateSchedulingSupport;
     let fakeTestIsSecureContextSupport;
+    let fakeTestStereoPannerNodeDefaultValueSupport;
 
     afterEach(() => {
         TEST_RESULTS.delete(fakeTestAsyncArrayBufferSupport);
@@ -23,6 +24,7 @@ describe('createIsSupportedPromise()', () => {
         TEST_RESULTS.delete(fakeTestChannelSplitterNodeChannelCountSupport);
         TEST_RESULTS.delete(fakeTestConstantSourceNodeAccurateSchedulingSupport);
         TEST_RESULTS.delete(fakeTestIsSecureContextSupport);
+        TEST_RESULTS.delete(fakeTestStereoPannerNodeDefaultValueSupport);
     });
 
     beforeEach(() => {
@@ -35,6 +37,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestChannelSplitterNodeChannelCountSupport = () => true;
         fakeTestConstantSourceNodeAccurateSchedulingSupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
+        fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.resolve(true);
     });
 
     it('should resolve to true if all test pass', async () => {
@@ -47,7 +50,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.true;
@@ -65,7 +69,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -83,7 +88,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -101,7 +107,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -119,7 +126,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -137,7 +145,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -155,7 +164,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -173,7 +183,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -191,7 +202,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -209,7 +221,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -227,7 +240,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;
@@ -245,7 +259,27 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for default value support of a StereoPannerNode fails', async () => {
+        fakeTestConstantSourceNodeAccurateSchedulingSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            fakeBrowsernizr,
+            fakeTestAsyncArrayBufferSupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport
         );
 
         expect(isSupported).to.be.false;

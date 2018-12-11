@@ -173,6 +173,7 @@ export * from './test-channel-merger-node-support-factory';
 export * from './test-channel-splitter-node-channel-count-support-factory';
 export * from './test-constant-source-node-accurate-scheduling-support-factory';
 export * from './test-is-secure-context-support-factory';
+export * from './test-stereo-panner-node-default-value-support-factory';
 export * from './typed-array';
 export * from './wave-shaper-node-constructor-factory';
 export * from './wave-shaper-node-renderer-factory-factory';

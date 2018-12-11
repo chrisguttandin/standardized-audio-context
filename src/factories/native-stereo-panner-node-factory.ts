@@ -29,13 +29,6 @@ export const createNativeStereoPannerNodeFactory: TNativeStereoPannerNodeFactory
             nativeStereoPannerNode.pan.value = options.pan;
         }
 
-        // Bug #107: Firefox does not kick off the processing of the StereoPannerNode if the value of pan is zero.
-        if (options.pan === 0) {
-            const gainNode = ntvCntxt.createGain();
-
-            gainNode.connect(nativeStereoPannerNode.pan);
-        }
-
         /*
          * Bug #105: The channelCountMode of 'clamped-max' should be supported. However it is not possible to write a polyfill for Safari
          * which supports it and therefore it can't be supported at all.

@@ -6,7 +6,7 @@ export const createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupp
     createNativeAudioNode
 ) => {
     return (nativeContext) => {
-        const nativeAudioBufferSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createBufferSource());
+        const nativeAudioBufferSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createOscillator());
 
         try {
             nativeAudioBufferSourceNode.start(-1);

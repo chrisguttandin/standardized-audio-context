@@ -30,7 +30,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             nativeConstantSourceNode.offset.value = options.offset;
         }
 
-        // Bug #44: Only Chrome & Opera throw a RangeError yet.
+        // Bug #44: Only Chrome, Firefox & Opera throw a RangeError yet.
         if (!cacheTestResult(
             testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
             () => testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
@@ -38,7 +38,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeConstantSourceNode);
         }
 
-        // Bug #44: No browser does throw a RangeError yet.
+        // Bug #44: Only Firefox does throw a RangeError yet.
         if (!cacheTestResult(
             testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
             () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)

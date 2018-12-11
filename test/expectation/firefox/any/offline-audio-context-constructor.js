@@ -182,27 +182,32 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
-    describe('createStereoPanner()', () => {
+    describe('createOscillator()', () => {
 
-        // bug #107
+        let oscillatorNode;
 
-        it('should not modify the signal', () => {
-            const constantSourceNode = new ConstantSourceNode(offlineAudioContext, { channelCount: 1, offset: 1 });
-            const stereoPanner = new StereoPannerNode(offlineAudioContext, { channelCount: 1 });
+        beforeEach(() => {
+            oscillatorNode = offlineAudioContext.createOscillator();
+        });
 
-            constantSourceNode.start();
+        describe('start()', () => {
 
-            constantSourceNode
-                .connect(stereoPanner)
-                .connect(offlineAudioContext.destination);
+            // bug #44
 
-            return offlineAudioContext
-                .startRendering()
-                .then((buffer) => {
-                    const channelData = buffer.getChannelData(0);
+            it('should throw a DOMException', () => {
+                expect(() => oscillatorNode.start(-1)).to.throw(DOMException);
+            });
 
-                    expect(channelData[0]).to.equal(1);
-                });
+        });
+
+        describe('stop()', () => {
+
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                expect(() => oscillatorNode.stop(-1)).to.throw(DOMException);
+            });
+
         });
 
     });

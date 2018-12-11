@@ -10,7 +10,8 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testChannelMergerNodeSupport,
     testChannelSplitterNodeChannelCountSupport,
     testConstantSourceNodeAccurateSchedulingSupport,
-    testIsSecureContextSupport
+    testIsSecureContextSupport,
+    testStereoPannerNodeDefaultValueSupport
 ) => {
     if (browsernizr.promises &&
             browsernizr.typedarrays &&
@@ -26,7 +27,8 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
                 cacheTestResult(testAudioContextDecodeAudioDataMethodTypeErrorSupport, () => {
                     return testAudioContextDecodeAudioDataMethodTypeErrorSupport();
                 }),
-                cacheTestResult(testChannelMergerNodeSupport, () => testChannelMergerNodeSupport())
+                cacheTestResult(testChannelMergerNodeSupport, () => testChannelMergerNodeSupport()),
+                cacheTestResult(testStereoPannerNodeDefaultValueSupport, () => testStereoPannerNodeDefaultValueSupport())
             ])
             .then(([ asyncArrayBufferSupport, audioContextDecodeAudioDataMethodTypeErrorSupport, channelMergerNodeSupport ]) => {
                 return asyncArrayBufferSupport && audioContextDecodeAudioDataMethodTypeErrorSupport && channelMergerNodeSupport;

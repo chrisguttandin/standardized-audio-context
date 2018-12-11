@@ -107,6 +107,7 @@ import {
     createTestConstantSourceNodeAccurateSchedulingSupport
 } from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
+import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
 import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-node-renderer-factory';
 import { createWindow } from './factories/window';
@@ -556,5 +557,6 @@ export const isSupported = () => createIsSupportedPromise(
     createTestChannelMergerNodeSupport(nativeAudioContextConstructor),
     createTestChannelSplitterNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
     createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
-    createTestIsSecureContextSupport(window)
+    createTestIsSecureContextSupport(window),
+    createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor)
 );
