@@ -160,7 +160,7 @@ describe('AudioWorkletNode', () => {
 
                             describe('with numberOfInputs and numberOfOutputs both set to zero', () => {
 
-                                it('should throw an NotSupportedError', (done) => {
+                                it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createAudioWorkletNode(context, 'inspector-processor', { numberOfInputs: 0, numberOfOutputs: 0 });
                                     } catch (err) {
@@ -205,7 +205,7 @@ describe('AudioWorkletNode', () => {
 
                             describe('with an invalid value for one of the outputs specified in outputChannelCount', () => {
 
-                                it('should throw an NotSupportedError', (done) => {
+                                it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createAudioWorkletNode(context, 'inspector-processor', { outputChannelCount: [ 0 ] });
                                     } catch (err) {

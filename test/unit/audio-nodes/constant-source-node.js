@@ -801,7 +801,7 @@ describe('ConstantSourceNode', () => {
 
                 describe('with a negative value as first parameter', () => {
 
-                    it('should throw an RangeError', () => {
+                    it('should throw a RangeError', () => {
                         expect(() => {
                             constantSourceNode.start(-1);
                         }).to.throw(RangeError);
@@ -980,7 +980,7 @@ describe('ConstantSourceNode', () => {
                         constantSourceNode.start();
                     });
 
-                    it('should throw an RangeError', () => {
+                    it('should throw a RangeError', () => {
                         expect(() => {
                             constantSourceNode.stop(-1);
                         }).to.throw(RangeError);

@@ -152,7 +152,7 @@ describe('StereoPannerNode', () => {
 
                             describe('with a channelCount greater than 2', () => {
 
-                                it('should throw an NotSupportedError', (done) => {
+                                it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createStereoPannerNode(context, { channelCount: 4 });
                                     } catch (err) {
@@ -171,7 +171,7 @@ describe('StereoPannerNode', () => {
                              */
                             describe("with a channelCountMode of 'clamped-max'", () => {
 
-                                it('should throw an NotSupportedError', (done) => {
+                                it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createStereoPannerNode(context, { channelCountMode: 'clamped-max' });
                                     } catch (err) {
@@ -186,7 +186,7 @@ describe('StereoPannerNode', () => {
 
                             describe("with a channelCountMode of 'max'", () => {
 
-                                it('should throw an NotSupportedError', (done) => {
+                                it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createStereoPannerNode(context, { channelCountMode: 'max' });
                                     } catch (err) {

@@ -1102,7 +1102,7 @@ describe('AudioBufferSourceNode', () => {
                         audioBufferSourceNode = createAudioBufferSourceNode(context);
                     });
 
-                    it('should throw an RangeError', () => {
+                    it('should throw a RangeError', () => {
                         expect(() => {
                             audioBufferSourceNode.start(-1);
                         }).to.throw(RangeError);
@@ -1118,7 +1118,7 @@ describe('AudioBufferSourceNode', () => {
                         audioBufferSourceNode = createAudioBufferSourceNode(context);
                     });
 
-                    it('should throw an RangeError', () => {
+                    it('should throw a RangeError', () => {
                         expect(() => {
                             audioBufferSourceNode.start(0, -1);
                         }).to.throw(RangeError);
@@ -1134,7 +1134,7 @@ describe('AudioBufferSourceNode', () => {
                         audioBufferSourceNode = createAudioBufferSourceNode(context);
                     });
 
-                    it('should throw an RangeError', () => {
+                    it('should throw a RangeError', () => {
                         expect(() => {
                             audioBufferSourceNode.start(0, 0, -1);
                         }).to.throw(RangeError);
@@ -1401,7 +1401,7 @@ describe('AudioBufferSourceNode', () => {
                         audioBufferSourceNode.start();
                     });
 
-                    it('should throw an RangeError', () => {
+                    it('should throw a RangeError', () => {
                         expect(() => {
                             audioBufferSourceNode.stop(-1);
                         }).to.throw(RangeError);

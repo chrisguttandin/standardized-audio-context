@@ -773,7 +773,7 @@ describe('OscillatorNode', () => {
 
                 describe('with a negative value as first parameter', () => {
 
-                    it('should throw an RangeError', () => {
+                    it('should throw a RangeError', () => {
                         expect(() => {
                             oscillatorNode.start(-1);
                         }).to.throw(RangeError);
@@ -956,7 +956,7 @@ describe('OscillatorNode', () => {
                         oscillatorNode.start();
                     });
 
-                    it('should throw an RangeError', () => {
+                    it('should throw a RangeError', () => {
                         expect(() => {
                             oscillatorNode.stop(-1);
                         }).to.throw(RangeError);

@@ -207,7 +207,7 @@ describe('AudioBuffer', () => {
 
                                 describe('with zero as the numberOfChannels', () => {
 
-                                    it('should throw an NotSupportedError', (done) => {
+                                    it('should throw a NotSupportedError', (done) => {
                                         try {
                                             createAudioBuffer(context, 0, 10, 44100);
                                         } catch (err) {
@@ -222,7 +222,7 @@ describe('AudioBuffer', () => {
 
                                 describe('with a length of zero', () => {
 
-                                    it('should throw an NotSupportedError', (done) => {
+                                    it('should throw a NotSupportedError', (done) => {
                                         try {
                                             createAudioBuffer(context, 2, 0, 44100);
                                         } catch (err) {
@@ -237,7 +237,7 @@ describe('AudioBuffer', () => {
 
                                 describe('with a sampleRate of zero', () => {
 
-                                    it('should throw an NotSupportedError', (done) => {
+                                    it('should throw a NotSupportedError', (done) => {
                                         try {
                                             createAudioBuffer(context, 2, 10, 0);
                                         } catch (err) {

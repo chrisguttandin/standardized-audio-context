@@ -288,7 +288,7 @@ describe('audioContextConstructor', () => {
 
                     // bug #100
 
-                    it('should throw an SyntaxError', (done) => {
+                    it('should throw a SyntaxError', (done) => {
                         try {
                             audioBuffer.getChannelData(2);
                         } catch (err) {
