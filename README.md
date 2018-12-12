@@ -59,13 +59,13 @@ oscillatorNode.start();
 
 ### AudioContext
 
-This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createConvolver()`, `createDelay()`, `createDynamicsCompressor()`, `createMediaStreamDestination()`, `createPanner()`, `createPeriodicWave()` and `createScriptProcessor()`. The `listener` property is also missing for now.
+This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createConvolver()`, `createDynamicsCompressor()`, `createMediaStreamDestination()`, `createPanner()`, `createPeriodicWave()` and `createScriptProcessor()`. The `listener` property is also missing for now.
 
 With the exception of `createMediaStreamDestination()` and `createScriptProcessor()` there is no technical reason for not supporting these methods. They are just not implemented yet. Please create a [new issue](https://github.com/chrisguttandin/standardized-audio-context/issues/new) if you desperately need any of them.
 
 ### OfflineAudioContext
 
-This is an incomplete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It misses mostly the same methods as the AudioContext which are: `createConvolver()`, `createDelay()`, `createDynamicsCompressor()`, `createPanner()`, `createPeriodicWave()` and `createScriptProcessor()`.
+This is an incomplete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It misses mostly the same methods as the AudioContext which are: `createConvolver()`, `createDynamicsCompressor()`, `createPanner()`, `createPeriodicWave()` and `createScriptProcessor()`.
 
 ### audioWorklet
 
@@ -114,6 +114,11 @@ This is an implementation of the
 
 This is an implementation of the
 [`ConstantSourceNode`](https://webaudio.github.io/web-audio-api/#ConstantSourceNode) constructor and the [`createConstantSource()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createconstantsource) factory method respectively.
+
+### DelayNode / createDelay
+
+This is an implementation of the
+[`DelayNode`](https://webaudio.github.io/web-audio-api/#DelayNode) constructor and the [`createDelay()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createdelay) factory method respectively.
 
 ### GainNode / createGain()
 

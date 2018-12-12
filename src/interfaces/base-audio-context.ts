@@ -5,6 +5,7 @@ import { IAudioNode } from './audio-node';
 import { IAudioWorklet } from './audio-worklet';
 import { IBiquadFilterNode } from './biquad-filter-node';
 import { IConstantSourceNode } from './constant-source-node';
+import { IDelayNode } from './delay-node';
 import { IGainNode } from './gain-node';
 import { IIIRFilterNode } from './iir-filter-node';
 import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
@@ -32,6 +33,8 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
     createChannelSplitter (numberOfOutputs?: number): IAudioNode;
 
     createConstantSource (): IConstantSourceNode;
+
+    createDelay (maxDelayTime: number): IDelayNode;
 
     createGain (): IGainNode;
 

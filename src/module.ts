@@ -27,6 +27,8 @@ import { createConstantSourceNodeConstructor } from './factories/constant-source
 import { createConstantSourceNodeRendererFactory } from './factories/constant-source-node-renderer-factory';
 import { createDataCloneError } from './factories/data-clone-error';
 import { createDecodeAudioData } from './factories/decode-audio-data';
+import { createDelayNodeConstructor } from './factories/delay-node-constructor';
+import { createDelayNodeRendererFactory } from './factories/delay-node-renderer-factory';
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
 import { createEncodingError } from './factories/encoding-error';
 import { createFetchSource } from './factories/fetch-source';
@@ -60,6 +62,7 @@ import { createNativeChannelMergerNodeFactory } from './factories/native-channel
 import { createNativeChannelSplitterNodeFactory } from './factories/native-channel-splitter-node-factory';
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConstantSourceNodeFakerFactory } from './factories/native-constant-source-node-faker-factory';
+import { createNativeDelayNodeFactory } from './factories/native-delay-node-factory';
 import { createNativeGainNodeFactory } from './factories/native-gain-node-factory';
 import { createNativeIIRFilterNodeFactory } from './factories/native-iir-filter-node-factory';
 import { createNativeIIRFilterNodeFakerFactory } from './factories/native-iir-filter-node-faker-factory';
@@ -133,6 +136,8 @@ import {
     IChannelSplitterNodeConstructor,
     IConstantSourceNode,
     IConstantSourceNodeConstructor,
+    IDelayNode,
+    IDelayNodeConstructor,
     IGainNode,
     IGainNodeConstructor,
     IIIRFilterNode,
@@ -286,6 +291,15 @@ const constantSourceNodeConstructor: IConstantSourceNodeConstructor = createCons
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const createNativeDelayNode = createNativeDelayNodeFactory(createNativeAudioNode);
+const createDelayNodeRenderer = createDelayNodeRendererFactory(createNativeDelayNode);
+const delayNodeConstructor: IDelayNodeConstructor = createDelayNodeConstructor(
+    createAudioParam,
+    createDelayNodeRenderer,
+    createNativeDelayNode,
+    isNativeOfflineAudioContext,
+    noneAudioDestinationNodeConstructor
+);
 const createGainNodeRenderer = createGainNodeRendererFactory(createNativeGainNode);
 const gainNodeConstructor: IGainNodeConstructor = createGainNodeConstructor(
     createAudioParam,
@@ -392,6 +406,7 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
     channelSplitterNodeConstructor,
     constantSourceNodeConstructor,
     decodeAudioData,
+    delayNodeConstructor,
     gainNodeConstructor,
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
@@ -486,6 +501,10 @@ export { channelSplitterNodeConstructor as ChannelSplitterNode };
 type constantSourceNodeConstructor = IConstantSourceNode;
 
 export { constantSourceNodeConstructor as ConstantSourceNode };
+
+type delayNodeConstructor = IDelayNode;
+
+export { delayNodeConstructor as DelayNode };
 
 type gainNodeConstructor = IGainNode;
 

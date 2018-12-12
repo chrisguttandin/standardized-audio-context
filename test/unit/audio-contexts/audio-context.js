@@ -315,6 +315,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createDelay()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createDelay).to.be.a('function');
+            });
+
+        });
+
         describe('createGain()', () => {
 
             it('should be a function', () => {
