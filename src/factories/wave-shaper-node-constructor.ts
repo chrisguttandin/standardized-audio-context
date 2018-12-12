@@ -2,9 +2,12 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
 import { TContext, TNativeWaveShaperNode, TOverSampleType, TWaveShaperNodeConstructorFactory } from '../types';
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: IWaveShaperOptions = {
+    channelCount: 2,
+    channelCountMode: 'max',
+    channelInterpretation: 'speakers',
     curve: null,
-    oversample: <TOverSampleType> 'none'
+    oversample: 'none'
 };
 
 export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory = (
@@ -23,7 +26,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
 
         constructor (context: TContext, options: Partial<IWaveShaperOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = <IWaveShaperOptions> { ...DEFAULT_OPTIONS, ...options };
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeWaveShaperNode = createNativeWaveShaperNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const waveShaperNodeRenderer = (isOffline) ? createWaveShaperNodeRenderer() : null;

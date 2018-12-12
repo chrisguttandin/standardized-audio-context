@@ -1,23 +1,15 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IOscillatorNode, IOscillatorNodeRenderer, IOscillatorOptions } from '../interfaces';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TContext,
-    TEndedEventHandler,
-    TNativeOscillatorNode,
-    TOscillatorNodeConstructorFactory,
-    TOscillatorType
-} from '../types';
+import { TContext, TEndedEventHandler, TNativeOscillatorNode, TOscillatorNodeConstructorFactory, TOscillatorType } from '../types';
 
 // The DEFAULT_OPTIONS are only of type Partial<IOscillatorOptions> because there is no default value for periodicWave.
 const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
     channelCount: 2,
-    channelCountMode: <TChannelCountMode> 'max', // This attribute has no effect for nodes with no inputs.
-    channelInterpretation: <TChannelInterpretation> 'speakers', // This attribute has no effect for nodes with no inputs.
+    channelCountMode: 'max', // This attribute has no effect for nodes with no inputs.
+    channelInterpretation: 'speakers', // This attribute has no effect for nodes with no inputs.
     detune: 0,
     frequency: 440,
-    type: <TOscillatorType> 'sine'
+    type: 'sine'
 };
 
 export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory = (

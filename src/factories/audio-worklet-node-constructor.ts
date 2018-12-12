@@ -5,8 +5,6 @@ import { ReadOnlyMap } from '../read-only-map';
 import {
     TAudioParamMap,
     TAudioWorkletNodeConstructorFactory,
-    TChannelCountMode,
-    TChannelInterpretation,
     TContext,
     TNativeAudioParam,
     TNativeAudioWorkletNode,
@@ -16,8 +14,8 @@ import {
 const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
     channelCount: 2,
     // Bug #61: The channelCountMode should be 'max' according to the spec but is set to 'explicit' to achieve consistent behavior.
-    channelCountMode: <TChannelCountMode> 'explicit',
-    channelInterpretation: <TChannelInterpretation> 'speakers',
+    channelCountMode: 'explicit',
+    channelInterpretation: 'speakers',
     numberOfInputs: 1,
     numberOfOutputs: 1,
     outputChannelCount: undefined,
@@ -72,7 +70,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         constructor (context: TContext, name: string, options: Partial<IAudioWorkletNodeOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = sanitizedOptions(<IAudioWorkletNodeOptions> { ...DEFAULT_OPTIONS, ...options });
+            const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
             const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
             const processorDefinition = (nodeNameToProcessorDefinitionMap === undefined) ?
                 undefined :

@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
-import { TChannelCountMode, TChannelInterpretation, TContext, TStereoPannerNodeConstructorFactory } from '../types';
+import { TContext, TStereoPannerNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS: IStereoPannerOptions = {
     channelCount: 2,
@@ -8,8 +8,8 @@ const DEFAULT_OPTIONS: IStereoPannerOptions = {
      * Bug #105: The channelCountMode should be 'clamped-max' according to the spec but is set to 'explicit' to achieve consistent
      * behavior.
      */
-    channelCountMode: <TChannelCountMode> 'explicit',
-    channelInterpretation: <TChannelInterpretation> 'speakers',
+    channelCountMode: 'explicit',
+    channelInterpretation: 'speakers',
     pan: 0
 };
 
@@ -27,7 +27,7 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
 
         constructor (context: TContext, options: Partial<IStereoPannerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = <IStereoPannerOptions> { ...DEFAULT_OPTIONS, ...options };
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeStereoPannerNode = createNativeStereoPannerNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const stereoPannerNodeRenderer = (isOffline) ? createStereoPannerNodeRenderer() : null;

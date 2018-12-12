@@ -1,11 +1,11 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAnalyserNode, IAnalyserOptions } from '../interfaces';
-import { TAnalyserNodeConstructorFactory, TChannelCountMode, TChannelInterpretation, TContext, TNativeAnalyserNode } from '../types';
+import { TAnalyserNodeConstructorFactory, TContext, TNativeAnalyserNode } from '../types';
 
 const DEFAULT_OPTIONS: IAnalyserOptions = {
     channelCount: 2,
-    channelCountMode: <TChannelCountMode> 'max',
-    channelInterpretation: <TChannelInterpretation> 'speakers',
+    channelCountMode: 'max',
+    channelInterpretation: 'speakers',
     fftSize: 2048,
     maxDecibels: -30,
     minDecibels: -100,
@@ -25,7 +25,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
 
         constructor (context: TContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = <IAnalyserOptions> { ...DEFAULT_OPTIONS, ...options };
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeAnalyserNode = createNativeAnalyserNode(nativeContext, mergedOptions);
             const analyserNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createAnalyserNodeRenderer() : null;
 

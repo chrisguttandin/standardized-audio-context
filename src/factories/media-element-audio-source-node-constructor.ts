@@ -1,16 +1,11 @@
 import { getNativeAudioContext } from '../helpers/get-native-audio-context';
 import { IAudioNodeOptions, IMediaElementAudioSourceNode, IMediaElementAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TMediaElementAudioSourceNodeConstructorFactory,
-    TNativeMediaElementAudioSourceNode
-} from '../types';
+import { TMediaElementAudioSourceNodeConstructorFactory, TNativeMediaElementAudioSourceNode } from '../types';
 
 const DEFAULT_OPTIONS: IAudioNodeOptions = {
     channelCount: 2,
-    channelCountMode: <TChannelCountMode> 'max',
-    channelInterpretation: <TChannelInterpretation> 'speakers'
+    channelCountMode: 'max',
+    channelInterpretation: 'speakers'
 };
 
 export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstructorFactory = (

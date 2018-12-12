@@ -6,20 +6,13 @@ import {
     IAudioBufferSourceOptions,
     IAudioParam
 } from '../interfaces';
-import {
-    TAudioBufferSourceNodeConstructorFactory,
-    TChannelCountMode,
-    TChannelInterpretation,
-    TContext,
-    TEndedEventHandler,
-    TNativeAudioBufferSourceNode
-} from '../types';
+import { TAudioBufferSourceNodeConstructorFactory, TContext, TEndedEventHandler, TNativeAudioBufferSourceNode } from '../types';
 
 const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     buffer: null,
     channelCount: 2,
-    channelCountMode: <TChannelCountMode> 'max',
-    channelInterpretation: <TChannelInterpretation> 'speakers',
+    channelCountMode: 'max',
+    channelInterpretation: 'speakers',
     detune: 0,
     loop: false,
     loopEnd: 0,
@@ -52,7 +45,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         constructor (context: TContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = <IAudioBufferSourceOptions> { ...DEFAULT_OPTIONS, ...options };
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const audioBufferSourceNodeRenderer = (isOffline) ? createAudioBufferSourceNodeRenderer() : null;

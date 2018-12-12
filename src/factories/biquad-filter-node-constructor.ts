@@ -1,23 +1,16 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions } from '../interfaces';
-import {
-    TBiquadFilterNodeConstructorFactory,
-    TBiquadFilterType,
-    TChannelCountMode,
-    TChannelInterpretation,
-    TContext,
-    TNativeBiquadFilterNode
-} from '../types';
+import { TBiquadFilterNodeConstructorFactory, TBiquadFilterType, TContext, TNativeBiquadFilterNode } from '../types';
 
 const DEFAULT_OPTIONS: IBiquadFilterOptions = {
     Q: 1,
     channelCount: 2,
-    channelCountMode: <TChannelCountMode> 'max',
-    channelInterpretation: <TChannelInterpretation> 'speakers',
+    channelCountMode: 'max',
+    channelInterpretation: 'speakers',
     detune: 0,
     frequency: 350,
     gain: 0,
-    type: <TBiquadFilterType> 'lowpass'
+    type: 'lowpass'
 };
 
 export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFactory = (
@@ -43,7 +36,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
         constructor (context: TContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = <IBiquadFilterOptions> { ...DEFAULT_OPTIONS, ...options };
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeBiquadFilterNode = createNativeBiquadFilterNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const biquadFilterNodeRenderer = (isOffline) ? createBiquadFilterNodeRenderer() : null;

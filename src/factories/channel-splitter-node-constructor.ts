@@ -1,11 +1,11 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { IChannelSplitterOptions } from '../interfaces';
-import { TChannelCountMode, TChannelInterpretation, TChannelSplitterNodeConstructorFactory, TContext } from '../types';
+import { TChannelSplitterNodeConstructorFactory, TContext } from '../types';
 
 const DEFAULT_OPTIONS: IChannelSplitterOptions = {
     channelCount: 6,
-    channelCountMode: <TChannelCountMode> 'explicit',
-    channelInterpretation: <TChannelInterpretation> 'discrete',
+    channelCountMode: 'explicit',
+    channelInterpretation: 'discrete',
     numberOfOutputs: 6
 };
 
@@ -24,7 +24,7 @@ export const createChannelSplitterNodeConstructor: TChannelSplitterNodeConstruct
 
         constructor (context: TContext, options: Partial<IChannelSplitterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = sanitizedOptions(<IChannelSplitterOptions> { ...DEFAULT_OPTIONS, ...options });
+            const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
             const nativeChannelSplitterNode = createNativeChannelSplitterNode(nativeContext, mergedOptions);
             const channelSplitterNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createChannelSplitterNodeRenderer() : null;
 

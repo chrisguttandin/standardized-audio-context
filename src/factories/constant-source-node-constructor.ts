@@ -1,18 +1,11 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IConstantSourceNode, IConstantSourceNodeRenderer, IConstantSourceOptions } from '../interfaces';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TConstantSourceNodeConstructorFactory,
-    TContext,
-    TEndedEventHandler,
-    TNativeConstantSourceNode
-} from '../types';
+import { TConstantSourceNodeConstructorFactory, TContext, TEndedEventHandler, TNativeConstantSourceNode } from '../types';
 
 const DEFAULT_OPTIONS: IConstantSourceOptions = {
     channelCount: 2,
-    channelCountMode: <TChannelCountMode> 'max',
-    channelInterpretation: <TChannelInterpretation> 'speakers',
+    channelCountMode: 'max',
+    channelInterpretation: 'speakers',
     offset: 1
 };
 
@@ -34,7 +27,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         constructor (context: TContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = <IConstantSourceOptions> { ...DEFAULT_OPTIONS, ...options };
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeConstantSourceNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const constantSourceNodeRenderer = (isOffline) ? createConstantSourceNodeRendererFactory() : null;

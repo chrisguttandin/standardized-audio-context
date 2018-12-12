@@ -1,19 +1,13 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { IIIRFilterNode, IIIRFilterOptions } from '../interfaces';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TContext,
-    TIIRFilterNodeConstructorFactory,
-    TNativeIIRFilterNode
-} from '../types';
+import { TContext, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
 
 // The DEFAULT_OPTIONS are only of type Partial<IIIRFilterOptions> because there are no default values for feedback and feedforward.
 const DEFAULT_OPTIONS: Partial<AudioNodeOptions> = {
     channelCount: 2,
-    channelCountMode: <TChannelCountMode> 'max',
-    channelInterpretation: <TChannelInterpretation> 'speakers'
+    channelCountMode: 'max',
+    channelInterpretation: 'speakers'
 };
 
 export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = (
