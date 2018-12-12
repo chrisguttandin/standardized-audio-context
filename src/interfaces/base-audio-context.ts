@@ -34,7 +34,7 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
 
     createConstantSource (): IConstantSourceNode;
 
-    createDelay (maxDelayTime: number): IDelayNode;
+    createDelay (maxDelayTime?: number): IDelayNode;
 
     createGain (): IGainNode;
 
