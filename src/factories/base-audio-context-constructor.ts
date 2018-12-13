@@ -11,6 +11,8 @@ import {
     IGainNode,
     IIIRFilterNode,
     IOscillatorNode,
+    IPeriodicWave,
+    IPeriodicWaveConstraints,
     IStereoPannerNode,
     IWaveShaperNode,
     IWorkletOptions
@@ -32,6 +34,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
     oscillatorNodeConstructor,
+    periodicWaveConstructor,
     stereoPannerNodeConstructor,
     waveShaperNodeConstructor
 ) => {
@@ -97,6 +100,14 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         public createOscillator (): IOscillatorNode {
             return new oscillatorNodeConstructor(<any> this);
+        }
+
+        public createPeriodicWave (
+            real: number[],
+            imag: number[],
+            constraints: Partial<IPeriodicWaveConstraints> = { disableNormalization: false }
+        ): IPeriodicWave {
+            return new periodicWaveConstructor(<any> this, { ...constraints, imag, real });
         }
 
         public createStereoPanner (): IStereoPannerNode {

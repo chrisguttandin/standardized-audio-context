@@ -59,13 +59,13 @@ oscillatorNode.start();
 
 ### AudioContext
 
-This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createConvolver()`, `createDynamicsCompressor()`, `createMediaStreamDestination()`, `createPanner()`, `createPeriodicWave()` and `createScriptProcessor()`. The `listener` property is also missing for now.
+This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createConvolver()`, `createDynamicsCompressor()`, `createMediaStreamDestination()`, `createPanner()` and `createScriptProcessor()`. The `listener` property is also missing for now.
 
 With the exception of `createMediaStreamDestination()` and `createScriptProcessor()` there is no technical reason for not supporting these methods. They are just not implemented yet. Please create a [new issue](https://github.com/chrisguttandin/standardized-audio-context/issues/new) if you desperately need any of them.
 
 ### OfflineAudioContext
 
-This is an incomplete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It misses mostly the same methods as the AudioContext which are: `createConvolver()`, `createDynamicsCompressor()`, `createPanner()`, `createPeriodicWave()` and `createScriptProcessor()`.
+This is an incomplete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It misses mostly the same methods as the AudioContext which are: `createConvolver()`, `createDynamicsCompressor()`, `createPanner()` and `createScriptProcessor()`.
 
 ### audioWorklet
 
@@ -144,6 +144,11 @@ This is an implementation of the
 
 This is an implementation of the
 [`OscillatorNode`](https://webaudio.github.io/web-audio-api/#oscillatornode) constructor and the [`createOscillator()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createoscillator) factory method respectively.
+
+### PeriodicWave / createPeriodicWave()
+
+This is an implementation of the
+[`PeriodicWave`](https://webaudio.github.io/web-audio-api/#periodicwave) constructor and the [`createPeriodicWave()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createperiodicwave) factory method respectively.
 
 ### StereoPannerNode / createStereoPanner()
 

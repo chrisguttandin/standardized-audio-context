@@ -18,6 +18,7 @@ import {
     MinimalOfflineAudioContext,
     OfflineAudioContext,
     OscillatorNode,
+    PeriodicWave,
     StereoPannerNode,
     WaveShaperNode,
     addAudioWorkletModule,
@@ -97,6 +98,10 @@ describe('module', () => {
 
     it('should export the OscillatorNode constructor', () => {
         expect(OscillatorNode).to.be.a('function');
+    });
+
+    it('should export the PeriodicWave constructor', () => {
+        expect(PeriodicWave).to.be.a('function');
     });
 
     it('should export the StereoPannerNode constructor', () => {

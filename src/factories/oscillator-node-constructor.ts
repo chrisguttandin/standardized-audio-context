@@ -48,6 +48,10 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             this._frequency = createAudioParam(context, isOffline, nativeOscillatorNode.frequency, nyquist, -nyquist);
             this._nativeOscillatorNode = nativeOscillatorNode;
             this._oscillatorNodeRenderer = oscillatorNodeRenderer;
+
+            if (this._oscillatorNodeRenderer !== null && mergedOptions.periodicWave) {
+                this._oscillatorNodeRenderer.periodicWave = mergedOptions.periodicWave;
+            }
         }
 
         public get detune (): IAudioParam {
@@ -77,10 +81,18 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             if (value === 'custom') {
                 throw createInvalidStateError();
             }
+
+            if (this._oscillatorNodeRenderer !== null) {
+                this._oscillatorNodeRenderer.periodicWave = null;
+            }
         }
 
         public setPeriodicWave (periodicWave: PeriodicWave): void {
             this._nativeOscillatorNode.setPeriodicWave(periodicWave);
+
+            if (this._oscillatorNodeRenderer !== null) {
+                this._oscillatorNodeRenderer.periodicWave = periodicWave;
+            }
         }
 
         public start (when = 0): void {

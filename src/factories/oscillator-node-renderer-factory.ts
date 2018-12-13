@@ -3,7 +3,7 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IOscillatorNode, IOscillatorOptions } from '../interfaces';
+import { IOscillatorNode, IOscillatorOptions, IPeriodicWave } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeOscillatorNode, TOscillatorNodeRendererFactoryFactory } from '../types';
 
 export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactoryFactory = (
@@ -11,10 +11,14 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
 ) => {
     return () => {
         let nativeOscillatorNode: null | TNativeOscillatorNode = null;
+        let periodicWave: null | IPeriodicWave = null;
         let start: null | number = null;
         let stop: null | number = null;
 
         return {
+            set periodicWave (value: null | IPeriodicWave) {
+                periodicWave = value;
+            },
             set start (value: number) {
                 start = value;
             },
@@ -42,9 +46,12 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
                         channelInterpretation: nativeOscillatorNode.channelInterpretation,
                         detune: nativeOscillatorNode.detune.value,
                         frequency: nativeOscillatorNode.frequency.value,
-                        // @todo periodicWave is not exposed by the native node.
                         type: nativeOscillatorNode.type
                     };
+
+                    if (periodicWave !== null) {
+                        options.periodicWave = periodicWave;
+                    }
 
                     nativeOscillatorNode = createNativeOscillatorNode(nativeOfflineAudioContext, options);
 

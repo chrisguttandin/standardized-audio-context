@@ -1,5 +1,6 @@
 import { TOscillatorType } from '../types';
 import { IAudioNodeOptions } from './audio-node-options';
+import { IPeriodicWave } from './periodic-wave';
 
 export interface IOscillatorOptions extends IAudioNodeOptions {
 
@@ -7,7 +8,7 @@ export interface IOscillatorOptions extends IAudioNodeOptions {
 
     frequency: number;
 
-    periodicWave?: PeriodicWave; // @todo Define a new interface.
+    periodicWave?: IPeriodicWave;
 
     type: TOscillatorType;
 

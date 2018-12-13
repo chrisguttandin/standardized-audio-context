@@ -12,6 +12,7 @@ import {
     IIIRFilterNodeConstructor,
     IMinimalBaseAudioContextConstructor,
     IOscillatorNodeConstructor,
+    IPeriodicWaveConstructor,
     IStereoPannerNodeConstructor,
     IWaveShaperNodeConstructor
 } from '../interfaces';
@@ -33,6 +34,7 @@ export type TBaseAudioContextConstructorFactory = (
     iIRFilterNodeConstructor: IIIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor: IMinimalBaseAudioContextConstructor,
     oscillatorNodeConstructor: IOscillatorNodeConstructor,
+    periodicWaveConstructor: IPeriodicWaveConstructor,
     stereoPannerNodeConstructor: IStereoPannerNodeConstructor,
     waveShaperNodeConstructor: IWaveShaperNodeConstructor
 ) => IBaseAudioContextConstructor;

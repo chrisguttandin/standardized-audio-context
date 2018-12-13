@@ -28,9 +28,9 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
             nativeOscillatorNode.frequency.value = options.frequency;
         }
 
-        // @todo periodicWave
-
-        if (options.type !== nativeOscillatorNode.type) {
+        if (options.periodicWave) {
+            nativeOscillatorNode.setPeriodicWave(options.periodicWave);
+        } else if (options.type !== nativeOscillatorNode.type) {
             nativeOscillatorNode.type = options.type;
         }
 

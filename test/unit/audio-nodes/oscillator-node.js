@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioWorkletNode, GainNode, OscillatorNode, addAudioWorkletModule } from '../../../src/module';
+import { AudioWorkletNode, GainNode, OscillatorNode, PeriodicWave, addAudioWorkletModule } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -36,6 +36,10 @@ const createOscillatorNodeWithFactoryFunction = (context, options = null) => {
 
     if (options !== null && options.frequency !== undefined) {
         oscillatorNode.frequency.value = options.frequency;
+    }
+
+    if (options !== null && options.periodicWave !== undefined) {
+        oscillatorNode.setPeriodicWave(options.periodicWave);
     }
 
     if (options !== null && options.type !== undefined) {
@@ -202,7 +206,12 @@ describe('OscillatorNode', () => {
                                 expect(oscillatorNode.frequency.value).to.equal(frequency);
                             });
 
-                            // @todo it('should return an instance with the given periodicWave');
+                            it('should return an instance with the given periodicWave', () => {
+                                const periodicWave = new PeriodicWave(context, { imag: [ 1 ], real: [ 1 ] });
+                                const oscillatorNode = createOscillatorNode(context, { periodicWave });
+
+                                expect(oscillatorNode.type).to.equal('custom');
+                            });
 
                             it('should return an instance with the given type', () => {
                                 const type = 'triangle';
@@ -210,6 +219,12 @@ describe('OscillatorNode', () => {
 
                                 expect(oscillatorNode.type).to.equal(type);
                             });
+
+                        });
+
+                        describe('with invalid options', () => {
+
+                            // @todo
 
                         });
 
