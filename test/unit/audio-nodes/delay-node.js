@@ -630,8 +630,8 @@ describe('DelayNode', () => {
                         prepare (destination) {
                             const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const firstDummyGainNode = new GainNode(context);
                             const delayNode = createDelayNode(context);
+                            const firstDummyGainNode = new GainNode(context);
                             const secondDummyGainNode = new GainNode(context);
 
                             audioBuffer.copyToChannel(new Float32Array(values), 0);

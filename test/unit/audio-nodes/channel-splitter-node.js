@@ -307,8 +307,8 @@ describe('ChannelSplitterNode', () => {
                         prepare (destination) {
                             const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const firstDummyGainNode = new GainNode(context);
                             const channelSplitterNode = createChannelSplitterNode(context);
+                            const firstDummyGainNode = new GainNode(context);
                             const secondDummyGainNode = new GainNode(context);
 
                             audioBuffer.copyToChannel(new Float32Array(values), 0);
