@@ -1,7 +1,7 @@
-import { TTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupportFactory } from '../types';
+import { TTestAudioScheduledSourceNodeStopMethodNegativeParametersSupportFactory } from '../types';
 
 export const createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport:
-    TTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupportFactory =
+    TTestAudioScheduledSourceNodeStopMethodNegativeParametersSupportFactory =
 (
     createNativeAudioNode
 ) => {
