@@ -25,6 +25,8 @@ import { createChannelSplitterNodeRendererFactory } from './factories/channel-sp
 import { createConnectMultipleOutputs } from './factories/connect-multiple-outputs';
 import { createConstantSourceNodeConstructor } from './factories/constant-source-node-constructor';
 import { createConstantSourceNodeRendererFactory } from './factories/constant-source-node-renderer-factory';
+import { createConvolverNodeConstructor } from './factories/convolver-node-constructor';
+import { createConvolverNodeRendererFactory } from './factories/convolver-node-renderer-factory';
 import { createDataCloneError } from './factories/data-clone-error';
 import { createDecodeAudioData } from './factories/decode-audio-data';
 import { createDelayNodeConstructor } from './factories/delay-node-constructor';
@@ -64,6 +66,8 @@ import { createNativeChannelMergerNodeFactory } from './factories/native-channel
 import { createNativeChannelSplitterNodeFactory } from './factories/native-channel-splitter-node-factory';
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConstantSourceNodeFakerFactory } from './factories/native-constant-source-node-faker-factory';
+import { createNativeConvolverNodeFactory } from './factories/native-convolver-node-factory';
+import { createNativeConvolverNodeFakerFactory } from './factories/native-convolver-node-faker-factory';
 import { createNativeDelayNodeFactory } from './factories/native-delay-node-factory';
 import { createNativeDynamicsCompressorNodeFactory } from './factories/native-dynamics-compressor-node-factory';
 import { createNativeGainNodeFactory } from './factories/native-gain-node-factory';
@@ -114,6 +118,7 @@ import { createTestChannelSplitterNodeChannelCountSupport } from './factories/te
 import {
     createTestConstantSourceNodeAccurateSchedulingSupport
 } from './factories/test-constant-source-node-accurate-scheduling-support';
+import { createTestConvolverNodeBufferReassignabilitySupport } from './factories/test-convolver-node-buffer-reassignability-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
 import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
@@ -141,6 +146,8 @@ import {
     IChannelSplitterNodeConstructor,
     IConstantSourceNode,
     IConstantSourceNodeConstructor,
+    IConvolverNode,
+    IConvolverNodeConstructor,
     IDelayNode,
     IDelayNodeConstructor,
     IDynamicsCompressorNode,
@@ -300,6 +307,21 @@ const constantSourceNodeConstructor: IConstantSourceNodeConstructor = createCons
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const createNativeConvolverNodeFaker = createNativeConvolverNodeFakerFactory(createNativeAudioNode, createNativeGainNode);
+const testConvolverNodeBufferReassignabilitySupport = createTestConvolverNodeBufferReassignabilitySupport(createNativeAudioNode);
+const createNativeConvolverNode = createNativeConvolverNodeFactory(
+    createNativeAudioNode,
+    createNativeConvolverNodeFaker,
+    createNotSupportedError,
+    testConvolverNodeBufferReassignabilitySupport
+);
+const createConvolverNodeRenderer = createConvolverNodeRendererFactory(createNativeConvolverNode);
+const convolverNodeConstructor: IConvolverNodeConstructor = createConvolverNodeConstructor(
+    createConvolverNodeRenderer,
+    createNativeConvolverNode,
+    isNativeOfflineAudioContext,
+    noneAudioDestinationNodeConstructor
+);
 const createNativeDelayNode = createNativeDelayNodeFactory(createNativeAudioNode);
 const createDelayNodeRenderer = createDelayNodeRendererFactory(createNativeDelayNode);
 const delayNodeConstructor: IDelayNodeConstructor = createDelayNodeConstructor(
@@ -426,6 +448,7 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
     channelMergerNodeConstructor,
     channelSplitterNodeConstructor,
     constantSourceNodeConstructor,
+    convolverNodeConstructor,
     decodeAudioData,
     delayNodeConstructor,
     dynamicsCompressorNodeConstructor,
@@ -522,6 +545,10 @@ type channelSplitterNodeConstructor = IAudioNode;
 export { channelSplitterNodeConstructor as ChannelSplitterNode };
 
 type constantSourceNodeConstructor = IConstantSourceNode;
+
+export { convolverNodeConstructor as ConvolverNode };
+
+type convolverNodeConstructor = IConvolverNode;
 
 export { constantSourceNodeConstructor as ConstantSourceNode };
 

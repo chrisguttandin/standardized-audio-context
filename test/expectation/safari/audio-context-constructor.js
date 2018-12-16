@@ -584,6 +584,51 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createConvolver()', () => {
+
+            let convolverNode;
+
+            beforeEach(() => {
+                convolverNode = audioContext.createConvolver();
+            });
+
+            describe('buffer', () => {
+
+                // bug #115
+
+                it('should not allow to assign the buffer to null', () => {
+                    const audioBuffer = audioContext.createBuffer(2, 100, 44100);
+
+                    convolverNode.buffer = audioBuffer;
+                    convolverNode.buffer = null;
+
+                    expect(convolverNode.buffer).to.equal(audioBuffer);
+                });
+
+            });
+
+            describe('channelCount', () => {
+
+                // bug #113
+
+                it('should not throw an error', () => {
+                    convolverNode.channelCount = 3;
+                });
+
+            });
+
+            describe('channelCountMode', () => {
+
+                // bug #114
+
+                it('should not throw an error', () => {
+                    convolverNode.channelCountMode = 'max';
+                });
+
+            });
+
+        });
+
         describe('createDynamicsCompressor()', () => {
 
             let dynamicsCompressorNode;

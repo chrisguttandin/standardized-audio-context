@@ -7,6 +7,7 @@ import {
     IBaseAudioContext,
     IBiquadFilterNode,
     IConstantSourceNode,
+    IConvolverNode,
     IDelayNode,
     IDynamicsCompressorNode,
     IGainNode,
@@ -29,6 +30,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
     channelMergerNodeConstructor,
     channelSplitterNodeConstructor,
     constantSourceNodeConstructor,
+    convolverNodeConstructor,
     decodeAudioData,
     delayNodeConstructor,
     dynamicsCompressorNodeConstructor,
@@ -86,6 +88,10 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         public createConstantSource (): IConstantSourceNode {
             return new constantSourceNodeConstructor(<any> this);
+        }
+
+        public createConvolver (): IConvolverNode {
+            return new convolverNodeConstructor(<any> this);
         }
 
         public createDelay (maxDelayTime = 1): IDelayNode {

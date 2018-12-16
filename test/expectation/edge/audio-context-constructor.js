@@ -402,6 +402,36 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createConvolver()', () => {
+
+            let convolverNode;
+
+            beforeEach(() => {
+                convolverNode = audioContext.createConvolver();
+            });
+
+            describe('channelCount', () => {
+
+                // bug #113
+
+                it('should not throw an error', () => {
+                    convolverNode.channelCount = 3;
+                });
+
+            });
+
+            describe('channelCountMode', () => {
+
+                // bug #114
+
+                it('should not throw an error', () => {
+                    convolverNode.channelCountMode = 'max';
+                });
+
+            });
+
+        });
+
         describe('createDynamicsCompressor()', () => {
 
             let dynamicsCompressorNode;

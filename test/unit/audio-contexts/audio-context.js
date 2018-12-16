@@ -315,6 +315,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createConvolver()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createConvolver).to.be.a('function');
+            });
+
+        });
+
         describe('createDelay()', () => {
 
             it('should be a function', () => {

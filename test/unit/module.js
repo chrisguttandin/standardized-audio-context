@@ -9,6 +9,7 @@ import {
     ChannelMergerNode,
     ChannelSplitterNode,
     ConstantSourceNode,
+    ConvolverNode,
     DelayNode,
     DynamicsCompressorNode,
     GainNode,
@@ -63,6 +64,10 @@ describe('module', () => {
 
     it('should export the ConstantSourceNode constructor', () => {
         expect(ConstantSourceNode).to.be.a('function');
+    });
+
+    it('should export the ConvolverNode constructor', () => {
+        expect(ConvolverNode).to.be.a('function');
     });
 
     it('should export the DelayNode constructor', () => {
