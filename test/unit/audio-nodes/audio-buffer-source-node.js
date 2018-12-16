@@ -18,6 +18,10 @@ const createAudioBufferSourceNodeWithConstructor = (context, options = null) => 
 const createAudioBufferSourceNodeWithFactoryFunction = (context, options = null) => {
     const audioBufferSourceNode = context.createBufferSource();
 
+    if (options !== null && options.buffer !== undefined) {
+        audioBufferSourceNode.buffer = options.buffer;
+    }
+
     if (options !== null && options.channelCount !== undefined) {
         audioBufferSourceNode.channelCount = options.channelCount;
     }
@@ -28,10 +32,6 @@ const createAudioBufferSourceNodeWithFactoryFunction = (context, options = null)
 
     if (options !== null && options.channelInterpretation !== undefined) {
         audioBufferSourceNode.channelInterpretation = options.channelInterpretation;
-    }
-
-    if (options !== null && options.buffer !== undefined) {
-        audioBufferSourceNode.buffer = options.buffer;
     }
 
     /*
