@@ -149,7 +149,7 @@ describe('DelayNode', () => {
 
                         describe('with valid options', () => {
 
-                            it('should return an instance with the given delayTime', () => {
+                            it('should return an instance with the given initial value for delayTime', () => {
                                 const delayTime = 0.5;
                                 const delayNode = createDelayNode(context, { delayTime });
 

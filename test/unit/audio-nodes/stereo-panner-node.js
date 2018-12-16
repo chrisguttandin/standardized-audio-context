@@ -245,7 +245,7 @@ describe('StereoPannerNode', () => {
 
                     stereoPannerNode.channelCount = channelCount;
 
-                    expect(stereoPannerNode.channelCount).to.equal(1);
+                    expect(stereoPannerNode.channelCount).to.equal(channelCount);
                 });
 
                 it('should not be assignable to a value larger than 2', (done) => {
@@ -282,7 +282,7 @@ describe('StereoPannerNode', () => {
 
                 it("should not be assignable to 'max'", (done) => {
                     try {
-                        stereoPannerNode.channelCount = 'max';
+                        stereoPannerNode.channelCountMode = 'max';
                     } catch (err) {
                         expect(err.code).to.equal(9);
                         expect(err.name).to.equal('NotSupportedError');
