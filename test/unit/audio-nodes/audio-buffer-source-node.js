@@ -183,6 +183,20 @@ describe('AudioBufferSourceNode', () => {
 
                         describe('with valid options', () => {
 
+                            it('should return an instance with the given buffer', () => {
+                                const audioBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+
+                                expect(audioBufferSourceNode.buffer).to.equal(audioBuffer);
+                            });
+
+                            it('should return an instance without a buffer', () => {
+                                const buffer = null;
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer });
+
+                                expect(audioBufferSourceNode.buffer).to.equal(buffer);
+                            });
+
                             it('should return an instance with the given channelCount', () => {
                                 const channelCount = 4;
                                 const audioBufferSourceNode = createAudioBufferSourceNode(context, { channelCount });
@@ -202,13 +216,6 @@ describe('AudioBufferSourceNode', () => {
                                 const audioBufferSourceNode = createAudioBufferSourceNode(context, { channelInterpretation });
 
                                 expect(audioBufferSourceNode.channelInterpretation).to.equal(channelInterpretation);
-                            });
-
-                            it('should return an instance with the given buffer', () => {
-                                const audioBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
-                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-
-                                expect(audioBufferSourceNode.buffer).to.equal(audioBuffer);
                             });
 
                             /*
