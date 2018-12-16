@@ -162,7 +162,7 @@ describe('AnalyserNode', () => {
                                 expect(analyserNode.getFloatTimeDomainData).to.be.a('function');
                                 expect(analyserNode.maxDecibels).to.equal(-30);
                                 expect(analyserNode.minDecibels).to.equal(-100);
-                                expect(analyserNode.smoothingTimeConstant).to.closeTo(0.8, 0.0000001);
+                                expect(analyserNode.smoothingTimeConstant).to.equal(0.8);
                             });
 
                         });
