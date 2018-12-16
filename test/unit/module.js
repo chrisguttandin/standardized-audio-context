@@ -10,6 +10,7 @@ import {
     ChannelSplitterNode,
     ConstantSourceNode,
     DelayNode,
+    DynamicsCompressorNode,
     GainNode,
     IIRFilterNode,
     MediaElementAudioSourceNode,
@@ -66,6 +67,10 @@ describe('module', () => {
 
     it('should export the DelayNode constructor', () => {
         expect(DelayNode).to.be.a('function');
+    });
+
+    it('should export the DynamicsCompressorNode constructor', () => {
+        expect(DynamicsCompressorNode).to.be.a('function');
     });
 
     it('should export the GainNode constructor', () => {

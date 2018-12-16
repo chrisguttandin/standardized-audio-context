@@ -110,6 +110,39 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createDynamicsCompressor()', () => {
+
+        // bug #112
+
+        it('should not have a tail-time', () => {
+            const audioBuffer = new AudioBuffer({ length: 3, sampleRate: 44100 });
+
+            audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1 ]), 0);
+
+            const audioBufferSourceNode = new AudioBufferSourceNode(offlineAudioContext, { buffer: audioBuffer });
+            const dynamicsCompressorNode = new DynamicsCompressorNode(offlineAudioContext);
+
+            audioBufferSourceNode
+                .connect(dynamicsCompressorNode)
+                .connect(offlineAudioContext.destination);
+
+            audioBufferSourceNode.start(0);
+
+            return offlineAudioContext
+                .startRendering()
+                .then((renderedBuffer) => {
+                    const channelData = new Float32Array(384);
+
+                    renderedBuffer.copyFromChannel(channelData, 0);
+
+                    for (let i = 0; i < channelData.length; i += 1) {
+                        expect(channelData[i]).to.equal(0);
+                    }
+                });
+        });
+
+    });
+
     describe('createGain()', () => {
 
         // bug #25

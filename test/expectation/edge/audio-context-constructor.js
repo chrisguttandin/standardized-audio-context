@@ -402,6 +402,156 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createDynamicsCompressor()', () => {
+
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = audioContext.createDynamicsCompressor();
+            });
+
+            describe('attack', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.attack.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.attack.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('channelCount', () => {
+
+                // bug #108
+
+                it('should not throw an error', () => {
+                    dynamicsCompressorNode.channelCount = 3;
+                });
+
+            });
+
+            describe('channelCountMode', () => {
+
+                // bug #109
+
+                it('should not throw an error', () => {
+                    dynamicsCompressorNode.channelCountMode = 'max';
+                });
+
+            });
+
+            describe('knee', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.knee.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.knee.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('ratio', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.ratio.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.ratio.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('release', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.release.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.release.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+            describe('threshold', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.threshold.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #110
+
+                    it('should be undefined', () => {
+                        expect(dynamicsCompressorNode.threshold.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+        });
+
         describe('createGain()', () => {
 
             describe('gain', () => {

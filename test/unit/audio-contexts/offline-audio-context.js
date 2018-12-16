@@ -477,6 +477,20 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('createDynamicsCompressor()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createDynamicsCompressor).to.be.a('function');
+        });
+
+    });
+
     describe('createGain()', () => {
 
         let offlineAudioContext;

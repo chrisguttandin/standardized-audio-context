@@ -8,6 +8,7 @@ import {
     IBiquadFilterNode,
     IConstantSourceNode,
     IDelayNode,
+    IDynamicsCompressorNode,
     IGainNode,
     IIIRFilterNode,
     IOscillatorNode,
@@ -30,6 +31,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
     constantSourceNodeConstructor,
     decodeAudioData,
     delayNodeConstructor,
+    dynamicsCompressorNodeConstructor,
     gainNodeConstructor,
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
@@ -88,6 +90,10 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         public createDelay (maxDelayTime = 1): IDelayNode {
             return new delayNodeConstructor(<any> this, { maxDelayTime });
+        }
+
+        public createDynamicsCompressor (): IDynamicsCompressorNode {
+            return new dynamicsCompressorNodeConstructor(<any> this);
         }
 
         public createGain (): IGainNode {

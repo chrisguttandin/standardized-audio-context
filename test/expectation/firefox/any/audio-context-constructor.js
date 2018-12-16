@@ -234,6 +234,35 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createDynamicsCompressor()', () => {
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = audioContext.createDynamicsCompressor();
+            });
+
+            describe('channelCount', () => {
+
+                // bug #108
+
+                it('should not throw an error', () => {
+                    dynamicsCompressorNode.channelCount = 3;
+                });
+
+            });
+
+            describe('channelCountMode', () => {
+
+                // bug #109
+
+                it('should not throw an error', () => {
+                    dynamicsCompressorNode.channelCountMode = 'max';
+                });
+
+            });
+
+        });
+
         describe('createGain()', () => {
 
             describe('gain', () => {

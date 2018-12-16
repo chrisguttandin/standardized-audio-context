@@ -30,6 +30,8 @@ import { createDecodeAudioData } from './factories/decode-audio-data';
 import { createDelayNodeConstructor } from './factories/delay-node-constructor';
 import { createDelayNodeRendererFactory } from './factories/delay-node-renderer-factory';
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
+import { createDynamicsCompressorNodeConstructor } from './factories/dynamics-compressor-node-constructor';
+import { createDynamicsCompressorNodeRendererFactory } from './factories/dynamics-compressor-node-renderer-factory';
 import { createEncodingError } from './factories/encoding-error';
 import { createFetchSource } from './factories/fetch-source';
 import { createGainNodeConstructor } from './factories/gain-node-constructor';
@@ -63,6 +65,7 @@ import { createNativeChannelSplitterNodeFactory } from './factories/native-chann
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConstantSourceNodeFakerFactory } from './factories/native-constant-source-node-faker-factory';
 import { createNativeDelayNodeFactory } from './factories/native-delay-node-factory';
+import { createNativeDynamicsCompressorNodeFactory } from './factories/native-dynamics-compressor-node-factory';
 import { createNativeGainNodeFactory } from './factories/native-gain-node-factory';
 import { createNativeIIRFilterNodeFactory } from './factories/native-iir-filter-node-factory';
 import { createNativeIIRFilterNodeFakerFactory } from './factories/native-iir-filter-node-faker-factory';
@@ -140,6 +143,8 @@ import {
     IConstantSourceNodeConstructor,
     IDelayNode,
     IDelayNodeConstructor,
+    IDynamicsCompressorNode,
+    IDynamicsCompressorNodeConstructor,
     IGainNode,
     IGainNodeConstructor,
     IIIRFilterNode,
@@ -304,6 +309,16 @@ const delayNodeConstructor: IDelayNodeConstructor = createDelayNodeConstructor(
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const createNativeDynamicsCompressorNode = createNativeDynamicsCompressorNodeFactory(createNativeAudioNode, createNotSupportedError);
+const createDynamicsCompressorNodeRenderer = createDynamicsCompressorNodeRendererFactory(createNativeDynamicsCompressorNode);
+const dynamicsCompressorNodeConstructor: IDynamicsCompressorNodeConstructor = createDynamicsCompressorNodeConstructor(
+    createAudioParam,
+    createDynamicsCompressorNodeRenderer,
+    createNativeDynamicsCompressorNode,
+    createNotSupportedError,
+    isNativeOfflineAudioContext,
+    noneAudioDestinationNodeConstructor
+);
 const createGainNodeRenderer = createGainNodeRendererFactory(createNativeGainNode);
 const gainNodeConstructor: IGainNodeConstructor = createGainNodeConstructor(
     createAudioParam,
@@ -413,6 +428,7 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
     constantSourceNodeConstructor,
     decodeAudioData,
     delayNodeConstructor,
+    dynamicsCompressorNodeConstructor,
     gainNodeConstructor,
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
@@ -512,6 +528,10 @@ export { constantSourceNodeConstructor as ConstantSourceNode };
 type delayNodeConstructor = IDelayNode;
 
 export { delayNodeConstructor as DelayNode };
+
+type dynamicsCompressorNodeConstructor = IDynamicsCompressorNode;
+
+export { dynamicsCompressorNodeConstructor as DynamicsCompressorNode };
 
 type gainNodeConstructor = IGainNode;
 

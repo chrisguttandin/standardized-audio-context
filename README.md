@@ -59,13 +59,13 @@ oscillatorNode.start();
 
 ### AudioContext
 
-This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createConvolver()`, `createDynamicsCompressor()`, `createMediaStreamDestination()`, `createPanner()` and `createScriptProcessor()`. The `listener` property is also missing for now.
+This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createConvolver()`, `createMediaStreamDestination()`, `createPanner()` and `createScriptProcessor()`. The `listener` property is also missing for now.
 
 With the exception of `createMediaStreamDestination()` and `createScriptProcessor()` there is no technical reason for not supporting these methods. They are just not implemented yet. Please create a [new issue](https://github.com/chrisguttandin/standardized-audio-context/issues/new) if you desperately need any of them.
 
 ### OfflineAudioContext
 
-This is an incomplete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It misses mostly the same methods as the AudioContext which are: `createConvolver()`, `createDynamicsCompressor()`, `createPanner()` and `createScriptProcessor()`.
+This is an incomplete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It misses mostly the same methods as the AudioContext which are: `createConvolver()`, `createPanner()` and `createScriptProcessor()`.
 
 ### audioWorklet
 
@@ -119,6 +119,11 @@ This is an implementation of the
 
 This is an implementation of the
 [`DelayNode`](https://webaudio.github.io/web-audio-api/#DelayNode) constructor and the [`createDelay()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createdelay) factory method respectively.
+
+### DynamicsCompressorNode / createDynamicsCompressor
+
+This is an implementation of the
+[`DynamicsCompressorNode`](https://webaudio.github.io/web-audio-api/#dynamicscompressornode) constructor and the [`createDynamicsCompressor()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createdynamicscompressor) factory method respectively.
 
 ### GainNode / createGain()
 

@@ -584,6 +584,55 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createDynamicsCompressor()', () => {
+
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = audioContext.createDynamicsCompressor();
+            });
+
+            describe('channelCount', () => {
+
+                // bug #108
+
+                it('should not throw an error', () => {
+                    dynamicsCompressorNode.channelCount = 3;
+                });
+
+            });
+
+            describe('channelCountMode', () => {
+
+                // bug #109
+
+                it('should not throw an error', () => {
+                    dynamicsCompressorNode.channelCountMode = 'max';
+                });
+
+            });
+
+            describe('reduction', () => {
+
+                // bug #111
+
+                it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.reduction.cancelScheduledValues).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.defaultValue).to.be.a('number');
+                    expect(dynamicsCompressorNode.reduction.exponentialRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.linearRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.maxValue).to.be.a('number');
+                    expect(dynamicsCompressorNode.reduction.minValue).to.be.a('number');
+                    expect(dynamicsCompressorNode.reduction.setTargetAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.setValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.setValueCurveAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.value).to.be.a('number');
+                });
+
+            });
+
+        });
+
         describe('createGain()', () => {
 
             // bug #11

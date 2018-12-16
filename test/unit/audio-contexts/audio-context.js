@@ -323,6 +323,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createDynamicsCompressor()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createDynamicsCompressor).to.be.a('function');
+            });
+
+        });
+
         describe('createGain()', () => {
 
             it('should be a function', () => {

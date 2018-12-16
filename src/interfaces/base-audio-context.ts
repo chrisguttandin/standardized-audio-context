@@ -6,6 +6,7 @@ import { IAudioWorklet } from './audio-worklet';
 import { IBiquadFilterNode } from './biquad-filter-node';
 import { IConstantSourceNode } from './constant-source-node';
 import { IDelayNode } from './delay-node';
+import { IDynamicsCompressorNode } from './dynamics-compressor-node';
 import { IGainNode } from './gain-node';
 import { IIIRFilterNode } from './iir-filter-node';
 import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
@@ -37,6 +38,8 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
     createConstantSource (): IConstantSourceNode;
 
     createDelay (maxDelayTime?: number): IDelayNode;
+
+    createDynamicsCompressor (): IDynamicsCompressorNode;
 
     createGain (): IGainNode;
 
