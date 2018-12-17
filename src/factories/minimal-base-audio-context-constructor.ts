@@ -1,13 +1,18 @@
 import { EventTarget } from '../event-target';
 import { CONTEXT_STORE } from '../globals';
-import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioDestinationNode, IAudioListener, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioContextState, TMinimalBaseAudioContextConstructorFactory, TNativeContext, TStateChangeEventHandler } from '../types';
 
-export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = (audioDestinationNodeConstructor) => {
+export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = (
+    audioDestinationNodeConstructor,
+    createAudioListener
+) => {
 
     return class MinimalBaseAudioContext extends EventTarget implements IMinimalBaseAudioContext {
 
         private _destination: IAudioDestinationNode;
+
+        private _listener: IAudioListener;
 
         private _nativeContext: TNativeContext;
 
@@ -23,8 +28,9 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
                 get: () => sampleRate
             });
 
-            this._nativeContext = nativeContext;
             this._destination = new audioDestinationNodeConstructor(<any> this, numberOfChannels);
+            this._listener = createAudioListener(<any> this, nativeContext);
+            this._nativeContext = nativeContext;
         }
 
         public get currentTime (): number {
@@ -33,6 +39,10 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
         public get destination (): IAudioDestinationNode {
             return this._destination;
+        }
+
+        get listener (): IAudioListener {
+            return this._listener;
         }
 
         public get onstatechange (): null | TStateChangeEventHandler {

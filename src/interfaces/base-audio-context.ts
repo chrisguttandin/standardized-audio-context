@@ -19,8 +19,6 @@ import { IWaveShaperNode } from './wave-shaper-node';
 
 export interface IBaseAudioContext extends IMinimalBaseAudioContext {
 
-    // @todo listener
-
     // The audioWorklet property is only available in a SecureContext.
     readonly audioWorklet?: IAudioWorklet;
 

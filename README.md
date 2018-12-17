@@ -59,7 +59,7 @@ oscillatorNode.start();
 
 ### AudioContext
 
-This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createMediaStreamDestination()`, `createPanner()` and `createScriptProcessor()`. The `listener` property is also missing for now.
+This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createMediaStreamDestination()`, `createPanner()` and `createScriptProcessor()`
 
 With the exception of `createMediaStreamDestination()` and `createScriptProcessor()` there is no technical reason for not supporting these methods. They are just not implemented yet. Please create a [new issue](https://github.com/chrisguttandin/standardized-audio-context/issues/new) if you desperately need any of them.
 

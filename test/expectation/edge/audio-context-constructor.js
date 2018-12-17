@@ -42,6 +42,24 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('listener', () => {
+
+            // bug #117
+
+            it('should not be implemented', () => {
+                expect(audioContext.listener.forwardX).to.be.undefined;
+                expect(audioContext.listener.forwardY).to.be.undefined;
+                expect(audioContext.listener.forwardZ).to.be.undefined;
+                expect(audioContext.listener.positionX).to.be.undefined;
+                expect(audioContext.listener.positionY).to.be.undefined;
+                expect(audioContext.listener.positionZ).to.be.undefined;
+                expect(audioContext.listener.upX).to.be.undefined;
+                expect(audioContext.listener.upY).to.be.undefined;
+                expect(audioContext.listener.upZ).to.be.undefined;
+            });
+
+        });
+
         describe('outputLatency', () => {
 
             // bug #40

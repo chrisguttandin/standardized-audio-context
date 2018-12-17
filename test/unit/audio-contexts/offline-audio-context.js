@@ -214,6 +214,30 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('listener', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be an instance of the AudioListener interface', () => {
+            const listener = offlineAudioContext.listener;
+
+            expect(listener.positionX).not.to.be.undefined;
+            expect(listener.positionY).not.to.be.undefined;
+            expect(listener.positionZ).not.to.be.undefined;
+            expect(listener.forwardX).not.to.be.undefined;
+            expect(listener.forwardY).not.to.be.undefined;
+            expect(listener.forwardZ).not.to.be.undefined;
+            expect(listener.upX).not.to.be.undefined;
+            expect(listener.upY).not.to.be.undefined;
+            expect(listener.upZ).not.to.be.undefined;
+        });
+
+    });
+
     describe('oncomplete', () => {
 
         // @todo

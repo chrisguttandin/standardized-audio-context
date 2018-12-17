@@ -10,6 +10,7 @@ import { createAudioBufferSourceNodeRendererFactory } from './factories/audio-bu
 import { createAudioContextConstructor } from './factories/audio-context-constructor';
 import { createAudioDestinationNodeConstructor } from './factories/audio-destination-node-constructor';
 import { createAudioDestinationNodeRenderer } from './factories/audio-destination-node-renderer-factory';
+import { createAudioListenerFactory } from './factories/audio-listener-factory';
 import { createAudioNodeConstructor } from './factories/audio-node-constructor';
 import { createAudioParamFactory } from './factories/audio-param-factory';
 import { createAudioParamRenderer } from './factories/audio-param-renderer';
@@ -370,7 +371,14 @@ const iIRFilterNodeConstructor: IIIRFilterNodeConstructor = createIIRFilterNodeC
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(audioDestinationNodeConstructor);
+const createAudioListener = createAudioListenerFactory(
+    createAudioParam,
+    createNativeChannelMergerNode,
+    createNativeConstantSourceNode,
+    createNativeScriptProcessorNode,
+    isNativeOfflineAudioContext
+);
+const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(audioDestinationNodeConstructor, createAudioListener);
 const createNativeOscillatorNode = createNativeOscillatorNodeFactory(
     createNativeAudioNode,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
