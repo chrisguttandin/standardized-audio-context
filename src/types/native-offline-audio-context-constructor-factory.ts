@@ -1,3 +1,3 @@
-import { INativeOfflineAudioContextConstructor } from '../interfaces';
+import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-context-constructor';
 
-export type TNativeOfflineAudioContextConstructorFactory = (window: null | Window) => null | INativeOfflineAudioContextConstructor;
+export type TNativeOfflineAudioContextConstructorFactory = (window: null | Window) => null | TNativeOfflineAudioContextConstructor;

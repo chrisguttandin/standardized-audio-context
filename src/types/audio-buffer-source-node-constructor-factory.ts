@@ -1,9 +1,10 @@
-import { IAudioBufferSourceNodeConstructor, INoneAudioDestinationNodeConstructor } from '../interfaces';
+import { TAudioBufferSourceNodeConstructor } from './audio-buffer-source-node-constructor';
 import { TAudioBufferSourceNodeRendererFactory } from './audio-buffer-source-node-renderer-factory';
 import { TAudioParamFactory } from './audio-param-factory';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeAudioBufferSourceNodeFactory } from './native-audio-buffer-source-node-factory';
+import { TNoneAudioDestinationNodeConstructor } from './none-audio-destination-node-constructor';
 
 export type TAudioBufferSourceNodeConstructorFactory = (
     createAudioBufferSourceNodeRenderer: TAudioBufferSourceNodeRendererFactory,
@@ -11,5 +12,5 @@ export type TAudioBufferSourceNodeConstructorFactory = (
     createInvalidStateError: TInvalidStateErrorFactory,
     createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFactory,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
-    noneAudioDestinationNodeConstructor: INoneAudioDestinationNodeConstructor
-) => IAudioBufferSourceNodeConstructor;
+    noneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructor
+) => TAudioBufferSourceNodeConstructor;

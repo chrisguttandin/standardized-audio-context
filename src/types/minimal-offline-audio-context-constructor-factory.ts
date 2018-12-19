@@ -1,14 +1,12 @@
-import {
-    IMinimalBaseAudioContextConstructor,
-    IMinimalOfflineAudioContextConstructor,
-    INativeOfflineAudioContextConstructor
-} from '../interfaces';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
+import { TMinimalBaseAudioContextConstructor } from './minimal-base-audio-context-constructor';
+import { TMinimalOfflineAudioContextConstructor } from './minimal-offline-audio-context-constructor';
+import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-context-constructor';
 import { TStartRenderingFunction } from './start-rendering-function';
 
 export type TMinimalOfflineAudioContextConstructorFactory = (
     createInvalidStateError: TInvalidStateErrorFactory,
-    minimalBaseAudioContextConstructor: IMinimalBaseAudioContextConstructor,
-    nativeOfflineAudioContextConstructor: null | INativeOfflineAudioContextConstructor,
+    minimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructor,
+    nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor,
     startRendering: TStartRenderingFunction
-) => IMinimalOfflineAudioContextConstructor;
+) => TMinimalOfflineAudioContextConstructor;

@@ -1,8 +1,9 @@
-import { INoneAudioDestinationNodeConstructor, IOscillatorNodeConstructor } from '../interfaces';
 import { TAudioParamFactory } from './audio-param-factory';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeOscillatorNodeFactory } from './native-oscillator-node-factory';
+import { TNoneAudioDestinationNodeConstructor } from './none-audio-destination-node-constructor';
+import { TOscillatorNodeConstructor } from './oscillator-node-constructor';
 import { TOscillatorNodeRendererFactory } from './oscillator-node-renderer-factory';
 
 export type TOscillatorNodeConstructorFactory = (
@@ -11,5 +12,5 @@ export type TOscillatorNodeConstructorFactory = (
     createNativeOscillatorNode: TNativeOscillatorNodeFactory,
     createOscillatorNodeRenderer: TOscillatorNodeRendererFactory,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
-    noneAudioDestinationNodeConstructor: INoneAudioDestinationNodeConstructor
-) => IOscillatorNodeConstructor;
+    noneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructor
+) => TOscillatorNodeConstructor;

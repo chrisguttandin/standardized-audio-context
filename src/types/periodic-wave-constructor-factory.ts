@@ -1,4 +1,4 @@
-import { IPeriodicWaveConstructor } from '../interfaces';
 import { TNativePeriodicWaveFactory } from './native-periodic-wave-factory';
+import { TPeriodicWaveConstructor } from './periodic-wave-constructor';
 
-export type TPeriodicWaveConstructorFactory = (createNativePeriodicWave: TNativePeriodicWaveFactory) => IPeriodicWaveConstructor;
+export type TPeriodicWaveConstructorFactory = (createNativePeriodicWave: TNativePeriodicWaveFactory) => TPeriodicWaveConstructor;

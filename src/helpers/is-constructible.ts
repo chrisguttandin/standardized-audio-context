@@ -1,4 +1,4 @@
-import { IConstructor } from '../interfaces';
+import { TConstructor } from '../types';
 
 const handler = {
     construct (): any {
@@ -6,7 +6,7 @@ const handler = {
     }
 };
 
-export const isConstructible = (constructible: IConstructor): boolean => {
+export const isConstructible = (constructible: TConstructor): boolean => {
     try {
         const proxy = new Proxy(constructible, handler);
 

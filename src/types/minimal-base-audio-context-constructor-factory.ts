@@ -1,7 +1,8 @@
-import { IAudioDestinationNodeConstructor, IMinimalBaseAudioContextConstructor } from '../interfaces';
+import { TAudioDestinationNodeConstructor } from './audio-destination-node-constructor';
 import { TAudioListenerFactory } from './audio-listener-factory';
+import { TMinimalBaseAudioContextConstructor } from './minimal-base-audio-context-constructor';
 
 export type TMinimalBaseAudioContextConstructorFactory = (
-    audioDestinationNodeConstructor: IAudioDestinationNodeConstructor,
+    audioDestinationNodeConstructor: TAudioDestinationNodeConstructor,
     createAudioListener: TAudioListenerFactory
-) => IMinimalBaseAudioContextConstructor;
+) => TMinimalBaseAudioContextConstructor;

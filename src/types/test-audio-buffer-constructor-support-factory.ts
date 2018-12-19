@@ -1,5 +1,5 @@
-import { INativeAudioBufferConstructor } from '../interfaces';
+import { TNativeAudioBufferConstructor } from './native-audio-buffer-constructor';
 
 export type TTestAudioBufferConstructorSupportFactory = (
-    nativeAudioBufferConstructor: null | INativeAudioBufferConstructor
+    nativeAudioBufferConstructor: null | TNativeAudioBufferConstructor
 ) => () => boolean;

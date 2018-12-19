@@ -1,5 +1,5 @@
-import { INativeAudioContextConstructor } from '../interfaces';
+import { TNativeAudioContextConstructor } from './native-audio-context-constructor';
 
 export type TTestChannelMergerNodeSupportFactory = (
-    nativeAudioContextConstructor: null | INativeAudioContextConstructor
+    nativeAudioContextConstructor: null | TNativeAudioContextConstructor
 ) => () => Promise<boolean>;

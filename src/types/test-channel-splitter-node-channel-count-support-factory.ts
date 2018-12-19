@@ -1,5 +1,5 @@
-import { INativeOfflineAudioContextConstructor } from '../interfaces';
+import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-context-constructor';
 
 export type TTestChannelSplitterNodeChannelCountSupportFactory = (
-    nativeOfflineAudioContextConstructor: null | INativeOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor
 ) => () => boolean;

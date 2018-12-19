@@ -1,3 +1,3 @@
-import { INativeAudioBufferConstructor } from '../interfaces';
+import { TNativeAudioBufferConstructor } from './native-audio-buffer-constructor';
 
-export type TNativeAudioBufferConstructorFactory = (window: null | Window) => null | INativeAudioBufferConstructor;
+export type TNativeAudioBufferConstructorFactory = (window: null | Window) => null | TNativeAudioBufferConstructor;
