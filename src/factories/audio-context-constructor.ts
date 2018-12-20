@@ -16,7 +16,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
 
         private _state: null | 'suspended';
 
-        constructor (options: IAudioContextOptions = {}) {
+        constructor (options: IAudioContextOptions = { }) {
             if (nativeAudioContextConstructor === null) {
                 throw new Error(); // @todo
             }
@@ -47,9 +47,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                         this._state = null;
                     }
 
-                    if (nativeAudioContext.removeEventListener) {
-                        nativeAudioContext.removeEventListener('statechange', revokeState);
-                    }
+                    nativeAudioContext.removeEventListener('statechange', revokeState);
                 };
 
                 nativeAudioContext.addEventListener('statechange', revokeState);

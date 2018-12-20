@@ -14,7 +14,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
 
         private _state: null | 'suspended';
 
-        constructor (options: IAudioContextOptions = {}) {
+        constructor (options: IAudioContextOptions = { }) {
             if (nativeAudioContextConstructor === null) {
                 throw new Error(); // @todo
             }
@@ -45,9 +45,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                         this._state = null;
                     }
 
-                    if (nativeAudioContext.removeEventListener) {
-                        nativeAudioContext.removeEventListener('statechange', revokeState);
-                    }
+                    nativeAudioContext.removeEventListener('statechange', revokeState);
                 };
 
                 nativeAudioContext.addEventListener('statechange', revokeState);

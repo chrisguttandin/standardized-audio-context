@@ -3,7 +3,7 @@ import { TNativeAudioNode, TNativeAudioParam } from '../types';
 export const interceptConnections = <T extends Object> (
     original: T,
     interceptor: TNativeAudioNode
-): T & { connect: TNativeAudioNode['connect'], disconnect: TNativeAudioNode['disconnect'] } => {
+): T & { connect: TNativeAudioNode['connect']; disconnect: TNativeAudioNode['disconnect'] } => {
     (<T & { connect: TNativeAudioNode['connect'] }> original).connect = ((
         destination: TNativeAudioNode | TNativeAudioParam,
         output = 0,
@@ -26,5 +26,5 @@ export const interceptConnections = <T extends Object> (
         (<any> interceptor.disconnect).apply(interceptor, arguments);
     };
 
-    return <T & { connect: TNativeAudioNode['connect'], disconnect: TNativeAudioNode['disconnect'] }> original;
+    return <T & { connect: TNativeAudioNode['connect']; disconnect: TNativeAudioNode['disconnect'] }> original;
 };

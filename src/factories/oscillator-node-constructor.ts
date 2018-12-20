@@ -49,7 +49,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             this._nativeOscillatorNode = nativeOscillatorNode;
             this._oscillatorNodeRenderer = oscillatorNodeRenderer;
 
-            if (this._oscillatorNodeRenderer !== null && mergedOptions.periodicWave) {
+            if (this._oscillatorNodeRenderer !== null && mergedOptions.periodicWave !== undefined) {
                 this._oscillatorNodeRenderer.periodicWave = mergedOptions.periodicWave;
             }
         }
