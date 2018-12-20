@@ -18,7 +18,7 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-external-helpers": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-env": "^7.2.3",
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-angular": "^7.1.2",
     "chai": "^4.2.0",
