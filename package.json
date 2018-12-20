@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.2.0",
-    "async-array-buffer": "^3.0.8",
+    "async-array-buffer": "^3.0.9",
     "tslib": "^1.9.3"
   },
   "description": "A cross-browser implementation of the AudioContext which aims to closely follow the standard.",
