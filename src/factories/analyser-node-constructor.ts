@@ -14,6 +14,7 @@ const DEFAULT_OPTIONS: IAnalyserOptions = {
 
 export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
     createAnalyserNodeRenderer,
+    createIndexSizeError,
     createNativeAnalyserNode,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
@@ -51,7 +52,16 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
         }
 
         public set maxDecibels (value) {
+            // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.
+            const maxDecibels = this._nativeAnalyserNode.maxDecibels;
+
             this._nativeAnalyserNode.maxDecibels = value;
+
+            if (!(value > this._nativeAnalyserNode.minDecibels)) {
+                this._nativeAnalyserNode.maxDecibels = maxDecibels;
+
+                throw createIndexSizeError();
+            }
         }
 
         public get minDecibels (): number {
@@ -59,7 +69,16 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
         }
 
         public set minDecibels (value) {
+            // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.
+            const minDecibels = this._nativeAnalyserNode.minDecibels;
+
             this._nativeAnalyserNode.minDecibels = value;
+
+            if (!(this._nativeAnalyserNode.maxDecibels > value)) {
+                this._nativeAnalyserNode.minDecibels = minDecibels;
+
+                throw createIndexSizeError();
+            }
         }
 
         public get smoothingTimeConstant (): number {

@@ -4,11 +4,16 @@ import { testAnalyserNodeGetFloatTimeDomainDataMethodSupport } from '../support-
 import { TNativeAnalyserNodeFactoryFactory } from '../types';
 import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 
-export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory = (createNativeAudioNode) => {
+export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory = (createIndexSizeError, createNativeAudioNode) => {
     return (nativeContext, options) => {
         const nativeAnalyserNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createAnalyser());
 
         assignNativeAudioNodeOptions(nativeAnalyserNode, options);
+
+        // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.
+        if (!(options.maxDecibels > options.minDecibels)) {
+            throw createIndexSizeError();
+        }
 
         if (options.fftSize !== nativeAnalyserNode.fftSize) {
             nativeAnalyserNode.fftSize = options.fftSize;

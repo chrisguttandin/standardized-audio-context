@@ -122,6 +122,36 @@ describe('audioContextConstructor', () => {
                 }
             });
 
+            describe('maxDecibels', () => {
+
+                // bug #118
+
+                it('should be assignable to a value that is less than minDecibels', () => {
+                    const analyserNode = audioContext.createAnalyser();
+                    const maxDecibels = analyserNode.minDecibels - 10;
+
+                    analyserNode.maxDecibels = maxDecibels;
+
+                    expect(analyserNode.maxDecibels).to.equal(maxDecibels);
+                });
+
+            });
+
+            describe('minDecibels', () => {
+
+                // bug #118
+
+                it('should be assignable to a value that is more than maxDecibels', () => {
+                    const analyserNode = audioContext.createAnalyser();
+                    const minDecibels = analyserNode.maxDecibels + 10;
+
+                    analyserNode.minDecibels = minDecibels;
+
+                    expect(analyserNode.minDecibels).to.equal(minDecibels);
+                });
+
+            });
+
             describe('getFloatTimeDomainData()', () => {
 
                 // bug #36

@@ -220,6 +220,115 @@ describe('AnalyserNode', () => {
 
                         });
 
+                        describe('with invalid options', () => {
+
+                            describe('with an fftSize below 32', () => {
+
+                                it('should throw an IndexSizeError', (done) => {
+                                    try {
+                                        createAnalyserNode(context, { fftSize: 16 });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(1);
+                                        expect(err.name).to.equal('IndexSizeError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with an fftSize above 32768', () => {
+
+                                it('should throw an IndexSizeError', (done) => {
+                                    try {
+                                        createAnalyserNode(context, { fftSize: 65536 });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(1);
+                                        expect(err.name).to.equal('IndexSizeError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with an fftSize that is not a power of two', () => {
+
+                                it('should throw an IndexSizeError', (done) => {
+                                    try {
+                                        createAnalyserNode(context, { fftSize: 200 });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(1);
+                                        expect(err.name).to.equal('IndexSizeError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with a value for maxDecibels that is equal to minDecibels', () => {
+
+                                it('should throw an IndexSizeError', (done) => {
+                                    try {
+                                        createAnalyserNode(context, { maxDecibels: -100 });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(1);
+                                        expect(err.name).to.equal('IndexSizeError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with a value for minDecibels that is equal to maxDecibels', () => {
+
+                                it('should throw an IndexSizeError', (done) => {
+                                    try {
+                                        createAnalyserNode(context, { minDecibels: -30 });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(1);
+                                        expect(err.name).to.equal('IndexSizeError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with a smoothingTimeConstant below 0', () => {
+
+                                it('should throw an IndexSizeError', (done) => {
+                                    try {
+                                        createAnalyserNode(context, { smoothingTimeConstant: -0.1 });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(1);
+                                        expect(err.name).to.equal('IndexSizeError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with a smoothingTimeConstant above 1', () => {
+
+                                it('should throw an IndexSizeError', (done) => {
+                                    try {
+                                        createAnalyserNode(context, { smoothingTimeConstant: 1.1 });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(1);
+                                        expect(err.name).to.equal('IndexSizeError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                        });
+
                     });
 
                 }
@@ -277,6 +386,46 @@ describe('AnalyserNode', () => {
 
                     expect(analyserNode.channelInterpretation).to.equal(channelInterpretation);
                 });
+
+            });
+
+            describe('fftSize', () => {
+
+                // @todo
+
+            });
+
+            describe('frequencyBinCount', () => {
+
+                let analyserNode;
+
+                beforeEach(() => {
+                    analyserNode = createAnalyserNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        analyserNode.frequencyBinCount = 512;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
+            describe('maxDecibels', () => {
+
+                // @todo
+
+            });
+
+            describe('minDecibels', () => {
+
+                // @todo
+
+            });
+
+            describe('smoothingTimeConstant', () => {
+
+                // @todo
 
             });
 
