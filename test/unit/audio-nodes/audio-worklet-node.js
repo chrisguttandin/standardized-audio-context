@@ -154,6 +154,95 @@ describe('AudioWorkletNode', () => {
 
                         });
 
+                        describe('with valid options', () => {
+
+                            it('should return an instance with the given channelCount', async () => {
+                                await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+
+                                const channelCount = 4;
+                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { channelCount });
+
+                                expect(audioWorkletNode.channelCount).to.equal(channelCount);
+                            });
+
+                            // Bug #61: Specifying a different channelCountMode is currently forbidden.
+
+                            it('should return an instance with the given channelInterpretation', async () => {
+                                await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+
+                                const channelInterpretation = 'discrete';
+                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { channelInterpretation });
+
+                                expect(audioWorkletNode.channelInterpretation).to.equal(channelInterpretation);
+                            });
+
+                            it('should return an instance with the given numberOfInputs', async () => {
+                                await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+
+                                const numberOfInputs = 2;
+                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { numberOfInputs });
+
+                                expect(audioWorkletNode.numberOfInputs).to.equal(numberOfInputs);
+                            });
+
+                            it('should return an instance with the given numberOfOutputs', async () => {
+                                await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+
+                                const numberOfOutputs = 0;
+                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { numberOfOutputs });
+
+                                expect(audioWorkletNode.numberOfOutputs).to.equal(numberOfOutputs);
+                            });
+
+                            it('should pass on the parameterData to the AudioWorkletProcessor', (done) => {
+                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
+                                    .then(() => {
+                                        const parameterData = { gain: 12 };
+                                        const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { parameterData });
+
+                                        audioWorkletNode.port.onmessage = ({ data }) => {
+                                            audioWorkletNode.port.onmessage = null;
+
+                                            expect(data.options.parameterData).to.deep.equal(parameterData);
+
+                                            done();
+                                        };
+
+                                        audioWorkletNode.port.postMessage(null);
+                                    });
+                            });
+
+                            it('should throw a DataCloneError when provided with an unclonable value', (done) => {
+                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
+                                    .then(() => createAudioWorkletNode(context, 'inspector-processor', { processorOptions: { fn: () => { } } }))
+                                    .catch((err) => {
+                                        expect(err.code).to.equal(25);
+                                        expect(err.name).to.equal('DataCloneError');
+
+                                        done();
+                                    });
+                            });
+
+                            it('should pass on the processorOptions to the AudioWorkletProcessor', (done) => {
+                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
+                                    .then(() => {
+                                        const processorOptions = { an: 'arbitrary', object: [ 'with', 'some', 'values' ] };
+                                        const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { processorOptions });
+
+                                        audioWorkletNode.port.onmessage = ({ data }) => {
+                                            audioWorkletNode.port.onmessage = null;
+
+                                            expect(data.options.processorOptions).to.deep.equal(processorOptions);
+
+                                            done();
+                                        };
+
+                                        audioWorkletNode.port.postMessage(null);
+                                    });
+                            });
+
+                        });
+
                         describe('with invalid options', () => {
 
                             beforeEach(() => addAudioWorkletModule('base/test/fixtures/inspector-processor.js'));
@@ -240,95 +329,6 @@ describe('AudioWorkletNode', () => {
                                     audioWorkletNode.port.postMessage(null);
                                 });
 
-                            });
-
-                        });
-
-                        describe('with valid options', () => {
-
-                            it('should return an instance with the given channelCount', async () => {
-                                await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
-
-                                const channelCount = 4;
-                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { channelCount });
-
-                                expect(audioWorkletNode.channelCount).to.equal(channelCount);
-                            });
-
-                            // Bug #61: Specifying a different channelCountMode is currently forbidden.
-
-                            it('should return an instance with the given channelInterpretation', async () => {
-                                await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
-
-                                const channelInterpretation = 'discrete';
-                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { channelInterpretation });
-
-                                expect(audioWorkletNode.channelInterpretation).to.equal(channelInterpretation);
-                            });
-
-                            it('should return an instance with the given numberOfInputs', async () => {
-                                await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
-
-                                const numberOfInputs = 2;
-                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { numberOfInputs });
-
-                                expect(audioWorkletNode.numberOfInputs).to.equal(numberOfInputs);
-                            });
-
-                            it('should return an instance with the given numberOfOutputs', async () => {
-                                await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
-
-                                const numberOfOutputs = 0;
-                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { numberOfOutputs });
-
-                                expect(audioWorkletNode.numberOfOutputs).to.equal(numberOfOutputs);
-                            });
-
-                            it('should pass on the parameterData to the AudioWorkletProcessor', (done) => {
-                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
-                                    .then(() => {
-                                        const parameterData = { gain: 12 };
-                                        const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { parameterData });
-
-                                        audioWorkletNode.port.onmessage = ({ data }) => {
-                                            audioWorkletNode.port.onmessage = null;
-
-                                            expect(data.options.parameterData).to.deep.equal(parameterData);
-
-                                            done();
-                                        };
-
-                                        audioWorkletNode.port.postMessage(null);
-                                    });
-                            });
-
-                            it('should throw a DataCloneError when provided with an unclonable value', (done) => {
-                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
-                                    .then(() => createAudioWorkletNode(context, 'inspector-processor', { processorOptions: { fn: () => { } } }))
-                                    .catch((err) => {
-                                        expect(err.code).to.equal(25);
-                                        expect(err.name).to.equal('DataCloneError');
-
-                                        done();
-                                    });
-                            });
-
-                            it('should pass on the processorOptions to the AudioWorkletProcessor', (done) => {
-                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
-                                    .then(() => {
-                                        const processorOptions = { an: 'arbitrary', object: [ 'with', 'some', 'values' ] };
-                                        const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { processorOptions });
-
-                                        audioWorkletNode.port.onmessage = ({ data }) => {
-                                            audioWorkletNode.port.onmessage = null;
-
-                                            expect(data.options.processorOptions).to.deep.equal(processorOptions);
-
-                                            done();
-                                        };
-
-                                        audioWorkletNode.port.postMessage(null);
-                                    });
                             });
 
                         });

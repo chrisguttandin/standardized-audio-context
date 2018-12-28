@@ -148,6 +148,31 @@ describe('StereoPannerNode', () => {
 
                         });
 
+                        describe('with valid options', () => {
+
+                            it('should return an instance with the given channelCount', () => {
+                                const channelCount = 1;
+                                const stereoPannerNode = createStereoPannerNode(context, { channelCount });
+
+                                expect(stereoPannerNode.channelCount).to.equal(channelCount);
+                            });
+
+                            it('should return an instance with the given channelInterpretation', () => {
+                                const channelInterpretation = 'discrete';
+                                const stereoPannerNode = createStereoPannerNode(context, { channelInterpretation });
+
+                                expect(stereoPannerNode.channelInterpretation).to.equal(channelInterpretation);
+                            });
+
+                            it('should return an instance with the given initial value for pan', () => {
+                                const pan = 0.5;
+                                const stereoPannerNode = createStereoPannerNode(context, { pan });
+
+                                expect(stereoPannerNode.pan.value).to.equal(pan);
+                            });
+
+                        });
+
                         describe('with invalid options', () => {
 
                             describe('with a channelCount greater than 2', () => {
@@ -197,31 +222,6 @@ describe('StereoPannerNode', () => {
                                     }
                                 });
 
-                            });
-
-                        });
-
-                        describe('with valid options', () => {
-
-                            it('should return an instance with the given channelCount', () => {
-                                const channelCount = 1;
-                                const stereoPannerNode = createStereoPannerNode(context, { channelCount });
-
-                                expect(stereoPannerNode.channelCount).to.equal(channelCount);
-                            });
-
-                            it('should return an instance with the given channelInterpretation', () => {
-                                const channelInterpretation = 'discrete';
-                                const stereoPannerNode = createStereoPannerNode(context, { channelInterpretation });
-
-                                expect(stereoPannerNode.channelInterpretation).to.equal(channelInterpretation);
-                            });
-
-                            it('should return an instance with the given initial value for pan', () => {
-                                const pan = 0.5;
-                                const stereoPannerNode = createStereoPannerNode(context, { pan });
-
-                                expect(stereoPannerNode.pan.value).to.equal(pan);
                             });
 
                         });

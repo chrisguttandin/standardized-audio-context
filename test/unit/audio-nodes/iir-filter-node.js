@@ -114,100 +114,6 @@ describe('IIRFilterNode', () => {
                             }
                         });
 
-                        describe('with invalid options', () => {
-
-                            describe('without any feedback coefficients', () => {
-
-                                it('should throw a NotSupportedError', (done) => {
-                                    try {
-                                        createIIRFilterNode(context, { feedback: [ ], feedforward });
-                                    } catch (err) {
-                                        expect(err.code).to.equal(9);
-                                        expect(err.name).to.equal('NotSupportedError');
-
-                                        done();
-                                    }
-                                });
-
-                            });
-
-                            describe('with feedback coefficients beginning with zero', () => {
-
-                                it('should throw an InvalidStateError', (done) => {
-                                    try {
-                                        createIIRFilterNode(context, { feedback: [ 0, 1 ], feedforward });
-                                    } catch (err) {
-                                        expect(err.code).to.equal(11);
-                                        expect(err.name).to.equal('InvalidStateError');
-
-                                        done();
-                                    }
-                                });
-
-                            });
-
-                            describe('with too many feedback coefficients', () => {
-
-                                it('should throw a NotSupportedError', (done) => {
-                                    try {
-                                        createIIRFilterNode(context, { feedback: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ], feedforward });
-                                    } catch (err) {
-                                        expect(err.code).to.equal(9);
-                                        expect(err.name).to.equal('NotSupportedError');
-
-                                        done();
-                                    }
-                                });
-
-                            });
-
-                            describe('without any feedforward coefficients', () => {
-
-                                it('should throw a NotSupportedError', (done) => {
-                                    try {
-                                        createIIRFilterNode(context, { feedback, feedforward: [ ] });
-                                    } catch (err) {
-                                        expect(err.code).to.equal(9);
-                                        expect(err.name).to.equal('NotSupportedError');
-
-                                        done();
-                                    }
-                                });
-
-                            });
-
-                            describe('with feedforward coefficients of only zero', () => {
-
-                                it('should throw an InvalidStateError', (done) => {
-                                    try {
-                                        createIIRFilterNode(context, { feedback, feedforward: [ 0 ] });
-                                    } catch (err) {
-                                        expect(err.code).to.equal(11);
-                                        expect(err.name).to.equal('InvalidStateError');
-
-                                        done();
-                                    }
-                                });
-
-                            });
-
-                            describe('with too many feedforward coefficients', () => {
-
-                                it('should throw a NotSupportedError', (done) => {
-                                    try {
-                                        createIIRFilterNode(context, { feedback, feedforward: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ] });
-                                    } catch (err) {
-                                        expect(err.code).to.equal(9);
-                                        expect(err.name).to.equal('NotSupportedError');
-
-                                        done();
-                                    }
-                                });
-
-                            });
-
-                        });
-
                         describe('with valid options', () => {
 
                             it('should return an instance of the EventTarget interface', () => {
@@ -392,6 +298,100 @@ describe('IIRFilterNode', () => {
                                 });
 
                             }
+
+                        });
+
+                        describe('with invalid options', () => {
+
+                            describe('without any feedback coefficients', () => {
+
+                                it('should throw a NotSupportedError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback: [ ], feedforward });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with feedback coefficients beginning with zero', () => {
+
+                                it('should throw an InvalidStateError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback: [ 0, 1 ], feedforward });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(11);
+                                        expect(err.name).to.equal('InvalidStateError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with too many feedback coefficients', () => {
+
+                                it('should throw a NotSupportedError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ], feedforward });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('without any feedforward coefficients', () => {
+
+                                it('should throw a NotSupportedError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback, feedforward: [ ] });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with feedforward coefficients of only zero', () => {
+
+                                it('should throw an InvalidStateError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback, feedforward: [ 0 ] });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(11);
+                                        expect(err.name).to.equal('InvalidStateError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe('with too many feedforward coefficients', () => {
+
+                                it('should throw a NotSupportedError', (done) => {
+                                    try {
+                                        createIIRFilterNode(context, { feedback, feedforward: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ] });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
 
                         });
 

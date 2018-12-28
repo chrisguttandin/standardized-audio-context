@@ -152,25 +152,6 @@ describe('WaveShaperNode', () => {
 
                         });
 
-                        describe('with invalid options', () => {
-
-                            describe('with a curve of less than two samples', () => {
-
-                                it('should throw an InvalidStateError', (done) => {
-                                    try {
-                                        createWaveShaperNode(context, { curve: new Float32Array([ 1 ]) });
-                                    } catch (err) {
-                                        expect(err.code).to.equal(11);
-                                        expect(err.name).to.equal('InvalidStateError');
-
-                                        done();
-                                    }
-                                });
-
-                            });
-
-                        });
-
                         describe('with valid options', () => {
 
                             it('should return an instance with the given channelCount', () => {
@@ -207,6 +188,25 @@ describe('WaveShaperNode', () => {
                                 const waveShaperNode = createWaveShaperNode(context, { oversample });
 
                                 expect(waveShaperNode.oversample).to.equal(oversample);
+                            });
+
+                        });
+
+                        describe('with invalid options', () => {
+
+                            describe('with a curve of less than two samples', () => {
+
+                                it('should throw an InvalidStateError', (done) => {
+                                    try {
+                                        createWaveShaperNode(context, { curve: new Float32Array([ 1 ]) });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(11);
+                                        expect(err.name).to.equal('InvalidStateError');
+
+                                        done();
+                                    }
+                                });
+
                             });
 
                         });
