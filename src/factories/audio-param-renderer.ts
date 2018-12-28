@@ -10,7 +10,11 @@ export const createAudioParamRenderer: TAudioParamRendererFactory = () => {
         },
         replay (audioParam: IAudioParam | TNativeAudioParam): void {
             for (const automation of automations) {
-                if (automation.type === 'exponentialRampToValue') {
+                if (automation.type === 'cancelScheduledValues') {
+                    const { cancelTime } = automation;
+
+                    audioParam.cancelScheduledValues(cancelTime);
+                } else if (automation.type === 'exponentialRampToValue') {
                     const { endTime, value } = automation;
 
                     audioParam.exponentialRampToValueAtTime(value, endTime);

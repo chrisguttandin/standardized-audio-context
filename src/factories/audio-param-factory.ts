@@ -34,7 +34,9 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
             cancelScheduledValues (cancelTime: number): IAudioParam {
                 nativeAudioParam.cancelScheduledValues(cancelTime);
 
-                // @todo
+                if (audioParamRenderer !== null) {
+                    audioParamRenderer.record({ cancelTime, type: 'cancelScheduledValues' });
+                }
 
                 return audioParam;
             },

@@ -427,6 +427,28 @@ describe('ConstantSourceNode', () => {
 
                             });
 
+                            describe('with a call to cancelScheduledValues()', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start (startTime, { constantSourceNode }) {
+                                            constantSourceNode.offset.setValueAtTime(0.5, startTime);
+                                            constantSourceNode.offset.setValueAtTime(1, startTime + (1.9 / context.sampleRate));
+                                            constantSourceNode.offset.linearRampToValueAtTime(0, startTime + (5 / context.sampleRate));
+                                            constantSourceNode.offset.cancelScheduledValues(startTime + (3 / context.sampleRate));
+
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 1, 1, 1 ]);
+                                        });
+                                });
+
+                            });
+
                             describe('with a call to setValueAtTime()', () => {
 
                                 it('should modify the signal', function () {

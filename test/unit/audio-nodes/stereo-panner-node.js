@@ -543,6 +543,41 @@ describe('StereoPannerNode', () => {
 
                                     });
 
+                                    describe('with a call to cancelScheduledValues()', () => {
+
+                                        it('should modify the signal', function () {
+                                            this.timeout(10000);
+
+                                            return renderer({
+                                                start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
+                                                    stereoPannerNode.pan.setValueAtTime(0.5, startTime);
+                                                    stereoPannerNode.pan.setValueAtTime(0, startTime + (1.9 / context.sampleRate));
+                                                    stereoPannerNode.pan.linearRampToValueAtTime(1, startTime + (5 / context.sampleRate));
+                                                    stereoPannerNode.pan.cancelScheduledValues(startTime + (3 / context.sampleRate));
+
+                                                    audioBufferSourceNode.start(startTime);
+                                                }
+                                            })
+                                                .then((channelData) => {
+                                                    if (channelLayout === 'mono') {
+                                                        expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
+                                                        expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
+                                                        expect(channelData[2]).to.equal(0);
+                                                        expect(channelData[3]).to.be.closeTo(-0.3535533, 0.000001);
+                                                        expect(channelData[4]).to.be.closeTo(-0.7071067, 0.000001);
+
+                                                    } else {
+                                                        expect(channelData[0]).to.be.closeTo(1.207106, 0.000001);
+                                                        expect(channelData[1]).to.be.closeTo(0.603553, 0.000001);
+                                                        expect(channelData[2]).to.equal(0);
+                                                        expect(channelData[3]).to.be.closeTo(-0.5, 0.0001);
+                                                        expect(channelData[4]).to.be.closeTo(-1, 0.0001);
+                                                    }
+                                                });
+                                        });
+
+                                    });
+
                                     describe('with a call to setValueAtTime()', () => {
 
                                         it('should modify the signal', function () {

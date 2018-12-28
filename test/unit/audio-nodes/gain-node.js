@@ -432,6 +432,28 @@ describe('GainNode', () => {
 
                             });
 
+                            describe('with a call to cancelScheduledValues()', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start (startTime, { audioBufferSourceNode, gainNode }) {
+                                            gainNode.gain.setValueAtTime(0.5, startTime);
+                                            gainNode.gain.setValueAtTime(1, startTime + (1.9 / context.sampleRate));
+                                            gainNode.gain.linearRampToValueAtTime(0, startTime + (5 / context.sampleRate));
+                                            gainNode.gain.cancelScheduledValues(startTime + (3 / context.sampleRate));
+
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.5, -1 ]);
+                                        });
+                                });
+
+                            });
+
                             describe('with a call to setValueAtTime()', () => {
 
                                 it('should modify the signal', function () {

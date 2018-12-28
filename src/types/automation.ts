@@ -1,4 +1,5 @@
 import {
+    ICancelScheduledValuesAutomation,
     IExponentialRampToValueAutomation,
     ILinearRampToValueAutomation,
     ISetTargetAutomation,
@@ -6,7 +7,8 @@ import {
     ISetValueCurveAutomation
 } from '../interfaces';
 
-export type TAutomation = IExponentialRampToValueAutomation |
+export type TAutomation = ICancelScheduledValuesAutomation |
+    IExponentialRampToValueAutomation |
     ILinearRampToValueAutomation |
     ISetTargetAutomation |
     ISetValueAutomation |

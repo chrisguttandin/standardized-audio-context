@@ -28,6 +28,7 @@ export * from './automation';
 export * from './base-audio-context';
 export * from './biquad-filter-node';
 export * from './biquad-filter-options';
+export * from './cancel-scheduled-values-automation';
 export * from './channel-merger-options';
 export * from './channel-splitter-options';
 export * from './constant-source-node';

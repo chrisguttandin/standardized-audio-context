@@ -459,6 +459,29 @@ describe('DelayNode', () => {
 
                             });
 
+                            describe('with a call to cancelScheduledValues()', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start (startTime, { audioBufferSourceNode, delayNode }) {
+                                            // @todo Edge seems to floor the values to the nearest sample.
+                                            delayNode.delayTime.setValueAtTime(2.000005 / context.sampleRate, startTime);
+                                            delayNode.delayTime.setValueAtTime(0, startTime + (2 / context.sampleRate));
+                                            delayNode.delayTime.linearRampToValueAtTime(1, startTime + (5 / context.sampleRate));
+                                            delayNode.delayTime.cancelScheduledValues(startTime + (3 / context.sampleRate));
+
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, -0.5, -1 ]);
+                                        });
+                                });
+
+                            });
+
                             describe('with a call to setValueAtTime()', () => {
 
                                 it('should modify the signal', function () {
