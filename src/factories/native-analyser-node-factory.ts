@@ -26,7 +26,7 @@ export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory 
             nativeAnalyserNode.smoothingTimeConstant = options.smoothingTimeConstant;
         }
 
-        // Bug #37: Only Edge and Safari create an AnalyserNode with the default properties.
+        // Bug #37: Only Chrome, Edge and Safari create an AnalyserNode with the default properties.
         if (nativeAnalyserNode.channelCount === 1) {
             nativeAnalyserNode.channelCount = 2;
         }
