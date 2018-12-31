@@ -1,3 +1,4 @@
+import { computeBufferSize } from '../helpers/compute-buffer-size';
 import { createAudioWorkletProcessor } from '../helpers/create-audio-worklet-processor';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
@@ -106,9 +107,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const inputChannelMergerNode = createNativeChannelMergerNode(nativeContext, {
             numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
         });
-        const bufferSize = (baseLatency === null)
-            ? 512
-            : Math.pow(2, Math.round(Math.log(baseLatency * nativeContext.sampleRate) / Math.log(2)));
+        const bufferSize = (baseLatency === null) ? 512 : computeBufferSize(baseLatency, nativeContext.sampleRate);
         const scriptProcessorNode = createNativeScriptProcessorNode(
             nativeContext,
             bufferSize,

@@ -1,3 +1,4 @@
+import { computeBufferSize } from '../helpers/compute-buffer-size';
 import { filterBuffer } from '../helpers/filter-buffer';
 import { interceptConnections } from '../helpers/intercept-connections';
 import { TNativeAudioNode, TNativeIIRFilterNode, TNativeIIRFilterNodeFakerFactoryFactory, TTypedArray } from '../types';
@@ -31,9 +32,7 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
     createNotSupportedError
 ) => {
     return (nativeContext, baseLatency, { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }) => {
-        const bufferSize = (baseLatency === null)
-            ? 512
-            : Math.pow(2, Math.round(Math.log(baseLatency * nativeContext.sampleRate) / Math.log(2)));
+        const bufferSize = (baseLatency === null) ? 512 : computeBufferSize(baseLatency, nativeContext.sampleRate);
         const feedbackLength = feedback.length;
         const feedforwardLength = feedforward.length;
         const minLength = Math.min(feedbackLength, feedforwardLength);
