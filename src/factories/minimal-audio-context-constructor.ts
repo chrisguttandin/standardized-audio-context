@@ -10,6 +10,8 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
 
     return class MinimalAudioContext extends minimalBaseAudioContextConstructor implements IMinimalAudioContext {
 
+        private _baseLatency: number;
+
         private _nativeAudioContext: TNativeAudioContext;
 
         private _state: null | 'suspended';
@@ -30,8 +32,25 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
 
             super(nativeAudioContext, nativeAudioContext.destination.channelCount);
 
-            this._state = null;
+            const { latencyHint } = options;
+            const { sampleRate } = nativeAudioContext;
+
+            // @todo The values for 'balanced', 'interactive' and 'playback' are just copied from Chrome's implementation.
+            this._baseLatency = (typeof nativeAudioContext.baseLatency === 'number')
+                ? nativeAudioContext.baseLatency
+                : (latencyHint === 'balanced')
+                    ? (512 / sampleRate)
+                    : (latencyHint === 'interactive' || latencyHint === undefined)
+                        ? (256 / sampleRate)
+                        : (latencyHint === 'playback')
+                            ? (1024 / sampleRate)
+                            /*
+                             * @todo The min (256) and max (16384) values are taken from the allowed bufferSize values of a
+                             * ScriptProcessorNode.
+                             */
+                            : (Math.max(2, Math.min(128, Math.round((latencyHint * sampleRate) / 128))) / sampleRate);
             this._nativeAudioContext = nativeAudioContext;
+            this._state = null;
 
             /*
              * Bug #34: Chrome and Opera pretend to be running right away, but fire an onstatechange event when the state actually
@@ -50,6 +69,10 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
 
                 nativeAudioContext.addEventListener('statechange', revokeState);
             }
+        }
+
+        public get baseLatency (): number {
+            return this._baseLatency;
         }
 
         public get state (): TAudioContextState {

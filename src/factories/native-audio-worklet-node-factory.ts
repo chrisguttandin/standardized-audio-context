@@ -7,7 +7,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
     createNativeAudioWorkletNodeFaker,
     createNotSupportedError
 ) => {
-    return (nativeContext, nativeAudioWorkletNodeConstructor, name, processorDefinition, options) => {
+    return (nativeContext, baseLatency, nativeAudioWorkletNodeConstructor, name, processorDefinition, options) => {
         if (nativeAudioWorkletNodeConstructor !== null) {
             try {
                 // Bug #86: Chrome Canary does not invoke the process() function if the corresponding AudioWorkletNode has no output.
@@ -59,6 +59,6 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
 
         testClonabilityOfAudioWorkletNodeOptions(options);
 
-        return createNativeAudioWorkletNodeFaker(nativeContext, processorDefinition, options);
+        return createNativeAudioWorkletNodeFaker(nativeContext, baseLatency, processorDefinition, options);
     };
 };

@@ -25,7 +25,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
     createNotSupportedError,
     disconnectMultipleOutputs
 ) => {
-    return (nativeContext, processorDefinition, options) => {
+    return (nativeContext, baseLatency, processorDefinition, options) => {
         if (options.numberOfInputs === 0 && options.numberOfOutputs === 0) {
             throw createNotSupportedError();
         }
@@ -106,7 +106,9 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const inputChannelMergerNode = createNativeChannelMergerNode(nativeContext, {
             numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
         });
-        const bufferSize = 512;
+        const bufferSize = (baseLatency === null)
+            ? 512
+            : Math.pow(2, Math.round(Math.log(baseLatency * nativeContext.sampleRate) / Math.log(2)));
         const scriptProcessorNode = createNativeScriptProcessorNode(
             nativeContext,
             bufferSize,

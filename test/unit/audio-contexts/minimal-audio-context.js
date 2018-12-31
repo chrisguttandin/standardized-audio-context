@@ -44,6 +44,20 @@ describe('MinimalAudioContext', () => {
             minimalAudioContext = new MinimalAudioContext();
         });
 
+        describe('baseLatency', () => {
+
+            it('should be a number', () => {
+                expect(minimalAudioContext.baseLatency).to.be.a('number');
+            });
+
+            it('should be readonly', () => {
+                expect(() => {
+                    minimalAudioContext.baseLatency = 0;
+                }).to.throw(TypeError);
+            });
+
+        });
+
         describe('currentTime', () => {
 
             it('should be a number', () => {

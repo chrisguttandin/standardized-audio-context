@@ -5,10 +5,10 @@ export const createNativeIIRFilterNodeFactory: TNativeIIRFilterNodeFactoryFactor
     createNativeAudioNode,
     createNativeIIRFilterNodeFaker
 ) => {
-    return (nativeContext, options) => {
+    return (nativeContext, baseLatency, options) => {
         // Bug #9: Safari does not support IIRFilterNodes.
         if (nativeContext.createIIRFilter === undefined) {
-            return createNativeIIRFilterNodeFaker(nativeContext, options);
+            return createNativeIIRFilterNodeFaker(nativeContext, baseLatency, options);
         }
 
         const nativeIIRFilterNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {

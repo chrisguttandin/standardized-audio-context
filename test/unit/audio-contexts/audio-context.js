@@ -56,6 +56,20 @@ describe('AudioContext', () => {
 
         });
 
+        describe('baseLatency', () => {
+
+            it('should be a number', () => {
+                expect(audioContext.baseLatency).to.be.a('number');
+            });
+
+            it('should be readonly', () => {
+                expect(() => {
+                    audioContext.baseLatency = 0;
+                }).to.throw(TypeError);
+            });
+
+        });
+
         describe('currentTime', () => {
 
             it('should be a number', () => {

@@ -30,8 +30,10 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
     createNativeScriptProcessorNode,
     createNotSupportedError
 ) => {
-    return (nativeContext, { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }) => {
-        const bufferSize = 256;
+    return (nativeContext, baseLatency, { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }) => {
+        const bufferSize = (baseLatency === null)
+            ? 512
+            : Math.pow(2, Math.round(Math.log(baseLatency * nativeContext.sampleRate) / Math.log(2)));
         const feedbackLength = feedback.length;
         const feedforwardLength = feedforward.length;
         const minLength = Math.min(feedbackLength, feedforwardLength);

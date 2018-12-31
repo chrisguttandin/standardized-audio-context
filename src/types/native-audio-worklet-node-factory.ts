@@ -5,6 +5,7 @@ import { TNativeContext } from './native-context';
 
 export type TNativeAudioWorkletNodeFactory = (
     nativeContext: TNativeContext,
+    baseLatency: null | number,
     nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
     name: string,
     processorDefinition: undefined | IAudioWorkletProcessorConstructor,

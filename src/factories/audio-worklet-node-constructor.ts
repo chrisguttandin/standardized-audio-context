@@ -1,6 +1,13 @@
 import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IAudioWorkletNode, IAudioWorkletNodeOptions, IReadOnlyMap } from '../interfaces';
+import {
+    IAudioContext,
+    IAudioParam,
+    IAudioWorkletNode,
+    IAudioWorkletNodeOptions,
+    IMinimalAudioContext,
+    IReadOnlyMap
+} from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
     TAudioParamMap,
@@ -70,6 +77,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         constructor (context: TContext, name: string, options: Partial<IAudioWorkletNodeOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
+            const isOffline = isNativeOfflineAudioContext(nativeContext);
             const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
             const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
             const processorDefinition = (nodeNameToProcessorDefinitionMap === undefined) ?
@@ -77,12 +85,12 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                 nodeNameToProcessorDefinitionMap.get(name);
             const nativeAudioWorkletNode = createNativeAudioWorkletNode(
                 nativeContext,
+                isOffline ? null : (<IAudioContext | IMinimalAudioContext> context).baseLatency,
                 nativeAudioWorkletNodeConstructor,
                 name,
                 processorDefinition,
                 mergedOptions
             );
-            const isOffline = isNativeOfflineAudioContext(nativeContext);
             const audioWorkletNodeRenderer = (isOffline) ?
                 createAudioWorkletNodeRenderer(name, mergedOptions, processorDefinition) :
                 null;
