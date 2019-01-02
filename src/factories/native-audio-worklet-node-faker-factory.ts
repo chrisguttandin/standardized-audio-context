@@ -107,7 +107,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const inputChannelMergerNode = createNativeChannelMergerNode(nativeContext, {
             numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
         });
-        const bufferSize = (baseLatency === null) ? 512 : computeBufferSize(baseLatency, nativeContext.sampleRate);
+        const bufferSize = computeBufferSize(baseLatency, nativeContext.sampleRate);
         const scriptProcessorNode = createNativeScriptProcessorNode(
             nativeContext,
             bufferSize,

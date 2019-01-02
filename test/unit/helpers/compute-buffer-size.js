@@ -2,6 +2,10 @@ import { computeBufferSize } from '../../../src/helpers/compute-buffer-size';
 
 describe('computeBufferSize()', () => {
 
+    it('should default to 512', () => {
+        expect(computeBufferSize(null, 44100)).to.equal(512);
+    });
+
     it('should be at least 512', () => {
         expect(computeBufferSize(0, 44100)).to.equal(512);
     });
