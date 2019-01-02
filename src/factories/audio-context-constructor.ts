@@ -50,7 +50,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                              * @todo The min (256) and max (16384) values are taken from the allowed bufferSize values of a
                              * ScriptProcessorNode.
                              */
-                            : (Math.max(2, Math.min(128, Math.round((latencyHint * sampleRate) / 128))) / sampleRate);
+                            : ((Math.max(2, Math.min(128, Math.round((latencyHint * sampleRate) / 128))) * 128) / sampleRate);
             this._nativeAudioContext = nativeAudioContext;
             this._state = null;
 
