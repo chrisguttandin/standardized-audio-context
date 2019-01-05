@@ -31,7 +31,7 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
             this._nativeMediaElementAudioSourceNode = nativeMediaElementAudioSourceNode;
         }
 
-        public get mediaElement (): HTMLMediaElement {
+        get mediaElement (): HTMLMediaElement {
             return (this._nativeMediaElementAudioSourceNode.mediaElement === undefined) ?
                 this._mediaElement :
                 this._nativeMediaElementAudioSourceNode.mediaElement;

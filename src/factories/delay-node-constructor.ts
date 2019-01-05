@@ -41,7 +41,7 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
             );
         }
 
-        public get delayTime (): IAudioParam {
+        get delayTime (): IAudioParam {
             return this._delayTime;
         }
 

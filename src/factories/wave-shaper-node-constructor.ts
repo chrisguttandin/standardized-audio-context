@@ -37,7 +37,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             this._nativeWaveShaperNode = nativeWaveShaperNode;
         }
 
-        public get curve (): null | Float32Array {
+        get curve (): null | Float32Array {
             if (this._isCurveNullified) {
                 return null;
             }
@@ -45,7 +45,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             return this._nativeWaveShaperNode.curve;
         }
 
-        public set curve (value) {
+        set curve (value) {
             // Bug #103: Safari does not allow to set the curve to null.
             if (value === null) {
                 this._isCurveNullified = true;
@@ -61,11 +61,11 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             }
         }
 
-        public get oversample (): TOverSampleType {
+        get oversample (): TOverSampleType {
             return this._nativeWaveShaperNode.oversample;
         }
 
-        public set oversample (value) {
+        set oversample (value) {
             this._nativeWaveShaperNode.oversample = value;
         }
 

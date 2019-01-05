@@ -38,7 +38,7 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
             this._pan = createAudioParam(context, isOffline, nativeStereoPannerNode.pan, 1, -1);
         }
 
-        public get pan (): IAudioParam {
+        get pan (): IAudioParam {
             return this._pan;
         }
 

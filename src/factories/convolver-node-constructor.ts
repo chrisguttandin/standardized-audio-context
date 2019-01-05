@@ -36,7 +36,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             this._nativeConvolverNode = nativeConvolverNode;
         }
 
-        public get buffer (): null | IAudioBuffer {
+        get buffer (): null | IAudioBuffer {
             if (this._isBufferNullified) {
                 return null;
             }
@@ -44,7 +44,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             return this._nativeConvolverNode.buffer;
         }
 
-        public set buffer (value) {
+        set buffer (value) {
             this._nativeConvolverNode.buffer = value;
 
             // Bug #115: Safari does not allow to set the buffer to null.
@@ -52,11 +52,11 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             this._isBufferNullified = (value === null && this._nativeConvolverNode.buffer !== null);
         }
 
-        public get normalize (): boolean {
+        get normalize (): boolean {
             return this._nativeConvolverNode.normalize;
         }
 
-        public set normalize (value) {
+        set normalize (value) {
             this._nativeConvolverNode.normalize = value;
         }
 

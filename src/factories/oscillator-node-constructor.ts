@@ -54,27 +54,27 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             }
         }
 
-        public get detune (): IAudioParam {
+        get detune (): IAudioParam {
             return this._detune;
         }
 
-        public get frequency (): IAudioParam {
+        get frequency (): IAudioParam {
             return this._frequency;
         }
 
-        public get onended (): null | TEndedEventHandler {
+        get onended (): null | TEndedEventHandler {
             return <null | TEndedEventHandler> this._nativeOscillatorNode.onended;
         }
 
-        public set onended (value) {
+        set onended (value) {
             this._nativeOscillatorNode.onended = <TNativeOscillatorNode['onended']> value;
         }
 
-        public get type (): TOscillatorType {
+        get type (): TOscillatorType {
             return this._nativeOscillatorNode.type;
         }
 
-        public set type (value) {
+        set type (value) {
             this._nativeOscillatorNode.type = value;
 
             // Bug #57: Edge will not throw an error when assigning the type to 'custom'. But it still will change the value.

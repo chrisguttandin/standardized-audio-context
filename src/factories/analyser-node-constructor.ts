@@ -35,23 +35,23 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             this._nativeAnalyserNode = nativeAnalyserNode;
         }
 
-        public get fftSize (): number {
+        get fftSize (): number {
             return this._nativeAnalyserNode.fftSize;
         }
 
-        public set fftSize (value) {
+        set fftSize (value) {
             this._nativeAnalyserNode.fftSize = value;
         }
 
-        public get frequencyBinCount (): number {
+        get frequencyBinCount (): number {
             return this._nativeAnalyserNode.frequencyBinCount;
         }
 
-        public get maxDecibels (): number {
+        get maxDecibels (): number {
             return this._nativeAnalyserNode.maxDecibels;
         }
 
-        public set maxDecibels (value) {
+        set maxDecibels (value) {
             // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.
             const maxDecibels = this._nativeAnalyserNode.maxDecibels;
 
@@ -64,11 +64,11 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             }
         }
 
-        public get minDecibels (): number {
+        get minDecibels (): number {
             return this._nativeAnalyserNode.minDecibels;
         }
 
-        public set minDecibels (value) {
+        set minDecibels (value) {
             // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.
             const minDecibels = this._nativeAnalyserNode.minDecibels;
 
@@ -81,11 +81,11 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             }
         }
 
-        public get smoothingTimeConstant (): number {
+        get smoothingTimeConstant (): number {
             return this._nativeAnalyserNode.smoothingTimeConstant;
         }
 
-        public set smoothingTimeConstant (value) {
+        set smoothingTimeConstant (value) {
             this._nativeAnalyserNode.smoothingTimeConstant = value;
         }
 

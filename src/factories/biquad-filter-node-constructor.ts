@@ -66,27 +66,27 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             this._nativeBiquadFilterNode = nativeBiquadFilterNode;
         }
 
-        public get Q (): IAudioParam {
+        get Q (): IAudioParam {
             return this._Q;
         }
 
-        public get detune (): IAudioParam {
+        get detune (): IAudioParam {
             return this._detune;
         }
 
-        public get frequency (): IAudioParam {
+        get frequency (): IAudioParam {
             return this._frequency;
         }
 
-        public get gain (): IAudioParam {
+        get gain (): IAudioParam {
             return this._gain;
         }
 
-        public get type (): TBiquadFilterType {
+        get type (): TBiquadFilterType {
             return this._nativeBiquadFilterNode.type;
         }
 
-        public set type (value) {
+        set type (value) {
             this._nativeBiquadFilterNode.type = value;
         }
 

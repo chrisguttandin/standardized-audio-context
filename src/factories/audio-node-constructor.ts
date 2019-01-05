@@ -172,39 +172,39 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             addAudioNode(context, this, audioNodeRenderer, nativeAudioNode);
         }
 
-        public get channelCount (): number {
+        get channelCount (): number {
             return this._nativeAudioNode.channelCount;
         }
 
-        public set channelCount (value) {
+        set channelCount (value) {
             this._nativeAudioNode.channelCount = value;
         }
 
-        public get channelCountMode (): TChannelCountMode {
+        get channelCountMode (): TChannelCountMode {
             return this._nativeAudioNode.channelCountMode;
         }
 
-        public set channelCountMode (value) {
+        set channelCountMode (value) {
             this._nativeAudioNode.channelCountMode = value;
         }
 
-        public get channelInterpretation (): TChannelInterpretation {
+        get channelInterpretation (): TChannelInterpretation {
             return this._nativeAudioNode.channelInterpretation;
         }
 
-        public set channelInterpretation (value) {
+        set channelInterpretation (value) {
             this._nativeAudioNode.channelInterpretation = value;
         }
 
-        public get context (): TContext {
+        get context (): TContext {
             return this._context;
         }
 
-        public get numberOfInputs (): number {
+        get numberOfInputs (): number {
             return this._nativeAudioNode.numberOfInputs;
         }
 
-        public get numberOfOutputs (): number {
+        get numberOfOutputs (): number {
             return this._nativeAudioNode.numberOfOutputs;
         }
 

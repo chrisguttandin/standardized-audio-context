@@ -67,7 +67,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             );
         }
 
-        public get buffer (): null | IAudioBuffer {
+        get buffer (): null | IAudioBuffer {
             if (this._isBufferNullified) {
                 return null;
             }
@@ -75,7 +75,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             return this._nativeAudioBufferSourceNode.buffer;
         }
 
-        public set buffer (value) {
+        set buffer (value) {
             // Bug #71: Edge does not allow to set the buffer to null.
             try {
                 this._nativeAudioBufferSourceNode.buffer = value;
@@ -98,43 +98,43 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             }
         }
 
-        public get onended (): null | TEndedEventHandler {
+        get onended (): null | TEndedEventHandler {
             return <null | TEndedEventHandler> this._nativeAudioBufferSourceNode.onended;
         }
 
-        public set onended (value) {
+        set onended (value) {
             this._nativeAudioBufferSourceNode.onended = <TNativeAudioBufferSourceNode['onended']> value;
         }
 
-        public get detune (): IAudioParam {
+        get detune (): IAudioParam {
             return this._detune;
         }
 
-        public get loop (): boolean {
+        get loop (): boolean {
             return this._nativeAudioBufferSourceNode.loop;
         }
 
-        public set loop (value) {
+        set loop (value) {
             this._nativeAudioBufferSourceNode.loop = value;
         }
 
-        public get loopEnd (): number {
+        get loopEnd (): number {
             return this._nativeAudioBufferSourceNode.loopEnd;
         }
 
-        public set loopEnd (value) {
+        set loopEnd (value) {
             this._nativeAudioBufferSourceNode.loopEnd = value;
         }
 
-        public get loopStart (): number {
+        get loopStart (): number {
             return this._nativeAudioBufferSourceNode.loopStart;
         }
 
-        public set loopStart (value) {
+        set loopStart (value) {
             this._nativeAudioBufferSourceNode.loopStart = value;
         }
 
-        public get playbackRate (): IAudioParam {
+        get playbackRate (): IAudioParam {
             return this._playbackRate;
         }
 

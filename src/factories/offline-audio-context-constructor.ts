@@ -75,7 +75,7 @@ export const createOfflineAudioContextConstructor: TOfflineAudioContextConstruct
             this._state = null;
         }
 
-        public get length (): number {
+        get length (): number {
             // Bug #17: Safari does not yet expose the length.
             if (this._nativeOfflineAudioContext.length === undefined) {
                 return this._length;
@@ -84,7 +84,7 @@ export const createOfflineAudioContextConstructor: TOfflineAudioContextConstruct
             return this._nativeOfflineAudioContext.length;
         }
 
-        public get state (): TAudioContextState {
+        get state (): TAudioContextState {
             return (this._state === null) ? this._nativeOfflineAudioContext.state : this._state;
         }
 

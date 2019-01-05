@@ -49,15 +49,15 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             );
         }
 
-        public get offset (): IAudioParam {
+        get offset (): IAudioParam {
             return this._offset;
         }
 
-        public get onended (): null | TEndedEventHandler {
+        get onended (): null | TEndedEventHandler {
             return <null | TEndedEventHandler> this._nativeConstantSourceNode.onended;
         }
 
-        public set onended (value) {
+        set onended (value) {
             this._nativeConstantSourceNode.onended = <TNativeConstantSourceNode['onended']> value;
         }
 

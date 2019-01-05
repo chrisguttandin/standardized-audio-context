@@ -33,11 +33,11 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             this._nativeContext = nativeContext;
         }
 
-        public get currentTime (): number {
+        get currentTime (): number {
             return this._nativeContext.currentTime;
         }
 
-        public get destination (): IAudioDestinationNode {
+        get destination (): IAudioDestinationNode {
             return this._destination;
         }
 
@@ -45,19 +45,19 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             return this._listener;
         }
 
-        public get onstatechange (): null | TStateChangeEventHandler {
+        get onstatechange (): null | TStateChangeEventHandler {
             return <null | TStateChangeEventHandler> this._nativeContext.onstatechange;
         }
 
-        public set onstatechange (value) {
+        set onstatechange (value) {
             this._nativeContext.onstatechange = <TNativeContext['onstatechange']> value;
         }
 
-        public get sampleRate (): number {
+        get sampleRate (): number {
             return this._nativeContext.sampleRate;
         }
 
-        public get state (): TAudioContextState {
+        get state (): TAudioContextState {
             return this._nativeContext.state;
         }
 

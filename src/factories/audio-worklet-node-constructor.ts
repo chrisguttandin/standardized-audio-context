@@ -121,15 +121,15 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             }
         }
 
-        public get numberOfOutputs (): number {
+        get numberOfOutputs (): number {
             return this._numberOfOutputs;
         }
 
-        public get onprocessorerror (): null | TProcessorErrorEventHandler {
+        get onprocessorerror (): null | TProcessorErrorEventHandler {
             return <null | TProcessorErrorEventHandler> this._nativeAudioWorkletNode.onprocessorerror;
         }
 
-        public set onprocessorerror (value) {
+        set onprocessorerror (value) {
             this._nativeAudioWorkletNode.onprocessorerror = <TNativeAudioWorkletNode['onprocessorerror']> value;
         }
 

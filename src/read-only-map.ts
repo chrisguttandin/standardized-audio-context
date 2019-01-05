@@ -8,7 +8,7 @@ export class ReadOnlyMap<T, U> implements IReadOnlyMap<T, U> {
         this._map = new Map(parameters);
     }
 
-    public get size (): number {
+    get size (): number {
         return this._map.size;
     }
 

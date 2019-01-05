@@ -71,11 +71,11 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
             }
         }
 
-        public get baseLatency (): number {
+        get baseLatency (): number {
             return this._baseLatency;
         }
 
-        public get state (): TAudioContextState {
+        get state (): TAudioContextState {
             return (this._state !== null) ? this._state : this._nativeAudioContext.state;
         }
 
