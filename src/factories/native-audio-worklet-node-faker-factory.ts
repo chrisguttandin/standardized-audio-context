@@ -1,4 +1,6 @@
 import { computeBufferSize } from '../helpers/compute-buffer-size';
+import { copyFromChannel } from '../helpers/copy-from-channel';
+import { copyToChannel } from '../helpers/copy-to-channel';
 import { createAudioWorkletProcessor } from '../helpers/create-audio-worklet-processor';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
@@ -265,23 +267,23 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 for (let i = 0; i < bufferSize; i += 128) {
                     for (let j = 0; j < options.numberOfInputs; j += 1) {
                         for (let k = 0; k < options.channelCount; k += 1) {
-                            // Bug #5: Safari does not support copyFromChannel().
-                            const slicedInputBuffer = inputBuffer
-                                .getChannelData(k)
-                                .slice(i, i + 128);
-
-                            inputs[j][k].set(slicedInputBuffer);
+                            copyFromChannel(inputBuffer, inputs[j], k, k, i);
                         }
                     }
 
                     if (processorDefinition.parameterDescriptors !== undefined) {
                         processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
-                            const slicedInputBuffer = inputBuffer
-                                .getChannelData(numberOfInputChannels + index)
-                                .slice(i, i + 128);
-
-                            parameters[ name ].set(slicedInputBuffer);
+                            copyFromChannel(inputBuffer, parameters, name, numberOfInputChannels + index, i);
                         });
+                    }
+
+                    for (let j = 0; j < options.numberOfInputs; j += 1) {
+                        for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
+                            // The byteLength will be 0 when the ArrayBuffer was transferred.
+                            if (outputs[j][k].byteLength === 0) {
+                                outputs[j][k] = new Float32Array(128);
+                            }
+                        }
                     }
 
                     try {
@@ -300,10 +302,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
                         for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
                             for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
-                                // Bug #5: Safari does not support copyFromChannel().
-                                outputBuffer
-                                    .getChannelData(outputChannelSplitterNodeOutput + k)
-                                    .set(outputs[j][k], i);
+                                copyToChannel(outputBuffer, outputs[j], k, outputChannelSplitterNodeOutput + k, i);
                             }
 
                             outputChannelSplitterNodeOutput += options.outputChannelCount[j];

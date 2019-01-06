@@ -1,4 +1,6 @@
 import { connectAudioParam } from '../helpers/connect-audio-param';
+import { copyFromChannel } from '../helpers/copy-from-channel';
+import { copyToChannel } from '../helpers/copy-to-channel';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioWorkletProcessor } from '../helpers/get-audio-worklet-processor';
@@ -50,30 +52,28 @@ const processBuffer = async (
     const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
     const parameters: { [ name: string ]: Float32Array } = Array
         .from(proxy.parameters.keys())
-        .reduce((prmtrs, name, index) => {
-            return { ...prmtrs, [ name ]: renderedBuffer.getChannelData(numberOfInputChannels + index) };
-        }, { });
+        .reduce((prmtrs, name) => ({ ...prmtrs, [ name ]: new Float32Array(128) }), { });
 
     for (let i = 0; i < length; i += 128) {
         for (let j = 0; j < options.numberOfInputs; j += 1) {
             for (let k = 0; k < options.channelCount; k += 1) {
-                // Bug #5: Safari does not support copyFromChannel().
-                const slicedRenderedBuffer = renderedBuffer
-                    .getChannelData(k)
-                    .slice(i, i + 128);
-
-                inputs[j][k].set(slicedRenderedBuffer);
+                copyFromChannel(renderedBuffer, inputs[j], k, k, i);
             }
         }
 
         if (processorDefinition.parameterDescriptors !== undefined) {
             processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
-                const slicedRenderedBuffer = renderedBuffer
-                    .getChannelData(numberOfInputChannels + index)
-                    .slice(i, i + 128);
-
-                parameters[ name ].set(slicedRenderedBuffer);
+                copyFromChannel(renderedBuffer, parameters, name, numberOfInputChannels + index, i);
             });
+        }
+
+        for (let j = 0; j < options.numberOfInputs; j += 1) {
+            for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
+                // The byteLength will be 0 when the ArrayBuffer was transferred.
+                if (outputs[j][k].byteLength === 0) {
+                    outputs[j][k] = new Float32Array(128);
+                }
+            }
         }
 
         try {
@@ -90,10 +90,7 @@ const processBuffer = async (
             if (processedBuffer !== null) {
                 for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
                     for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
-                        // Bug #5: Safari does not support copyToChannel().
-                        processedBuffer
-                            .getChannelData(outputChannelSplitterNodeOutput + k)
-                            .set(outputs[j][k], i);
+                        copyToChannel(processedBuffer, outputs[j], k, outputChannelSplitterNodeOutput + k, i);
                     }
 
                     outputChannelSplitterNodeOutput += options.outputChannelCount[j];

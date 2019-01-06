@@ -1,3 +1,3 @@
 import { MinimalOfflineAudioContext } from '../../src/module';
 
-export const createMinimalOfflineAudioContext = () => new MinimalOfflineAudioContext({ length: 5, sampleRate: 44100 });
+export const createMinimalOfflineAudioContext = ({ length = 5 } = { length: 5 }) => new MinimalOfflineAudioContext({ length, sampleRate: 44100 });

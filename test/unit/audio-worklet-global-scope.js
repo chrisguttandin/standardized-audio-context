@@ -18,7 +18,7 @@ const testCases = {
     },
     'addAudioWorkletModule() with a MinimalOfflineAudioContext': {
         addAudioWorkletModule: addAudioWorkletModuleWithGlobalAudioWorklet,
-        createContext: createMinimalOfflineAudioContext
+        createContext: () => createMinimalOfflineAudioContext({ length: 512 })
     },
     'audioWorklet.addModule() with an AudioContext': {
         addAudioWorkletModule: addAudioWorkletModuleWithAudioWorkletOfContext,
@@ -26,7 +26,7 @@ const testCases = {
     },
     'audioWorklet.addModule() with an OfflineAudioContext': {
         addAudioWorkletModule: addAudioWorkletModuleWithAudioWorkletOfContext,
-        createContext: createOfflineAudioContext
+        createContext: () => createOfflineAudioContext({ length: 512 })
     }
 };
 
@@ -227,89 +227,29 @@ describe('AudioWorkletGlobalScope', () => {
 
             describe('AudioWorkletProcessor', () => {
 
-                let audioWorkletNode;
-
-                beforeEach(async () => {
-                    await addAudioWorkletModule(context, 'inspector-processor');
-
-                    audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor', {
-                        channelCount: 1
-                    });
-                });
-
                 describe('process()', () => {
 
-                    describe('inputs', () => {
+                    describe('with a processor which transfers the arguments', () => {
 
-                        describe('without any connected input', () => {
+                        let audioWorkletNode;
 
-                            // Bug #88: Chrome doesn't correctly handle that edge case.
-                            if (window.AudioWorkletNode === undefined) {
+                        beforeEach(async () => {
+                            await addAudioWorkletModule(context, 'transferring-processor');
 
-                                it('should call process() with an empty array for each input', (done) => {
-                                    audioWorkletNode.port.onmessage = ({ data }) => {
-                                        audioWorkletNode.port.onmessage = null;
-
-                                        expect(data.inputs.length).to.equal(1);
-                                        expect(data.inputs[0].length).to.equal(0);
-
-                                        done();
-                                    };
-
-                                    audioWorkletNode.connect(context.destination);
-
-                                    if (context.startRendering !== undefined) {
-                                        context.startRendering();
-                                    }
-                                });
-
-                            }
-
+                            audioWorkletNode = new AudioWorkletNode(context, 'transferring-processor');
                         });
 
-                        describe('with a connected input', () => {
+                        it('should recover and continue calling process()', (done) => {
+                            let callCount = 0;
 
-                            it('should call process() with the current inputs', (done) => {
-                                const gainNode = new GainNode(context);
+                            audioWorkletNode.port.onmessage = () => {
+                                callCount += 1;
 
-                                audioWorkletNode.port.onmessage = ({ data }) => {
+                                if (callCount > 3) {
                                     audioWorkletNode.port.onmessage = null;
 
-                                    expect(data.inputs.length).to.equal(1);
-                                    expect(data.inputs[0].length).to.equal(1);
-                                    expect(data.inputs[0][0].length).to.equal(128);
-
                                     done();
-                                };
-
-                                gainNode
-                                    .connect(audioWorkletNode)
-                                    .connect(context.destination);
-
-                                if (context.startRendering !== undefined) {
-                                    context.startRendering();
                                 }
-                            });
-
-                        });
-
-                    });
-
-                    describe('outputs', () => {
-
-                        it('should call process() with the current outputs', (done) => {
-                            const zeros = new Array(128);
-
-                            zeros.fill(0);
-
-                            audioWorkletNode.port.onmessage = ({ data }) => {
-                                audioWorkletNode.port.onmessage = null;
-
-                                expect(data.outputs.length).to.equal(1);
-                                expect(data.outputs[0].length).to.equal(1);
-                                expect(Array.from(data.outputs[0][0])).to.deep.equal(zeros);
-
-                                done();
                             };
 
                             audioWorkletNode.connect(context.destination);
@@ -321,27 +261,87 @@ describe('AudioWorkletGlobalScope', () => {
 
                     });
 
-                    describe('parameters', () => {
+                    describe('with a processor which does not transfer the arguments', () => {
 
-                        let values;
+                        let audioWorkletNode;
 
-                        beforeEach(() => {
-                            values = new Array(128);
+                        beforeEach(async () => {
+                            await addAudioWorkletModule(context, 'inspector-processor');
 
-                            values.fill(1);
+                            audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor', {
+                                channelCount: 1
+                            });
                         });
 
-                        describe('without a parameter value change', () => {
+                        describe('inputs', () => {
 
-                            it('should call process() with the full array of values or a single value array for each parameter', (done) => {
+                            describe('without any connected input', () => {
+
+                                // Bug #88: Chrome doesn't correctly handle that edge case.
+                                if (window.AudioWorkletNode === undefined) {
+
+                                    it('should call process() with an empty array for each input', (done) => {
+                                        audioWorkletNode.port.onmessage = ({ data }) => {
+                                            audioWorkletNode.port.onmessage = null;
+
+                                            expect(data.inputs.length).to.equal(1);
+                                            expect(data.inputs[0].length).to.equal(0);
+
+                                            done();
+                                        };
+
+                                        audioWorkletNode.connect(context.destination);
+
+                                        if (context.startRendering !== undefined) {
+                                            context.startRendering();
+                                        }
+                                    });
+
+                                }
+
+                            });
+
+                            describe('with a connected input', () => {
+
+                                it('should call process() with the current inputs', (done) => {
+                                    const gainNode = new GainNode(context);
+
+                                    audioWorkletNode.port.onmessage = ({ data }) => {
+                                        audioWorkletNode.port.onmessage = null;
+
+                                        expect(data.inputs.length).to.equal(1);
+                                        expect(data.inputs[0].length).to.equal(1);
+                                        expect(data.inputs[0][0].length).to.equal(128);
+
+                                        done();
+                                    };
+
+                                    gainNode
+                                        .connect(audioWorkletNode)
+                                        .connect(context.destination);
+
+                                    if (context.startRendering !== undefined) {
+                                        context.startRendering();
+                                    }
+                                });
+
+                            });
+
+                        });
+
+                        describe('outputs', () => {
+
+                            it('should call process() with the current outputs', (done) => {
+                                const zeros = new Array(128);
+
+                                zeros.fill(0);
+
                                 audioWorkletNode.port.onmessage = ({ data }) => {
                                     audioWorkletNode.port.onmessage = null;
 
-                                    if (data.parameters.gain.length === 1) {
-                                        expect(Array.from(data.parameters.gain)).to.deep.equal([ values[0] ]);
-                                    } else {
-                                        expect(Array.from(data.parameters.gain)).to.deep.equal(values);
-                                    }
+                                    expect(data.outputs.length).to.equal(1);
+                                    expect(data.outputs[0].length).to.equal(1);
+                                    expect(Array.from(data.outputs[0][0])).to.deep.equal(zeros);
 
                                     done();
                                 };
@@ -355,36 +355,72 @@ describe('AudioWorkletGlobalScope', () => {
 
                         });
 
-                        describe('with a parameter value change in the current render quantum', () => {
+                        describe('parameters', () => {
 
-                            it('should call process() with the full array of values for each parameter', (done) => {
-                                values[0] = 0;
+                            let values;
 
-                                audioWorkletNode.port.onmessage = ({ data }) => {
-                                    if (data.parameters.gain[0] === 0) {
+                            beforeEach(() => {
+                                values = new Array(128);
+
+                                values.fill(1);
+                            });
+
+                            describe('without a parameter value change', () => {
+
+                                it('should call process() with the full array of values or a single value array for each parameter', (done) => {
+                                    audioWorkletNode.port.onmessage = ({ data }) => {
                                         audioWorkletNode.port.onmessage = null;
 
-                                        expect(Array.from(data.parameters.gain)).to.deep.equal(values);
+                                        if (data.parameters.gain.length === 1) {
+                                            expect(Array.from(data.parameters.gain)).to.deep.equal([ values[0] ]);
+                                        } else {
+                                            expect(Array.from(data.parameters.gain)).to.deep.equal(values);
+                                        }
 
                                         done();
+                                    };
+
+                                    audioWorkletNode.connect(context.destination);
+
+                                    if (context.startRendering !== undefined) {
+                                        context.startRendering();
                                     }
-                                };
+                                });
 
-                                const renderQuantum = 128 / context.sampleRate;
-                                const currentTime = Math.ceil(context.currentTime / renderQuantum) * renderQuantum;
-                                const sample = 0.9 / context.sampleRate;
-                                const gain = audioWorkletNode.parameters.get('gain');
+                            });
 
-                                for (let i = 0; i < 50; i += 1) {
-                                    gain.setValueAtTime(0, currentTime + (renderQuantum * i));
-                                    gain.setValueAtTime(1, currentTime + (renderQuantum * i) + sample);
-                                }
+                            describe('with a parameter value change in the current render quantum', () => {
 
-                                audioWorkletNode.connect(context.destination);
+                                it('should call process() with the full array of values for each parameter', (done) => {
+                                    values[0] = 0;
 
-                                if (context.startRendering !== undefined) {
-                                    context.startRendering();
-                                }
+                                    audioWorkletNode.port.onmessage = ({ data }) => {
+                                        if (data.parameters.gain[0] === 0) {
+                                            audioWorkletNode.port.onmessage = null;
+
+                                            expect(Array.from(data.parameters.gain)).to.deep.equal(values);
+
+                                            done();
+                                        }
+                                    };
+
+                                    const renderQuantum = 128 / context.sampleRate;
+                                    const currentTime = Math.ceil(context.currentTime / renderQuantum) * renderQuantum;
+                                    const sample = 0.9 / context.sampleRate;
+                                    const gain = audioWorkletNode.parameters.get('gain');
+
+                                    for (let i = 0; i < 50; i += 1) {
+                                        gain.setValueAtTime(0, currentTime + (renderQuantum * i));
+                                        gain.setValueAtTime(1, currentTime + (renderQuantum * i) + sample);
+                                    }
+
+                                    audioWorkletNode.connect(context.destination);
+
+                                    if (context.startRendering !== undefined) {
+                                        context.startRendering();
+                                    }
+                                });
+
                             });
 
                         });
