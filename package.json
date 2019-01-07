@@ -92,5 +92,5 @@
     "test": "grunt lint && grunt test"
   },
   "types": "build/es2018/module.d.ts",
-  "version": "17.5.4"
+  "version": "17.5.5"
 }
