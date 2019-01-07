@@ -82,11 +82,6 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                 complete();
             };
 
-            const succeed = (dBffrWrppr: AudioBuffer) => {
-                resolve(dBffrWrppr);
-                complete();
-            };
-
             // Bug #26: Safari throws a synchronous error.
             try {
                 // Bug #1: Safari requires a successCallback.
@@ -98,7 +93,8 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                         wrapAudioBufferGetChannelDataMethod(audioBuffer);
                     }
 
-                    succeed(audioBuffer);
+                    resolve(audioBuffer);
+                    complete();
                 }, (err: DOMException | Error) => {
                     // Bug #4: Safari returns null instead of an error.
                     if (err === null) {
