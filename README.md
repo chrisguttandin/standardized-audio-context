@@ -8,7 +8,9 @@
 
 This package provides a subset of the [Web Audio API](https://webaudio.github.io/web-audio-api) which works in a reliable and consistent way in every supported browser. In contrast to other popular polyfills `standardized-audio-context` does not patch or modify anything on the global scope. In other words, it does not cause any side effects. It can therefore be used safely inside of libraries.
 
-One of the goals of `standardized-audio-context` is to only polyfill missing functionality and to avoid rewriting builtin features whenever possible.
+One of the goals of `standardized-audio-context` is to only polyfill missing functionality and to
+avoid rewriting built-in features whenever possible. Please take a look at the paragraph about the
+[browser support](#browser-support) below for more information.
 
 There are of course some things which cannot be faked in a way that makes them as performant as
 they could be when implemented natively. The most obvious amongst those things is the
@@ -185,6 +187,25 @@ isSupported()
     });
 ```
 
+## Browser Support
+
+The goal of this package is to provide a consistent API. But at the same time this package should
+not grow indefinitely until everything works in IE 6. Whenever something is implemented in every
+supported browser it should not be part of this package anymore. And hopefully at some point in the
+future this package boils down to a file which re-exports built-in objects.
+
+But until then great care is taken to avoid any unnecessary bloat. This means whenever a workaround
+for a certain browser is added to this library this will be accompanied by a test which checks that
+this particular workaround is still needed. I call those tests expectation tests because they test
+if a browser behaves as expected. An expectation test is designed to fail when the browser
+eventually ships a fix. Once that happens the workaround and the backing expectation test get
+removed. The expectation test however gets recycled and will now be used as part of the browser
+check performed when calling `isSupported()`.
+
+The list of currently supported browsers includes Chrome v56+, Edge v18, Firefox v62+, Opera v42+
+and Safari v12. Please note that the tests are only executed in the current and upcoming version of
+each browser.
+
 ## TypeScript
 
 This package is written in [TypeScript](https://www.typescriptlang.org/) which means it can be used seamlessly in any TypeScript project. But that is entirely optional.
@@ -196,4 +217,6 @@ API which does not always match the actually available implementations.
 
 ## Tests
 
-All implemented methods are covered by a large number of tests which are executed on a variety of browsers. Many thanks to [BrowserStack](https://www.browserstack.com) and [Sauce Labs](https://saucelabs.com) for allowing this module to be tested with their services.
+All implemented methods are covered by a large number of tests which are executed in the browsers
+mentioned above. Many thanks to [BrowserStack](https://www.browserstack.com) and
+[Sauce Labs](https://saucelabs.com) for allowing this module to be tested with their services.
