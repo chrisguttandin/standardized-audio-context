@@ -41,6 +41,10 @@ module.exports = (config) => {
             'test/unit/**/*.js': 'webpack'
         },
 
+        reporters: [
+            'dots'
+        ],
+
         singleRun: true,
 
         webpack: {
@@ -118,10 +122,6 @@ module.exports = (config) => {
                     os_version: 'High Sierra' // eslint-disable-line camelcase
                 }
             },
-
-            reporters: [
-                'dots'
-            ],
 
             tunnelIdentifier: env.TRAVIS_JOB_NUMBER
 
