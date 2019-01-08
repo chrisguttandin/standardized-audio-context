@@ -70,7 +70,9 @@ describe('MinimalAudioContext', () => {
                 }).to.throw(TypeError);
             });
 
-            it('should advance over time', (done) => {
+            it('should advance over time', function (done) {
+                this.timeout(10000);
+
                 const now = minimalAudioContext.currentTime;
 
                 minimalAudioContext.onstatechange = () => {
@@ -80,7 +82,7 @@ describe('MinimalAudioContext', () => {
                         expect(minimalAudioContext.currentTime).to.above(now);
 
                         done();
-                    }, 1000);
+                    }, 5000);
                 };
 
                 // Kick off the minimalAudioContext.

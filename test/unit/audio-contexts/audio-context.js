@@ -82,7 +82,9 @@ describe('AudioContext', () => {
                 }).to.throw(TypeError);
             });
 
-            it('should advance over time', (done) => {
+            it('should advance over time', function (done) {
+                this.timeout(10000);
+
                 const now = audioContext.currentTime;
 
                 audioContext.onstatechange = () => {
@@ -92,7 +94,7 @@ describe('AudioContext', () => {
                         expect(audioContext.currentTime).to.above(now);
 
                         done();
-                    }, 1000);
+                    }, 5000);
                 };
 
                 // Kick off the audioContext.
