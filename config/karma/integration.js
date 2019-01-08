@@ -9,16 +9,48 @@ module.exports = (config) => {
         browserNoActivityTimeout: 240000,
 
         browsers: [
-            'FirefoxBrowserStack'
+            'ChromeBrowserStack',
+            'EdgeBrowserStack',
+            'FirefoxBrowserStack',
+            'OperaBrowserStack',
+            'SafariBrowserStack'
         ],
 
         concurrency: 2,
 
         customLaunchers: {
+            ChromeBrowserStack: {
+                base: 'BrowserStack',
+                browser: 'chrome',
+                browser_version: '55.0', // eslint-disable-line camelcase
+                os: 'OS X',
+                os_version: 'Mojave' // eslint-disable-line camelcase
+            },
+            EdgeBrowserStack: {
+                base: 'BrowserStack',
+                browser: 'edge',
+                browser_version : '17.0', // eslint-disable-line camelcase
+                os: 'Windows',
+                os_version: '10' // eslint-disable-line camelcase
+            },
             FirefoxBrowserStack: {
                 base: 'BrowserStack',
                 browser: 'firefox',
                 browser_version: '62', // eslint-disable-line camelcase
+                os: 'OS X',
+                os_version: 'Mojave' // eslint-disable-line camelcase
+            },
+            OperaBrowserStack: {
+                base: 'BrowserStack',
+                browser: 'opera',
+                browser_version : '42', // eslint-disable-line camelcase
+                os: 'OS X',
+                os_version: 'Mojave' // eslint-disable-line camelcase
+            },
+            SafariBrowserStack: {
+                base: 'BrowserStack',
+                browser: 'safari',
+                browser_version: '11.1', // eslint-disable-line camelcase
                 os: 'OS X',
                 os_version: 'High Sierra' // eslint-disable-line camelcase
             }
