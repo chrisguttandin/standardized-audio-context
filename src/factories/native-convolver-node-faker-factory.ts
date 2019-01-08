@@ -79,15 +79,6 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
             get context (): TNativeConvolverNode['context'] {
                 return convolverNode.context;
             },
-            addEventListener (...args: any[]): void {
-                return inputGainNode.addEventListener(args[0], args[1], args[2]);
-            },
-            dispatchEvent (...args: any[]): boolean {
-                return inputGainNode.dispatchEvent(args[0]);
-            },
-            removeEventListener (...args: any[]): void {
-                return inputGainNode.removeEventListener(args[0], args[1], args[2]);
-            },
             get inputs (): TNativeAudioNode[] {
                 return [ inputGainNode ];
             },
@@ -102,6 +93,15 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
             },
             set normalize (value) {
                 convolverNode.normalize = value;
+            },
+            addEventListener (...args: any[]): void {
+                return inputGainNode.addEventListener(args[0], args[1], args[2]);
+            },
+            dispatchEvent (...args: any[]): boolean {
+                return inputGainNode.dispatchEvent(args[0]);
+            },
+            removeEventListener (...args: any[]): void {
+                return inputGainNode.removeEventListener(args[0], args[1], args[2]);
             }
         };
 
