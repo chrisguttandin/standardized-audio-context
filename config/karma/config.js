@@ -85,7 +85,7 @@ module.exports = (config) => {
             },
 
             browsers: [
-                'ChromeBrowserStack',
+                'ChromeHeadlessWithNoRequiredUserGesture',
                 'EdgeBrowserStack',
                 'FirefoxBrowserStack'
                 /*
@@ -97,11 +97,9 @@ module.exports = (config) => {
             captureTimeout: 120000,
 
             customLaunchers: {
-                ChromeBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'chrome',
-                    os: 'OS X',
-                    os_version: 'High Sierra' // eslint-disable-line camelcase
+                ChromeHeadlessWithNoRequiredUserGesture: {
+                    base: 'Chrome',
+                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
                 },
                 EdgeBrowserStack: {
                     base: 'BrowserStack',
