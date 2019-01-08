@@ -83,6 +83,7 @@ import { createNativeScriptProcessorNodeFactory } from './factories/native-scrip
 import { createNativeStereoPannerNodeFactory } from './factories/native-stereo-panner-node-factory';
 import { createNativeStereoPannerNodeFakerFactory } from './factories/native-stereo-panner-node-faker-factory';
 import { createNativeWaveShaperNodeFactory } from './factories/native-wave-shaper-node-factory';
+import { createNativeWaveShaperNodeFakerFactory } from './factories/native-wave-shaper-node-faker-factory';
 import { createNoneAudioDestinationNodeConstructor } from './factories/none-audio-destination-node-constructor';
 import { createNotSupportedError } from './factories/not-supported-error';
 import { createOfflineAudioContextConstructor } from './factories/offline-audio-context-constructor';
@@ -401,7 +402,16 @@ const oscillatorNodeConstructor: TOscillatorNodeConstructor = createOscillatorNo
 );
 const createNativePeriodicWave = createNativePeriodicWaveFactory(getBackupNativeContext);
 const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(createNativePeriodicWave);
-const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(createInvalidStateError, createNativeAudioNode);
+const createNativeWaveShaperNodeFaker = createNativeWaveShaperNodeFakerFactory(
+    createInvalidStateError,
+    createNativeAudioNode,
+    createNativeGainNode
+);
+const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(
+    createInvalidStateError,
+    createNativeAudioNode,
+    createNativeWaveShaperNodeFaker
+);
 const nativeStereoPannerNodeFakerFactory = createNativeStereoPannerNodeFakerFactory(
     createNativeChannelMergerNode,
     createNativeChannelSplitterNode,

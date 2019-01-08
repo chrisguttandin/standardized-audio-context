@@ -417,7 +417,7 @@ describe('WaveShaperNode', () => {
                 beforeEach(function () {
                     this.timeout(10000);
 
-                    values = [ 1, 1, 1, 1, 1 ];
+                    values = [ 1, 0.5, 0, -0.5, -1 ];
 
                     renderer = createRenderer({
                         context,
@@ -427,7 +427,7 @@ describe('WaveShaperNode', () => {
                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
                             const firstDummyGainNode = new GainNode(context);
                             const secondDummyGainNode = new GainNode(context);
-                            const waveShaperNode = createWaveShaperNode(context, { curve: new Float32Array([ 0.5, 0.5 ]) });
+                            const waveShaperNode = createWaveShaperNode(context, { curve: new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]) });
 
                             audioBuffer.copyToChannel(new Float32Array(values), 0);
 
@@ -473,7 +473,7 @@ describe('WaveShaperNode', () => {
                         }
                     })
                         .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 0.5, 0.5, 0.5 ]);
+                            expect(Array.from(channelData)).to.deep.equal([ 1, 0.75, 0.5, 0.25, 0 ]);
                         });
                 });
 

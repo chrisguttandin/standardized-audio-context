@@ -197,6 +197,8 @@ export * from './native-stereo-panner-node-faker-factory-factory';
 export * from './native-wave-shaper-node';
 export * from './native-wave-shaper-node-factory';
 export * from './native-wave-shaper-node-factory-factory';
+export * from './native-wave-shaper-node-faker-factory';
+export * from './native-wave-shaper-node-faker-factory-factory';
 export * from './none-audio-destination-node-constructor';
 export * from './none-audio-destination-node-constructor-factory';
 export * from './not-supported-error-factory';

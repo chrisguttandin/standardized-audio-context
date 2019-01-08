@@ -1,4 +1,5 @@
 import { interceptConnections } from '../helpers/intercept-connections';
+import { INativeWaveShaperNodeFaker } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -46,25 +47,31 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
         }
 
         const leftGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-        const leftWaveShaperNode = createNativeWaveShaperNode(nativeContext, {
-            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
-            curve: leftWaveShaperCurve
-        });
-        const panWaveShaperNode = createNativeWaveShaperNode(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE });
+        // Bug #119: Safari does not fully support the WaveShaperNode.
+        const leftWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
+            nativeContext,
+            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: leftWaveShaperCurve }
+        );
+        // Bug #119: Safari does not fully support the WaveShaperNode.
+        const panWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
+            nativeContext,
+            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE }
+        );
         const rightGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-        const rightWaveShaperNode = createNativeWaveShaperNode(nativeContext, {
-            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
-            curve: rightWaveShaperCurve
-        });
+        // Bug #119: Safari does not fully support the WaveShaperNode.
+        const rightWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
+            nativeContext,
+            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightWaveShaperCurve }
+        );
 
         inputGainNode.connect(leftGainNode);
-        inputGainNode.connect(panWaveShaperNode);
+        inputGainNode.connect(panWaveShaperNode.inputs[0]);
         inputGainNode.connect(rightGainNode);
 
         panWaveShaperNode.connect(panGainNode);
 
-        panGainNode.connect(leftWaveShaperNode);
-        panGainNode.connect(rightWaveShaperNode);
+        panGainNode.connect(leftWaveShaperNode.inputs[0]);
+        panGainNode.connect(rightWaveShaperNode.inputs[0]);
 
         leftWaveShaperNode.connect(leftGainNode.gain);
         rightWaveShaperNode.connect(rightGainNode.gain);
@@ -113,29 +120,36 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             numberOfOutputs: 2
         });
         const leftInputForLeftOutputGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-        const leftInputForLeftOutputWaveShaperNode = createNativeWaveShaperNode(nativeContext, {
-            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
-            curve: leftInputForLeftOutputWaveShaperCurve
-        });
+        // Bug #119: Safari does not fully support the WaveShaperNode.
+        const leftInputForLeftOutputWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
+            nativeContext,
+            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: leftInputForLeftOutputWaveShaperCurve }
+        );
         const leftInputForRightOutputGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-        const leftInputForRightOutputWaveShaperNode = createNativeWaveShaperNode(nativeContext, {
-            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
-            curve: leftInputForRightOutputWaveShaperCurve
-        });
-        const panWaveShaperNode = createNativeWaveShaperNode(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE });
+        // Bug #119: Safari does not fully support the WaveShaperNode.
+        const leftInputForRightOutputWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
+            nativeContext,
+            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: leftInputForRightOutputWaveShaperCurve }
+        );
+        // Bug #119: Safari does not fully support the WaveShaperNode.
+        const panWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
+            nativeContext,
+            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE }
+        );
         const rightInputForLeftOutputGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-        const rightInputForLeftOutputWaveShaperNode = createNativeWaveShaperNode(nativeContext, {
-            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
-            curve: rightInputForLeftOutputWaveShaperCurve
-        });
+        // Bug #119: Safari does not fully support the WaveShaperNode.
+        const rightInputForLeftOutputWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
+            nativeContext,
+            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightInputForLeftOutputWaveShaperCurve });
         const rightInputForRightOutputGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-        const rightInputForRightOutputWaveShaperNode = createNativeWaveShaperNode(nativeContext, {
-            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
-            curve: rightInputForRightOutputWaveShaperCurve
-        });
+        // Bug #119: Safari does not fully support the WaveShaperNode.
+        const rightInputForRightOutputWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
+            nativeContext,
+            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightInputForRightOutputWaveShaperCurve }
+        );
 
         inputGainNode.connect(channelSplitterNode);
-        inputGainNode.connect(panWaveShaperNode);
+        inputGainNode.connect(panWaveShaperNode.inputs[0]);
 
         channelSplitterNode.connect(leftInputForLeftOutputGainNode, 1);
         channelSplitterNode.connect(leftInputForRightOutputGainNode, 1);
@@ -144,10 +158,10 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
         panWaveShaperNode.connect(panGainNode);
 
-        panGainNode.connect(leftInputForLeftOutputWaveShaperNode);
-        panGainNode.connect(leftInputForRightOutputWaveShaperNode);
-        panGainNode.connect(rightInputForLeftOutputWaveShaperNode);
-        panGainNode.connect(rightInputForRightOutputWaveShaperNode);
+        panGainNode.connect(leftInputForLeftOutputWaveShaperNode.inputs[0]);
+        panGainNode.connect(leftInputForRightOutputWaveShaperNode.inputs[0]);
+        panGainNode.connect(rightInputForLeftOutputWaveShaperNode.inputs[0]);
+        panGainNode.connect(rightInputForRightOutputWaveShaperNode.inputs[0]);
 
         leftInputForLeftOutputWaveShaperNode.connect(leftInputForLeftOutputGainNode.gain);
         leftInputForRightOutputWaveShaperNode.connect(leftInputForRightOutputGainNode.gain);
