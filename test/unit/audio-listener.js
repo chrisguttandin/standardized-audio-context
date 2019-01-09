@@ -19,15 +19,6 @@ const testCases = {
     }
 };
 
-// @todo Skip about 50% of the test cases when running on Travis to prevent the browsers from crashing while running the tests.
-if (process.env.TRAVIS) { // eslint-disable-line no-undef
-    for (const description of Object.keys(testCases)) {
-        if (Math.random() < 0.5) {
-            delete testCases[ description ];
-        }
-    }
-}
-
 describe('AudioListener', () => {
 
     for (const [ description, { createContext } ] of Object.entries(testCases)) {
