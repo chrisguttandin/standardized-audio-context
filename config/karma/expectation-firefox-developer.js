@@ -40,7 +40,7 @@ module.exports = (config) => {
                 FirefoxDeveloperSauceLabs: {
                     base: 'SauceLabs',
                     browserName: 'firefox',
-                    platform: 'OS X 10.13',
+                    platform: 'OS X 10.14',
                     version: 'dev'
                 }
             },

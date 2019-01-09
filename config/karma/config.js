@@ -85,21 +85,19 @@ module.exports = (config) => {
             },
 
             browsers: [
-                'ChromeHeadlessWithNoRequiredUserGesture',
+                'ChromeBrowserStack',
                 'EdgeBrowserStack',
                 'FirefoxBrowserStack'
-                /*
-                 * @todo Enable Safari tests again.
-                 * 'SafariBrowserStack'
-                 */
             ],
 
             captureTimeout: 120000,
 
             customLaunchers: {
-                ChromeHeadlessWithNoRequiredUserGesture: {
-                    base: 'Chrome',
-                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
+                ChromeBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'chrome',
+                    os: 'Windows',
+                    os_version: '10' // eslint-disable-line camelcase
                 },
                 EdgeBrowserStack: {
                     base: 'BrowserStack',
@@ -111,13 +109,7 @@ module.exports = (config) => {
                     base: 'BrowserStack',
                     browser: 'firefox',
                     os: 'OS X',
-                    os_version: 'High Sierra' // eslint-disable-line camelcase
-                },
-                SafariBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'safari',
-                    os: 'OS X',
-                    os_version: 'High Sierra' // eslint-disable-line camelcase
+                    os_version: 'Mojave' // eslint-disable-line camelcase
                 }
             },
 
