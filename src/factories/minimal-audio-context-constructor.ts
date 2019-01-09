@@ -103,6 +103,24 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
         }
 
         public resume (): Promise<void> {
+            if (this._state === 'suspended') {
+                return new Promise((resolve, reject) => {
+                    const resolvePromise = () => {
+                        this._nativeAudioContext.removeEventListener('statechange', resolvePromise);
+
+                        if (this._nativeAudioContext.state === 'running') {
+                            resolve();
+                        } else {
+                            this
+                                .resume()
+                                .then(resolve, reject);
+                        }
+                    };
+
+                    this._nativeAudioContext.addEventListener('statechange', resolvePromise);
+                });
+            }
+
             return this._nativeAudioContext
                 .resume()
                 .catch((err) => {
