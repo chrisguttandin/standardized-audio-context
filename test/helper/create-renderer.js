@@ -63,8 +63,6 @@ const waitForRunningState = (audioContext) => {
     });
 };
 const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeStart, start }) => {
-    await waitForRunningState(context);
-
     const gainNode = new GainNode(context);
     const audioNodes = await prepare(gainNode);
     const bufferNode = createBufferNode({ audioNodes, context });
@@ -205,6 +203,8 @@ export const createRenderer = ({ context, create, length, prepare }) => {
             let indexOfCurrentTry = 0;
 
             while (indexOfCurrentTry < MAX_RETRIES) {
+                await waitForRunningState(context);
+
                 try {
                     const newChannelData = await renderOnOnlineContext({ context, create, length, prepare, prepareBeforeStart, start });
 
