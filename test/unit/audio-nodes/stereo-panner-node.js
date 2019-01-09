@@ -692,41 +692,6 @@ describe('StereoPannerNode', () => {
                     expect(stereoPannerNode.connect(antoherStereoPannerNode)).to.equal(antoherStereoPannerNode);
                 });
 
-                it('should not be connectable to an AudioNode of another AudioContext', (done) => {
-                    const anotherContext = createContext();
-
-                    try {
-                        stereoPannerNode.connect(anotherContext.destination);
-                    } catch (err) {
-                        expect(err.code).to.equal(15);
-                        expect(err.name).to.equal('InvalidAccessError');
-
-                        done();
-                    } finally {
-                        if (anotherContext.close !== undefined) {
-                            anotherContext.close();
-                        }
-                    }
-                });
-
-                it('should not be connectable to an AudioParam of another AudioContext', (done) => {
-                    const anotherContext = createContext();
-                    const anotherStereoPannerNode = createStereoPannerNode(anotherContext);
-
-                    try {
-                        stereoPannerNode.connect(anotherStereoPannerNode.pan);
-                    } catch (err) {
-                        expect(err.code).to.equal(15);
-                        expect(err.name).to.equal('InvalidAccessError');
-
-                        done();
-                    } finally {
-                        if (anotherContext.close !== undefined) {
-                            anotherContext.close();
-                        }
-                    }
-                });
-
                 it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                     const anotherStereoPannerNode = createStereoPannerNode(context);
 
@@ -738,6 +703,46 @@ describe('StereoPannerNode', () => {
 
                         done();
                     }
+                });
+
+                describe('with another context', () => {
+
+                    let anotherContext;
+
+                    afterEach(() => {
+                        if (anotherContext.close !== undefined) {
+                            return anotherContext.close();
+                        }
+                    });
+
+                    beforeEach(() => {
+                        anotherContext = createContext();
+                    });
+
+                    it('should not be connectable to an AudioNode of that context', (done) => {
+                        try {
+                            stereoPannerNode.connect(anotherContext.destination);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
+                    it('should not be connectable to an AudioParam of that context', (done) => {
+                        const anotherStereoPannerNode = createStereoPannerNode(anotherContext);
+
+                        try {
+                            stereoPannerNode.connect(anotherStereoPannerNode.pan);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
                 });
 
             });

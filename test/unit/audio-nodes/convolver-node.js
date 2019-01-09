@@ -419,41 +419,6 @@ describe('ConvolverNode', () => {
                     expect(convolverNode.connect(gainNode)).to.equal(gainNode);
                 });
 
-                it('should not be connectable to an AudioNode of another AudioContext', (done) => {
-                    const anotherContext = createContext();
-
-                    try {
-                        convolverNode.connect(anotherContext.destination);
-                    } catch (err) {
-                        expect(err.code).to.equal(15);
-                        expect(err.name).to.equal('InvalidAccessError');
-
-                        done();
-                    } finally {
-                        if (anotherContext.close !== undefined) {
-                            anotherContext.close();
-                        }
-                    }
-                });
-
-                it('should not be connectable to an AudioParam of another AudioContext', (done) => {
-                    const anotherContext = createContext();
-                    const gainNode = new GainNode(anotherContext);
-
-                    try {
-                        convolverNode.connect(gainNode.gain);
-                    } catch (err) {
-                        expect(err.code).to.equal(15);
-                        expect(err.name).to.equal('InvalidAccessError');
-
-                        done();
-                    } finally {
-                        if (anotherContext.close !== undefined) {
-                            anotherContext.close();
-                        }
-                    }
-                });
-
                 it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                     const gainNode = new GainNode(context);
 
@@ -465,6 +430,46 @@ describe('ConvolverNode', () => {
 
                         done();
                     }
+                });
+
+                describe('with another context', () => {
+
+                    let anotherContext;
+
+                    afterEach(() => {
+                        if (anotherContext.close !== undefined) {
+                            return anotherContext.close();
+                        }
+                    });
+
+                    beforeEach(() => {
+                        anotherContext = createContext();
+                    });
+
+                    it('should not be connectable to an AudioNode of that context', (done) => {
+                        try {
+                            convolverNode.connect(anotherContext.destination);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
+                    it('should not be connectable to an AudioParam of that context', (done) => {
+                        const gainNode = new GainNode(anotherContext);
+
+                        try {
+                            convolverNode.connect(gainNode.gain);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
                 });
 
             });
