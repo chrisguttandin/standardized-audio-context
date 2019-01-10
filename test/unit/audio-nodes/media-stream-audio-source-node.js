@@ -56,7 +56,17 @@ describe('MediaStreamAudioSourceNode', () => {
                 let context;
                 let mediaStream;
 
-                afterEach(() => {
+                afterEach(async () => {
+                    for (const mediaStreamTrack of mediaStream.getTracks()) {
+                        mediaStreamTrack.stop();
+                    }
+
+                    await new Promise((resolve, reject) => {
+                        audioElement.onerror = () => reject(audioElement.error);
+                        audioElement.onpause = resolve;
+                        audioElement.pause();
+                    });
+
                     if (context.close !== undefined) {
                         return context.close();
                     }
@@ -319,16 +329,6 @@ describe('MediaStreamAudioSourceNode', () => {
                 describe('disconnect()', () => {
 
                     let renderer;
-
-                    afterEach(() => {
-                        if (!audioElement.paused) {
-                            return new Promise((resolve, reject) => {
-                                audioElement.onerror = () => reject(audioElement.error);
-                                audioElement.onpause = resolve;
-                                audioElement.pause();
-                            });
-                        }
-                    });
 
                     beforeEach(async function () {
                         this.timeout(10000);
