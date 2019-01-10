@@ -36,19 +36,19 @@ const createDelayNodeWithFactoryFunction = (context, options = null) => {
     return delayNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createDelayNode: createDelayNodeWithConstructor
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createContext: createMinimalOfflineAudioContext,
         createDelayNode: createDelayNodeWithConstructor
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createContext: createAudioContext,
         createDelayNode: createDelayNodeWithConstructor
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createDelayNode: createDelayNodeWithConstructor
     },

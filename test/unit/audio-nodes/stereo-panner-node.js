@@ -36,19 +36,19 @@ const createStereoPannerNodeWithFactoryFunction = (context, options = null) => {
     return stereoPannerNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createStereoPannerNode: createStereoPannerNodeWithConstructor
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createContext: createMinimalOfflineAudioContext,
         createStereoPannerNode: createStereoPannerNodeWithConstructor
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createContext: createAudioContext,
         createStereoPannerNode: createStereoPannerNodeWithConstructor
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createStereoPannerNode: createStereoPannerNodeWithConstructor
     },

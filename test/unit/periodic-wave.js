@@ -19,19 +19,19 @@ const createPeriodicWaveWithFactoryFunction = (context, options = null) => {
         : context.createPeriodicWave(options.real, options.imag, { disableNormalization: options.disableNormalization });
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createPeriodicWave: createPeriodicWaveWithConstructor
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createContext: createMinimalOfflineAudioContext,
         createPeriodicWave: createPeriodicWaveWithConstructor
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createContext: createAudioContext,
         createPeriodicWave: createPeriodicWaveWithConstructor
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createPeriodicWave: createPeriodicWaveWithConstructor
     },

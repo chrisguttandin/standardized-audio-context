@@ -48,19 +48,19 @@ const createAnalyserNodeWithFactoryFunction = (context, options = null) => {
     return analyserNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createAnalyserNode: createAnalyserNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createAnalyserNode: createAnalyserNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createAnalyserNode: createAnalyserNodeWithConstructor,
         createContext: createAudioContext
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createAnalyserNode: createAnalyserNodeWithConstructor,
         createContext: createOfflineAudioContext
     },

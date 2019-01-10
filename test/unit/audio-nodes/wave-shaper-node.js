@@ -40,19 +40,19 @@ const createWaveShaperNodeWithFactoryFunction = (context, options = null) => {
     return waveShaperNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createWaveShaperNode: createWaveShaperNodeWithConstructor
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createContext: createMinimalOfflineAudioContext,
         createWaveShaperNode: createWaveShaperNodeWithConstructor
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createContext: createAudioContext,
         createWaveShaperNode: createWaveShaperNodeWithConstructor
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createWaveShaperNode: createWaveShaperNodeWithConstructor
     },

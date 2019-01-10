@@ -34,19 +34,19 @@ const createChannelMergerNodeWithFactoryFunction = (context, options = null) => 
     return channelMergerNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createChannelMergerNode: createChannelMergerNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createChannelMergerNode: createChannelMergerNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createChannelMergerNode: createChannelMergerNodeWithConstructor,
         createContext: createAudioContext
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createChannelMergerNode: createChannelMergerNodeWithConstructor,
         createContext: createOfflineAudioContext
     },

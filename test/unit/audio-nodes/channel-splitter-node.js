@@ -34,19 +34,19 @@ const createChannelSplitterNodeWithFactoryFunction = (context, options = null) =
     return channelSplitterNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createChannelSplitterNode: createChannelSplitterNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createChannelSplitterNode: createChannelSplitterNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createChannelSplitterNode: createChannelSplitterNodeWithConstructor,
         createContext: createAudioContext
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createChannelSplitterNode: createChannelSplitterNodeWithConstructor,
         createContext: createOfflineAudioContext
     },

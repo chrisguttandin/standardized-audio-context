@@ -37,19 +37,19 @@ const createConstantSourceNodeWithFactoryFunction = (context, options = null) =>
     return constantSourceNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithConstructor,
         createContext: createAudioContext
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createConstantSourceNode: createConstantSourceNodeWithConstructor,
         createContext: createOfflineAudioContext
     },

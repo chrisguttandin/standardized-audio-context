@@ -52,19 +52,19 @@ const createBiquadFilterNodeWithFactoryFunction = (context, options = null) => {
     return biquadFilterNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
         createContext: createMinimalAudioContext
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
         createContext: createAudioContext
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createBiquadFilterNode: createBiquadFilterNodeWithConstructor,
         createContext: createOfflineAudioContext
     },

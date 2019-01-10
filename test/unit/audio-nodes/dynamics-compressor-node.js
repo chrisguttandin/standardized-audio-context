@@ -52,19 +52,19 @@ const createDynamicsCompressorNodeWithFactoryFunction = (context, options = null
     return dynamicsCompressorNode;
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createContext: createMinimalAudioContext,
         createDynamicsCompressorNode: createDynamicsCompressorNodeWithConstructor
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createContext: createMinimalOfflineAudioContext,
         createDynamicsCompressorNode: createDynamicsCompressorNodeWithConstructor
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createContext: createAudioContext,
         createDynamicsCompressorNode: createDynamicsCompressorNodeWithConstructor
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createContext: createOfflineAudioContext,
         createDynamicsCompressorNode: createDynamicsCompressorNodeWithConstructor
     },

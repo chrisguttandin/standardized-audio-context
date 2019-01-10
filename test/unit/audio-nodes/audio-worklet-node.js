@@ -21,19 +21,19 @@ const createAudioWorkletNode = (context, filename, options = null) => {
     return new AudioWorkletNode(context, filename, options);
 };
 const testCases = {
-    'constructor with a MinimalAudioContext': {
+    'constructor of a MinimalAudioContext': {
         createAddAudioWorkletModule: createAddAudioWorkletModuleWithGlobalAudioWorklet,
         createContext: createMinimalAudioContext
     },
-    'constructor with a MinimalOfflineAudioContext': {
+    'constructor of a MinimalOfflineAudioContext': {
         createAddAudioWorkletModule: createAddAudioWorkletModuleWithGlobalAudioWorklet,
         createContext: createMinimalOfflineAudioContext
     },
-    'constructor with an AudioContext': {
+    'constructor of an AudioContext': {
         createAddAudioWorkletModule: createAddAudioWorkletModuleWithAudioWorkletOfContext,
         createContext: createAudioContext
     },
-    'constructor with an OfflineAudioContext': {
+    'constructor of an OfflineAudioContext': {
         createAddAudioWorkletModule: createAddAudioWorkletModuleWithAudioWorkletOfContext,
         createContext: createOfflineAudioContext
     }
