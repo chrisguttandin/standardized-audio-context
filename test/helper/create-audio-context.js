@@ -1,3 +1,3 @@
 import { AudioContext } from '../../src/module';
 
-export const createAudioContext = () => new AudioContext();
+export const createAudioContext = () => new AudioContext({ latencyHint: 'playback' });
