@@ -11,8 +11,6 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 240000,
 
-        concurrency: 1,
-
         files: [
             {
                 included: false,
@@ -134,6 +132,8 @@ module.exports = (config) => {
                 'OperaWithNoRequiredUserGestureAndNoThrottling',
                 'Safari'
             ],
+
+            concurrency: 1,
 
             customLaunchers: {
                 ChromeCanaryHeadlessWithNoRequiredUserGesture: {
