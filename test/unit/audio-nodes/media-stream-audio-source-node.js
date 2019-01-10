@@ -330,10 +330,8 @@ describe('MediaStreamAudioSourceNode', () => {
 
                     let renderer;
 
-                    beforeEach(async function () {
+                    beforeEach(function () {
                         this.timeout(10000);
-
-                        await audioElement.play();
 
                         renderer = createRenderer({
                             context,
