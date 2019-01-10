@@ -457,9 +457,8 @@ describe('DelayNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, delayNode }) {
-                                            // @todo Edge seems to floor the values to the nearest sample.
-                                            delayNode.delayTime.setValueAtTime(2.000005 / context.sampleRate, startTime);
-                                            delayNode.delayTime.setValueAtTime(0, startTime + (2 / context.sampleRate));
+                                            delayNode.delayTime.setValueAtTime(3 / context.sampleRate, startTime);
+                                            delayNode.delayTime.setValueAtTime(0, startTime + (1.9 / context.sampleRate));
                                             delayNode.delayTime.linearRampToValueAtTime(1, startTime + (5 / context.sampleRate));
                                             delayNode.delayTime.cancelScheduledValues(startTime + (3 / context.sampleRate));
 
@@ -480,18 +479,17 @@ describe('DelayNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, delayNode }) {
-                                            // @todo Edge seems to floor the values to the nearest sample.
-                                            delayNode.delayTime.setValueAtTime(2.000005 / context.sampleRate, startTime + (2 / context.sampleRate));
+                                            delayNode.delayTime.setValueAtTime(3 / context.sampleRate, startTime + (1.9 / context.sampleRate));
 
                                             audioBufferSourceNode.start(startTime);
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.00001);
-                                            expect(channelData[1]).to.closeTo(0.5, 0.00001);
-                                            expect(channelData[2]).to.closeTo(1, 0.00001);
-                                            expect(channelData[3]).to.closeTo(0.5, 0.00001);
-                                            expect(channelData[4]).to.closeTo(0, 0.00001);
+                                            expect(channelData[0]).to.equal(1);
+                                            expect(channelData[1]).to.equal(0.5);
+                                            expect(channelData[2]).to.equal(0);
+                                            expect(channelData[3]).to.closeTo(1, 0.00001);
+                                            expect(channelData[4]).to.closeTo(0.5, 0.00001);
                                         });
                                 });
 
