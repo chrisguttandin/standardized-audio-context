@@ -58,7 +58,13 @@ const waitForRunningState = (audioContext) => {
                 }
             };
 
-            audioContext.resume();
+            audioContext
+                .resume()
+                .catch((err) => {
+                    audioContext.onstatechange = null;
+
+                    reject(err);
+                });
         }
     });
 };
