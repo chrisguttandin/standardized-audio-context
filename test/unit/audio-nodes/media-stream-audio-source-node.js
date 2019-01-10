@@ -134,6 +134,39 @@ describe('MediaStreamAudioSourceNode', () => {
 
                             });
 
+                            describe('with invalid options', () => {
+
+                                describe('with a mediaStream that has no audio track', () => {
+
+                                    let videoStream;
+
+                                    afterEach(() => {
+                                        for (const videoStreamTrack of videoStream.getTracks()) {
+                                            videoStreamTrack.stop();
+                                        }
+                                    });
+
+                                    beforeEach(() => {
+                                        const canvasElement = document.createElement('canvas');
+
+                                        videoStream = canvasElement.captureStream();
+                                    });
+
+                                    it('should throw an InvalidStateError', (done) => {
+                                        try {
+                                            createMediaStreamAudioSourceNode(context, { mediaStream: videoStream });
+                                        } catch (err) {
+                                            expect(err.code).to.equal(11);
+                                            expect(err.name).to.equal('InvalidStateError');
+
+                                            done();
+                                        }
+                                    });
+
+                                });
+
+                            });
+
                         });
 
                     }
