@@ -339,6 +339,33 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createMediaStreamSource()', () => {
+
+            let videoStream;
+
+            afterEach(() => {
+                for (const videoStreamTrack of videoStream.getTracks()) {
+                    videoStreamTrack.stop();
+                }
+            });
+
+            beforeEach(() => {
+                const canvasElement = document.createElement('canvas');
+
+                // @todo https://bugzilla.mozilla.org/show_bug.cgi?id=1388974
+                canvasElement.getContext('2d');
+
+                videoStream = canvasElement.captureStream();
+            });
+
+            // bug #120
+
+            it('should not throw an error', () => {
+                audioContext.createMediaStreamSource(videoStream);
+            });
+
+        });
+
         describe('createOscillator()', () => {
 
             let oscillatorNode;

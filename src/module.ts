@@ -489,7 +489,10 @@ const mediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstr
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const createNativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNodeFactory(createNativeAudioNode);
+const createNativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNodeFactory(
+    createInvalidStateError,
+    createNativeAudioNode
+);
 const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
     createNativeMediaStreamAudioSourceNode,
     createNotSupportedError,
