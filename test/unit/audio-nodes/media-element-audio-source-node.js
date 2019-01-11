@@ -5,6 +5,7 @@ import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { isSafari } from '../../helper/is-safari';
 
 const createMediaElementAudioSourceNodeWithConstructor = (context, options) => {
     return new MediaElementAudioSourceNode(context, options);
@@ -341,7 +342,7 @@ describe('MediaElementAudioSourceNode', () => {
                          * Muting the mediaElement seems to be crazy, but Safari only plays muted audio without any user interaction. However even
                          * though the mediaElement is muted the audio gets routed into the audio graph.
                          */
-                        mediaElement.muted = !/Chrome/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent);
+                        mediaElement.muted = isSafari(navigator);
                         mediaElement.loop = true;
                         // Edge delivers far more consistent results when playing an MP3 file.
                         mediaElement.src = (/Edge/.test(navigator.userAgent)) ?

@@ -5,6 +5,7 @@ import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { isSafari } from '../../helper/is-safari';
 
 const createMediaStreamAudioSourceNodeWithConstructor = (context, options) => {
     return new MediaStreamAudioSourceNode(context, options);
@@ -44,10 +45,11 @@ const testCases = {
 describe('MediaStreamAudioSourceNode', () => {
 
     /*
-     * Bug #65: Only Chrome & Opera implement captureStream() so far, which is why this test can't be executed in other browsers for now.
+     * Bug #65: Only Chrome & Opera implement captureStream() so far. But Firefox can be configured to allow user media access without any
+     * user interaction. This leaves Edge and Safari as the browsers which can't be tested so far.
      * @todo There is currently now way to disable the autoplay policy on BrowserStack or Sauce Labs.
      */
-    if (!process.env.TRAVIS && /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent)) { // eslint-disable-line no-undef
+    if (!process.env.TRAVIS && !/Edge/.test(navigator.userAgent) && !isSafari(navigator)) { // eslint-disable-line no-undef
 
         for (const [ description, { createContext, createMediaStreamAudioSourceNode } ] of Object.entries(testCases)) {
 
@@ -62,27 +64,43 @@ describe('MediaStreamAudioSourceNode', () => {
                         mediaStreamTrack.stop();
                     }
 
-                    await new Promise((resolve, reject) => {
-                        audioElement.onerror = () => reject(audioElement.error);
-                        audioElement.onpause = resolve;
-                        audioElement.pause();
-                    });
+                    if (typeof audioElement.captureStream === 'function') {
+                        await new Promise((resolve, reject) => {
+                            audioElement.onerror = () => reject(audioElement.error);
+                            audioElement.onpause = resolve;
+                            audioElement.pause();
+                        });
+                    }
 
                     if (context.close !== undefined) {
                         return context.close();
                     }
                 });
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioElement = new Audio();
 
-                    audioElement.src = 'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
-                    audioElement.muted = true;
+                    if (typeof audioElement.captureStream === 'function') {
+                        audioElement.src = 'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
+                        audioElement.muted = true;
 
-                    await audioElement.play();
+                        await audioElement.play();
+
+                        mediaStream = audioElement.captureStream();
+                    } else {
+                        mediaStream = await navigator.mediaDevices.getUserMedia({
+                            audio: {
+                                // Turn off everything which could attenuate the signal.
+                                autoGainControl: false,
+                                echoCancellation: false,
+                                noiseSuppression: false
+                            }
+                        });
+                    }
 
                     context = createContext();
-                    mediaStream = audioElement.captureStream();
                 });
 
                 describe('constructor()', () => {
@@ -184,6 +202,9 @@ describe('MediaStreamAudioSourceNode', () => {
 
                                     beforeEach(() => {
                                         const canvasElement = document.createElement('canvas');
+
+                                        // @todo https://bugzilla.mozilla.org/show_bug.cgi?id=1388974
+                                        canvasElement.getContext('2d');
 
                                         videoStream = canvasElement.captureStream();
                                     });
@@ -402,7 +423,10 @@ describe('MediaStreamAudioSourceNode', () => {
                             verifyChannelData: false
                         })
                             .then((channelData) => {
-                                // @todo The audioElement will just play a sine wave. Therefore it is okay to only test for non zero values.
+                                /*
+                                 * @todo The audioElement will just play a sine wave and Firefox will just capture the signal from the
+                                 * microphone. Therefore it is okay to only test for non zero values.
+                                 */
                                 expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
                             });
                     });

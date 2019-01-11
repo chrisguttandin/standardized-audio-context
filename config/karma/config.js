@@ -127,8 +127,8 @@ module.exports = (config) => {
                 'ChromeCanaryHeadlessWithNoRequiredUserGesture',
                 'ChromeHeadlessWithNoRequiredUserGesture',
                 'EdgeBrowserStack',
-                'FirefoxDeveloperHeadless',
-                'FirefoxHeadless',
+                'FirefoxDeveloperHeadlessWithPrefs',
+                'FirefoxHeadlessWithPrefs',
                 'OperaWithNoRequiredUserGestureAndNoThrottling',
                 'Safari'
             ],
@@ -149,6 +149,18 @@ module.exports = (config) => {
                     browser: 'edge',
                     os: 'Windows',
                     os_version: '10' // eslint-disable-line camelcase
+                },
+                FirefoxDeveloperHeadlessWithPrefs: {
+                    base : 'FirefoxDeveloperHeadless',
+                    prefs : {
+                        'media.navigator.permission.disabled' : true
+                    }
+                },
+                FirefoxHeadlessWithPrefs: {
+                    base : 'FirefoxHeadless',
+                    prefs : {
+                        'media.navigator.permission.disabled' : true
+                    }
                 },
                 OperaWithNoRequiredUserGestureAndNoThrottling: {
                     base: 'Opera',
