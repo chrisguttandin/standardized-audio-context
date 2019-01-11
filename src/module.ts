@@ -485,11 +485,15 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
 const createNativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNodeFactory(createNativeAudioNode);
 const mediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstructor = createMediaElementAudioSourceNodeConstructor(
     createNativeMediaElementAudioSourceNode,
+    createNotSupportedError,
+    isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
 const createNativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNodeFactory(createNativeAudioNode);
 const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
     createNativeMediaStreamAudioSourceNode,
+    createNotSupportedError,
+    isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
 const audioContextConstructor: TAudioContextConstructor = createAudioContextConstructor(

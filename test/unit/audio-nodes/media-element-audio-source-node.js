@@ -3,6 +3,7 @@ import { GainNode, MediaElementAudioSourceNode } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
+import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
 
 const createMediaElementAudioSourceNodeWithConstructor = (context, options) => {
@@ -117,6 +118,35 @@ describe('MediaElementAudioSourceNode', () => {
 
                                 expect(mediaElementAudioSourceNode.mediaElement).to.be.an.instanceOf(HTMLMediaElement);
                             });
+
+                        });
+
+                        describe('with invalid options', () => {
+
+                            if (description.includes('constructor')) {
+
+                                describe('with an OfflineAudioContext', () => {
+
+                                    let offlineAudioContext;
+
+                                    beforeEach(() => {
+                                        offlineAudioContext = createOfflineAudioContext();
+                                    });
+
+                                    it('should throw a NotSupportedError', (done) => {
+                                        try {
+                                            createMediaElementAudioSourceNode(offlineAudioContext, { mediaElement });
+                                        } catch (err) {
+                                            expect(err.code).to.equal(9);
+                                            expect(err.name).to.equal('NotSupportedError');
+
+                                            done();
+                                        }
+                                    });
+
+                                });
+
+                            }
 
                         });
 

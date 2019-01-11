@@ -10,6 +10,8 @@ const DEFAULT_OPTIONS: IAudioNodeOptions = {
 
 export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructorFactory = (
     createNativeMediaStreamAudioSourceNode,
+    createNotSupportedError,
+    isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {
 
@@ -21,6 +23,11 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
 
         constructor (context: IMinimalAudioContext, options: IMediaStreamAudioSourceOptions) {
             const nativeContext = getNativeAudioContext(context);
+
+            if (isNativeOfflineAudioContext(nativeContext)) {
+                throw createNotSupportedError();
+            }
+
             const mergedOptions = <IAudioNodeOptions & IMediaStreamAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, mergedOptions);
 
