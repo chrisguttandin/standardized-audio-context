@@ -85,6 +85,16 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createMediaStreamTrackSource()', () => {
+
+        // bug #121
+
+        it('should not be implemented', () => {
+            expect(audioContext.createMediaStreamTrackSource).to.be.undefined;
+        });
+
+    });
+
     describe('createWaveShaper()', () => {
 
         describe('curve', () => {
