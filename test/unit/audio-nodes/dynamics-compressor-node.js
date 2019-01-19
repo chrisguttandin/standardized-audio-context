@@ -416,6 +416,324 @@ describe('DynamicsCompressorNode', () => {
 
             });
 
+            describe('knee', () => {
+
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.knee.cancelScheduledValues).to.be.a('function');
+                    expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
+                    expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.knee.linearRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.knee.maxValue).to.equal(40);
+                    expect(dynamicsCompressorNode.knee.minValue).to.equal(0);
+                    expect(dynamicsCompressorNode.knee.setTargetAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.knee.setValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.knee.setValueCurveAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.knee.value).to.equal(30);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.knee = 'anything';
+                    }).to.throw(TypeError);
+                });
+
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.knee.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.knee);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.knee.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.knee.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.knee);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.knee.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.knee.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.knee);
+                    });
+
+                });
+
+                // @todo automation
+
+            });
+
+            describe('ratio', () => {
+
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.ratio.cancelScheduledValues).to.be.a('function');
+                    expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
+                    expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.ratio.maxValue).to.equal(20);
+                    expect(dynamicsCompressorNode.ratio.minValue).to.equal(1);
+                    expect(dynamicsCompressorNode.ratio.setTargetAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.ratio.setValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.ratio.setValueCurveAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.ratio.value).to.equal(12);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.ratio = 'anything';
+                    }).to.throw(TypeError);
+                });
+
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.ratio.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.ratio);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.ratio.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.ratio);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.ratio.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.ratio.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.ratio);
+                    });
+
+                });
+
+                // @todo automation
+
+            });
+
+            // @todo reduction
+
+            describe('release', () => {
+
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.release.cancelScheduledValues).to.be.a('function');
+                    expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
+                    expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.release.linearRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.release.maxValue).to.equal(1);
+                    expect(dynamicsCompressorNode.release.minValue).to.equal(0);
+                    expect(dynamicsCompressorNode.release.setTargetAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.release.setValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.release.setValueCurveAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.release.value).to.equal(0.25);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.release = 'anything';
+                    }).to.throw(TypeError);
+                });
+
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.release.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.release);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.release.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.release.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.release);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.release.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.release.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.release);
+                    });
+
+                });
+
+                // @todo automation
+
+            });
+
+            describe('threshold', () => {
+
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.threshold.cancelScheduledValues).to.be.a('function');
+                    expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);
+                    expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.threshold.maxValue).to.equal(0);
+                    expect(dynamicsCompressorNode.threshold.minValue).to.equal(-100);
+                    expect(dynamicsCompressorNode.threshold.setTargetAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.threshold.setValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.threshold.setValueCurveAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.threshold.value).to.equal(-24);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.threshold = 'anything';
+                    }).to.throw(TypeError);
+                });
+
+                describe('cancelScheduledValues()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.threshold.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.threshold);
+                    });
+
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        // @todo expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
+                    });
+
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
+                    });
+
+                });
+
+                describe('setTargetAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.threshold.setTargetAtTime(-1, 0, 0.1)).to.equal(dynamicsCompressorNode.threshold);
+                    });
+
+                });
+
+                describe('setValueAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.threshold.setValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
+                    });
+
+                });
+
+                describe('setValueCurveAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.threshold.setValueAtTime(new Float32Array([ -1 ]), 0, 0)).to.equal(dynamicsCompressorNode.threshold);
+                    });
+
+                });
+
+                // @todo automation
+
+            });
+
             describe('connect()', () => {
 
                 let dynamicsCompressorNode;
@@ -591,322 +909,6 @@ describe('DynamicsCompressorNode', () => {
                             expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
                         });
                 });
-
-            });
-
-            describe('knee', () => {
-
-                let dynamicsCompressorNode;
-
-                beforeEach(() => {
-                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                });
-
-                it('should return an instance of the AudioParam interface', () => {
-                    expect(dynamicsCompressorNode.knee.cancelScheduledValues).to.be.a('function');
-                    expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
-                    expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.knee.linearRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.knee.maxValue).to.equal(40);
-                    expect(dynamicsCompressorNode.knee.minValue).to.equal(0);
-                    expect(dynamicsCompressorNode.knee.setTargetAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.knee.setValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.knee.setValueCurveAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.knee.value).to.equal(30);
-                });
-
-                it('should be readonly', () => {
-                    expect(() => {
-                        dynamicsCompressorNode.knee = 'anything';
-                    }).to.throw(TypeError);
-                });
-
-                describe('cancelScheduledValues()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.knee);
-                    });
-
-                });
-
-                describe('exponentialRampToValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
-                    });
-
-                });
-
-                describe('linearRampToValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
-                    });
-
-                });
-
-                describe('setTargetAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.knee);
-                    });
-
-                });
-
-                describe('setValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
-                    });
-
-                });
-
-                describe('setValueCurveAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.knee);
-                    });
-
-                });
-
-                // @todo automation
-
-            });
-
-            describe('ratio', () => {
-
-                let dynamicsCompressorNode;
-
-                beforeEach(() => {
-                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                });
-
-                it('should return an instance of the AudioParam interface', () => {
-                    expect(dynamicsCompressorNode.ratio.cancelScheduledValues).to.be.a('function');
-                    expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
-                    expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.ratio.maxValue).to.equal(20);
-                    expect(dynamicsCompressorNode.ratio.minValue).to.equal(1);
-                    expect(dynamicsCompressorNode.ratio.setTargetAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.ratio.setValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.ratio.setValueCurveAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.ratio.value).to.equal(12);
-                });
-
-                it('should be readonly', () => {
-                    expect(() => {
-                        dynamicsCompressorNode.ratio = 'anything';
-                    }).to.throw(TypeError);
-                });
-
-                describe('cancelScheduledValues()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.ratio);
-                    });
-
-                });
-
-                describe('exponentialRampToValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
-                    });
-
-                });
-
-                describe('linearRampToValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
-                    });
-
-                });
-
-                describe('setTargetAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.ratio);
-                    });
-
-                });
-
-                describe('setValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
-                    });
-
-                });
-
-                describe('setValueCurveAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.ratio);
-                    });
-
-                });
-
-                // @todo automation
-
-            });
-
-            describe('release', () => {
-
-                let dynamicsCompressorNode;
-
-                beforeEach(() => {
-                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                });
-
-                it('should return an instance of the AudioParam interface', () => {
-                    expect(dynamicsCompressorNode.release.cancelScheduledValues).to.be.a('function');
-                    expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
-                    expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.release.linearRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.release.maxValue).to.equal(1);
-                    expect(dynamicsCompressorNode.release.minValue).to.equal(0);
-                    expect(dynamicsCompressorNode.release.setTargetAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.release.setValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.release.setValueCurveAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.release.value).to.equal(0.25);
-                });
-
-                it('should be readonly', () => {
-                    expect(() => {
-                        dynamicsCompressorNode.release = 'anything';
-                    }).to.throw(TypeError);
-                });
-
-                describe('cancelScheduledValues()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.release);
-                    });
-
-                });
-
-                describe('exponentialRampToValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
-                    });
-
-                });
-
-                describe('linearRampToValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
-                    });
-
-                });
-
-                describe('setTargetAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.release);
-                    });
-
-                });
-
-                describe('setValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
-                    });
-
-                });
-
-                describe('setValueCurveAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.release);
-                    });
-
-                });
-
-                // @todo automation
-
-            });
-
-            describe('threshold', () => {
-
-                let dynamicsCompressorNode;
-
-                beforeEach(() => {
-                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                });
-
-                it('should return an instance of the AudioParam interface', () => {
-                    expect(dynamicsCompressorNode.threshold.cancelScheduledValues).to.be.a('function');
-                    expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);
-                    expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.threshold.maxValue).to.equal(0);
-                    expect(dynamicsCompressorNode.threshold.minValue).to.equal(-100);
-                    expect(dynamicsCompressorNode.threshold.setTargetAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.threshold.setValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.threshold.setValueCurveAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.threshold.value).to.equal(-24);
-                });
-
-                it('should be readonly', () => {
-                    expect(() => {
-                        dynamicsCompressorNode.threshold = 'anything';
-                    }).to.throw(TypeError);
-                });
-
-                describe('cancelScheduledValues()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.threshold.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.threshold);
-                    });
-
-                });
-
-                describe('exponentialRampToValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        // @todo expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
-                    });
-
-                });
-
-                describe('linearRampToValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
-                    });
-
-                });
-
-                describe('setTargetAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.threshold.setTargetAtTime(-1, 0, 0.1)).to.equal(dynamicsCompressorNode.threshold);
-                    });
-
-                });
-
-                describe('setValueAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.threshold.setValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
-                    });
-
-                });
-
-                describe('setValueCurveAtTime()', () => {
-
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.threshold.setValueAtTime(new Float32Array([ -1 ]), 0, 0)).to.equal(dynamicsCompressorNode.threshold);
-                    });
-
-                });
-
-                // @todo automation
 
             });
 
