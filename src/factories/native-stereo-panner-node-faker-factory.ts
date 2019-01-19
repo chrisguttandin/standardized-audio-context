@@ -219,7 +219,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
         let outputNodes = buildInternalGraph(nativeContext, channelCount, inputGainNode, panGainNode, channelMergerNode);
 
-        const panAudioParam = Object.defineProperties(panGainNode.gain, { defaultValue: { get: () => 0 } });
+        Object.defineProperty(panGainNode.gain, 'defaultValue', { get: () => 0 });
 
         const nativeStereoPannerNodeFakerFactory = {
             get bufferSize (): undefined {
@@ -267,7 +267,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
                 return inputGainNode.numberOfOutputs;
             },
             get pan (): TNativeStereoPannerNode['pan'] {
-                return panAudioParam;
+                return panGainNode.gain;
             },
             addEventListener (...args: any[]): void {
                 return inputGainNode.addEventListener(args[0], args[1], args[2]);
