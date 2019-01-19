@@ -4,21 +4,6 @@ import { TNativeChannelSplitterNode } from '../types';
 export const wrapChannelSplitterNode = (channelSplitterNode: TNativeChannelSplitterNode): void => {
     const channelCount = channelSplitterNode.numberOfOutputs;
 
-    // Bug #96: Safari does not have the correct channelCount.
-    if (channelSplitterNode.channelCount !== channelCount) {
-        channelSplitterNode.channelCount = channelCount;
-    }
-
-    // Bug #29: Edge & Safari do not have the correct channelCountMode.
-    if (channelSplitterNode.channelCountMode !== 'explicit') {
-        channelSplitterNode.channelCountMode = 'explicit';
-    }
-
-    // Bug #31: Edge & Safari do not have the correct channelInterpretation.
-    if (channelSplitterNode.channelInterpretation !== 'discrete') {
-        channelSplitterNode.channelInterpretation = 'discrete';
-    }
-
     // Bug #97: Safari does not throw an error when attempting to change the channelCount to something other than its initial value.
     Object.defineProperty(channelSplitterNode, 'channelCount', {
         get: () => channelCount,
