@@ -61,13 +61,11 @@ oscillatorNode.start();
 
 ### AudioContext
 
-This is an incomplete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses the following factory methods: `createMediaStreamDestination()`, `createMediaStreamTrackSource()`, `createPanner()` and `createScriptProcessor()`
-
-With the exception of `createMediaStreamDestination()` and `createScriptProcessor()` there is no technical reason for not supporting these methods. They are just not implemented yet. Please create a [new issue](https://github.com/chrisguttandin/standardized-audio-context/issues/new) if you desperately need any of them.
+This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses only the following factory methods: `createMediaStreamDestination()`, `createMediaStreamTrackSource()` and `createScriptProcessor()`. `createMediaStreamDestination()` is not implemented in Edge and unfortunately it is very complicated (if not impossible) to polyfill. `createMediaStreamTrackSource()` has not yet landed in any browser and `createScriptProcessor()` is already deprecated.
 
 ### OfflineAudioContext
 
-This is an incomplete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It misses mostly the same methods as the AudioContext which are: `createPanner()` and `createScriptProcessor()`.
+This is an almost complete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It only misses the `createScriptProcessor()` method which is deprecated anyway.
 
 ### audioWorklet
 
@@ -156,6 +154,11 @@ This is an implementation of the
 
 This is an implementation of the
 [`OscillatorNode`](https://webaudio.github.io/web-audio-api/#oscillatornode) constructor and the [`createOscillator()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createoscillator) factory method respectively.
+
+### PannerNode / createPanner()
+
+This is an implementation of the [`PannerNode`](https://webaudio.github.io/web-audio-api/#pannernode) constructor and the [`createPanner()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createpanner) factory method respectively. The panningModel can only be savely assigned to `'equalpower'`.
+This is because Edge has no native implementation of the `'HRTF'` panningModel. An attempt to set the panningModel to `'HRTF'` in Edge will throw a `NotSupportedError`.
 
 ### PeriodicWave / createPeriodicWave()
 
