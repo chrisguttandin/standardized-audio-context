@@ -947,12 +947,52 @@ describe('audioContextConstructor', () => {
 
             });
 
+            describe('coneOuterGain', () => {
+
+                // bug #127
+
+                it('should not throw an error', () => {
+                    pannerNode.coneOuterGain = 3;
+                });
+
+            });
+
+            describe('maxDistance', () => {
+
+                // bug #128
+
+                it('should not throw an error', () => {
+                    pannerNode.maxDistance = -10;
+                });
+
+            });
+
             describe('orientationX', () => {
 
                 // bug #124
 
                 it('should not be implemented', () => {
                     expect(pannerNode.orientationX).to.be.undefined;
+                });
+
+            });
+
+            describe('refDistance', () => {
+
+                // bug #129
+
+                it('should not throw an error', () => {
+                    pannerNode.refDistance = -10;
+                });
+
+            });
+
+            describe('rolloffFactor', () => {
+
+                // bug #130
+
+                it('should not throw an error', () => {
+                    pannerNode.rolloffFactor = -10;
                 });
 
             });

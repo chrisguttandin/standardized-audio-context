@@ -762,6 +762,26 @@ describe('audioContextConstructor', () => {
                 pannerNode = audioContext.createPanner();
             });
 
+            describe('coneOuterGain', () => {
+
+                // bug #127
+
+                it('should not throw an error', () => {
+                    pannerNode.coneOuterGain = 3;
+                });
+
+            });
+
+            describe('maxDistance', () => {
+
+                // bug #128
+
+                it('should not throw an error', () => {
+                    pannerNode.maxDistance = -10;
+                });
+
+            });
+
             describe('orientationX', () => {
 
                 // bug #124
@@ -780,6 +800,26 @@ describe('audioContextConstructor', () => {
                     pannerNode.panningModel = 'HRTF';
 
                     expect(pannerNode.panningModel).to.equal('equalpower');
+                });
+
+            });
+
+            describe('refDistance', () => {
+
+                // bug #129
+
+                it('should not throw an error', () => {
+                    pannerNode.refDistance = -10;
+                });
+
+            });
+
+            describe('rolloffFactor', () => {
+
+                // bug #130
+
+                it('should not throw an error', () => {
+                    pannerNode.rolloffFactor = -10;
                 });
 
             });

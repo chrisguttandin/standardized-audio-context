@@ -165,6 +165,36 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createPanner()', () => {
+
+        let pannerNode;
+
+        beforeEach(() => {
+            pannerNode = audioContext.createPanner();
+        });
+
+        describe('coneOuterGain', () => {
+
+            // bug #127
+
+            it('should not throw an error', () => {
+                pannerNode.coneOuterGain = 3;
+            });
+
+        });
+
+        describe('rolloffFactor', () => {
+
+            // bug #130
+
+            it('should not throw an error', () => {
+                pannerNode.rolloffFactor = -10;
+            });
+
+        });
+
+    });
+
     describe('decodeAudioData()', () => {
 
         // bug #6
