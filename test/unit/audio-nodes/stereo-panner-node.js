@@ -687,16 +687,16 @@ describe('StereoPannerNode', () => {
                 });
 
                 it('should be chainable', () => {
-                    const antoherStereoPannerNode = createStereoPannerNode(context);
+                    const gainNode = new GainNode(context);
 
-                    expect(stereoPannerNode.connect(antoherStereoPannerNode)).to.equal(antoherStereoPannerNode);
+                    expect(stereoPannerNode.connect(gainNode)).to.equal(gainNode);
                 });
 
                 it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
-                    const anotherStereoPannerNode = createStereoPannerNode(context);
+                    const gainNode = new GainNode(context);
 
                     try {
-                        stereoPannerNode.connect(anotherStereoPannerNode.pan, -1);
+                        stereoPannerNode.connect(gainNode.gain, -1);
                     } catch (err) {
                         expect(err.code).to.equal(1);
                         expect(err.name).to.equal('IndexSizeError');
@@ -731,10 +731,10 @@ describe('StereoPannerNode', () => {
                     });
 
                     it('should not be connectable to an AudioParam of that context', (done) => {
-                        const anotherStereoPannerNode = createStereoPannerNode(anotherContext);
+                        const gainNode = new GainNode(anotherContext);
 
                         try {
-                            stereoPannerNode.connect(anotherStereoPannerNode.pan);
+                            stereoPannerNode.connect(gainNode.gain);
                         } catch (err) {
                             expect(err.code).to.equal(15);
                             expect(err.name).to.equal('InvalidAccessError');
