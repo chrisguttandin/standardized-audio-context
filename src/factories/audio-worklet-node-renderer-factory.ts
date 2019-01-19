@@ -194,9 +194,15 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                                 return constantSourceNode;
                             }));
 
-                    const inputChannelMergerNode = createNativeChannelMergerNode(partialOfflineAudioContext, {
-                        numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
-                    });
+                    const inputChannelMergerNode = createNativeChannelMergerNode(
+                        partialOfflineAudioContext,
+                        {
+                            channelCount: 1,
+                            channelCountMode: 'explicit',
+                            channelInterpretation: 'speakers',
+                            numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
+                        }
+                    );
 
                     for (let i = 0; i < options.numberOfInputs; i += 1) {
                         gainNodes[i].connect(inputChannelSplitterNodes[i]);
@@ -229,9 +235,15 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
 
                             for (let i = 0; i < proxy.numberOfOutputs; i += 1) {
-                                outputChannelMergerNodes.push(createNativeChannelMergerNode(nativeOfflineAudioContext, {
-                                   numberOfInputs: options.outputChannelCount[i]
-                               }));
+                                outputChannelMergerNodes.push(createNativeChannelMergerNode(
+                                    nativeOfflineAudioContext,
+                                    {
+                                        channelCount: 1,
+                                        channelCountMode: 'explicit',
+                                        channelInterpretation: 'speakers',
+                                        numberOfInputs: options.outputChannelCount[i]
+                                    }
+                                ));
                             }
 
                             const processedBuffer = await processBuffer(

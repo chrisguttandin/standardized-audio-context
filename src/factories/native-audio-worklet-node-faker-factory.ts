@@ -106,9 +106,15 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         }
 
-        const inputChannelMergerNode = createNativeChannelMergerNode(nativeContext, {
-            numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
-        });
+        const inputChannelMergerNode = createNativeChannelMergerNode(
+            nativeContext,
+            {
+                channelCount: 1,
+                channelCountMode: 'explicit',
+                channelInterpretation: 'speakers',
+                numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
+            }
+        );
         const bufferSize = computeBufferSize(baseLatency, nativeContext.sampleRate);
         const scriptProcessorNode = createNativeScriptProcessorNode(
             nativeContext,
@@ -126,9 +132,15 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
 
         for (let i = 0; i < options.numberOfOutputs; i += 1) {
-            outputChannelMergerNodes.push(createNativeChannelMergerNode(nativeContext, {
-               numberOfInputs: options.outputChannelCount[i]
-           }));
+            outputChannelMergerNodes.push(createNativeChannelMergerNode(
+                nativeContext,
+                {
+                    channelCount: 1,
+                    channelCountMode: 'explicit',
+                    channelInterpretation: 'speakers',
+                    numberOfInputs: options.outputChannelCount[i]
+                }
+            ));
         }
 
         for (let i = 0; i < options.numberOfInputs; i += 1) {

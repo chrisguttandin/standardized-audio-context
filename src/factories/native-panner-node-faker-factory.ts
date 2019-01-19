@@ -57,7 +57,10 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             channelInterpretation: <TChannelInterpretation> 'discrete'
         };
 
-        const channelMergerNode = createNativeChannelMergerNode(nativeContext, { numberOfInputs: 6 });
+        const channelMergerNode = createNativeChannelMergerNode(
+            nativeContext,
+            { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'speakers', numberOfInputs: 6 }
+        );
         const inputGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: 1 });
         const orientationXGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 1 });
         const orientationYGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });

@@ -5,9 +5,9 @@ export const createNativeChannelMergerNodeFactory: TNativeChannelMergerNodeFacto
     createNativeAudioNode,
     wrapChannelMergerNode
 ) => {
-    return (nativeContext, options = { }) => {
+    return (nativeContext, options) => {
         const nativeChannelMergerNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
-            return ntvCntxt.createChannelMerger((options.numberOfInputs === undefined) ? 6 : options.numberOfInputs);
+            return ntvCntxt.createChannelMerger(options.numberOfInputs);
         });
 
         assignNativeAudioNodeOptions(nativeChannelMergerNode, options);

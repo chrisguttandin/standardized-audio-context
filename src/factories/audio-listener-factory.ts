@@ -13,7 +13,10 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
 
         // Bug #117: Only Chrome & Opera support the new interface already.
         const createFakeAudioParams = () => {
-            const channelMergerNode = createNativeChannelMergerNode(nativeContext, { numberOfInputs: 9 });
+            const channelMergerNode = createNativeChannelMergerNode(
+                nativeContext,
+                { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'speakers', numberOfInputs: 9 }
+            );
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const scriptProcessorNode = createNativeScriptProcessorNode(nativeContext, 256, 9, 0);
 
