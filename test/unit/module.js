@@ -20,6 +20,7 @@ import {
     MinimalOfflineAudioContext,
     OfflineAudioContext,
     OscillatorNode,
+    PannerNode,
     PeriodicWave,
     StereoPannerNode,
     WaveShaperNode,
@@ -108,6 +109,10 @@ describe('module', () => {
 
     it('should export the OscillatorNode constructor', () => {
         expect(OscillatorNode).to.be.a('function');
+    });
+
+    it('should export the PannerNode constructor', () => {
+        expect(PannerNode).to.be.a('function');
     });
 
     it('should export the PeriodicWave constructor', () => {

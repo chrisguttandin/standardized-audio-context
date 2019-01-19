@@ -13,6 +13,7 @@ import {
     IGainNode,
     IIIRFilterNode,
     IOscillatorNode,
+    IPannerNode,
     IPeriodicWave,
     IPeriodicWaveConstraints,
     IStereoPannerNode,
@@ -38,6 +39,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
     oscillatorNodeConstructor,
+    pannerNodeConstructor,
     periodicWaveConstructor,
     stereoPannerNodeConstructor,
     waveShaperNodeConstructor
@@ -112,6 +114,10 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         public createOscillator (): IOscillatorNode {
             return new oscillatorNodeConstructor(<any> this);
+        }
+
+        public createPanner (): IPannerNode {
+            return new pannerNodeConstructor(<any> this);
         }
 
         public createPeriodicWave (

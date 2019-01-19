@@ -15,6 +15,7 @@ import { TGainNodeConstructor } from './gain-node-constructor';
 import { TIIRFilterNodeConstructor } from './iir-filter-node-constructor';
 import { TMinimalBaseAudioContextConstructor } from './minimal-base-audio-context-constructor';
 import { TOscillatorNodeConstructor } from './oscillator-node-constructor';
+import { TPannerNodeConstructor } from './panner-node-constructor';
 import { TPeriodicWaveConstructor } from './periodic-wave-constructor';
 import { TStereoPannerNodeConstructor } from './stereo-panner-node-constructor';
 import { TWaveShaperNodeConstructor } from './wave-shaper-node-constructor';
@@ -36,6 +37,7 @@ export type TBaseAudioContextConstructorFactory = (
     iIRFilterNodeConstructor: TIIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructor,
     oscillatorNodeConstructor: TOscillatorNodeConstructor,
+    pannerNodeConstructor: TPannerNodeConstructor,
     periodicWaveConstructor: TPeriodicWaveConstructor,
     stereoPannerNodeConstructor: TStereoPannerNodeConstructor,
     waveShaperNodeConstructor: TWaveShaperNodeConstructor

@@ -413,6 +413,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createPanner()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createPanner).to.be.a('function');
+            });
+
+        });
+
         describe('createPeriodicWave()', () => {
 
             it('should be a function', () => {

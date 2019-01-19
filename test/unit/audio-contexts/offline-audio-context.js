@@ -557,6 +557,20 @@ describe('OfflineAudioContext', () => {
 
     });
 
+    describe('createPanner()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should be a function', () => {
+            expect(offlineAudioContext.createPanner).to.be.a('function');
+        });
+
+    });
+
     describe('createPeriodicWave()', () => {
 
         let offlineAudioContext;

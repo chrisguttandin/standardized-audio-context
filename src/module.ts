@@ -78,6 +78,8 @@ import { createNativeMediaElementAudioSourceNodeFactory } from './factories/nati
 import { createNativeMediaStreamAudioSourceNodeFactory } from './factories/native-media-stream-audio-source-node-factory';
 import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
 import { createNativeOscillatorNodeFactory } from './factories/native-oscillator-node-factory';
+import { createNativePannerNodeFactory } from './factories/native-panner-node-factory';
+import { createNativePannerNodeFakerFactory } from './factories/native-panner-node-faker-factory';
 import { createNativePeriodicWaveFactory } from './factories/native-periodic-wave-factory';
 import { createNativeScriptProcessorNodeFactory } from './factories/native-script-processor-node-factory';
 import { createNativeStereoPannerNodeFactory } from './factories/native-stereo-panner-node-factory';
@@ -89,6 +91,8 @@ import { createNotSupportedError } from './factories/not-supported-error';
 import { createOfflineAudioContextConstructor } from './factories/offline-audio-context-constructor';
 import { createOscillatorNodeConstructor } from './factories/oscillator-node-constructor';
 import { createOscillatorNodeRendererFactory } from './factories/oscillator-node-renderer-factory';
+import { createPannerNodeConstructor } from './factories/panner-node-constructor';
+import { createPannerNodeRendererFactory } from './factories/panner-node-renderer-factory';
 import { createPeriodicWaveConstructor } from './factories/periodic-wave-constructor';
 import { createRenderNativeOfflineAudioContext } from './factories/render-native-offline-audio-context';
 import { createStartRendering } from './factories/start-rendering';
@@ -151,6 +155,7 @@ import {
     IOfflineAudioContext,
     IOfflineAudioContextConstructor,
     IOscillatorNode,
+    IPannerNode,
     IPeriodicWave,
     IStereoPannerNode,
     IWaveShaperNode
@@ -179,6 +184,7 @@ import {
     TMinimalAudioContextConstructor,
     TMinimalOfflineAudioContextConstructor,
     TOscillatorNodeConstructor,
+    TPannerNodeConstructor,
     TPeriodicWaveConstructor,
     TStereoPannerNodeConstructor,
     TWaveShaperNodeConstructor
@@ -400,8 +406,6 @@ const oscillatorNodeConstructor: TOscillatorNodeConstructor = createOscillatorNo
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const createNativePeriodicWave = createNativePeriodicWaveFactory(getBackupNativeContext);
-const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(createNativePeriodicWave);
 const createNativeWaveShaperNodeFaker = createNativeWaveShaperNodeFakerFactory(
     createInvalidStateError,
     createNativeAudioNode,
@@ -412,6 +416,30 @@ const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(
     createNativeAudioNode,
     createNativeWaveShaperNodeFaker
 );
+const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
+    createNativeAudioNode,
+    createNativeChannelMergerNode,
+    createNativeGainNode,
+    createNativeScriptProcessorNode,
+    createNativeWaveShaperNode,
+    createNotSupportedError
+);
+const createNativePannerNode = createNativePannerNodeFactory(
+    createInvalidStateError,
+    createNativeAudioNode,
+    createNativePannerNodeFaker
+);
+const createPannerNodeRenderer = createPannerNodeRendererFactory(createNativePannerNode);
+const pannerNodeConstructor: TPannerNodeConstructor = createPannerNodeConstructor(
+    createAudioParam,
+    createInvalidStateError,
+    createNativePannerNode,
+    createPannerNodeRenderer,
+    isNativeOfflineAudioContext,
+    noneAudioDestinationNodeConstructor
+);
+const createNativePeriodicWave = createNativePeriodicWaveFactory(getBackupNativeContext);
+const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(createNativePeriodicWave);
 const nativeStereoPannerNodeFakerFactory = createNativeStereoPannerNodeFakerFactory(
     createNativeChannelMergerNode,
     createNativeChannelSplitterNode,
@@ -478,6 +506,7 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
     iIRFilterNodeConstructor,
     minimalBaseAudioContextConstructor,
     oscillatorNodeConstructor,
+    pannerNodeConstructor,
     periodicWaveConstructor,
     stereoPannerNodeConstructor,
     waveShaperNodeConstructor
@@ -641,6 +670,10 @@ export { offlineAudioContextConstructor as OfflineAudioContext };
 type oscillatorNodeConstructor = IOscillatorNode;
 
 export { oscillatorNodeConstructor as OscillatorNode };
+
+type pannerNodeConstructor = IPannerNode;
+
+export { pannerNodeConstructor as PannerNode };
 
 type periodicWaveConstructor = IPeriodicWave;
 

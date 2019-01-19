@@ -12,6 +12,7 @@ import { IGainNode } from './gain-node';
 import { IIIRFilterNode } from './iir-filter-node';
 import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 import { IOscillatorNode } from './oscillator-node';
+import { IPannerNode } from './panner-node';
 import { IPeriodicWave } from './periodic-wave';
 import { IPeriodicWaveConstraints } from './periodic-wave-constraints';
 import { IStereoPannerNode } from './stereo-panner-node';
@@ -47,6 +48,8 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
     createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode;
 
     createOscillator (): IOscillatorNode;
+
+    createPanner (): IPannerNode;
 
     createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
 
