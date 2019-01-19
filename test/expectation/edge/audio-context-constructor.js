@@ -754,6 +754,38 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createPanner()', () => {
+
+            let pannerNode;
+
+            beforeEach(() => {
+                pannerNode = audioContext.createPanner();
+            });
+
+            describe('orientationX', () => {
+
+                // bug #124
+
+                it('should not be implemented', () => {
+                    expect(pannerNode.orientationX).to.be.undefined;
+                });
+
+            });
+
+            describe('panningModel', () => {
+
+                // bug #123
+
+                it('should not be assignable to HRTF', () => {
+                    pannerNode.panningModel = 'HRTF';
+
+                    expect(pannerNode.panningModel).to.equal('equalpower');
+                });
+
+            });
+
+        });
+
         describe('createStereoPanner()', () => {
 
             let stereoPannerNode;

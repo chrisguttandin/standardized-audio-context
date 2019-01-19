@@ -919,6 +919,46 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createPanner()', () => {
+
+            let pannerNode;
+
+            beforeEach(() => {
+                pannerNode = audioContext.createPanner();
+            });
+
+            describe('channelCount', () => {
+
+                // bug #125
+
+                it('should not throw an error', () => {
+                    pannerNode.channelCount = 4;
+                });
+
+            });
+
+            describe('channelCountMode', () => {
+
+                // bug #126
+
+                it('should not throw an error', () => {
+                    pannerNode.channelCountMode = 'max';
+                });
+
+            });
+
+            describe('orientationX', () => {
+
+                // bug #124
+
+                it('should not be implemented', () => {
+                    expect(pannerNode.orientationX).to.be.undefined;
+                });
+
+            });
+
+        });
+
         describe('createStereoPanner()', () => {
 
             // bug #105
