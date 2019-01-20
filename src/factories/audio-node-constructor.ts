@@ -222,21 +222,31 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             const nativeContext = getNativeContext(this._context);
 
             if (isAudioNode(destination)) {
-                // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
-                if (this._context !== destination.context) {
-                    throw createInvalidAccessError();
-                }
+                const nativeDestinationNode = getNativeAudioNode<TNativeAudioDestinationNode>(destination);
+                const inputs = (<INativeAudioNodeFaker> nativeDestinationNode).inputs;
 
-                if (!isNativeOfflineAudioContext(nativeContext)) {
-                    const nativeDestinationNode = getNativeAudioNode<TNativeAudioDestinationNode>(destination);
-
-                    if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
-                        const inputs = <TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs;
-
+                try {
+                    if (inputs !== undefined) {
                         this._nativeAudioNode.connect(inputs[input], output, 0);
                     } else {
                         this._nativeAudioNode.connect(nativeDestinationNode, output, input);
                     }
+
+                    // @todo Calling connect() is only needed to throw possible errors when the nativeContext is an OfflineAudioContext.
+                    if (isNativeOfflineAudioContext(nativeContext)) {
+                        if (inputs !== undefined) {
+                            this._nativeAudioNode.disconnect(inputs[input], output, 0);
+                        } else {
+                            this._nativeAudioNode.disconnect(nativeDestinationNode, output, input);
+                        }
+                    }
+                } catch (err) {
+                    // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
+                    if (err.code === 12) {
+                        throw createInvalidAccessError();
+                    }
+
+                    throw err; // tslint:disable-line:rxjs-throw-error
                 }
 
                 addConnectionToAudioNode(this, destination, output, input);

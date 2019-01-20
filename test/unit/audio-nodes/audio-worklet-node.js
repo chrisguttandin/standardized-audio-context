@@ -976,64 +976,78 @@ describe('AudioWorkletNode', () => {
                     audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                 });
 
-                it('should be chainable', () => {
-                    const gainNode = new GainNode(context);
+                for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
-                    expect(audioWorkletNode.connect(gainNode)).to.equal(gainNode);
-                });
+                    describe(`with an ${ type }`, () => {
 
-                it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
-                    const gainNode = new GainNode(context);
+                        let audioNodeOrAudioParam;
 
-                    try {
-                        audioWorkletNode.connect(gainNode.gain, -1);
-                    } catch (err) {
-                        expect(err.code).to.equal(1);
-                        expect(err.name).to.equal('IndexSizeError');
+                        beforeEach(() => {
+                            const gainNode = new GainNode(context);
 
-                        done();
-                    }
-                });
+                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                        });
 
-                describe('with another context', () => {
+                        if (type === 'AudioNode') {
 
-                    let anotherContext;
+                            it('should be chainable', () => {
+                                expect(audioWorkletNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
+                            });
 
-                    afterEach(() => {
-                        if (anotherContext.close !== undefined) {
-                            return anotherContext.close();
+                        } else {
+
+                            it('should not be chainable', () => {
+                                expect(audioWorkletNode.connect(audioNodeOrAudioParam)).to.be.undefined;
+                            });
+
                         }
+
+                        it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                            try {
+                                audioWorkletNode.connect(audioNodeOrAudioParam, -1);
+                            } catch (err) {
+                                expect(err.code).to.equal(1);
+                                expect(err.name).to.equal('IndexSizeError');
+
+                                done();
+                            }
+                        });
+
                     });
 
-                    beforeEach(() => {
-                        anotherContext = createContext();
+                    describe(`with an ${ type } of another context`, () => {
+
+                        let anotherContext;
+                        let audioNodeOrAudioParam;
+
+                        afterEach(() => {
+                            if (anotherContext.close !== undefined) {
+                                return anotherContext.close();
+                            }
+                        });
+
+                        beforeEach(() => {
+                            anotherContext = createContext();
+
+                            const gainNode = new GainNode(anotherContext);
+
+                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                        });
+
+                        it('should throw an InvalidAccessError', (done) => {
+                            try {
+                                audioWorkletNode.connect(audioNodeOrAudioParam);
+                            } catch (err) {
+                                expect(err.code).to.equal(15);
+                                expect(err.name).to.equal('InvalidAccessError');
+
+                                done();
+                            }
+                        });
+
                     });
 
-                    it('should not be connectable to an AudioNode of that context', (done) => {
-                        try {
-                            audioWorkletNode.connect(anotherContext.destination);
-                        } catch (err) {
-                            expect(err.code).to.equal(15);
-                            expect(err.name).to.equal('InvalidAccessError');
-
-                            done();
-                        }
-                    });
-
-                    it('should not be connectable to an AudioParam of that context', (done) => {
-                        const gainNode = new GainNode(anotherContext);
-
-                        try {
-                            audioWorkletNode.connect(gainNode.gain);
-                        } catch (err) {
-                            expect(err.code).to.equal(15);
-                            expect(err.name).to.equal('InvalidAccessError');
-
-                            done();
-                        }
-                    });
-
-                });
+                }
 
             });
 

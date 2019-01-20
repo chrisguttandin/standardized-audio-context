@@ -534,64 +534,78 @@ describe('GainNode', () => {
                     gainNode = createGainNode(context);
                 });
 
-                it('should be chainable', () => {
-                    const antoherGainNode = createGainNode(context);
+                for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
-                    expect(gainNode.connect(antoherGainNode)).to.equal(antoherGainNode);
-                });
+                    describe(`with an ${ type }`, () => {
 
-                it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
-                    const anotherGainNode = createGainNode(context);
+                        let audioNodeOrAudioParam;
 
-                    try {
-                        gainNode.connect(anotherGainNode.gain, -1);
-                    } catch (err) {
-                        expect(err.code).to.equal(1);
-                        expect(err.name).to.equal('IndexSizeError');
+                        beforeEach(() => {
+                            const anotherGainNode = createGainNode(context);
 
-                        done();
-                    }
-                });
+                            audioNodeOrAudioParam = (type === 'AudioNode') ? anotherGainNode : anotherGainNode.gain;
+                        });
 
-                describe('with another context', () => {
+                        if (type === 'AudioNode') {
 
-                    let anotherContext;
+                            it('should be chainable', () => {
+                                expect(gainNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
+                            });
 
-                    afterEach(() => {
-                        if (anotherContext.close !== undefined) {
-                            return anotherContext.close();
+                        } else {
+
+                            it('should not be chainable', () => {
+                                expect(gainNode.connect(audioNodeOrAudioParam)).to.be.undefined;
+                            });
+
                         }
+
+                        it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                            try {
+                                gainNode.connect(audioNodeOrAudioParam, -1);
+                            } catch (err) {
+                                expect(err.code).to.equal(1);
+                                expect(err.name).to.equal('IndexSizeError');
+
+                                done();
+                            }
+                        });
+
                     });
 
-                    beforeEach(() => {
-                        anotherContext = createContext();
+                    describe(`with an ${ type } of another context`, () => {
+
+                        let anotherContext;
+                        let audioNodeOrAudioParam;
+
+                        afterEach(() => {
+                            if (anotherContext.close !== undefined) {
+                                return anotherContext.close();
+                            }
+                        });
+
+                        beforeEach(() => {
+                            anotherContext = createContext();
+
+                            const anotherGainNode = createGainNode(anotherContext);
+
+                            audioNodeOrAudioParam = (type === 'AudioNode') ? anotherGainNode : anotherGainNode.gain;
+                        });
+
+                        it('should throw an InvalidAccessError', (done) => {
+                            try {
+                                gainNode.connect(audioNodeOrAudioParam);
+                            } catch (err) {
+                                expect(err.code).to.equal(15);
+                                expect(err.name).to.equal('InvalidAccessError');
+
+                                done();
+                            }
+                        });
+
                     });
 
-                    it('should not be connectable to an AudioNode of that context', (done) => {
-                        try {
-                            gainNode.connect(anotherContext.destination);
-                        } catch (err) {
-                            expect(err.code).to.equal(15);
-                            expect(err.name).to.equal('InvalidAccessError');
-
-                            done();
-                        }
-                    });
-
-                    it('should not be connectable to an AudioParam of that context', (done) => {
-                        const anotherGainNode = createGainNode(anotherContext);
-
-                        try {
-                            gainNode.connect(anotherGainNode.gain);
-                        } catch (err) {
-                            expect(err.code).to.equal(15);
-                            expect(err.name).to.equal('InvalidAccessError');
-
-                            done();
-                        }
-                    });
-
-                });
+                }
 
             });
 
