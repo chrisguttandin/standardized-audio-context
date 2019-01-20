@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativePannerNodeFactoryFactory } from '../types';
@@ -27,38 +28,19 @@ export const createNativePannerNodeFactory: TNativePannerNodeFactoryFactory = (
 
         assignNativeAudioNodeOptions(nativePannerNode, options);
 
+        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'orientationX');
+        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'orientationY');
+        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'orientationZ');
+        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'positionZ');
+        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'positionZ');
+        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'positionZ');
+
         assignNativeAudioNodeOption(nativePannerNode, options, 'coneInnerAngle');
         assignNativeAudioNodeOption(nativePannerNode, options, 'coneOuterAngle');
         assignNativeAudioNodeOption(nativePannerNode, options, 'coneOuterGain');
         assignNativeAudioNodeOption(nativePannerNode, options, 'distanceModel');
         assignNativeAudioNodeOption(nativePannerNode, options, 'maxDistance');
-
-        if (options.orientationX !== nativePannerNode.orientationX.value) {
-            nativePannerNode.orientationX.value = options.orientationX;
-        }
-
-        if (options.orientationY !== nativePannerNode.orientationY.value) {
-            nativePannerNode.orientationY.value = options.orientationY;
-        }
-
-        if (options.orientationZ !== nativePannerNode.orientationZ.value) {
-            nativePannerNode.orientationZ.value = options.orientationZ;
-        }
-
         assignNativeAudioNodeOption(nativePannerNode, options, 'panningModel');
-
-        if (options.positionX !== nativePannerNode.positionX.value) {
-            nativePannerNode.positionX.value = options.positionX;
-        }
-
-        if (options.positionY !== nativePannerNode.positionY.value) {
-            nativePannerNode.positionY.value = options.positionY;
-        }
-
-        if (options.positionZ !== nativePannerNode.positionZ.value) {
-            nativePannerNode.positionZ.value = options.positionZ;
-        }
-
         assignNativeAudioNodeOption(nativePannerNode, options, 'refDistance');
         assignNativeAudioNodeOption(nativePannerNode, options, 'rolloffFactor');
 

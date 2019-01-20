@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
@@ -27,6 +28,8 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
 
         assignNativeAudioNodeOptions(nativeAudioBufferSourceNode, options);
 
+        assignNativeAudioNodeAudioParamValue(nativeAudioBufferSourceNode, options, 'playbackRate');
+
         // Bug #71: Edge does not allow to set the buffer to null.
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'buffer');
 
@@ -35,10 +38,6 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loop');
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopEnd');
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopStart');
-
-        if (options.playbackRate !== undefined) {
-            nativeAudioBufferSourceNode.playbackRate.value = options.playbackRate;
-        }
 
         // Bug #69: Safari does allow calls to start() of an already scheduled AudioBufferSourceNode.
         if (!cacheTestResult(

@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeGainNodeFactoryFactory } from '../types';
 
@@ -7,9 +8,7 @@ export const createNativeGainNodeFactory: TNativeGainNodeFactoryFactory = (creat
 
         assignNativeAudioNodeOptions(nativeGainNode, options);
 
-        if (options.gain !== nativeGainNode.gain.value) {
-            nativeGainNode.gain.value = options.gain;
-        }
+        assignNativeAudioNodeAudioParamValue(nativeGainNode, options, 'gain');
 
         return nativeGainNode;
     };

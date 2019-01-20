@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeDelayNodeFactoryFactory } from '../types';
 
@@ -7,9 +8,7 @@ export const createNativeDelayNodeFactory: TNativeDelayNodeFactoryFactory = (cre
 
         assignNativeAudioNodeOptions(nativeDelayNode, options);
 
-        if (options.delayTime !== nativeDelayNode.delayTime.value) {
-            nativeDelayNode.delayTime.value = options.delayTime;
-        }
+        assignNativeAudioNodeAudioParamValue(nativeDelayNode, options, 'delayTime');
 
         return nativeDelayNode;
     };

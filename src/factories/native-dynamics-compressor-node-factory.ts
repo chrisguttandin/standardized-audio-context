@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeDynamicsCompressorNodeFactoryFactory } from '../types';
 
@@ -10,10 +11,6 @@ export const createNativeDynamicsCompressorNodeFactory: TNativeDynamicsCompresso
 
         assignNativeAudioNodeOptions(nativeDynamicsCompressorNode, options);
 
-        if (options.attack !== nativeDynamicsCompressorNode.attack.value) {
-            nativeDynamicsCompressorNode.attack.value = options.attack;
-        }
-
         // Bug #108: Only Chrome and Opera disallow a channelCount of three and above yet.
         if (options.channelCount > 2) {
             throw createNotSupportedError();
@@ -24,21 +21,11 @@ export const createNativeDynamicsCompressorNodeFactory: TNativeDynamicsCompresso
             throw createNotSupportedError();
         }
 
-        if (options.knee !== nativeDynamicsCompressorNode.knee.value) {
-            nativeDynamicsCompressorNode.knee.value = options.knee;
-        }
-
-        if (options.ratio !== nativeDynamicsCompressorNode.ratio.value) {
-            nativeDynamicsCompressorNode.ratio.value = options.ratio;
-        }
-
-        if (options.release !== nativeDynamicsCompressorNode.release.value) {
-            nativeDynamicsCompressorNode.release.value = options.release;
-        }
-
-        if (options.threshold !== nativeDynamicsCompressorNode.threshold.value) {
-            nativeDynamicsCompressorNode.threshold.value = options.threshold;
-        }
+        assignNativeAudioNodeAudioParamValue(nativeDynamicsCompressorNode, options, 'attack');
+        assignNativeAudioNodeAudioParamValue(nativeDynamicsCompressorNode, options, 'knee');
+        assignNativeAudioNodeAudioParamValue(nativeDynamicsCompressorNode, options, 'ratio');
+        assignNativeAudioNodeAudioParamValue(nativeDynamicsCompressorNode, options, 'release');
+        assignNativeAudioNodeAudioParamValue(nativeDynamicsCompressorNode, options, 'threshold');
 
         return nativeDynamicsCompressorNode;
     };

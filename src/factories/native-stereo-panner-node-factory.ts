@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeStereoPannerNodeFactoryFactory } from '../types';
 
@@ -26,9 +27,7 @@ export const createNativeStereoPannerNodeFactory: TNativeStereoPannerNodeFactory
 
         assignNativeAudioNodeOptions(nativeStereoPannerNode, options);
 
-        if (options.pan !== nativeStereoPannerNode.pan.value) {
-            nativeStereoPannerNode.pan.value = options.pan;
-        }
+        assignNativeAudioNodeAudioParamValue(nativeStereoPannerNode, options, 'pan');
 
         /*
          * Bug #105: The channelCountMode of 'clamped-max' should be supported. However it is not possible to write a polyfill for Safari

@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { TNativeConstantSourceNodeFactoryFactory } from '../types';
@@ -26,9 +27,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
 
         assignNativeAudioNodeOptions(nativeConstantSourceNode, options);
 
-        if (options.offset !== nativeConstantSourceNode.offset.value) {
-            nativeConstantSourceNode.offset.value = options.offset;
-        }
+        assignNativeAudioNodeAudioParamValue(nativeConstantSourceNode, options, 'offset');
 
         // Bug #44: Only Chrome, Firefox & Opera throw a RangeError yet.
         if (!cacheTestResult(

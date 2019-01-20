@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
@@ -21,13 +22,8 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
 
         assignNativeAudioNodeOptions(nativeOscillatorNode, options);
 
-        if (options.detune !== nativeOscillatorNode.detune.value) {
-            nativeOscillatorNode.detune.value = options.detune;
-        }
-
-        if (options.frequency !== nativeOscillatorNode.frequency.value) {
-            nativeOscillatorNode.frequency.value = options.frequency;
-        }
+        assignNativeAudioNodeAudioParamValue(nativeOscillatorNode, options, 'detune');
+        assignNativeAudioNodeAudioParamValue(nativeOscillatorNode, options, 'frequency');
 
         if (options.periodicWave !== undefined) {
             nativeOscillatorNode.setPeriodicWave(options.periodicWave);
