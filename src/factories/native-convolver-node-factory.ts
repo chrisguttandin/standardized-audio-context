@@ -24,7 +24,7 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
 
         assignNativeAudioNodeOption(nativeConvolverNode, options, 'buffer');
 
-        if (options.disableNormalization !== undefined) {
+        if (options.disableNormalization === nativeConvolverNode.normalize) {
             nativeConvolverNode.normalize = !options.disableNormalization;
         }
 
