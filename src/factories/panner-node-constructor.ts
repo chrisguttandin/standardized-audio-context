@@ -1,3 +1,4 @@
+import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IPannerNode, IPannerOptions } from '../interfaces';
 import { TContext, TDistanceModelType, TNativePannerNode, TPannerNodeConstructorFactory, TPanningModelType } from '../types';
@@ -62,43 +63,43 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
                 context,
                 isOffline,
                 nativePannerNode.orientationX,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
             this._orientationY = createAudioParam(
                 context,
                 isOffline,
                 nativePannerNode.orientationY,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
             this._orientationZ = createAudioParam(
                 context,
                 isOffline,
                 nativePannerNode.orientationZ,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
             this._positionX = createAudioParam(
                 context,
                 isOffline,
                 nativePannerNode.positionX,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
             this._positionY = createAudioParam(
                 context,
                 isOffline,
                 nativePannerNode.positionY,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
             this._positionZ = createAudioParam(
                 context,
                 isOffline,
                 nativePannerNode.positionZ,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
         }
 

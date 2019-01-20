@@ -1,3 +1,4 @@
+import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { computeBufferSize } from '../helpers/compute-buffer-size';
 import { copyFromChannel } from '../helpers/copy-from-channel';
 import { copyToChannel } from '../helpers/copy-to-channel';
@@ -95,10 +96,10 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                         get: () => (defaultValue === undefined) ? 0 : defaultValue
                     },
                     maxValue: {
-                        get: () => (maxValue === undefined) ? 3.4028234663852886e38 : maxValue
+                        get: () => (maxValue === undefined) ? MOST_POSITIVE_SINGLE_FLOAT : maxValue
                     },
                     minValue: {
-                        get: () => (minValue === undefined) ? -3.4028234663852886e38 : minValue
+                        get: () => (minValue === undefined) ? MOST_NEGATIVE_SINGLE_FLOAT : minValue
                     }
                 });
 

@@ -1,3 +1,4 @@
+import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions } from '../interfaces';
 import { TBiquadFilterNodeConstructorFactory, TBiquadFilterType, TContext, TNativeBiquadFilterNode } from '../types';
@@ -44,25 +45,37 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             super(context, nativeBiquadFilterNode, biquadFilterNodeRenderer);
 
             // Bug #80: Edge & Safari do not export the correct values for maxValue and minValue.
-            this._Q = createAudioParam(context, isOffline, nativeBiquadFilterNode.Q, 3.4028234663852886e38, -3.4028234663852886e38);
+            this._Q = createAudioParam(
+                context,
+                isOffline,
+                nativeBiquadFilterNode.Q,
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
+            );
             // Bug #78: Edge & Safari do not export the correct values for maxValue and minValue.
             this._detune = createAudioParam(
                 context,
                 isOffline,
                 nativeBiquadFilterNode.detune,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
             // Bug #77: Chrome, Edge, Firefox, Opera & Safari do not export the correct values for maxValue and minValue.
             this._frequency = createAudioParam(
                 context,
                 isOffline,
                 nativeBiquadFilterNode.frequency,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
             // Bug #79: Edge & Safari do not export the correct values for maxValue and minValue.
-            this._gain = createAudioParam(context, isOffline, nativeBiquadFilterNode.gain, 3.4028234663852886e38, -3.4028234663852886e38);
+            this._gain = createAudioParam(
+                context,
+                isOffline,
+                nativeBiquadFilterNode.gain,
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
+            );
             this._nativeBiquadFilterNode = nativeBiquadFilterNode;
         }
 

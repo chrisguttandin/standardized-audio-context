@@ -1,3 +1,4 @@
+import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IConstantSourceNode, IConstantSourceNodeRenderer, IConstantSourceOptions } from '../interfaces';
 import { TConstantSourceNodeConstructorFactory, TContext, TEndedEventHandler, TNativeConstantSourceNode } from '../types';
@@ -44,8 +45,8 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
                 context,
                 isOffline,
                 nativeConstantSourceNode.offset,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
         }
 

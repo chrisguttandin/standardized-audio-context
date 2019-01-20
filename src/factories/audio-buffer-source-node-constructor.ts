@@ -1,3 +1,4 @@
+import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
 import {
     IAudioBuffer,
@@ -62,8 +63,8 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
                 context,
                 isOffline,
                 nativeAudioBufferSourceNode.playbackRate,
-                3.4028234663852886e38,
-                -3.4028234663852886e38
+                MOST_POSITIVE_SINGLE_FLOAT,
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
         }
 

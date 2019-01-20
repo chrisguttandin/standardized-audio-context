@@ -1,3 +1,4 @@
+import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { IAudioParam } from '../interfaces';
 import { TAudioListenerFactoryFactory } from '../types';
 
@@ -41,7 +42,13 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                  * Bug #62 & #74: Edge & Safari do not support ConstantSourceNodes and do not export the correct values for maxValue and
                  * minValue for GainNodes.
                  */
-                return createAudioParam(context, isOffline, constantSourceNode.offset, 3.4028234663852886e38, -3.4028234663852886e38);
+                return createAudioParam(
+                    context,
+                    isOffline,
+                    constantSourceNode.offset,
+                    MOST_POSITIVE_SINGLE_FLOAT,
+                    MOST_NEGATIVE_SINGLE_FLOAT
+                );
             };
 
             let lastOrientation = [ 0, 0, -1, 0, 1, 0 ];
