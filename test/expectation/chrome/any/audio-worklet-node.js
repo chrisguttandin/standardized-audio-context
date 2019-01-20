@@ -31,7 +31,9 @@ describe('AudioWorklet', () => {
 
         // bug #66
 
-        it('should throw a TypeError', async () => {
+        it('should throw a TypeError', async function () {
+            this.timeout(10000);
+
             await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
 
             expect(() => {
@@ -45,7 +47,9 @@ describe('AudioWorklet', () => {
 
         // bug #82
 
-        it('should be 3.402820018375656e+38 and -3.402820018375656e+38', async () => {
+        it('should be 3.402820018375656e+38 and -3.402820018375656e+38', async function () {
+            this.timeout(10000);
+
             await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
 
             const audioWorkletNode = new AudioWorkletNode(audioContext, 'gain-processor');
@@ -60,7 +64,9 @@ describe('AudioWorklet', () => {
 
         // bug #88
 
-        it('should call process() with an nonempty array for each input', (done) => {
+        it('should call process() with an nonempty array for each input', function (done) {
+            this.timeout(10000);
+
             audioContext.audioWorklet
                 .addModule('base/test/fixtures/inspector-processor.js')
                 .then(() => {
@@ -86,7 +92,9 @@ describe('AudioWorklet', () => {
 
         // bug #86
 
-        it('should not call process()', (done) => {
+        it('should not call process()', function (done) {
+            this.timeout(10000);
+
             audioContext.audioWorklet
                 .addModule('base/test/fixtures/inspector-processor.js')
                 .then(() => {
@@ -111,7 +119,9 @@ describe('AudioWorklet', () => {
 
     describe('with a module depending on another module', () => {
 
-        beforeEach(async () => {
+        beforeEach(async function () {
+            this.timeout(10000);
+
             await audioContext.audioWorklet.addModule('base/test/fixtures/library.js');
             await audioContext.audioWorklet.addModule('base/test/fixtures/dependent-processor.js');
         });

@@ -52,7 +52,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule(context, 'inspector-processor');
 
                     audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
@@ -80,7 +82,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule(context, 'inspector-processor');
 
                     audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
@@ -108,7 +112,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule(context, 'inspector-processor');
 
                     audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
@@ -136,7 +142,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule(context, 'inspector-processor');
 
                     audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
@@ -164,7 +172,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule(context, 'inspector-processor');
 
                     audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
@@ -192,7 +202,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule(context, 'inspector-processor');
 
                     audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
@@ -224,7 +236,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                         let audioWorkletNode;
 
-                        beforeEach(async () => {
+                        beforeEach(async function () {
+                            this.timeout(10000);
+
                             await addAudioWorkletModule(context, 'transferring-processor');
 
                             audioWorkletNode = new AudioWorkletNode(context, 'transferring-processor');
@@ -256,7 +270,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                         let audioWorkletNode;
 
-                        beforeEach(async () => {
+                        beforeEach(async function () {
+                            this.timeout(10000);
+
                             await addAudioWorkletModule(context, 'inspector-processor');
 
                             audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor', {
@@ -429,7 +445,9 @@ describe('AudioWorkletGlobalScope', () => {
                     // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
-                        it('should throw an error', (done) => {
+                        it('should throw an error', function (done) {
+                            this.timeout(10000);
+
                             addAudioWorkletModule(context, 'empty-string-processor')
                                 .catch((err) => {
                                     expect(err.code).to.equal(9);
@@ -445,14 +463,18 @@ describe('AudioWorkletGlobalScope', () => {
 
                 describe('with a duplicate name', () => {
 
-                    beforeEach(async () => {
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
                         await addAudioWorkletModule(context, 'gain-processor');
                     });
 
                     // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
-                        it('should throw an error', (done) => {
+                        it('should throw an error', function (done) {
+                            this.timeout(10000);
+
                             addAudioWorkletModule(context, 'duplicate-gain-processor')
                                 .catch((err) => {
                                     expect(err.code).to.equal(9);
@@ -471,7 +493,9 @@ describe('AudioWorkletGlobalScope', () => {
                     // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
-                        it('should throw an error', (done) => {
+                        it('should throw an error', function (done) {
+                            this.timeout(10000);
+
                             addAudioWorkletModule(context, 'unconstructible-processor')
                                 .catch((err) => {
                                     expect(err).to.be.an.instanceOf(TypeError);
@@ -489,7 +513,9 @@ describe('AudioWorkletGlobalScope', () => {
                     // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
-                        it('should throw an error', (done) => {
+                        it('should throw an error', function (done) {
+                            this.timeout(10000);
+
                             addAudioWorkletModule(context, 'prototypeless-processor')
                                 .catch((err) => {
                                     expect(err).to.be.an.instanceOf(TypeError);
@@ -507,7 +533,9 @@ describe('AudioWorkletGlobalScope', () => {
                     // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
-                        it('should throw an error', (done) => {
+                        it('should throw an error', function (done) {
+                            this.timeout(10000);
+
                             addAudioWorkletModule(context, 'processless-processor')
                                 .catch((err) => {
                                     expect(err).to.be.an.instanceOf(TypeError);
@@ -525,7 +553,9 @@ describe('AudioWorkletGlobalScope', () => {
                     // @todo Chrome has the only native implementation so far and it doesn't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
 
-                        it('should throw an error', (done) => {
+                        it('should throw an error', function (done) {
+                            this.timeout(10000);
+
                             addAudioWorkletModule(context, 'invalid-parameter-descriptors-property-processor')
                                 .catch((err) => {
                                     expect(err).to.be.an.instanceOf(TypeError);

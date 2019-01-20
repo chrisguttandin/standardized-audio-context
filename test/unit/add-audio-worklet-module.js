@@ -52,7 +52,9 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             describe('with a missing module', () => {
 
-                it('should return a promise which rejects an AbortError', (done) => {
+                it('should return a promise which rejects an AbortError', function (done) {
+                    this.timeout(10000);
+
                     addAudioWorkletModule('base/test/fixtures/missing-processor.js')
                         .catch((err) => {
                             expect(err.code).to.equal(20);
@@ -66,7 +68,9 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             describe('with an unparsable module', () => {
 
-                it('should return a promise which rejects an AbortError', (done) => {
+                it('should return a promise which rejects an AbortError', function (done) {
+                    this.timeout(10000);
+
                     addAudioWorkletModule('base/test/fixtures/unparsable-processor.xs')
                         .catch((err) => {
                             expect(err.code).to.equal(20);
@@ -80,7 +84,9 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             describe('with a previously unknown module', () => {
 
-                it('should return a resolving promise', () => {
+                it('should return a resolving promise', function () {
+                    this.timeout(10000);
+
                     return addAudioWorkletModule('base/test/fixtures/gain-processor.js');
                 });
 
@@ -99,11 +105,15 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             describe('with a previously added module', () => {
 
-                beforeEach(() => {
+                beforeEach(function () {
+                    this.timeout(10000);
+
                     return addAudioWorkletModule('base/test/fixtures/gain-processor.js');
                 });
 
-                it('should return a resolving promise', () => {
+                it('should return a resolving promise', function () {
+                    this.timeout(10000);
+
                     return addAudioWorkletModule('base/test/fixtures/gain-processor.js');
                 });
 
@@ -115,7 +125,9 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             describe('with a module which ends with a comment', () => {
 
-                it('should return a resolving promise', () => {
+                it('should return a resolving promise', function () {
+                    this.timeout(10000);
+
                     return addAudioWorkletModule('base/test/fixtures/gain-processor-with-comment.js');
                 });
 
@@ -123,7 +135,9 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             describe('with a module which contains an import statement', () => {
 
-                it('should return a resolving promise', () => {
+                it('should return a resolving promise', function () {
+                    this.timeout(10000);
+
                     return addAudioWorkletModule('base/test/fixtures/gibberish-processor.js');
                 });
 

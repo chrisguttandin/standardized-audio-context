@@ -90,7 +90,11 @@ describe('AudioWorkletNode', () => {
 
                         describe('without any options', () => {
 
-                            beforeEach(() => addAudioWorkletModule('base/test/fixtures/inspector-processor.js'));
+                            beforeEach(function () {
+                                this.timeout(10000);
+
+                                return addAudioWorkletModule('base/test/fixtures/inspector-processor.js');
+                            });
 
                             it('should pass on the default options to the AudioWorkletProcessor', () => {
                                 const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
@@ -147,7 +151,9 @@ describe('AudioWorkletNode', () => {
 
                         describe('with valid options', () => {
 
-                            it('should return an instance with the given channelCount', async () => {
+                            it('should return an instance with the given channelCount', async function () {
+                                this.timeout(10000);
+
                                 await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                                 const channelCount = 4;
@@ -158,7 +164,9 @@ describe('AudioWorkletNode', () => {
 
                             // Bug #61: Specifying a different channelCountMode is currently forbidden.
 
-                            it('should return an instance with the given channelInterpretation', async () => {
+                            it('should return an instance with the given channelInterpretation', async function () {
+                                this.timeout(10000);
+
                                 await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                                 const channelInterpretation = 'discrete';
@@ -167,7 +175,9 @@ describe('AudioWorkletNode', () => {
                                 expect(audioWorkletNode.channelInterpretation).to.equal(channelInterpretation);
                             });
 
-                            it('should return an instance with the given numberOfInputs', async () => {
+                            it('should return an instance with the given numberOfInputs', async function () {
+                                this.timeout(10000);
+
                                 await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                                 const numberOfInputs = 2;
@@ -176,7 +186,9 @@ describe('AudioWorkletNode', () => {
                                 expect(audioWorkletNode.numberOfInputs).to.equal(numberOfInputs);
                             });
 
-                            it('should return an instance with the given numberOfOutputs', async () => {
+                            it('should return an instance with the given numberOfOutputs', async function () {
+                                this.timeout(10000);
+
                                 await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                                 const numberOfOutputs = 0;
@@ -185,7 +197,9 @@ describe('AudioWorkletNode', () => {
                                 expect(audioWorkletNode.numberOfOutputs).to.equal(numberOfOutputs);
                             });
 
-                            it('should pass on the parameterData to the AudioWorkletProcessor', (done) => {
+                            it('should pass on the parameterData to the AudioWorkletProcessor', function (done) {
+                                this.timeout(10000);
+
                                 addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
                                     .then(() => {
                                         const parameterData = { gain: 12 };
@@ -203,7 +217,9 @@ describe('AudioWorkletNode', () => {
                                     });
                             });
 
-                            it('should throw a DataCloneError when provided with an unclonable value', (done) => {
+                            it('should throw a DataCloneError when provided with an unclonable value', function (done) {
+                                this.timeout(10000);
+
                                 addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
                                     .then(() => createAudioWorkletNode(context, 'inspector-processor', { processorOptions: { fn: () => { } } }))
                                     .catch((err) => {
@@ -214,7 +230,9 @@ describe('AudioWorkletNode', () => {
                                     });
                             });
 
-                            it('should pass on the processorOptions to the AudioWorkletProcessor', (done) => {
+                            it('should pass on the processorOptions to the AudioWorkletProcessor', function (done) {
+                                this.timeout(10000);
+
                                 addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
                                     .then(() => {
                                         const processorOptions = { an: 'arbitrary', object: [ 'with', 'some', 'values' ] };
@@ -236,7 +254,11 @@ describe('AudioWorkletNode', () => {
 
                         describe('with invalid options', () => {
 
-                            beforeEach(() => addAudioWorkletModule('base/test/fixtures/inspector-processor.js'));
+                            beforeEach(function () {
+                                this.timeout(10000);
+
+                                return addAudioWorkletModule('base/test/fixtures/inspector-processor.js');
+                            });
 
                             describe('with numberOfInputs and numberOfOutputs both set to zero', () => {
 
@@ -334,7 +356,9 @@ describe('AudioWorkletNode', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -359,7 +383,9 @@ describe('AudioWorkletNode', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -384,7 +410,9 @@ describe('AudioWorkletNode', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -404,7 +432,9 @@ describe('AudioWorkletNode', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/inspector-processor.js');
 
                     audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', {
@@ -441,7 +471,9 @@ describe('AudioWorkletNode', () => {
 
             describe('onprocessorerror', () => {
 
-                it('should be null', async () => {
+                it('should be null', async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -449,7 +481,9 @@ describe('AudioWorkletNode', () => {
                     expect(audioWorkletNode.onprocessorerror).to.be.null;
                 });
 
-                it('should be assignable to a function', async () => {
+                it('should be assignable to a function', async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -460,7 +494,9 @@ describe('AudioWorkletNode', () => {
                     expect(audioWorkletNode.onprocessorerror).to.equal(fn);
                 });
 
-                it('should be assignable to null', async () => {
+                it('should be assignable to null', async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -470,7 +506,9 @@ describe('AudioWorkletNode', () => {
                     expect(audioWorkletNode.onprocessorerror).to.be.null;
                 });
 
-                it('should not be assignable to something else', async () => {
+                it('should not be assignable to something else', async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -484,7 +522,9 @@ describe('AudioWorkletNode', () => {
                     expect(audioWorkletNode.onprocessorerror).to.be.null;
                 });
 
-                it('should fire an assigned processorerror event listener', (done) => {
+                it('should fire an assigned processorerror event listener', function (done) {
+                    this.timeout(10000);
+
                     addAudioWorkletModule('base/test/fixtures/failing-processor.js')
                         .then(() => {
                             const audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
@@ -508,7 +548,9 @@ describe('AudioWorkletNode', () => {
 
             describe('parameters', () => {
 
-                it('should return an instance of the AudioParamMap interface', async () => {
+                it('should return an instance of the AudioParamMap interface', async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -533,7 +575,9 @@ describe('AudioWorkletNode', () => {
                     let entries;
                     let parameters;
 
-                    beforeEach(async () => {
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                         const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -556,7 +600,9 @@ describe('AudioWorkletNode', () => {
 
                     let parameters;
 
-                    beforeEach(async () => {
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                         const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -584,7 +630,9 @@ describe('AudioWorkletNode', () => {
 
                     let parameters;
 
-                    beforeEach(async () => {
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                         const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -680,7 +728,9 @@ describe('AudioWorkletNode', () => {
 
                     let parameters;
 
-                    beforeEach(async () => {
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                         const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -710,7 +760,9 @@ describe('AudioWorkletNode', () => {
 
                     let keys;
 
-                    beforeEach(async () => {
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                         const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -733,7 +785,9 @@ describe('AudioWorkletNode', () => {
                     let values;
                     let parameters;
 
-                    beforeEach(async () => {
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                         const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -929,7 +983,9 @@ describe('AudioWorkletNode', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -970,7 +1026,9 @@ describe('AudioWorkletNode', () => {
 
                 let audioWorkletNode;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
