@@ -31,8 +31,8 @@ export const createNativePannerNodeFactory: TNativePannerNodeFactoryFactory = (
         assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'orientationX');
         assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'orientationY');
         assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'orientationZ');
-        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'positionZ');
-        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'positionZ');
+        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'positionX');
+        assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'positionY');
         assignNativeAudioNodeAudioParamValue(nativePannerNode, options, 'positionZ');
 
         assignNativeAudioNodeOption(nativePannerNode, options, 'coneInnerAngle');
