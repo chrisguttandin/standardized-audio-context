@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { TNativeOscillatorNodeFactoryFactory } from '../types';
@@ -30,8 +31,8 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
 
         if (options.periodicWave !== undefined) {
             nativeOscillatorNode.setPeriodicWave(options.periodicWave);
-        } else if (options.type !== nativeOscillatorNode.type) {
-            nativeOscillatorNode.type = options.type;
+        } else {
+            assignNativeAudioNodeOption(nativeOscillatorNode, options, 'type');
         }
 
         // Bug #44: Only Chrome & Opera throw a RangeError yet.

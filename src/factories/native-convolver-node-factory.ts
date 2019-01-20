@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { TNativeConvolverNodeFactoryFactory } from '../types';
@@ -21,9 +22,7 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
 
         assignNativeAudioNodeOptions(nativeConvolverNode, options);
 
-        if (options.buffer !== undefined) {
-            nativeConvolverNode.buffer = options.buffer;
-        }
+        assignNativeAudioNodeOption(nativeConvolverNode, options, 'buffer');
 
         if (options.disableNormalization !== undefined) {
             nativeConvolverNode.normalize = !options.disableNormalization;

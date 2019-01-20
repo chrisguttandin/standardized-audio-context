@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeBiquadFilterNodeFactoryFactory } from '../types';
 
@@ -23,9 +24,7 @@ export const createNativeBiquadFilterNodeFactory: TNativeBiquadFilterNodeFactory
             nativeBiquadFilterNode.gain.value = options.gain;
         }
 
-        if (options.type !== nativeBiquadFilterNode.type) {
-            nativeBiquadFilterNode.type = options.type;
-        }
+        assignNativeAudioNodeOption(nativeBiquadFilterNode, options, 'type');
 
         return nativeBiquadFilterNode;
     };

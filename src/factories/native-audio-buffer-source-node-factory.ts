@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
@@ -27,25 +28,13 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
         assignNativeAudioNodeOptions(nativeAudioBufferSourceNode, options);
 
         // Bug #71: Edge does not allow to set the buffer to null.
-        if (options.buffer !== undefined && options.buffer !== null) {
-            nativeAudioBufferSourceNode.buffer = options.buffer;
-        }
+        assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'buffer');
 
-        // @todo if (options.detune !== undefined) {
-        // @todo    nativeAudioBufferSourceNode.detune.value = options.detune;
-        // @todo }
+        // @todo assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'detune');
 
-        if (options.loop !== undefined) {
-            nativeAudioBufferSourceNode.loop = options.loop;
-        }
-
-        if (options.loopEnd !== undefined) {
-            nativeAudioBufferSourceNode.loopEnd = options.loopEnd;
-        }
-
-        if (options.loopStart !== undefined) {
-            nativeAudioBufferSourceNode.loopStart = options.loopStart;
-        }
+        assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loop');
+        assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopEnd');
+        assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopStart');
 
         if (options.playbackRate !== undefined) {
             nativeAudioBufferSourceNode.playbackRate.value = options.playbackRate;

@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeWaveShaperNodeFactoryFactory } from '../types';
 
@@ -19,20 +20,15 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
 
         assignNativeAudioNodeOptions(nativeWaveShaperNode, options);
 
-        if (options.curve !== nativeWaveShaperNode.curve) {
-            const curve = options.curve;
+        const curve = options.curve;
 
-            // Bug #104: Chrome will throw an InvalidAccessError when the curve has less than two samples.
-            if (curve !== null && curve.length < 2) {
-                throw createInvalidStateError();
-            }
-
-            nativeWaveShaperNode.curve = curve;
+        // Bug #104: Chrome will throw an InvalidAccessError when the curve has less than two samples.
+        if (curve !== null && curve.length < 2) {
+            throw createInvalidStateError();
         }
 
-        if (options.oversample !== nativeWaveShaperNode.oversample) {
-            nativeWaveShaperNode.oversample = options.oversample;
-        }
+        assignNativeAudioNodeOption(nativeWaveShaperNode, options, 'curve');
+        assignNativeAudioNodeOption(nativeWaveShaperNode, options, 'oversample');
 
         return nativeWaveShaperNode;
     };

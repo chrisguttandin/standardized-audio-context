@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativePannerNodeFactoryFactory } from '../types';
 
@@ -26,25 +27,11 @@ export const createNativePannerNodeFactory: TNativePannerNodeFactoryFactory = (
 
         assignNativeAudioNodeOptions(nativePannerNode, options);
 
-        if (options.coneInnerAngle !== undefined) {
-            nativePannerNode.coneInnerAngle = options.coneInnerAngle;
-        }
-
-        if (options.coneOuterAngle !== undefined) {
-            nativePannerNode.coneOuterAngle = options.coneOuterAngle;
-        }
-
-        if (options.coneOuterGain !== undefined) {
-            nativePannerNode.coneOuterGain = options.coneOuterGain;
-        }
-
-        if (options.distanceModel !== undefined) {
-            nativePannerNode.distanceModel = options.distanceModel;
-        }
-
-        if (options.maxDistance !== undefined) {
-            nativePannerNode.maxDistance = options.maxDistance;
-        }
+        assignNativeAudioNodeOption(nativePannerNode, options, 'coneInnerAngle');
+        assignNativeAudioNodeOption(nativePannerNode, options, 'coneOuterAngle');
+        assignNativeAudioNodeOption(nativePannerNode, options, 'coneOuterGain');
+        assignNativeAudioNodeOption(nativePannerNode, options, 'distanceModel');
+        assignNativeAudioNodeOption(nativePannerNode, options, 'maxDistance');
 
         if (options.orientationX !== nativePannerNode.orientationX.value) {
             nativePannerNode.orientationX.value = options.orientationX;
@@ -58,9 +45,7 @@ export const createNativePannerNodeFactory: TNativePannerNodeFactoryFactory = (
             nativePannerNode.orientationZ.value = options.orientationZ;
         }
 
-        if (options.panningModel !== undefined) {
-            nativePannerNode.panningModel = options.panningModel;
-        }
+        assignNativeAudioNodeOption(nativePannerNode, options, 'panningModel');
 
         if (options.positionX !== nativePannerNode.positionX.value) {
             nativePannerNode.positionX.value = options.positionX;
@@ -74,13 +59,8 @@ export const createNativePannerNodeFactory: TNativePannerNodeFactoryFactory = (
             nativePannerNode.positionZ.value = options.positionZ;
         }
 
-        if (options.refDistance !== undefined) {
-            nativePannerNode.refDistance = options.refDistance;
-        }
-
-        if (options.rolloffFactor !== undefined) {
-            nativePannerNode.rolloffFactor = options.rolloffFactor;
-        }
+        assignNativeAudioNodeOption(nativePannerNode, options, 'refDistance');
+        assignNativeAudioNodeOption(nativePannerNode, options, 'rolloffFactor');
 
         return nativePannerNode;
     };

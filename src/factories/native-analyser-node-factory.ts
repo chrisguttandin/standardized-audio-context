@@ -1,3 +1,4 @@
+import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { cacheTestResult } from '../helpers/cache-test-result';
 import { testAnalyserNodeGetFloatTimeDomainDataMethodSupport } from '../support-testers/analyser-node-get-float-time-domain-data-method';
@@ -8,6 +9,7 @@ export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory 
     return (nativeContext, options) => {
         const nativeAnalyserNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createAnalyser());
 
+        // Bug #37: Only Chrome, Edge and Safari create an AnalyserNode with the default properties.
         assignNativeAudioNodeOptions(nativeAnalyserNode, options);
 
         // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.
@@ -15,26 +17,10 @@ export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory 
             throw createIndexSizeError();
         }
 
-        if (options.fftSize !== nativeAnalyserNode.fftSize) {
-            nativeAnalyserNode.fftSize = options.fftSize;
-        }
-
-        if (options.maxDecibels !== nativeAnalyserNode.maxDecibels) {
-            nativeAnalyserNode.maxDecibels = options.maxDecibels;
-        }
-
-        if (options.minDecibels !== nativeAnalyserNode.minDecibels) {
-            nativeAnalyserNode.minDecibels = options.minDecibels;
-        }
-
-        if (options.smoothingTimeConstant !== nativeAnalyserNode.smoothingTimeConstant) {
-            nativeAnalyserNode.smoothingTimeConstant = options.smoothingTimeConstant;
-        }
-
-        // Bug #37: Only Chrome, Edge and Safari create an AnalyserNode with the default properties.
-        if (nativeAnalyserNode.channelCount === 1) {
-            nativeAnalyserNode.channelCount = 2;
-        }
+        assignNativeAudioNodeOption(nativeAnalyserNode, options, 'fftSize');
+        assignNativeAudioNodeOption(nativeAnalyserNode, options, 'maxDecibels');
+        assignNativeAudioNodeOption(nativeAnalyserNode, options, 'minDecibels');
+        assignNativeAudioNodeOption(nativeAnalyserNode, options, 'smoothingTimeConstant');
 
         // Bug #36: Safari does not support getFloatTimeDomainData() yet.
         if (!cacheTestResult(
