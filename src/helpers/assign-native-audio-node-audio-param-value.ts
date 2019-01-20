@@ -6,6 +6,6 @@ export const assignNativeAudioNodeAudioParamValue = <T extends { [ key: string ]
     const value = options[audioParam];
 
     if (value !== undefined && value !== nativeAudioNode[audioParam].value) {
-        nativeAudioNode[audioParam] = value;
+        nativeAudioNode[audioParam].value = value;
     }
 };
