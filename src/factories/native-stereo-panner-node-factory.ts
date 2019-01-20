@@ -8,11 +8,12 @@ export const createNativeStereoPannerNodeFactory: TNativeStereoPannerNodeFactory
 ) => {
     return (nativeContext, options) => createNativeAudioNode(nativeContext, (ntvCntxt) => {
         const channelCountMode = options.channelCountMode;
+
         /*
          * Bug #105: The channelCountMode of 'clamped-max' should be supported. However it is not possible to write a polyfill for Safari
          * which supports it and therefore it can't be supported at all.
          */
-        if (options.channelCountMode === 'clamped-max') {
+        if (channelCountMode === 'clamped-max') {
             throw createNotSupportedError();
         }
 
