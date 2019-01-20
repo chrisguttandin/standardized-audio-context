@@ -11,9 +11,6 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
 
         assignNativeAudioNodeOptions(convolverNode, audioNodeOptions);
 
-        convolverNode.buffer = buffer;
-        convolverNode.normalize = !disableNormalization;
-
         const inputGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: 1 });
         const outputGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: 1 });
 
@@ -104,6 +101,14 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
                 return inputGainNode.removeEventListener(args[0], args[1], args[2]);
             }
         };
+
+        if (buffer !== nativeConvolverNodeFaker.buffer) {
+            nativeConvolverNodeFaker.buffer = buffer;
+        }
+
+        if (disableNormalization === nativeConvolverNodeFaker.normalize) {
+            nativeConvolverNodeFaker.normalize = !disableNormalization;
+        }
 
         return interceptConnections(nativeConvolverNodeFaker, outputGainNode);
     };

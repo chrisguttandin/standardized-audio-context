@@ -277,23 +277,23 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             }
         };
 
-        if (coneInnerAngle !== undefined) {
+        if (coneInnerAngle !== nativePannerNodeFaker.coneInnerAngle) {
             nativePannerNodeFaker.coneInnerAngle = coneInnerAngle;
         }
 
-        if (coneOuterAngle !== undefined) {
+        if (coneOuterAngle !== nativePannerNodeFaker.coneOuterAngle) {
             nativePannerNodeFaker.coneOuterAngle = coneOuterAngle;
         }
 
-        if (coneOuterGain !== undefined) {
+        if (coneOuterGain !== nativePannerNodeFaker.coneOuterGain) {
             nativePannerNodeFaker.coneOuterGain = coneOuterGain;
         }
 
-        if (distanceModel !== undefined) {
+        if (distanceModel !== nativePannerNodeFaker.distanceModel) {
             nativePannerNodeFaker.distanceModel = distanceModel;
         }
 
-        if (maxDistance !== undefined) {
+        if (maxDistance !== nativePannerNodeFaker.maxDistance) {
             nativePannerNodeFaker.maxDistance = maxDistance;
         }
 
@@ -309,7 +309,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             nativePannerNodeFaker.orientationZ.value = orientationZ;
         }
 
-        if (panningModel !== undefined) {
+        if (panningModel !== nativePannerNodeFaker.panningModel) {
             nativePannerNodeFaker.panningModel = panningModel;
         }
 
@@ -325,11 +325,11 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             nativePannerNodeFaker.positionZ.value = positionZ;
         }
 
-        if (refDistance !== undefined) {
+        if (refDistance !== nativePannerNodeFaker.refDistance) {
             nativePannerNodeFaker.refDistance = refDistance;
         }
 
-        if (rolloffFactor !== undefined) {
+        if (rolloffFactor !== nativePannerNodeFaker.rolloffFactor) {
             nativePannerNodeFaker.rolloffFactor = rolloffFactor;
         }
 
