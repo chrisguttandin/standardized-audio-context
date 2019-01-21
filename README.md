@@ -151,11 +151,6 @@ The fact that the internal implementation relies on a ScriptProcessorNode also i
 
 Another thing to keep in mind is that the fallback will evaluate the `AudioWorkletProcessor` on the global scope. It gets isolated in a basic way to mimic the [`AudioWorkletGlobalScope`](https://webaudio.github.io/web-audio-api/#audioworkletglobalscope) but that can't be done in a way which makes it impossible for an attacker to break out of that sandbox. This should not be a problem unless you load an AudioWorklet from an untrusted source.
 
-#### decodeAudioData()
-
-This is an implementation of the
-[`decodeAudioData()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-decodeaudiodata) method. There is also a standalone method with a similar interface described below.
-
 #### createAnalyser() / AnalyserNode
 
 This is an implementation of the [`createAnalyser()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createanalyser) factory method. The [`AnalyserNode`](https://webaudio.github.io/web-audio-api/#analysernode) constructor may be used as an alternative.
@@ -243,6 +238,11 @@ The channelCountMode can only be `'explicit'` unless Safari comes up with a nati
 #### createWaveShaper() / WaveShaperNode
 
 This is an implementation of the [`createWaveShaper()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createwaveshaper) factory method. The [`WaveShaperNode`](https://webaudio.github.io/web-audio-api/#waveshapernode) constructor may be used as an alternative.
+
+#### decodeAudioData()
+
+This is an implementation of the
+[`decodeAudioData()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-decodeaudiodata) method. There is also a standalone method with a similar interface described below.
 
 ### decodeAudioData()
 
