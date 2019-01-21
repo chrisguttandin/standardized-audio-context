@@ -1,8 +1,8 @@
 import { getAudioGraph } from '../helpers/get-audio-graph';
 import { IAudioParam, IAudioParamConnections } from '../interfaces';
-import { TContext, TNativeContext } from '../types';
+import { TAnyContext } from '../types';
 
-export function getAudioParamConnections (anyContext: TContext | TNativeContext, audioParam: IAudioParam): IAudioParamConnections {
+export function getAudioParamConnections (anyContext: TAnyContext, audioParam: IAudioParam): IAudioParamConnections {
     const audioGraph = getAudioGraph(anyContext);
     const audioParamConnections = audioGraph.params.get(audioParam);
 

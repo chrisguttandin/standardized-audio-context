@@ -6,11 +6,11 @@ import {
     IAudioWorkletProcessorConstructor,
     INativeAudioNodeFaker
 } from './interfaces';
-import { TContext, TNativeAudioNode, TNativeAudioParam, TNativeAudioWorkletNode, TNativeContext } from './types';
+import { TAnyContext, TContext, TNativeAudioNode, TNativeAudioParam, TNativeAudioWorkletNode, TNativeContext } from './types';
 
 export const AUDIO_NODE_STORE: WeakMap<IAudioNode, TNativeAudioNode | INativeAudioNodeFaker> = new WeakMap();
 
-export const AUDIO_GRAPHS: WeakMap<TContext | TNativeContext, IAudioGraph> = new WeakMap();
+export const AUDIO_GRAPHS: WeakMap<TAnyContext, IAudioGraph> = new WeakMap();
 
 export const AUDIO_PARAM_STORE: WeakMap<IAudioParam, TNativeAudioParam> = new WeakMap();
 
