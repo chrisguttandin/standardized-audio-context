@@ -173,6 +173,22 @@ This is an implementation of the [`StereoPannerNode`](https://webaudio.github.io
 
 This is an implementation of the [`WaveShaperNode`](https://webaudio.github.io/web-audio-api/#waveshapernode) constructor and the [`createWaveShaper()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createwaveshaper) factory method respectively.
 
+### decodeAudioData()
+
+This is a standalone wrapper which can be used in a similar way as the instance method with the same name. The most notable difference is that it expects an (Offline)AudioContext created with this library as the first parameter. But it can also handle a native (webkit)(Offline)AudioContext. Another difference is that it only returns a promise. It will not call any callbacks.
+
+```js
+import { decodeAudioData } from 'standardized-audio-context';
+
+// Let's imagine you run this in Safari.
+const nativeAudioContext = new webkitAudioContextContext();
+
+const response = await fetch('/a-super-cool-audio-file');
+const arrayBuffer = await response.arrayBuffer();
+
+const audioBuffer = await decodeAudioData(nativeAudioContext, arrayBuffer);
+```
+
 ### isSupported()
 
  `standardized-audio-context` is also exporting a promise which can be accessed by calling `isSupported()`. This promise resolves to a boolean which indicates if the functionality is supported within the currently used browser. This is not part of the specification.
