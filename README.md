@@ -63,9 +63,85 @@ oscillatorNode.start();
 
 This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses only the following factory methods: `createMediaStreamDestination()`, `createMediaStreamTrackSource()` and `createScriptProcessor()`. `createMediaStreamDestination()` is not implemented in Edge and unfortunately it is very complicated (if not impossible) to polyfill. `createMediaStreamTrackSource()` has not yet landed in any browser and `createScriptProcessor()` is already deprecated.
 
+It implements the following TypeScript interface.
+
+```typescript
+interface IAudioContext extends EventTarget {
+    readonly audioWorklet?: IAudioWorklet;
+    readonly baseLatency: number;
+    readonly currentTime: number;
+    readonly destination: IAudioDestinationNode;
+    readonly listener: IAudioListener;
+    onstatechange: null | TStateChangeEventHandler;
+    readonly sampleRate: number;
+    readonly state: TAudioContextState;
+    close (): Promise<void>;
+    createAnalyser (): IAnalyserNode;
+    createBiquadFilter (): IBiquadFilterNode;
+    createBuffer (numberOfChannels: number, length: number, sampleRate: number): AudioBuffer;
+    createBufferSource (): IAudioBufferSourceNode;
+    createChannelMerger (numberOfInputs?: number): IAudioNode;
+    createChannelSplitter (numberOfOutputs?: number): IAudioNode;
+    createConstantSource (): IConstantSourceNode;
+    createConvolver (): IConvolverNode;
+    createDelay (maxDelayTime?: number): IDelayNode;
+    createDynamicsCompressor (): IDynamicsCompressorNode;
+    createGain (): IGainNode;
+    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode;
+    createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode;
+    createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode;
+    createOscillator (): IOscillatorNode;
+    createPanner (): IPannerNode;
+    createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
+    createStereoPanner (): IStereoPannerNode;
+    createWaveShaper (): IWaveShaperNode;
+    decodeAudioData (audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback): Promise<AudioBuffer>;
+    resume (): Promise<void>;
+    suspend (): Promise<void>;
+}
+```
+
+The properties and methods are described in greater detail below.
+
 ### OfflineAudioContext
 
 This is an almost complete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It only misses the `createScriptProcessor()` method which is deprecated anyway.
+
+It implements the following TypeScript interface.
+
+```typescript
+interface IOfflineAudioContext extends EventTarget {
+    readonly audioWorklet?: IAudioWorklet;
+    readonly baseLatency: number;
+    readonly currentTime: number;
+    readonly destination: IAudioDestinationNode;
+    readonly listener: IAudioListener;
+    onstatechange: null | TStateChangeEventHandler;
+    readonly sampleRate: number;
+    readonly state: TAudioContextState;
+    createAnalyser (): IAnalyserNode;
+    createBiquadFilter (): IBiquadFilterNode;
+    createBuffer (numberOfChannels: number, length: number, sampleRate: number): AudioBuffer;
+    createBufferSource (): IAudioBufferSourceNode;
+    createChannelMerger (numberOfInputs?: number): IAudioNode;
+    createChannelSplitter (numberOfOutputs?: number): IAudioNode;
+    createConstantSource (): IConstantSourceNode;
+    createConvolver (): IConvolverNode;
+    createDelay (maxDelayTime?: number): IDelayNode;
+    createDynamicsCompressor (): IDynamicsCompressorNode;
+    createGain (): IGainNode;
+    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode;
+    createOscillator (): IOscillatorNode;
+    createPanner (): IPannerNode;
+    createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
+    createStereoPanner (): IStereoPannerNode;
+    createWaveShaper (): IWaveShaperNode;
+    decodeAudioData (audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback): Promise<AudioBuffer>;
+    startRendering (): Promise<AudioBuffer>;
+}
+```
+
+The properties and methods are described in greater detail below.
 
 #### audioWorklet
 
