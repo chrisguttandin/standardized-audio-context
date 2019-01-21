@@ -67,7 +67,7 @@ This is an almost complete implementation of the [`AudioContext`](https://webaud
 
 This is an almost complete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It only misses the `createScriptProcessor()` method which is deprecated anyway.
 
-### audioWorklet
+#### audioWorklet
 
 The [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet) is accessible as a property of an AudioContext or OfflineAudioContext. It uses the ScriptProcessorNode internally to create an [`AudioWorkletProcessor`](https://webaudio.github.io/web-audio-api/#audioworkletprocessor) in any browser but Chrome. This means it will not provide the performance improvements that you would normally expect from using an [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworkletnode).
 
@@ -75,101 +75,101 @@ The fact that the internal implementation relies on a ScriptProcessorNode also i
 
 Another thing to keep in mind is that the fallback will evaluate the `AudioWorkletProcessor` on the global scope. It gets isolated in a basic way to mimic the [`AudioWorkletGlobalScope`](https://webaudio.github.io/web-audio-api/#audioworkletglobalscope) but that can't be done in a way which makes it impossible for an attacker to break out of that sandbox. This should not be a problem unless you load an AudioWorklet from an untrusted source.
 
-### decodeAudioData()
+#### decodeAudioData()
 
 This is an implementation of the
 [`decodeAudioData()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-decodeaudiodata) method.
 
-### AnalyserNode / createAnalyser()
+#### AnalyserNode / createAnalyser()
 
 This is an implementation of the
 [`AnalyserNode`](https://webaudio.github.io/web-audio-api/#analysernode) constructor and the [`createAnalyser()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createanalyser) factory method respectively.
 
-### BiquadFilterNode / createBiquadFilter()
+#### BiquadFilterNode / createBiquadFilter()
 
 This is an implementation of the
 [`BiquadFilterNode`](https://webaudio.github.io/web-audio-api/#biquadfilternode) constructor and the [`createBiquadFilter()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbiquadfilter) factory method respectively.
 
-### AudioBuffer / createBuffer()
+#### AudioBuffer / createBuffer()
 
 This is an implementation of the
 [`AudioBuffer`](https://webaudio.github.io/web-audio-api/#audiobuffer) constructor and the [`createBuffer()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbuffer) factory method respectively.
 
-### AudioBufferSourceNode / createBufferSource()
+#### AudioBufferSourceNode / createBufferSource()
 
 This is an implementation of the
 [`AudioBufferSourceNode`](https://webaudio.github.io/web-audio-api/#AudioBufferSourceNode) constructor and the [`createBufferSource()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbuffersource) factory method respectively. It is currently missing the [detune AudioParam](https://webaudio.github.io/web-audio-api/#dom-audiobuffersourcenode-detune).
 
-### ChannelMergerNode / createChannelMerger()
+#### ChannelMergerNode / createChannelMerger()
 
 This is an implementation of the
 [`ChannelMergerNode`](https://webaudio.github.io/web-audio-api/#channelmergernode) constructor and the [`createChannelMerger()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createchannelmerger) factory method respectively.
 
-### ChannelSplitterNode / createChannelSplitter()
+#### ChannelSplitterNode / createChannelSplitter()
 
 This is an implementation of the
 [`ChannelSplitterNode`](https://webaudio.github.io/web-audio-api/#channelsplitternode) constructor and the [`createChannelSplitter()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createchannelsplitter) factory method respectively.
 
-### ConstantSourceNode / createConstantSource()
+#### ConstantSourceNode / createConstantSource()
 
 This is an implementation of the
 [`ConstantSourceNode`](https://webaudio.github.io/web-audio-api/#ConstantSourceNode) constructor and the [`createConstantSource()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createconstantsource) factory method respectively.
 
-### ConvolverNode / createConvolver()
+#### ConvolverNode / createConvolver()
 
 This is an implementation of the
 [`ConvolverNode`](https://webaudio.github.io/web-audio-api/#ConvolverNode) constructor and the [`createConvolver()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createconvolver) factory method respectively.
 
-### DelayNode / createDelay
+#### DelayNode / createDelay
 
 This is an implementation of the
 [`DelayNode`](https://webaudio.github.io/web-audio-api/#DelayNode) constructor and the [`createDelay()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createdelay) factory method respectively.
 
-### DynamicsCompressorNode / createDynamicsCompressor
+#### DynamicsCompressorNode / createDynamicsCompressor
 
 This is an implementation of the
 [`DynamicsCompressorNode`](https://webaudio.github.io/web-audio-api/#dynamicscompressornode) constructor and the [`createDynamicsCompressor()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createdynamicscompressor) factory method respectively.
 
-### GainNode / createGain()
+#### GainNode / createGain()
 
 This is an implementation of the
 [`GainNode`](https://webaudio.github.io/web-audio-api/#gainnode) constructor and the [`createGain()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-creategain) factory method respectively.
 
-### IIRFilterNode / createIIRFilter()
+#### IIRFilterNode / createIIRFilter()
 
 This is an implementation of the
 [`IIRFilterNode`](https://webaudio.github.io/web-audio-api/#iirfilternode) constructor and the [`createIIRFilter()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createiirfilter) factory method respectively. It has to be faked internally with a ScriptProcessorNode in Safari which means it is not as performant as in other browsers which support it natively.
 
-### MediaElementAudioSourceNode / createMediaElementSource()
+#### MediaElementAudioSourceNode / createMediaElementSource()
 
 This is an implementation of the
 [`MediaElementAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediaelementaudiosourcenode) constructor and the [`createMediaElementSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediaelementsource) factory method respectively. It does only work with an AudioContext but not with an OfflineAudioContext.
 
-### MediaStreamSourceNode / createMediaStreamSource()
+#### MediaStreamSourceNode / createMediaStreamSource()
 
 This is an implementation of the
 [`MediaStreamAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediastreamaudiosourcenode) constructor and the [`createMediaStreamSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediastreamsource) factory method respectively. It does only work with an AudioContext but not with an OfflineAudioContext.
 
-### OscillatorNode / createOscillator()
+#### OscillatorNode / createOscillator()
 
 This is an implementation of the
 [`OscillatorNode`](https://webaudio.github.io/web-audio-api/#oscillatornode) constructor and the [`createOscillator()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createoscillator) factory method respectively.
 
-### PannerNode / createPanner()
+#### PannerNode / createPanner()
 
 This is an implementation of the [`PannerNode`](https://webaudio.github.io/web-audio-api/#pannernode) constructor and the [`createPanner()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createpanner) factory method respectively. The panningModel can only be savely assigned to `'equalpower'`.
 This is because Edge has no native implementation of the `'HRTF'` panningModel. An attempt to set the panningModel to `'HRTF'` in Edge will throw a `NotSupportedError`.
 
-### PeriodicWave / createPeriodicWave()
+#### PeriodicWave / createPeriodicWave()
 
 This is an implementation of the
 [`PeriodicWave`](https://webaudio.github.io/web-audio-api/#periodicwave) constructor and the [`createPeriodicWave()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createperiodicwave) factory method respectively.
 
-### StereoPannerNode / createStereoPanner()
+#### StereoPannerNode / createStereoPanner()
 
 This is an implementation of the [`StereoPannerNode`](https://webaudio.github.io/web-audio-api/#stereopannernode) constructor and the [`createStereoPanner()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createstereopanner) factory method respectively. The channelCountMode can only be `'explicit'` unless Safari comes up with a native implementation.
 
-### WaveShaperNode / createWaveShaper()
+#### WaveShaperNode / createWaveShaper()
 
 This is an implementation of the [`WaveShaperNode`](https://webaudio.github.io/web-audio-api/#waveshapernode) constructor and the [`createWaveShaper()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createwaveshaper) factory method respectively.
 
