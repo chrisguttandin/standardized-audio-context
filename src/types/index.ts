@@ -96,6 +96,8 @@ export * from './iir-filter-node-renderer-factory-factory';
 export * from './index-size-error-factory';
 export * from './invalid-access-error-factory';
 export * from './invalid-state-error-factory';
+export * from './is-native-context-factory';
+export * from './is-native-context-function';
 export * from './is-native-offline-audio-context-factory';
 export * from './is-native-offline-audio-context-function';
 export * from './is-secure-context-factory';

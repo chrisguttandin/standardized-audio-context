@@ -1,4 +1,4 @@
 import { IAudioBuffer } from '../interfaces';
-import { TNativeContext } from './native-context';
+import { TAnyContext } from './any-context';
 
-export type TDecodeAudioDataFunction = (context: TNativeContext, audioData: ArrayBuffer) => Promise<IAudioBuffer>;
+export type TDecodeAudioDataFunction = (anyContext: TAnyContext, audioData: ArrayBuffer) => Promise<IAudioBuffer>;

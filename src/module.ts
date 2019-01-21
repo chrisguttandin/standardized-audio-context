@@ -45,6 +45,7 @@ import { createIIRFilterNodeRendererFactory } from './factories/iir-filter-node-
 import { createIndexSizeError } from './factories/index-size-error';
 import { createInvalidAccessError } from './factories/invalid-access-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
+import { createIsNativeContext } from './factories/is-native-context';
 import { createIsNativeOfflineAudioContext } from './factories/is-native-offline-audio-context';
 import { createIsSecureContext } from './factories/is-secure-context';
 import { createIsSupportedPromise } from './factories/is-supported-promise';
@@ -480,10 +481,13 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
     ) :
     undefined;
 
+const isNativeContext = createIsNativeContext(isNativeOfflineAudioContext, nativeAudioContextConstructor);
+
 export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     createDataCloneError,
     createEncodingError,
     nativeOfflineAudioContextConstructor,
+    isNativeContext,
     isNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsSubarraySupport,
     testPromiseSupport

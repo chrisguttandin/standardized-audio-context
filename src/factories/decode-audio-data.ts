@@ -1,6 +1,7 @@
 import { deallocate } from 'async-array-buffer';
 import { DETACHED_ARRAY_BUFFERS } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
+import { getNativeContext } from '../helpers/get-native-context';
 import { TDecodeAudioDataFactory } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
 import { wrapAudioBufferCopyChannelMethodsSubarray } from '../wrappers/audio-buffer-copy-channel-methods-subarray';
@@ -10,11 +11,14 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     createDataCloneError,
     createEncodingError,
     nativeOfflineAudioContextConstructor,
+    isNativeContext,
     isNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsSubarraySupport,
     testPromiseSupport
 ) => {
-    return (nativeContext, audioData) => {
+    return (anyContext, audioData) => {
+        const nativeContext = isNativeContext(anyContext) ? anyContext : getNativeContext(anyContext);
+
         // Bug #43: Only Chrome and Opera do throw a DataCloneError.
         if (DETACHED_ARRAY_BUFFERS.has(audioData)) {
             const err = createDataCloneError();

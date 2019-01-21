@@ -2,5 +2,5 @@ import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-
 import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-context-constructor';
 
 export type TIsNativeOfflineAudioContextFactory = (
-    nativeAudioWorkletNodeConstructor: null | TNativeOfflineAudioContextConstructor
+    nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor
 ) => TIsNativeOfflineAudioContextFunction;
