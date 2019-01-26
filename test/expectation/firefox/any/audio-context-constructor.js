@@ -389,7 +389,7 @@ describe('audioContextConstructor', () => {
                 // bug #44
 
                 it('should throw a DOMException', () => {
-                    expect(() => oscillatorNode.start(-1)).to.throw(DOMException);
+                    expect(() => oscillatorNode.start(-1)).to.throw(DOMException).with.property('name', 'NotSupportedError');
                 });
 
             });
@@ -399,7 +399,7 @@ describe('audioContextConstructor', () => {
                 // bug #44
 
                 it('should throw a DOMException', () => {
-                    expect(() => oscillatorNode.stop(-1)).to.throw(DOMException);
+                    expect(() => oscillatorNode.stop(-1)).to.throw(DOMException).with.property('name', 'NotSupportedError');
                 });
 
             });

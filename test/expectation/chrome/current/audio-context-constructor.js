@@ -39,7 +39,7 @@ describe('audioContextConstructor', () => {
             it('should throw a DOMException', () => {
                 const audioBufferSourceNode = audioContext.createBufferSource();
 
-                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
             });
 
         });

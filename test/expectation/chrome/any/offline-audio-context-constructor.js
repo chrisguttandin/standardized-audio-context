@@ -33,7 +33,7 @@ describe('offlineAudioContextConstructor', () => {
             it('should throw a DOMException', () => {
                 const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
+                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
             });
 
         });

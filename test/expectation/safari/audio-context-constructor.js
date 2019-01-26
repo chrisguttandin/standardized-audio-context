@@ -493,9 +493,9 @@ describe('audioContextConstructor', () => {
                 it('should throw a DOMException', () => {
                     const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => audioBufferSourceNode.start(-1)).to.throw(DOMException);
-                    expect(() => audioBufferSourceNode.start(0, -1)).to.throw(DOMException);
-                    expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw(DOMException);
+                    expect(() => audioBufferSourceNode.start(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.start(0, -1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
                 });
 
                 // bug #69
@@ -516,7 +516,7 @@ describe('audioContextConstructor', () => {
                 it('should throw a DOMException', () => {
                     const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException);
+                    expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
                 });
 
             });
