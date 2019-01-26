@@ -1,5 +1,6 @@
 import '../../helper/play-silence';
 import { AudioContext } from '../../../src/module';
+import { isSafari } from '../../helper/is-safari';
 import { loadFixture } from '../../helper/load-fixture';
 import { spy } from 'sinon';
 
@@ -37,6 +38,44 @@ describe('AudioContext', () => {
             // Create a new AudioContext to ensure the afterEach hooks keeps working.
             audioContext = new AudioContext();
         });
+
+        if (isSafari(navigator)) {
+
+            describe('with four running AudioContexts', () => {
+
+                let audioContexts;
+                let gainNodes;
+
+                afterEach(() => {
+                    [ audioContext, ...audioContexts ]
+                        .forEach((dCntxt, index) => gainNodes[index].disconnect(dCntxt.destination));
+
+                    return Promise.all(audioContexts.map((dCntxt) => dCntxt.close()));
+                });
+
+                beforeEach(() => {
+                    audioContext = new AudioContext();
+                    audioContexts = [ new AudioContext(), new AudioContext(), new AudioContext() ];
+
+                    gainNodes = [ audioContext, ...audioContexts ]
+                        .map((dCntxt) => {
+                            const gainNode = dCntxt.createGain();
+
+                            gainNode.connect(dCntxt.destination);
+
+                            return gainNode;
+                        });
+                });
+
+                it('should throw an error', () => {
+                    expect(() => {
+                        new AudioContext({ latencyHint: 'balanced' });
+                    }).to.throw(DOMException).with.property('name', 'UnknownError');
+                });
+
+            });
+
+        }
 
     });
 

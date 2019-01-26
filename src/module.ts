@@ -128,6 +128,7 @@ import {
 import { createTestConvolverNodeBufferReassignabilitySupport } from './factories/test-convolver-node-buffer-reassignability-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
 import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
+import { createUnknownError } from './factories/unknown-error';
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
 import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-node-renderer-factory';
 import { createWindow } from './factories/window';
@@ -535,6 +536,7 @@ const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstruc
 const audioContextConstructor: TAudioContextConstructor = createAudioContextConstructor(
     baseAudioContextConstructor,
     createInvalidStateError,
+    createUnknownError,
     mediaElementAudioSourceNodeConstructor,
     mediaStreamAudioSourceNodeConstructor,
     nativeAudioContextConstructor
@@ -640,6 +642,7 @@ export { mediaStreamAudioSourceNodeConstructor as MediaStreamAudioSourceNode };
 
 const minimalAudioContextConstructor: TMinimalAudioContextConstructor = createMinimalAudioContextConstructor(
     createInvalidStateError,
+    createUnknownError,
     minimalBaseAudioContextConstructor,
     nativeAudioContextConstructor
 );

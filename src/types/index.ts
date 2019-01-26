@@ -251,6 +251,7 @@ export * from './test-convolver-node-buffer-reassignability-support-factory';
 export * from './test-is-secure-context-support-factory';
 export * from './test-stereo-panner-node-default-value-support-factory';
 export * from './typed-array';
+export * from './unknown-error-factory';
 export * from './wave-shaper-node-constructor';
 export * from './wave-shaper-node-constructor-factory';
 export * from './wave-shaper-node-renderer-factory-factory';

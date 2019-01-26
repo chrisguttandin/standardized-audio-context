@@ -1,5 +1,6 @@
 import '../../helper/play-silence';
 import { GainNode, MinimalAudioContext } from '../../../src/module';
+import { isSafari } from '../../helper/is-safari';
 
 describe('MinimalAudioContext', () => {
 
@@ -35,6 +36,44 @@ describe('MinimalAudioContext', () => {
             // Create a new AudioContext to ensure the afterEach hooks keeps working.
             minimalAudioContext = new MinimalAudioContext();
         });
+
+        if (isSafari(navigator)) {
+
+            describe('with four running MinimalAudioContexts', () => {
+
+                let gainNodes;
+                let minimalAudioContexts;
+
+                afterEach(() => {
+                    [ minimalAudioContext, ...minimalAudioContexts ]
+                        .forEach((mnmlDCntxt, index) => gainNodes[index].disconnect(mnmlDCntxt.destination));
+
+                    return Promise.all(minimalAudioContexts.map((mnmlDCntxt) => mnmlDCntxt.close()));
+                });
+
+                beforeEach(() => {
+                    minimalAudioContext = new MinimalAudioContext();
+                    minimalAudioContexts = [ new MinimalAudioContext(), new MinimalAudioContext(), new MinimalAudioContext() ];
+
+                    gainNodes = [ minimalAudioContext, ...minimalAudioContexts ]
+                        .map((mnmlDCntxt) => {
+                            const gainNode = new GainNode(mnmlDCntxt);
+
+                            gainNode.connect(mnmlDCntxt.destination);
+
+                            return gainNode;
+                        });
+                });
+
+                it('should throw an error', () => {
+                    expect(() => {
+                        new MinimalAudioContext({ latencyHint: 'balanced' });
+                    }).to.throw(DOMException).with.property('name', 'UnknownError');
+                });
+
+            });
+
+        }
 
     });
 

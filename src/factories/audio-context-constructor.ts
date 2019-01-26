@@ -5,6 +5,7 @@ import { TAudioContextConstructorFactory, TAudioContextState, TNativeAudioContex
 export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     baseAudioContextConstructor,
     createInvalidStateError,
+    createUnknownError,
     mediaElementAudioSourceNodeConstructor,
     mediaStreamAudioSourceNodeConstructor,
     nativeAudioContextConstructor
@@ -24,6 +25,11 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             }
 
             const nativeAudioContext = new nativeAudioContextConstructor(options);
+
+            // Bug #131 Safari returns null when there are four other AudioContexts running already.
+            if (nativeAudioContext === null) {
+                throw createUnknownError();
+            }
 
             // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.
             if (!isValidLatencyHint(options.latencyHint)) {
