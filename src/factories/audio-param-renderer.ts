@@ -39,7 +39,7 @@ export const createAudioParamRenderer: TAudioParamRendererFactory = () => {
                      */
                     (<IAudioParam> audioParam).setValueCurveAtTime(values, startTime, duration);
                 } else {
-                    throw new Error("Can't apply an unkown automation.");
+                    throw new Error("Can't apply an unknown automation.");
                 }
             }
         }
