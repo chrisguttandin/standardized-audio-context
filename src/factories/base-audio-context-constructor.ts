@@ -49,15 +49,12 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
         private _audioWorklet: undefined | IAudioWorklet;
 
-        private _nativeContext: TNativeContext;
-
-        constructor (nativeContext: TNativeContext, numberOfChannels: number) {
-            super(nativeContext, numberOfChannels);
+        constructor (private _nativeContext: TNativeContext, numberOfChannels: number) {
+            super(_nativeContext, numberOfChannels);
 
             this._audioWorklet = (addAudioWorkletModule === undefined) ?
                 undefined :
                 { addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(<any> this, moduleURL, options) };
-            this._nativeContext = nativeContext;
         }
 
         get audioWorklet (): undefined | IAudioWorklet {

@@ -15,25 +15,22 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
         private _listener: IAudioListener;
 
-        private _nativeContext: TNativeContext;
-
         private _onstatechange: null | TStateChangeEventHandler;
 
-        constructor (nativeContext: TNativeContext, numberOfChannels: number) {
-            super(nativeContext);
+        constructor (private _nativeContext: TNativeContext, numberOfChannels: number) {
+            super(_nativeContext);
 
-            CONTEXT_STORE.set(<any> this, nativeContext);
+            CONTEXT_STORE.set(<any> this, _nativeContext);
 
             // Bug #93: Edge will set the sampleRate of an AudioContext to zero when it is closed.
-            const sampleRate = nativeContext.sampleRate;
+            const sampleRate = _nativeContext.sampleRate;
 
-            Object.defineProperty(nativeContext, 'sampleRate', {
+            Object.defineProperty(_nativeContext, 'sampleRate', {
                 get: () => sampleRate
             });
 
             this._destination = new audioDestinationNodeConstructor(<any> this, numberOfChannels);
-            this._listener = createAudioListener(<any> this, nativeContext);
-            this._nativeContext = nativeContext;
+            this._listener = createAudioListener(<any> this, _nativeContext);
             this._onstatechange = null;
         }
 
