@@ -1,4 +1,5 @@
 import { getNativeContext } from '../helpers/get-native-context';
+import { wrapEventListener } from '../helpers/wrap-event-listener';
 import { IAudioParam, IOscillatorNode, IOscillatorNodeRenderer, IOscillatorOptions } from '../interfaces';
 import { TContext, TEndedEventHandler, TNativeOscillatorNode, TOscillatorNodeConstructorFactory, TOscillatorType } from '../types';
 
@@ -29,6 +30,8 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _nativeOscillatorNode: TNativeOscillatorNode;
 
+        private _onended: null | TEndedEventHandler<IOscillatorNode>;
+
         private _oscillatorNodeRenderer: null | IOscillatorNodeRenderer;
 
         constructor (context: TContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
@@ -47,6 +50,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             // Bug #76: Edge & Safari do not export the correct values for maxValue and minValue.
             this._frequency = createAudioParam(context, isOffline, nativeOscillatorNode.frequency, nyquist, -nyquist);
             this._nativeOscillatorNode = nativeOscillatorNode;
+            this._onended = null;
             this._oscillatorNodeRenderer = oscillatorNodeRenderer;
 
             if (this._oscillatorNodeRenderer !== null && mergedOptions.periodicWave !== undefined) {
@@ -62,12 +66,18 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             return this._frequency;
         }
 
-        get onended (): null | TEndedEventHandler {
-            return <null | TEndedEventHandler> this._nativeOscillatorNode.onended;
+        get onended (): null | TEndedEventHandler<IOscillatorNode> {
+            return this._onended;
         }
 
         set onended (value) {
-            this._nativeOscillatorNode.onended = <TNativeOscillatorNode['onended']> value;
+            const wrappedListener = <TNativeOscillatorNode['onended']> wrapEventListener(this, value);
+
+            this._nativeOscillatorNode.onended = wrappedListener;
+
+            const nativeOnStateChange = <null | TEndedEventHandler<IOscillatorNode>> this._nativeOscillatorNode.onended;
+
+            this._onended = (nativeOnStateChange === wrappedListener) ? value : nativeOnStateChange;
         }
 
         get type (): TOscillatorType {

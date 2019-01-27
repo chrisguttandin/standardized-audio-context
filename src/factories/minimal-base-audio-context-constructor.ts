@@ -1,5 +1,6 @@
 import { EventTarget } from '../event-target';
 import { CONTEXT_STORE } from '../globals';
+import { wrapEventListener } from '../helpers/wrap-event-listener';
 import { IAudioDestinationNode, IAudioListener, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioContextState, TMinimalBaseAudioContextConstructorFactory, TNativeContext, TStateChangeEventHandler } from '../types';
 
@@ -16,8 +17,10 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
         private _nativeContext: TNativeContext;
 
+        private _onstatechange: null | TStateChangeEventHandler;
+
         constructor (nativeContext: TNativeContext, numberOfChannels: number) {
-            super();
+            super(nativeContext);
 
             CONTEXT_STORE.set(<any> this, nativeContext);
 
@@ -31,6 +34,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             this._destination = new audioDestinationNodeConstructor(<any> this, numberOfChannels);
             this._listener = createAudioListener(<any> this, nativeContext);
             this._nativeContext = nativeContext;
+            this._onstatechange = null;
         }
 
         get currentTime (): number {
@@ -46,11 +50,17 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
         }
 
         get onstatechange (): null | TStateChangeEventHandler {
-            return <null | TStateChangeEventHandler> this._nativeContext.onstatechange;
+            return this._onstatechange;
         }
 
         set onstatechange (value) {
-            this._nativeContext.onstatechange = <TNativeContext['onstatechange']> value;
+            const wrappedListener = <TNativeContext['onstatechange']> wrapEventListener(this, value);
+
+            this._nativeContext.onstatechange = wrappedListener;
+
+            const nativeOnStateChange = <null | TStateChangeEventHandler> this._nativeContext.onstatechange;
+
+            this._onstatechange = (nativeOnStateChange === wrappedListener) ? value : nativeOnStateChange;
         }
 
         get sampleRate (): number {

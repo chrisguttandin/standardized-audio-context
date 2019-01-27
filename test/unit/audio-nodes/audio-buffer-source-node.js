@@ -597,10 +597,44 @@ describe('AudioBufferSourceNode', () => {
                     });
                 });
 
+                it('should be null', () => {
+                    expect(audioBufferSourceNode.onended).to.be.null;
+                });
+
+                it('should be assignable to a function', () => {
+                    const fn = () => {};
+                    const onended = audioBufferSourceNode.onended = fn; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.equal(fn);
+                    expect(audioBufferSourceNode.onended).to.equal(fn);
+                });
+
+                it('should be assignable to null', () => {
+                    const onended = audioBufferSourceNode.onended = null; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.be.null;
+                    expect(audioBufferSourceNode.onended).to.be.null;
+                });
+
+                it('should not be assignable to something else', () => {
+                    const string = 'no function or null value';
+
+                    audioBufferSourceNode.onended = () => {};
+
+                    const onended = audioBufferSourceNode.onended = string; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.equal(string);
+                    expect(audioBufferSourceNode.onended).to.be.null;
+                });
+
                 it('should fire an assigned ended event listener', (done) => {
-                    audioBufferSourceNode.onended = (event) => {
+                    audioBufferSourceNode.onended = function (event) {
                         expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(audioBufferSourceNode);
+                        expect(event.target).to.equal(audioBufferSourceNode);
                         expect(event.type).to.equal('ended');
+
+                        expect(this).to.equal(audioBufferSourceNode);
 
                         done();
                     };
@@ -826,9 +860,13 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 it('should fire a registered ended event listener', (done) => {
-                    audioBufferSourceNode.addEventListener('ended', (event) => {
+                    audioBufferSourceNode.addEventListener('ended', function (event) {
                         expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(audioBufferSourceNode);
+                        expect(event.target).to.equal(audioBufferSourceNode);
                         expect(event.type).to.equal('ended');
+
+                        expect(this).to.equal(audioBufferSourceNode);
 
                         done();
                     });

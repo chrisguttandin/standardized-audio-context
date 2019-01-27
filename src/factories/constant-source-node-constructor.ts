@@ -1,5 +1,6 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
+import { wrapEventListener } from '../helpers/wrap-event-listener';
 import { IAudioParam, IConstantSourceNode, IConstantSourceNodeRenderer, IConstantSourceOptions } from '../interfaces';
 import { TConstantSourceNodeConstructorFactory, TContext, TEndedEventHandler, TNativeConstantSourceNode } from '../types';
 
@@ -26,6 +27,8 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         private _offset: IAudioParam;
 
+        private _onended: null | TEndedEventHandler<IConstantSourceNode>;
+
         constructor (context: TContext, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
@@ -48,18 +51,25 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
                 MOST_POSITIVE_SINGLE_FLOAT,
                 MOST_NEGATIVE_SINGLE_FLOAT
             );
+            this._onended = null;
         }
 
         get offset (): IAudioParam {
             return this._offset;
         }
 
-        get onended (): null | TEndedEventHandler {
-            return <null | TEndedEventHandler> this._nativeConstantSourceNode.onended;
+        get onended (): null | TEndedEventHandler<IConstantSourceNode> {
+            return this._onended;
         }
 
         set onended (value) {
-            this._nativeConstantSourceNode.onended = <TNativeConstantSourceNode['onended']> value;
+            const wrappedListener = <TNativeConstantSourceNode['onended']> wrapEventListener(this, value);
+
+            this._nativeConstantSourceNode.onended = wrappedListener;
+
+            const nativeOnEnded = <null | TEndedEventHandler<IConstantSourceNode>> this._nativeConstantSourceNode.onended;
+
+            this._onended = (nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
         }
 
         public start (when = 0): void {

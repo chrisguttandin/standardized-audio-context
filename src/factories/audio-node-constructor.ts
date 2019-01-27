@@ -152,7 +152,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
             audioNodeRenderer: null | IAudioNodeRenderer
         ) {
-            super();
+            super(nativeAudioNode);
 
             this._context = context;
             this._nativeAudioNode = nativeAudioNode;
@@ -206,14 +206,6 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
 
         get numberOfOutputs (): number {
             return this._nativeAudioNode.numberOfOutputs;
-        }
-
-        public addEventListener (
-            type: string,
-            listener: any, // @todo EventListenerOrEventListenerObject | null = null,
-            options?: boolean | AddEventListenerOptions
-        ): void {
-            return this._nativeAudioNode.addEventListener(type, listener, options);
         }
 
         public connect (destinationNode: IAudioNode, output?: number, input?: number): IAudioNode;
@@ -329,14 +321,6 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             } else {
                 deleteConnectionToDestination(this, destinationOrOutput, output, input);
             }
-        }
-
-        public removeEventListener (
-            type: string,
-            listener: any, // @todo EventListenerOrEventListenerObject | null = null,
-            options?: EventListenerOptions | boolean
-        ): void {
-            return this._nativeAudioNode.removeEventListener(type, listener, options);
         }
 
     };

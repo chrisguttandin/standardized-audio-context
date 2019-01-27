@@ -3,7 +3,7 @@ import { IAudioNode } from './audio-node';
 
 export interface IAudioScheduledSourceNode extends IAudioNode {
 
-    onended: null | TEndedEventHandler;
+    onended: null | TEndedEventHandler<any>;
 
     start (when?: number): void;
 

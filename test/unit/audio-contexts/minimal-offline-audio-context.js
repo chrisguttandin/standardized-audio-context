@@ -210,11 +210,16 @@ describe('MinimalOfflineAudioContext', () => {
             expect(minimalOfflineAudioContext.onstatechange).to.be.null;
         });
 
-        it('should fire an Event of type statechange when starting to render', (done) => {
-            minimalOfflineAudioContext.onstatechange = (event) => {
+        it('should fire an assigned statechange event listener when starting to render', (done) => {
+            minimalOfflineAudioContext.onstatechange = function (event) {
                 minimalOfflineAudioContext.onstatechange = null;
 
+                expect(event).to.be.an.instanceOf(Event);
+                expect(event.currentTarget).to.equal(minimalOfflineAudioContext);
+                expect(event.target).to.equal(minimalOfflineAudioContext);
                 expect(event.type).to.equal('statechange');
+
+                expect(this).to.equal(minimalOfflineAudioContext);
 
                 done();
             };
@@ -222,14 +227,19 @@ describe('MinimalOfflineAudioContext', () => {
             minimalOfflineAudioContext.startRendering();
         });
 
-        it('should fire an Event of type statechange when done with rendering', (done) => {
+        it('should fire an assigned statechange event listener when done with rendering', (done) => {
             minimalOfflineAudioContext
                 .startRendering()
                 .then(() => {
-                    minimalOfflineAudioContext.onstatechange = (event) => {
+                    minimalOfflineAudioContext.onstatechange = function (event) {
                         minimalOfflineAudioContext.onstatechange = null;
 
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(minimalOfflineAudioContext);
+                        expect(event.target).to.equal(minimalOfflineAudioContext);
                         expect(event.type).to.equal('statechange');
+
+                        expect(this).to.equal(minimalOfflineAudioContext);
 
                         done();
                     };
@@ -289,6 +299,55 @@ describe('MinimalOfflineAudioContext', () => {
                 .startRendering()
                 .then(() => {
                     expect(minimalOfflineAudioContext.state).to.equal('closed');
+                });
+        });
+
+    });
+
+    describe('addEventListener()', () => {
+
+        let minimalOfflineAudioContext;
+
+        beforeEach(() => {
+            minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should fire a registered statechange event listener when starting to render', (done) => {
+            function stateChangeListener (event) {
+                minimalOfflineAudioContext.removeEventListener('statechange', stateChangeListener);
+
+                expect(event).to.be.an.instanceOf(Event);
+                expect(event.currentTarget).to.equal(minimalOfflineAudioContext);
+                expect(event.target).to.equal(minimalOfflineAudioContext);
+                expect(event.type).to.equal('statechange');
+
+                expect(this).to.equal(minimalOfflineAudioContext);
+
+                done();
+            }
+
+            minimalOfflineAudioContext.addEventListener('statechange', stateChangeListener);
+            minimalOfflineAudioContext.startRendering();
+        });
+
+        it('should fire a registered statechange event listener when done with rendering', (done) => {
+            minimalOfflineAudioContext
+                .startRendering()
+                .then(() => {
+                    function stateChangeListener (event) {
+                        minimalOfflineAudioContext.removeEventListener('statechange', stateChangeListener);
+
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(minimalOfflineAudioContext);
+                        expect(event.target).to.equal(minimalOfflineAudioContext);
+                        expect(event.type).to.equal('statechange');
+
+                        expect(this).to.equal(minimalOfflineAudioContext);
+
+                        done();
+                    }
+
+                    minimalOfflineAudioContext.addEventListener('statechange', stateChangeListener);
                 });
         });
 

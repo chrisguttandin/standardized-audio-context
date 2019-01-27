@@ -448,10 +448,44 @@ describe('OscillatorNode', () => {
                     oscillatorNode = createOscillatorNode(context);
                 });
 
+                it('should be null', () => {
+                    expect(oscillatorNode.onended).to.be.null;
+                });
+
+                it('should be assignable to a function', () => {
+                    const fn = () => {};
+                    const onended = oscillatorNode.onended = fn; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.equal(fn);
+                    expect(oscillatorNode.onended).to.equal(fn);
+                });
+
+                it('should be assignable to null', () => {
+                    const onended = oscillatorNode.onended = null; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.be.null;
+                    expect(oscillatorNode.onended).to.be.null;
+                });
+
+                it('should not be assignable to something else', () => {
+                    const string = 'no function or null value';
+
+                    oscillatorNode.onended = () => {};
+
+                    const onended = oscillatorNode.onended = string; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.equal(string);
+                    expect(oscillatorNode.onended).to.be.null;
+                });
+
                 it('should fire an assigned ended event listener', (done) => {
-                    oscillatorNode.onended = (event) => {
+                    oscillatorNode.onended = function (event) {
                         expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(oscillatorNode);
+                        expect(event.target).to.equal(oscillatorNode);
                         expect(event.type).to.equal('ended');
+
+                        expect(this).to.equal(oscillatorNode);
 
                         done();
                     };
@@ -513,9 +547,13 @@ describe('OscillatorNode', () => {
                 });
 
                 it('should fire a registered ended event listener', (done) => {
-                    oscillatorNode.addEventListener('ended', (event) => {
+                    oscillatorNode.addEventListener('ended', function (event) {
                         expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(oscillatorNode);
+                        expect(event.target).to.equal(oscillatorNode);
                         expect(event.type).to.equal('ended');
+
+                        expect(this).to.equal(oscillatorNode);
 
                         done();
                     });

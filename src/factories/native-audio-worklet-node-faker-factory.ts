@@ -227,7 +227,15 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 return onprocessorerror;
             },
             set onprocessorerror (value) {
+                if (typeof onprocessorerror === 'function') {
+                    nativeAudioWorkletNodeFaker.removeEventListener('processorerror', onprocessorerror);
+                }
+
                 onprocessorerror = (typeof value === 'function') ? value : null;
+
+                if (typeof onprocessorerror === 'function') {
+                    nativeAudioWorkletNodeFaker.addEventListener('processorerror', onprocessorerror);
+                }
             },
             get parameters (): TNativeAudioWorkletNode['parameters'] {
                 return parameterMap;
@@ -323,9 +331,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     } catch {
                         isActive = false;
 
-                        if (onprocessorerror !== null) {
-                            onprocessorerror.call(nativeAudioWorkletNodeFaker, new ErrorEvent('processorerror'));
-                        }
+                        nativeAudioWorkletNodeFaker.dispatchEvent(new ErrorEvent('processorerror'));
                     }
 
                     if (!isActive) {

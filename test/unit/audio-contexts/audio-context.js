@@ -232,11 +232,16 @@ describe('AudioContext', () => {
                 expect(audioContext.onstatechange).to.be.null;
             });
 
-            it('should fire an Event of type statechange', (done) => {
-                audioContext.onstatechange = (event) => {
+            it('should fire an assigned statechange event listener', (done) => {
+                audioContext.onstatechange = function (event) {
                     audioContext.onstatechange = null;
 
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(audioContext);
+                    expect(event.target).to.equal(audioContext);
                     expect(event.type).to.equal('statechange');
+
+                    expect(this).to.equal(audioContext);
 
                     done();
                 };
@@ -281,6 +286,30 @@ describe('AudioContext', () => {
 
                     done();
                 };
+
+                // Kick off the audioContext.
+                audioContext.createGain();
+            });
+
+        });
+
+        describe('addEventListener()', () => {
+
+            it('should fire a registered statechange event listener', (done) => {
+                function stateChangeListener (event) {
+                    audioContext.removeEventListener('statechange', stateChangeListener);
+
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(audioContext);
+                    expect(event.target).to.equal(audioContext);
+                    expect(event.type).to.equal('statechange');
+
+                    expect(this).to.equal(audioContext);
+
+                    done();
+                }
+
+                audioContext.addEventListener('statechange', stateChangeListener);
 
                 // Kick off the audioContext.
                 audioContext.createGain();

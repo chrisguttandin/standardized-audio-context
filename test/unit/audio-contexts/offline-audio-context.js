@@ -282,11 +282,16 @@ describe('OfflineAudioContext', () => {
             expect(offlineAudioContext.onstatechange).to.be.null;
         });
 
-        it('should fire an Event of type statechange when starting to render', (done) => {
-            offlineAudioContext.onstatechange = (event) => {
+        it('should fire an assigned statechange event listener when starting to render', (done) => {
+            offlineAudioContext.onstatechange = function (event) {
                 offlineAudioContext.onstatechange = null;
 
+                expect(event).to.be.an.instanceOf(Event);
+                expect(event.currentTarget).to.equal(offlineAudioContext);
+                expect(event.target).to.equal(offlineAudioContext);
                 expect(event.type).to.equal('statechange');
+
+                expect(this).to.equal(offlineAudioContext);
 
                 done();
             };
@@ -294,14 +299,19 @@ describe('OfflineAudioContext', () => {
             offlineAudioContext.startRendering();
         });
 
-        it('should fire an Event of type statechange when done with rendering', (done) => {
+        it('should fire an assigned statechange event listener when done with rendering', (done) => {
             offlineAudioContext
                 .startRendering()
                 .then(() => {
-                    offlineAudioContext.onstatechange = (event) => {
+                    offlineAudioContext.onstatechange = function (event) {
                         offlineAudioContext.onstatechange = null;
 
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(offlineAudioContext);
+                        expect(event.target).to.equal(offlineAudioContext);
                         expect(event.type).to.equal('statechange');
+
+                        expect(this).to.equal(offlineAudioContext);
 
                         done();
                     };
@@ -384,6 +394,55 @@ describe('OfflineAudioContext', () => {
                 .startRendering()
                 .then(() => {
                     expect(offlineAudioContext.state).to.equal('closed');
+                });
+        });
+
+    });
+
+    describe('addEventListener()', () => {
+
+        let offlineAudioContext;
+
+        beforeEach(() => {
+            offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+        });
+
+        it('should fire a registered statechange event listener when starting to render', (done) => {
+            function stateChangeListener (event) {
+                offlineAudioContext.removeEventListener('statechange', stateChangeListener);
+
+                expect(event).to.be.an.instanceOf(Event);
+                expect(event.currentTarget).to.equal(offlineAudioContext);
+                expect(event.target).to.equal(offlineAudioContext);
+                expect(event.type).to.equal('statechange');
+
+                expect(this).to.equal(offlineAudioContext);
+
+                done();
+            }
+
+            offlineAudioContext.addEventListener('statechange', stateChangeListener);
+            offlineAudioContext.startRendering();
+        });
+
+        it('should fire a registered statechange event listener when done with rendering', (done) => {
+            offlineAudioContext
+                .startRendering()
+                .then(() => {
+                    function stateChangeListener (event) {
+                        offlineAudioContext.removeEventListener('statechange', stateChangeListener);
+
+                        expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(offlineAudioContext);
+                        expect(event.target).to.equal(offlineAudioContext);
+                        expect(event.type).to.equal('statechange');
+
+                        expect(this).to.equal(offlineAudioContext);
+
+                        done();
+                    }
+
+                    offlineAudioContext.addEventListener('statechange', stateChangeListener);
                 });
         });
 

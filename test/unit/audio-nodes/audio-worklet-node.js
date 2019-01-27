@@ -529,9 +529,13 @@ describe('AudioWorkletNode', () => {
                         .then(() => {
                             const audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
 
-                            audioWorkletNode.onprocessorerror = (event) => {
+                            audioWorkletNode.onprocessorerror = function (event) {
                                 expect(event).to.be.an.instanceOf(Event);
+                                expect(event.currentTarget).to.equal(audioWorkletNode);
+                                expect(event.target).to.equal(audioWorkletNode);
                                 expect(event.type).to.equal('processorerror');
+
+                                expect(this).to.equal(audioWorkletNode);
 
                                 done();
                             };
@@ -1018,6 +1022,36 @@ describe('AudioWorkletNode', () => {
                     };
 
                     audioWorkletNode.port.postMessage(message);
+                });
+
+            });
+
+            describe('addEventListener()', () => {
+
+                it('should fire a registered processorerror event listener', function (done) {
+                    this.timeout(10000);
+
+                    addAudioWorkletModule('base/test/fixtures/failing-processor.js')
+                        .then(() => {
+                            const audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
+
+                            audioWorkletNode.addEventListener('processorerror', function (event) {
+                                expect(event).to.be.an.instanceOf(Event);
+                                expect(event.currentTarget).to.equal(audioWorkletNode);
+                                expect(event.target).to.equal(audioWorkletNode);
+                                expect(event.type).to.equal('processorerror');
+
+                                expect(this).to.equal(audioWorkletNode);
+
+                                done();
+                            });
+
+                            audioWorkletNode.connect(context.destination);
+
+                            if (context.startRendering !== undefined) {
+                                context.startRendering();
+                            }
+                        });
                 });
 
             });

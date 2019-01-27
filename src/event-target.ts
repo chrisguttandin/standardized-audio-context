@@ -1,32 +1,44 @@
+import { wrapEventListener } from './helpers/wrap-event-listener';
+import { TNativeEventTarget } from './types';
+
 export class EventTarget {
+
+    private _listeners: WeakMap<any, null | ((this: this, event: Event) => any)>;
+
+    constructor (private _nativeEventTarget: TNativeEventTarget) {
+        this._listeners = new WeakMap();
+    }
 
     public addEventListener (
         type: string,
         listener: any, // @todo EventListenerOrEventListenerObject | null = null,
         options?: boolean | AddEventListenerOptions
     ): void {
-        // @todo Implement the addEventListener() method.
-        listener; // tslint:disable-line:no-unused-expression
-        options; // tslint:disable-line:no-unused-expression
-        type; // tslint:disable-line:no-unused-expression
+        const wrappedEventListener = wrapEventListener(this, listener);
+
+        if (typeof listener === 'function') {
+            this._listeners.set(listener, wrappedEventListener);
+        }
+
+        return this._nativeEventTarget.addEventListener(type, wrappedEventListener, options);
     }
 
-    public dispatchEvent (evt: Event): boolean {
-        // @todo Implement the dispatchEvent() method.
-        evt; // tslint:disable-line:no-unused-expression
-
-        return false;
+    public dispatchEvent (event: Event): boolean {
+        return this._nativeEventTarget.dispatchEvent(event);
     }
 
     public removeEventListener (
         type: string,
         listener: any, // @todo EventListenerOrEventListenerObject | null = null,
-        options?: EventListenerOptions | boolean
+        options?: boolean | EventListenerOptions
     ): void {
-        // @todo Implement the removeEventListener() method.
-        listener; // tslint:disable-line:no-unused-expression
-        options; // tslint:disable-line:no-unused-expression
-        type; // tslint:disable-line:no-unused-expression
+        const wrappedEventListener = this._listeners.get(listener);
+
+        return this._nativeEventTarget.removeEventListener(
+            type,
+            (wrappedEventListener === undefined) ? null : wrappedEventListener,
+            options
+        );
     }
 
 }

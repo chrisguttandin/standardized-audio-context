@@ -220,11 +220,16 @@ describe('MinimalAudioContext', () => {
                 expect(minimalAudioContext.onstatechange).to.be.null;
             });
 
-            it('should fire an Event of type statechange', (done) => {
-                minimalAudioContext.onstatechange = (event) => {
+            it('should fire an assigned statechange event listener', (done) => {
+                minimalAudioContext.onstatechange = function (event) {
                     minimalAudioContext.onstatechange = null;
 
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(minimalAudioContext);
+                    expect(event.target).to.equal(minimalAudioContext);
                     expect(event.type).to.equal('statechange');
+
+                    expect(this).to.equal(minimalAudioContext);
 
                     done();
                 };
@@ -269,6 +274,30 @@ describe('MinimalAudioContext', () => {
 
                     done();
                 };
+
+                // Kick off the minimalAudioContext.
+                new GainNode(minimalAudioContext);
+            });
+
+        });
+
+        describe('addEventListener()', () => {
+
+            it('should fire a registered statechange event listener', (done) => {
+                function stateChangeListener (event) {
+                    minimalAudioContext.removeEventListener('statechange', stateChangeListener);
+
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(minimalAudioContext);
+                    expect(event.target).to.equal(minimalAudioContext);
+                    expect(event.type).to.equal('statechange');
+
+                    expect(this).to.equal(minimalAudioContext);
+
+                    done();
+                }
+
+                minimalAudioContext.addEventListener('statechange', stateChangeListener);
 
                 // Kick off the minimalAudioContext.
                 new GainNode(minimalAudioContext);

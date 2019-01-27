@@ -1,5 +1,6 @@
 import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
+import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioContext,
     IAudioParam,
@@ -73,6 +74,8 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         private _numberOfOutputs: number;
 
+        private _onprocessorerror: null | TProcessorErrorEventHandler;
+
         private _parameters: null | TAudioParamMap;
 
         constructor (context: TContext, name: string, options: Partial<IAudioWorkletNodeOptions> = DEFAULT_OPTIONS) {
@@ -108,6 +111,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             this._nativeAudioWorkletNode = nativeAudioWorkletNode;
             // Bug #86 & #87: Every browser but Firefox needs to get an unused output which should not be exposed.
             this._numberOfOutputs = (options.numberOfOutputs === 0) ? 0 : this._nativeAudioWorkletNode.numberOfOutputs;
+            this._onprocessorerror = null;
             this._parameters = new ReadOnlyMap(parameters);
 
             /*
@@ -126,11 +130,17 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
         }
 
         get onprocessorerror (): null | TProcessorErrorEventHandler {
-            return <null | TProcessorErrorEventHandler> this._nativeAudioWorkletNode.onprocessorerror;
+            return this._onprocessorerror;
         }
 
         set onprocessorerror (value) {
-            this._nativeAudioWorkletNode.onprocessorerror = <TNativeAudioWorkletNode['onprocessorerror']> value;
+            const wrappedListener = <TNativeAudioWorkletNode['onprocessorerror']> wrapEventListener(this, value);
+
+            this._nativeAudioWorkletNode.onprocessorerror = wrappedListener;
+
+            const nativeOnProcessorError = <null | TProcessorErrorEventHandler> this._nativeAudioWorkletNode.onprocessorerror;
+
+            this._onprocessorerror = (nativeOnProcessorError === wrappedListener) ? value : nativeOnProcessorError;
         }
 
         get parameters (): TAudioParamMap {

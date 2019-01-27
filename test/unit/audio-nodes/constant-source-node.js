@@ -529,10 +529,44 @@ describe('ConstantSourceNode', () => {
                     constantSourceNode = createConstantSourceNode(context, { offset: 0 });
                 });
 
+                it('should be null', () => {
+                    expect(constantSourceNode.onended).to.be.null;
+                });
+
+                it('should be assignable to a function', () => {
+                    const fn = () => {};
+                    const onended = constantSourceNode.onended = fn; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.equal(fn);
+                    expect(constantSourceNode.onended).to.equal(fn);
+                });
+
+                it('should be assignable to null', () => {
+                    const onended = constantSourceNode.onended = null; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.be.null;
+                    expect(constantSourceNode.onended).to.be.null;
+                });
+
+                it('should not be assignable to something else', () => {
+                    const string = 'no function or null value';
+
+                    constantSourceNode.onended = () => {};
+
+                    const onended = constantSourceNode.onended = string; // eslint-disable-line no-multi-assign
+
+                    expect(onended).to.equal(string);
+                    expect(constantSourceNode.onended).to.be.null;
+                });
+
                 it('should fire an assigned ended event listener', (done) => {
-                    constantSourceNode.onended = (event) => {
+                    constantSourceNode.onended = function (event) {
                         expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(constantSourceNode);
+                        expect(event.target).to.equal(constantSourceNode);
                         expect(event.type).to.equal('ended');
+
+                        expect(this).to.equal(constantSourceNode);
 
                         done();
                     };
@@ -558,9 +592,13 @@ describe('ConstantSourceNode', () => {
                 });
 
                 it('should fire a registered ended event listener', (done) => {
-                    constantSourceNode.addEventListener('ended', (event) => {
+                    constantSourceNode.addEventListener('ended', function (event) {
                         expect(event).to.be.an.instanceOf(Event);
+                        expect(event.currentTarget).to.equal(constantSourceNode);
+                        expect(event.target).to.equal(constantSourceNode);
                         expect(event.type).to.equal('ended');
+
+                        expect(this).to.equal(constantSourceNode);
 
                         done();
                     });

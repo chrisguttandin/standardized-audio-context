@@ -1,5 +1,6 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
+import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioBuffer,
     IAudioBufferSourceNode,
@@ -42,6 +43,8 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         private _nativeAudioBufferSourceNode: TNativeAudioBufferSourceNode;
 
+        private _onended: null | TEndedEventHandler<IAudioBufferSourceNode>;
+
         private _playbackRate: IAudioParam;
 
         constructor (context: TContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
@@ -58,6 +61,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             this._isBufferNullified = false;
             this._isBufferSet = false;
             this._nativeAudioBufferSourceNode = nativeAudioBufferSourceNode;
+            this._onended = null;
             // Bug #73: Edge & Safari do not export the correct values for maxValue and minValue.
             this._playbackRate = createAudioParam(
                 context,
@@ -99,12 +103,18 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             }
         }
 
-        get onended (): null | TEndedEventHandler {
-            return <null | TEndedEventHandler> this._nativeAudioBufferSourceNode.onended;
+        get onended (): null | TEndedEventHandler<IAudioBufferSourceNode> {
+            return this._onended;
         }
 
         set onended (value) {
-            this._nativeAudioBufferSourceNode.onended = <TNativeAudioBufferSourceNode['onended']> value;
+            const wrappedListener = <TNativeAudioBufferSourceNode['onended']> wrapEventListener(this, value);
+
+            this._nativeAudioBufferSourceNode.onended = wrappedListener;
+
+            const nativeOnEnded = <null | TEndedEventHandler<IAudioBufferSourceNode>> this._nativeAudioBufferSourceNode.onended;
+
+            this._onended = (nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
         }
 
         get detune (): IAudioParam {
