@@ -53,12 +53,6 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                     throw err;
                 });
 
-            setTimeout(() => {
-                try {
-                    deallocate(audioData);
-                } catch { /* Ignore errors. */ }
-            });
-
             return promise
                 .then((audioBuffer) => {
                     // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
@@ -76,6 +70,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
         // Bug #21: Safari does not return a Promise yet.
         return new Promise((resolve, reject) => {
             const complete = () => {
+                // Bug #133: Safari does neuter the ArrayBuffer.
                 try {
                     deallocate(audioData);
                 } catch { /* Ignore errors. */ }
@@ -97,8 +92,8 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                         wrapAudioBufferGetChannelDataMethod(audioBuffer);
                     }
 
-                    resolve(audioBuffer);
                     complete();
+                    resolve(audioBuffer);
                 }, (err: DOMException | Error) => {
                     // Bug #4: Safari returns null instead of an error.
                     if (err === null) {

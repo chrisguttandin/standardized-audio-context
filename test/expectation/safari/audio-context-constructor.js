@@ -1153,6 +1153,20 @@ describe('audioContextConstructor', () => {
                 });
             });
 
+            // bug #133
+
+            it('should not neuter the arrayBuffer', (done) => {
+                loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+                    expect(err).to.be.null;
+
+                    audioContext.decodeAudioData(arrayBuffer, () => {
+                        expect(arrayBuffer.byteLength).to.not.equal(0);
+
+                        done();
+                    });
+                });
+            });
+
         });
 
         describe('getOutputTimestamp()', () => {
