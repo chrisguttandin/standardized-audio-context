@@ -3,10 +3,9 @@ import { AudioBuffer, AudioBufferSourceNode, MinimalOfflineAudioContext, Offline
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../src/globals';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
-import { createNativeAudioContextConstructor } from '../../src/factories/native-audio-context-constructor';
-import { createNativeOfflineAudioContextConstructor } from '../../src/factories/native-offline-audio-context-constructor';
+import { createNativeAudioContext } from '../helper/create-native-audio-context';
+import { createNativeOfflineAudioContext } from '../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
-import { createWindow } from '../../src/factories/window';
 import { loadFixture } from '../helper/load-fixture';
 
 const createAudioBufferWithDecodeAudioDataPromiseFunction = (context) => {
@@ -175,10 +174,9 @@ describe('AudioBuffer', () => {
 
                             }
 
+
                             it('should return an AudioBuffer which can be used with a native AudioContext', () => {
-                                const window = createWindow();
-                                const nativeAudioContextConstructor = createNativeAudioContextConstructor(window);
-                                const nativeAudioContext = new nativeAudioContextConstructor(); // eslint-disable-line new-cap
+                                const nativeAudioContext = createNativeAudioContext();
                                 const nativeAudioBufferSourceNode = nativeAudioContext.createBufferSource();
 
                                 nativeAudioBufferSourceNode.buffer = audioBuffer;
@@ -187,9 +185,7 @@ describe('AudioBuffer', () => {
                             });
 
                             it('should return an AudioBuffer which can be used with a native OfflineAudioContext', () => {
-                                const window = createWindow();
-                                const nativeOfflineAudioContextConstructor = createNativeOfflineAudioContextConstructor(window);
-                                const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100); // eslint-disable-line new-cap
+                                const nativeOfflineAudioContext = createNativeOfflineAudioContext();
                                 const nativeAudioBufferSourceNode = nativeOfflineAudioContext.createBufferSource();
 
                                 nativeAudioBufferSourceNode.buffer = audioBuffer;
