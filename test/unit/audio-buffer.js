@@ -99,9 +99,7 @@ describe('AudioBuffer', () => {
                 }
             });
 
-            beforeEach(() => {
-                context = (createContext === null) ? null : createContext();
-            });
+            beforeEach(() => context = (createContext === null) ? null : createContext());
 
             describe('constructor()', () => {
 

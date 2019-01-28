@@ -92,9 +92,7 @@ describe('BiquadFilterNode', () => {
                 }
             });
 
-            beforeEach(() => {
-                context = createContext();
-            });
+            beforeEach(() => context = createContext());
 
             describe('constructor()', () => {
 

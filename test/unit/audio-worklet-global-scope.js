@@ -44,9 +44,7 @@ describe('AudioWorkletGlobalScope', () => {
                 }
             });
 
-            beforeEach(() => {
-                context = createContext();
-            });
+            beforeEach(() => context = createContext());
 
             describe('currentFrame', () => {
 

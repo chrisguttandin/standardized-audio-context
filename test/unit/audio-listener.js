@@ -33,9 +33,7 @@ describe('AudioListener', () => {
                 }
             });
 
-            beforeEach(() => {
-                context = createContext();
-            });
+            beforeEach(() => context = createContext());
 
             describe('forwardX', () => {
 
