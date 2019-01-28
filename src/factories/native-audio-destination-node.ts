@@ -17,7 +17,7 @@ export const createNativeAudioDestinationNode: TNativeAudioDestinationNodeFactor
         nativeAudioDestinationNode.channelCountMode = 'explicit';
     }
 
-    // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
+    // Bug #47: The AudioDestinationNode in Edge and Safari does not initialize the maxChannelCount property correctly.
     if (nativeAudioDestinationNode.maxChannelCount === 0) {
         Object.defineProperty(nativeAudioDestinationNode, 'maxChannelCount', {
             get: () => nativeAudioDestinationNode.channelCount
