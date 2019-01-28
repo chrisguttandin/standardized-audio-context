@@ -33,10 +33,16 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('destination', () => {
 
+        // bug #132
+
+        it('should have a wrong channelCount property', () => {
+            expect(offlineAudioContext.destination.channelCount).to.equal(2);
+        });
+
         // bug #52
 
         it('should allow to change the value of the channelCount property', () => {
-            offlineAudioContext.destination.channelCount = 2;
+            offlineAudioContext.destination.channelCount = 3;
         });
 
         // bug #53

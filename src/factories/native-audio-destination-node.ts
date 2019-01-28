@@ -7,7 +7,7 @@ export const createNativeAudioDestinationNode: TNativeAudioDestinationNodeFactor
 ) => {
     const nativeAudioDestinationNode = nativeContext.destination;
 
-    // @todo Which bug is that covering?
+    // Bug #132: Edge & Safari do not have the correct channelCount.
     if (nativeAudioDestinationNode.channelCount !== channelCount) {
         nativeAudioDestinationNode.channelCount = channelCount;
     }
