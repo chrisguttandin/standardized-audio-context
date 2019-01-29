@@ -10,7 +10,7 @@ describe('AudioWorklet', () => {
         audioContext = new AudioContext();
     });
 
-    describe('with an unknown module', () => {
+    describe('with the name of an unknown processor', () => {
 
         // bug #60
 

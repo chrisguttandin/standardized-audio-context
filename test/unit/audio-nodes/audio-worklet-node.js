@@ -344,6 +344,21 @@ describe('AudioWorkletNode', () => {
 
                             });
 
+                            describe('with the name of an unknown processor', () => {
+
+                                it('should throw a NotSupportedError', (done) => {
+                                    try {
+                                        createAudioWorkletNode(context, 'unknown-processor');
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
                         });
 
                     });

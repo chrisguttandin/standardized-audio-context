@@ -44,7 +44,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                 return nativeAudioWorkletNode;
             } catch (err) {
                 // Bug #60: Chrome Canary throws an InvalidStateError instead of a NotSupportedError.
-                if (err.code === 11 && nativeContext.state !== 'closed') {
+                if (err.code === 11) {
                     throw createNotSupportedError();
                 }
 
