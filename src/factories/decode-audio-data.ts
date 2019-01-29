@@ -1,6 +1,6 @@
-import { deallocate } from 'async-array-buffer';
 import { DETACHED_ARRAY_BUFFERS } from '../globals';
 import { cacheTestResult } from '../helpers/cache-test-result';
+import { detachArrayBuffer } from '../helpers/detach-array-buffer';
 import { getNativeContext } from '../helpers/get-native-context';
 import { TDecodeAudioDataFactory } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
@@ -72,7 +72,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             const complete = () => {
                 // Bug #133: Safari does neuter the ArrayBuffer.
                 try {
-                    deallocate(audioData);
+                    detachArrayBuffer(audioData);
                 } catch { /* Ignore errors. */ }
             };
 

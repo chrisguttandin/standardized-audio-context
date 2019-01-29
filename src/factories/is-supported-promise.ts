@@ -3,7 +3,6 @@ import { TIsSupportedPromiseFactory } from '../types';
 
 export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     browsernizr,
-    testAsyncArrayBufferSupport,
     testAudioContextCloseMethodSupport,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
     testAudioContextOptionsSupport,
@@ -11,7 +10,8 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testChannelSplitterNodeChannelCountSupport,
     testConstantSourceNodeAccurateSchedulingSupport,
     testIsSecureContextSupport,
-    testStereoPannerNodeDefaultValueSupport
+    testStereoPannerNodeDefaultValueSupport,
+    testTransferablesSupport
 ) => {
     if (browsernizr.promises &&
             browsernizr.typedarrays &&
@@ -23,16 +23,14 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
             cacheTestResult(testIsSecureContextSupport, () => testIsSecureContextSupport())) {
         return Promise
             .all([
-                cacheTestResult(testAsyncArrayBufferSupport, () => testAsyncArrayBufferSupport()),
                 cacheTestResult(testAudioContextDecodeAudioDataMethodTypeErrorSupport, () => {
                     return testAudioContextDecodeAudioDataMethodTypeErrorSupport();
                 }),
                 cacheTestResult(testChannelMergerNodeSupport, () => testChannelMergerNodeSupport()),
-                cacheTestResult(testStereoPannerNodeDefaultValueSupport, () => testStereoPannerNodeDefaultValueSupport())
+                cacheTestResult(testStereoPannerNodeDefaultValueSupport, () => testStereoPannerNodeDefaultValueSupport()),
+                cacheTestResult(testTransferablesSupport, () => testTransferablesSupport())
             ])
-            .then(([ asyncArrayBufferSupport, audioContextDecodeAudioDataMethodTypeErrorSupport, channelMergerNodeSupport ]) => {
-                return asyncArrayBufferSupport && audioContextDecodeAudioDataMethodTypeErrorSupport && channelMergerNodeSupport;
-            });
+            .then((results) => results.every((result) => result));
     }
 
     return Promise.resolve(false);

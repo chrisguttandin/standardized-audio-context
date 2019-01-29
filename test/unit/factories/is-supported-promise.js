@@ -5,7 +5,6 @@ import { createIsSupportedPromise } from '../../../src/factories/is-supported-pr
 describe('createIsSupportedPromise()', () => {
 
     let fakeBrowsernizr;
-    let fakeTestAsyncArrayBufferSupport;
     let fakeTestAudioContextCloseMethodSupport;
     let fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport;
     let fakeTestAudioContextOptionsSupport;
@@ -14,9 +13,9 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestConstantSourceNodeAccurateSchedulingSupport;
     let fakeTestIsSecureContextSupport;
     let fakeTestStereoPannerNodeDefaultValueSupport;
+    let fakeTestTransferablesSupport;
 
     afterEach(() => {
-        TEST_RESULTS.delete(fakeTestAsyncArrayBufferSupport);
         TEST_RESULTS.delete(fakeTestAudioContextCloseMethodSupport);
         TEST_RESULTS.delete(fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport);
         TEST_RESULTS.delete(fakeTestAudioContextOptionsSupport);
@@ -25,11 +24,11 @@ describe('createIsSupportedPromise()', () => {
         TEST_RESULTS.delete(fakeTestConstantSourceNodeAccurateSchedulingSupport);
         TEST_RESULTS.delete(fakeTestIsSecureContextSupport);
         TEST_RESULTS.delete(fakeTestStereoPannerNodeDefaultValueSupport);
+        TEST_RESULTS.delete(fakeTestTransferablesSupport);
     });
 
     beforeEach(() => {
         fakeBrowsernizr = { promises: true, typedarrays: true, webaudio: true };
-        fakeTestAsyncArrayBufferSupport = () => true;
         fakeTestAudioContextCloseMethodSupport = () => true;
         fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.resolve(true);
         fakeTestAudioContextOptionsSupport = () => true;
@@ -38,12 +37,12 @@ describe('createIsSupportedPromise()', () => {
         fakeTestConstantSourceNodeAccurateSchedulingSupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
         fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.resolve(true);
+        fakeTestTransferablesSupport = () => Promise.resolve(true);
     });
 
     it('should resolve to true if all test pass', async () => {
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -51,7 +50,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.true;
@@ -62,7 +62,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -70,7 +69,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -81,7 +81,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -89,7 +88,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -100,7 +100,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -108,26 +107,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
-        );
-
-        expect(isSupported).to.be.false;
-    });
-
-    it('should resolve to false if the test for async-array-buffer support fails', async () => {
-        fakeTestAsyncArrayBufferSupport = () => false;
-
-        const isSupported = await createIsSupportedPromise(
-            fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
-            fakeTestAudioContextCloseMethodSupport,
-            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
-            fakeTestAudioContextOptionsSupport,
-            fakeTestChannelMergerNodeSupport,
-            fakeTestChannelSplitterNodeChannelCountSupport,
-            fakeTestConstantSourceNodeAccurateSchedulingSupport,
-            fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -138,7 +119,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -146,7 +126,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -157,7 +138,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -165,7 +145,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -176,7 +157,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -184,7 +164,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -195,7 +176,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -203,7 +183,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -214,7 +195,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -222,7 +202,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -233,7 +214,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -241,7 +221,8 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
@@ -252,7 +233,6 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -260,18 +240,18 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;
     });
 
     it('should resolve to false if the test for default value support of a StereoPannerNode fails', async () => {
-        fakeTestConstantSourceNodeAccurateSchedulingSupport = () => false;
+        fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.resolve(false);
 
         const isSupported = await createIsSupportedPromise(
             fakeBrowsernizr,
-            fakeTestAsyncArrayBufferSupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -279,7 +259,27 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestIsSecureContextSupport,
-            fakeTestStereoPannerNodeDefaultValueSupport
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for transferables support fails', async () => {
+        fakeTestTransferablesSupport = () => Promise.resolve(false);
+
+        const isSupported = await createIsSupportedPromise(
+            fakeBrowsernizr,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
         );
 
         expect(isSupported).to.be.false;

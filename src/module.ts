@@ -1,4 +1,3 @@
-import { isSupported as testAsyncArrayBufferSupport } from 'async-array-buffer';
 import browsernizr from './browsernizr';
 import { createAbortError } from './factories/abort-error';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
@@ -164,6 +163,7 @@ import {
 } from './interfaces';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
 import { testPromiseSupport } from './support-testers/promise';
+import { testTransferablesSupport } from './support-testers/transferables';
 import {
     TAddAudioWorkletModuleFunction,
     TAnalyserNodeConstructor,
@@ -696,7 +696,6 @@ export { waveShaperNodeConstructor as WaveShaperNode };
 
 export const isSupported = () => createIsSupportedPromise(
     browsernizr,
-    testAsyncArrayBufferSupport,
     createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
@@ -704,5 +703,6 @@ export const isSupported = () => createIsSupportedPromise(
     createTestChannelSplitterNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
     createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
     createTestIsSecureContextSupport(window),
-    createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor)
+    createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),
+    testTransferablesSupport
 );

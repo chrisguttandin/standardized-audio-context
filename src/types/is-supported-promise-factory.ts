@@ -2,7 +2,6 @@ import { TBrowsernizr } from './browsernizr';
 
 export type TIsSupportedPromiseFactory = (
     browsernizr: TBrowsernizr,
-    testAsyncArrayBufferSupport: () => Promise<boolean>,
     testAudioContextCloseMethodSupport: () => boolean,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: () => Promise<boolean>,
     testAudioContextOptionsSupport: () => boolean,
@@ -10,5 +9,6 @@ export type TIsSupportedPromiseFactory = (
     testChannelSplitterNodeChannelCountSupport: () => boolean,
     testConstantSourceNodeAccurateSchedulingSupport: () => boolean,
     testIsSecureContextSupport: () => boolean,
-    testStereoPannerNodeDefaultValueSupport: () => Promise<boolean>
+    testStereoPannerNodeDefaultValueSupport: () => Promise<boolean>,
+    testTransferablesSupport: () => Promise<boolean>
 ) => Promise<boolean>;
