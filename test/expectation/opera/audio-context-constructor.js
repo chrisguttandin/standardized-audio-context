@@ -10,6 +10,92 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
+    describe('audioWorklet', () => {
+
+        describe('addModule()', () => {
+
+            describe('with an empty string as name', () => {
+
+                // bug #134
+
+                it('should throw no error', function () {
+                    this.timeout(10000);
+
+                    return audioContext.audioWorklet.addModule('base/test/fixtures/empty-string-processor.js');
+                });
+
+            });
+
+            describe('with a duplicate name', () => {
+
+                beforeEach(function () {
+                    this.timeout(10000);
+
+                    return audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+                });
+
+                // bug #135
+
+                it('should not throw an error', function () {
+                    this.timeout(10000);
+
+                    return audioContext.audioWorklet.addModule('base/test/fixtures/duplicate-gain-processor.js');
+                });
+
+            });
+
+            describe('with a processor without a valid constructor', () => {
+
+                // bug #136
+
+                it('should not throw an error', function () {
+                    this.timeout(10000);
+
+                    return audioContext.audioWorklet.addModule('base/test/fixtures/unconstructible-processor.js');
+                });
+
+            });
+
+            describe('with a processor without a prototype', () => {
+
+                // Bug #137
+
+                it('should not throw an error', function () {
+                    this.timeout(10000);
+
+                    return audioContext.audioWorklet.addModule('base/test/fixtures/prototypeless-processor.js');
+                });
+
+            });
+
+            describe('with a processor without a process function', () => {
+
+                // Bug #138
+
+                it('should not throw an error', function () {
+                    this.timeout(10000);
+
+                    return audioContext.audioWorklet.addModule('base/test/fixtures/processless-processor.js');
+                });
+
+            });
+
+            describe('with a processor with an invalid parameterDescriptors property', () => {
+
+                // Bug #139
+
+                it('should not throw an error', function () {
+                    this.timeout(10000);
+
+                    return audioContext.audioWorklet.addModule('base/test/fixtures/invalid-parameter-descriptors-property-processor.js');
+                });
+
+            });
+
+        });
+
+    });
+
     describe('outputLatency', () => {
 
         // bug #40
