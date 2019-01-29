@@ -486,83 +486,97 @@ describe('AudioWorkletGlobalScope', () => {
 
                 });
 
-                describe('with a processor without a valid constructor', () => {
+                describe('with a unique name', () => {
 
-                    // Bug #136: Chrome & Opera have the only native implementation so far and don't throw the expected error.
-                    if (window.AudioWorkletNode === undefined) {
+                    describe('with a processor without a valid constructor', () => {
 
-                        it('should throw an error', function (done) {
+                        // Bug #136: Chrome & Opera have the only native implementation so far and don't throw the expected error.
+                        if (window.AudioWorkletNode === undefined) {
+
+                            it('should throw an error', function (done) {
+                                this.timeout(10000);
+
+                                addAudioWorkletModule(context, 'unconstructible-processor')
+                                    .catch((err) => {
+                                        expect(err).to.be.an.instanceOf(TypeError);
+
+                                        done();
+                                    });
+                            });
+
+                        }
+
+                    });
+
+                    describe('with a processor without a prototype', () => {
+
+                        // Bug #137: Chrome & Opera have the only native implementation so far and don't throw the expected error.
+                        if (window.AudioWorkletNode === undefined) {
+
+                            it('should throw an error', function (done) {
+                                this.timeout(10000);
+
+                                addAudioWorkletModule(context, 'prototypeless-processor')
+                                    .catch((err) => {
+                                        expect(err).to.be.an.instanceOf(TypeError);
+
+                                        done();
+                                    });
+                            });
+
+                        }
+
+                    });
+
+                    describe('with a processor without a process function', () => {
+
+                        // Bug #138: Chrome & Opera have the only native implementation so far and don't throw the expected error.
+                        if (window.AudioWorkletNode === undefined) {
+
+                            it('should throw an error', function (done) {
+                                this.timeout(10000);
+
+                                addAudioWorkletModule(context, 'processless-processor')
+                                    .catch((err) => {
+                                        expect(err).to.be.an.instanceOf(TypeError);
+
+                                        done();
+                                    });
+                            });
+
+                        }
+
+                    });
+
+                    describe('with a processor with an invalid parameterDescriptors property', () => {
+
+                        // Bug #139: Chrome & Opera have the only native implementation so far and don't throw the expected error.
+                        if (window.AudioWorkletNode === undefined) {
+
+                            it('should throw an error', function (done) {
+                                this.timeout(10000);
+
+                                addAudioWorkletModule(context, 'invalid-parameter-descriptors-property-processor')
+                                    .catch((err) => {
+                                        expect(err).to.be.an.instanceOf(TypeError);
+
+                                        done();
+                                    });
+                            });
+
+                        }
+
+                    });
+
+                    describe('with a valid processor', () => {
+
+                        it('should return a promise', function () {
                             this.timeout(10000);
 
-                            addAudioWorkletModule(context, 'unconstructible-processor')
-                                .catch((err) => {
-                                    expect(err).to.be.an.instanceOf(TypeError);
-
-                                    done();
-                                });
+                            return addAudioWorkletModule(context, 'gain-processor');
                         });
 
-                    }
-
-                });
-
-                describe('with a processor without a prototype', () => {
-
-                    // Bug #137: Chrome & Opera have the only native implementation so far and don't throw the expected error.
-                    if (window.AudioWorkletNode === undefined) {
-
-                        it('should throw an error', function (done) {
-                            this.timeout(10000);
-
-                            addAudioWorkletModule(context, 'prototypeless-processor')
-                                .catch((err) => {
-                                    expect(err).to.be.an.instanceOf(TypeError);
-
-                                    done();
-                                });
-                        });
-
-                    }
-
-                });
-
-                describe('with a processor without a process function', () => {
-
-                    // Bug #138: Chrome & Opera have the only native implementation so far and don't throw the expected error.
-                    if (window.AudioWorkletNode === undefined) {
-
-                        it('should throw an error', function (done) {
-                            this.timeout(10000);
-
-                            addAudioWorkletModule(context, 'processless-processor')
-                                .catch((err) => {
-                                    expect(err).to.be.an.instanceOf(TypeError);
-
-                                    done();
-                                });
-                        });
-
-                    }
-
-                });
-
-                describe('with a processor with an invalid parameterDescriptors property', () => {
-
-                    // Bug #139: Chrome & Opera have the only native implementation so far and don't throw the expected error.
-                    if (window.AudioWorkletNode === undefined) {
-
-                        it('should throw an error', function (done) {
-                            this.timeout(10000);
-
-                            addAudioWorkletModule(context, 'invalid-parameter-descriptors-property-processor')
-                                .catch((err) => {
-                                    expect(err).to.be.an.instanceOf(TypeError);
-
-                                    done();
-                                });
-                        });
-
-                    }
+                    });
 
                 });
 
