@@ -312,7 +312,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                         const potentiallyEmptyInputs = inputs
                             .map((input, index) => {
                                 if (audioNodeConnections.inputs[index].size === 0) {
-                                    return [ ];
+                                    return [ new Float32Array(0) ];
                                 }
 
                                 return input;
