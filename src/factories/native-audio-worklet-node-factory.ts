@@ -5,14 +5,15 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
     createInvalidStateError,
     createNativeAudioNode,
     createNativeAudioWorkletNodeFaker,
-    createNotSupportedError
+    createNotSupportedError,
+    isNativeOfflineAudioContext
 ) => {
     return (nativeContext, baseLatency, nativeAudioWorkletNodeConstructor, name, processorDefinition, options) => {
         if (nativeAudioWorkletNodeConstructor !== null) {
             try {
                 // Bug #86: Chrome Canary does not invoke the process() function if the corresponding AudioWorkletNode has no output.
                 const nativeAudioWorkletNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
-                    return (options.numberOfInputs !== 0 && options.numberOfOutputs === 0) ?
+                    return (isNativeOfflineAudioContext(ntvCntxt) && options.numberOfInputs !== 0 && options.numberOfOutputs === 0) ?
                         new nativeAudioWorkletNodeConstructor(ntvCntxt, name, {
                             ...options,
                             numberOfOutputs: 1,

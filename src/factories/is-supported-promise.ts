@@ -6,6 +6,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testAudioContextCloseMethodSupport,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
     testAudioContextOptionsSupport,
+    testAudioWorkletProcessorNoOutputsSupport,
     testChannelMergerNodeSupport,
     testChannelSplitterNodeChannelCountSupport,
     testConstantSourceNodeAccurateSchedulingSupport,
@@ -27,6 +28,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
                     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
                     testAudioContextDecodeAudioDataMethodTypeErrorSupport
                 ),
+                cacheTestResult(testAudioWorkletProcessorNoOutputsSupport, testAudioWorkletProcessorNoOutputsSupport),
                 cacheTestResult(testChannelMergerNodeSupport, testChannelMergerNodeSupport),
                 cacheTestResult(testStereoPannerNodeDefaultValueSupport, testStereoPannerNodeDefaultValueSupport),
                 cacheTestResult(testTransferablesSupport, testTransferablesSupport)

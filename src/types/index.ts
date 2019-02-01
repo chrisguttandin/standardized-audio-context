@@ -245,6 +245,7 @@ export * from './test-audio-context-options-support-factory';
 export * from './test-audio-scheduled-source-node-start-method-consecutive-calls-support-factory';
 export * from './test-audio-scheduled-source-node-stop-method-consecutive-calls-support-factory';
 export * from './test-audio-scheduled-source-node-stop-method-negative-parameters-support-factory';
+export * from './test-audio-worklet-processor-no-outputs-support-factory';
 export * from './test-channel-merger-node-support-factory';
 export * from './test-channel-splitter-node-channel-count-support-factory';
 export * from './test-constant-source-node-accurate-scheduling-support-factory';

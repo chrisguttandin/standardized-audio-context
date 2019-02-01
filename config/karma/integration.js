@@ -22,7 +22,7 @@ module.exports = (config) => {
             ChromeBrowserStack: {
                 base: 'BrowserStack',
                 browser: 'chrome',
-                browser_version: '55.0', // eslint-disable-line camelcase
+                browser_version: '67.0', // eslint-disable-line camelcase
                 os: 'OS X',
                 os_version: 'Mojave' // eslint-disable-line camelcase
             },

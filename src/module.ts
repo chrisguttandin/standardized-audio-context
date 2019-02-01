@@ -119,6 +119,8 @@ import {
 import {
     createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 } from './factories/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
+
+import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/test-audio-worklet-processor-no-outputs-support';
 import { createTestChannelMergerNodeSupport } from './factories/test-channel-merger-node-support';
 import { createTestChannelSplitterNodeChannelCountSupport } from './factories/test-channel-splitter-node-channel-count-support';
 import {
@@ -564,7 +566,8 @@ const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
     createInvalidStateError,
     createNativeAudioNode,
     createNativeAudioWorkletNodeFaker,
-    createNotSupportedError
+    createNotSupportedError,
+    isNativeOfflineAudioContext
 );
 const nativeAudioWorkletNodeConstructor = createNativeAudioWorkletNodeConstructor(window);
 const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
@@ -700,6 +703,7 @@ export const isSupported = () => createIsSupportedPromise(
     createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
+    createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
     createTestChannelMergerNodeSupport(nativeAudioContextConstructor),
     createTestChannelSplitterNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
     createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
