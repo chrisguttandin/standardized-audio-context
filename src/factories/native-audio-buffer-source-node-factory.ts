@@ -50,7 +50,7 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
         // Bug #92: Edge does not respect the duration parameter yet.
         if (!cacheTestResult(
             testAudioBufferSourceNodeStartMethodDurationParameterSupport,
-            () => testAudioBufferSourceNodeStartMethodDurationParameterSupport()
+            testAudioBufferSourceNodeStartMethodDurationParameterSupport
         )) {
             wrapAudioBufferSourceNodeStartMethodDurationParameter(nativeAudioBufferSourceNode, nativeContext);
         }

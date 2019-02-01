@@ -52,7 +52,7 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
              * factory function. But since Firefox also supports the constructor everything should be fine.
              */
             const audioBuffer = (nativeAudioBufferConstructor !== null &&
-                    cacheTestResult(testNativeAudioBufferConstructorSupport, () => testNativeAudioBufferConstructorSupport())) ?
+                    cacheTestResult(testNativeAudioBufferConstructorSupport, testNativeAudioBufferConstructorSupport)) ?
                 new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate }) :
                 nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
