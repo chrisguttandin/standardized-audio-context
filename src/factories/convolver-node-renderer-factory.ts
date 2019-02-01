@@ -6,43 +6,44 @@ import { TConvolverNodeRendererFactoryFactory, TNativeConvolverNode, TNativeOffl
 
 export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFactory = (createNativeConvolverNode) => {
     return () => {
-        let nativeConvolverNode: null | TNativeConvolverNode = null;
+        let nativeConvolverNodePromise: null | Promise<TNativeConvolverNode> = null;
+
+        const createConvolverNode = async (proxy: IConvolverNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeConvolverNode = getNativeAudioNode<TNativeConvolverNode>(proxy);
+
+            // If the initially used nativeConvolverNode was not constructed on the same OfflineAudioContext it needs to be created again.
+            if (!isOwnedByContext(nativeConvolverNode, nativeOfflineAudioContext)) {
+                const options: IConvolverOptions = {
+                    buffer: nativeConvolverNode.buffer,
+                    channelCount: nativeConvolverNode.channelCount,
+                    channelCountMode: nativeConvolverNode.channelCountMode,
+                    channelInterpretation: nativeConvolverNode.channelInterpretation,
+                    disableNormalization: !nativeConvolverNode.normalize
+                };
+
+                nativeConvolverNode = createNativeConvolverNode(nativeOfflineAudioContext, options);
+            }
+
+            if ((<INativeConvolverNodeFaker> nativeConvolverNode).inputs !== undefined) {
+                await renderInputsOfAudioNode(
+                    proxy,
+                    nativeOfflineAudioContext,
+                    (<INativeConvolverNodeFaker> nativeConvolverNode).inputs[0]
+                );
+            } else {
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode);
+            }
+
+            return nativeConvolverNode;
+        };
 
         return {
-            render: async (proxy: IConvolverNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeConvolverNode> => {
-                if (nativeConvolverNode !== null) {
-                    return nativeConvolverNode;
+            render (proxy: IConvolverNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeConvolverNode> {
+                if (nativeConvolverNodePromise === null) {
+                    nativeConvolverNodePromise = createConvolverNode(proxy, nativeOfflineAudioContext);
                 }
 
-                nativeConvolverNode = getNativeAudioNode<TNativeConvolverNode>(proxy);
-
-                /*
-                 * If the initially used nativeConvolverNode was not constructed on the same OfflineAudioContext it needs to be created
-                 * again.
-                 */
-                if (!isOwnedByContext(nativeConvolverNode, nativeOfflineAudioContext)) {
-                    const options: IConvolverOptions = {
-                        buffer: nativeConvolverNode.buffer,
-                        channelCount: nativeConvolverNode.channelCount,
-                        channelCountMode: nativeConvolverNode.channelCountMode,
-                        channelInterpretation: nativeConvolverNode.channelInterpretation,
-                        disableNormalization: !nativeConvolverNode.normalize
-                    };
-
-                    nativeConvolverNode = createNativeConvolverNode(nativeOfflineAudioContext, options);
-                }
-
-                if ((<INativeConvolverNodeFaker> nativeConvolverNode).inputs !== undefined) {
-                    await renderInputsOfAudioNode(
-                        proxy,
-                        nativeOfflineAudioContext,
-                        (<INativeConvolverNodeFaker> nativeConvolverNode).inputs[0]
-                    );
-                } else {
-                    await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode);
-                }
-
-                return nativeConvolverNode;
+                return nativeConvolverNodePromise;
             }
         };
     };

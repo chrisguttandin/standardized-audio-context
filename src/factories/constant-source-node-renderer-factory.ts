@@ -10,9 +10,44 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
     createNativeConstantSourceNode
 ) => {
     return () => {
-        let nativeConstantSourceNode: null | TNativeConstantSourceNode = null;
+        let nativeConstantSourceNodePromise: null | Promise<TNativeConstantSourceNode> = null;
         let start: null | number = null;
         let stop: null | number = null;
+
+        const createConstantSourceNode = async (proxy: IConstantSourceNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeConstantSourceNode = getNativeAudioNode<TNativeConstantSourceNode>(proxy);
+
+            /*
+             * If the initially used nativeConstantSourceNode was not constructed on the same OfflineAudioContext it needs to be created
+             * again.
+             */
+            if (!isOwnedByContext(nativeConstantSourceNode, nativeOfflineAudioContext)) {
+                const options: IConstantSourceOptions = {
+                    channelCount: nativeConstantSourceNode.channelCount,
+                    channelCountMode: nativeConstantSourceNode.channelCountMode,
+                    channelInterpretation: nativeConstantSourceNode.channelInterpretation,
+                    offset: nativeConstantSourceNode.offset.value
+                };
+
+                nativeConstantSourceNode = createNativeConstantSourceNode(nativeOfflineAudioContext, options);
+
+                if (start !== null) {
+                    nativeConstantSourceNode.start(start);
+                }
+
+                if (stop !== null) {
+                    nativeConstantSourceNode.stop(stop);
+                }
+
+                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
+            } else {
+                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.offset);
+            }
+
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConstantSourceNode);
+
+            return nativeConstantSourceNode;
+        };
 
         return {
             set start (value: number) {
@@ -21,46 +56,15 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
             set stop (value: number) {
                 stop = value;
             },
-            render: async (
+            render (
                 proxy: IConstantSourceNode,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
-            ): Promise<TNativeConstantSourceNode> => {
-                if (nativeConstantSourceNode !== null) {
-                    return nativeConstantSourceNode;
+            ): Promise<TNativeConstantSourceNode> {
+                if (nativeConstantSourceNodePromise === null) {
+                    nativeConstantSourceNodePromise = createConstantSourceNode(proxy, nativeOfflineAudioContext);
                 }
 
-                nativeConstantSourceNode = getNativeAudioNode<TNativeConstantSourceNode>(proxy);
-
-                /*
-                 * If the initially used nativeConstantSourceNode was not constructed on the same OfflineAudioContext it needs to be
-                 * created again.
-                 */
-                if (!isOwnedByContext(nativeConstantSourceNode, nativeOfflineAudioContext)) {
-                    const options: IConstantSourceOptions = {
-                        channelCount: nativeConstantSourceNode.channelCount,
-                        channelCountMode: nativeConstantSourceNode.channelCountMode,
-                        channelInterpretation: nativeConstantSourceNode.channelInterpretation,
-                        offset: nativeConstantSourceNode.offset.value
-                    };
-
-                    nativeConstantSourceNode = createNativeConstantSourceNode(nativeOfflineAudioContext, options);
-
-                    if (start !== null) {
-                        nativeConstantSourceNode.start(start);
-                    }
-
-                    if (stop !== null) {
-                        nativeConstantSourceNode.stop(stop);
-                    }
-
-                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
-                } else {
-                    await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.offset);
-                }
-
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConstantSourceNode);
-
-                return nativeConstantSourceNode;
+                return nativeConstantSourceNodePromise;
             }
         };
     };

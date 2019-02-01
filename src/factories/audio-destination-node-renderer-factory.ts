@@ -3,22 +3,26 @@ import { IAudioDestinationNode } from '../interfaces';
 import { TAudioDestinationNodeRendererFactory, TNativeAudioDestinationNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFactory = () => {
-    let nativeAudioDestinationNode: null | TNativeAudioDestinationNode = null;
+    let nativeAudioDestinationNodePromise: null | Promise<TNativeAudioDestinationNode> = null;
+
+    const createAudioDestinationNode = async (proxy: IAudioDestinationNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+        const nativeAudioDestinationNode = nativeOfflineAudioContext.destination;
+
+        await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
+
+        return nativeAudioDestinationNode;
+    };
 
     return {
-        render: async (
+        render (
             proxy: IAudioDestinationNode,
             nativeOfflineAudioContext: TNativeOfflineAudioContext
-        ): Promise<TNativeAudioDestinationNode> => {
-            if (nativeAudioDestinationNode !== null) {
-                return nativeAudioDestinationNode;
+        ): Promise<TNativeAudioDestinationNode> {
+            if (nativeAudioDestinationNodePromise === null) {
+                nativeAudioDestinationNodePromise = createAudioDestinationNode(proxy, nativeOfflineAudioContext);
             }
 
-            nativeAudioDestinationNode = nativeOfflineAudioContext.destination;
-
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
-
-            return nativeAudioDestinationNode;
+            return nativeAudioDestinationNodePromise;
         }
     };
 };

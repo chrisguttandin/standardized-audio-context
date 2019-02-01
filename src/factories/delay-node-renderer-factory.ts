@@ -8,36 +8,40 @@ import { TDelayNodeRendererFactoryFactory, TNativeDelayNode, TNativeOfflineAudio
 
 export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = (createNativeDelayNode) => {
     return (maxDelayTime: number) => {
-        let nativeDelayNode: null | TNativeDelayNode = null;
+        let nativeDelayNodePromise: null | Promise<TNativeDelayNode> = null;
+
+        const createDelayNode = async (proxy: IDelayNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeDelayNode = getNativeAudioNode<TNativeDelayNode>(proxy);
+
+            // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
+            if (!isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext)) {
+                const options: IDelayOptions = {
+                    channelCount: nativeDelayNode.channelCount,
+                    channelCountMode: nativeDelayNode.channelCountMode,
+                    channelInterpretation: nativeDelayNode.channelInterpretation,
+                    delayTime: nativeDelayNode.delayTime.value,
+                    maxDelayTime
+                };
+
+                nativeDelayNode = createNativeDelayNode(nativeOfflineAudioContext, options);
+
+                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
+            } else {
+                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.delayTime);
+            }
+
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeDelayNode);
+
+            return nativeDelayNode;
+        };
 
         return {
-            render: async (proxy: IDelayNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeDelayNode> => {
-                if (nativeDelayNode !== null) {
-                    return nativeDelayNode;
+            render (proxy: IDelayNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeDelayNode> {
+                if (nativeDelayNodePromise === null) {
+                    nativeDelayNodePromise = createDelayNode(proxy, nativeOfflineAudioContext);
                 }
 
-                nativeDelayNode = getNativeAudioNode<TNativeDelayNode>(proxy);
-
-                // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
-                if (!isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext)) {
-                    const options: IDelayOptions = {
-                        channelCount: nativeDelayNode.channelCount,
-                        channelCountMode: nativeDelayNode.channelCountMode,
-                        channelInterpretation: nativeDelayNode.channelInterpretation,
-                        delayTime: nativeDelayNode.delayTime.value,
-                        maxDelayTime
-                    };
-
-                    nativeDelayNode = createNativeDelayNode(nativeOfflineAudioContext, options);
-
-                    await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
-                } else {
-                    await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.delayTime);
-                }
-
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeDelayNode);
-
-                return nativeDelayNode;
+                return nativeDelayNodePromise;
             }
         };
     };

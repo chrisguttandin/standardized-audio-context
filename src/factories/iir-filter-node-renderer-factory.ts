@@ -67,64 +67,63 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
     renderNativeOfflineAudioContext
 ) => {
     return (feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) => {
-        let nativeAudioNode: null | TNativeAudioBufferSourceNode | TNativeIIRFilterNode = null;
+        let nativeAudioNodePromise: null | Promise<TNativeAudioBufferSourceNode | TNativeIIRFilterNode> = null;
+
+        const createAudioNode = async (proxy: IIIRFilterNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeAudioNode = getNativeAudioNode<TNativeIIRFilterNode>(proxy);
+
+            if (nativeOfflineAudioContextConstructor === null) {
+                throw new Error(); // @todo
+            }
+
+            // Bug #9: Safari does not support IIRFilterNodes.
+            if (nativeOfflineAudioContext.createIIRFilter === undefined) {
+               const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
+                   // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
+                   proxy.context.destination.channelCount,
+                   // Bug #17: Safari does not yet expose the length.
+                   (<IMinimalOfflineAudioContext> proxy.context).length,
+                   nativeOfflineAudioContext.sampleRate
+               );
+
+               await renderInputsOfAudioNode(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination);
+
+               const renderedBuffer = await renderNativeOfflineAudioContext(partialOfflineAudioContext);
+               const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext);
+
+               audioBufferSourceNode.buffer = filterFullBuffer(
+                   renderedBuffer,
+                   nativeOfflineAudioContext,
+                   feedback,
+                   feedforward
+               );
+               audioBufferSourceNode.start(0);
+
+               return audioBufferSourceNode;
+           } else {
+                // If the initially used nativeAudioNode was not constructed on the same OfflineAudioContext it needs to be created again.
+                if (!isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext)) {
+                    nativeAudioNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => {
+                        return ntvCntxt.createIIRFilter(<number[]> feedforward, <number[]> feedback);
+                    });
+                }
+
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode);
+
+                return nativeAudioNode;
+            }
+        };
 
         return {
-            render: async (
+            render (
                 proxy: IIIRFilterNode,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
-            ): Promise<TNativeAudioBufferSourceNode | TNativeIIRFilterNode> => {
-                if (nativeAudioNode !== null) {
-                    return nativeAudioNode;
+            ): Promise<TNativeAudioBufferSourceNode | TNativeIIRFilterNode> {
+                if (nativeAudioNodePromise === null) {
+                    nativeAudioNodePromise = createAudioNode(proxy, nativeOfflineAudioContext);
                 }
 
-                if (nativeOfflineAudioContextConstructor === null) {
-                    throw new Error(); // @todo
-                }
-
-                nativeAudioNode = getNativeAudioNode<TNativeIIRFilterNode>(proxy);
-
-                // Bug #9: Safari does not support IIRFilterNodes.
-                if (nativeOfflineAudioContext.createIIRFilter === undefined) {
-                   const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
-                       // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
-                       proxy.context.destination.channelCount,
-                       // Bug #17: Safari does not yet expose the length.
-                       (<IMinimalOfflineAudioContext> proxy.context).length,
-                       nativeOfflineAudioContext.sampleRate
-                   );
-
-                   await renderInputsOfAudioNode(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination);
-
-                   const renderedBuffer = await renderNativeOfflineAudioContext(partialOfflineAudioContext);
-                   const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext);
-
-                   audioBufferSourceNode.buffer = filterFullBuffer(
-                       renderedBuffer,
-                       nativeOfflineAudioContext,
-                       feedback,
-                       feedforward
-                   );
-                   audioBufferSourceNode.start(0);
-
-                   nativeAudioNode = audioBufferSourceNode;
-
-                   return nativeAudioNode;
-               } else {
-                    /*
-                     * If the initially used nativeAudioNode was not constructed on the same OfflineAudioContext it needs to be created
-                     * again.
-                     */
-                    if (!isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext)) {
-                        nativeAudioNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => {
-                            return ntvCntxt.createIIRFilter(<number[]> feedforward, <number[]> feedback);
-                        });
-                    }
-
-                    await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode);
-
-                    return nativeAudioNode;
-                }
+                return nativeAudioNodePromise;
             }
         };
     };

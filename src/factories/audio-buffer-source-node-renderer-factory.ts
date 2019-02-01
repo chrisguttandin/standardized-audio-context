@@ -8,9 +8,48 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
     createNativeAudioBufferSourceNode
 ) => {
     return () => {
-        let nativeAudioBufferSourceNode: null | TNativeAudioBufferSourceNode = null;
+        let nativeAudioBufferSourceNodePromise: null | Promise<TNativeAudioBufferSourceNode> = null;
         let start: null | [ number, number ] | [ number, number, number ] = null;
         let stop: null | number = null;
+
+        const createAudioBufferSourceNode = async (
+            proxy: IAudioBufferSourceNode,
+            nativeOfflineAudioContext: TNativeOfflineAudioContext
+        ) => {
+            let nativeAudioBufferSourceNode = getNativeAudioNode<TNativeAudioBufferSourceNode>(proxy);
+
+            /*
+             * If the initially used nativeAudioBufferSourceNode was not constructed on the same OfflineAudioContext it needs to be created
+             * again.
+             */
+            if (!isOwnedByContext(nativeAudioBufferSourceNode, nativeOfflineAudioContext)) {
+                const options: IAudioBufferSourceOptions = {
+                    buffer: nativeAudioBufferSourceNode.buffer,
+                    channelCount: nativeAudioBufferSourceNode.channelCount,
+                    channelCountMode: nativeAudioBufferSourceNode.channelCountMode,
+                    channelInterpretation: nativeAudioBufferSourceNode.channelInterpretation,
+                    detune: 0, // @todo nativeAudioBufferSourceNode.detune.value,
+                    loop: nativeAudioBufferSourceNode.loop,
+                    loopEnd: nativeAudioBufferSourceNode.loopEnd,
+                    loopStart: nativeAudioBufferSourceNode.loopStart,
+                    playbackRate: nativeAudioBufferSourceNode.playbackRate.value
+                };
+
+                nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext, options);
+
+                if (start !== null) {
+                    nativeAudioBufferSourceNode.start(...start);
+                }
+
+                if (stop !== null) {
+                    nativeAudioBufferSourceNode.stop(stop);
+                }
+            }
+
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioBufferSourceNode);
+
+            return nativeAudioBufferSourceNode;
+        };
 
         return {
             set start (value: [ number, number ] | [ number, number, number ]) {
@@ -19,47 +58,15 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
             set stop (value: number) {
                 stop = value;
             },
-            render: async (
+            render (
                 proxy: IAudioBufferSourceNode,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
-            ): Promise<TNativeAudioBufferSourceNode> => {
-                if (nativeAudioBufferSourceNode !== null) {
-                    return nativeAudioBufferSourceNode;
+            ): Promise<TNativeAudioBufferSourceNode> {
+                if (nativeAudioBufferSourceNodePromise === null) {
+                    nativeAudioBufferSourceNodePromise = createAudioBufferSourceNode(proxy, nativeOfflineAudioContext);
                 }
 
-                nativeAudioBufferSourceNode = <TNativeAudioBufferSourceNode> getNativeAudioNode(proxy);
-
-                /*
-                 * If the initially used nativeAudioBufferSourceNode was not constructed on the same OfflineAudioContext it needs to be
-                 * created again.
-                 */
-                if (!isOwnedByContext(nativeAudioBufferSourceNode, nativeOfflineAudioContext)) {
-                    const options: IAudioBufferSourceOptions = {
-                        buffer: nativeAudioBufferSourceNode.buffer,
-                        channelCount: nativeAudioBufferSourceNode.channelCount,
-                        channelCountMode: nativeAudioBufferSourceNode.channelCountMode,
-                        channelInterpretation: nativeAudioBufferSourceNode.channelInterpretation,
-                        detune: 0, // @todo nativeAudioBufferSourceNode.detune.value,
-                        loop: nativeAudioBufferSourceNode.loop,
-                        loopEnd: nativeAudioBufferSourceNode.loopEnd,
-                        loopStart: nativeAudioBufferSourceNode.loopStart,
-                        playbackRate: nativeAudioBufferSourceNode.playbackRate.value
-                    };
-
-                    nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext, options);
-
-                    if (start !== null) {
-                        nativeAudioBufferSourceNode.start(...start);
-                    }
-
-                    if (stop !== null) {
-                        nativeAudioBufferSourceNode.stop(stop);
-                    }
-                }
-
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioBufferSourceNode);
-
-                return nativeAudioBufferSourceNode;
+                return nativeAudioBufferSourceNodePromise;
             }
         };
     };

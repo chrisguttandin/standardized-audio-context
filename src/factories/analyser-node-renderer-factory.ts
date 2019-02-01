@@ -6,37 +6,38 @@ import { TAnalyserNodeRendererFactoryFactory, TNativeAnalyserNode, TNativeOfflin
 
 export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFactory = (createNativeAnalyserNode) => {
     return () => {
-        let nativeAnalyserNode: null | TNativeAnalyserNode = null;
+        let nativeAnalyserNodePromise: null | Promise<TNativeAnalyserNode> = null;
+
+        const createAnalyserNode = async (proxy: IAnalyserNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeAnalyserNode = getNativeAudioNode<TNativeAnalyserNode>(proxy);
+
+            // If the initially used nativeAnalyserNode was not constructed on the same OfflineAudioContext it needs to be created again.
+            if (!isOwnedByContext(nativeAnalyserNode, nativeOfflineAudioContext)) {
+                const options: IAnalyserOptions = {
+                    channelCount: nativeAnalyserNode.channelCount,
+                    channelCountMode: nativeAnalyserNode.channelCountMode,
+                    channelInterpretation: nativeAnalyserNode.channelInterpretation,
+                    fftSize: nativeAnalyserNode.fftSize,
+                    maxDecibels: nativeAnalyserNode.maxDecibels,
+                    minDecibels: nativeAnalyserNode.minDecibels,
+                    smoothingTimeConstant: nativeAnalyserNode.smoothingTimeConstant
+                };
+
+                nativeAnalyserNode = createNativeAnalyserNode(nativeOfflineAudioContext, options);
+            }
+
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAnalyserNode);
+
+            return nativeAnalyserNode;
+        };
 
         return {
-            render: async (proxy: IAnalyserNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> => {
-                if (nativeAnalyserNode !== null) {
-                    return nativeAnalyserNode;
+            render (proxy: IAnalyserNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> {
+                if (nativeAnalyserNodePromise === null) {
+                    nativeAnalyserNodePromise = createAnalyserNode(proxy, nativeOfflineAudioContext);
                 }
 
-                nativeAnalyserNode = getNativeAudioNode<TNativeAnalyserNode>(proxy);
-
-                /*
-                 * If the initially used nativeAnalyserNode was not constructed on the same OfflineAudioContext it needs to be created
-                 * again.
-                 */
-                if (!isOwnedByContext(nativeAnalyserNode, nativeOfflineAudioContext)) {
-                    const options: IAnalyserOptions = {
-                        channelCount: nativeAnalyserNode.channelCount,
-                        channelCountMode: nativeAnalyserNode.channelCountMode,
-                        channelInterpretation: nativeAnalyserNode.channelInterpretation,
-                        fftSize: nativeAnalyserNode.fftSize,
-                        maxDecibels: nativeAnalyserNode.maxDecibels,
-                        minDecibels: nativeAnalyserNode.minDecibels,
-                        smoothingTimeConstant: nativeAnalyserNode.smoothingTimeConstant
-                    };
-
-                    nativeAnalyserNode = createNativeAnalyserNode(nativeOfflineAudioContext, options);
-                }
-
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAnalyserNode);
-
-                return nativeAnalyserNode;
+                return nativeAnalyserNodePromise;
             }
         };
     };
