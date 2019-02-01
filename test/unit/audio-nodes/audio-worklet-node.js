@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -445,42 +445,7 @@ describe('AudioWorkletNode', () => {
 
             describe('numberOfOutputs', () => {
 
-                let audioWorkletNode;
-
-                beforeEach(async function () {
-                    this.timeout(10000);
-
-                    await addAudioWorkletModule('base/test/fixtures/inspector-processor.js');
-
-                    audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', {
-                        numberOfOutputs: 0
-                    });
-                });
-
-                it('should call process() even without any output', (done) => {
-                    audioWorkletNode.port.onmessage = ({ data: { inputs, outputs } }) => {
-                        if (inputs !== undefined) {
-                            audioWorkletNode.port.onmessage = null;
-
-                            expect(inputs.length).to.equal(1);
-                            // @todo Test the number of inputs.
-                            expect(inputs[0][0].length).to.equal(128);
-
-                            expect(outputs.length).to.equal(0);
-
-                            done();
-                        }
-                    };
-
-                    const constantSourceNode = new ConstantSourceNode(context);
-
-                    constantSourceNode.connect(audioWorkletNode);
-                    constantSourceNode.start();
-
-                    if (context.startRendering !== undefined) {
-                        context.startRendering();
-                    }
-                });
+                // @todo
 
             });
 
