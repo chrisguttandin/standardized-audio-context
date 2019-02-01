@@ -586,6 +586,7 @@ const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = (i
         createAudioParam,
         createAudioWorkletNodeRenderer,
         createNativeAudioWorkletNode,
+        gainNodeConstructor,
         isNativeOfflineAudioContext,
         nativeAudioWorkletNodeConstructor,
         noneAudioDestinationNodeConstructor

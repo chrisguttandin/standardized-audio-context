@@ -63,6 +63,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     createAudioParam,
     createAudioWorkletNodeRenderer,
     createNativeAudioWorkletNode,
+    gainNodeConstructor,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
     noneAudioDestinationNodeConstructor
@@ -120,8 +121,18 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
              * Bug #50: Only Safari does yet allow to create AudioNodes on a closed AudioContext. Therefore this is currently faked by
              * using another AudioContext. And that is the reason why this will fail in case of a closed AudioContext.
              */
-            if (options.numberOfOutputs === 0 && this.context.state !== 'closed') {
-                this.connect(context.destination);
+            if (context.state !== 'closed') {
+                const gainNode = new gainNodeConstructor(context, { gain: 0 });
+
+                try {
+                    this
+                        .connect(gainNode)
+                        .connect(context.destination);
+                } catch (err) {
+                    if (err.name !== 'IndexSizeError') {
+                        throw err; // tslint:disable-line:rxjs-throw-error
+                    }
+                }
             }
         }
 
