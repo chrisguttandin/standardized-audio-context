@@ -217,30 +217,6 @@ describe('audioContextConstructor', () => {
 
     });
 
-    describe('createConvolver()', () => {
-
-        let convolverNode;
-
-        beforeEach(() => {
-            convolverNode = audioContext.createConvolver();
-        });
-
-        describe('buffer', () => {
-
-            // bug #116
-
-            it('should not allow to reassign the buffer to another buffer', () => {
-                convolverNode.buffer = audioContext.createBuffer(2, 100, 44100);
-
-                expect(() => {
-                    convolverNode.buffer = audioContext.createBuffer(2, 100, 44100);
-                }).to.throw(DOMException).with.property('name', 'InvalidStateError');
-            });
-
-        });
-
-    });
-
     describe('createMediaStreamTrackSource()', () => {
 
         // bug #121

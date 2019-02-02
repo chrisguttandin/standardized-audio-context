@@ -10,6 +10,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testChannelMergerNodeSupport,
     testChannelSplitterNodeChannelCountSupport,
     testConstantSourceNodeAccurateSchedulingSupport,
+    testConvolverNodeBufferReassignabilitySupport,
     testIsSecureContextSupport,
     testStereoPannerNodeDefaultValueSupport,
     testTransferablesSupport
@@ -21,6 +22,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
             && cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport)
             && cacheTestResult(testChannelSplitterNodeChannelCountSupport, testChannelSplitterNodeChannelCountSupport)
             && cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport)
+            && cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport)
             && cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport)) {
         return Promise
             .all([

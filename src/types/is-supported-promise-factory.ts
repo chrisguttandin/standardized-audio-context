@@ -9,6 +9,7 @@ export type TIsSupportedPromiseFactory = (
     testChannelMergerNodeSupport: () => Promise<boolean>,
     testChannelSplitterNodeChannelCountSupport: () => boolean,
     testConstantSourceNodeAccurateSchedulingSupport: () => boolean,
+    testConvolverNodeBufferReassignabilitySupport: () => boolean,
     testIsSecureContextSupport: () => boolean,
     testStereoPannerNodeDefaultValueSupport: () => Promise<boolean>,
     testTransferablesSupport: () => Promise<boolean>

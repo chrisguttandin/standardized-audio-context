@@ -68,7 +68,6 @@ import { createNativeChannelSplitterNodeFactory } from './factories/native-chann
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConstantSourceNodeFakerFactory } from './factories/native-constant-source-node-faker-factory';
 import { createNativeConvolverNodeFactory } from './factories/native-convolver-node-factory';
-import { createNativeConvolverNodeFakerFactory } from './factories/native-convolver-node-faker-factory';
 import { createNativeDelayNodeFactory } from './factories/native-delay-node-factory';
 import { createNativeDynamicsCompressorNodeFactory } from './factories/native-dynamics-compressor-node-factory';
 import { createNativeGainNodeFactory } from './factories/native-gain-node-factory';
@@ -323,14 +322,7 @@ const constantSourceNodeConstructor: TConstantSourceNodeConstructor = createCons
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const createNativeConvolverNodeFaker = createNativeConvolverNodeFakerFactory(createNativeAudioNode, createNativeGainNode);
-const testConvolverNodeBufferReassignabilitySupport = createTestConvolverNodeBufferReassignabilitySupport(createNativeAudioNode);
-const createNativeConvolverNode = createNativeConvolverNodeFactory(
-    createNativeAudioNode,
-    createNativeConvolverNodeFaker,
-    createNotSupportedError,
-    testConvolverNodeBufferReassignabilitySupport
-);
+const createNativeConvolverNode = createNativeConvolverNodeFactory(createNativeAudioNode, createNotSupportedError);
 const createConvolverNodeRenderer = createConvolverNodeRendererFactory(createNativeConvolverNode);
 const convolverNodeConstructor: TConvolverNodeConstructor = createConvolverNodeConstructor(
     createConvolverNodeRenderer,
@@ -703,6 +695,7 @@ export const isSupported = () => createIsSupportedPromise(
     createTestChannelMergerNodeSupport(nativeAudioContextConstructor),
     createTestChannelSplitterNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
     createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
+    createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),
     createTestIsSecureContextSupport(window),
     createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),
     testTransferablesSupport

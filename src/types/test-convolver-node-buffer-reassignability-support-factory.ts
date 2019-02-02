@@ -1,6 +1,5 @@
-import { TNativeAudioNodeFactory } from './native-audio-node-factory';
-import { TNativeContext } from './native-context';
+import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-context-constructor';
 
 export type TTestConvolverNodeBufferReassignabilitySupportFactory = (
-    createNativeAudioNode: TNativeAudioNodeFactory
-) => (nativeContext: TNativeContext) => boolean;
+    nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor
+) => () => boolean;

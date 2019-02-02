@@ -1,17 +1,21 @@
 import { TTestConvolverNodeBufferReassignabilitySupportFactory } from '../types';
 
-export const createTestConvolverNodeBufferReassignabilitySupport:
-    TTestConvolverNodeBufferReassignabilitySupportFactory =
-(
-    createNativeAudioNode
+// Opera up to version 57 did not allow to reassign the buffer of a ConvolverNode.
+export const createTestConvolverNodeBufferReassignabilitySupport: TTestConvolverNodeBufferReassignabilitySupportFactory = (
+    nativeOfflineAudioContextConstructor
 ) => {
-    return (nativeContext) => {
-        const nativeConvolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
+    return () => {
+        if (nativeOfflineAudioContextConstructor === null) {
+            return false;
+        }
 
-        nativeConvolverNode.buffer = nativeContext.createBuffer(1, 1, nativeContext.sampleRate);
+        const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 128, 3200);
+        const nativeConvolverNode = offlineAudioContext.createConvolver();
+
+        nativeConvolverNode.buffer = offlineAudioContext.createBuffer(1, 1, offlineAudioContext.sampleRate);
 
         try {
-            nativeConvolverNode.buffer = nativeContext.createBuffer(1, 1, nativeContext.sampleRate);
+            nativeConvolverNode.buffer = offlineAudioContext.createBuffer(1, 1, offlineAudioContext.sampleRate);
         } catch {
             return false;
         }

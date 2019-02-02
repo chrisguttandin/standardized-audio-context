@@ -1,23 +1,9 @@
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { TNativeConvolverNodeFactoryFactory } from '../types';
 
-export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactory = (
-    createNativeAudioNode,
-    createNativeConvolverNodeFaker,
-    createNotSupportedError,
-    testConvolverNodeBufferReassignabilitySupport
-) => {
+export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactory = (createNativeAudioNode, createNotSupportedError) => {
     return (nativeContext, options) => {
-        // Bug #116: Opera does not allow to reassign the buffer
-        if (!cacheTestResult(
-            testConvolverNodeBufferReassignabilitySupport,
-            () => testConvolverNodeBufferReassignabilitySupport(nativeContext)
-        )) {
-            return createNativeConvolverNodeFaker(nativeContext, options);
-        }
-
         const nativeConvolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
 
         assignNativeAudioNodeOptions(nativeConvolverNode, options);
