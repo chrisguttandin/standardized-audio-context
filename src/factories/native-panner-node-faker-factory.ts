@@ -10,6 +10,7 @@ import {
 } from '../types';
 
 export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFactory = (
+    createInvalidStateError,
     createNativeAudioNode,
     createNativeChannelMergerNode,
     createNativeGainNode,
@@ -184,6 +185,11 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.coneOuterGain;
             },
             set coneOuterGain (value) {
+                // Bug #127: Edge & Safari do not throw an InvalidStateError yet.
+                if (value < 0 || value > 1) {
+                    throw createInvalidStateError();
+                }
+
                 pannerNode.coneOuterGain = value;
             },
             get context (): TNativePannerNode['context'] {
@@ -259,7 +265,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.rolloffFactor;
             },
             set rolloffFactor (value) {
-                // Bug #130: Edge, Opera & Safari do not throw an error yet.
+                // Bug #130: Edge & Safari do not throw an error yet.
                 if (value < 0) {
                     throw new RangeError();
                 }

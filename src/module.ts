@@ -421,6 +421,7 @@ const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(
     createNativeWaveShaperNodeFaker
 );
 const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
+    createInvalidStateError,
     createNativeAudioNode,
     createNativeChannelMergerNode,
     createNativeGainNode,
@@ -428,15 +429,10 @@ const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
     createNativeWaveShaperNode,
     createNotSupportedError
 );
-const createNativePannerNode = createNativePannerNodeFactory(
-    createInvalidStateError,
-    createNativeAudioNode,
-    createNativePannerNodeFaker
-);
+const createNativePannerNode = createNativePannerNodeFactory(createNativeAudioNode, createNativePannerNodeFaker);
 const createPannerNodeRenderer = createPannerNodeRendererFactory(createNativePannerNode);
 const pannerNodeConstructor: TPannerNodeConstructor = createPannerNodeConstructor(
     createAudioParam,
-    createInvalidStateError,
     createNativePannerNode,
     createPannerNodeRenderer,
     isNativeOfflineAudioContext,

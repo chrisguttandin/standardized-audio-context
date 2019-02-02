@@ -25,7 +25,6 @@ const DEFAULT_OPTIONS: IPannerOptions = {
 
 export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
     createAudioParam,
-    createInvalidStateError,
     createNativePannerNode,
     createPannerNodeRenderer,
     isNativeOfflineAudioContext,
@@ -124,16 +123,7 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
         }
 
         set coneOuterGain (value) {
-            const previousChannelCount = this._nativePannerNode.coneOuterGain;
-
             this._nativePannerNode.coneOuterGain = value;
-
-            // Bug #127: Edge, Opera & Safari do not throw an InvalidStateError yet.
-            if (value < 0 || value > 1) {
-                this._nativePannerNode.coneOuterGain = previousChannelCount;
-
-                throw createInvalidStateError();
-            }
         }
 
         get distanceModel (): TDistanceModelType {
@@ -197,16 +187,7 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
         }
 
         set rolloffFactor (value) {
-            const previousRolloffFactor = this._nativePannerNode.rolloffFactor;
-
             this._nativePannerNode.rolloffFactor = value;
-
-            // Bug #130: Edge, Opera & Safari do not throw a RangeError yet.
-            if (value < 0) {
-                this._nativePannerNode.rolloffFactor = previousRolloffFactor;
-
-                throw new RangeError();
-            }
         }
 
     };

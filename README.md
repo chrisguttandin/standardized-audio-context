@@ -294,7 +294,7 @@ eventually ships a fix. Once that happens the workaround and the backing expecta
 removed. The expectation test however gets recycled and will now be used as part of the browser
 check performed when calling `isSupported()`.
 
-The list of currently supported browsers includes Chrome v68+, Edge v18, Firefox v62+, Opera v42+
+The list of currently supported browsers includes Chrome v68+, Edge v18, Firefox v62+, Opera v57+
 and Safari v12. Please note that the tests are only executed in the current and upcoming version of
 each browser.
 
