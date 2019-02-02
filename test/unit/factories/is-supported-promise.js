@@ -12,6 +12,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestChannelMergerNodeSupport;
     let fakeTestChannelSplitterNodeChannelCountSupport;
     let fakeTestConstantSourceNodeAccurateSchedulingSupport;
+    let fakeTestConvolverNodeBufferReassignabilitySupport;
     let fakeTestIsSecureContextSupport;
     let fakeTestStereoPannerNodeDefaultValueSupport;
     let fakeTestTransferablesSupport;
@@ -24,6 +25,7 @@ describe('createIsSupportedPromise()', () => {
         TEST_RESULTS.delete(fakeTestChannelMergerNodeSupport);
         TEST_RESULTS.delete(fakeTestChannelSplitterNodeChannelCountSupport);
         TEST_RESULTS.delete(fakeTestConstantSourceNodeAccurateSchedulingSupport);
+        TEST_RESULTS.delete(fakeTestConvolverNodeBufferReassignabilitySupport);
         TEST_RESULTS.delete(fakeTestIsSecureContextSupport);
         TEST_RESULTS.delete(fakeTestStereoPannerNodeDefaultValueSupport);
         TEST_RESULTS.delete(fakeTestTransferablesSupport);
@@ -38,6 +40,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestChannelMergerNodeSupport = () => Promise.resolve(true);
         fakeTestChannelSplitterNodeChannelCountSupport = () => true;
         fakeTestConstantSourceNodeAccurateSchedulingSupport = () => true;
+        fakeTestConvolverNodeBufferReassignabilitySupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
         fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.resolve(true);
         fakeTestTransferablesSupport = () => Promise.resolve(true);
@@ -53,6 +56,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -73,6 +77,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -93,6 +98,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -113,6 +119,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -133,6 +140,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -153,6 +161,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -173,6 +182,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -193,6 +203,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -213,6 +224,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -233,6 +245,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -253,6 +266,28 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for buffer reassignability support of a ConvolverNode fails', async () => {
+        fakeTestConvolverNodeBufferReassignabilitySupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            fakeBrowsernizr,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -273,6 +308,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -293,6 +329,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
@@ -313,6 +350,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestChannelMergerNodeSupport,
             fakeTestChannelSplitterNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
