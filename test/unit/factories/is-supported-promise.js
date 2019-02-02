@@ -191,7 +191,7 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
-    it('should resolve to false if the test for AudioWorkletProcessor process support fails', async () => {
+    it('should resolve to false if the test for process support of an AudioWorkletProcessor fails', async () => {
         fakeTestAudioWorkletProcessorNoOutputsSupport = () => Promise.resolve(false);
 
         const isSupported = await createIsSupportedPromise(
@@ -233,7 +233,7 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
-    it('should resolve to false if the test for ChannelSplitterNode channelCount support fails', async () => {
+    it('should resolve to false if the test for channelCount support of a ChannelSplitterNode fails', async () => {
         fakeTestChannelSplitterNodeChannelCountSupport = () => false;
 
         const isSupported = await createIsSupportedPromise(
@@ -254,7 +254,7 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
-    it('should resolve to false if the test for accurate scheduling of a ConstantSourceNode support fails', async () => {
+    it('should resolve to false if the test for accurate scheduling support of a ConstantSourceNode fails', async () => {
         fakeTestConstantSourceNodeAccurateSchedulingSupport = () => false;
 
         const isSupported = await createIsSupportedPromise(
