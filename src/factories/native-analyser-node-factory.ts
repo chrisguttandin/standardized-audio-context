@@ -9,7 +9,7 @@ export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory 
     return (nativeContext, options) => {
         const nativeAnalyserNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createAnalyser());
 
-        // Bug #37: Only Chrome, Edge and Safari create an AnalyserNode with the default properties.
+        // Bug #37: Firefox does not create an AnalyserNode with the default properties.
         assignNativeAudioNodeOptions(nativeAnalyserNode, options);
 
         // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.

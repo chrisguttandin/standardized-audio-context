@@ -138,14 +138,6 @@ describe('audioContextConstructor', () => {
 
     describe('createAnalyser()', () => {
 
-        // bug #37
-
-        it('should have a channelCount of 1', () => {
-            const analyserNode = audioContext.createAnalyser();
-
-            expect(analyserNode.channelCount).to.equal(1);
-        });
-
         // bug #58
 
         it('should throw a SyntaxError when calling connect() with an AudioParam of another AudioContext', (done) => {
