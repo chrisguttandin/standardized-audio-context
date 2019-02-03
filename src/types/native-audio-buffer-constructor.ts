@@ -1,4 +1,1 @@
-import { IAudioBufferOptions } from '../interfaces';
-import { TNativeAudioBuffer } from './native-audio-buffer';
-
-export type TNativeAudioBufferConstructor = new (options?: IAudioBufferOptions) => TNativeAudioBuffer;
+export type TNativeAudioBufferConstructor = typeof AudioBuffer;
