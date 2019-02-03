@@ -14,10 +14,14 @@ export class EventTarget {
         listener: any, // @todo EventListenerOrEventListenerObject | null = null,
         options?: boolean | AddEventListenerOptions
     ): void {
-        const wrappedEventListener = wrapEventListener(this, listener);
+        let wrappedEventListener = this._listeners.get(listener);
 
-        if (typeof listener === 'function') {
-            this._listeners.set(listener, wrappedEventListener);
+        if (wrappedEventListener === undefined) {
+            wrappedEventListener = wrapEventListener(this, listener);
+
+            if (typeof listener === 'function') {
+                this._listeners.set(listener, wrappedEventListener);
+            }
         }
 
         return this._nativeEventTarget.addEventListener(type, wrappedEventListener, options);
