@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioBuffer, IConvolverNode, IConvolverOptions } from '../interfaces';
-import { TContext, TConvolverNodeConstructorFactory, TNativeConvolverNode } from '../types';
+import { IConvolverNode, IConvolverOptions } from '../interfaces';
+import { TAnyAudioBuffer, TContext, TConvolverNodeConstructorFactory, TNativeConvolverNode } from '../types';
 
 const DEFAULT_OPTIONS: IConvolverOptions = {
     buffer: null,
@@ -36,7 +36,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             this._nativeConvolverNode = nativeConvolverNode;
         }
 
-        get buffer (): null | IAudioBuffer {
+        get buffer (): null | TAnyAudioBuffer {
             if (this._isBufferNullified) {
                 return null;
             }

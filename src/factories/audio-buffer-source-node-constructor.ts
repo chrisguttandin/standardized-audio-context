@@ -1,14 +1,14 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
+import { IAudioBufferSourceNode, IAudioBufferSourceNodeRenderer, IAudioBufferSourceOptions, IAudioParam } from '../interfaces';
 import {
-    IAudioBuffer,
-    IAudioBufferSourceNode,
-    IAudioBufferSourceNodeRenderer,
-    IAudioBufferSourceOptions,
-    IAudioParam
-} from '../interfaces';
-import { TAudioBufferSourceNodeConstructorFactory, TContext, TEndedEventHandler, TNativeAudioBufferSourceNode } from '../types';
+    TAnyAudioBuffer,
+    TAudioBufferSourceNodeConstructorFactory,
+    TContext,
+    TEndedEventHandler,
+    TNativeAudioBufferSourceNode
+} from '../types';
 
 const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     buffer: null,
@@ -72,7 +72,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             );
         }
 
-        get buffer (): null | IAudioBuffer {
+        get buffer (): null | TAnyAudioBuffer {
             if (this._isBufferNullified) {
                 return null;
             }

@@ -1,9 +1,9 @@
-import { IAudioBuffer } from './audio-buffer';
+import { TAnyAudioBuffer } from '../types';
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IAudioBufferSourceOptions extends IAudioNodeOptions {
 
-    buffer: null | IAudioBuffer;
+    buffer: null | TAnyAudioBuffer;
 
     detune: number;
 

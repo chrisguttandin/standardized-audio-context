@@ -1,9 +1,9 @@
-import { IAudioBuffer } from './audio-buffer';
+import { TAnyAudioBuffer } from '../types';
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IConvolverOptions extends IAudioNodeOptions {
 
-    buffer: null | IAudioBuffer;
+    buffer: null | TAnyAudioBuffer;
 
     disableNormalization: boolean;
 

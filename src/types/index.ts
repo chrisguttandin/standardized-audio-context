@@ -5,6 +5,7 @@ export * from './analyser-node-constructor';
 export * from './analyser-node-constructor-factory';
 export * from './analyser-node-renderer-factory';
 export * from './analyser-node-renderer-factory-factory';
+export * from './any-audio-buffer';
 export * from './any-context';
 export * from './audio-buffer-constructor';
 export * from './audio-buffer-constructor-factory';

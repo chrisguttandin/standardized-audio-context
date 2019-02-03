@@ -1,10 +1,10 @@
-import { TEndedEventHandler } from '../types';
+import { TAnyAudioBuffer, TEndedEventHandler } from '../types';
 import { IAudioParam } from './audio-param';
 import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
 
 export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
 
-    buffer: null | AudioBuffer;
+    buffer: null | TAnyAudioBuffer;
 
     readonly detune: IAudioParam;
 
