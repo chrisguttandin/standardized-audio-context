@@ -1,5 +1,6 @@
 import { TDecodeErrorCallback, TDecodeSuccessCallback } from '../types';
 import { IAnalyserNode } from './analyser-node';
+import { IAudioBuffer } from './audio-buffer';
 import { IAudioBufferSourceNode } from './audio-buffer-source-node';
 import { IAudioNode } from './audio-node';
 import { IAudioWorklet } from './audio-worklet';
@@ -27,7 +28,7 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
 
     createBiquadFilter (): IBiquadFilterNode;
 
-    createBuffer (numberOfChannels: number, length: number, sampleRate: number): AudioBuffer;
+    createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
 
     createBufferSource (): IAudioBufferSourceNode;
 

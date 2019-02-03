@@ -80,7 +80,7 @@ interface IAudioContext extends EventTarget {
     close (): Promise<void>;
     createAnalyser (): IAnalyserNode;
     createBiquadFilter (): IBiquadFilterNode;
-    createBuffer (numberOfChannels: number, length: number, sampleRate: number): AudioBuffer;
+    createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
     createBufferSource (): IAudioBufferSourceNode;
     createChannelMerger (numberOfInputs?: number): IAudioNode;
     createChannelSplitter (numberOfOutputs?: number): IAudioNode;
@@ -97,7 +97,7 @@ interface IAudioContext extends EventTarget {
     createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
     createStereoPanner (): IStereoPannerNode;
     createWaveShaper (): IWaveShaperNode;
-    decodeAudioData (audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback): Promise<AudioBuffer>;
+    decodeAudioData (audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback): Promise<IAudioBuffer>;
     resume (): Promise<void>;
     suspend (): Promise<void>;
 }
@@ -123,7 +123,7 @@ interface IOfflineAudioContext extends EventTarget {
     readonly state: TAudioContextState;
     createAnalyser (): IAnalyserNode;
     createBiquadFilter (): IBiquadFilterNode;
-    createBuffer (numberOfChannels: number, length: number, sampleRate: number): AudioBuffer;
+    createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
     createBufferSource (): IAudioBufferSourceNode;
     createChannelMerger (numberOfInputs?: number): IAudioNode;
     createChannelSplitter (numberOfOutputs?: number): IAudioNode;
@@ -138,8 +138,8 @@ interface IOfflineAudioContext extends EventTarget {
     createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
     createStereoPanner (): IStereoPannerNode;
     createWaveShaper (): IWaveShaperNode;
-    decodeAudioData (audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback): Promise<AudioBuffer>;
-    startRendering (): Promise<AudioBuffer>;
+    decodeAudioData (audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback): Promise<IAudioBuffer>;
+    startRendering (): Promise<IAudioBuffer>;
 }
 ```
 

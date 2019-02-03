@@ -1,1 +1,3 @@
-export type TDecodeSuccessCallback = (decodedData: AudioBuffer) => void;
+import { IAudioBuffer } from '../interfaces';
+
+export type TDecodeSuccessCallback = (decodedData: IAudioBuffer) => void;

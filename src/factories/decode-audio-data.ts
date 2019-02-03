@@ -84,7 +84,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             // Bug #26: Safari throws a synchronous error.
             try {
                 // Bug #1: Safari requires a successCallback.
-                nativeContext.decodeAudioData(audioData, (audioBuffer: AudioBuffer) => {
+                nativeContext.decodeAudioData(audioData, (audioBuffer) => {
                     // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
                     // Bug #100: Safari does throw a wrong error when calling getChannelData() with an out-of-bounds value.
                     if (typeof audioBuffer.copyFromChannel !== 'function') {
