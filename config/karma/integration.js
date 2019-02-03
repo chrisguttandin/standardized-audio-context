@@ -43,7 +43,7 @@ module.exports = (config) => {
             OperaBrowserStack: {
                 base: 'BrowserStack',
                 browser: 'opera',
-                browser_version : '42', // eslint-disable-line camelcase
+                browser_version : '57', // eslint-disable-line camelcase
                 os: 'OS X',
                 os_version: 'Mojave' // eslint-disable-line camelcase
             },
