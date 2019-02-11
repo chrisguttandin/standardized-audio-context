@@ -83,7 +83,10 @@ module.exports = (config) => {
             },
 
             browsers: [
-                'ChromeBrowserStack',
+                /*
+                 * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                 * 'ChromeBrowserStack',
+                 */
                 'EdgeBrowserStack',
                 'FirefoxBrowserStack'
             ],
