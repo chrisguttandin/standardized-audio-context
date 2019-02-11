@@ -314,7 +314,7 @@ describe('MediaElementAudioSourceNode', () => {
 
             });
 
-            // @todo There is currently now way to disable the autoplay policy on BrowserStack or Sauce Labs.
+            // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
             if (!process.env.TRAVIS) { // eslint-disable-line no-undef
 
                 describe('disconnect()', () => {
