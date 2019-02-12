@@ -174,7 +174,6 @@ describe('AudioBuffer', () => {
 
                             }
 
-
                             it('should return an AudioBuffer which can be used with a native AudioContext', () => {
                                 const nativeAudioContext = createNativeAudioContext();
                                 const nativeAudioBufferSourceNode = nativeAudioContext.createBufferSource();
