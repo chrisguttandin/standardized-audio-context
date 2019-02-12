@@ -32,7 +32,7 @@ module.exports = (config) => {
         ],
 
         parallelOptions: {
-            executors: 6
+            executors: 7
         },
 
         preprocessors: {
