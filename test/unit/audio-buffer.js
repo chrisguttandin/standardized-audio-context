@@ -133,7 +133,9 @@ describe('AudioBuffer', () => {
 
                             let audioBuffer;
 
-                            beforeEach(async () => {
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
                                 audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
                             });
 
@@ -257,7 +259,9 @@ describe('AudioBuffer', () => {
 
                 let audioBuffer;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
                 });
 
@@ -273,7 +277,9 @@ describe('AudioBuffer', () => {
 
                 let audioBuffer;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
                 });
 
@@ -289,7 +295,9 @@ describe('AudioBuffer', () => {
 
                 let audioBuffer;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
                 });
 
@@ -305,7 +313,9 @@ describe('AudioBuffer', () => {
 
                 let audioBuffer;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
                 });
 
@@ -321,7 +331,9 @@ describe('AudioBuffer', () => {
 
                 let audioBuffer;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
                 });
 
@@ -359,7 +371,9 @@ describe('AudioBuffer', () => {
                 let audioBuffer;
                 let destination;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
                     destination = new Float32Array(10);
                 });
@@ -395,7 +409,9 @@ describe('AudioBuffer', () => {
                 let audioBuffer;
                 let source;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
                     source = new Float32Array(10);
                 });
@@ -432,7 +448,9 @@ describe('AudioBuffer', () => {
                 let destination;
                 let source;
 
-                beforeEach(async () => {
+                beforeEach(async function () {
+                    this.timeout(10000);
+
                     audioBuffer = await createAudioBuffer(context, 2, 100, 44100);
                     destination = new Float32Array(10);
                     source = new Float32Array(10);
