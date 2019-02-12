@@ -876,7 +876,9 @@ describe('audioContextConstructor', () => {
 
             // bug #43
 
-            it('should not throw a DataCloneError', (done) => {
+            it('should not throw a DataCloneError', function (done) {
+                this.timeout(10000);
+
                 loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
                     expect(err).to.be.null;
 
