@@ -156,13 +156,15 @@ module.exports = (config) => {
                 FirefoxDeveloperHeadlessWithPrefs: {
                     base : 'FirefoxDeveloperHeadless',
                     prefs : {
-                        'media.navigator.permission.disabled' : true
+                        'media.navigator.permission.disabled' : true,
+                        'media.navigator.streams.fake': true
                     }
                 },
                 FirefoxHeadlessWithPrefs: {
                     base : 'FirefoxHeadless',
                     prefs : {
-                        'media.navigator.permission.disabled' : true
+                        'media.navigator.permission.disabled' : true,
+                        'media.navigator.streams.fake': true
                     }
                 },
                 OperaWithNoRequiredUserGestureAndNoThrottling: {
