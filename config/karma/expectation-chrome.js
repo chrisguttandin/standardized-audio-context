@@ -6,7 +6,7 @@ module.exports = (config) => {
 
     config.set({
 
-        browserDisconnectTimeout: 10000,
+        browserDisconnectTimeout: 20000,
 
         browsers: [
             'ChromeHeadlessWithNoRequiredUserGesture'
