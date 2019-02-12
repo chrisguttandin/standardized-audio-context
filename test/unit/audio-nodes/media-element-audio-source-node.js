@@ -363,17 +363,12 @@ describe('MediaElementAudioSourceNode', () => {
                             'base/test/fixtures/1000-hertz-for-ten-seconds.mp3' :
                             'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
 
-                        // @todo Edge doesn't yet return a promise.
-                        const promise = mediaElement.play();
+                        mediaElement.play();
 
-                        if (promise === undefined) {
-                            return new Promise((resolve, reject) => {
-                                mediaElement.oncanplaythrough = resolve;
-                                mediaElement.onerror = () => reject(mediaElement.error);
-                            });
-                        }
-
-                        return promise;
+                        return new Promise((resolve, reject) => {
+                            mediaElement.oncanplaythrough = resolve;
+                            mediaElement.onerror = () => reject(mediaElement.error);
+                        });
                     });
 
                     it('should be possible to disconnect a destination', function () {

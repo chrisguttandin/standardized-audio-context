@@ -86,7 +86,12 @@ describe('MediaStreamAudioSourceNode', () => {
                         audioElement.src = 'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
                         audioElement.muted = true;
 
-                        await audioElement.play();
+                        audioElement.play();
+
+                        await new Promise((resolve, reject) => {
+                            audioElement.oncanplaythrough = resolve;
+                            audioElement.onerror = () => reject(audioElement.error);
+                        });
 
                         mediaStream = audioElement.captureStream();
                     } else {
