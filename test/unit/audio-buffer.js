@@ -8,9 +8,21 @@ import { createNativeOfflineAudioContext } from '../helper/create-native-offline
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
 import { loadFixture } from '../helper/load-fixture';
 
-const createAudioBufferWithDecodeAudioDataPromiseFunction = (context) => {
+const createAudioBufferWithDecodeAudioDataPromiseFunction = (context, { length, numberOfChannels = 1, sampleRate }) => {
+    if (length !== 1000) {
+        throw new Error("The length can't be changed when creating an AudioBuffer through decoding.");
+    }
+
+    if (numberOfChannels !== 1) {
+        throw new Error("The numberOfChannels can't be changed when creating an AudioBuffer through decoding.");
+    }
+
+    if (sampleRate !== context.sampleRate) {
+        throw new Error("The sampleRate can't be changed when creating an AudioBuffer through decoding.");
+    }
+
     return new Promise((resolve, reject) => {
-        loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+        loadFixture('1000-frames-of-noise-mono.wav', (err, arrayBuffer) => {
             if (err === null) {
                 context
                     .decodeAudioData(arrayBuffer)
@@ -21,9 +33,21 @@ const createAudioBufferWithDecodeAudioDataPromiseFunction = (context) => {
         });
     });
 };
-const createAudioBufferWithDecodeAudioDataSuccessCallbackFunction = (context) => {
+const createAudioBufferWithDecodeAudioDataSuccessCallbackFunction = (context, { length, numberOfChannels = 1, sampleRate }) => {
+    if (length !== 1000) {
+        throw new Error("The length can't be changed when creating an AudioBuffer through decoding.");
+    }
+
+    if (numberOfChannels !== 1) {
+        throw new Error("The numberOfChannels can't be changed when creating an AudioBuffer through decoding.");
+    }
+
+    if (sampleRate !== context.sampleRate) {
+        throw new Error("The sampleRate can't be changed when creating an AudioBuffer through decoding.");
+    }
+
     return new Promise((resolve, reject) => {
-        loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+        loadFixture('1000-frames-of-noise-mono.wav', (err, arrayBuffer) => {
             if (err === null) {
                 context.decodeAudioData(arrayBuffer, resolve, reject);
             } else {
@@ -32,13 +56,13 @@ const createAudioBufferWithDecodeAudioDataSuccessCallbackFunction = (context) =>
         });
     });
 };
-const createAudioBufferWithConstructor = (_, numberOfChannels, length, sampleRate) => {
+const createAudioBufferWithConstructor = (_, { length, numberOfChannels = 1, sampleRate }) => {
     return Promise.resolve(new AudioBuffer({ length, numberOfChannels, sampleRate }));
 };
-const createAudioBufferWithFactoryFunction = (context, numberOfChannels, length, sampleRate) => {
+const createAudioBufferWithFactoryFunction = (context, { length, numberOfChannels = 1, sampleRate }) => {
     return Promise.resolve(context.createBuffer(numberOfChannels, length, sampleRate));
 };
-const createAudioBufferWithStartRenderingFunction = (context, numberOfChannels, length, sampleRate) => {
+const createAudioBufferWithStartRenderingFunction = (context, { length, numberOfChannels = 1, sampleRate }) => {
     if (context instanceof MinimalOfflineAudioContext) {
         return (new MinimalOfflineAudioContext({ length, numberOfChannels, sampleRate })).startRendering();
     }
@@ -136,15 +160,15 @@ describe('AudioBuffer', () => {
                             beforeEach(async function () {
                                 this.timeout(10000);
 
-                                audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                                audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                             });
 
                             it('should return an instance of the AudioBuffer interface', () => {
-                                const length = (description.startsWith('decodeAudioData')) ? 1000 : 10;
+                                const length = 1000;
 
                                 expect(audioBuffer.duration).to.be.closeTo(length / 44100, 0.001);
                                 expect(audioBuffer.length).to.equal(length);
-                                expect(audioBuffer.numberOfChannels).to.equal(2);
+                                expect(audioBuffer.numberOfChannels).to.equal(1);
                                 expect(audioBuffer.sampleRate).to.equal(44100);
                                 expect(audioBuffer.getChannelData).to.be.a('function');
                                 expect(audioBuffer.copyFromChannel).to.be.a('function');
@@ -204,7 +228,7 @@ describe('AudioBuffer', () => {
 
                                     it('should throw a NotSupportedError', (done) => {
                                         try {
-                                            createAudioBuffer(context, 0, 10, 44100);
+                                            createAudioBuffer(context, { length: 1000, numberOfChannels: 0, sampleRate: 44100 });
                                         } catch (err) {
                                             expect(err.code).to.equal(9);
                                             expect(err.name).to.equal('NotSupportedError');
@@ -219,7 +243,7 @@ describe('AudioBuffer', () => {
 
                                     it('should throw a NotSupportedError', (done) => {
                                         try {
-                                            createAudioBuffer(context, 2, 0, 44100);
+                                            createAudioBuffer(context, { length: 0, sampleRate: 44100 });
                                         } catch (err) {
                                             expect(err.code).to.equal(9);
                                             expect(err.name).to.equal('NotSupportedError');
@@ -234,7 +258,7 @@ describe('AudioBuffer', () => {
 
                                     it('should throw a NotSupportedError', (done) => {
                                         try {
-                                            createAudioBuffer(context, 2, 10, 0);
+                                            createAudioBuffer(context, { length: 1000, sampleRate: 0 });
                                         } catch (err) {
                                             expect(err.code).to.equal(9);
                                             expect(err.name).to.equal('NotSupportedError');
@@ -262,7 +286,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                 });
 
                 it('should be readonly', () => {
@@ -280,7 +304,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                 });
 
                 it('should be readonly', () => {
@@ -298,7 +322,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                 });
 
                 it('should be readonly', () => {
@@ -316,7 +340,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                 });
 
                 it('should be readonly', () => {
@@ -334,17 +358,16 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                 });
 
                 describe('with an index of an existing channel', () => {
 
                     it('should return a Float32Array', () => {
                         const channelData = audioBuffer.getChannelData(0);
-                        const length = (description.startsWith('decodeAudioData')) ? 1000 : 10;
 
                         expect(channelData).to.be.an.instanceOf(Float32Array);
-                        expect(channelData.length).to.equal(length);
+                        expect(channelData.length).to.equal(1000);
                     });
 
                 });
@@ -374,7 +397,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                     destination = new Float32Array(10);
                 });
 
@@ -390,10 +413,8 @@ describe('AudioBuffer', () => {
                 });
 
                 it('should not allow to copy values with an offset greater than the length', (done) => {
-                    const length = (description.startsWith('decodeAudioData')) ? 1000 : 10;
-
                     try {
-                        audioBuffer.copyFromChannel(destination, 0, length);
+                        audioBuffer.copyFromChannel(destination, 0, 1000);
                     } catch (err) {
                         expect(err.code).to.equal(1);
                         expect(err.name).to.equal('IndexSizeError');
@@ -412,7 +433,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, 2, 10, 44100);
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                     source = new Float32Array(10);
                 });
 
@@ -428,10 +449,8 @@ describe('AudioBuffer', () => {
                 });
 
                 it('should not allow to copy values with an offset greater than the length', (done) => {
-                    const length = (description.startsWith('decodeAudioData')) ? 1000 : 10;
-
                     try {
-                        audioBuffer.copyToChannel(source, 0, length);
+                        audioBuffer.copyToChannel(source, 0, 1000);
                     } catch (err) {
                         expect(err.code).to.equal(1);
                         expect(err.name).to.equal('IndexSizeError');
@@ -451,7 +470,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, 2, 100, 44100);
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                     destination = new Float32Array(10);
                     source = new Float32Array(10);
 
@@ -481,10 +500,9 @@ describe('AudioBuffer', () => {
 
                 it('should copy values with an offset large enough to leave a part of the destination untouched', () => {
                     const destinationCopy = Array.from(destination);
-                    const length = (description.startsWith('decodeAudioData')) ? 1000 : 100;
 
-                    audioBuffer.copyToChannel(source, 0, length - 5);
-                    audioBuffer.copyFromChannel(destination, 0, length - 5);
+                    audioBuffer.copyToChannel(source, 0, 1000 - 5);
+                    audioBuffer.copyFromChannel(destination, 0, 1000 - 5);
 
                     for (let i = 0; i < 5; i += 1) {
                         expect(destination[i]).to.equal(source[i]);
