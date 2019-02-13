@@ -187,7 +187,7 @@ describe('decodeAudioData()', () => {
                 beforeEach(function (done) {
                     this.timeout(10000);
 
-                    loadFixture('1000-frames-of-noise.wav', (err, rrBffr) => {
+                    loadFixture('1000-frames-of-noise-stereo.wav', (err, rrBffr) => {
                         expect(err).to.be.null;
 
                         arrayBuffer = rrBffr;

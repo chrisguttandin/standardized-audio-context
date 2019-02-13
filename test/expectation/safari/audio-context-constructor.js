@@ -1088,7 +1088,7 @@ describe('audioContextConstructor', () => {
             it('should require the success callback function as a parameter', function (done) {
                 this.timeout(10000);
 
-                loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+                loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                     expect(err).to.be.null;
 
                     expect(() => {
@@ -1121,7 +1121,7 @@ describe('audioContextConstructor', () => {
             it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
                 this.timeout(10000);
 
-                loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+                loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                     expect(err).to.be.null;
 
                     audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
@@ -1138,7 +1138,7 @@ describe('audioContextConstructor', () => {
             it('should not return a promise', function (done) {
                 this.timeout(10000);
 
-                loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+                loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                     expect(err).to.be.null;
 
                     expect(audioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
@@ -1162,7 +1162,7 @@ describe('audioContextConstructor', () => {
             it('should not throw a DataCloneError', function (done) {
                 this.timeout(10000);
 
-                loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+                loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                     expect(err).to.be.null;
 
                     audioContext
@@ -1178,7 +1178,7 @@ describe('audioContextConstructor', () => {
             it('should not neuter the arrayBuffer', function (done) {
                 this.timeout(10000);
 
-                loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+                loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                     expect(err).to.be.null;
 
                     audioContext.decodeAudioData(arrayBuffer, () => {

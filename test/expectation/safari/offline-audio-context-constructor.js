@@ -736,7 +736,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should require the success callback function as a parameter', function (done) {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
                 expect(() => {
@@ -769,7 +769,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
                 offlineAudioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
@@ -786,7 +786,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should not return a promise', function (done) {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
                 expect(offlineAudioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
@@ -810,7 +810,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should not throw a DataCloneError', function (done) {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
                 offlineAudioContext

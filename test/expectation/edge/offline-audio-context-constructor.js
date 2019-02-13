@@ -375,7 +375,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should not throw a DataCloneError', function (done) {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
                 offlineAudioContext
@@ -395,7 +395,7 @@ describe('offlineAudioContextConstructor', () => {
         it('should refuse to execute decodeAudioData() on a closed context', function (done) {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise.wav', (err, arrayBuffer) => {
+            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
                 expect(err).to.be.null;
 
                 offlineAudioContext
