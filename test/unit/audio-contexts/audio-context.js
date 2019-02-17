@@ -37,6 +37,7 @@ describe('AudioContext', () => {
             audioContext = new AudioContext();
         });
 
+        // Bug #131 Safari returns null when there are four other AudioContexts running already.
         if (isSafari(navigator)) {
 
             describe('with four running AudioContexts', () => {
