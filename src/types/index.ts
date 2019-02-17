@@ -63,6 +63,8 @@ export * from './convolver-node-constructor';
 export * from './convolver-node-constructor-factory';
 export * from './convolver-node-renderer-factory';
 export * from './convolver-node-renderer-factory-factory';
+export * from './create-native-offline-audio-context-factory';
+export * from './create-native-offline-audio-context-function';
 export * from './data-clone-error-factory';
 export * from './decode-audio-data-factory';
 export * from './decode-audio-data-function';

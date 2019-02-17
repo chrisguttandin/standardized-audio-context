@@ -11,12 +11,50 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('constructor()', () => {
 
-        // bug #46
+        describe('with a length of zero', () => {
 
-        it('should throw a TypeError', () => {
-            expect(() => {
-                new OfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 });
-            }).to.throw(TypeError);
+            // bug #143
+
+            it('should throw a SyntaxError', (done) => {
+                try {
+                    new OfflineAudioContext(1, 0, 44100);
+                } catch (err) {
+                    expect(err.code).to.equal(12);
+                    expect(err.name).to.equal('SyntaxError');
+
+                    done();
+                }
+            });
+
+        });
+
+        describe('with a sampleRate of zero', () => {
+
+            // bug #145
+
+            it('should throw an IndexSizeError', (done) => {
+                try {
+                    new OfflineAudioContext(1, 1, 0);
+                } catch (err) {
+                    expect(err.code).to.equal(1);
+                    expect(err.name).to.equal('IndexSizeError');
+
+                    done();
+                }
+            });
+
+        });
+
+        describe('with OfflineAudioContextOptions', () => {
+
+            // bug #46
+
+            it('should throw a TypeError', () => {
+                expect(() => {
+                    new OfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 });
+                }).to.throw(TypeError);
+            });
+
         });
 
     });

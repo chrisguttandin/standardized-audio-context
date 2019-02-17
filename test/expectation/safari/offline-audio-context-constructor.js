@@ -15,12 +15,91 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('constructor()', () => {
 
-        // bug #46
+        describe('with zero as the numberOfChannels', () => {
 
-        it('should throw a TypeError', () => {
-            expect(() => {
-                new webkitOfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 }); // eslint-disable-line new-cap, no-undef
-            }).to.throw(TypeError);
+            // bug #146
+
+            it('should throw a SyntaxError', (done) => {
+                try {
+                    new webkitOfflineAudioContext(0, 1, 44100); // eslint-disable-line new-cap, no-undef
+                } catch (err) {
+                    expect(err.code).to.equal(12);
+                    expect(err.name).to.equal('SyntaxError');
+
+                    done();
+                }
+            });
+
+        });
+
+        describe('with 32 as the value for numberOfChannels', () => {
+
+            // bug #142
+
+            it('should throw an error', () => {
+                expect(() => {
+                    new webkitOfflineAudioContext(32, 1, 44100); // eslint-disable-line new-cap, no-undef
+                }).to.throw(DOMException);
+            });
+
+        });
+
+        describe('with a length of zero', () => {
+
+            // bug #143
+
+            it('should throw a SyntaxError', (done) => {
+                try {
+                    new webkitOfflineAudioContext(1, 0, 44100); // eslint-disable-line new-cap, no-undef
+                } catch (err) {
+                    expect(err.code).to.equal(12);
+                    expect(err.name).to.equal('SyntaxError');
+
+                    done();
+                }
+            });
+
+        });
+
+        describe('with a sampleRate of zero', () => {
+
+            // bug #144
+
+            it('should throw a SyntaxError', (done) => {
+                try {
+                    new webkitOfflineAudioContext(1, 1, 0); // eslint-disable-line new-cap, no-undef
+                } catch (err) {
+                    expect(err.code).to.equal(12);
+                    expect(err.name).to.equal('SyntaxError');
+
+                    done();
+                }
+            });
+
+        });
+
+        describe('with a sampleRate of 8000 Hz', () => {
+
+            // bug #141
+
+            it('should throw an error', () => {
+                expect(() => {
+                    new webkitOfflineAudioContext(1, 1, 8000); // eslint-disable-line new-cap, no-undef
+                }).to.throw(DOMException);
+            });
+
+        });
+
+        describe('with OfflineAudioContextOptions', () => {
+
+            // bug #46
+
+            it('should throw a TypeError', () => {
+                expect(() => {
+                    new webkitOfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 }); // eslint-disable-line new-cap, no-undef
+                }).to.throw(TypeError);
+            });
+
         });
 
     });

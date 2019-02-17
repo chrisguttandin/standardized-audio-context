@@ -27,6 +27,7 @@ import { createConstantSourceNodeConstructor } from './factories/constant-source
 import { createConstantSourceNodeRendererFactory } from './factories/constant-source-node-renderer-factory';
 import { createConvolverNodeConstructor } from './factories/convolver-node-constructor';
 import { createConvolverNodeRendererFactory } from './factories/convolver-node-renderer-factory';
+import { createCreateNativeOfflineAudioContext } from './factories/create-native-offline-audio-context';
 import { createDataCloneError } from './factories/data-clone-error';
 import { createDecodeAudioData } from './factories/decode-audio-data';
 import { createDelayNodeConstructor } from './factories/delay-node-constructor';
@@ -643,11 +644,15 @@ type minimalAudioContextConstructor = IMinimalAudioContext;
 
 export { minimalAudioContextConstructor as MinimalAudioContext };
 
+const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(
+    createNotSupportedError,
+    nativeOfflineAudioContextConstructor
+);
 const startRendering = createStartRendering(renderNativeOfflineAudioContext, testAudioBufferCopyChannelMethodsSubarraySupport);
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     createInvalidStateError,
+    createNativeOfflineAudioContext,
     minimalBaseAudioContextConstructor,
-    nativeOfflineAudioContextConstructor,
     startRendering
 );
 
@@ -658,7 +663,7 @@ export { minimalOfflineAudioContextConstructor as MinimalOfflineAudioContext };
 const offlineAudioContextConstructor: IOfflineAudioContextConstructor = createOfflineAudioContextConstructor(
     baseAudioContextConstructor,
     createInvalidStateError,
-    nativeOfflineAudioContextConstructor,
+    createNativeOfflineAudioContext,
     startRendering
 );
 

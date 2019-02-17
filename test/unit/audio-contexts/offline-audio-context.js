@@ -1,7 +1,127 @@
 import '../../helper/play-silence';
 import { OfflineAudioContext } from '../../../src/module';
+import { isSafari } from '../../helper/is-safari';
 
 describe('OfflineAudioContext', () => {
+
+    describe('constructor()', () => {
+
+        describe('with mininal options', () => {
+
+            let offlineAudioContext;
+
+            beforeEach(() => {
+                offlineAudioContext = new OfflineAudioContext({ length: 1, sampleRate: 44100 });
+            });
+
+            it('should return an instance of the EventTarget interface', () => {
+                expect(offlineAudioContext.addEventListener).to.be.a('function');
+                expect(offlineAudioContext.dispatchEvent).to.be.a('function');
+                expect(offlineAudioContext.removeEventListener).to.be.a('function');
+            });
+
+            // @todo it('should return an instance of the IMinimalBaseAudioContext interface');
+
+            // @todo it('should return an instance of the IOfflineAudioContext interface');
+
+        });
+
+        describe('with valid options', () => {
+
+            describe('with valid options', () => {
+
+                it('should return a OfflineAudioContext with the given length', () => {
+                    const length = 250;
+                    const offlineAudioContext = new OfflineAudioContext({ length, sampleRate: 44100 });
+
+                    expect(offlineAudioContext.length).to.equal(length);
+                });
+
+                // Bug #142: Safari does not support OfflineAudioContexts with 32 channels.
+                if (!isSafari(navigator)) {
+
+                    it('should return a OfflineAudioContext with the given numberOfChannels as maxChannelCount of its destination', () => {
+                        const numberOfChannels = 32;
+                        const offlineAudioContext = new OfflineAudioContext({ length: 1000, numberOfChannels, sampleRate: 44100 });
+
+                        expect(offlineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
+                    });
+
+                }
+
+                // Bug #141: Safari does not support OfflineAudioContexts with 8000 Hz.
+                if (!isSafari(navigator)) {
+
+                    it('should return a OfflineAudioContext with the given sampleRate of 8 kHz', () => {
+                        const sampleRate = 8000;
+                        const offlineAudioContext = new OfflineAudioContext({ length: 1000, sampleRate });
+
+                        expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
+                    });
+
+                }
+
+                it('should return a OfflineAudioContext with the given sampleRate of 96 kHz', () => {
+                    const sampleRate = 96000;
+                    const offlineAudioContext = new OfflineAudioContext({ length: 1000, sampleRate });
+
+                    expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
+                });
+
+            });
+
+        });
+
+        describe('with invalid options', () => {
+
+            describe('with zero as the numberOfChannels', () => {
+
+                it('should throw a NotSupportedError', (done) => {
+                    try {
+                        new OfflineAudioContext({ length: 1000, numberOfChannels: 0, sampleRate: 44100 });
+                    } catch (err) {
+                        expect(err.code).to.equal(9);
+                        expect(err.name).to.equal('NotSupportedError');
+
+                        done();
+                    }
+                });
+
+            });
+
+            describe('with a length of zero', () => {
+
+                it('should throw a NotSupportedError', (done) => {
+                    try {
+                        new OfflineAudioContext({ length: 0, sampleRate: 44100 });
+                    } catch (err) {
+                        expect(err.code).to.equal(9);
+                        expect(err.name).to.equal('NotSupportedError');
+
+                        done();
+                    }
+                });
+
+            });
+
+            describe('with a sampleRate of zero', () => {
+
+                it('should throw a NotSupportedError', (done) => {
+                    try {
+                        new OfflineAudioContext({ length: 1000, sampleRate: 0 });
+                    } catch (err) {
+                        expect(err.code).to.equal(9);
+                        expect(err.name).to.equal('NotSupportedError');
+
+                        done();
+                    }
+                });
+
+            });
+
+        });
+
+    });
 
     describe('audioWorklet', () => {
 
