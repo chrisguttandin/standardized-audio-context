@@ -458,6 +458,22 @@ describe('audioContextConstructor', () => {
 
             });
 
+            describe('detune', () => {
+
+                let audioBufferSourceNode;
+
+                beforeEach(() => {
+                    audioBufferSourceNode = audioContext.createBufferSource();
+                });
+
+                // bug #149
+
+                it('should not be implemented', () => {
+                    expect(audioBufferSourceNode.detune).to.be.undefined;
+                });
+
+            });
+
             describe('playbackRate', () => {
 
                 let audioBufferSourceNode;

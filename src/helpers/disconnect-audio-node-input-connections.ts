@@ -25,7 +25,10 @@ export const disconnectAudioNodeInputConnections = (audioGraph: IAudioGraph, aud
         }
 
         const audioParams = (isAudioBufferSourceNode(audioNode))
-            ? [ /* @todo audioNode.detune, */ audioNode.playbackRate ]
+            ? [
+                // Bug #149: Safari does not yet support the detune AudioParam.
+                audioNode.playbackRate
+            ]
             : (isAudioWorkletNode(audioNode))
                 ? Array.from(audioNode.parameters.values())
                 : (isBiquadFilterNode(audioNode))

@@ -28,7 +28,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
                     channelCount: nativeAudioBufferSourceNode.channelCount,
                     channelCountMode: nativeAudioBufferSourceNode.channelCountMode,
                     channelInterpretation: nativeAudioBufferSourceNode.channelInterpretation,
-                    detune: 0, // @todo nativeAudioBufferSourceNode.detune.value,
+                    // Bug #149: Safari does not yet support the detune AudioParam.
                     loop: nativeAudioBufferSourceNode.loop,
                     loopEnd: nativeAudioBufferSourceNode.loopEnd,
                     loopStart: nativeAudioBufferSourceNode.loopStart,

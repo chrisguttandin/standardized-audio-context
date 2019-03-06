@@ -5,7 +5,11 @@ export interface IAudioBufferSourceOptions extends IAudioNodeOptions {
 
     buffer: null | TAnyAudioBuffer;
 
-    detune: number;
+    /*
+     * Bug #149: Safari does not yet support the detune AudioParam.
+     *
+     * detune: number;
+     */
 
     loop: boolean;
 

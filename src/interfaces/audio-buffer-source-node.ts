@@ -6,7 +6,11 @@ export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
 
     buffer: null | TAnyAudioBuffer;
 
-    readonly detune: IAudioParam;
+    /*
+     * Bug #149: Safari does not yet support the detune AudioParam.
+     *
+     * readonly detune: IAudioParam;
+     */
 
     loop: boolean;
 
