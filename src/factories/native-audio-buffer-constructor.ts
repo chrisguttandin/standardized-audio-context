@@ -6,8 +6,7 @@ export const createNativeAudioBufferConstructor: TNativeAudioBufferConstructorFa
     }
 
     if (window.hasOwnProperty('AudioBuffer')) {
-        // @todo TypeScript doesn't know yet about the AudioBuffer constructor.
-        return (<any> window).AudioBuffer;
+        return window.AudioBuffer;
     }
 
     return null;

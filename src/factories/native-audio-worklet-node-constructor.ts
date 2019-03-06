@@ -5,6 +5,5 @@ export const createNativeAudioWorkletNodeConstructor: TNativeAudioWorkletNodeCon
         return null;
     }
 
-    // @todo TypeScript doesn't know yet about the AudioWorkletNode constructor.
-    return (window.hasOwnProperty('AudioWorkletNode')) ? (<any> window).AudioWorkletNode : null;
+    return (window.hasOwnProperty('AudioWorkletNode')) ? window.AudioWorkletNode : null;
 };

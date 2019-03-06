@@ -1,30 +1,28 @@
-interface AudioParam { // tslint:disable-line:interface-name
-
-    readonly maxValue: number;
-
-    readonly minValue: number;
-
-}
-
-interface MediaElementAudioSourceNode { // tslint:disable-line:interface-name
-
-    readonly mediaElement: HTMLMediaElement;
-
-}
-
-interface MediaStreamAudioSourceNode { // tslint:disable-line:interface-name
-
-    readonly mediaStream: MediaStream;
-
-}
+// @todo TypeScript doesn't know yet about globally available constructors.
 
 interface Window { // tslint:disable-line:interface-name
+
+    AudioBuffer: {
+
+        prototype: AudioBuffer;
+
+        new (options: AudioBufferOptions): AudioBuffer;
+
+    };
 
     AudioContext: {
 
         prototype: AudioContext;
 
-        new (): AudioContext;
+        new (contextOptions?: AudioContextOptions): AudioContext;
+
+    };
+
+    AudioWorkletNode: {
+
+        prototype: AudioWorkletNode;
+
+        new (context: BaseAudioContext, name: string, options?: AudioWorkletNodeOptions): AudioWorkletNode;
 
     };
 
@@ -32,7 +30,8 @@ interface Window { // tslint:disable-line:interface-name
 
         prototype: OfflineAudioContext;
 
-        new (): OfflineAudioContext;
+        new (contextOptions: OfflineAudioContextOptions): OfflineAudioContext;
+        new (numberOfChannels: number, length: number, sampleRate: number): OfflineAudioContext;
 
     };
 
