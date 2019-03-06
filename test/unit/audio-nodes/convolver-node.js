@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, ConvolverNode, GainNode } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConvolverNode, GainNode, addAudioWorkletModule } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -229,17 +229,15 @@ describe('ConvolverNode', () => {
 
             describe('buffer', () => {
 
-                let convolverNode;
-
-                beforeEach(() => {
-                    convolverNode = createConvolverNode(context);
-                });
-
                 for (const assignment of [ 'with', 'without' ]) {
 
                     describe(`${ assignment } a previously assigned AudioBuffer`, () => {
 
+                        let convolverNode;
+
                         beforeEach(() => {
+                            convolverNode = createConvolverNode(context);
+
                             if (assignment === 'with') {
                                 convolverNode.buffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                             }
@@ -312,6 +310,151 @@ describe('ConvolverNode', () => {
                     });
 
                 }
+
+                describe('with a nullified AudioBuffer', () => {
+
+                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+
+                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+
+                            let renderer;
+
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
+                                if (withAnAppendedAudioWorklet) {
+                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                }
+
+                                renderer = createRenderer({
+                                    context,
+                                    length: (context.length === undefined) ? 5 : undefined,
+                                    prepare (destination) {
+                                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                        const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const convolverNode = createConvolverNode(context, { disableNormalization: true });
+
+                                        audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+
+                                        audioBufferSourceNode.buffer = audioBuffer;
+
+                                        const convolverBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
+
+                                        convolverBuffer.copyToChannel(new Float32Array([ 0.8 ]), 0);
+
+                                        convolverNode.buffer = convolverBuffer;
+                                        convolverNode.buffer = null;
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            audioBufferSourceNode
+                                                .connect(convolverNode)
+                                                .connect(audioWorkletNode)
+                                                .connect(destination);
+                                        } else {
+                                            audioBufferSourceNode
+                                                .connect(convolverNode)
+                                                .connect(destination);
+                                        }
+
+                                        return { audioBufferSourceNode, convolverNode };
+                                    }
+                                });
+                            });
+
+                            it('should render silence', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    start (startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                })
+                                    .then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
+                            });
+
+                        });
+
+                    }
+
+                });
+
+                describe('with a reassigned AudioBuffer', () => {
+
+                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+
+                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+
+                            let renderer;
+
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
+                                if (withAnAppendedAudioWorklet) {
+                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                }
+
+                                renderer = createRenderer({
+                                    context,
+                                    length: (context.length === undefined) ? 5 : undefined,
+                                    prepare (destination) {
+                                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                        const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const convolverNode = createConvolverNode(context, { disableNormalization: true });
+
+                                        audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+
+                                        audioBufferSourceNode.buffer = audioBuffer;
+
+                                        const convolverBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
+
+                                        convolverBuffer.copyToChannel(new Float32Array([ 0.8 ]), 0);
+
+                                        convolverNode.buffer = convolverBuffer;
+
+                                        const reassignedConvolverBuffer = new AudioBuffer({ length: 1, numberOfChannels: 1, sampleRate: context.sampleRate });
+
+                                        reassignedConvolverBuffer.copyToChannel(new Float32Array([ 0.5 ]), 0);
+
+                                        convolverNode.buffer = reassignedConvolverBuffer;
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            audioBufferSourceNode
+                                                .connect(convolverNode)
+                                                .connect(audioWorkletNode)
+                                                .connect(destination);
+                                        } else {
+                                            audioBufferSourceNode
+                                                .connect(convolverNode)
+                                                .connect(destination);
+                                        }
+
+                                        return { audioBufferSourceNode, convolverNode };
+                                    }
+                                });
+                            });
+
+                            it('should apply the reassigned AudioBuffer', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    start (startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                })
+                                    .then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 0.5, 0.5, 0.5 ]);
+                                    });
+                            });
+
+                        });
+
+                    }
+
+                });
 
             });
 
