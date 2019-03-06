@@ -63,7 +63,7 @@ oscillatorNode.start();
 
 This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses only the following factory methods: `createMediaStreamDestination()`, `createMediaStreamTrackSource()` and `createScriptProcessor()`. `createMediaStreamDestination()` is not implemented in Edge and unfortunately it is very complicated (if not impossible) to polyfill. `createMediaStreamTrackSource()` has not yet landed in any browser and `createScriptProcessor()` is already deprecated.
 
-Safari allows only 4 running AudioContexts at the same time. Creating the fifth AudioContext will throw an [`UnknownError`](https://heycam.github.io/webidl/#unknownerror).
+⚠️ <!-- Bug #131 --> Safari allows only 4 running AudioContexts at the same time. Creating the fifth AudioContext will throw an [`UnknownError`](https://heycam.github.io/webidl/#unknownerror).
 
 The AudioContext implements the following TypeScript interface.
 
@@ -109,7 +109,7 @@ The properties and methods are described in greater detail below.
 
 This is an almost complete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It only misses the `createScriptProcessor()` method which is deprecated anyway.
 
-Safari does not support creating an OfflineAudioContext with more than 10 channels or with a sampleRate below 44100 Hz.
+⚠️ <!-- Bug #141 & #142 --> Safari does not support creating an OfflineAudioContext with more than 10 channels or with a sampleRate below 44100 Hz.
 
 It implements the following TypeScript interface.
 
@@ -149,11 +149,11 @@ The properties and methods are described in greater detail below.
 
 #### audioWorklet
 
-The [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet) is accessible as a property of an AudioContext or OfflineAudioContext. It uses the ScriptProcessorNode internally to create an [`AudioWorkletProcessor`](https://webaudio.github.io/web-audio-api/#audioworkletprocessor) in any browser but Chrome. This means it will not provide the performance improvements that you would normally expect from using an [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworkletnode).
+⚠️ <!-- Bug #59 --> The [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet) is accessible as a property of an AudioContext or OfflineAudioContext. It uses the ScriptProcessorNode internally to create an [`AudioWorkletProcessor`](https://webaudio.github.io/web-audio-api/#audioworkletprocessor) in any browser but Chrome. This means it will not provide the performance improvements that you would normally expect from using an [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworkletnode).
 
-The fact that the internal implementation relies on a ScriptProcessorNode also implies that the [`channelCountMode`](https://webaudio.github.io/web-audio-api/#dom-audionode-channelcountmode) can only be `'explicit'` for now. It also means that the total number of channels of all inputs plus the number of all parameters can't be larger than six.
+⚠️ <!-- Bug #59 --> The fact that the internal implementation relies on a ScriptProcessorNode also implies that the [`channelCountMode`](https://webaudio.github.io/web-audio-api/#dom-audionode-channelcountmode) can only be `'explicit'` for now. It also means that the total number of channels of all inputs plus the number of all parameters can't be larger than six.
 
-Another thing to keep in mind is that the fallback will evaluate the `AudioWorkletProcessor` on the global scope. It gets isolated in a basic way to mimic the [`AudioWorkletGlobalScope`](https://webaudio.github.io/web-audio-api/#audioworkletglobalscope) but that can't be done in a way which makes it impossible for an attacker to break out of that sandbox. This should not be a problem unless you load an AudioWorklet from an untrusted source.
+⚠️ <!-- Bug #59 --> Another thing to keep in mind is that the fallback will evaluate the `AudioWorkletProcessor` on the global scope. It gets isolated in a basic way to mimic the [`AudioWorkletGlobalScope`](https://webaudio.github.io/web-audio-api/#audioworkletglobalscope) but that can't be done in a way which makes it impossible for an attacker to break out of that sandbox. This should not be a problem unless you load an AudioWorklet from an untrusted source.
 
 #### createAnalyser() / AnalyserNode
 
@@ -167,13 +167,13 @@ This is an implementation of the [`createBiquadFilter()`](https://webaudio.githu
 
 This is an implementation of the [`createBuffer()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbuffer) factory method. The [`AudioBuffer`](https://webaudio.github.io/web-audio-api/#audiobuffer) constructor may be used as an alternative.
 
-Safari does not support AudioBuffers with a sampleRate below 22050 Hz.
+⚠️ <!-- Bug #140 --> Safari does not support AudioBuffers with a sampleRate below 22050 Hz.
 
 #### createBufferSource() / AudioBufferSourceNode
 
 This is an implementation of the [`createBufferSource()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbuffersource) factory method. The [`AudioBufferSourceNode`](https://webaudio.github.io/web-audio-api/#AudioBufferSourceNode) constructor may be used as an alternative.
 
-The [detune AudioParam](https://webaudio.github.io/web-audio-api/#dom-audiobuffersourcenode-detune) is not implemented so far.
+⚠️ <!-- Bug #149 --> The [detune AudioParam](https://webaudio.github.io/web-audio-api/#dom-audiobuffersourcenode-detune) is not implemented so far.
 
 #### createChannelMerger() / ChannelMergerNode
 
@@ -207,7 +207,7 @@ This is an implementation of the [`createGain()`](https://webaudio.github.io/web
 
 This is an implementation of the [`createIIRFilter()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createiirfilter) factory method. The [`IIRFilterNode`](https://webaudio.github.io/web-audio-api/#iirfilternode) constructor may be used as an alternative.
 
-It has to be faked internally with a ScriptProcessorNode in Safari which means it is not as performant as in other browsers which support it natively.
+⚠️ <!-- Bug #9 --> It has to be faked internally with a ScriptProcessorNode in Safari which means it is not as performant as in other browsers which support it natively.
 
 #### createMediaElementSource() / MediaElementAudioSourceNode
 
@@ -229,7 +229,7 @@ This is an implementation of the [`createOscillator()`](https://webaudio.github.
 
 This is an implementation of the [`createPanner()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createpanner) factory method. The [`PannerNode`](https://webaudio.github.io/web-audio-api/#pannernode) constructor may be used as an alternative.
 
-The panningModel can only be savely assigned to `'equalpower'`. This is because Edge has no native implementation of the `'HRTF'` panningModel. An attempt to set the panningModel to `'HRTF'` in Edge will throw a `NotSupportedError`.
+⚠️ <!-- Bug #123 --> The panningModel can only be savely assigned to `'equalpower'`. This is because Edge has no native implementation of the `'HRTF'` panningModel. An attempt to set the panningModel to `'HRTF'` in Edge will throw a `NotSupportedError`.
 
 #### createPeriodicWave() / PeriodicWave
 
