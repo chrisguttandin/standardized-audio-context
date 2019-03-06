@@ -48,8 +48,14 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             this._nativeConvolverNode.buffer = value;
 
             // Bug #115: Safari does not allow to set the buffer to null.
-            // @todo Create a new internal nativeConvolverNode.
-            this._isBufferNullified = (value === null && this._nativeConvolverNode.buffer !== null);
+            if (value === null && this._nativeConvolverNode.buffer !== null) {
+                const nativeContext = this._nativeConvolverNode.context;
+
+                this._nativeConvolverNode.buffer = nativeContext.createBuffer(1, 1, nativeContext.sampleRate);
+                this._isBufferNullified = true;
+            } else {
+                this._isBufferNullified = false;
+            }
         }
 
         get normalize (): boolean {
