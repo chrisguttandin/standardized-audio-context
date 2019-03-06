@@ -8,11 +8,12 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
 
         assignNativeAudioNodeOptions(nativeConvolverNode, options);
 
-        assignNativeAudioNodeOption(nativeConvolverNode, options, 'buffer');
-
+        // The normalize property needs to be set before setting the buffer.
         if (options.disableNormalization === nativeConvolverNode.normalize) {
             nativeConvolverNode.normalize = !options.disableNormalization;
         }
+
+        assignNativeAudioNodeOption(nativeConvolverNode, options, 'buffer');
 
         // Bug #113: Edge & Safari allow to change the channelCount
         if (options.channelCount !== 2) {
