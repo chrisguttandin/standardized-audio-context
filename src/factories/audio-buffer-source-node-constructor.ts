@@ -89,8 +89,19 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
                     throw err; // tslint:disable-line:rxjs-throw-error
                 }
 
-                // @todo Create a new internal nativeAudioBufferSourceNode.
-                this._isBufferNullified = (this._nativeAudioBufferSourceNode.buffer !== null);
+                // This will modify the buffer in place. Luckily that works in Edge and has the same effect as setting the buffer to null.
+                if (this._nativeAudioBufferSourceNode.buffer !== null) {
+                    const buffer = this._nativeAudioBufferSourceNode.buffer;
+                    const numberOfChannels = buffer.numberOfChannels;
+
+                    for (let i = 0; i < numberOfChannels; i += 1) {
+                        buffer
+                            .getChannelData(i)
+                            .fill(0);
+                    }
+
+                    this._isBufferNullified = true;
+                }
             }
 
             // Bug #72: Only Chrome, Edge & Opera do not allow to reassign the buffer yet.
