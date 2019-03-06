@@ -181,6 +181,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             outputChannelSplitterNodeOutput += options.outputChannelCount[i];
         }
 
+        let channelInterpretation = options.channelInterpretation;
         let onprocessorerror: TNativeAudioWorkletNode['onprocessorerror'] = null;
 
         // Bug #87: Expose at least one output to make this node connectable.
@@ -204,15 +205,17 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 throw createInvalidStateError();
             },
             get channelInterpretation (): TNativeAudioWorkletNode['channelInterpretation'] {
-                return gainNodes[0].channelInterpretation;
+                return channelInterpretation;
             },
             set channelInterpretation (value) {
                 for (const gainNode of gainNodes) {
                     gainNode.channelInterpretation = value;
                 }
+
+                channelInterpretation = value;
             },
             get context (): TNativeAudioWorkletNode['context'] {
-                return gainNodes[0].context;
+                return scriptProcessorNode.context;
             },
             get inputs (): TNativeAudioNode[] {
                 return gainNodes;
@@ -244,7 +247,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 return messageChannel.port2;
             },
             addEventListener (...args: any[]): void {
-                return gainNodes[0].addEventListener(args[0], args[1], args[2]);
+                return scriptProcessorNode.addEventListener(args[0], args[1], args[2]);
             },
             connect (...args: any[]): any {
                 return <any> connectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
@@ -253,10 +256,10 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 return <any> disconnectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
             },
             dispatchEvent (...args: any[]): boolean {
-                return gainNodes[0].dispatchEvent(args[0]);
+                return scriptProcessorNode.dispatchEvent(args[0]);
             },
             removeEventListener (...args: any[]): void {
-                return gainNodes[0].removeEventListener(args[0], args[1], args[2]);
+                return scriptProcessorNode.removeEventListener(args[0], args[1], args[2]);
             }
         };
 
