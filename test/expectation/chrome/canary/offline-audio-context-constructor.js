@@ -43,6 +43,41 @@ describe('offlineAudioContextConstructor', () => {
                 });
         });
 
+        // bug #148
+
+        it('should not render a nullified AudioBuffer as silence', (done) => {
+            const audioBuffer = offlineAudioContext.createBuffer(1, 5, 44100);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const fiveRandomValues = [];
+
+            for (let i = 0; i < 5; i += 1) {
+                fiveRandomValues[i] = (Math.random() * 2) - 1;
+            }
+
+            audioBuffer.copyToChannel(new Float32Array(fiveRandomValues), 0);
+
+            audioBufferSourceNode.buffer = audioBuffer;
+            audioBufferSourceNode.buffer = null;
+            audioBufferSourceNode.start(0);
+            audioBufferSourceNode.connect(offlineAudioContext.destination);
+
+            offlineAudioContext
+                .startRendering()
+                .then((buffer) => {
+                    const channelData = new Float32Array(5);
+
+                    buffer.copyFromChannel(channelData, 0);
+
+                    expect(channelData[0]).to.closeTo(fiveRandomValues[0], 0.0000001);
+                    expect(channelData[1]).to.closeTo(fiveRandomValues[1], 0.0000001);
+                    expect(channelData[2]).to.closeTo(fiveRandomValues[2], 0.0000001);
+                    expect(channelData[3]).to.closeTo(fiveRandomValues[3], 0.0000001);
+                    expect(channelData[4]).to.closeTo(fiveRandomValues[4], 0.0000001);
+
+                    done();
+                });
+        });
+
     });
 
     describe('decodeAudioData()', () => {
