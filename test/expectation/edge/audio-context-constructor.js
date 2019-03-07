@@ -14,6 +14,16 @@ describe('audioContextConstructor', () => {
             audioContext = new AudioContext({ latencyHint: 'negative' });
         });
 
+        // bug #150
+
+        it('should not allow to set the sampleRate', () => {
+            const sampleRate = 16000;
+
+            audioContext = new AudioContext({ sampleRate });
+
+            expect(audioContext.sampleRate).to.not.equal(sampleRate);
+        });
+
     });
 
     describe('with a constructed AudioContext', () => {

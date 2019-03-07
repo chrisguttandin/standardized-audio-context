@@ -4,206 +4,224 @@ describe('audioContextConstructor', () => {
 
     afterEach(() => audioContext.close());
 
-    beforeEach(() => {
-        audioContext = new AudioContext();
-    });
+    describe('without a constructed AudioContext', () => {
 
-    describe('audioWorklet', () => {
+        // bug #150
 
-        describe('addModule()', () => {
+        it('should not allow to set the sampleRate', () => {
+            const sampleRate = 16000;
 
-            describe('with an empty string as name', () => {
+            audioContext = new AudioContext({ sampleRate });
 
-                // bug #134
-
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/empty-string-processor.js');
-                });
-
-            });
-
-            describe('with a duplicate name', () => {
-
-                beforeEach(function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
-                });
-
-                // bug #135
-
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/duplicate-gain-processor.js');
-                });
-
-            });
-
-            describe('with a processor without a valid constructor', () => {
-
-                // bug #136
-
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/unconstructible-processor.js');
-                });
-
-            });
-
-            describe('with a processor without a prototype', () => {
-
-                // Bug #137
-
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/prototypeless-processor.js');
-                });
-
-            });
-
-            describe('with a processor without a process function', () => {
-
-                // Bug #138
-
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/processless-processor.js');
-                });
-
-            });
-
-            describe('with a processor with an invalid parameterDescriptors property', () => {
-
-                // Bug #139
-
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/invalid-parameter-descriptors-property-processor.js');
-                });
-
-            });
-
+            expect(audioContext.sampleRate).to.not.equal(sampleRate);
         });
 
     });
 
-    describe('createAnalyser()', () => {
-
-        // bug #58
-
-        it('should throw a SyntaxError when calling connect() with an AudioParam of another AudioContext', (done) => {
-            const analyserNode = audioContext.createAnalyser();
-            const anotherAudioContext = new AudioContext();
-            const gainNode = anotherAudioContext.createGain();
-
-            try {
-                analyserNode.connect(gainNode.gain);
-            } catch (err) {
-                expect(err.code).to.equal(12);
-                expect(err.name).to.equal('SyntaxError');
-
-                done();
-            } finally {
-                anotherAudioContext.close();
-            }
-        });
-
-    });
-
-    describe('createBiquadFilter()', () => {
-
-        let biquadFilterNode;
+    describe('with a constructed AudioContext', () => {
 
         beforeEach(() => {
-            biquadFilterNode = audioContext.createBiquadFilter();
+            audioContext = new AudioContext();
         });
 
-        describe('frequency', () => {
+        describe('audioWorklet', () => {
 
-            describe('maxValue', () => {
+            describe('addModule()', () => {
 
-                // bug #77
+                describe('with an empty string as name', () => {
 
-                it('should be the nyquist frequency', () => {
-                    expect(biquadFilterNode.frequency.maxValue).to.equal(audioContext.sampleRate / 2);
+                    // bug #134
+
+                    it('should not throw an error', function () {
+                        this.timeout(10000);
+
+                        return audioContext.audioWorklet.addModule('base/test/fixtures/empty-string-processor.js');
+                    });
+
+                });
+
+                describe('with a duplicate name', () => {
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        return audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+                    });
+
+                    // bug #135
+
+                    it('should not throw an error', function () {
+                        this.timeout(10000);
+
+                        return audioContext.audioWorklet.addModule('base/test/fixtures/duplicate-gain-processor.js');
+                    });
+
+                });
+
+                describe('with a processor without a valid constructor', () => {
+
+                    // bug #136
+
+                    it('should not throw an error', function () {
+                        this.timeout(10000);
+
+                        return audioContext.audioWorklet.addModule('base/test/fixtures/unconstructible-processor.js');
+                    });
+
+                });
+
+                describe('with a processor without a prototype', () => {
+
+                    // Bug #137
+
+                    it('should not throw an error', function () {
+                        this.timeout(10000);
+
+                        return audioContext.audioWorklet.addModule('base/test/fixtures/prototypeless-processor.js');
+                    });
+
+                });
+
+                describe('with a processor without a process function', () => {
+
+                    // Bug #138
+
+                    it('should not throw an error', function () {
+                        this.timeout(10000);
+
+                        return audioContext.audioWorklet.addModule('base/test/fixtures/processless-processor.js');
+                    });
+
+                });
+
+                describe('with a processor with an invalid parameterDescriptors property', () => {
+
+                    // Bug #139
+
+                    it('should not throw an error', function () {
+                        this.timeout(10000);
+
+                        return audioContext.audioWorklet.addModule('base/test/fixtures/invalid-parameter-descriptors-property-processor.js');
+                    });
+
                 });
 
             });
 
-            describe('minValue', () => {
-
-                // bug #77
-
-                it('should be 0', () => {
-                    expect(biquadFilterNode.frequency.minValue).to.equal(0);
-                });
-
-            });
-
         });
 
-    });
+        describe('createAnalyser()', () => {
 
-    describe('createMediaStreamTrackSource()', () => {
+            // bug #58
 
-        // bug #121
-
-        it('should not be implemented', () => {
-            expect(audioContext.createMediaStreamTrackSource).to.be.undefined;
-        });
-
-    });
-
-    describe('createWaveShaper()', () => {
-
-        describe('curve', () => {
-
-            // bug #104
-
-            it('should throw an InvalidAccessError when assigning a curve with less than two samples', (done) => {
-                const waveShaperNode = audioContext.createWaveShaper();
+            it('should throw a SyntaxError when calling connect() with an AudioParam of another AudioContext', (done) => {
+                const analyserNode = audioContext.createAnalyser();
+                const anotherAudioContext = new AudioContext();
+                const gainNode = anotherAudioContext.createGain();
 
                 try {
-                    waveShaperNode.curve = new Float32Array([ 1 ]);
+                    analyserNode.connect(gainNode.gain);
                 } catch (err) {
-                    expect(err.code).to.equal(15);
-                    expect(err.name).to.equal('InvalidAccessError');
+                    expect(err.code).to.equal(12);
+                    expect(err.name).to.equal('SyntaxError');
 
                     done();
+                } finally {
+                    anotherAudioContext.close();
                 }
             });
 
         });
 
-    });
+        describe('createBiquadFilter()', () => {
 
-    describe('resume()', () => {
+            let biquadFilterNode;
 
-        afterEach(() => {
-            // Create a closeable AudioContext to align the behaviour with other tests.
-            audioContext = new AudioContext();
+            beforeEach(() => {
+                biquadFilterNode = audioContext.createBiquadFilter();
+            });
+
+            describe('frequency', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #77
+
+                    it('should be the nyquist frequency', () => {
+                        expect(biquadFilterNode.frequency.maxValue).to.equal(audioContext.sampleRate / 2);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #77
+
+                    it('should be 0', () => {
+                        expect(biquadFilterNode.frequency.minValue).to.equal(0);
+                    });
+
+                });
+
+            });
+
         });
 
-        beforeEach(() => audioContext.close());
+        describe('createMediaStreamTrackSource()', () => {
 
-        // bug #55
+            // bug #121
 
-        it('should throw an InvalidAccessError with a closed AudioContext', (done) => {
-            audioContext
-                .resume()
-                .catch((err) => {
-                    expect(err.code).to.equal(15);
-                    expect(err.name).to.equal('InvalidAccessError');
+            it('should not be implemented', () => {
+                expect(audioContext.createMediaStreamTrackSource).to.be.undefined;
+            });
 
-                    done();
+        });
+
+        describe('createWaveShaper()', () => {
+
+            describe('curve', () => {
+
+                // bug #104
+
+                it('should throw an InvalidAccessError when assigning a curve with less than two samples', (done) => {
+                    const waveShaperNode = audioContext.createWaveShaper();
+
+                    try {
+                        waveShaperNode.curve = new Float32Array([ 1 ]);
+                    } catch (err) {
+                        expect(err.code).to.equal(15);
+                        expect(err.name).to.equal('InvalidAccessError');
+
+                        done();
+                    }
                 });
+
+            });
+
+        });
+
+        describe('resume()', () => {
+
+            afterEach(() => {
+                // Create a closeable AudioContext to align the behaviour with other tests.
+                audioContext = new AudioContext();
+            });
+
+            beforeEach(() => audioContext.close());
+
+            // bug #55
+
+            it('should throw an InvalidAccessError with a closed AudioContext', (done) => {
+                audioContext
+                    .resume()
+                    .catch((err) => {
+                        expect(err.code).to.equal(15);
+                        expect(err.name).to.equal('InvalidAccessError');
+
+                        done();
+                    });
+            });
+
         });
 
     });

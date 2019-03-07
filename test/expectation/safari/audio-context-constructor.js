@@ -14,6 +14,16 @@ describe('audioContextConstructor', () => {
             audioContext = new webkitAudioContext({ latencyHint: 'negative' }); // eslint-disable-line new-cap, no-undef
         });
 
+        // bug #150
+
+        it('should not allow to set the sampleRate', () => {
+            const sampleRate = 16000;
+
+            audioContext = new webkitAudioContext({ sampleRate }); // eslint-disable-line new-cap, no-undef
+
+            expect(audioContext.sampleRate).to.not.equal(sampleRate);
+        });
+
         describe('with four running AudioContexts', () => {
 
             let audioContexts;
