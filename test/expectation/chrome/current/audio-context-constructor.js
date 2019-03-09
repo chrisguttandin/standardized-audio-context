@@ -10,76 +10,94 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    describe('outputLatency', () => {
+    describe('without a constructed AudioContext', () => {
 
-        // bug #40
+        // bug #150
 
-        it('should not be implemented', () => {
-            expect(audioContext.outputLatency).to.be.undefined;
+        it('should not allow to set the sampleRate', () => {
+            const sampleRate = 16000;
+
+            audioContext = new AudioContext({ sampleRate });
+
+            expect(audioContext.sampleRate).to.not.equal(sampleRate);
         });
 
     });
 
-    describe('state', () => {
+    describe('with a constructed AudioContext', () => {
 
-        // bug #34
+        describe('outputLatency', () => {
 
-        it('should be set to running right away', () => {
-            expect(audioContext.state).to.equal('running');
-        });
+            // bug #40
 
-    });
-
-    describe('close()', () => {
-
-        // bug #50
-
-        it('should not allow to create AudioNodes on a closed context', (done) => {
-            audioContext
-                .close()
-                .then(() => {
-                    audioContext.createGain();
-                })
-                .catch(() => {
-                    // Create a closeable AudioContext to align the behaviour with other tests.
-                    audioContext = new AudioContext();
-
-                    done();
-                });
-        });
-
-    });
-
-    describe('createBufferSource()', () => {
-
-        describe('stop()', () => {
-
-            // bug #44
-
-            it('should throw a DOMException', () => {
-                const audioBufferSourceNode = audioContext.createBufferSource();
-
-                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+            it('should not be implemented', () => {
+                expect(audioContext.outputLatency).to.be.undefined;
             });
 
         });
 
-    });
+        describe('state', () => {
 
-    describe('decodeAudioData()', () => {
+            // bug #34
 
-        // bug #6
+            it('should be set to running right away', () => {
+                expect(audioContext.state).to.equal('running');
+            });
 
-        it('should not call the errorCallback at all', (done) => {
-            const errorCallback = spy();
+        });
 
-            audioContext.decodeAudioData(null, () => {}, errorCallback);
+        describe('close()', () => {
 
-            setTimeout(() => {
-                expect(errorCallback).to.have.not.been.called;
+            // bug #50
 
-                done();
-            }, 1000);
+            it('should not allow to create AudioNodes on a closed context', (done) => {
+                audioContext
+                    .close()
+                    .then(() => {
+                        audioContext.createGain();
+                    })
+                    .catch(() => {
+                        // Create a closeable AudioContext to align the behaviour with other tests.
+                        audioContext = new AudioContext();
+
+                        done();
+                    });
+            });
+
+        });
+
+        describe('createBufferSource()', () => {
+
+            describe('stop()', () => {
+
+                // bug #44
+
+                it('should throw a DOMException', () => {
+                    const audioBufferSourceNode = audioContext.createBufferSource();
+
+                    expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                });
+
+            });
+
+        });
+
+        describe('decodeAudioData()', () => {
+
+            // bug #6
+
+            it('should not call the errorCallback at all', (done) => {
+                const errorCallback = spy();
+
+                audioContext.decodeAudioData(null, () => {}, errorCallback);
+
+                setTimeout(() => {
+                    expect(errorCallback).to.have.not.been.called;
+
+                    done();
+                }, 1000);
+            });
+
         });
 
     });
