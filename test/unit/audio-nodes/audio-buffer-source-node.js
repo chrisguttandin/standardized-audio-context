@@ -305,7 +305,7 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 // Bug #148: There is a bug in Chrome v74 which does not allow to nullify the buffer.
-                if (!/Chrome\/74/.test(navigator.userAgent)) {
+                if (!/Chrome\/75/.test(navigator.userAgent)) {
 
                     describe('with a nullified AudioBuffer', () => {
 
