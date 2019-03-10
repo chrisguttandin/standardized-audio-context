@@ -341,27 +341,93 @@ describe('audioContextConstructor', () => {
 
         describe('createMediaStreamSource()', () => {
 
-            let videoStream;
+            describe('with a mediaStream that has no audio track', () => {
 
-            afterEach(() => {
-                for (const videoStreamTrack of videoStream.getTracks()) {
-                    videoStreamTrack.stop();
-                }
+                let videoStream;
+
+                afterEach(() => {
+                    for (const videoStreamTrack of videoStream.getTracks()) {
+                        videoStreamTrack.stop();
+                    }
+                });
+
+                beforeEach(() => {
+                    const canvasElement = document.createElement('canvas');
+
+                    // @todo https://bugzilla.mozilla.org/show_bug.cgi?id=1388974
+                    canvasElement.getContext('2d');
+
+                    videoStream = canvasElement.captureStream();
+                });
+
+                // bug #120
+
+                it('should not throw an error', () => {
+                    audioContext.createMediaStreamSource(videoStream);
+                });
+
             });
 
-            beforeEach(() => {
-                const canvasElement = document.createElement('canvas');
+            describe('with an audio track that gets removed from the mediaStream after construction', () => {
 
-                // @todo https://bugzilla.mozilla.org/show_bug.cgi?id=1388974
-                canvasElement.getContext('2d');
+                let mediaStream;
+                let mediaStreamTracks;
+                let oscillatorNode;
 
-                videoStream = canvasElement.captureStream();
-            });
+                afterEach(() => {
+                    for (const mediaStreamTrack of mediaStreamTracks) {
+                        mediaStreamTrack.stop();
+                    }
 
-            // bug #120
+                    oscillatorNode.stop();
+                });
 
-            it('should not throw an error', () => {
-                audioContext.createMediaStreamSource(videoStream);
+                beforeEach(() => {
+                    const mediaStreamDestinationNode = new MediaStreamAudioDestinationNode(audioContext);
+
+                    oscillatorNode = new OscillatorNode(audioContext);
+
+                    oscillatorNode.connect(mediaStreamDestinationNode);
+                    oscillatorNode.start();
+
+                    mediaStream = mediaStreamDestinationNode.stream;
+                    mediaStreamTracks = mediaStream.getTracks();
+                });
+
+                // bug #151
+
+                it('should not use the audio track as input anymore', (done) => {
+                    const channelData = new Float32Array(512);
+                    const mediaStreamAudioSourceNode = new MediaStreamAudioSourceNode(audioContext, { mediaStream });
+                    const scriptProcessorNode = audioContext.createScriptProcessor(512);
+
+                    for (const mediaStreamTrack of mediaStreamTracks) {
+                        mediaStream.removeTrack(mediaStreamTrack);
+                    }
+
+                    scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                        inputBuffer.copyFromChannel(channelData, 0);
+
+                        for (let i = 0; i < 512; i += 1) {
+                            if (channelData[i] !== 0) {
+                                mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                                done(new Error('The signal is expected to be zero at all time.'));
+
+                                break;
+                            }
+                        }
+                    };
+
+                    mediaStreamAudioSourceNode.connect(scriptProcessorNode);
+
+                    setTimeout(() => {
+                        mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                        done();
+                    }, 1000);
+                });
+
             });
 
         });

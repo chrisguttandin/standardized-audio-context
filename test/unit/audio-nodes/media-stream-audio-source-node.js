@@ -394,89 +394,103 @@ describe('MediaStreamAudioSourceNode', () => {
 
                 describe('disconnect()', () => {
 
-                    let renderer;
+                    for (const isAudioStreamTrackRemoved of [ true, false ]) {
 
-                    beforeEach(function () {
-                        this.timeout(10000);
+                        describe(`with an audio track that gets ${ (isAudioStreamTrackRemoved) ? 'not' : '' } removed`, () => {
 
-                        renderer = createRenderer({
-                            context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
-                                const firstDummyGainNode = new GainNode(context);
-                                const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
-                                const secondDummyGainNode = new GainNode(context);
+                            let renderer;
 
-                                mediaStreamAudioSourceNode
-                                    .connect(firstDummyGainNode)
-                                    .connect(destination);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                                mediaStreamAudioSourceNode.connect(secondDummyGainNode);
+                                renderer = createRenderer({
+                                    context,
+                                    length: (context.length === undefined) ? 5 : undefined,
+                                    prepare (destination) {
+                                        const firstDummyGainNode = new GainNode(context);
+                                        const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+                                        const secondDummyGainNode = new GainNode(context);
 
-                                return { firstDummyGainNode, mediaStreamAudioSourceNode, secondDummyGainNode };
-                            }
+                                        if (isAudioStreamTrackRemoved === 'removed') {
+                                            for (const audioStreamTrack of mediaStream.getAudioTracks()) {
+                                                mediaStream.removeTrack(audioStreamTrack);
+                                            }
+                                        }
+
+                                        mediaStreamAudioSourceNode
+                                            .connect(firstDummyGainNode)
+                                            .connect(destination);
+
+                                        mediaStreamAudioSourceNode.connect(secondDummyGainNode);
+
+                                        return { firstDummyGainNode, mediaStreamAudioSourceNode, secondDummyGainNode };
+                                    }
+                                });
+                            });
+
+                            it('should be possible to disconnect a destination', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    prepare ({ firstDummyGainNode, mediaStreamAudioSourceNode }) {
+                                        mediaStreamAudioSourceNode.disconnect(firstDummyGainNode);
+                                    },
+                                    verifyChannelData: false
+                                })
+                                    .then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
+                            });
+
+                            it('should be possible to disconnect another destination in isolation', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    prepare ({ mediaStreamAudioSourceNode, secondDummyGainNode }) {
+                                        mediaStreamAudioSourceNode.disconnect(secondDummyGainNode);
+                                    },
+                                    verifyChannelData: false
+                                })
+                                    .then((channelData) => {
+                                        /*
+                                         * @todo The audioElement will just play a sine wave and Firefox will just capture the signal from the
+                                         * microphone. Therefore it is okay to only test for non zero values.
+                                         */
+                                        expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
+                            });
+
+                            it('should be possible to disconnect all destinations by specifying the output', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    prepare ({ mediaStreamAudioSourceNode }) {
+                                        mediaStreamAudioSourceNode.disconnect(0);
+                                    },
+                                    verifyChannelData: false
+                                })
+                                    .then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
+                            });
+
+                            it('should be possible to disconnect all destinations', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    prepare ({ mediaStreamAudioSourceNode }) {
+                                        mediaStreamAudioSourceNode.disconnect();
+                                    },
+                                    verifyChannelData: false
+                                })
+                                    .then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
+                            });
+
                         });
-                    });
 
-                    it('should be possible to disconnect a destination', function () {
-                        this.timeout(10000);
-
-                        return renderer({
-                            prepare ({ firstDummyGainNode, mediaStreamAudioSourceNode }) {
-                                mediaStreamAudioSourceNode.disconnect(firstDummyGainNode);
-                            },
-                            verifyChannelData: false
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
-                    });
-
-                    it('should be possible to disconnect another destination in isolation', function () {
-                        this.timeout(10000);
-
-                        return renderer({
-                            prepare ({ mediaStreamAudioSourceNode, secondDummyGainNode }) {
-                                mediaStreamAudioSourceNode.disconnect(secondDummyGainNode);
-                            },
-                            verifyChannelData: false
-                        })
-                            .then((channelData) => {
-                                /*
-                                 * @todo The audioElement will just play a sine wave and Firefox will just capture the signal from the
-                                 * microphone. Therefore it is okay to only test for non zero values.
-                                 */
-                                expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
-                    });
-
-                    it('should be possible to disconnect all destinations by specifying the output', function () {
-                        this.timeout(10000);
-
-                        return renderer({
-                            prepare ({ mediaStreamAudioSourceNode }) {
-                                mediaStreamAudioSourceNode.disconnect(0);
-                            },
-                            verifyChannelData: false
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
-                    });
-
-                    it('should be possible to disconnect all destinations', function () {
-                        this.timeout(10000);
-
-                        return renderer({
-                            prepare ({ mediaStreamAudioSourceNode }) {
-                                mediaStreamAudioSourceNode.disconnect();
-                            },
-                            verifyChannelData: false
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
-                    });
+                    }
 
                 });
 

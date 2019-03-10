@@ -34,6 +34,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
             super(context, nativeMediaStreamAudioSourceNode, null);
 
             // Bug #63: Edge & Firefox do not expose the mediaStream yet.
+            // Bug #151: The mediaStream gets cloned for Firefox but luckily it doesn't expose it at the same time.
             this._mediaStream = mergedOptions.mediaStream;
             this._nativeMediaStreamAudioSourceNode = nativeMediaStreamAudioSourceNode;
         }
