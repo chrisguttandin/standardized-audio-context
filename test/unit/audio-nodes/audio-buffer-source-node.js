@@ -304,70 +304,65 @@ describe('AudioBufferSourceNode', () => {
 
                 });
 
-                // Bug #148: There is a bug in Chrome v74 which does not allow to nullify the buffer.
-                if (!/Chrome\/75/.test(navigator.userAgent)) {
+                describe('with a nullified AudioBuffer', () => {
 
-                    describe('with a nullified AudioBuffer', () => {
+                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
 
-                        for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
-                            describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                            let renderer;
 
-                                let renderer;
+                            beforeEach(async function () {
+                                this.timeout(10000);
 
-                                beforeEach(async function () {
-                                    this.timeout(10000);
+                                if (withAnAppendedAudioWorklet) {
+                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                }
 
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                renderer = createRenderer({
+                                    context,
+                                    length: (context.length === undefined) ? 5 : undefined,
+                                    prepare (destination) {
+                                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+
+                                        audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+
+                                        const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+
+                                        audioBufferSourceNode.buffer = null;
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            audioBufferSourceNode
+                                                .connect(audioWorkletNode)
+                                                .connect(destination);
+                                        } else {
+                                            audioBufferSourceNode.connect(destination);
+                                        }
+
+                                        return { audioBufferSourceNode };
                                     }
-
-                                    renderer = createRenderer({
-                                        context,
-                                        length: (context.length === undefined) ? 5 : undefined,
-                                        prepare (destination) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-
-                                            audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
-
-                                            const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-                                            const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
-
-                                            audioBufferSourceNode.buffer = null;
-
-                                            if (withAnAppendedAudioWorklet) {
-                                                audioBufferSourceNode
-                                                    .connect(audioWorkletNode)
-                                                    .connect(destination);
-                                            } else {
-                                                audioBufferSourceNode.connect(destination);
-                                            }
-
-                                            return { audioBufferSourceNode };
-                                        }
-                                    });
                                 });
-
-                                it('should render silence', function () {
-                                    this.timeout(10000);
-
-                                    return renderer({
-                                        start (startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime);
-                                        }
-                                    })
-                                        .then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                        });
-                                });
-
                             });
 
-                        }
+                            it('should render silence', function () {
+                                this.timeout(10000);
 
-                    });
+                                return renderer({
+                                    start (startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                })
+                                    .then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
+                            });
 
-                }
+                        });
+
+                    }
+
+                });
 
             });
 
