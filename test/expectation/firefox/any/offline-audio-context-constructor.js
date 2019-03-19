@@ -1,3 +1,4 @@
+import { loadFixture } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
@@ -215,6 +216,32 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createIIRFilter()', () => {
+
+        let iIRFilterNode;
+
+        beforeEach(() => {
+            iIRFilterNode = offlineAudioContext.createIIRFilter([ 1 ], [ 1 ]);
+        });
+
+        describe('getFrequencyResponse()', () => {
+
+            // bug #23
+
+            it('should not throw a NotSupportedError', () => {
+                iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
+            });
+
+            // bug #24
+
+            it('should not throw a NotSupportedError', () => {
+                iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
+            });
+
+        });
+
+    });
+
     describe('createOscillator()', () => {
 
         let oscillatorNode;
@@ -288,6 +315,26 @@ describe('offlineAudioContextConstructor', () => {
 
                 done();
             }, 1000);
+        });
+
+        // bug #43
+
+        it('should not throw a DataCloneError', function (done) {
+            this.timeout(10000);
+
+            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
+                expect(err).to.be.null;
+
+                offlineAudioContext
+                    .decodeAudioData(arrayBuffer)
+                    .then(() => offlineAudioContext.decodeAudioData(arrayBuffer))
+                    .catch((err2) => {
+                        expect(err2.code).to.not.equal(25);
+                        expect(err2.name).to.not.equal('DataCloneError');
+
+                        done();
+                    });
+            });
         });
 
     });

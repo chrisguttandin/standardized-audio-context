@@ -1,3 +1,4 @@
+import { loadFixture } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 
 describe('audioContextConstructor', () => {
@@ -281,6 +282,32 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createIIRFilter()', () => {
+
+            let iIRFilterNode;
+
+            beforeEach(() => {
+                iIRFilterNode = audioContext.createIIRFilter([ 1 ], [ 1 ]);
+            });
+
+            describe('getFrequencyResponse()', () => {
+
+                // bug #23
+
+                it('should not throw an InvalidAccessError', () => {
+                    iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
+                });
+
+                // bug #24
+
+                it('should not throw an InvalidAccessError', () => {
+                    iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
+                });
+
+            });
+
+        });
+
         describe('createGain()', () => {
 
             describe('gain', () => {
@@ -486,6 +513,26 @@ describe('audioContextConstructor', () => {
 
                     done();
                 }, 1000);
+            });
+
+            // bug #43
+
+            it('should not throw a DataCloneError', function (done) {
+                this.timeout(10000);
+
+                loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
+                    expect(err).to.be.null;
+
+                    audioContext
+                        .decodeAudioData(arrayBuffer)
+                        .then(() => audioContext.decodeAudioData(arrayBuffer))
+                        .catch((err2) => {
+                            expect(err2.code).to.not.equal(25);
+                            expect(err2.name).to.not.equal('DataCloneError');
+
+                            done();
+                        });
+                });
             });
 
         });
