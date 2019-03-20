@@ -93,141 +93,141 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                             throw err; // tslint:disable-line:rxjs-throw-error
                         });
                 });
-        } else {
-            const resolvedRequestsOfContext = resolvedRequests.get(context);
+        }
 
-            if (resolvedRequestsOfContext !== undefined && resolvedRequestsOfContext.has(moduleURL)) {
-                return Promise.resolve();
+        const resolvedRequestsOfContext = resolvedRequests.get(context);
+
+        if (resolvedRequestsOfContext !== undefined && resolvedRequestsOfContext.has(moduleURL)) {
+            return Promise.resolve();
+        }
+
+        const ongoingRequestsOfContext = ongoingRequests.get(context);
+
+        if (ongoingRequestsOfContext !== undefined) {
+            const promiseOfOngoingRequest = ongoingRequestsOfContext.get(moduleURL);
+
+            if (promiseOfOngoingRequest !== undefined) {
+                return promiseOfOngoingRequest;
             }
+        }
 
-            const ongoingRequestsOfContext = ongoingRequests.get(context);
+        const promise = fetchSource(moduleURL)
+            .then((source) => {
+                const [ importStatements, sourceWithoutImportStatements ] = splitImportStatements(source, absoluteUrl);
 
-            if (ongoingRequestsOfContext !== undefined) {
-                const promiseOfOngoingRequest = ongoingRequestsOfContext.get(moduleURL);
-
-                if (promiseOfOngoingRequest !== undefined) {
-                    return promiseOfOngoingRequest;
-                }
-            }
-
-            const promise = fetchSource(moduleURL)
-                .then((source) => {
-                    const [ importStatements, sourceWithoutImportStatements ] = splitImportStatements(source, absoluteUrl);
-
-                    /*
-                     * This is the unminified version of the code used below:
-                     *
-                     * ```js
-                     * ${ importStatements };
-                     * ((a, b) => {
-                     *     (a[b] = a[b] || [ ]).push(
-                     *         (AudioWorkletProcessor, currentFrame, currentTime, global, egisterProcessor, sampleRate, self, window) => {
-                     *             ${ sourceWithoutImportStatements }
-                     *         }
-                     *     );
-                     * })(window, '_AWGS');
-                     * ```
-                     */
-                    // tslint:disable-next-line:max-line-length
-                    const wrappedSource = `${ importStatements };((a,b)=>{(a[b]=a[b]||[]).push((AudioWorkletProcessor,currentFrame,currentTime,global,registerProcessor,sampleRate,self,window)=>{${ sourceWithoutImportStatements }
+                /*
+                 * This is the unminified version of the code used below:
+                 *
+                 * ```js
+                 * ${ importStatements };
+                 * ((a, b) => {
+                 *     (a[b] = a[b] || [ ]).push(
+                 *         (AudioWorkletProcessor, currentFrame, currentTime, global, egisterProcessor, sampleRate, self, window) => {
+                 *             ${ sourceWithoutImportStatements }
+                 *         }
+                 *     );
+                 * })(window, '_AWGS');
+                 * ```
+                 */
+                // tslint:disable-next-line:max-line-length
+                const wrappedSource = `${ importStatements };((a,b)=>{(a[b]=a[b]||[]).push((AudioWorkletProcessor,currentFrame,currentTime,global,registerProcessor,sampleRate,self,window)=>{${ sourceWithoutImportStatements }
 })})(window,'_AWGS')`;
 
-                    // @todo Evaluating the given source code is a possible security problem.
-                    return evaluateSource(wrappedSource);
-                })
-                .then(() => {
-                    const globalScope = Object.create(null, {
-                        currentFrame: {
-                            get: () => {
-                                return nativeContext.currentTime * nativeContext.sampleRate;
-                            }
-                        },
-                        currentTime: {
-                            get: () => {
-                                return nativeContext.currentTime;
-                            }
-                        },
-                        sampleRate: {
-                            get: () => {
-                                return nativeContext.sampleRate;
-                            }
+                // @todo Evaluating the given source code is a possible security problem.
+                return evaluateSource(wrappedSource);
+            })
+            .then(() => {
+                const globalScope = Object.create(null, {
+                    currentFrame: {
+                        get: () => {
+                            return nativeContext.currentTime * nativeContext.sampleRate;
                         }
-                    });
-
-                    const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]> (<any> window)._AWGS).pop();
-
-                    if (evaluateAudioWorkletGlobalScope === undefined) {
-                        throw new SyntaxError();
+                    },
+                    currentTime: {
+                        get: () => {
+                            return nativeContext.currentTime;
+                        }
+                    },
+                    sampleRate: {
+                        get: () => {
+                            return nativeContext.sampleRate;
+                        }
                     }
+                });
 
-                    evaluateAudioWorkletGlobalScope(
-                        class AudioWorkletProcessor { },
-                        globalScope.currentFrame,
-                        globalScope.currentTime,
-                        undefined,
-                        (name, processorCtor) => {
-                            if (name.trim() === '') {
+                const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]> (<any> window)._AWGS).pop();
+
+                if (evaluateAudioWorkletGlobalScope === undefined) {
+                    throw new SyntaxError();
+                }
+
+                evaluateAudioWorkletGlobalScope(
+                    class AudioWorkletProcessor { },
+                    globalScope.currentFrame,
+                    globalScope.currentTime,
+                    undefined,
+                    (name, processorCtor) => {
+                        if (name.trim() === '') {
+                            throw createNotSupportedError();
+                        }
+
+                        const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
+
+                        if (nodeNameToProcessorDefinitionMap !== undefined) {
+                            if (nodeNameToProcessorDefinitionMap.has(name)) {
                                 throw createNotSupportedError();
                             }
 
-                            const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
+                            verifyProcessorCtor(processorCtor);
+                            verifyParameterDescriptors(processorCtor.parameterDescriptors);
 
-                            if (nodeNameToProcessorDefinitionMap !== undefined) {
-                                if (nodeNameToProcessorDefinitionMap.has(name)) {
-                                    throw createNotSupportedError();
-                                }
+                            nodeNameToProcessorDefinitionMap.set(name, processorCtor);
+                        } else {
+                            verifyProcessorCtor(processorCtor);
+                            verifyParameterDescriptors(processorCtor.parameterDescriptors);
 
-                                verifyProcessorCtor(processorCtor);
-                                verifyParameterDescriptors(processorCtor.parameterDescriptors);
+                            NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
+                        }
+                    },
+                    globalScope.sampleRate,
+                    undefined,
+                    undefined
+                );
+            })
+            .catch((err) => {
+                if (err.name === 'SyntaxError') {
+                    throw createAbortError();
+                }
 
-                                nodeNameToProcessorDefinitionMap.set(name, processorCtor);
-                            } else {
-                                verifyProcessorCtor(processorCtor);
-                                verifyParameterDescriptors(processorCtor.parameterDescriptors);
+                throw err; // tslint:disable-line:rxjs-throw-error
+            });
 
-                                NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
-                            }
-                        },
-                        globalScope.sampleRate,
-                        undefined,
-                        undefined
-                    );
-                })
-                .catch((err) => {
-                    if (err.name === 'SyntaxError') {
-                        throw createAbortError();
-                    }
-
-                    throw err; // tslint:disable-line:rxjs-throw-error
-                });
-
-            if (ongoingRequestsOfContext === undefined) {
-                 ongoingRequests.set(context, new Map([ [ moduleURL, promise ] ]));
-            } else {
-                ongoingRequestsOfContext.set(moduleURL, promise);
-            }
-
-            promise
-                .then(() => {
-                    const rslvdRqstsFCntxt = resolvedRequests.get(context);
-
-                    if (rslvdRqstsFCntxt === undefined) {
-                        resolvedRequests.set(context, new Set([ moduleURL ]));
-                    } else {
-                        rslvdRqstsFCntxt.add(moduleURL);
-                    }
-                })
-                .catch(() => { }) // tslint:disable-line:no-empty
-                // @todo Use finally when it becomes available in all supported browsers.
-                .then(() => {
-                    const ngngRqstsFCntxt = ongoingRequests.get(context);
-
-                    if (ngngRqstsFCntxt !== undefined) {
-                        ngngRqstsFCntxt.delete(moduleURL);
-                    }
-                });
-
-            return promise;
+        if (ongoingRequestsOfContext === undefined) {
+             ongoingRequests.set(context, new Map([ [ moduleURL, promise ] ]));
+        } else {
+            ongoingRequestsOfContext.set(moduleURL, promise);
         }
+
+        promise
+            .then(() => {
+                const rslvdRqstsFCntxt = resolvedRequests.get(context);
+
+                if (rslvdRqstsFCntxt === undefined) {
+                    resolvedRequests.set(context, new Set([ moduleURL ]));
+                } else {
+                    rslvdRqstsFCntxt.add(moduleURL);
+                }
+            })
+            .catch(() => { }) // tslint:disable-line:no-empty
+            // @todo Use finally when it becomes available in all supported browsers.
+            .then(() => {
+                const ngngRqstsFCntxt = ongoingRequests.get(context);
+
+                if (ngngRqstsFCntxt !== undefined) {
+                    ngngRqstsFCntxt.delete(moduleURL);
+                }
+            });
+
+        return promise;
     };
 };

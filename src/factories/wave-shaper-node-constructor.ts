@@ -50,12 +50,13 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             if (value === null) {
                 this._isCurveNullified = true;
                 this._nativeWaveShaperNode.curve = new Float32Array([ 0, 0 ]);
-
-            // Bug #102: Safari does not throw an InvalidStateError when the curve has less than two samples.
-            // Bug #104: Chrome will throw an InvalidAccessError when the curve has less than two samples.
-            } else if (value.length < 2) {
-                throw createInvalidStateError();
             } else {
+                // Bug #102: Safari does not throw an InvalidStateError when the curve has less than two samples.
+                // Bug #104: Chrome will throw an InvalidAccessError when the curve has less than two samples.
+                if (value.length < 2) {
+                    throw createInvalidStateError();
+                }
+
                 this._isCurveNullified = false;
                 this._nativeWaveShaperNode.curve = value;
             }

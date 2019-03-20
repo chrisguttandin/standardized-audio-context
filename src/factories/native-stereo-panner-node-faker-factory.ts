@@ -191,7 +191,9 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
     ) => {
         if (channelCount === 1) {
             return buildInternalGraphForMono(nativeContext, inputGainNode, panGainNode, channelMergerNode);
-        } else if (channelCount === 2) {
+        }
+
+        if (channelCount === 2) {
             return buildInternalGraphForStereo(nativeContext, inputGainNode, panGainNode, channelMergerNode);
         }
 
