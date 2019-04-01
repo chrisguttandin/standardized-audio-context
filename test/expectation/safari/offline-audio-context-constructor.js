@@ -729,6 +729,40 @@ describe('offlineAudioContextConstructor', () => {
 
         });
 
+        describe('setValueCurveAtTime()', () => {
+
+            // bug #152
+
+            it('should interpolate the values incorrectly', (done) => {
+                const audioBuffer = offlineAudioContext.createBuffer(1, 3, 44100);
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+                const gainNode = offlineAudioContext.createGain();
+
+                // Bug #5: Safari does not support copyFromChannel().
+                audioBuffer.getChannelData(0).fill(1);
+
+                audioBufferSourceNode.buffer = audioBuffer;
+
+                gainNode.gain.setValueCurveAtTime(new Float32Array([ 1, 3 ]), 0, 2 / offlineAudioContext.sampleRate);
+
+                audioBufferSourceNode.connect(gainNode);
+                gainNode.connect(offlineAudioContext.destination);
+
+                audioBufferSourceNode.start(0);
+
+                offlineAudioContext.oncomplete = (event) => {
+                    // Bug #5: Safari does not support copyFromChannel().
+                    const channelData = event.renderedBuffer.getChannelData(0);
+
+                    expect(Array.from(channelData).slice(0, 3)).to.deep.equal([ 1, 3, 3 ]);
+
+                    done();
+                };
+                offlineAudioContext.startRendering();
+            });
+
+        });
+
     });
 
     describe('createIIRFilter()', () => {
