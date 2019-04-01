@@ -430,7 +430,7 @@ describe('GainNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, gainNode }) {
-                                            gainNode.gain.setValueAtTime(0.5, startTime);
+                                            gainNode.gain.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
                                             gainNode.gain.setValueAtTime(1, startTime + (1.9 / context.sampleRate));
                                             gainNode.gain.linearRampToValueAtTime(0, startTime + (5 / context.sampleRate));
                                             gainNode.gain.cancelScheduledValues(startTime + (3 / context.sampleRate));

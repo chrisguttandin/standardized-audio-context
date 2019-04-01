@@ -457,7 +457,7 @@ describe('DelayNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, delayNode }) {
-                                            delayNode.delayTime.setValueAtTime(3 / context.sampleRate, startTime);
+                                            delayNode.delayTime.setValueAtTime(3 / context.sampleRate, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
                                             delayNode.delayTime.setValueAtTime(0, startTime + (1.9 / context.sampleRate));
                                             delayNode.delayTime.linearRampToValueAtTime(1, startTime + (5 / context.sampleRate));
                                             delayNode.delayTime.cancelScheduledValues(startTime + (3 / context.sampleRate));

@@ -871,7 +871,7 @@ describe('AudioWorkletNode', () => {
                                 start (startTime, { audioBufferSourceNode, audioWorkletNode }) {
                                     const gain = audioWorkletNode.parameters.get('gain');
 
-                                    gain.setValueAtTime(0.5, startTime);
+                                    gain.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
                                     gain.setValueAtTime(1, startTime + (1.9 / context.sampleRate));
                                     gain.linearRampToValueAtTime(0, startTime + (5 / context.sampleRate));
                                     gain.cancelScheduledValues(startTime + (3 / context.sampleRate));

@@ -541,7 +541,7 @@ describe('StereoPannerNode', () => {
 
                                             return renderer({
                                                 start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                    stereoPannerNode.pan.setValueAtTime(0.5, startTime);
+                                                    stereoPannerNode.pan.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
                                                     stereoPannerNode.pan.setValueAtTime(0, startTime + (1.9 / context.sampleRate));
                                                     stereoPannerNode.pan.linearRampToValueAtTime(1, startTime + (5 / context.sampleRate));
                                                     stereoPannerNode.pan.cancelScheduledValues(startTime + (3 / context.sampleRate));
