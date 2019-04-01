@@ -6,8 +6,8 @@ export const interceptConnections = <T extends Object> (
 ): T & { connect: TNativeAudioNode['connect']; disconnect: TNativeAudioNode['disconnect'] } => {
     (<T & { connect: TNativeAudioNode['connect'] }> original).connect = ((
         destination: TNativeAudioNode | TNativeAudioParam,
-        output = 0,
-        input = 0
+        output: number = 0,
+        input: number = 0
     ) => {
         if (destination instanceof AudioNode) {
             // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
