@@ -466,14 +466,13 @@ describe('ConstantSourceNode', () => {
 
                                     return renderer({
                                         start (startTime, { constantSourceNode }) {
-                                            constantSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, (6 / context.sampleRate));
+                                            constantSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), (startTime === 0) ? startTime : startTime - (1e-12 / context.sampleRate), (6 / context.sampleRate));
 
                                             constantSourceNode.start(startTime);
                                         }
                                     })
                                         .then((channelData) => {
-                                            // @todo The implementation of Safari is different. Therefore this test only checks if the values have changed.
-                                            expect(Array.from(channelData)).to.not.deep.equal([ 1, 1, 1, 1, 1 ]);
+                                            expect(Array.from(channelData)).to.deep.equal([ 0, 0.1666666716337204, 0.3333333432674408, 0.5, 0.6666666865348816 ]);
                                         });
                                 });
 

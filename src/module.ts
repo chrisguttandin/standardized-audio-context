@@ -255,7 +255,7 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 );
 const createAudioBufferSourceNodeRenderer = createAudioBufferSourceNodeRendererFactory(createNativeAudioBufferSourceNode);
-const createAudioParam = createAudioParamFactory(createAudioParamRenderer);
+const createAudioParam = createAudioParamFactory(createAudioParamRenderer, nativeAudioContextConstructor);
 const audioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructor = createAudioBufferSourceNodeConstructor(
     createAudioBufferSourceNodeRenderer,
     createAudioParam,

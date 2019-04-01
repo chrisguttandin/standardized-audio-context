@@ -607,14 +607,21 @@ describe('StereoPannerNode', () => {
 
                                             return renderer({
                                                 start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                    stereoPannerNode.pan.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, (6 / context.sampleRate));
+                                                    stereoPannerNode.pan.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), (startTime === 0) ? startTime : startTime - (1e-12 / context.sampleRate), (6 / context.sampleRate));
 
                                                     audioBufferSourceNode.start(startTime);
                                                 }
                                             })
                                                 .then((channelData) => {
-                                                    // @todo The implementation of Safari is different. Therefore this test only checks if the values have changed.
-                                                    expect(Array.from(channelData)).to.not.deep.equal(values);
+                                                    if (channelLayout === 'mono') {
+                                                        expect(channelData[0]).to.equal(0.7071067690849304);
+                                                        expect(channelData[1]).to.closeTo(0.3505287, 0.0000001);
+                                                        expect(channelData[2]).to.equal(0);
+                                                        expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                        expect(channelData[4]).to.equal(-0.6123723983764648);
+                                                    } else {
+                                                        expect(Array.from(channelData)).to.deep.equal([ 1, 0.5561861991882324, 0, -0.6035534143447876, -1.1830127239227295 ]);
+                                                    }
                                                 });
                                         });
 

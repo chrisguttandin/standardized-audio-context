@@ -9,7 +9,7 @@ const addAudioParam = (context: TContext, audioParam: IAudioParam, audioParamRen
     audioGraph.params.set(audioParam, { inputs: new Set(), renderer: audioParamRenderer });
 };
 
-export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioParamRenderer) => {
+export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioParamRenderer, nativeAudioContextConstructor) => {
     return (context, isAudioParamOfOfflineAudioContext, nativeAudioParam, maxValue = null, minValue = null) => {
         const audioParamRenderer = (isAudioParamOfOfflineAudioContext) ? createAudioParamRenderer() : null;
         const audioParam = {
@@ -77,10 +77,50 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
                 return audioParam;
             },
             setValueCurveAtTime (values: Float32Array, startTime: number, duration: number): IAudioParam {
-                nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
+                const type = 'setValueCurve';
 
-                if (audioParamRenderer !== null) {
-                    audioParamRenderer.record({ duration, startTime, type: 'setValueCurve', values });
+                /*
+                 * Bug #152: Safari does not correctly interpolate the values of the curve.
+                 * @todo Unfortunately there is no way to test for this behavior in synchronous fashion which is why testing for the
+                 * existence of the webkitAudioContext is used as a workaround here.
+                 */
+                if (nativeAudioContextConstructor !== null && nativeAudioContextConstructor.name === 'webkitAudioContext') {
+                    const endTime = startTime + duration;
+                    const firstSample = Math.ceil(startTime * context.sampleRate);
+                    const lastSample = Math.floor((endTime) * context.sampleRate);
+                    const numberOfInterpolatedValues = lastSample - firstSample;
+                    const interpolatedValues = new Float32Array(numberOfInterpolatedValues);
+
+                    for (let i = 0; i < numberOfInterpolatedValues; i += 1) {
+                        const theoreticIndex = ((values.length - 1) / duration) * (((firstSample + i) / context.sampleRate) - startTime);
+                        const lowerIndex = Math.floor(theoreticIndex);
+                        const upperIndex = Math.ceil(theoreticIndex);
+
+                        interpolatedValues[i] = (lowerIndex === upperIndex)
+                            ? values[lowerIndex]
+                            : ((1 - (theoreticIndex - lowerIndex)) * values[lowerIndex])
+                                + ((1 - (upperIndex - theoreticIndex)) * values[upperIndex]);
+                    }
+
+                    nativeAudioParam.setValueCurveAtTime(interpolatedValues, startTime, duration);
+
+                    if (audioParamRenderer !== null) {
+                        audioParamRenderer.record({ duration, startTime, type, values: interpolatedValues });
+                    }
+
+                    const timeOfLastSample = lastSample / context.sampleRate;
+
+                    if (timeOfLastSample < endTime) {
+                        audioParam.setValueAtTime(interpolatedValues[interpolatedValues.length - 1], timeOfLastSample);
+                    }
+
+                    audioParam.setValueAtTime(values[values.length - 1], endTime);
+                } else {
+                    nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
+
+                    if (audioParamRenderer !== null) {
+                        audioParamRenderer.record({ duration, startTime, type, values });
+                    }
                 }
 
                 return audioParam;
