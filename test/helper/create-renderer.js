@@ -112,7 +112,7 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
         const impulseStartTime = (Math.round(context.currentTime / renderQuantum) * renderQuantum) + (8192 / sampleRate);
         // Add an additional delay of 8192 samples to the startTime. That's especially useful for testing the MediaElementAudioSourceNode.
         const startTimeOffset = 8192;
-        const startTime = impulseStartTime + (startTimeOffset / sampleRate);
+        const startTime = Math.round((impulseStartTime * sampleRate) + startTimeOffset) / sampleRate;
 
         let channelData = null;
         let impulseOffset = null;
