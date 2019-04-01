@@ -11,8 +11,7 @@ class GainProcessor extends AudioWorkletProcessor {
     }
 
     process ([ input ], [ output ], { gain }) { // eslint-disable-line class-methods-use-this
-        for (let channel = 0; channel < input.length; channel += 1) {
-            const inputChannel = input[channel];
+        for (const [ channel, inputChannel ] of input.entries()) {
             const outputChannel = output[channel];
 
             for (let i = 0; i < inputChannel.length; i += 1) {

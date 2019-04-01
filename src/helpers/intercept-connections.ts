@@ -6,8 +6,9 @@ export const interceptConnections = <T extends Object> (
 ): T & { connect: TNativeAudioNode['connect']; disconnect: TNativeAudioNode['disconnect'] } => {
     (<T & { connect: TNativeAudioNode['connect'] }> original).connect = ((
         destination: TNativeAudioNode | TNativeAudioParam,
-        output: number = 0,
-        input: number = 0
+        // @todo TypeScript can't infer the type for the parameters output and input in this case.
+        output: number = 0, // tslint:disable-line:no-inferrable-types
+        input: number = 0 // tslint:disable-line:no-inferrable-types
     ) => {
         if (destination instanceof AudioNode) {
             // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
