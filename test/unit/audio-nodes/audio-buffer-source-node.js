@@ -6,6 +6,7 @@ import { createMinimalAudioContext } from '../../helper/create-minimal-audio-con
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { isSafari } from '../../helper/is-safari';
 import { spy } from 'sinon';
 
 const createAudioBufferSourceNodeWithConstructor = (context, options = null) => {
@@ -901,6 +902,128 @@ describe('AudioBufferSourceNode', () => {
                                 });
 
                             });
+
+                            describe('with a call to cancelScheduledValues()', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start (startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.playbackRate.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
+                                            audioBufferSourceNode.playbackRate.setValueAtTime(1, startTime + (1.9 / context.sampleRate));
+                                            audioBufferSourceNode.playbackRate.linearRampToValueAtTime(0, startTime + (5 / context.sampleRate));
+                                            audioBufferSourceNode.playbackRate.cancelScheduledValues(startTime + (3 / context.sampleRate));
+
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(channelData[0]).to.closeTo(1, 0.2);
+                                            expect(channelData[1]).to.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.closeTo(1, 0.2);
+                                            expect(channelData[3]).to.closeTo(0.5, 0.1);
+                                            expect(channelData[4]).to.closeTo(0, 0.1);
+                                        });
+                                });
+
+                            });
+
+                            describe('with a call to setValueAtTime()', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start (startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.playbackRate.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
+
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(channelData[0]).to.closeTo(1, 0.2);
+                                            expect(channelData[1]).to.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.closeTo(1, 0.2);
+                                            expect(channelData[3]).to.closeTo(0.5, 0.1);
+                                            expect(channelData[4]).to.closeTo(0, 0.1);
+                                        });
+                                });
+
+                            });
+
+                            describe('with a call to setValueCurveAtTime()', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start (startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.playbackRate.setValueCurveAtTime(
+                                                new Float32Array([ 0.5, 0.375, 0.25, 0.125, 0 ]),
+                                                (startTime === 0)
+                                                    ? startTime
+                                                    // @todo Safari needs some extra help to schedule the curve reliably.
+                                                    : isSafari(navigator)
+                                                        ? startTime - (1e-3 / context.sampleRate)
+                                                        : startTime - (1e-12 / context.sampleRate),
+                                                (6 / context.sampleRate)
+                                            );
+
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(channelData[0]).to.closeTo(1, 0.2);
+                                            expect(channelData[1]).to.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.closeTo(1, 0.2);
+                                            expect(channelData[3]).to.closeTo(0.5, 0.1);
+                                            expect(channelData[4]).to.closeTo(0, 0.1);
+                                        });
+                                });
+
+                            });
+
+                            // Bug #147: Safari does not support connecting something to the playbackRate AudioParam.
+                            if (!isSafari(navigator)) {
+
+                                describe('with another AudioNode connected to the AudioParam', () => {
+
+                                    it('should modify the signal', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            prepare ({ audioBufferSourceNode }) {
+                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                                const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+
+                                                audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.5, 0.5, 0.5, 0.5 ]), 0);
+
+                                                audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+
+                                                audioBufferSourceNode.playbackRate.value = 0;
+
+                                                audioBufferSourceNodeForAudioParam.connect(audioBufferSourceNode.playbackRate);
+
+                                                return { audioBufferSourceNodeForAudioParam };
+                                            },
+                                            start (startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                                audioBufferSourceNode.start(startTime);
+                                                audioBufferSourceNodeForAudioParam.start(startTime);
+                                            }
+                                        })
+                                            .then((channelData) => {
+                                                expect(channelData[0]).to.closeTo(1, 0.2);
+                                                expect(channelData[1]).to.closeTo(1, 0.2);
+                                                expect(channelData[2]).to.closeTo(1, 0.2);
+                                                expect(channelData[3]).to.closeTo(0.5, 0.1);
+                                                expect(channelData[4]).to.closeTo(0, 0.1);
+                                            });
+                                    });
+
+                                });
+
+                            }
 
                             // @todo Test other automations as well.
 
