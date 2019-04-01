@@ -11,7 +11,9 @@ export const createGetBackupNativeContext: TGetBackupNativeContextFactory = (
          * Bug #50: Only Safari does currently allow to create AudioNodes on a closed context yet which is why there needs to be no
          * backupNativeContext in that case.
          */
-        if (nativeContext.state === 'closed' && !window.hasOwnProperty('webkitAudioContext')) {
+        if (nativeContext.state === 'closed'
+                && nativeAudioContextConstructor !== null
+                && nativeAudioContextConstructor.name !== 'webkitAudioContext') {
             if (isNativeOfflineAudioContext(nativeContext)) {
                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(nativeContext);
 
@@ -34,14 +36,12 @@ export const createGetBackupNativeContext: TGetBackupNativeContextFactory = (
                     return <T> backupNativeContext;
                 }
 
-                if (nativeAudioContextConstructor !== null) {
-                    // @todo Copy the attached AudioWorkletProcessors and other settings.
-                    const bckpNtveCntxt = new nativeAudioContextConstructor();
+                // @todo Copy the attached AudioWorkletProcessors and other settings.
+                const bckpNtveCntxt = new nativeAudioContextConstructor();
 
-                    BACKUP_NATIVE_CONTEXT_STORE.set(nativeContext, bckpNtveCntxt);
+                BACKUP_NATIVE_CONTEXT_STORE.set(nativeContext, bckpNtveCntxt);
 
-                    return <T> bckpNtveCntxt;
-                }
+                return <T> bckpNtveCntxt;
             }
         }
 
