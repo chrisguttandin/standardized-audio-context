@@ -170,6 +170,7 @@ module.exports = (config) => {
                 FirefoxHeadlessWithPrefs: {
                     base : 'FirefoxHeadless',
                     prefs : {
+                        'media.autoplay.default': 0,
                         'media.navigator.permission.disabled' : true,
                         'media.navigator.streams.fake': true
                     }
