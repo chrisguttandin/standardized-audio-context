@@ -8,7 +8,7 @@ const COMMON_TEST_TASKS = [
     'karma:test-edge',
     'karma:test-firefox',
     'karma:test-opera',
-    'karma:test-safari',
+    'karma:test-safari-legacy',
     'karma:integration'
 ];
 
@@ -32,5 +32,5 @@ module.exports = {
     ],
     test: (env.TRAVIS)
         ? COMMON_TEST_TASKS
-        : [ ...COMMON_TEST_TASKS, 'karma:test-chrome-canary', 'karma:test-firefox-developer' ]
+        : [ ...COMMON_TEST_TASKS, 'karma:test-chrome-canary', 'karma:test-firefox-developer', 'karma:test-safari' ]
 };

@@ -1,5 +1,5 @@
 import { spy, stub } from 'sinon';
-import { loadFixture } from '../../helper/load-fixture';
+import { loadFixture } from '../../../helper/load-fixture';
 
 describe('offlineAudioContextConstructor', () => {
 
@@ -219,33 +219,12 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
-    describe('createAnalyser()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const analyserNode = offlineAudioContext.createAnalyser(),
-                gainNode = offlineAudioContext.createGain();
-
-            expect(analyserNode.connect(gainNode)).to.be.undefined;
-        });
-
-    });
-
     describe('createBiquadFilter()', () => {
 
         let biquadFilterNode;
 
         beforeEach(() => {
             biquadFilterNode = offlineAudioContext.createBiquadFilter();
-        });
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(biquadFilterNode.connect(gainNode)).to.be.undefined;
         });
 
         describe('detune', () => {
@@ -287,15 +266,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('createBufferSource()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(audioBufferSourceNode.connect(gainNode)).to.be.undefined;
-        });
 
         // bug #14
 
@@ -485,15 +455,6 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('createChannelMerger()', () => {
 
-        // bug #11
-
-        it('should not be chainable', () => {
-            const channelMergerNode = offlineAudioContext.createChannelMerger();
-            const gainNode = offlineAudioContext.createGain();
-
-            expect(channelMergerNode.connect(gainNode)).to.be.undefined;
-        });
-
         // bug #15
 
         it('should have a wrong channelCount', () => {
@@ -511,15 +472,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('createChannelSplitter()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const channelSplitterNode = offlineAudioContext.createChannelSplitter(),
-                gainNode = offlineAudioContext.createGain();
-
-            expect(channelSplitterNode.connect(gainNode)).to.be.undefined;
-        });
 
         // bug #96
 
@@ -620,15 +572,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('createGain()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const gainNodeA = offlineAudioContext.createGain();
-            const gainNodeB = offlineAudioContext.createGain();
-
-            expect(gainNodeA.connect(gainNodeB)).to.be.undefined;
-        });
 
         // bug #12
 
@@ -771,19 +714,6 @@ describe('offlineAudioContextConstructor', () => {
 
         it('should not be implemented', () => {
             expect(offlineAudioContext.createIIRFilter).to.be.undefined;
-        });
-
-    });
-
-    describe('createOscillator()', () => {
-
-        // bug #11
-
-        it('should not be chainable', () => {
-            const gainNode = offlineAudioContext.createGain();
-            const oscillatorNode = offlineAudioContext.createOscillator();
-
-            expect(oscillatorNode.connect(gainNode)).to.be.undefined;
         });
 
     });

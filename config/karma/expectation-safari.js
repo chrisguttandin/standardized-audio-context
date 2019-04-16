@@ -1,4 +1,3 @@
-const { env } = require('process');
 const common = require('./expectation.js');
 
 module.exports = (config) => {
@@ -7,9 +6,14 @@ module.exports = (config) => {
 
     config.set({
 
+        browsers: [
+            'Safari'
+        ],
+
         files: [
             'test/expectation/any/**/*.js',
-            'test/expectation/safari/**/*.js',
+            'test/expectation/safari/any/**/*.js',
+            'test/expectation/safari/current/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
@@ -19,51 +23,10 @@ module.exports = (config) => {
 
         preprocessors: {
             'test/expectation/any/**/*.js': 'webpack',
-            'test/expectation/safari/**/*.js': 'webpack'
+            'test/expectation/safari/any/**/*.js': 'webpack',
+            'test/expectation/safari/current/**/*.js': 'webpack'
         }
 
     });
-
-    if (env.TRAVIS) {
-
-        config.set({
-
-            browserNoActivityTimeout: 20000,
-
-            browserStack: {
-                accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                username: env.BROWSER_STACK_USERNAME
-            },
-
-            browsers: [
-                'SafariBrowserStack'
-            ],
-
-            captureTimeout: 120000,
-
-            customLaunchers: {
-                SafariBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'safari',
-                    os: 'OS X',
-                    os_version: 'High Sierra' // eslint-disable-line camelcase
-                }
-            },
-
-            tunnelIdentifier: env.TRAVIS_JOB_NUMBER
-
-        });
-
-    } else {
-
-        config.set({
-
-            browsers: [
-                'Safari'
-            ]
-
-        });
-
-    }
 
 };

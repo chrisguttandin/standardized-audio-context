@@ -25,5 +25,8 @@ module.exports = {
     },
     'test-safari': {
         configFile: 'config/karma/expectation-safari.js'
+    },
+    'test-safari-legacy': {
+        configFile: 'config/karma/expectation-safari-legacy.js'
     }
 };
