@@ -512,6 +512,16 @@ describe('audioContextConstructor', () => {
 
                 });
 
+                describe('name', () => {
+
+                    // bug #153
+
+                    it('should export the name as a property', () => {
+                        expect(audioBufferSourceNode.playbackRate.name).to.equal('playbackRate');
+                    });
+
+                });
+
                 describe('exponentialRampToValueAtTime()', () => {
 
                     // bug #45

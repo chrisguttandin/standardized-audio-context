@@ -984,10 +984,10 @@ describe('AudioBufferSourceNode', () => {
 
                             });
 
-                            // Bug #147: Safari does not support connecting something to the playbackRate AudioParam.
-                            if (!isSafari(navigator)) {
+                            describe('with another AudioNode connected to the AudioParam', () => {
 
-                                describe('with another AudioNode connected to the AudioParam', () => {
+                                // Bug #147: Safari does not support connecting something to the playbackRate AudioParam.
+                                if (!isSafari(navigator)) {
 
                                     it('should modify the signal', function () {
                                         this.timeout(10000);
@@ -1021,9 +1021,31 @@ describe('AudioBufferSourceNode', () => {
                                             });
                                     });
 
-                                });
+                                } else {
 
-                            }
+                                    it('should throw a NotSupportedError', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            prepare ({ audioBufferSourceNode }) {
+                                                const gainNode = new GainNode(context);
+
+                                                try {
+                                                    gainNode.connect(audioBufferSourceNode.playbackRate);
+
+                                                    throw new Error('This should never be called.');
+                                                } catch (err) {
+                                                    expect(err.code).to.equal(9);
+                                                    expect(err.name).to.equal('NotSupportedError');
+                                                }
+                                            }
+                                        });
+                                    });
+
+                                }
+
+                            });
+
 
                             // @todo Test other automations as well.
 

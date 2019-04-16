@@ -16,7 +16,8 @@ import {
     TChannelInterpretation,
     TContext,
     TNativeAudioDestinationNode,
-    TNativeAudioNode
+    TNativeAudioNode,
+    TNativeAudioParam
 } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
@@ -139,7 +140,11 @@ const deleteConnectionToDestination = (source: IAudioNode, destination: IAudioNo
     }
 };
 
-export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createInvalidAccessError, isNativeOfflineAudioContext) => {
+export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
+    createInvalidAccessError,
+    createNotSupportedError,
+    isNativeOfflineAudioContext
+) => {
 
     return class AudioNode extends EventTarget implements IAudioNode {
 
@@ -247,6 +252,15 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (createI
             }
 
             const nativeAudioParam = getNativeAudioParam(destination);
+
+            /*
+             * Bug #147 & #153: Safari does not support to connect an input signal to the playbackRate AudioParam of an
+             * AudioBufferSourceNode. This can't be easily detected and that's why the outdated name property is used here to identify
+             * Safari.
+             */
+            if ((<TNativeAudioParam & { name: string }> nativeAudioParam).name === 'playbackRate') {
+                throw createNotSupportedError();
+            }
 
             try {
                 this._nativeAudioNode.connect(nativeAudioParam, output);
