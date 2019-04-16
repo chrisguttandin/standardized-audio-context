@@ -46,9 +46,7 @@ module.exports = (config) => {
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
                 username: env.BROWSER_STACK_USERNAME
-            },
-
-            captureTimeout: 120000
+            }
 
         });
 
