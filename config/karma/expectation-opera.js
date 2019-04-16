@@ -1,5 +1,6 @@
 const { env } = require('process');
 const common = require('./expectation.js');
+const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => {
 
@@ -20,6 +21,17 @@ module.exports = (config) => {
         preprocessors: {
             'test/expectation/any/**/*.js': 'webpack',
             'test/expectation/opera/**/*.js': 'webpack'
+        },
+
+        webpack: {
+            mode: 'development',
+            plugins: [
+                new DefinePlugin({
+                    'process.env': {
+                        TRAVIS: JSON.stringify(env.TRAVIS)
+                    }
+                })
+            ]
         }
 
     });
