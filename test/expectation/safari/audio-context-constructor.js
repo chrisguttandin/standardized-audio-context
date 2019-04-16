@@ -847,7 +847,7 @@ describe('audioContextConstructor', () => {
                     const chnnlDt = event.inputBuffer.getChannelData(0);
 
                     if (Array.prototype.some.call(chnnlDt, (sample) => sample === 1)) {
-                        done('should never happen');
+                        done(new Error('This should never be called.'));
                     }
                 };
 
