@@ -442,7 +442,7 @@ describe('offlineAudioContextConstructor', () => {
 
             // bug #69
 
-            it('should not ignore calls repeated calls to stop()', () => {
+            it('should not ignore calls repeated calls to start()', () => {
                 const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
                 audioBufferSourceNode.start();

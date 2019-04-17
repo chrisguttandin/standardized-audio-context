@@ -522,7 +522,7 @@ describe('audioContextConstructor', () => {
 
                 // bug #69
 
-                it('should not ignore calls repeated calls to stop()', () => {
+                it('should not ignore calls repeated calls to start()', () => {
                     const audioBufferSourceNode = audioContext.createBufferSource();
 
                     audioBufferSourceNode.start();
