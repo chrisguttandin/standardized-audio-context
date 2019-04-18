@@ -18,9 +18,11 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
     createNativeAudioNode,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
     testAudioBufferSourceNodeStartMethodDurationParameterSupport,
+    testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
+    wrapAudioBufferSourceNodeStartMethodOffsetClampling,
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 ) => {
     return (nativeContext, options = { }) => {
@@ -53,6 +55,14 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
             testAudioBufferSourceNodeStartMethodDurationParameterSupport
         )) {
             wrapAudioBufferSourceNodeStartMethodDurationParameter(nativeAudioBufferSourceNode, nativeContext);
+        }
+
+        // Bug #154 & #155: Safari does not handle offsets which are equal to or greater than the duration of the buffer.
+        if (!cacheTestResult(
+            testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
+            () => testAudioBufferSourceNodeStartMethodOffsetClampingSupport(nativeContext)
+        )) {
+            wrapAudioBufferSourceNodeStartMethodOffsetClampling(nativeAudioBufferSourceNode);
         }
 
         // Bug #44: Only Chrome, Firefox & Opera throw a RangeError yet.

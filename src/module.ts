@@ -105,6 +105,9 @@ import {
 import {
     createTestAudioBufferSourceNodeStartMethodDurationParameterSupport
 } from './factories/test-audio-buffer-source-node-start-method-duration-parameter-support';
+import {
+    createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport
+} from './factories/test-audio-buffer-source-node-start-method-offset-clamping-support';
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method-support';
 import {
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport
@@ -193,6 +196,7 @@ import {
     TStereoPannerNodeConstructor,
     TWaveShaperNodeConstructor
 } from './types';
+import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './wrappers/audio-buffer-source-node-start-method-offset-clamping';
 
 export * from './interfaces';
 export * from './types';
@@ -249,9 +253,11 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
     createNativeAudioNode,
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(createNativeAudioNode),
     createTestAudioBufferSourceNodeStartMethodDurationParameterSupport(nativeOfflineAudioContextConstructor),
+    createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport(createNativeAudioNode),
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
+    wrapAudioBufferSourceNodeStartMethodOffsetClamping,
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 );
 const createAudioBufferSourceNodeRenderer = createAudioBufferSourceNodeRendererFactory(createNativeAudioBufferSourceNode);
