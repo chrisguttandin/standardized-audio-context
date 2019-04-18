@@ -4,6 +4,7 @@ import { TAudioContextState, TMinimalAudioContextConstructorFactory, TNativeAudi
 
 export const createMinimalAudioContextConstructor: TMinimalAudioContextConstructorFactory = (
     createInvalidStateError,
+    createNotSupportedError,
     createUnknownError,
     minimalBaseAudioContextConstructor,
     nativeAudioContextConstructor
@@ -34,6 +35,11 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 throw new TypeError(
                     `The provided value '${ options.latencyHint }' is not a valid enum value of type AudioContextLatencyCategory.`
                 );
+            }
+
+            // Bug #150 Only Chrome Canary and Firefox support setting the sampleRate.
+            if (options.sampleRate !== undefined && nativeAudioContext.sampleRate !== options.sampleRate) {
+                throw createNotSupportedError();
             }
 
             super(nativeAudioContext, nativeAudioContext.destination.channelCount);

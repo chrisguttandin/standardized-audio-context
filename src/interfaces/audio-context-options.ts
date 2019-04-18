@@ -4,6 +4,6 @@ export interface IAudioContextOptions {
 
     latencyHint?: number | TAudioContextLatencyCategory;
 
-    // @todo sampleRate: number;
+    sampleRate?: number;
 
 }

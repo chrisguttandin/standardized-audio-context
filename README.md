@@ -63,6 +63,8 @@ oscillatorNode.start();
 
 This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses only the following factory methods: `createMediaStreamDestination()`, `createMediaStreamTrackSource()` and `createScriptProcessor()`. `createMediaStreamDestination()` is not implemented in Edge and unfortunately it is very complicated (if not impossible) to polyfill. `createMediaStreamTrackSource()` has not yet landed in any browser and `createScriptProcessor()` is already deprecated.
 
+⚠️ <!-- Bug #150 --> Only Firefox and Chrome Canary do yet support to set the sampleRate.
+
 ⚠️ <!-- Bug #131 --> Safari allows only 4 running AudioContexts at the same time. Creating the fifth AudioContext will throw an [`UnknownError`](https://heycam.github.io/webidl/#unknownerror).
 
 The AudioContext implements the following TypeScript interface.

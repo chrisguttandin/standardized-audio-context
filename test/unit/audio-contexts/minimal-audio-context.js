@@ -37,6 +37,71 @@ describe('MinimalAudioContext', () => {
             minimalAudioContext = new MinimalAudioContext();
         });
 
+        // Bug #150 Only Chrome Canary and Firefox support setting the sampleRate.
+        if (/Chrome\/75/.test(navigator.userAgent) || /Firefox/.test(navigator.userAgent)) {
+
+            it('should allow to set the sampleRate to 8 kHz', () => {
+                const sampleRate = 8000;
+
+                minimalAudioContext = new MinimalAudioContext({ sampleRate });
+
+                expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
+            });
+
+            it('should allow to set the sampleRate to 96 kHz', () => {
+                const sampleRate = 96000;
+
+                minimalAudioContext = new MinimalAudioContext({ sampleRate });
+
+                expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
+            });
+
+        } else {
+
+            it('should not allow to set the sampleRate to 8 kHz', (done) => {
+                try {
+                    minimalAudioContext = new MinimalAudioContext({ sampleRate: 8000 });
+                } catch (err) {
+                    expect(err.code).to.equal(9);
+                    expect(err.name).to.equal('NotSupportedError');
+
+                    // Create a new AudioContext to ensure the afterEach hooks keeps working.
+                    minimalAudioContext = new MinimalAudioContext();
+
+                    done();
+                }
+            });
+
+            it('should not allow to set the sampleRate to 96 kHz', (done) => {
+                try {
+                    minimalAudioContext = new MinimalAudioContext({ sampleRate: 96000 });
+                } catch (err) {
+                    expect(err.code).to.equal(9);
+                    expect(err.name).to.equal('NotSupportedError');
+
+                    // Create a new AudioContext to ensure the afterEach hooks keeps working.
+                    minimalAudioContext = new MinimalAudioContext();
+
+                    done();
+                }
+            });
+
+        }
+
+        it('should not allow to set the sampleRate to zero', (done) => {
+            try {
+                minimalAudioContext = new MinimalAudioContext({ sampleRate: 0 });
+            } catch (err) {
+                expect(err.code).to.equal(9);
+                expect(err.name).to.equal('NotSupportedError');
+
+                // Create a new AudioContext to ensure the afterEach hooks keeps working.
+                minimalAudioContext = new MinimalAudioContext();
+
+                done();
+            }
+        });
+
         // Bug #131 Safari returns null when there are four other AudioContexts running already.
         if (isSafari(navigator)) {
 
