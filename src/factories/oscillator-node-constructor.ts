@@ -86,9 +86,9 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
             this._nativeOscillatorNode.onended = wrappedListener;
 
-            const nativeOnStateChange = <null | IEndedEventHandler<T, this>> this._nativeOscillatorNode.onended;
+            const nativeOnEnded = <null | IEndedEventHandler<T, this>> this._nativeOscillatorNode.onended;
 
-            this._onended = (nativeOnStateChange === wrappedListener) ? value : nativeOnStateChange;
+            this._onended = (nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
         }
 
         get type (): TOscillatorType {
