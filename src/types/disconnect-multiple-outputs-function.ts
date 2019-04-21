@@ -6,4 +6,4 @@ export type TDisconnectMultipleOutputsFunction = (
     outputOrDestinationAudioNodeOrAudioParam?: number | TNativeAudioNode | TNativeAudioParam,
     output?: number,
     input?: number
-) => void | TNativeAudioNode;
+) => void;
