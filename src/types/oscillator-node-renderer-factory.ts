@@ -1,3 +1,3 @@
-import { IOscillatorNodeRenderer } from '../interfaces';
+import { IMinimalOfflineAudioContext, IOscillatorNodeRenderer } from '../interfaces';
 
-export type TOscillatorNodeRendererFactory = () => IOscillatorNodeRenderer;
+export type TOscillatorNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IOscillatorNodeRenderer<T>;

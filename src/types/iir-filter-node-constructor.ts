@@ -1,7 +1,6 @@
-import { IIIRFilterNode, IIIRFilterOptions } from '../interfaces';
-import { TContext } from './context';
+import { IIIRFilterNode, IIIRFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TIIRFilterNodeConstructor =  new (
-    context: TContext,
+export type TIIRFilterNodeConstructor =  new <T extends IMinimalBaseAudioContext>(
+    context: T,
     options: { feedback: IIIRFilterOptions['feedback']; feedforward: IIIRFilterOptions['feedforward'] } & Partial<IIIRFilterOptions>
-) => IIIRFilterNode;
+) => IIIRFilterNode<T>;

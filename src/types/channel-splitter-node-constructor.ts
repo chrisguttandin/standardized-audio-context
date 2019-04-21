@@ -1,4 +1,6 @@
-import { IAudioNode, IChannelSplitterOptions } from '../interfaces';
-import { TContext } from './context';
+import { IAudioNode, IChannelSplitterOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TChannelSplitterNodeConstructor = new (context: TContext, options?: Partial<IChannelSplitterOptions>) => IAudioNode;
+export type TChannelSplitterNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+    context: T,
+    options?: Partial<IChannelSplitterOptions>
+) => IAudioNode<T>;

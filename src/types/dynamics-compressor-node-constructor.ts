@@ -1,7 +1,6 @@
-import { IDynamicsCompressorNode, IDynamicsCompressorOptions } from '../interfaces';
-import { TContext } from './context';
+import { IDynamicsCompressorNode, IDynamicsCompressorOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TDynamicsCompressorNodeConstructor = new (
-    context: TContext,
+export type TDynamicsCompressorNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+    context: T,
     options?: Partial<IDynamicsCompressorOptions>
-) => IDynamicsCompressorNode;
+) => IDynamicsCompressorNode<T>;

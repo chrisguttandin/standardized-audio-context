@@ -1,9 +1,8 @@
 import { createInvalidStateError } from '../factories/invalid-state-error';
 import { CONTEXT_STORE } from '../globals';
-import { IMinimalAudioContext } from '../interfaces';
-import { TNativeAudioContext } from '../types';
+import { TContext, TNativeAudioContext } from '../types';
 
-export const getNativeAudioContext = (audioContext: IMinimalAudioContext): TNativeAudioContext => {
+export const getNativeAudioContext = (audioContext: TContext): TNativeAudioContext => {
     const nativeContext = CONTEXT_STORE.get(audioContext);
 
     if (nativeContext === undefined) {

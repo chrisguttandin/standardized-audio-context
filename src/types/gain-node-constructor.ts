@@ -1,4 +1,3 @@
-import { IGainNode, IGainOptions } from '../interfaces';
-import { TContext } from './context';
+import { IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TGainNodeConstructor = new (context: TContext, options?: Partial<IGainOptions>) => IGainNode;
+export type TGainNodeConstructor = new <T extends IMinimalBaseAudioContext>(context: T, options?: Partial<IGainOptions>) => IGainNode<T>;

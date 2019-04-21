@@ -1,8 +1,8 @@
 import { EventTarget } from '../event-target';
 import { CONTEXT_STORE } from '../globals';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
-import { IAudioDestinationNode, IAudioListener, IMinimalBaseAudioContext } from '../interfaces';
-import { TAudioContextState, TMinimalBaseAudioContextConstructorFactory, TNativeContext, TStateChangeEventHandler } from '../types';
+import { IAudioDestinationNode, IAudioListener, IMinimalBaseAudioContext, IStateChangeEventHandler } from '../interfaces';
+import { TAudioContextState, TMinimalBaseAudioContextConstructorFactory, TNativeContext } from '../types';
 
 export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = (
     audioDestinationNodeConstructor,
@@ -11,16 +11,16 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
     return class MinimalBaseAudioContext extends EventTarget implements IMinimalBaseAudioContext {
 
-        private _destination: IAudioDestinationNode;
+        private _destination: IAudioDestinationNode<this>;
 
         private _listener: IAudioListener;
 
-        private _onstatechange: null | TStateChangeEventHandler;
+        private _onstatechange: null | IStateChangeEventHandler<this>;
 
         constructor (private _nativeContext: TNativeContext, numberOfChannels: number) {
             super(_nativeContext);
 
-            CONTEXT_STORE.set(<any> this, _nativeContext);
+            CONTEXT_STORE.set(this, _nativeContext);
 
             // Bug #93: Edge will set the sampleRate of an AudioContext to zero when it is closed.
             const sampleRate = _nativeContext.sampleRate;
@@ -29,8 +29,8 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
                 get: () => sampleRate
             });
 
-            this._destination = new audioDestinationNodeConstructor(<any> this, numberOfChannels);
-            this._listener = createAudioListener(<any> this, _nativeContext);
+            this._destination = new audioDestinationNodeConstructor(this, numberOfChannels);
+            this._listener = createAudioListener(this, _nativeContext);
             this._onstatechange = null;
         }
 
@@ -38,7 +38,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             return this._nativeContext.currentTime;
         }
 
-        get destination (): IAudioDestinationNode {
+        get destination (): IAudioDestinationNode<this> {
             return this._destination;
         }
 
@@ -46,7 +46,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             return this._listener;
         }
 
-        get onstatechange (): null | TStateChangeEventHandler {
+        get onstatechange (): null | IStateChangeEventHandler<this> {
             return this._onstatechange;
         }
 
@@ -55,7 +55,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
             this._nativeContext.onstatechange = wrappedListener;
 
-            const nativeOnStateChange = <null | TStateChangeEventHandler> this._nativeContext.onstatechange;
+            const nativeOnStateChange = <null | IStateChangeEventHandler<this>> this._nativeContext.onstatechange;
 
             this._onstatechange = (nativeOnStateChange === wrappedListener) ? value : nativeOnStateChange;
         }

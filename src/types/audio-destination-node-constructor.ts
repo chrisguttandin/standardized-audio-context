@@ -1,4 +1,6 @@
-import { IAudioDestinationNode } from '../interfaces';
-import { TContext } from './context';
+import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TAudioDestinationNodeConstructor = new (context: TContext, channelCount: number) => IAudioDestinationNode;
+export type TAudioDestinationNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+    context: T,
+    channelCount: number
+) => IAudioDestinationNode<T>;

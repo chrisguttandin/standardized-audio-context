@@ -24,39 +24,39 @@ export interface IBaseAudioContext extends IMinimalBaseAudioContext {
     // The audioWorklet property is only available in a SecureContext.
     readonly audioWorklet?: IAudioWorklet;
 
-    createAnalyser (): IAnalyserNode;
+    createAnalyser (): IAnalyserNode<this>;
 
-    createBiquadFilter (): IBiquadFilterNode;
+    createBiquadFilter (): IBiquadFilterNode<this>;
 
     createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
 
-    createBufferSource (): IAudioBufferSourceNode;
+    createBufferSource (): IAudioBufferSourceNode<this>;
 
-    createChannelMerger (numberOfInputs?: number): IAudioNode;
+    createChannelMerger (numberOfInputs?: number): IAudioNode<this>;
 
-    createChannelSplitter (numberOfOutputs?: number): IAudioNode;
+    createChannelSplitter (numberOfOutputs?: number): IAudioNode<this>;
 
-    createConstantSource (): IConstantSourceNode;
+    createConstantSource (): IConstantSourceNode<this>;
 
-    createConvolver (): IConvolverNode;
+    createConvolver (): IConvolverNode<this>;
 
-    createDelay (maxDelayTime?: number): IDelayNode;
+    createDelay (maxDelayTime?: number): IDelayNode<this>;
 
-    createDynamicsCompressor (): IDynamicsCompressorNode;
+    createDynamicsCompressor (): IDynamicsCompressorNode<this>;
 
-    createGain (): IGainNode;
+    createGain (): IGainNode<this>;
 
-    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode;
+    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode<this>;
 
-    createOscillator (): IOscillatorNode;
+    createOscillator (): IOscillatorNode<this>;
 
-    createPanner (): IPannerNode;
+    createPanner (): IPannerNode<this>;
 
     createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
 
-    createStereoPanner (): IStereoPannerNode;
+    createStereoPanner (): IStereoPannerNode<this>;
 
-    createWaveShaper (): IWaveShaperNode;
+    createWaveShaper (): IWaveShaperNode<this>;
 
     decodeAudioData (
         audioData: ArrayBuffer,

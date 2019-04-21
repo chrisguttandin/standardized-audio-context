@@ -3,20 +3,20 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IDynamicsCompressorNode, IDynamicsCompressorOptions } from '../interfaces';
+import { IDynamicsCompressorNode, IDynamicsCompressorOptions, IMinimalOfflineAudioContext } from '../interfaces';
 import { TDynamicsCompressorNodeRendererFactoryFactory, TNativeDynamicsCompressorNode, TNativeOfflineAudioContext } from '../types';
 
 export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNodeRendererFactoryFactory = (
     createNativeDynamicsCompressorNode
 ) => {
-    return () => {
+    return <T extends IMinimalOfflineAudioContext>() => {
         let nativeDynamicsCompressorNodePromise: null | Promise<TNativeDynamicsCompressorNode> = null;
 
         const createDynamicsCompressorNodes = async (
-            proxy: IDynamicsCompressorNode,
+            proxy: IDynamicsCompressorNode<T>,
             nativeOfflineAudioContext: TNativeOfflineAudioContext
         ) => {
-            let nativeDynamicsCompressorNode = getNativeAudioNode<TNativeDynamicsCompressorNode>(proxy);
+            let nativeDynamicsCompressorNode = getNativeAudioNode<T, TNativeDynamicsCompressorNode>(proxy);
 
             /*
              * If the initially used nativeDynamicsCompressorNode was not constructed on the same OfflineAudioContext it needs to be
@@ -61,7 +61,7 @@ export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNod
 
         return {
             render (
-                proxy: IDynamicsCompressorNode,
+                proxy: IDynamicsCompressorNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeDynamicsCompressorNode> {
                 if (nativeDynamicsCompressorNodePromise === null) {

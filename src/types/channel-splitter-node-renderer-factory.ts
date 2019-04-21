@@ -1,3 +1,3 @@
-import { IAudioNodeRenderer } from '../interfaces';
+import { IAudioNode, IAudioNodeRenderer, IMinimalOfflineAudioContext } from '../interfaces';
 
-export type TChannelSplitterNodeRendererFactory = () => IAudioNodeRenderer;
+export type TChannelSplitterNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IAudioNodeRenderer<T, IAudioNode<T>>;

@@ -1,16 +1,17 @@
-import { TAudioContextState, TStateChangeEventHandler } from '../types';
+import { TAudioContextState } from '../types';
 import { IAudioDestinationNode } from './audio-destination-node';
 import { IAudioListener } from './audio-listener';
+import { IStateChangeEventHandler } from './state-change-event-handler';
 
 export interface IMinimalBaseAudioContext extends EventTarget {
 
     readonly currentTime: number;
 
-    readonly destination: IAudioDestinationNode;
+    readonly destination: IAudioDestinationNode<this>;
 
     readonly listener: IAudioListener;
 
-    onstatechange: null | TStateChangeEventHandler;
+    onstatechange: null | IStateChangeEventHandler<this>;
 
     readonly sampleRate: number;
 

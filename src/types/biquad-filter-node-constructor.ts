@@ -1,4 +1,6 @@
-import { IBiquadFilterNode, IBiquadFilterOptions } from '../interfaces';
-import { TContext } from './context';
+import { IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TBiquadFilterNodeConstructor = new (context: TContext, options?: Partial<IBiquadFilterOptions>) => IBiquadFilterNode;
+export type TBiquadFilterNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+    context: T,
+    options?: Partial<IBiquadFilterOptions>
+) => IBiquadFilterNode<T>;

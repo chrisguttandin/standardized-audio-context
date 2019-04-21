@@ -3,15 +3,15 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IDelayNode, IDelayOptions } from '../interfaces';
+import { IDelayNode, IDelayOptions, IMinimalOfflineAudioContext } from '../interfaces';
 import { TDelayNodeRendererFactoryFactory, TNativeDelayNode, TNativeOfflineAudioContext } from '../types';
 
 export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = (createNativeDelayNode) => {
-    return (maxDelayTime: number) => {
+    return <T extends IMinimalOfflineAudioContext>(maxDelayTime: number) => {
         let nativeDelayNodePromise: null | Promise<TNativeDelayNode> = null;
 
-        const createDelayNode = async (proxy: IDelayNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeDelayNode = getNativeAudioNode<TNativeDelayNode>(proxy);
+        const createDelayNode = async (proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeDelayNode = getNativeAudioNode<T, TNativeDelayNode>(proxy);
 
             // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext)) {
@@ -36,7 +36,7 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
         };
 
         return {
-            render (proxy: IDelayNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeDelayNode> {
+            render (proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeDelayNode> {
                 if (nativeDelayNodePromise === null) {
                     nativeDelayNodePromise = createDelayNode(proxy, nativeOfflineAudioContext);
                 }

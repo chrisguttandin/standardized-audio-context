@@ -1,6 +1,6 @@
 import { getNativeAudioContext } from '../helpers/get-native-audio-context';
 import { IAudioNodeOptions, IMediaElementAudioSourceNode, IMediaElementAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
-import { TMediaElementAudioSourceNodeConstructorFactory, TNativeMediaElementAudioSourceNode } from '../types';
+import { TAudioNodeRenderer, TMediaElementAudioSourceNodeConstructorFactory, TNativeMediaElementAudioSourceNode } from '../types';
 
 const DEFAULT_OPTIONS: IAudioNodeOptions = {
     channelCount: 2,
@@ -15,13 +15,15 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class MediaElementAudioSourceNode extends noneAudioDestinationNodeConstructor implements IMediaElementAudioSourceNode {
+    return class MediaElementAudioSourceNode<T extends IMinimalAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IMediaElementAudioSourceNode<T> {
 
         private _mediaElement: HTMLMediaElement;
 
         private _nativeMediaElementAudioSourceNode: TNativeMediaElementAudioSourceNode;
 
-        constructor (context: IMinimalAudioContext, options: IMediaElementAudioSourceOptions) {
+        constructor (context: T, options: IMediaElementAudioSourceOptions) {
             const nativeContext = getNativeAudioContext(context);
 
             if (isNativeOfflineAudioContext(nativeContext)) {
@@ -31,7 +33,7 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
             const mergedOptions = <IAudioNodeOptions & IMediaElementAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNode(nativeContext, mergedOptions);
 
-            super(context, nativeMediaElementAudioSourceNode, null);
+            super(context, nativeMediaElementAudioSourceNode, <TAudioNodeRenderer<T>> null);
 
             // Bug #63: Edge & Firefox do not expose the mediaElement yet.
             this._mediaElement = mergedOptions.mediaElement;

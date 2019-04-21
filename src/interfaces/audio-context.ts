@@ -5,8 +5,8 @@ import { IMinimalAudioContext } from './minimal-audio-context';
 
 export interface IAudioContext extends IBaseAudioContext, IMinimalAudioContext {
 
-    createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode;
+    createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this>;
 
-    createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode;
+    createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode<this>;
 
 }

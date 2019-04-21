@@ -1,6 +1,7 @@
 import { IAudioNode } from './audio-node';
+import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IAnalyserNode extends IAudioNode {
+export interface IAnalyserNode<T extends IMinimalBaseAudioContext> extends IAudioNode<T> {
 
     fftSize: number;
 

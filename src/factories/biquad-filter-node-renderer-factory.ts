@@ -3,15 +3,15 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IBiquadFilterNode, IBiquadFilterOptions } from '../interfaces';
+import { IBiquadFilterNode, IBiquadFilterOptions, IMinimalOfflineAudioContext } from '../interfaces';
 import { TBiquadFilterNodeRendererFactoryFactory, TNativeBiquadFilterNode, TNativeOfflineAudioContext } from '../types';
 
 export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFactoryFactory = (createNativeBiquadFilterNode) => {
-    return () => {
+    return <T extends IMinimalOfflineAudioContext>() => {
         let nativeBiquadFilterNodePromise: null | Promise<TNativeBiquadFilterNode> = null;
 
-        const createBiquadFilterNode = async (proxy: IBiquadFilterNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeBiquadFilterNode = getNativeAudioNode<TNativeBiquadFilterNode>(proxy);
+        const createBiquadFilterNode = async (proxy: IBiquadFilterNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeBiquadFilterNode = getNativeAudioNode<T, TNativeBiquadFilterNode>(proxy);
 
             /*
              * If the initially used nativeBiquadFilterNode was not constructed on the same OfflineAudioContext it needs to be created
@@ -48,7 +48,7 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
         };
 
         return {
-            render (proxy: IBiquadFilterNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeBiquadFilterNode> {
+            render (proxy: IBiquadFilterNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeBiquadFilterNode> {
                 if (nativeBiquadFilterNodePromise === null) {
                     nativeBiquadFilterNodePromise = createBiquadFilterNode(proxy, nativeOfflineAudioContext);
                 }

@@ -1,4 +1,6 @@
-import { IAudioNode, IChannelMergerOptions } from '../interfaces';
-import { TContext } from './context';
+import { IAudioNode, IChannelMergerOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TChannelMergerNodeConstructor = new (context: TContext, options?: Partial<IChannelMergerOptions>) => IAudioNode;
+export type TChannelMergerNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+    context: T,
+    options?: Partial<IChannelMergerOptions>
+) => IAudioNode<T>;

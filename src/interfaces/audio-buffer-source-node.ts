@@ -1,8 +1,9 @@
-import { TAnyAudioBuffer, TEndedEventHandler } from '../types';
+import { TAnyAudioBuffer } from '../types';
 import { IAudioParam } from './audio-param';
 import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
+import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
+export interface IAudioBufferSourceNode<T extends IMinimalBaseAudioContext> extends IAudioScheduledSourceNode<T> {
 
     buffer: null | TAnyAudioBuffer;
 
@@ -17,8 +18,6 @@ export interface IAudioBufferSourceNode extends IAudioScheduledSourceNode {
     loopEnd: number;
 
     loopStart: number;
-
-    onended: null | TEndedEventHandler<IAudioBufferSourceNode>;
 
     readonly playbackRate: IAudioParam;
 

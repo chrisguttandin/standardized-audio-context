@@ -1,5 +1,5 @@
-import { IAudioNode, IAudioWorkletNode } from '../interfaces';
+import { IAudioNode, IAudioWorkletNode, IMinimalBaseAudioContext } from '../interfaces';
 
-export const isAudioWorkletNode = (audioNode: IAudioNode): audioNode is IAudioWorkletNode => {
+export const isAudioWorkletNode = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>): audioNode is IAudioWorkletNode<T> => {
     return audioNode.hasOwnProperty('port');
 };

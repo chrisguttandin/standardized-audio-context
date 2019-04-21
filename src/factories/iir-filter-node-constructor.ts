@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioContext, IIIRFilterNode, IIIRFilterOptions, IMinimalAudioContext } from '../interfaces';
-import { TContext, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
+import { IIIRFilterNode, IIIRFilterOptions, IMinimalAudioContext, IMinimalBaseAudioContext } from '../interfaces';
+import { TAudioNodeRenderer, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
 
 // The DEFAULT_OPTIONS are only of type Partial<IIIRFilterOptions> because there are no default values for feedback and feedforward.
@@ -17,12 +17,14 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class IIRFilterNode extends noneAudioDestinationNodeConstructor implements IIIRFilterNode {
+    return class IIRFilterNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IIIRFilterNode<T> {
 
         private _nativeIIRFilterNode: TNativeIIRFilterNode;
 
         constructor (
-            context: TContext,
+            context: T,
             options: { feedback: IIIRFilterOptions['feedback']; feedforward: IIIRFilterOptions['feedforward'] } & Partial<IIIRFilterOptions>
         ) {
             const nativeContext = getNativeContext(context);
@@ -30,12 +32,12 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeIIRFilterNode = createNativeIIRFilterNode(
                 nativeContext,
-                isOffline ? null : (<IAudioContext | IMinimalAudioContext> context).baseLatency,
+                isOffline ? null : (<IMinimalAudioContext> (<any> context)).baseLatency,
                 mergedOptions
             );
-            const iirFilterNodeRenderer = (isOffline) ?
-                createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward) :
-                null;
+            const iirFilterNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
+                ? createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward)
+                : null);
 
             super(context, nativeIIRFilterNode, iirFilterNodeRenderer);
 

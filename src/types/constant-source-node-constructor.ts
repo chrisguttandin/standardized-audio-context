@@ -1,4 +1,6 @@
-import { IConstantSourceNode, IConstantSourceOptions } from '../interfaces';
-import { TContext } from './context';
+import { IConstantSourceNode, IConstantSourceOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TConstantSourceNodeConstructor = new (context: TContext, options?: Partial<IConstantSourceOptions>) => IConstantSourceNode;
+export type TConstantSourceNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+    context: T,
+    options?: Partial<IConstantSourceOptions>
+) => IConstantSourceNode<T>;

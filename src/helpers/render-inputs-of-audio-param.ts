@@ -1,15 +1,15 @@
 import { getAudioNodeRenderer } from '../helpers/get-audio-node-renderer';
 import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
-import { IAudioParam } from '../interfaces';
-import { TContext, TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
+import { IAudioParam, IMinimalOfflineAudioContext } from '../interfaces';
+import { TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
 
-export const renderInputsOfAudioParam = (
-    context: TContext,
+export const renderInputsOfAudioParam = <T extends IMinimalOfflineAudioContext>(
+    context: T,
     audioParam: IAudioParam,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     nativeAudioParam: TNativeAudioParam
 ) => {
-    const audioParamConnections = getAudioParamConnections(context, audioParam);
+    const audioParamConnections = getAudioParamConnections<T>(context, audioParam);
 
     return Promise
         .all(Array

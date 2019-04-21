@@ -1,7 +1,7 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IPannerNode, IPannerOptions } from '../interfaces';
-import { TContext, TDistanceModelType, TNativePannerNode, TPannerNodeConstructorFactory, TPanningModelType } from '../types';
+import { IAudioParam, IMinimalBaseAudioContext, IPannerNode, IPannerOptions } from '../interfaces';
+import { TAudioNodeRenderer, TDistanceModelType, TNativePannerNode, TPannerNodeConstructorFactory, TPanningModelType } from '../types';
 
 const DEFAULT_OPTIONS: IPannerOptions = {
     channelCount: 2,
@@ -31,7 +31,7 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class PannerNode extends noneAudioDestinationNodeConstructor implements IPannerNode {
+    return class PannerNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> implements IPannerNode<T> {
 
         private _nativePannerNode: TNativePannerNode;
 
@@ -47,12 +47,12 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
 
         private _positionZ: IAudioParam;
 
-        constructor (context: TContext, options: Partial<IPannerOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IPannerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativePannerNode = createNativePannerNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const pannerNodeRenderer = (isOffline) ? createPannerNodeRenderer() : null;
+            const pannerNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createPannerNodeRenderer() : null);
 
             super(context, nativePannerNode, pannerNodeRenderer);
 

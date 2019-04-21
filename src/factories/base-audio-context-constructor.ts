@@ -54,67 +54,67 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
 
             this._audioWorklet = (addAudioWorkletModule === undefined) ?
                 undefined :
-                { addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(<any> this, moduleURL, options) };
+                { addModule: (moduleURL: string, options?: IWorkletOptions) => addAudioWorkletModule(this, moduleURL, options) };
         }
 
         get audioWorklet (): undefined | IAudioWorklet {
             return this._audioWorklet;
         }
 
-        public createAnalyser (): IAnalyserNode {
-            return new analyserNodeConstructor(<any> this);
+        public createAnalyser (): IAnalyserNode<this> {
+            return new analyserNodeConstructor(this);
         }
 
-        public createBiquadFilter (): IBiquadFilterNode {
-            return new biquadFilterNodeConstructor(<any> this);
+        public createBiquadFilter (): IBiquadFilterNode<this> {
+            return new biquadFilterNodeConstructor(this);
         }
 
         public createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer {
             return new audioBufferConstructor({ length, numberOfChannels, sampleRate });
         }
 
-        public createBufferSource (): IAudioBufferSourceNode {
-            return new audioBufferSourceNodeConstructor(<any> this);
+        public createBufferSource (): IAudioBufferSourceNode<this> {
+            return new audioBufferSourceNodeConstructor(this);
         }
 
-        public createChannelMerger (numberOfInputs = 6): IAudioNode {
-            return new channelMergerNodeConstructor(<any> this, { numberOfInputs });
+        public createChannelMerger (numberOfInputs = 6): IAudioNode<this> {
+            return new channelMergerNodeConstructor(this, { numberOfInputs });
         }
 
-        public createChannelSplitter (numberOfOutputs = 6): IAudioNode {
-            return new channelSplitterNodeConstructor(<any> this, { numberOfOutputs });
+        public createChannelSplitter (numberOfOutputs = 6): IAudioNode<this> {
+            return new channelSplitterNodeConstructor(this, { numberOfOutputs });
         }
 
-        public createConstantSource (): IConstantSourceNode {
-            return new constantSourceNodeConstructor(<any> this);
+        public createConstantSource (): IConstantSourceNode<this> {
+            return new constantSourceNodeConstructor(this);
         }
 
-        public createConvolver (): IConvolverNode {
-            return new convolverNodeConstructor(<any> this);
+        public createConvolver (): IConvolverNode<this> {
+            return new convolverNodeConstructor(this);
         }
 
-        public createDelay (maxDelayTime = 1): IDelayNode {
-            return new delayNodeConstructor(<any> this, { maxDelayTime });
+        public createDelay (maxDelayTime = 1): IDelayNode<this> {
+            return new delayNodeConstructor(this, { maxDelayTime });
         }
 
-        public createDynamicsCompressor (): IDynamicsCompressorNode {
-            return new dynamicsCompressorNodeConstructor(<any> this);
+        public createDynamicsCompressor (): IDynamicsCompressorNode<this> {
+            return new dynamicsCompressorNodeConstructor(this);
         }
 
-        public createGain (): IGainNode {
-            return new gainNodeConstructor(<any> this);
+        public createGain (): IGainNode<this> {
+            return new gainNodeConstructor(this);
         }
 
-        public createIIRFilter (feedforward: number[] | TTypedArray, feedback: number[] | TTypedArray): IIIRFilterNode {
-            return new iIRFilterNodeConstructor(<any> this, { feedback, feedforward });
+        public createIIRFilter (feedforward: number[] | TTypedArray, feedback: number[] | TTypedArray): IIIRFilterNode<this> {
+            return new iIRFilterNodeConstructor(this, { feedback, feedforward });
         }
 
-        public createOscillator (): IOscillatorNode {
-            return new oscillatorNodeConstructor(<any> this);
+        public createOscillator (): IOscillatorNode<this> {
+            return new oscillatorNodeConstructor(this);
         }
 
-        public createPanner (): IPannerNode {
-            return new pannerNodeConstructor(<any> this);
+        public createPanner (): IPannerNode<this> {
+            return new pannerNodeConstructor(this);
         }
 
         public createPeriodicWave (
@@ -122,15 +122,15 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
             imag: number[],
             constraints: Partial<IPeriodicWaveConstraints> = { disableNormalization: false }
         ): IPeriodicWave {
-            return new periodicWaveConstructor(<any> this, { ...constraints, imag, real });
+            return new periodicWaveConstructor(this, { ...constraints, imag, real });
         }
 
-        public createStereoPanner (): IStereoPannerNode {
-            return new stereoPannerNodeConstructor(<any> this);
+        public createStereoPanner (): IStereoPannerNode<this> {
+            return new stereoPannerNodeConstructor(this);
         }
 
-        public createWaveShaper (): IWaveShaperNode {
-            return new waveShaperNodeConstructor(<any> this);
+        public createWaveShaper (): IWaveShaperNode<this> {
+            return new waveShaperNodeConstructor(this);
         }
 
         public decodeAudioData (

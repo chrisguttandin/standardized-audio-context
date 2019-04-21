@@ -4,19 +4,20 @@ import {
     IAudioParam,
     IAudioWorkletProcessor,
     IAudioWorkletProcessorConstructor,
+    IMinimalBaseAudioContext,
     INativeAudioNodeFaker
 } from './interfaces';
-import { TAnyContext, TContext, TNativeAudioNode, TNativeAudioParam, TNativeAudioWorkletNode, TNativeContext } from './types';
+import { TAnyContext, TNativeAudioNode, TNativeAudioParam, TNativeAudioWorkletNode, TNativeContext } from './types';
 
-export const AUDIO_NODE_STORE: WeakMap<IAudioNode, TNativeAudioNode | INativeAudioNodeFaker> = new WeakMap();
+export const AUDIO_NODE_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, TNativeAudioNode | INativeAudioNodeFaker> = new WeakMap();
 
-export const AUDIO_GRAPHS: WeakMap<TAnyContext, IAudioGraph> = new WeakMap();
+export const AUDIO_GRAPHS: WeakMap<TAnyContext, IAudioGraph<IMinimalBaseAudioContext>> = new WeakMap();
 
 export const AUDIO_PARAM_STORE: WeakMap<IAudioParam, TNativeAudioParam> = new WeakMap();
 
 export const BACKUP_NATIVE_CONTEXT_STORE: WeakMap<TNativeContext, TNativeContext> = new WeakMap();
 
-export const CONTEXT_STORE: WeakMap<TContext, TNativeContext> = new WeakMap();
+export const CONTEXT_STORE: WeakMap<IMinimalBaseAudioContext, TNativeContext> = new WeakMap();
 
 export const DETACHED_ARRAY_BUFFERS: WeakSet<ArrayBuffer> = new WeakSet();
 

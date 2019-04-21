@@ -1,9 +1,9 @@
-import { IAudioGraph, IAudioNode, IAudioParam } from '../interfaces';
+import { IAudioGraph, IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 
-export const disconnectAudioParamInputConnections = (
-    audioGraph: IAudioGraph,
+export const disconnectAudioParamInputConnections = <T extends IMinimalBaseAudioContext>(
+    audioGraph: IAudioGraph<T>,
     audioParam: IAudioParam,
-    disconnectAudioNodeInputConnections: (audioGraph: IAudioGraph, audioNode: IAudioNode) => void
+    disconnectAudioNodeInputConnections: (audioGraph: IAudioGraph<T>, audioNode: IAudioNode<T>) => void
 ) => {
     const audioParamConnections = audioGraph.params.get(audioParam);
 

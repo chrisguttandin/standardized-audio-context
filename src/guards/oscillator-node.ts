@@ -1,5 +1,5 @@
-import { IAudioNode, IOscillatorNode } from '../interfaces';
+import { IAudioNode, IMinimalBaseAudioContext, IOscillatorNode } from '../interfaces';
 
-export const isOscillatorNode = (audioNode: IAudioNode): audioNode is IOscillatorNode => {
+export const isOscillatorNode = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>): audioNode is IOscillatorNode<T> => {
     return (audioNode.hasOwnProperty('detune') && audioNode.hasOwnProperty('frequency'));
 };

@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IChannelSplitterOptions } from '../interfaces';
-import { TChannelSplitterNodeConstructorFactory, TContext } from '../types';
+import { IChannelSplitterOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { TAudioNodeRenderer, TChannelSplitterNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS: IChannelSplitterOptions = {
     channelCount: 6,
@@ -20,13 +20,15 @@ export const createChannelSplitterNodeConstructor: TChannelSplitterNodeConstruct
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class ChannelSplitterNode extends noneAudioDestinationNodeConstructor {
+    return class ChannelSplitterNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> {
 
-        constructor (context: TContext, options: Partial<IChannelSplitterOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IChannelSplitterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
             const nativeChannelSplitterNode = createNativeChannelSplitterNode(nativeContext, mergedOptions);
-            const channelSplitterNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createChannelSplitterNodeRenderer() : null;
+            const channelSplitterNodeRenderer = <TAudioNodeRenderer<T, this>> ((isNativeOfflineAudioContext(nativeContext))
+                ? createChannelSplitterNodeRenderer()
+                : null);
 
             super(context, nativeChannelSplitterNode, channelSplitterNodeRenderer);
         }

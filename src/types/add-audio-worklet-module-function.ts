@@ -1,4 +1,7 @@
-import { IWorkletOptions } from '../interfaces';
-import { TContext } from './context';
+import { IMinimalBaseAudioContext, IWorkletOptions } from '../interfaces';
 
-export type TAddAudioWorkletModuleFunction = (context: TContext, moduleURL: string, options?: IWorkletOptions) => Promise<void>;
+export type TAddAudioWorkletModuleFunction = (
+    context: IMinimalBaseAudioContext,
+    moduleURL: string,
+    options?: IWorkletOptions
+) => Promise<void>;

@@ -66,11 +66,11 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
     nativeOfflineAudioContextConstructor,
     renderNativeOfflineAudioContext
 ) => {
-    return (feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) => {
+    return <T extends IMinimalOfflineAudioContext>(feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) => {
         let nativeAudioNodePromise: null | Promise<TNativeAudioBufferSourceNode | TNativeIIRFilterNode> = null;
 
-        const createAudioNode = async (proxy: IIIRFilterNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeAudioNode = getNativeAudioNode<TNativeIIRFilterNode>(proxy);
+        const createAudioNode = async (proxy: IIIRFilterNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeAudioNode = getNativeAudioNode<T, TNativeIIRFilterNode>(proxy);
 
             if (nativeOfflineAudioContextConstructor === null) {
                 throw new Error(); // @todo
@@ -82,7 +82,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                     // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
                     proxy.context.destination.channelCount,
                     // Bug #17: Safari does not yet expose the length.
-                    (<IMinimalOfflineAudioContext> proxy.context).length,
+                    proxy.context.length,
                     nativeOfflineAudioContext.sampleRate
                 );
 
@@ -116,7 +116,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
 
         return {
             render (
-                proxy: IIIRFilterNode,
+                proxy: IIIRFilterNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode | TNativeIIRFilterNode> {
                 if (nativeAudioNodePromise === null) {

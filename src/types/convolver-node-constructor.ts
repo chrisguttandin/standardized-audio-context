@@ -1,4 +1,6 @@
-import { IConvolverNode, IConvolverOptions } from '../interfaces';
-import { TContext } from './context';
+import { IConvolverNode, IConvolverOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TConvolverNodeConstructor = new (context: TContext, options?: Partial<IConvolverOptions>) => IConvolverNode;
+export type TConvolverNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+    context: T,
+    options?: Partial<IConvolverOptions>
+) => IConvolverNode<T>;

@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
-import { TContext, TStereoPannerNodeConstructorFactory } from '../types';
+import { IAudioParam, IMinimalBaseAudioContext, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
+import { TAudioNodeRenderer, TStereoPannerNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS: IStereoPannerOptions = {
     channelCount: 2,
@@ -21,16 +21,18 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class StereoPannerNode extends noneAudioDestinationNodeConstructor implements IStereoPannerNode {
+    return class StereoPannerNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IStereoPannerNode<T> {
 
         private _pan: IAudioParam;
 
-        constructor (context: TContext, options: Partial<IStereoPannerOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IStereoPannerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeStereoPannerNode = createNativeStereoPannerNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const stereoPannerNodeRenderer = (isOffline) ? createStereoPannerNodeRenderer() : null;
+            const stereoPannerNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createStereoPannerNodeRenderer() : null);
 
             super(context, nativeStereoPannerNode, stereoPannerNodeRenderer);
 

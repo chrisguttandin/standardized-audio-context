@@ -3,20 +3,20 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IOscillatorNode, IOscillatorOptions, IPeriodicWave } from '../interfaces';
+import { IMinimalOfflineAudioContext, IOscillatorNode, IOscillatorOptions, IPeriodicWave } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeOscillatorNode, TOscillatorNodeRendererFactoryFactory } from '../types';
 
 export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactoryFactory = (
     createNativeOscillatorNode
 ) => {
-    return () => {
+    return <T extends IMinimalOfflineAudioContext>() => {
         let nativeOscillatorNodePromise: null | Promise<TNativeOscillatorNode> = null;
         let periodicWave: null | IPeriodicWave = null;
         let start: null | number = null;
         let stop: null | number = null;
 
-        const createOscillatorNode = async (proxy: IOscillatorNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeOscillatorNode = getNativeAudioNode<TNativeOscillatorNode>(proxy);
+        const createOscillatorNode = async (proxy: IOscillatorNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeOscillatorNode = getNativeAudioNode<T, TNativeOscillatorNode>(proxy);
 
             // If the initially used nativeOscillatorNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativeOscillatorNode, nativeOfflineAudioContext)) {
@@ -65,7 +65,7 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
             set stop (value: number) {
                 stop = value;
             },
-            render (proxy: IOscillatorNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeOscillatorNode> {
+            render (proxy: IOscillatorNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeOscillatorNode> {
                 if (nativeOscillatorNodePromise === null) {
                     nativeOscillatorNodePromise = createOscillatorNode(proxy, nativeOfflineAudioContext);
                 }

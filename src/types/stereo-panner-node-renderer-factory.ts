@@ -1,3 +1,3 @@
-import { IAudioNodeRenderer } from '../interfaces';
+import { IAudioNodeRenderer, IMinimalOfflineAudioContext, IStereoPannerNode } from '../interfaces';
 
-export type TStereoPannerNodeRendererFactory = () => IAudioNodeRenderer;
+export type TStereoPannerNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IAudioNodeRenderer<T, IStereoPannerNode<T>>;

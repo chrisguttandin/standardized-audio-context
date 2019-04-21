@@ -1,4 +1,3 @@
-import { IDelayNode, IDelayOptions } from '../interfaces';
-import { TContext } from './context';
+import { IDelayNode, IDelayOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TDelayNodeConstructor = new (context: TContext, options?: Partial<IDelayOptions>) => IDelayNode;
+export type TDelayNodeConstructor = new <T extends IMinimalBaseAudioContext>(context: T, options?: Partial<IDelayOptions>) => IDelayNode<T>;

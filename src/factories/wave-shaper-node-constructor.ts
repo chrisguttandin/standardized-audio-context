@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
-import { TContext, TNativeWaveShaperNode, TOverSampleType, TWaveShaperNodeConstructorFactory } from '../types';
+import { IMinimalBaseAudioContext, IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
+import { TAudioNodeRenderer, TNativeWaveShaperNode, TOverSampleType, TWaveShaperNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS: IWaveShaperOptions = {
     channelCount: 2,
@@ -18,18 +18,20 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class WaveShaperNode extends noneAudioDestinationNodeConstructor implements IWaveShaperNode {
+    return class WaveShaperNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IWaveShaperNode<T> {
 
         private _isCurveNullified: boolean;
 
         private _nativeWaveShaperNode: TNativeWaveShaperNode;
 
-        constructor (context: TContext, options: Partial<IWaveShaperOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IWaveShaperOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeWaveShaperNode = createNativeWaveShaperNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const waveShaperNodeRenderer = (isOffline) ? createWaveShaperNodeRenderer() : null;
+            const waveShaperNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createWaveShaperNodeRenderer() : null);
 
             super(context, nativeWaveShaperNode, waveShaperNodeRenderer);
 

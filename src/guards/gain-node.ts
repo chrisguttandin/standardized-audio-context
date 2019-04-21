@@ -1,5 +1,5 @@
-import { IAudioNode, IGainNode } from '../interfaces';
+import { IAudioNode, IGainNode, IMinimalBaseAudioContext } from '../interfaces';
 
-export const isGainNode = (audioNode: IAudioNode): audioNode is IGainNode => {
+export const isGainNode = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>): audioNode is IGainNode<T> => {
     return (!audioNode.hasOwnProperty('frequency') && audioNode.hasOwnProperty('gain'));
 };

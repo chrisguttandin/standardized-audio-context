@@ -3,19 +3,19 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IConstantSourceNode, IConstantSourceOptions } from '../interfaces';
+import { IConstantSourceNode, IConstantSourceOptions, IMinimalOfflineAudioContext } from '../interfaces';
 import { TConstantSourceNodeRendererFactoryFactory, TNativeConstantSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendererFactoryFactory = (
     createNativeConstantSourceNode
 ) => {
-    return () => {
+    return <T extends IMinimalOfflineAudioContext>() => {
         let nativeConstantSourceNodePromise: null | Promise<TNativeConstantSourceNode> = null;
         let start: null | number = null;
         let stop: null | number = null;
 
-        const createConstantSourceNode = async (proxy: IConstantSourceNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeConstantSourceNode = getNativeAudioNode<TNativeConstantSourceNode>(proxy);
+        const createConstantSourceNode = async (proxy: IConstantSourceNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeConstantSourceNode = getNativeAudioNode<T, TNativeConstantSourceNode>(proxy);
 
             /*
              * If the initially used nativeConstantSourceNode was not constructed on the same OfflineAudioContext it needs to be created
@@ -57,7 +57,7 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
                 stop = value;
             },
             render (
-                proxy: IConstantSourceNode,
+                proxy: IConstantSourceNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeConstantSourceNode> {
                 if (nativeConstantSourceNodePromise === null) {

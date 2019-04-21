@@ -1,8 +1,8 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IDynamicsCompressorNode, IDynamicsCompressorOptions } from '../interfaces';
+import { IAudioParam, IDynamicsCompressorNode, IDynamicsCompressorOptions, IMinimalBaseAudioContext } from '../interfaces';
 import {
+    TAudioNodeRenderer,
     TChannelCountMode,
-    TContext,
     TDynamicsCompressorNodeConstructorFactory,
     TNativeAudioParam,
     TNativeDynamicsCompressorNode
@@ -28,7 +28,9 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class DynamicsCompressorNode extends noneAudioDestinationNodeConstructor implements IDynamicsCompressorNode {
+    return class DynamicsCompressorNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IDynamicsCompressorNode<T> {
 
         private _attack: IAudioParam;
 
@@ -42,12 +44,14 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
 
         private _threshold: IAudioParam;
 
-        constructor (context: TContext, options: Partial<IDynamicsCompressorOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IDynamicsCompressorOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeDynamicsCompressorNode = createNativeDynamicsCompressorNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const dynamicsCompressorNodeRenderer = (isOffline) ? createDynamicsCompressorNodeRenderer() : null;
+            const dynamicsCompressorNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
+                ? createDynamicsCompressorNodeRenderer()
+                : null);
 
             super(context, nativeDynamicsCompressorNode, dynamicsCompressorNodeRenderer);
 

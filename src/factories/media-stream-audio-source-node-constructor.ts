@@ -1,6 +1,6 @@
 import { getNativeAudioContext } from '../helpers/get-native-audio-context';
 import { IAudioNodeOptions, IMediaStreamAudioSourceNode, IMediaStreamAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
-import { TMediaStreamAudioSourceNodeConstructorFactory, TNativeMediaStreamAudioSourceNode } from '../types';
+import { TAudioNodeRenderer, TMediaStreamAudioSourceNodeConstructorFactory, TNativeMediaStreamAudioSourceNode } from '../types';
 
 const DEFAULT_OPTIONS: IAudioNodeOptions = {
     channelCount: 2,
@@ -15,13 +15,15 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class MediaStreamAudioSourceNode extends noneAudioDestinationNodeConstructor implements IMediaStreamAudioSourceNode {
+    return class MediaStreamAudioSourceNode<T extends IMinimalAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IMediaStreamAudioSourceNode<T> {
 
         private _mediaStream: MediaStream;
 
         private _nativeMediaStreamAudioSourceNode: TNativeMediaStreamAudioSourceNode;
 
-        constructor (context: IMinimalAudioContext, options: IMediaStreamAudioSourceOptions) {
+        constructor (context: T, options: IMediaStreamAudioSourceOptions) {
             const nativeContext = getNativeAudioContext(context);
 
             if (isNativeOfflineAudioContext(nativeContext)) {
@@ -31,7 +33,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
             const mergedOptions = <IAudioNodeOptions & IMediaStreamAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, mergedOptions);
 
-            super(context, nativeMediaStreamAudioSourceNode, null);
+            super(context, nativeMediaStreamAudioSourceNode, <TAudioNodeRenderer<T>> null);
 
             // Bug #63: Edge & Firefox do not expose the mediaStream yet.
             // Bug #151: The mediaStream gets cloned for Firefox but luckily it doesn't expose it at the same time.

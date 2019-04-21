@@ -1,12 +1,19 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
-import { IAudioBufferSourceNode, IAudioBufferSourceNodeRenderer, IAudioBufferSourceOptions, IAudioParam } from '../interfaces';
+import {
+    IAudioBufferSourceNode,
+    IAudioBufferSourceNodeRenderer,
+    IAudioBufferSourceOptions,
+    IAudioParam,
+    IEndedEventHandler,
+    IMinimalBaseAudioContext,
+    IMinimalOfflineAudioContext
+} from '../interfaces';
 import {
     TAnyAudioBuffer,
     TAudioBufferSourceNodeConstructorFactory,
-    TContext,
-    TEndedEventHandler,
+    TAudioBufferSourceNodeRenderer,
     TNativeAudioBufferSourceNode
 } from '../types';
 
@@ -31,9 +38,11 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class AudioBufferSourceNode extends noneAudioDestinationNodeConstructor implements IAudioBufferSourceNode {
+    return class AudioBufferSourceNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IAudioBufferSourceNode<T> {
 
-        private _audioBufferSourceNodeRenderer: null | IAudioBufferSourceNodeRenderer;
+        private _audioBufferSourceNodeRenderer: null | IAudioBufferSourceNodeRenderer<IMinimalOfflineAudioContext>;
 
         private _isBufferNullified: boolean;
 
@@ -41,16 +50,18 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         private _nativeAudioBufferSourceNode: TNativeAudioBufferSourceNode;
 
-        private _onended: null | TEndedEventHandler<IAudioBufferSourceNode>;
+        private _onended: null | IEndedEventHandler<T, this>;
 
         private _playbackRate: IAudioParam;
 
-        constructor (context: TContext, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const audioBufferSourceNodeRenderer = (isOffline) ? createAudioBufferSourceNodeRenderer() : null;
+            const audioBufferSourceNodeRenderer = <TAudioBufferSourceNodeRenderer<T>> ((isOffline)
+                ? createAudioBufferSourceNodeRenderer()
+                : null);
 
             super(context, nativeAudioBufferSourceNode, audioBufferSourceNodeRenderer);
 
@@ -111,7 +122,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             }
         }
 
-        get onended (): null | TEndedEventHandler<IAudioBufferSourceNode> {
+        get onended (): null | IEndedEventHandler<T, this> {
             return this._onended;
         }
 
@@ -120,7 +131,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
             this._nativeAudioBufferSourceNode.onended = wrappedListener;
 
-            const nativeOnEnded = <null | TEndedEventHandler<IAudioBufferSourceNode>> this._nativeAudioBufferSourceNode.onended;
+            const nativeOnEnded = <null | IEndedEventHandler<T, this>> this._nativeAudioBufferSourceNode.onended;
 
             this._onended = (nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
         }

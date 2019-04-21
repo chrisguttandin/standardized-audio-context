@@ -1,5 +1,7 @@
-import { IAudioNode, IAudioParam } from '../interfaces';
+import { IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
 
-export const isAudioNode = (audioNodeOrAudioParam: IAudioNode | IAudioParam): audioNodeOrAudioParam is IAudioNode => {
-    return ((<IAudioNode> audioNodeOrAudioParam).context !== undefined);
+export const isAudioNode = <T extends IMinimalBaseAudioContext>(
+    audioNodeOrAudioParam: IAudioNode<T> | IAudioParam
+): audioNodeOrAudioParam is IAudioNode<T> => {
+    return ((<IAudioNode<T>> audioNodeOrAudioParam).context !== undefined);
 };

@@ -1,15 +1,15 @@
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IAnalyserNode, IAnalyserOptions } from '../interfaces';
+import { IAnalyserNode, IAnalyserOptions, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAnalyserNodeRendererFactoryFactory, TNativeAnalyserNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFactory = (createNativeAnalyserNode) => {
-    return () => {
+    return <T extends IMinimalOfflineAudioContext>() => {
         let nativeAnalyserNodePromise: null | Promise<TNativeAnalyserNode> = null;
 
-        const createAnalyserNode = async (proxy: IAnalyserNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeAnalyserNode = getNativeAudioNode<TNativeAnalyserNode>(proxy);
+        const createAnalyserNode = async (proxy: IAnalyserNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeAnalyserNode = getNativeAudioNode<T, TNativeAnalyserNode>(proxy);
 
             // If the initially used nativeAnalyserNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativeAnalyserNode, nativeOfflineAudioContext)) {
@@ -32,7 +32,7 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
         };
 
         return {
-            render (proxy: IAnalyserNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> {
+            render (proxy: IAnalyserNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> {
                 if (nativeAnalyserNodePromise === null) {
                     nativeAnalyserNodePromise = createAnalyserNode(proxy, nativeOfflineAudioContext);
                 }

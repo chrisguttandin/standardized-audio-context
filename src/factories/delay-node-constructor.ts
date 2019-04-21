@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IDelayNode, IDelayOptions } from '../interfaces';
-import { TContext, TDelayNodeConstructorFactory } from '../types';
+import { IAudioParam, IDelayNode, IDelayOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { TAudioNodeRenderer, TDelayNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS: IDelayOptions = {
     channelCount: 2,
@@ -18,16 +18,18 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class DelayNode extends noneAudioDestinationNodeConstructor implements IDelayNode {
+    return class DelayNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> implements IDelayNode<T> {
 
         private _delayTime: IAudioParam;
 
-        constructor (context: TContext, options: Partial<IDelayOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IDelayOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeDelayNode = createNativeDelayNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const delayNodeRenderer = (isOffline) ? createDelayNodeRenderer(mergedOptions.maxDelayTime) : null;
+            const delayNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
+                ? createDelayNodeRenderer(mergedOptions.maxDelayTime)
+                : null);
 
             super(context, nativeDelayNode, delayNodeRenderer);
 

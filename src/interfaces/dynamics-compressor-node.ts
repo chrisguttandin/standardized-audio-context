@@ -1,7 +1,8 @@
 import { IAudioNode } from './audio-node';
 import { IAudioParam } from './audio-param';
+import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IDynamicsCompressorNode extends IAudioNode {
+export interface IDynamicsCompressorNode<T extends IMinimalBaseAudioContext> extends IAudioNode<T> {
 
     readonly attack: IAudioParam;
 

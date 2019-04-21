@@ -180,6 +180,7 @@ import {
     TChannelMergerNodeConstructor,
     TChannelSplitterNodeConstructor,
     TConstantSourceNodeConstructor,
+    TContext,
     TConvolverNodeConstructor,
     TDecodeAudioDataFunction,
     TDelayNodeConstructor,
@@ -223,7 +224,7 @@ const analyserNodeConstructor: TAnalyserNodeConstructor = createAnalyserNodeCons
     noneAudioDestinationNodeConstructor
 );
 
-type analyserNodeConstructor = IAnalyserNode;
+type analyserNodeConstructor<T extends TContext> = IAnalyserNode<T>;
 
 export { analyserNodeConstructor as AnalyserNode };
 
@@ -271,7 +272,7 @@ const audioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructor = crea
     noneAudioDestinationNodeConstructor
 );
 
-type audioBufferSourceNodeConstructor = IAudioBufferSourceNode;
+type audioBufferSourceNodeConstructor<T extends TContext> = IAudioBufferSourceNode<T>;
 
 export { audioBufferSourceNodeConstructor as AudioBufferSourceNode };
 
@@ -592,51 +593,51 @@ const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = (i
     ) :
     undefined;
 
-type audioWorkletNodeConstructor = undefined | IAudioWorkletNode;
+type audioWorkletNodeConstructor<T extends TContext> = undefined | IAudioWorkletNode<T>;
 
 export { audioWorkletNodeConstructor as AudioWorkletNode };
 
-type biquadFilterNodeConstructor = IBiquadFilterNode;
+type biquadFilterNodeConstructor<T extends TContext> = IBiquadFilterNode<T>;
 
 export { biquadFilterNodeConstructor as BiquadFilterNode };
 
-type channelMergerNodeConstructor = IAudioNode;
+type channelMergerNodeConstructor<T extends TContext> = IAudioNode<T>;
 
 export { channelMergerNodeConstructor as ChannelMergerNode };
 
-type channelSplitterNodeConstructor = IAudioNode;
+type channelSplitterNodeConstructor<T extends TContext> = IAudioNode<T>;
 
 export { channelSplitterNodeConstructor as ChannelSplitterNode };
 
-type constantSourceNodeConstructor = IConstantSourceNode;
+type constantSourceNodeConstructor<T extends TContext> = IConstantSourceNode<T>;
 
 export { convolverNodeConstructor as ConvolverNode };
 
-type convolverNodeConstructor = IConvolverNode;
+type convolverNodeConstructor<T extends TContext> = IConvolverNode<T>;
 
 export { constantSourceNodeConstructor as ConstantSourceNode };
 
-type delayNodeConstructor = IDelayNode;
+type delayNodeConstructor<T extends TContext> = IDelayNode<T>;
 
 export { delayNodeConstructor as DelayNode };
 
-type dynamicsCompressorNodeConstructor = IDynamicsCompressorNode;
+type dynamicsCompressorNodeConstructor<T extends TContext> = IDynamicsCompressorNode<T>;
 
 export { dynamicsCompressorNodeConstructor as DynamicsCompressorNode };
 
-type gainNodeConstructor = IGainNode;
+type gainNodeConstructor<T extends TContext> = IGainNode<T>;
 
 export { gainNodeConstructor as GainNode };
 
-type iIRFilterNodeConstructor = IIIRFilterNode;
+type iIRFilterNodeConstructor<T extends TContext> = IIIRFilterNode<T>;
 
 export { iIRFilterNodeConstructor as IIRFilterNode };
 
-type mediaElementAudioSourceNodeConstructor = IMediaElementAudioSourceNode;
+type mediaElementAudioSourceNodeConstructor<T extends IAudioContext | IMinimalAudioContext> = IMediaElementAudioSourceNode<T>;
 
 export { mediaElementAudioSourceNodeConstructor as MediaElementAudioSourceNode };
 
-type mediaStreamAudioSourceNodeConstructor = IMediaStreamAudioSourceNode;
+type mediaStreamAudioSourceNodeConstructor<T extends IAudioContext | IMinimalAudioContext> = IMediaStreamAudioSourceNode<T>;
 
 export { mediaStreamAudioSourceNodeConstructor as MediaStreamAudioSourceNode };
 
@@ -679,11 +680,11 @@ type offlineAudioContextConstructor = IOfflineAudioContext;
 
 export { offlineAudioContextConstructor as OfflineAudioContext };
 
-type oscillatorNodeConstructor = IOscillatorNode;
+type oscillatorNodeConstructor<T extends TContext> = IOscillatorNode<T>;
 
 export { oscillatorNodeConstructor as OscillatorNode };
 
-type pannerNodeConstructor = IPannerNode;
+type pannerNodeConstructor<T extends TContext> = IPannerNode<T>;
 
 export { pannerNodeConstructor as PannerNode };
 
@@ -691,11 +692,11 @@ type periodicWaveConstructor = IPeriodicWave;
 
 export { periodicWaveConstructor as PeriodicWave };
 
-type stereoPannerNodeConstructor = IStereoPannerNode;
+type stereoPannerNodeConstructor<T extends TContext> = IStereoPannerNode<T>;
 
 export { stereoPannerNodeConstructor as StereoPannerNode };
 
-type waveShaperNodeConstructor = IWaveShaperNode;
+type waveShaperNodeConstructor<T extends TContext> = IWaveShaperNode<T>;
 
 export { waveShaperNodeConstructor as WaveShaperNode };
 

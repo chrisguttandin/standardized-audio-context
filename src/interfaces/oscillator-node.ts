@@ -1,14 +1,13 @@
-import { TEndedEventHandler, TOscillatorType } from '../types';
+import { TOscillatorType } from '../types';
 import { IAudioParam } from './audio-param';
 import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
+import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IOscillatorNode extends IAudioScheduledSourceNode {
+export interface IOscillatorNode<T extends IMinimalBaseAudioContext> extends IAudioScheduledSourceNode<T> {
 
     readonly detune: IAudioParam;
 
     readonly frequency: IAudioParam;
-
-    onended: null | TEndedEventHandler<IOscillatorNode>;
 
     type: TOscillatorType;
 

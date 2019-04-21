@@ -3,8 +3,8 @@ import { evaluateSource } from '../helpers/evaluate-source';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isConstructible } from '../helpers/is-constructible';
 import { splitImportStatements } from '../helpers/split-import-statements';
-import { IAudioWorkletProcessorConstructor } from '../interfaces';
-import { TAddAudioWorkletModuleFactory, TContext, TEvaluateAudioWorkletGlobalScopeFunction } from '../types';
+import { IAudioWorkletProcessorConstructor, IMinimalBaseAudioContext } from '../interfaces';
+import { TAddAudioWorkletModuleFactory, TEvaluateAudioWorkletGlobalScopeFunction } from '../types';
 
 const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessorConstructor['parameterDescriptors']) => {
     if (parameterDescriptors !== undefined && !Array.isArray(parameterDescriptors)) {
@@ -26,8 +26,8 @@ const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (proce
     }
 };
 
-const ongoingRequests: WeakMap<TContext, Map<string, Promise<void>>> = new WeakMap();
-const resolvedRequests: WeakMap<TContext, Set<string>> = new WeakMap();
+const ongoingRequests: WeakMap<IMinimalBaseAudioContext, Map<string, Promise<void>>> = new WeakMap();
+const resolvedRequests: WeakMap<IMinimalBaseAudioContext, Set<string>> = new WeakMap();
 
 export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     createAbortError,

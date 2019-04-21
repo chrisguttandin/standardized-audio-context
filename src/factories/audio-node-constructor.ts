@@ -8,23 +8,30 @@ import { getAudioParamConnections } from '../helpers/get-audio-param-connections
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { getNativeAudioParam } from '../helpers/get-native-audio-param';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioNode, IAudioNodeRenderer, IAudioParam, INativeAudioNodeFaker } from '../interfaces';
+import {
+    IAudioNode,
+    IAudioNodeRenderer,
+    IAudioParam,
+    IMinimalBaseAudioContext,
+    IMinimalOfflineAudioContext,
+    INativeAudioNodeFaker
+} from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
 import {
+    TAnyContext,
     TAudioNodeConstructorFactory,
     TChannelCountMode,
     TChannelInterpretation,
-    TContext,
     TNativeAudioDestinationNode,
     TNativeAudioNode,
     TNativeAudioParam
 } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
-const addAudioNode = (
-    context: TContext,
-    audioNode: IAudioNode,
-    audioNoderRender: null | IAudioNodeRenderer,
+const addAudioNode = <T extends IMinimalBaseAudioContext>(
+    context: T,
+    audioNode: IAudioNode<T>,
+    audioNoderRender: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null,
     nativeAudioNode: TNativeAudioNode
 ) => {
     const audioGraph = getAudioGraph(context);
@@ -41,7 +48,12 @@ const addAudioNode = (
     audioGraph.nodes.set(nativeAudioNode, audioNodeConnections);
 };
 
-const addConnectionToAudioNode = (source: IAudioNode, destination: IAudioNode, output: number, input: number) => {
+const addConnectionToAudioNode = <T extends IMinimalBaseAudioContext>(
+    source: IAudioNode<T>,
+    destination: IAudioNode<T>,
+    output: number,
+    input: number
+) => {
     const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
     const audioNodeConnectionsOfDestination = getAudioNodeConnections(destination);
 
@@ -49,15 +61,24 @@ const addConnectionToAudioNode = (source: IAudioNode, destination: IAudioNode, o
     audioNodeConnectionsOfDestination.inputs[input].add([ source, output ]);
 };
 
-const addConnectionToAudioParam = (source: IAudioNode, destination: IAudioParam, output: number) => {
+const addConnectionToAudioParam = <T extends IMinimalBaseAudioContext>(
+    source: IAudioNode<T>,
+    destination: IAudioParam,
+    output: number
+) => {
     const audioNodeConnections = getAudioNodeConnections(source);
-    const audioParamConnections = getAudioParamConnections(source.context, destination);
+    const audioParamConnections = getAudioParamConnections(<TAnyContext> source.context, destination);
 
     audioNodeConnections.outputs.add([ destination, output ]);
     audioParamConnections.inputs.add([ source, output ]);
 };
 
-const deleteInputsOfAudioNode = (source: IAudioNode, destination: IAudioNode, output?: number, input?: number) => {
+const deleteInputsOfAudioNode = <T extends IMinimalBaseAudioContext>(
+    source: IAudioNode<T>,
+    destination: IAudioNode<T>,
+    output?: number,
+    input?: number
+) => {
     const { inputs } = getAudioNodeConnections(destination);
     const length = inputs.length;
 
@@ -74,8 +95,12 @@ const deleteInputsOfAudioNode = (source: IAudioNode, destination: IAudioNode, ou
     }
 };
 
-const deleteInputsOfAudioParam = (source: IAudioNode, destination: IAudioParam, output?: number) => {
-    const audioParamConnections = getAudioParamConnections(source.context, destination);
+const deleteInputsOfAudioParam = <T extends IMinimalBaseAudioContext>(
+    source: IAudioNode<T>,
+    destination: IAudioParam,
+    output?: number
+) => {
+    const audioParamConnections = getAudioParamConnections(<TAnyContext> source.context, destination);
 
     for (const connection of audioParamConnections.inputs) {
         if (connection[0] === source && (output === undefined || connection[1] === output)) {
@@ -84,7 +109,12 @@ const deleteInputsOfAudioParam = (source: IAudioNode, destination: IAudioParam, 
     }
 };
 
-const deleteOutputsOfAudioNode = (source: IAudioNode, destination: IAudioNode | IAudioParam, output?: number, input?: number) => {
+const deleteOutputsOfAudioNode = <T extends IMinimalBaseAudioContext>(
+    source: IAudioNode<T>,
+    destination: IAudioNode<T> | IAudioParam,
+    output?: number,
+    input?: number
+) => {
     const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
 
     for (const connection of audioNodeConnectionsOfSource.outputs.values()) {
@@ -97,7 +127,7 @@ const deleteOutputsOfAudioNode = (source: IAudioNode, destination: IAudioNode | 
     }
 };
 
-const deleteAnyConnection = (source: IAudioNode) => {
+const deleteAnyConnection = <T extends IMinimalBaseAudioContext>(source: IAudioNode<T>) => {
     const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
 
     for (const [ destination ] of audioNodeConnectionsOfSource.outputs) {
@@ -111,7 +141,7 @@ const deleteAnyConnection = (source: IAudioNode) => {
     audioNodeConnectionsOfSource.outputs.clear();
 };
 
-const deleteConnectionAtOutput = (source: IAudioNode, output: number) => {
+const deleteConnectionAtOutput = <T extends IMinimalBaseAudioContext>(source: IAudioNode<T>, output: number) => {
     const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
 
     Array
@@ -130,7 +160,12 @@ const deleteConnectionAtOutput = (source: IAudioNode, output: number) => {
         });
 };
 
-const deleteConnectionToDestination = (source: IAudioNode, destination: IAudioNode | IAudioParam, output?: number, input?: number) => {
+const deleteConnectionToDestination = <T extends IMinimalBaseAudioContext>(
+    source: IAudioNode<T>,
+    destination: IAudioNode<T> | IAudioParam,
+    output?: number,
+    input?: number
+) => {
     deleteOutputsOfAudioNode(source, destination, output, input);
 
     if (isAudioNode(destination)) {
@@ -146,16 +181,16 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     isNativeOfflineAudioContext
 ) => {
 
-    return class AudioNode extends EventTarget implements IAudioNode {
+    return class AudioNode<T extends IMinimalBaseAudioContext> extends EventTarget implements IAudioNode<T> {
 
-        private _context: TContext;
+        private _context: T;
 
         private _nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode;
 
         constructor (
-            context: TContext,
+            context: T,
             nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
-            audioNodeRenderer: null | IAudioNodeRenderer
+            audioNodeRenderer: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null
         ) {
             super(nativeAudioNode);
 
@@ -201,7 +236,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             this._nativeAudioNode.channelInterpretation = value;
         }
 
-        get context (): TContext {
+        get context (): T {
             return this._context;
         }
 
@@ -213,13 +248,13 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             return this._nativeAudioNode.numberOfOutputs;
         }
 
-        public connect (destinationNode: IAudioNode, output?: number, input?: number): IAudioNode;
+        public connect <U extends IAudioNode<T>> (destinationNode: U, output?: number, input?: number): U;
         public connect (destinationParam: IAudioParam, output?: number): void;
-        public connect (destination: IAudioNode | IAudioParam, output = 0, input = 0): void | IAudioNode {
+        public connect <U extends IAudioNode<T>> (destination: U | IAudioParam, output = 0, input = 0): void | U {
             const nativeContext = getNativeContext(this._context);
 
             if (isAudioNode(destination)) {
-                const nativeDestinationNode = getNativeAudioNode<TNativeAudioDestinationNode>(destination);
+                const nativeDestinationNode = getNativeAudioNode<T, TNativeAudioDestinationNode>(destination);
                 const inputs = (<INativeAudioNodeFaker> nativeDestinationNode).inputs;
 
                 try {
@@ -282,9 +317,9 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
         }
 
         public disconnect (output?: number): void;
-        public disconnect (destinationNode: IAudioNode, output?: number, input?: number): void;
+        public disconnect (destinationNode: IAudioNode<T>, output?: number, input?: number): void;
         public disconnect (destinationParam: IAudioParam, output?: number): void;
-        public disconnect (destinationOrOutput?: number | IAudioNode | IAudioParam, output?: number, input?: number): void {
+        public disconnect (destinationOrOutput?: number | IAudioNode<T> | IAudioParam, output?: number, input?: number): void {
             const nativeContext = getNativeContext(this._context);
 
             if (!isNativeOfflineAudioContext(nativeContext)) {
@@ -293,7 +328,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                 } else if (typeof destinationOrOutput === 'number') {
                     this._nativeAudioNode.disconnect(destinationOrOutput);
                 } else if (isAudioNode(destinationOrOutput)) {
-                    const nativeDestinationNode = getNativeAudioNode<TNativeAudioDestinationNode>(destinationOrOutput);
+                    const nativeDestinationNode = getNativeAudioNode<T, TNativeAudioDestinationNode>(destinationOrOutput);
 
                     if ((<INativeAudioNodeFaker> nativeDestinationNode).inputs !== undefined) {
                         const inputs = <TNativeAudioNode[]> (<INativeAudioNodeFaker> nativeDestinationNode).inputs;

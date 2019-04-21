@@ -1,7 +1,15 @@
 import { getNativeContext } from '../helpers/get-native-context';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
-import { IAudioParam, IOscillatorNode, IOscillatorNodeRenderer, IOscillatorOptions } from '../interfaces';
-import { TContext, TEndedEventHandler, TNativeOscillatorNode, TOscillatorNodeConstructorFactory, TOscillatorType } from '../types';
+import {
+    IAudioParam,
+    IEndedEventHandler,
+    IMinimalBaseAudioContext,
+    IMinimalOfflineAudioContext,
+    IOscillatorNode,
+    IOscillatorNodeRenderer,
+    IOscillatorOptions
+} from '../interfaces';
+import { TNativeOscillatorNode, TOscillatorNodeConstructorFactory, TOscillatorNodeRenderer, TOscillatorType } from '../types';
 
 // The DEFAULT_OPTIONS are only of type Partial<IOscillatorOptions> because there is no default value for periodicWave.
 const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
@@ -22,7 +30,9 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return  class OscillatorNode extends noneAudioDestinationNodeConstructor implements IOscillatorNode {
+    return class OscillatorNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IOscillatorNode<T> {
 
         private _detune: IAudioParam;
 
@@ -30,17 +40,17 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _nativeOscillatorNode: TNativeOscillatorNode;
 
-        private _onended: null | TEndedEventHandler<IOscillatorNode>;
+        private _onended: null | IEndedEventHandler<T, this>;
 
-        private _oscillatorNodeRenderer: null | IOscillatorNodeRenderer;
+        private _oscillatorNodeRenderer: null | IOscillatorNodeRenderer<IMinimalOfflineAudioContext>;
 
-        constructor (context: TContext, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
             const absoluteValue = 1200 * Math.log2(context.sampleRate);
             const nativeContext = getNativeContext(context);
             const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeOscillatorNode = createNativeOscillatorNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const oscillatorNodeRenderer = (isOffline) ? createOscillatorNodeRenderer() : null;
+            const oscillatorNodeRenderer = <TOscillatorNodeRenderer<T>> ((isOffline) ? createOscillatorNodeRenderer() : null);
             const nyquist = context.sampleRate / 2;
 
             super(context, nativeOscillatorNode, oscillatorNodeRenderer);
@@ -54,7 +64,8 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             this._oscillatorNodeRenderer = oscillatorNodeRenderer;
 
             if (this._oscillatorNodeRenderer !== null && mergedOptions.periodicWave !== undefined) {
-                this._oscillatorNodeRenderer.periodicWave = mergedOptions.periodicWave;
+                (<IOscillatorNodeRenderer<IMinimalOfflineAudioContext>> this._oscillatorNodeRenderer).periodicWave =
+                    mergedOptions.periodicWave;
             }
         }
 
@@ -66,7 +77,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             return this._frequency;
         }
 
-        get onended (): null | TEndedEventHandler<IOscillatorNode> {
+        get onended (): null | IEndedEventHandler<T, this> {
             return this._onended;
         }
 
@@ -75,7 +86,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
             this._nativeOscillatorNode.onended = wrappedListener;
 
-            const nativeOnStateChange = <null | TEndedEventHandler<IOscillatorNode>> this._nativeOscillatorNode.onended;
+            const nativeOnStateChange = <null | IEndedEventHandler<T, this>> this._nativeOscillatorNode.onended;
 
             this._onended = (nativeOnStateChange === wrappedListener) ? value : nativeOnStateChange;
         }

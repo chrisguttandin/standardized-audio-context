@@ -1,5 +1,5 @@
-import { IAudioNode, IConstantSourceNode } from '../interfaces';
+import { IAudioNode, IConstantSourceNode, IMinimalBaseAudioContext } from '../interfaces';
 
-export const isConstantSourceNode = (audioNode: IAudioNode): audioNode is IConstantSourceNode => {
+export const isConstantSourceNode = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>): audioNode is IConstantSourceNode<T> => {
     return (audioNode.hasOwnProperty('offset') !== undefined);
 };

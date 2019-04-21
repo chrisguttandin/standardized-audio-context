@@ -116,11 +116,11 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
              */
         }
 
-        public createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode {
+        public createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this> {
             return new mediaElementAudioSourceNodeConstructor(this, { mediaElement });
         }
 
-        public createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode {
+        public createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode<this> {
             return new mediaStreamAudioSourceNodeConstructor(this, { mediaStream });
         }
 

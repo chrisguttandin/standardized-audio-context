@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IConvolverNode, IConvolverOptions } from '../interfaces';
-import { TAnyAudioBuffer, TContext, TConvolverNodeConstructorFactory, TNativeConvolverNode } from '../types';
+import { IConvolverNode, IConvolverOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { TAnyAudioBuffer, TAudioNodeRenderer, TConvolverNodeConstructorFactory, TNativeConvolverNode } from '../types';
 
 const DEFAULT_OPTIONS: IConvolverOptions = {
     buffer: null,
@@ -17,18 +17,20 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class ConvolverNode extends noneAudioDestinationNodeConstructor implements IConvolverNode {
+    return class ConvolverNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IConvolverNode<T> {
 
         private _isBufferNullified: boolean;
 
         private _nativeConvolverNode: TNativeConvolverNode;
 
-        constructor (context: TContext, options: Partial<IConvolverOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IConvolverOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeConvolverNode = createNativeConvolverNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const convolverNodeRenderer = (isOffline) ? createConvolverNodeRenderer() : null;
+            const convolverNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createConvolverNodeRenderer() : null);
 
             super(context, nativeConvolverNode, convolverNodeRenderer);
 

@@ -7,7 +7,7 @@ import { TNoneAudioDestinationNodeConstructor } from './none-audio-destination-n
 
 export type TConstantSourceNodeConstructorFactory = (
     createAudioParam: TAudioParamFactory,
-    createConstantSourceNodeRendererFactory: TConstantSourceNodeRendererFactory,
+    createConstantSourceNodeRenderer: TConstantSourceNodeRendererFactory,
     createNativeConstantSourceNode: TNativeConstantSourceNodeFactory,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
     noneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructor

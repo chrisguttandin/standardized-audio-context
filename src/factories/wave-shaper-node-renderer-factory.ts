@@ -1,15 +1,15 @@
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { INativeWaveShaperNodeFaker, IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
+import { IMinimalOfflineAudioContext, INativeWaveShaperNodeFaker, IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeWaveShaperNode, TWaveShaperNodeRendererFactoryFactory } from '../types';
 
 export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactoryFactory = (createNativeWaveShaperNode) => {
-    return () => {
+    return <T extends IMinimalOfflineAudioContext>() => {
         let nativeWaveShaperNodePromise: null | Promise<TNativeWaveShaperNode> = null;
 
-        const createWaveShaperNode = async (proxy: IWaveShaperNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeWaveShaperNode = getNativeAudioNode<TNativeWaveShaperNode>(proxy);
+        const createWaveShaperNode = async (proxy: IWaveShaperNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeWaveShaperNode = getNativeAudioNode<T, TNativeWaveShaperNode>(proxy);
 
             // If the initially used nativeWaveShaperNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativeWaveShaperNode, nativeOfflineAudioContext)) {
@@ -38,7 +38,7 @@ export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactory
         };
 
         return {
-            render (proxy: IWaveShaperNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeWaveShaperNode> {
+            render (proxy: IWaveShaperNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeWaveShaperNode> {
                 if (nativeWaveShaperNodePromise === null) {
                     nativeWaveShaperNodePromise = createWaveShaperNode(proxy, nativeOfflineAudioContext);
                 }

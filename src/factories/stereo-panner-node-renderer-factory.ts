@@ -3,15 +3,15 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { INativeStereoPannerNodeFaker, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
+import { IMinimalOfflineAudioContext, INativeStereoPannerNodeFaker, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeStereoPannerNode, TStereoPannerNodeRendererFactoryFactory } from '../types';
 
 export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFactoryFactory = (createNativeStereoPannerNode) => {
-    return () => {
+    return <T extends IMinimalOfflineAudioContext>() => {
         let nativeStereoPannerNodePromise: null | Promise<TNativeStereoPannerNode> = null;
 
-        const createStereoPannerNode = async (proxy: IStereoPannerNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeStereoPannerNode = getNativeAudioNode<TNativeStereoPannerNode>(proxy);
+        const createStereoPannerNode = async (proxy: IStereoPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeStereoPannerNode = getNativeAudioNode<T, TNativeStereoPannerNode>(proxy);
 
             /*
              * If the initially used nativeStereoPannerNode was not constructed on the same OfflineAudioContext it needs to be created
@@ -46,7 +46,7 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
         };
 
         return {
-            render (proxy: IStereoPannerNode, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeStereoPannerNode> {
+            render (proxy: IStereoPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeStereoPannerNode> {
                 if (nativeStereoPannerNodePromise === null) {
                     nativeStereoPannerNodePromise = createStereoPannerNode(proxy, nativeOfflineAudioContext);
                 }

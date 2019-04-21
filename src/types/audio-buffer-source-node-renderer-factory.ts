@@ -1,3 +1,3 @@
-import { IAudioBufferSourceNodeRenderer } from '../interfaces';
+import { IAudioBufferSourceNodeRenderer, IMinimalOfflineAudioContext } from '../interfaces';
 
-export type TAudioBufferSourceNodeRendererFactory = () => IAudioBufferSourceNodeRenderer;
+export type TAudioBufferSourceNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IAudioBufferSourceNodeRenderer<T>;

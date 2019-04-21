@@ -1,7 +1,7 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IGainNode, IGainOptions } from '../interfaces';
-import { TContext, TGainNodeConstructorFactory } from '../types';
+import { IAudioParam, IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { TAudioNodeRenderer, TGainNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS: IGainOptions = {
     channelCount: 2,
@@ -18,16 +18,16 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class GainNode extends noneAudioDestinationNodeConstructor implements IGainNode {
+    return class GainNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> implements IGainNode<T> {
 
         private _gain: IAudioParam;
 
-        constructor (context: TContext, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeGainNode = createNativeGainNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const gainNodeRenderer = (isOffline) ? createGainNodeRenderer() : null;
+            const gainNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createGainNodeRenderer() : null);
 
             super(context, nativeGainNode, gainNodeRenderer);
 

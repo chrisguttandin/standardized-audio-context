@@ -1,10 +1,10 @@
 import { getAudioParamRenderer } from '../helpers/get-audio-param-renderer';
 import { renderInputsOfAudioParam } from '../helpers/render-inputs-of-audio-param';
-import { IAudioParam } from '../interfaces';
-import { TContext, TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
+import { IAudioParam, IMinimalOfflineAudioContext } from '../interfaces';
+import { TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
 
-export const renderAutomation = (
-    context: TContext,
+export const renderAutomation = <T extends IMinimalOfflineAudioContext>(
+    context: T,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     audioParam: IAudioParam,
     nativeAudioParam: TNativeAudioParam

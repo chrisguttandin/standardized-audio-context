@@ -1,3 +1,3 @@
-import { IConstantSourceNodeRenderer } from '../interfaces';
+import { IConstantSourceNodeRenderer, IMinimalOfflineAudioContext } from '../interfaces';
 
-export type TConstantSourceNodeRendererFactory = () => IConstantSourceNodeRenderer;
+export type TConstantSourceNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IConstantSourceNodeRenderer<T>;

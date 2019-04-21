@@ -3,22 +3,22 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IAudioBufferSourceNode, IAudioBufferSourceOptions } from '../interfaces';
+import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAudioBufferSourceNodeRendererFactoryFactory, TNativeAudioBufferSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeRendererFactoryFactory = (
     createNativeAudioBufferSourceNode
 ) => {
-    return () => {
+    return <T extends IMinimalOfflineAudioContext>() => {
         let nativeAudioBufferSourceNodePromise: null | Promise<TNativeAudioBufferSourceNode> = null;
         let start: null | [ number, number ] | [ number, number, number ] = null;
         let stop: null | number = null;
 
         const createAudioBufferSourceNode = async (
-            proxy: IAudioBufferSourceNode,
+            proxy: IAudioBufferSourceNode<T>,
             nativeOfflineAudioContext: TNativeOfflineAudioContext
         ) => {
-            let nativeAudioBufferSourceNode = getNativeAudioNode<TNativeAudioBufferSourceNode>(proxy);
+            let nativeAudioBufferSourceNode = getNativeAudioNode<T, TNativeAudioBufferSourceNode>(proxy);
 
             /*
              * If the initially used nativeAudioBufferSourceNode was not constructed on the same OfflineAudioContext it needs to be created
@@ -72,7 +72,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
                 stop = value;
             },
             render (
-                proxy: IAudioBufferSourceNode,
+                proxy: IAudioBufferSourceNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode> {
                 if (nativeAudioBufferSourceNodePromise === null) {

@@ -1,5 +1,7 @@
-import { IAudioBufferSourceNode, IAudioNode } from '../interfaces';
+import { IAudioBufferSourceNode, IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
 
-export const isAudioBufferSourceNode = (audioNode: IAudioNode): audioNode is IAudioBufferSourceNode => {
+export const isAudioBufferSourceNode = <T extends IMinimalBaseAudioContext>(
+    audioNode: IAudioNode<T>
+): audioNode is IAudioBufferSourceNode<T> => {
     return audioNode.hasOwnProperty('playbackRate');
 };

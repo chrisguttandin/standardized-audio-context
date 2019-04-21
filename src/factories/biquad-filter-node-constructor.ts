@@ -1,7 +1,7 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions } from '../interfaces';
-import { TBiquadFilterNodeConstructorFactory, TBiquadFilterType, TContext, TNativeBiquadFilterNode } from '../types';
+import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { TAudioNodeRenderer, TBiquadFilterNodeConstructorFactory, TBiquadFilterType, TNativeBiquadFilterNode } from '../types';
 
 const DEFAULT_OPTIONS: IBiquadFilterOptions = {
     Q: 1,
@@ -23,7 +23,9 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class BiquadFilterNode extends noneAudioDestinationNodeConstructor implements IBiquadFilterNode {
+    return class BiquadFilterNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IBiquadFilterNode<T> {
 
         private _detune: IAudioParam;
 
@@ -35,12 +37,12 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
         private _Q: IAudioParam;
 
-        constructor (context: TContext, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeBiquadFilterNode = createNativeBiquadFilterNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const biquadFilterNodeRenderer = (isOffline) ? createBiquadFilterNodeRenderer() : null;
+            const biquadFilterNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createBiquadFilterNodeRenderer() : null);
 
             super(context, nativeBiquadFilterNode, biquadFilterNodeRenderer);
 

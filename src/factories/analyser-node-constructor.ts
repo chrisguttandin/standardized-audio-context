@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAnalyserNode, IAnalyserOptions } from '../interfaces';
-import { TAnalyserNodeConstructorFactory, TContext, TNativeAnalyserNode } from '../types';
+import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { TAnalyserNodeConstructorFactory, TAudioNodeRenderer, TNativeAnalyserNode } from '../types';
 
 const DEFAULT_OPTIONS: IAnalyserOptions = {
     channelCount: 2,
@@ -20,15 +20,19 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
     noneAudioDestinationNodeConstructor
 ) => {
 
-    return class AnalyserNode extends noneAudioDestinationNodeConstructor implements IAnalyserNode {
+    return class AnalyserNode<T extends IMinimalBaseAudioContext>
+            extends noneAudioDestinationNodeConstructor<T>
+            implements IAnalyserNode<T> {
 
         private _nativeAnalyserNode: TNativeAnalyserNode;
 
-        constructor (context: TContext, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
+        constructor (context: T, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeAnalyserNode = createNativeAnalyserNode(nativeContext, mergedOptions);
-            const analyserNodeRenderer = (isNativeOfflineAudioContext(nativeContext)) ? createAnalyserNodeRenderer() : null;
+            const analyserNodeRenderer = <TAudioNodeRenderer<T, this>> ((isNativeOfflineAudioContext(nativeContext))
+                ? createAnalyserNodeRenderer()
+                : null);
 
             super(context, nativeAnalyserNode, analyserNodeRenderer);
 

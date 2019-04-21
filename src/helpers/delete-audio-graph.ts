@@ -1,8 +1,9 @@
 import { AUDIO_GRAPHS, CONTEXT_STORE, NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS, NODE_TO_PROCESSOR_MAPS } from '../globals';
-import { TContext, TNativeContext } from '../types';
+import { IMinimalBaseAudioContext } from '../interfaces';
+import { TNativeContext } from '../types';
 import { disconnectAudioNodeInputConnections } from './disconnect-audio-node-input-connections';
 
-export const deleteAudioGraph = (context: TContext, nativeContext: TNativeContext): void => {
+export const deleteAudioGraph = <T extends IMinimalBaseAudioContext>(context: T, nativeContext: TNativeContext): void => {
     const audioGraph = AUDIO_GRAPHS.get(context);
 
     if (audioGraph !== undefined) {

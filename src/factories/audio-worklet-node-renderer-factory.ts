@@ -19,6 +19,7 @@ import {
     TAudioWorkletNodeRendererFactoryFactory,
     TNativeAudioBuffer,
     TNativeAudioBufferSourceNode,
+    TNativeAudioNode,
     TNativeAudioParam,
     TNativeAudioWorkletNode,
     TNativeChannelMergerNode,
@@ -26,8 +27,8 @@ import {
     TNativeOfflineAudioContext
 } from '../types';
 
-const processBuffer = async (
-    proxy: IAudioWorkletNode,
+const processBuffer = async <T extends IMinimalOfflineAudioContext>(
+    proxy: IAudioWorkletNode<T>,
     renderedBuffer: TNativeAudioBuffer,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
@@ -122,11 +123,15 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     nativeOfflineAudioContextConstructor,
     renderNativeOfflineAudioContext
 ) => {
-    return (name, options, processorDefinition) => {
+    return <T extends IMinimalOfflineAudioContext>(
+        name: string,
+        options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
+        processorDefinition: undefined | IAudioWorkletProcessorConstructor
+    ) => {
         let nativeAudioNodePromise: null | Promise<TNativeAudioBufferSourceNode | TNativeAudioWorkletNode> = null;
 
-        const createNativeAudioNode = async (proxy: IAudioWorkletNode, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeAudioNode = getNativeAudioNode<TNativeAudioWorkletNode>(proxy);
+        const createNativeAudioNode = async (proxy: IAudioWorkletNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeAudioNode = getNativeAudioNode<T, TNativeAudioWorkletNode>(proxy);
 
             // Bug #61: Only Chrome & Opera have an implementation of the AudioWorkletNode yet.
             if (nativeAudioWorkletNodeConstructor === null) {
@@ -147,7 +152,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     numberOfInputChannels + numberOfParameters,
                     // Ceil the length to the next full render quantum.
                     // Bug #17: Safari does not yet expose the length.
-                    Math.ceil((<IMinimalOfflineAudioContext> proxy.context).length / 128) * 128,
+                    Math.ceil(proxy.context.length / 128) * 128,
                     nativeOfflineAudioContext.sampleRate
                 );
                 const gainNodes: TNativeGainNode[] = [ ];
@@ -309,7 +314,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
         return {
             render (
-                proxy: IAudioWorkletNode,
+                proxy: IAudioWorkletNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode | TNativeAudioWorkletNode> {
                 if (nativeAudioNodePromise === null) {

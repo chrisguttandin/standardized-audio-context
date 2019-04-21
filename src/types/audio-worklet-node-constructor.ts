@@ -1,8 +1,7 @@
-import { IAudioWorkletNode, IAudioWorkletNodeOptions } from '../interfaces';
-import { TContext } from './context';
+import { IAudioWorkletNode, IAudioWorkletNodeOptions, IMinimalBaseAudioContext } from '../interfaces';
 
-export type TAudioWorkletNodeConstructor = new (
-    context: TContext,
+export type TAudioWorkletNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+    context: T,
     name: string,
     options?: Partial<IAudioWorkletNodeOptions>
-) => IAudioWorkletNode;
+) => IAudioWorkletNode<T>;

@@ -1,6 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IPeriodicWave, IPeriodicWaveOptions } from '../interfaces';
-import { TContext, TPeriodicWaveConstructorFactory } from '../types';
+import { IMinimalBaseAudioContext, IPeriodicWave, IPeriodicWaveOptions } from '../interfaces';
+import { TPeriodicWaveConstructorFactory } from '../types';
 
 // The DEFAULT_OPTIONS are only of type Partial<IPeriodicWaveOptions> because there are no default values for imag and real.
 const DEFAULT_OPTIONS: Partial<IPeriodicWaveOptions> = {
@@ -9,10 +9,10 @@ const DEFAULT_OPTIONS: Partial<IPeriodicWaveOptions> = {
 
 export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (createNativePeriodicWave) => {
 
-    return class PeriodicWave implements IPeriodicWave {
+    return class PeriodicWave<T extends IMinimalBaseAudioContext> implements IPeriodicWave {
 
         constructor (
-            context: TContext,
+            context: T,
             options: { imag: IPeriodicWaveOptions['imag']; real: IPeriodicWaveOptions['real'] } & Partial<IPeriodicWaveOptions>
         ) {
             const nativeContext = getNativeContext(context);
