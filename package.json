@@ -56,7 +56,7 @@
     "karma-webpack": "^3.0.5",
     "load-grunt-config": "^1.0.1",
     "mocha": "^6.1.4",
-    "rollup": "^1.10.0",
+    "rollup": "^1.10.1",
     "rollup-plugin-babel": "^4.3.2",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0",
