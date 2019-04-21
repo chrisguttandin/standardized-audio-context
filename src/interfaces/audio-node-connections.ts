@@ -6,7 +6,7 @@ import { IMinimalOfflineAudioContext } from './minimal-offline-audio-context';
 
 export interface IAudioNodeConnections<T extends IMinimalBaseAudioContext> {
 
-    ixnputs: Set<[ IAudioNode<T>, number ]>[];
+    inputs: Set<[ IAudioNode<T>, number ]>[];
 
     outputs: Set<[ IAudioNode<T>, number, number ] | [ IAudioParam, number ]>;
 
