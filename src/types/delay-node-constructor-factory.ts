@@ -7,7 +7,7 @@ import { TNoneAudioDestinationNodeConstructor } from './none-audio-destination-n
 
 export type TDelayNodeConstructorFactory = (
     createAudioParam: TAudioParamFactory,
-    createDelayNodeRendererFactory: TDelayNodeRendererFactory,
+    createDelayNodeRenderer: TDelayNodeRendererFactory,
     createNativeDelayNode: TNativeDelayNodeFactory,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
     noneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructor
