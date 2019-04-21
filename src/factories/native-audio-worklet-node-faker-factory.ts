@@ -249,12 +249,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             addEventListener (...args: any[]): void {
                 return scriptProcessorNode.addEventListener(args[0], args[1], args[2]);
             },
-            connect (...args: any[]): any {
-                return <any> connectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
-            },
-            disconnect (...args: any[]): void {
-                return <any> disconnectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
-            },
+            connect: <TNativeAudioNode['connect']> connectMultipleOutputs.bind(null, outputAudioNodes),
+            disconnect: <TNativeAudioNode['disconnect']> disconnectMultipleOutputs.bind(null, outputAudioNodes),
             dispatchEvent (...args: any[]): boolean {
                 return scriptProcessorNode.dispatchEvent(args[0]);
             },

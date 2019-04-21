@@ -271,12 +271,9 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             [ outputChannelSplitterNode ] :
                             outputChannelMergerNodes;
 
-                        audioBufferSourceNode.connect = (...args: any[]) => {
-                            return <any> connectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
-                        };
-                        audioBufferSourceNode.disconnect = (...args: any[]) => {
-                            return <any> disconnectMultipleOutputs(outputAudioNodes, args[0], args[1], args[2]);
-                        };
+                        audioBufferSourceNode.connect = <TNativeAudioNode['connect']> connectMultipleOutputs.bind(null, outputAudioNodes);
+                        audioBufferSourceNode.disconnect =
+                            <TNativeAudioNode['disconnect']> disconnectMultipleOutputs.bind(null, outputAudioNodes);
 
                         return audioBufferSourceNode;
                     });
