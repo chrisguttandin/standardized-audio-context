@@ -1,4 +1,4 @@
-import { getNativeAudioContext } from '../helpers/get-native-audio-context';
+import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioNodeOptions, IMediaElementAudioSourceNode, IMediaElementAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TMediaElementAudioSourceNodeConstructorFactory, TNativeMediaElementAudioSourceNode } from '../types';
 
@@ -24,7 +24,7 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
         private _nativeMediaElementAudioSourceNode: TNativeMediaElementAudioSourceNode;
 
         constructor (context: T, options: IMediaElementAudioSourceOptions) {
-            const nativeContext = getNativeAudioContext(context);
+            const nativeContext = getNativeContext(context);
 
             if (isNativeOfflineAudioContext(nativeContext)) {
                 throw createNotSupportedError();
