@@ -1,12 +1,11 @@
 import { getAudioGraph } from '../helpers/get-audio-graph';
 import { IAudioParam, IAudioParamConnections, IMinimalBaseAudioContext } from '../interfaces';
-import { TAnyContext } from '../types';
 
 export function getAudioParamConnections <T extends IMinimalBaseAudioContext> (
-    anyContext: TAnyContext,
+    context: T,
     audioParam: IAudioParam
 ): IAudioParamConnections<T> {
-    const audioGraph = getAudioGraph<T>(anyContext);
+    const audioGraph = getAudioGraph<T>(context);
     const audioParamConnections = audioGraph.params.get(audioParam);
 
     if (audioParamConnections === undefined) {

@@ -18,7 +18,6 @@ import {
 } from '../interfaces';
 import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
 import {
-    TAnyContext,
     TAudioNodeConstructorFactory,
     TChannelCountMode,
     TChannelInterpretation,
@@ -67,7 +66,7 @@ const addConnectionToAudioParam = <T extends IMinimalBaseAudioContext>(
     output: number
 ) => {
     const audioNodeConnections = getAudioNodeConnections(source);
-    const audioParamConnections = getAudioParamConnections(<TAnyContext> source.context, destination);
+    const audioParamConnections = getAudioParamConnections(source.context, destination);
 
     audioNodeConnections.outputs.add([ destination, output ]);
     audioParamConnections.inputs.add([ source, output ]);
@@ -100,7 +99,7 @@ const deleteInputsOfAudioParam = <T extends IMinimalBaseAudioContext>(
     destination: IAudioParam,
     output?: number
 ) => {
-    const audioParamConnections = getAudioParamConnections(<TAnyContext> source.context, destination);
+    const audioParamConnections = getAudioParamConnections(source.context, destination);
 
     for (const connection of audioParamConnections.inputs) {
         if (connection[0] === source && (output === undefined || connection[1] === output)) {
