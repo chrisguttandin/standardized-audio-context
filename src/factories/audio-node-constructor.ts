@@ -150,7 +150,7 @@ const deleteConnectionAtOutput = <T extends IMinimalBaseAudioContext>(source: IA
             const [ destination ] = connection;
 
             if (isAudioNode(destination)) {
-                deleteInputsOfAudioNode(source, destination, connection[1], <number> connection[2]);
+                deleteInputsOfAudioNode(source, destination, connection[1], connection[2]);
             } else {
                 deleteInputsOfAudioParam(source, destination, connection[1]);
             }
