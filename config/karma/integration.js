@@ -62,7 +62,7 @@ module.exports = (config) => {
                 pattern: 'src/**',
                 served: false
             },
-            'test/integration/**/*.js'
+            'test/integration/unsupported.js'
         ],
 
         frameworks: [
@@ -71,7 +71,7 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            'test/integration/**/*.js': 'webpack'
+            'test/integration/unsupported.js': 'webpack'
         },
 
         singleRun: true,

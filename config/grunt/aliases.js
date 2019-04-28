@@ -9,7 +9,8 @@ const COMMON_TEST_TASKS = [
     'karma:test-firefox',
     'karma:test-opera',
     'karma:test-safari-legacy',
-    'karma:integration'
+    'karma:integration',
+    'sh:integration'
 ];
 
 module.exports = {

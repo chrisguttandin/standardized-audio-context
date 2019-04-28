@@ -7,5 +7,8 @@ module.exports = {
     },
     'lint': {
         cmd: 'tslint --config config/tslint/src.json --exclude src/browsernizr.ts --project src/tsconfig.json src/*.ts src/**/*.ts'
+    },
+    'test-integration': {
+        cmd: 'mocha --bail --require config/mocha/config-integration.js test/integration/memory.js'
     }
 };
