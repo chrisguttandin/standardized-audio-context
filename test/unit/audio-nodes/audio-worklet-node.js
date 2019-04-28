@@ -100,18 +100,20 @@ describe('AudioWorkletNode', () => {
                                 const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
 
                                 audioWorkletNode.port.onmessage = ({ data }) => {
-                                    audioWorkletNode.port.onmessage = null;
+                                    if ('options' in data) {
+                                        audioWorkletNode.port.onmessage = null;
 
-                                    expect(data.options).to.deep.equal({
-                                        channelCount: 2,
-                                        channelCountMode: 'explicit',
-                                        channelInterpretation: 'speakers',
-                                        numberOfInputs: 1,
-                                        numberOfOutputs: 1,
-                                        outputChannelCount: [ 2 ],
-                                        parameterData: { },
-                                        processorOptions: { }
-                                    });
+                                        expect(data.options).to.deep.equal({
+                                            channelCount: 2,
+                                            channelCountMode: 'explicit',
+                                            channelInterpretation: 'speakers',
+                                            numberOfInputs: 1,
+                                            numberOfOutputs: 1,
+                                            outputChannelCount: [ 2 ],
+                                            parameterData: { },
+                                            processorOptions: { }
+                                        });
+                                    }
                                 };
 
                                 audioWorkletNode.port.postMessage(null);
@@ -206,11 +208,13 @@ describe('AudioWorkletNode', () => {
                                         const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { parameterData });
 
                                         audioWorkletNode.port.onmessage = ({ data }) => {
-                                            audioWorkletNode.port.onmessage = null;
+                                            if ('options' in data) {
+                                                audioWorkletNode.port.onmessage = null;
 
-                                            expect(data.options.parameterData).to.deep.equal(parameterData);
+                                                expect(data.options.parameterData).to.deep.equal(parameterData);
 
-                                            done();
+                                                done();
+                                            }
                                         };
 
                                         audioWorkletNode.port.postMessage(null);
@@ -239,11 +243,13 @@ describe('AudioWorkletNode', () => {
                                         const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { processorOptions });
 
                                         audioWorkletNode.port.onmessage = ({ data }) => {
-                                            audioWorkletNode.port.onmessage = null;
+                                            if ('options' in data) {
+                                                audioWorkletNode.port.onmessage = null;
 
-                                            expect(data.options.processorOptions).to.deep.equal(processorOptions);
+                                                expect(data.options.processorOptions).to.deep.equal(processorOptions);
 
-                                            done();
+                                                done();
+                                            }
                                         };
 
                                         audioWorkletNode.port.postMessage(null);
@@ -332,11 +338,13 @@ describe('AudioWorkletNode', () => {
 
                                 it('should ignore the entry', (done) => {
                                     audioWorkletNode.port.onmessage = ({ data }) => {
-                                        audioWorkletNode.port.onmessage = null;
+                                        if ('options' in data) {
+                                            audioWorkletNode.port.onmessage = null;
 
-                                        expect(data.options.parameterData).to.deep.equal(parameterData);
+                                            expect(data.options.parameterData).to.deep.equal(parameterData);
 
-                                        done();
+                                            done();
+                                        }
                                     };
 
                                     audioWorkletNode.port.postMessage(null);

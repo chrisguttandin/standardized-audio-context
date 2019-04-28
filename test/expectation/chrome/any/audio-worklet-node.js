@@ -104,11 +104,13 @@ describe('AudioWorklet', () => {
             const audioWorkletNode = new AudioWorkletNode(audioContext, 'dependent-processor');
 
             audioWorkletNode.port.onmessage = ({ data }) => {
-                audioWorkletNode.port.onmessage = null;
+                if ('typeOfWindow' in data) {
+                    audioWorkletNode.port.onmessage = null;
 
-                expect(data.typeOfLibrary).to.equal('undefined');
+                    expect(data.typeOfLibrary).to.equal('undefined');
 
-                done();
+                    done();
+                }
             };
 
             audioWorkletNode.port.postMessage(null);

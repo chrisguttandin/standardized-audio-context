@@ -90,15 +90,13 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should expose the currentTime of the context', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if (data.currentTime === undefined) {
-                            return;
+                        if ('currentFrame' in data) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.currentTime).to.be.a('number');
+
+                            done();
                         }
-
-                        audioWorkletNode.port.onmessage = null;
-
-                        expect(data.currentTime).to.be.a('number');
-
-                        done();
                     };
 
                     audioWorkletNode.port.postMessage(null);
@@ -120,15 +118,13 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should not expose a global object', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if (data.typeOfGlobal === undefined) {
-                            return;
+                        if ('typeOfGlobal' in data) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.typeOfGlobal).to.equal('undefined');
+
+                            done();
                         }
-
-                        audioWorkletNode.port.onmessage = null;
-
-                        expect(data.typeOfGlobal).to.equal('undefined');
-
-                        done();
                     };
 
                     audioWorkletNode.port.postMessage(null);
@@ -150,15 +146,13 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should expose the sampleRate of the context', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if (data.sampleRate === undefined) {
-                            return;
+                        if ('sampleRate' in data) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.sampleRate).to.equal(context.sampleRate);
+
+                            done();
                         }
-
-                        audioWorkletNode.port.onmessage = null;
-
-                        expect(data.sampleRate).to.equal(context.sampleRate);
-
-                        done();
                     };
 
                     audioWorkletNode.port.postMessage(null);
@@ -180,15 +174,13 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should not expose a self object', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if (data.typeOfSelf === undefined) {
-                            return;
+                        if ('typeOfSelf' in data) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.typeOfSelf).to.equal('undefined');
+
+                            done();
                         }
-
-                        audioWorkletNode.port.onmessage = null;
-
-                        expect(data.typeOfSelf).to.equal('undefined');
-
-                        done();
                     };
 
                     audioWorkletNode.port.postMessage(null);
@@ -210,15 +202,13 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should not expose a window object', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if (data.typeOfWindow === undefined) {
-                            return;
+                        if ('typeOfWindow' in data) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.typeOfWindow).to.equal('undefined');
+
+                            done();
                         }
-
-                        audioWorkletNode.port.onmessage = null;
-
-                        expect(data.typeOfWindow).to.equal('undefined');
-
-                        done();
                     };
 
                     audioWorkletNode.port.postMessage(null);
