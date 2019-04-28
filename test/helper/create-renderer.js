@@ -104,6 +104,7 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
         channelMergerNode.disconnect(recorderScriptProcessorNode);
         recorderScriptProcessorNode.disconnect(context.destination);
 
+        bufferNode.onaudioprocess = null;
         recorderScriptProcessorNode.onaudioprocess = null;
     };
 
