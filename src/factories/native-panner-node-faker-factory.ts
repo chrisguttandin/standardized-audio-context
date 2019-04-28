@@ -1,6 +1,6 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
+import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { interceptConnections } from '../helpers/intercept-connections';
-import { INativeWaveShaperNodeFaker } from '../interfaces';
 import {
     TChannelCountMode,
     TChannelInterpretation,
@@ -107,9 +107,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
         inputGainNode.connect(pannerNode);
 
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        inputGainNode.connect(((<INativeWaveShaperNodeFaker> waveShaperNode).inputs === undefined)
-            ? waveShaperNode
-            : (<INativeWaveShaperNodeFaker> waveShaperNode).inputs[0]);
+        connectNativeAudioNodeToNativeAudioNode(inputGainNode, waveShaperNode, 0, 0);
 
         waveShaperNode.connect(orientationXGainNode);
         waveShaperNode.connect(orientationYGainNode);
