@@ -1,5 +1,5 @@
 /*!
- * modernizr v3.6.0
+ * modernizr v3.7.1
  * Build https://modernizr.com/download?-promises-typedarrays-webaudio-dontmin
  *
  * Copyright (c)
@@ -10,6 +10,7 @@
  *  Patrick Kettner
  *  Stu Cox
  *  Richard Herrera
+ *  Veeck
 
  * MIT License
  */
@@ -28,20 +29,19 @@ interface WindowWithPromise extends Window {
 declare var window: WindowWithPromise;
 
 export default (function(window: any){
+
   var tests: any[] = [];
   
 
   /**
-   *
    * ModernizrProto is the constructor for Modernizr
    *
    * @class
    * @access public
    */
-
   var ModernizrProto = {
     // The current version, dummy
-    _version: '3.6.0',
+    _version: '3.7.1',
 
     // Any settings that don't work as separate modules
     // can go in here as configuration.
@@ -100,20 +100,20 @@ export default (function(window: any){
    * @function is
    * @param {*} obj - A thing we want to check the type of
    * @param {string} type - A string to compare the typeof against
-   * @returns {boolean}
+   * @returns {boolean} true if the typeof the first parameter is exactly the specified type, false otherwise
    */
-
   function is(obj: any, type: any) {
     return typeof obj === type;
   }
+
   ;
 
   /**
    * Run through all tests and detect their support in the current UA.
    *
    * @access private
+   * @returns {void}
    */
-
   function testRunner() {
     var featureNames;
     var feature;
@@ -147,7 +147,6 @@ export default (function(window: any){
 
         // Run the test, or use the raw value if it's not a function
         result = is(feature.fn, 'function') ? feature.fn() : feature.fn;
-
 
         // Set each of the names on the Modernizr object
         for (nameIdx = 0; nameIdx < featureNames.length; nameIdx++) {
@@ -192,8 +191,8 @@ export default (function(window: any){
     "name": "Chromium dashboard - ES6 Promises",
     "href": "https://www.chromestatus.com/features/5681726336532480"
   },{
-    "name": "JavaScript Promises: There and back again - HTML5 Rocks",
-    "href": "http://www.html5rocks.com/en/tutorials/es6/promises/"
+    "name": "JavaScript Promises: an Introduction",
+    "href": "https://developers.google.com/web/fundamentals/primers/promises/"
   }]
 }
 !*/
@@ -226,11 +225,11 @@ Check if browser implements ECMAScript 6 Promises per specification.
   "tags": ["js"],
   "authors": ["Stanley Stuart (@fivetanley)"],
   "notes": [{
-    "name": "MDN documentation",
-    "href": "https://developer.mozilla.org/en-US/docs/JavaScript_typed_arrays"
+    "name": "MDN Docs",
+    "href": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays"
   },{
     "name": "Kronos spec",
-    "href": "https://www.khronos.org/registry/typedarray/specs/latest/"
+    "href": "http://www.ecma-international.org/ecma-262/6.0/#sec-typedarray-objects"
   }],
   "polyfills": ["joshuabell-polyfill"]
 }
@@ -264,7 +263,7 @@ Does not check for DataView support; use `Modernizr.dataview` for that.
   "builderAliases": ["audio_webaudio_api"],
   "authors": ["Addy Osmani"],
   "notes": [{
-    "name": "W3 Specification",
+    "name": "W3C Spec",
     "href": "https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html"
   }]
 }
@@ -302,3 +301,4 @@ Detects the older non standard webaudio API, (as opposed to the standards based 
 ;
 
 })(window);
+
