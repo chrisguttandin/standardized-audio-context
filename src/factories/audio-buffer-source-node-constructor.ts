@@ -1,5 +1,6 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
+import { setInternalState } from '../helpers/set-internal-state';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioBufferSourceNode,
@@ -63,7 +64,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
                 ? createAudioBufferSourceNodeRenderer()
                 : null);
 
-            super(context, nativeAudioBufferSourceNode, audioBufferSourceNodeRenderer);
+            super(context, 'passive', nativeAudioBufferSourceNode, audioBufferSourceNodeRenderer);
 
             this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
             this._isBufferNullified = false;
@@ -169,6 +170,17 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
             if (this._audioBufferSourceNodeRenderer !== null) {
                 this._audioBufferSourceNodeRenderer.start = (duration === undefined) ? [ when, offset ] : [ when, offset, duration ];
+            } else {
+                setInternalState(this, 'active');
+
+                const setInternalStateToInactive = () => {
+                    this._nativeAudioBufferSourceNode.removeEventListener('ended', setInternalStateToInactive);
+
+                    // @todo Determine a meaningful delay instead of just using one second.
+                    setTimeout(() => setInternalState(this, 'passive'), 1000);
+                };
+
+                this._nativeAudioBufferSourceNode.addEventListener('ended', setInternalStateToInactive);
             }
         }
 

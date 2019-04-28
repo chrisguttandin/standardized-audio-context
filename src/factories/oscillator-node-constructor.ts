@@ -1,4 +1,5 @@
 import { getNativeContext } from '../helpers/get-native-context';
+import { setInternalState } from '../helpers/set-internal-state';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioParam,
@@ -53,7 +54,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             const oscillatorNodeRenderer = <TOscillatorNodeRenderer<T>> ((isOffline) ? createOscillatorNodeRenderer() : null);
             const nyquist = context.sampleRate / 2;
 
-            super(context, nativeOscillatorNode, oscillatorNodeRenderer);
+            super(context, 'passive', nativeOscillatorNode, oscillatorNodeRenderer);
 
             // Bug #81: Edge & Safari do not export the correct values for maxValue and minValue.
             this._detune = createAudioParam(context, isOffline, nativeOscillatorNode.detune, absoluteValue, -absoluteValue);
@@ -121,6 +122,17 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
             if (this._oscillatorNodeRenderer !== null) {
                 this._oscillatorNodeRenderer.start = when;
+            } else {
+                setInternalState(this, 'active');
+
+                const setInternalStateToInactive = () => {
+                    this._nativeOscillatorNode.removeEventListener('ended', setInternalStateToInactive);
+
+                    // @todo Determine a meaningful delay instead of just using one second.
+                    setTimeout(() => setInternalState(this, 'passive'), 1000);
+                };
+
+                this._nativeOscillatorNode.addEventListener('ended', setInternalStateToInactive);
             }
         }
 

@@ -1,4 +1,4 @@
-import { AUDIO_GRAPHS, AUDIO_NODE_STORE, CONTEXT_STORE } from '../../src/globals';
+import { AUDIO_GRAPHS, AUDIO_NODE_STATE_STORE, AUDIO_NODE_STORE, AUDIO_NODE_SYMBOL_STORE, CONTEXT_STORE, EVENT_LISTENERS } from '../../src/globals';
 
 export const createScriptProcessor = (context, bufferSize, numberOfInputChannels, numberOfOutputChannels) => {
     const nativeContext = CONTEXT_STORE.get(context);
@@ -11,6 +11,19 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
                     target[property].call(target, AUDIO_NODE_STORE.get(destination), ...args);
 
                     if (property === 'connect') {
+                        if (AUDIO_NODE_STATE_STORE.get(destination) === 'passive') {
+                            const eventListeners = EVENT_LISTENERS.get(destination);
+
+                            AUDIO_NODE_STATE_STORE.set(destination, 'active');
+
+                            eventListeners.forEach((eventListener) => eventListener('active'));
+                        }
+
+                        const audioGraph = AUDIO_GRAPHS.get(context);
+                        const { inputs } = audioGraph.nodes.get(destination);
+
+                        inputs[ args[1] || 0 ].add([ destination, args[0] || 0 ]);
+
                         return destination;
                     }
                 };
@@ -31,7 +44,10 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
 
     });
 
+    AUDIO_NODE_STATE_STORE.set(scriptProcessorNodeProxy, 'active');
     AUDIO_NODE_STORE.set(scriptProcessorNodeProxy, scriptProcessorNode);
+    AUDIO_NODE_SYMBOL_STORE.set(scriptProcessorNodeProxy, Symbol('ScriptProcessorNode'));
+    EVENT_LISTENERS.set(scriptProcessorNodeProxy, new Set());
 
     const audioGraph = AUDIO_GRAPHS.get(context);
 

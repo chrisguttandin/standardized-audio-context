@@ -33,7 +33,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
             const mergedOptions = <IAudioNodeOptions & IMediaStreamAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
             const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, mergedOptions);
 
-            super(context, nativeMediaStreamAudioSourceNode, <TAudioNodeRenderer<T>> null);
+            super(context, 'active', nativeMediaStreamAudioSourceNode, <TAudioNodeRenderer<T>> null);
 
             // Bug #63: Edge & Firefox do not expose the mediaStream yet.
             // Bug #151: The mediaStream gets cloned for Firefox but luckily it doesn't expose it at the same time.

@@ -31,7 +31,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             AUDIO_GRAPHS.set(context, audioGraph);
             AUDIO_GRAPHS.set(nativeContext, audioGraph);
 
-            super(context, nativeAudioDestinationNode, audioDestinationNodeRenderer);
+            super(context, 'passive', nativeAudioDestinationNode, audioDestinationNodeRenderer);
 
             this._isNodeOfNativeOfflineAudioContext = isOffline;
             this._nativeAudioDestinationNode = nativeAudioDestinationNode;

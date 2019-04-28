@@ -7,9 +7,21 @@ import {
     IMinimalBaseAudioContext,
     INativeAudioNodeFaker
 } from './interfaces';
-import { TAnyContext, TNativeAudioNode, TNativeAudioParam, TNativeAudioWorkletNode, TNativeContext } from './types';
+import {
+    TAnyContext,
+    TInternalState,
+    TInternalStateEventListener,
+    TNativeAudioNode,
+    TNativeAudioParam,
+    TNativeAudioWorkletNode,
+    TNativeContext
+} from './types';
+
+export const AUDIO_NODE_STATE_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, TInternalState> = new WeakMap();
 
 export const AUDIO_NODE_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, TNativeAudioNode | INativeAudioNodeFaker> = new WeakMap();
+
+export const AUDIO_NODE_SYMBOL_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, symbol> = new WeakMap();
 
 export const AUDIO_GRAPHS: WeakMap<TAnyContext, IAudioGraph<IMinimalBaseAudioContext>> = new WeakMap();
 
@@ -20,6 +32,8 @@ export const BACKUP_NATIVE_CONTEXT_STORE: WeakMap<TNativeContext, TNativeContext
 export const CONTEXT_STORE: WeakMap<IMinimalBaseAudioContext, TNativeContext> = new WeakMap();
 
 export const DETACHED_ARRAY_BUFFERS: WeakSet<ArrayBuffer> = new WeakSet();
+
+export const EVENT_LISTENERS: WeakMap<IAudioNode<IMinimalBaseAudioContext>, Set<TInternalStateEventListener>> = new WeakMap();
 
 // This clunky name is borrowed from the spec. :-)
 export const NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS: WeakMap<

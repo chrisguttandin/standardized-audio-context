@@ -34,7 +34,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
                 ? createAnalyserNodeRenderer()
                 : null);
 
-            super(context, nativeAnalyserNode, analyserNodeRenderer);
+            super(context, 'passive', nativeAnalyserNode, analyserNodeRenderer);
 
             this._nativeAnalyserNode = nativeAnalyserNode;
         }

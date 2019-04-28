@@ -1,12 +1,12 @@
 import { AUDIO_PARAM_STORE } from '../globals';
 import { getAudioGraph } from '../helpers/get-audio-graph';
-import { IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext } from '../interfaces';
-import { TAudioParamFactoryFactory } from '../types';
+import { IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
+import { TAudioParamFactoryFactory, TNativeAudioParam } from '../types';
 
 const addAudioParam = <T extends IMinimalBaseAudioContext>(
     context: T,
     audioParam: IAudioParam,
-    audioParamRenderer: null | IAudioParamRenderer
+    audioParamRenderer: T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null
 ) => {
     const audioGraph = getAudioGraph(context);
 
@@ -14,7 +14,13 @@ const addAudioParam = <T extends IMinimalBaseAudioContext>(
 };
 
 export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioParamRenderer, nativeAudioContextConstructor) => {
-    return (context, isAudioParamOfOfflineAudioContext, nativeAudioParam, maxValue = null, minValue = null) => {
+    return <T extends IMinimalBaseAudioContext>(
+        context: T,
+        isAudioParamOfOfflineAudioContext: boolean,
+        nativeAudioParam: TNativeAudioParam,
+        maxValue: null | number = null,
+        minValue: null | number = null
+    ): IAudioParam => {
         const audioParamRenderer = (isAudioParamOfOfflineAudioContext) ? createAudioParamRenderer() : null;
         const audioParam = {
             get defaultValue (): number {
@@ -133,7 +139,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
 
         AUDIO_PARAM_STORE.set(audioParam, nativeAudioParam);
 
-        addAudioParam(context, audioParam, audioParamRenderer);
+        addAudioParam(context, audioParam, <T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer);
 
         return audioParam;
     };

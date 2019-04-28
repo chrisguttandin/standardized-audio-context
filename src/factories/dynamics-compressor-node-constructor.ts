@@ -53,7 +53,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
                 ? createDynamicsCompressorNodeRenderer()
                 : null);
 
-            super(context, nativeDynamicsCompressorNode, dynamicsCompressorNodeRenderer);
+            super(context, 'passive', nativeDynamicsCompressorNode, dynamicsCompressorNodeRenderer);
 
             // Bug #110: Edge does not export the correct values for maxValue and minValue.
             this._attack = createAudioParam(context, isOffline, nativeDynamicsCompressorNode.attack, 1, 0);

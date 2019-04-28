@@ -101,7 +101,11 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                 ? createAudioWorkletNodeRenderer(name, mergedOptions, processorDefinition)
                 : null);
 
-            super(context, nativeAudioWorkletNode, audioWorkletNodeRenderer);
+            /*
+             * @todo Add a mechanism to switch an AudioWorkletNode to passive once the process() function of the AudioWorkletProcessor
+             * returns false.
+             */
+            super(context, 'active', nativeAudioWorkletNode, audioWorkletNodeRenderer);
 
             const parameters: [ string, IAudioParam ][] = [ ];
 

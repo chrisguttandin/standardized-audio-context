@@ -30,7 +30,7 @@ export const createChannelSplitterNodeConstructor: TChannelSplitterNodeConstruct
                 ? createChannelSplitterNodeRenderer()
                 : null);
 
-            super(context, nativeChannelSplitterNode, channelSplitterNodeRenderer);
+            super(context, 'passive', nativeChannelSplitterNode, channelSplitterNodeRenderer);
         }
 
     };

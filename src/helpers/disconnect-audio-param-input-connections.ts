@@ -10,10 +10,12 @@ export const disconnectAudioParamInputConnections = <T extends IMinimalBaseAudio
     if (audioParamConnections !== undefined) {
         audioParamConnections
             .inputs
-            .forEach(([ source, output ]) => {
-                source.disconnect(audioParam, output);
+            .forEach(([ source, , output ]) => {
+                if (typeof source !== 'symbol') {
+                    source.disconnect(audioParam, output);
 
-                disconnectAudioNodeInputConnections(audioGraph, source);
+                    disconnectAudioNodeInputConnections(audioGraph, source);
+                }
             });
     }
 };

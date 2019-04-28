@@ -32,7 +32,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const convolverNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createConvolverNodeRenderer() : null);
 
-            super(context, nativeConvolverNode, convolverNodeRenderer);
+            super(context, 'passive', nativeConvolverNode, convolverNodeRenderer);
 
             this._isBufferNullified = false;
             this._nativeConvolverNode = nativeConvolverNode;
