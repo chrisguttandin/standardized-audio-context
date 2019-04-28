@@ -37,8 +37,8 @@ describe('AudioContext', () => {
             audioContext = new AudioContext();
         });
 
-        // Bug #150 Only Chrome Canary and Firefox support setting the sampleRate.
-        if (/Chrome\/76/.test(navigator.userAgent) || /Firefox/.test(navigator.userAgent)) {
+        // Bug #150 Only Chrome and Firefox support setting the sampleRate.
+        if ((/Chrome/.test(navigator.userAgent) && !/Edge\//.test(navigator.userAgent) && !/OPR\//.test(navigator.userAgent)) || /Firefox/.test(navigator.userAgent)) {
 
             it('should allow to set the sampleRate to 8 kHz', () => {
                 const sampleRate = 8000;

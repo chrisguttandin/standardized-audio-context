@@ -10,20 +10,6 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    describe('without a constructed AudioContext', () => {
-
-        // bug #150
-
-        it('should not allow to set the sampleRate', () => {
-            const sampleRate = 16000;
-
-            audioContext = new AudioContext({ sampleRate });
-
-            expect(audioContext.sampleRate).to.not.equal(sampleRate);
-        });
-
-    });
-
     describe('with a constructed AudioContext', () => {
 
         describe('outputLatency', () => {
@@ -42,26 +28,6 @@ describe('audioContextConstructor', () => {
 
             it('should be set to running right away', () => {
                 expect(audioContext.state).to.equal('running');
-            });
-
-        });
-
-        describe('close()', () => {
-
-            // bug #50
-
-            it('should not allow to create AudioNodes on a closed context', (done) => {
-                audioContext
-                    .close()
-                    .then(() => {
-                        audioContext.createGain();
-                    })
-                    .catch(() => {
-                        // Create a closeable AudioContext to align the behaviour with other tests.
-                        audioContext = new AudioContext();
-
-                        done();
-                    });
             });
 
         });

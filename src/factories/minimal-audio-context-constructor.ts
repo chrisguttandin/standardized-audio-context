@@ -37,7 +37,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 );
             }
 
-            // Bug #150 Only Chrome Canary and Firefox support setting the sampleRate.
+            // Bug #150 Only Chrome and Firefox support setting the sampleRate.
             if (options.sampleRate !== undefined && nativeAudioContext.sampleRate !== options.sampleRate) {
                 throw createNotSupportedError();
             }
