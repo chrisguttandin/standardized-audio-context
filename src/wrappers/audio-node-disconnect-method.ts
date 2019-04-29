@@ -2,33 +2,74 @@ import { isNativeAudioNode } from '../guards/native-audio-node';
 import { TNativeAudioNode, TNativeAudioParam } from '../types';
 
 export const wrapAudioNodeDisconnectMethod = (nativeAudioNode: TNativeAudioNode): void => {
-    const destinations = new Map();
+    const connections = new Map<TNativeAudioNode | TNativeAudioParam, { input: number; output: number }[]>();
 
-    nativeAudioNode.connect = ((connect) => {
-        return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0) => {
-            destinations.set(destination, { input, output });
+    nativeAudioNode.connect = <TNativeAudioNode['connect']> ((connect) => {
+        return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0): void | TNativeAudioNode => {
+            const returnValue = (isNativeAudioNode(destination))
+                ? connect(destination, output, input)
+                : connect(destination, output);
 
-            if (isNativeAudioNode(destination)) {
-                // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
-                return (<any> connect).call(nativeAudioNode, destination, output, input);
+            // Save the new connection only if the calls to connect above didn't throw an error.
+            const connectionsToDestination = connections.get(destination);
+
+            if (connectionsToDestination === undefined) {
+                connections.set(destination, [ { input, output } ]);
+            } else {
+                if (connectionsToDestination.every((connection) => (connection.input !== input || connection.output !== output))) {
+                    connectionsToDestination.push({ input, output });
+                }
             }
 
-            return connect.call(nativeAudioNode, destination, output);
+            return returnValue;
         };
-    })(nativeAudioNode.connect);
+    })(nativeAudioNode.connect.bind(nativeAudioNode));
 
     nativeAudioNode.disconnect = ((disconnect) => {
-        return (outputOrDestination?: number | TNativeAudioNode | TNativeAudioParam, _output?: number, _input?: number) => {
+        return (outputOrDestination?: number | TNativeAudioNode | TNativeAudioParam, output?: number, input?: number): void => {
             disconnect.apply(nativeAudioNode);
 
             if (outputOrDestination === undefined) {
-                destinations.clear();
-            } else if (destinations.has(outputOrDestination)) {
-                destinations.delete(outputOrDestination);
+                connections.clear();
+            } else if (typeof outputOrDestination === 'number') {
+                for (const [ destination, connectionsToDestination ] of connections) {
+                    const filteredConnections = connectionsToDestination
+                        .filter((connection) => (connection.output !== outputOrDestination));
 
-                destinations.forEach(({ input, output }, dstntn) => {
-                    nativeAudioNode.connect(dstntn, input, output);
-                });
+                    if (filteredConnections.length === 0) {
+                        connections.delete(destination);
+                    } else {
+                        connections.set(destination, filteredConnections);
+                    }
+                }
+            } else if (connections.has(outputOrDestination)) {
+                if (output === undefined) {
+                    connections.delete(outputOrDestination);
+                } else {
+                    const connectionsToDestination = connections.get(outputOrDestination);
+
+                    if (connectionsToDestination !== undefined) {
+                        const filteredConnections = connectionsToDestination
+                            .filter((connection) => (connection.output !== output && (connection.input !== input || input === undefined)));
+
+                        if (filteredConnections.length === 0) {
+                            connections.delete(outputOrDestination);
+                        } else {
+                            connections.set(outputOrDestination, filteredConnections);
+                        }
+                    }
+                }
+            }
+
+            for (const [ destination, connectionsToDestination ] of connections) {
+                connectionsToDestination
+                    .forEach((connection) => {
+                        if (isNativeAudioNode(destination)) {
+                            nativeAudioNode.connect(destination, connection.output, connection.input);
+                        } else {
+                            nativeAudioNode.connect(destination, connection.output);
+                        }
+                    });
             }
         };
     })(nativeAudioNode.disconnect);
