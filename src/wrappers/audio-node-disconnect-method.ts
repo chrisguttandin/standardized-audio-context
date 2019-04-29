@@ -1,3 +1,4 @@
+import { isNativeAudioNode } from '../guards/native-audio-node';
 import { TNativeAudioNode, TNativeAudioParam } from '../types';
 
 export const wrapAudioNodeDisconnectMethod = (nativeAudioNode: TNativeAudioNode): void => {
@@ -7,7 +8,7 @@ export const wrapAudioNodeDisconnectMethod = (nativeAudioNode: TNativeAudioNode)
         return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0) => {
             destinations.set(destination, { input, output });
 
-            if (destination instanceof AudioNode) {
+            if (isNativeAudioNode(destination)) {
                 // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
                 return (<any> connect).call(nativeAudioNode, destination, output, input);
             }

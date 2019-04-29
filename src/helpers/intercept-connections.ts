@@ -1,3 +1,4 @@
+import { isNativeAudioNode } from '../guards/native-audio-node';
 import { TNativeAudioNode, TNativeAudioParam } from '../types';
 
 export const interceptConnections = <T extends Object> (
@@ -10,7 +11,7 @@ export const interceptConnections = <T extends Object> (
         output: number = 0, // tslint:disable-line:no-inferrable-types
         input: number = 0 // tslint:disable-line:no-inferrable-types
     ) => {
-        if (destination instanceof AudioNode) {
+        if (isNativeAudioNode(destination)) {
             // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
             (<any> interceptor.connect).call(interceptor, destination, output, input);
 
