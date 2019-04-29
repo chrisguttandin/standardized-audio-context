@@ -334,7 +334,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
 
             const nativeContext = getNativeContext(context);
 
-            // Bug #12: Firefox and Safari do not support to disconnect a specific destination.
+            // Bug #12: Safari does not support to disconnect a specific destination.
             // @todo Make sure this is not used with an OfflineAudioContext.
             if (!isNativeOfflineAudioContext(nativeContext) && true !== cacheTestResult(testAudioNodeDisconnectMethodSupport, () => {
                 return testAudioNodeDisconnectMethodSupport(nativeContext);
