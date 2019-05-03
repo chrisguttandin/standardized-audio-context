@@ -114,6 +114,11 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
         // Add an additional delay of 8192 samples to the startTime. That's especially useful for testing the MediaElementAudioSourceNode.
         const startTimeOffset = 8192;
         const startTime = Math.round((impulseStartTime * sampleRate) + startTimeOffset) / sampleRate;
+        // This renderer is impatient. If it is not done within a second it will abort the process and try again.
+        const timeoutId = setTimeout(() => {
+            disconnect();
+            reject(new Error('Recording the sample was not possible in one second.'));
+        }, 1000);
 
         let channelData = null;
         let impulseOffset = null;
@@ -157,6 +162,7 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
                     if (impulseChannelData.slice(index, index + 1)[0] === 1) {
                         channelData = playbackChannelData.slice(index, index + length);
                     } else {
+                        clearTimeout(timeoutId);
                         disconnect();
                         reject(new Error('Recording the second impulse was not possible.'));
                     }
@@ -165,6 +171,7 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
                     const impulseChannelData = inputBuffer.getChannelData(0);
                     const index = expectedThirdImpulseOffset - lastPlaybackOffset;
 
+                    clearTimeout(timeoutId);
                     disconnect();
 
                     if (impulseChannelData.slice(index, index + 1)[0] === 1) {
@@ -173,6 +180,7 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
                         reject(new Error('Recording the third impulse was not possible.'));
                     }
                 } else if (lastPlaybackOffset >= expectedPlaybackOffset + startTimeOffset) {
+                    clearTimeout(timeoutId);
                     disconnect();
                     reject(new Error('Rendering the result was not possible.'));
                 }
