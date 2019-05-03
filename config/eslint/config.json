@@ -4,6 +4,7 @@
     },
     "extends": "eslint-config-holy-grail",
     "rules": {
-        "no-sync": 0
+        "no-sync": "off",
+        "node/no-missing-require": "off"
     }
 }

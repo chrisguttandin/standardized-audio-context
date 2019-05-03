@@ -8,6 +8,8 @@
         "expect": "readonly"
     },
     "rules": {
-        "no-unused-expressions": 0
+        "no-unused-expressions": "off",
+        "node/file-extension-in-import": "off",
+        "node/no-missing-require": "off"
     }
 }
