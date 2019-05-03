@@ -1,24 +1,15 @@
 import { NODE_TO_PROCESSOR_MAPS } from '../globals';
-import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { IAudioNode, IAudioWorkletProcessor, IMinimalBaseAudioContext } from '../interfaces';
 import { TNativeAudioWorkletNode, TNativeOfflineAudioContext } from '../types';
+import { getNativeAudioNode } from './get-native-audio-node';
+import { getValueForKey } from './get-value-for-key';
 
 export const getAudioWorkletProcessor = <T extends IMinimalBaseAudioContext>(
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     proxy: IAudioNode<T>
 ): Promise<IAudioWorkletProcessor> => {
-    const nodeToProcessorMap = NODE_TO_PROCESSOR_MAPS.get(nativeOfflineAudioContext);
-
-    if (nodeToProcessorMap === undefined) {
-        throw new Error('Missing the processor map for the given OfflineAudioContext.');
-    }
-
+    const nodeToProcessorMap = getValueForKey(NODE_TO_PROCESSOR_MAPS, nativeOfflineAudioContext);
     const nativeAudioWorkletNode = getNativeAudioNode<T, TNativeAudioWorkletNode>(proxy);
-    const audioWorkletProcessorPromise = nodeToProcessorMap.get(nativeAudioWorkletNode);
 
-    if (audioWorkletProcessorPromise === undefined) {
-        throw new Error('Missing the promise for the given AudioWorkletNode.');
-    }
-
-    return audioWorkletProcessorPromise;
+    return getValueForKey(nodeToProcessorMap, nativeAudioWorkletNode);
 };

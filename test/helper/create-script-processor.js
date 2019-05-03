@@ -1,4 +1,4 @@
-import { AUDIO_GRAPHS, AUDIO_NODE_STATE_STORE, AUDIO_NODE_STORE, AUDIO_NODE_SYMBOL_STORE, CONTEXT_STORE, EVENT_LISTENERS } from '../../src/globals';
+import { AUDIO_GRAPHS, AUDIO_NODE_STATE_STORE, AUDIO_NODE_STORE, CONTEXT_STORE, EVENT_LISTENERS } from '../../src/globals';
 
 export const createScriptProcessor = (context, bufferSize, numberOfInputChannels, numberOfOutputChannels) => {
     const nativeContext = CONTEXT_STORE.get(context);
@@ -20,9 +20,9 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
                         }
 
                         const audioGraph = AUDIO_GRAPHS.get(context);
-                        const { inputs } = audioGraph.nodes.get(destination);
+                        const { activeInputs } = audioGraph.nodes.get(destination);
 
-                        inputs[ args[1] || 0 ].add([ destination, args[0] || 0 ]);
+                        activeInputs[ args[1] || 0 ].add([ destination, args[0] || 0 ]);
 
                         return destination;
                     }
@@ -46,7 +46,6 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
 
     AUDIO_NODE_STATE_STORE.set(scriptProcessorNodeProxy, 'active');
     AUDIO_NODE_STORE.set(scriptProcessorNodeProxy, scriptProcessorNode);
-    AUDIO_NODE_SYMBOL_STORE.set(scriptProcessorNodeProxy, Symbol('ScriptProcessorNode'));
     EVENT_LISTENERS.set(scriptProcessorNodeProxy, new Set());
 
     const audioGraph = AUDIO_GRAPHS.get(context);
@@ -55,7 +54,7 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
         throw new Error('Missing the audio graph of the given context.');
     }
 
-    const audioNodeConnections = { inputs: [ new Set() ], outputs: new Set(), renderer: null };
+    const audioNodeConnections = { activeInputs: [ new Set() ], outputs: new Set(), passiveInputs: new WeakMap(), renderer: null };
 
     audioGraph.nodes.set(scriptProcessorNode, audioNodeConnections);
     audioGraph.nodes.set(scriptProcessorNodeProxy, audioNodeConnections);

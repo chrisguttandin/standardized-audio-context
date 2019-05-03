@@ -10,7 +10,7 @@ const addAudioParam = <T extends IMinimalBaseAudioContext>(
 ) => {
     const audioGraph = getAudioGraph(context);
 
-    audioGraph.params.set(audioParam, { inputs: new Set(), renderer: audioParamRenderer });
+    audioGraph.params.set(audioParam, { activeInputs: new Set(), passiveInputs: new WeakMap(), renderer: audioParamRenderer });
 };
 
 export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioParamRenderer, nativeAudioContextConstructor) => {

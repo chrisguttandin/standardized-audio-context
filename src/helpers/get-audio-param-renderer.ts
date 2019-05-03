@@ -1,5 +1,5 @@
-import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
 import { IAudioParam, IAudioParamRenderer, IMinimalOfflineAudioContext } from '../interfaces';
+import { getAudioParamConnections } from './get-audio-param-connections';
 
 export function getAudioParamRenderer <T extends IMinimalOfflineAudioContext> (context: T, audioParam: IAudioParam): IAudioParamRenderer {
     const audioParamConnections = getAudioParamConnections(context, audioParam);

@@ -1,5 +1,5 @@
-import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { IAudioNode, IAudioNodeRenderer, IMinimalOfflineAudioContext } from '../interfaces';
+import { getAudioNodeConnections } from './get-audio-node-connections';
 
 export const getAudioNodeRenderer = <T extends IMinimalOfflineAudioContext>(
     audioNode: IAudioNode<T>

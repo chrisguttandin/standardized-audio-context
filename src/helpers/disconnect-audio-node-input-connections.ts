@@ -15,17 +15,16 @@ export const disconnectAudioNodeInputConnections = <T extends IMinimalBaseAudioC
     const audioNodeConnections = audioGraph.nodes.get(audioNode);
 
     if (audioNodeConnections !== undefined) {
-        const numberOfInputs = audioNodeConnections.inputs.length;
+        const activeInputs = audioNodeConnections.activeInputs;
+        const numberOfInputs = activeInputs.length;
 
         for (let i = 0; i < numberOfInputs; i += 1) {
-            const connections = audioNodeConnections.inputs[i];
+            const connections = activeInputs[i];
 
-            for (const [ source, , output ] of connections) {
-                if (typeof source !== 'symbol') {
-                    source.disconnect(audioNode, output, i);
+            for (const [ source, output ] of connections) {
+                source.disconnect(audioNode, output, i);
 
-                    disconnectAudioNodeInputConnections(audioGraph, source);
-                }
+                disconnectAudioNodeInputConnections(audioGraph, source);
             }
         }
 

@@ -29,7 +29,6 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             const audioGraph = { audioWorkletGlobalScope: null, nodes: new WeakMap(), params: new WeakMap() };
 
             AUDIO_GRAPHS.set(context, audioGraph);
-            AUDIO_GRAPHS.set(nativeContext, audioGraph);
 
             super(context, 'passive', nativeAudioDestinationNode, audioDestinationNodeRenderer);
 

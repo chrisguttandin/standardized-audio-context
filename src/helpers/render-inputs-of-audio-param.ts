@@ -1,7 +1,7 @@
-import { getAudioNodeRenderer } from '../helpers/get-audio-node-renderer';
-import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
-import { IAudioNode, IAudioParam, IMinimalOfflineAudioContext } from '../interfaces';
-import { TInternalStateEventListener, TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
+import { IAudioParam, IMinimalOfflineAudioContext } from '../interfaces';
+import { TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
+import { getAudioNodeRenderer } from './get-audio-node-renderer';
+import { getAudioParamConnections } from './get-audio-param-connections';
 
 export const renderInputsOfAudioParam = <T extends IMinimalOfflineAudioContext>(
     context: T,
@@ -13,14 +13,9 @@ export const renderInputsOfAudioParam = <T extends IMinimalOfflineAudioContext>(
 
     return Promise
         .all(Array
-            .from(audioParamConnections.inputs)
-            .filter((connection): connection is [ IAudioNode<T>, null | TInternalStateEventListener, number ] => {
-                return (typeof connection[0] !== 'symbol');
-            })
-            .map(([ source, , output ]) => {
-                const audioNodeRenderer = getAudioNodeRenderer(source);
-
-                return audioNodeRenderer
+            .from(audioParamConnections.activeInputs)
+            .map(([ source, output ]) => {
+                return getAudioNodeRenderer(source)
                     .render(source, nativeOfflineAudioContext)
                     .then((node) => node.connect(nativeAudioParam, output));
             }));

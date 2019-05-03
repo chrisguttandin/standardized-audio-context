@@ -1,7 +1,7 @@
-import { getNativeAudioParam } from '../helpers/get-native-audio-param';
-import { renderInputsOfAudioParam } from '../helpers/render-inputs-of-audio-param';
 import { IAudioParam, IMinimalOfflineAudioContext } from '../interfaces';
 import { TNativeAudioParam, TNativeOfflineAudioContext } from '../types';
+import { getNativeAudioParam } from './get-native-audio-param';
+import { renderInputsOfAudioParam } from './render-inputs-of-audio-param';
 
 export const connectAudioParam = <T extends IMinimalOfflineAudioContext>(
     context: T,
