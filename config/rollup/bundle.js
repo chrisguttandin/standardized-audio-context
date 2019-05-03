@@ -1,6 +1,6 @@
 import babel from 'rollup-plugin-babel';
 
-export default {
+export default { // eslint-disable-line import/no-default-export
     input: 'build/es2018/module.js',
     output: {
         file: 'build/es5/bundle.js',

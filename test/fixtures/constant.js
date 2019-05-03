@@ -1,1 +1,1 @@
-export default 2;
+export const constant = 2;
