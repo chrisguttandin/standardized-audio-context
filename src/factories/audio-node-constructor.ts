@@ -1,5 +1,5 @@
 import { EventTarget } from '../event-target';
-import { AUDIO_NODE_STATE_STORE, AUDIO_NODE_STORE, AUXILIARY_GAIN_NODE_STORE, EVENT_LISTENERS } from '../globals';
+import { ACTIVE_AUDIO_NODE_STORE, AUDIO_NODE_STORE, AUXILIARY_GAIN_NODE_STORE, EVENT_LISTENERS } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
 import { isAudioWorkletNode } from '../guards/audio-worklet-node';
@@ -16,6 +16,8 @@ import { getNativeAudioParam } from '../helpers/get-native-audio-param';
 import { getNativeContext } from '../helpers/get-native-context';
 import { getValueForKey } from '../helpers/get-value-for-key';
 import { insertElementInSet } from '../helpers/insert-element-in-set';
+import { isActiveAudioNode } from '../helpers/is-active-audio-node';
+import { isPassiveAudioNode } from '../helpers/is-passive-audio-node';
 import { pickElementFromSet } from '../helpers/pick-element-from-set';
 import { setInternalState } from '../helpers/set-internal-state';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
@@ -199,7 +201,7 @@ const addConnectionToAudioNodeOfAudioContext = <T extends IMinimalBaseAudioConte
             addActiveInputConnectionToAudioNode(activeInputs, source, partialConnection);
             connectNativeAudioNodeToNativeAudioNode(nativeSourceAudioNode, nativeDestinationAudioNode, output, input);
 
-            if (AUDIO_NODE_STATE_STORE.get(destination) === 'passive') {
+            if (isPassiveAudioNode(destination)) {
                 setInternalState(destination, 'active');
             }
         } else if (type === 'passive') {
@@ -208,7 +210,7 @@ const addConnectionToAudioNodeOfAudioContext = <T extends IMinimalBaseAudioConte
             addPassiveInputConnectionToAudioNode(passiveInputs, input, partialConnection);
             disconnectNativeAudioNodeFromNativeAudioNode(nativeSourceAudioNode, nativeDestinationAudioNode, output, input);
 
-            if (AUDIO_NODE_STATE_STORE.get(destination) === 'active') {
+            if (isActiveAudioNode(destination)) {
                 setInternalStateToPassiveWhenNecessary(destination, activeInputs);
             }
         }
@@ -216,7 +218,7 @@ const addConnectionToAudioNodeOfAudioContext = <T extends IMinimalBaseAudioConte
 
     eventListeners.add(eventListener);
 
-    if (AUDIO_NODE_STATE_STORE.get(source) === 'active') {
+    if (isActiveAudioNode(source)) {
         addActiveInputConnectionToAudioNode(activeInputs, source, [ output, input, eventListener ]);
     } else {
         addPassiveInputConnectionToAudioNode(passiveInputs, input, [ source, output, eventListener ]);
@@ -268,7 +270,7 @@ const addConnectionToAudioParamOfAudioContext = <T extends IMinimalBaseAudioCont
 
     eventListeners.add(eventListener);
 
-    if (AUDIO_NODE_STATE_STORE.get(source) === 'active') {
+    if (isActiveAudioNode(source)) {
         addActiveInputConnectionToAudioParam(activeInputs, source, [ output, null]);
     } else {
         addPassiveInputConnectionToAudioParam(passiveInputs, [ source, output, null ]);
@@ -363,7 +365,7 @@ const deleteInputsOfAudioNode = <T extends IMinimalBaseAudioContext>(
         }
     }
 
-    if (AUDIO_NODE_STATE_STORE.get(destination) === 'active') {
+    if (isActiveAudioNode(destination)) {
         const { activeInputs } = getAudioNodeConnections(destination);
 
         setInternalStateToPassiveWhenNecessary(destination, activeInputs);
@@ -474,7 +476,10 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                 wrapAudioNodeDisconnectMethod(nativeAudioNode);
             }
 
-            AUDIO_NODE_STATE_STORE.set(this, internalState);
+            if (internalState === 'active') {
+                ACTIVE_AUDIO_NODE_STORE.add(this);
+            }
+
             AUDIO_NODE_STORE.set(this, nativeAudioNode);
             EVENT_LISTENERS.set(this, new Set());
 
@@ -534,12 +539,10 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                         input
                     );
 
-                    if (isOffline || AUDIO_NODE_STATE_STORE.get(this) === 'passive') {
+                    if (isOffline || isPassiveAudioNode(this)) {
                         this._nativeAudioNode.disconnect(...connection);
-                    } else {
-                        if (AUDIO_NODE_STATE_STORE.get(destination) === 'passive') {
-                            setInternalState(destination, 'active');
-                        }
+                    } else if (isPassiveAudioNode(destination)) {
+                        setInternalState(destination, 'active');
                     }
 
                     // An AudioWorklet needs a connection because it otherwise may truncate the input array.
@@ -596,7 +599,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             try {
                 this._nativeAudioNode.connect(nativeAudioParam, output);
 
-                if (isOffline || AUDIO_NODE_STATE_STORE.get(this) === 'passive') {
+                if (isOffline || isPassiveAudioNode(this)) {
                     this._nativeAudioNode.disconnect(nativeAudioParam, output);
                 }
             } catch (err) {

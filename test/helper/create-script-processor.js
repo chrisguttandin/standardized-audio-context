@@ -1,4 +1,4 @@
-import { AUDIO_GRAPHS, AUDIO_NODE_STATE_STORE, AUDIO_NODE_STORE, CONTEXT_STORE, EVENT_LISTENERS } from '../../src/globals';
+import { ACTIVE_AUDIO_NODE_STORE, AUDIO_GRAPHS, AUDIO_NODE_STORE, CONTEXT_STORE, EVENT_LISTENERS } from '../../src/globals';
 
 export const createScriptProcessor = (context, bufferSize, numberOfInputChannels, numberOfOutputChannels) => {
     const nativeContext = CONTEXT_STORE.get(context);
@@ -11,10 +11,10 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
                     target[property].call(target, AUDIO_NODE_STORE.get(destination), ...args);
 
                     if (property === 'connect') {
-                        if (AUDIO_NODE_STATE_STORE.get(destination) === 'passive') {
+                        if (!ACTIVE_AUDIO_NODE_STORE.has(destination)) {
                             const eventListeners = EVENT_LISTENERS.get(destination);
 
-                            AUDIO_NODE_STATE_STORE.set(destination, 'active');
+                            ACTIVE_AUDIO_NODE_STORE.add(destination);
 
                             eventListeners.forEach((eventListener) => eventListener('active'));
                         }
@@ -44,7 +44,7 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
 
     });
 
-    AUDIO_NODE_STATE_STORE.set(scriptProcessorNodeProxy, 'active');
+    ACTIVE_AUDIO_NODE_STORE.add(scriptProcessorNodeProxy);
     AUDIO_NODE_STORE.set(scriptProcessorNodeProxy, scriptProcessorNode);
     EVENT_LISTENERS.set(scriptProcessorNodeProxy, new Set());
 

@@ -8,7 +8,6 @@ import {
     INativeAudioNodeFaker
 } from './interfaces';
 import {
-    TInternalState,
     TInternalStateEventListener,
     TNativeAudioNode,
     TNativeAudioParam,
@@ -17,7 +16,7 @@ import {
     TNativeGainNode
 } from './types';
 
-export const AUDIO_NODE_STATE_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, TInternalState> = new WeakMap();
+export const ACTIVE_AUDIO_NODE_STORE: WeakSet<IAudioNode<IMinimalBaseAudioContext>> = new WeakSet();
 
 export const AUDIO_NODE_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, TNativeAudioNode | INativeAudioNodeFaker> = new WeakMap();
 
