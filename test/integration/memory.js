@@ -93,21 +93,15 @@ describe('module', () => {
             const run = (numberOfIterations) => {
                 for (let i = 0; i < numberOfIterations; i += 1) {
                     const gainNode = new GainNode(audioContext); // eslint-disable-line no-undef
-                    const gainNode2 = new GainNode(audioContext); // eslint-disable-line no-undef
 
-                    // @todo Test this with a connection to the destination of the audioContext.
-                    gainNode.connect(gainNode2);
+                    gainNode.connect(audioContext.destination); // eslint-disable-line no-undef
                 }
             };
-
-            // Run the test a couple of times because the first runs will memoize some functions.
-            await page.evaluate(run, 10);
-
             const numberOfObjects = await countObjects(page);
 
             await page.evaluate(run, 1000);
 
-            expect(await countObjects(page)).to.equal(numberOfObjects + 2);
+            expect(await countObjects(page)).to.equal(numberOfObjects);
         });
 
         it('should collect disconnected GainNodes', async function () {
@@ -163,10 +157,8 @@ describe('module', () => {
                         audioContext, // eslint-disable-line no-undef
                         { buffer: new AudioBuffer({ length: 1, sampleRate: audioContext.sampleRate }) } // eslint-disable-line no-undef
                     );
-                    const gainNode = new GainNode(audioContext); // eslint-disable-line no-undef
 
-                    // @todo Test this with a connection to the destination of the audioContext.
-                    audioBufferSourceNode.connect(gainNode);
+                    audioBufferSourceNode.connect(audioContext.destination); // eslint-disable-line no-undef
                 }
             };
 
@@ -177,7 +169,7 @@ describe('module', () => {
 
             await page.evaluate(run, 1000);
 
-            expect(await countObjects(page)).to.equal(numberOfObjects + 2);
+            expect(await countObjects(page)).to.equal(numberOfObjects);
         });
 
         // @todo Run a test with started AudioBufferSourceNodes.
