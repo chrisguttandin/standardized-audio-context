@@ -1,10 +1,10 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
+import { AUXILIARY_GAIN_NODE_STORE } from '../globals';
 import { computeBufferSize } from '../helpers/compute-buffer-size';
 import { copyFromChannel } from '../helpers/copy-from-channel';
 import { copyToChannel } from '../helpers/copy-to-channel';
 import { createAudioWorkletProcessor } from '../helpers/create-audio-worklet-processor';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
-import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { IAudioWorkletProcessor } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
@@ -307,10 +307,11 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }
 
                     try {
-                        const audioNodeConnections = getAudioNodeConnections(nativeAudioWorkletNodeFaker);
                         const potentiallyEmptyInputs = inputs
                             .map((input, index) => {
-                                if (audioNodeConnections.inputs[index].size === 0) {
+                                const auxiliaryGainNodes = AUXILIARY_GAIN_NODE_STORE.get(nativeAudioWorkletNodeFaker);
+
+                                if (auxiliaryGainNodes === undefined || auxiliaryGainNodes.get(index) === undefined) {
                                     return [ new Float32Array(0) ];
                                 }
 

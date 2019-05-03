@@ -36,7 +36,8 @@ import {
     TInternalState,
     TInternalStateEventListener,
     TNativeAudioNode,
-    TNativeAudioParam
+    TNativeAudioParam,
+    TNativeAudioWorkletNode
 } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
@@ -535,17 +536,32 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
 
                     if (isOffline || AUDIO_NODE_STATE_STORE.get(this) === 'passive') {
                         this._nativeAudioNode.disconnect(...connection);
-
-                        // An AudioWorklet needs a connection because it otherwise may modifiy the input array.
-                        if (isAudioWorkletNode(destination)) {
-                            // @todo Only do this if no other connection is active.
-                            nativeContext
-                                .createGain()
-                                .connect(connection[0]);
-                        }
                     } else {
                         if (AUDIO_NODE_STATE_STORE.get(destination) === 'passive') {
                             setInternalState(destination, 'active');
+                        }
+                    }
+
+                    // An AudioWorklet needs a connection because it otherwise may truncate the input array.
+                    // @todo Count the number of connections which depend on this auxiliary GainNode to know when it can be removed again.
+                    if (isAudioWorkletNode(destination)) {
+                        const auxiliaryGainNodes = AUXILIARY_GAIN_NODE_STORE.get(<TNativeAudioWorkletNode> nativeDestinationAudioNode);
+
+                        if (auxiliaryGainNodes === undefined) {
+                            const nativeGainNode = nativeContext.createGain();
+
+                            nativeGainNode.connect(connection[0], 0, connection[2]);
+
+                            AUXILIARY_GAIN_NODE_STORE.set(
+                                <TNativeAudioWorkletNode> nativeDestinationAudioNode,
+                                new Map([ [ input, nativeGainNode ] ])
+                            );
+                        } else if (auxiliaryGainNodes.get(input) === undefined) {
+                            const nativeGainNode = nativeContext.createGain();
+
+                            nativeGainNode.connect(connection[0], 0, connection[2]);
+
+                            auxiliaryGainNodes.set(input, nativeGainNode);
                         }
                     }
                 } catch (err) {

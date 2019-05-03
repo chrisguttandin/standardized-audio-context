@@ -13,7 +13,8 @@ import {
     TNativeAudioNode,
     TNativeAudioParam,
     TNativeAudioWorkletNode,
-    TNativeContext
+    TNativeContext,
+    TNativeGainNode
 } from './types';
 
 export const AUDIO_NODE_STATE_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, TInternalState> = new WeakMap();
@@ -23,6 +24,8 @@ export const AUDIO_NODE_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, TNa
 export const AUDIO_GRAPHS: WeakMap<IMinimalBaseAudioContext, IAudioGraph<IMinimalBaseAudioContext>> = new WeakMap();
 
 export const AUDIO_PARAM_STORE: WeakMap<IAudioParam, TNativeAudioParam> = new WeakMap();
+
+export const AUXILIARY_GAIN_NODE_STORE: WeakMap<TNativeAudioWorkletNode, Map<number, TNativeGainNode>> = new WeakMap();
 
 export const BACKUP_NATIVE_CONTEXT_STORE: WeakMap<TNativeContext, TNativeContext> = new WeakMap();
 
