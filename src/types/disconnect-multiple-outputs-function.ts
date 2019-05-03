@@ -3,7 +3,7 @@ import { TNativeAudioParam } from './native-audio-param';
 
 export type TDisconnectMultipleOutputsFunction = (
     outputAudioNodes: TNativeAudioNode[],
-    outputOrDestinationAudioNodeOrAudioParam?: number | TNativeAudioNode | TNativeAudioParam,
+    destinationOutput?: number | TNativeAudioNode | TNativeAudioParam,
     output?: number,
     input?: number
 ) => void;

@@ -16,38 +16,38 @@ const getOutputAudioNodeAtIndex = (
 };
 
 export const createDisconnectMultipleOutputs: TDisconnectMultipleOutputsFactory = (createIndexSizeError) => {
-    return (outputAudioNodes, outputOrDestinationAudioNodeOrAudioParam = undefined, output = undefined, input = 0) => {
-        if (outputOrDestinationAudioNodeOrAudioParam === undefined) {
+    return (outputAudioNodes, destinationOrOutput = undefined, output = undefined, input = 0) => {
+        if (destinationOrOutput === undefined) {
             return outputAudioNodes
                 .forEach((outputAudioNode) => outputAudioNode.disconnect());
         }
 
-        if (typeof outputOrDestinationAudioNodeOrAudioParam === 'number') {
-            return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, outputOrDestinationAudioNodeOrAudioParam)
+        if (typeof destinationOrOutput === 'number') {
+            return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, destinationOrOutput)
                 .disconnect();
         }
 
-        if (isNativeAudioNode(outputOrDestinationAudioNodeOrAudioParam)) {
+        if (isNativeAudioNode(destinationOrOutput)) {
             if (output === undefined) {
                 return outputAudioNodes
-                    .forEach((outputAudioNode) => outputAudioNode.disconnect(outputOrDestinationAudioNodeOrAudioParam));
+                    .forEach((outputAudioNode) => outputAudioNode.disconnect(destinationOrOutput));
             }
 
             if (input === undefined) {
                 return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output)
-                    .disconnect(outputOrDestinationAudioNodeOrAudioParam, 0);
+                    .disconnect(destinationOrOutput, 0);
             }
 
             return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output)
-                .disconnect(outputOrDestinationAudioNodeOrAudioParam, 0, input);
+                .disconnect(destinationOrOutput, 0, input);
         }
 
         if (output === undefined) {
             return outputAudioNodes
-                .forEach((outputAudioNode) => outputAudioNode.disconnect(outputOrDestinationAudioNodeOrAudioParam));
+                .forEach((outputAudioNode) => outputAudioNode.disconnect(destinationOrOutput));
         }
 
         return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output)
-            .disconnect(outputOrDestinationAudioNodeOrAudioParam, 0);
+            .disconnect(destinationOrOutput, 0);
     };
 };
