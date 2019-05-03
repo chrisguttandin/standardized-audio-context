@@ -1,4 +1,4 @@
-import { constant } from './constant.js'; // eslint-disable-line node/file-extension-in-import
+import { constant } from './constant.js';
 
 class GibberishProcessor extends AudioWorkletProcessor {
 
