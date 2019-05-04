@@ -60,15 +60,13 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should expose the currentFrame of the context', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if (data.currentFrame === undefined) {
-                            return;
+                        if ('currentFrame' in data) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.currentFrame).to.be.a('number');
+
+                            done();
                         }
-
-                        audioWorkletNode.port.onmessage = null;
-
-                        expect(data.currentFrame).to.be.a('number');
-
-                        done();
                     };
 
                     audioWorkletNode.port.postMessage(null);
