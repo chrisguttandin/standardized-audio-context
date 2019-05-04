@@ -58,7 +58,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
              * minValue for GainNodes.
              */
             this._offset = createAudioParam(
-                context,
+                this,
                 isOffline,
                 nativeConstantSourceNode.offset,
                 MOST_POSITIVE_SINGLE_FLOAT,

@@ -110,7 +110,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             const parameters: [ string, IAudioParam ][] = [ ];
 
             nativeAudioWorkletNode.parameters.forEach((nativeAudioParam, nm) => {
-                const audioParam = createAudioParam(context, isOffline, nativeAudioParam);
+                const audioParam = createAudioParam(this, isOffline, nativeAudioParam);
 
                 parameters.push([ nm, audioParam ]);
             });

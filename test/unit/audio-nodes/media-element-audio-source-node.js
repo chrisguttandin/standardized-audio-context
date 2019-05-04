@@ -281,6 +281,21 @@ describe('MediaElementAudioSourceNode', () => {
                             }
                         });
 
+                        if (type === 'AudioNode') {
+
+                            it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
+                                try {
+                                    mediaElementAudioSourceNode.connect(audioNodeOrAudioParam, 0, -1);
+                                } catch (err) {
+                                    expect(err.code).to.equal(1);
+                                    expect(err.name).to.equal('IndexSizeError');
+
+                                    done();
+                                }
+                            });
+
+                        }
+
                     });
 
                     describe(`with an ${ type } of another context`, () => {

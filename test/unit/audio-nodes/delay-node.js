@@ -611,6 +611,34 @@ describe('DelayNode', () => {
                             }
                         });
 
+                        if (type === 'AudioNode') {
+
+                            it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
+                                try {
+                                    delayNode.connect(audioNodeOrAudioParam, 0, -1);
+                                } catch (err) {
+                                    expect(err.code).to.equal(1);
+                                    expect(err.name).to.equal('IndexSizeError');
+
+                                    done();
+                                }
+                            });
+
+                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
+                                try {
+                                    audioNodeOrAudioParam
+                                        .connect(delayNode)
+                                        .connect(audioNodeOrAudioParam.gain);
+                                } catch (err) {
+                                    expect(err.code).to.equal(9);
+                                    expect(err.name).to.equal('NotSupportedError');
+
+                                    done();
+                                }
+                            });
+
+                        }
+
                     });
 
                     describe(`with an ${ type } of another context`, () => {

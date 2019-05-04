@@ -1,6 +1,6 @@
-import { AUDIO_PARAM_STORE } from '../globals';
+import { AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE } from '../globals';
 import { getAudioGraph } from '../helpers/get-audio-graph';
-import { IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAudioParamFactoryFactory, TNativeAudioParam } from '../types';
 
 const addAudioParam = <T extends IMinimalBaseAudioContext>(
@@ -15,7 +15,7 @@ const addAudioParam = <T extends IMinimalBaseAudioContext>(
 
 export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioParamRenderer, nativeAudioContextConstructor) => {
     return <T extends IMinimalBaseAudioContext>(
-        context: T,
+        audioNode: IAudioNode<T>,
         isAudioParamOfOfflineAudioContext: boolean,
         nativeAudioParam: TNativeAudioParam,
         maxValue: null | number = null,
@@ -39,7 +39,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
                 nativeAudioParam.value = value;
 
                 // Bug #98: Edge, Firefox & Safari do not yet treat the value setter like a call to setValueAtTime().
-                audioParam.setValueAtTime(value, context.currentTime);
+                audioParam.setValueAtTime(value, audioNode.context.currentTime);
             },
             cancelScheduledValues (cancelTime: number): IAudioParam {
                 nativeAudioParam.cancelScheduledValues(cancelTime);
@@ -96,13 +96,14 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
                  */
                 if (nativeAudioContextConstructor !== null && nativeAudioContextConstructor.name === 'webkitAudioContext') {
                     const endTime = startTime + duration;
-                    const firstSample = Math.ceil(startTime * context.sampleRate);
-                    const lastSample = Math.floor((endTime) * context.sampleRate);
+                    const sampleRate = audioNode.context.sampleRate;
+                    const firstSample = Math.ceil(startTime * sampleRate);
+                    const lastSample = Math.floor((endTime) * sampleRate);
                     const numberOfInterpolatedValues = lastSample - firstSample;
                     const interpolatedValues = new Float32Array(numberOfInterpolatedValues);
 
                     for (let i = 0; i < numberOfInterpolatedValues; i += 1) {
-                        const theoreticIndex = ((values.length - 1) / duration) * (((firstSample + i) / context.sampleRate) - startTime);
+                        const theoreticIndex = ((values.length - 1) / duration) * (((firstSample + i) / sampleRate) - startTime);
                         const lowerIndex = Math.floor(theoreticIndex);
                         const upperIndex = Math.ceil(theoreticIndex);
 
@@ -118,7 +119,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
                         audioParamRenderer.record({ duration, startTime, type, values: interpolatedValues });
                     }
 
-                    const timeOfLastSample = lastSample / context.sampleRate;
+                    const timeOfLastSample = lastSample / sampleRate;
 
                     if (timeOfLastSample < endTime) {
                         audioParam.setValueAtTime(interpolatedValues[interpolatedValues.length - 1], timeOfLastSample);
@@ -138,8 +139,13 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
         };
 
         AUDIO_PARAM_STORE.set(audioParam, nativeAudioParam);
+        AUDIO_PARAM_AUDIO_NODE_STORE.set(audioParam, audioNode);
 
-        addAudioParam(context, audioParam, <T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer);
+        addAudioParam(
+            audioNode.context,
+            audioParam,
+            <T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer
+        );
 
         return audioParam;
     };

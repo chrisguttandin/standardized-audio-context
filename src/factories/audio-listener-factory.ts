@@ -43,7 +43,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                  * minValue for GainNodes.
                  */
                 return createAudioParam(
-                    context,
+                    <any> { context },
                     isOffline,
                     constantSourceNode.offset,
                     MOST_POSITIVE_SINGLE_FLOAT,

@@ -48,7 +48,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
             // Bug #80: Edge & Safari do not export the correct values for maxValue and minValue.
             this._Q = createAudioParam(
-                context,
+                this,
                 isOffline,
                 nativeBiquadFilterNode.Q,
                 MOST_POSITIVE_SINGLE_FLOAT,
@@ -56,7 +56,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             );
             // Bug #78: Edge & Safari do not export the correct values for maxValue and minValue.
             this._detune = createAudioParam(
-                context,
+                this,
                 isOffline,
                 nativeBiquadFilterNode.detune,
                 MOST_POSITIVE_SINGLE_FLOAT,
@@ -64,7 +64,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             );
             // Bug #77: Chrome, Edge, Firefox, Opera & Safari do not export the correct values for maxValue and minValue.
             this._frequency = createAudioParam(
-                context,
+                this,
                 isOffline,
                 nativeBiquadFilterNode.frequency,
                 MOST_POSITIVE_SINGLE_FLOAT,
@@ -72,7 +72,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             );
             // Bug #79: Edge & Safari do not export the correct values for maxValue and minValue.
             this._gain = createAudioParam(
-                context,
+                this,
                 isOffline,
                 nativeBiquadFilterNode.gain,
                 MOST_POSITIVE_SINGLE_FLOAT,
