@@ -138,8 +138,8 @@ describe('module', () => {
                 }
             };
 
-            // Run the test a couple of times because the first runs will memoize some functions.
-            await page.evaluate(run, 10);
+            // Run the test once because the first run will trigger some memoizations.
+            await page.evaluate(run, 1);
 
             const numberOfObjects = await countObjects(page);
 
@@ -162,8 +162,8 @@ describe('module', () => {
                 }
             };
 
-            // Run the test a couple of times because the first runs will memoize some functions.
-            await page.evaluate(run, 10);
+            // Run the test once because the first run will trigger some memoizations.
+            await page.evaluate(run, 1);
 
             const numberOfObjects = await countObjects(page);
 
@@ -189,8 +189,8 @@ describe('module', () => {
                 }
             };
 
-            // Run the test a couple of times because the first runs will memoize some functions.
-            await page.evaluate(run, 10);
+            // Run the test once because the first run will trigger some memoizations.
+            await page.evaluate(run, 1);
 
             const numberOfObjects = await countObjects(page);
 
