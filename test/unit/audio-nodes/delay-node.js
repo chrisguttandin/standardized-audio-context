@@ -595,6 +595,11 @@ describe('DelayNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            delayNode.connect(audioNodeOrAudioParam);
+                            delayNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 delayNode.connect(audioNodeOrAudioParam, -1);

@@ -768,6 +768,11 @@ describe('DynamicsCompressorNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            dynamicsCompressorNode.connect(audioNodeOrAudioParam);
+                            dynamicsCompressorNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 dynamicsCompressorNode.connect(audioNodeOrAudioParam, -1);

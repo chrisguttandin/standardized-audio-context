@@ -480,6 +480,11 @@ describe('IIRFilterNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            iIRFilterNode.connect(audioNodeOrAudioParam);
+                            iIRFilterNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 iIRFilterNode.connect(audioNodeOrAudioParam, -1);

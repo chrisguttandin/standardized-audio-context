@@ -247,6 +247,11 @@ describe('ChannelMergerNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            channelMergerNode.connect(audioNodeOrAudioParam);
+                            channelMergerNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 channelMergerNode.connect(audioNodeOrAudioParam, -1);

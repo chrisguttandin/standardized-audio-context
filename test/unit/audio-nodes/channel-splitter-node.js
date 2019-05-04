@@ -252,6 +252,11 @@ describe('ChannelSplitterNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            channelSplitterNode.connect(audioNodeOrAudioParam);
+                            channelSplitterNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 channelSplitterNode.connect(audioNodeOrAudioParam, -1);

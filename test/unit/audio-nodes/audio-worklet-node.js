@@ -1081,6 +1081,11 @@ describe('AudioWorkletNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            audioWorkletNode.connect(audioNodeOrAudioParam);
+                            audioWorkletNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 audioWorkletNode.connect(audioNodeOrAudioParam, -1);

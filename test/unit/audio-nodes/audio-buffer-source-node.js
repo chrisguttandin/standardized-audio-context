@@ -1124,6 +1124,11 @@ describe('AudioBufferSourceNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            audioBufferSourceNode.connect(audioNodeOrAudioParam);
+                            audioBufferSourceNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 audioBufferSourceNode.connect(audioNodeOrAudioParam, -1);

@@ -719,6 +719,11 @@ describe('StereoPannerNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            stereoPannerNode.connect(audioNodeOrAudioParam);
+                            stereoPannerNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 stereoPannerNode.connect(audioNodeOrAudioParam, -1);

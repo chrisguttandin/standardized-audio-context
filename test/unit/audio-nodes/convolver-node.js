@@ -582,6 +582,11 @@ describe('ConvolverNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            convolverNode.connect(audioNodeOrAudioParam);
+                            convolverNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 convolverNode.connect(audioNodeOrAudioParam, -1);

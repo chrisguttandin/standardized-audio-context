@@ -343,6 +343,11 @@ describe('MediaStreamAudioSourceNode', () => {
 
                             }
 
+                            it('should accept duplicate connections', () => {
+                                mediaStreamAudioSourceNode.connect(audioNodeOrAudioParam);
+                                mediaStreamAudioSourceNode.connect(audioNodeOrAudioParam);
+                            });
+
                             it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                                 try {
                                     mediaStreamAudioSourceNode.connect(audioNodeOrAudioParam, -1);

@@ -265,6 +265,11 @@ describe('MediaElementAudioSourceNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            mediaElementAudioSourceNode.connect(audioNodeOrAudioParam);
+                            mediaElementAudioSourceNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 mediaElementAudioSourceNode.connect(audioNodeOrAudioParam, -1);

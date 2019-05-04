@@ -454,6 +454,11 @@ describe('AnalyserNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            analyserNode.connect(audioNodeOrAudioParam);
+                            analyserNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 analyserNode.connect(audioNodeOrAudioParam, -1);

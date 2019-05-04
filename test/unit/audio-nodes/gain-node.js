@@ -559,6 +559,11 @@ describe('GainNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            gainNode.connect(audioNodeOrAudioParam);
+                            gainNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 gainNode.connect(audioNodeOrAudioParam, -1);

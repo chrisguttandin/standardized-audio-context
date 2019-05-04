@@ -604,6 +604,11 @@ describe('OscillatorNode', () => {
 
                         }
 
+                        it('should accept duplicate connections', () => {
+                            oscillatorNode.connect(audioNodeOrAudioParam);
+                            oscillatorNode.connect(audioNodeOrAudioParam);
+                        });
+
                         it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
                             try {
                                 oscillatorNode.connect(audioNodeOrAudioParam, -1);
