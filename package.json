@@ -81,6 +81,7 @@
     }
   },
   "keywords": [
+    "AudioWorklet",
     "Web Audio API",
     "audio",
     "browser"
