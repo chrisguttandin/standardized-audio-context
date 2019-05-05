@@ -136,9 +136,9 @@ describe('ChannelSplitterNode', () => {
 
                             it('should return an instance with the given numberOfOutputs', () => {
                                 const numberOfOutputs = 2;
-                                const channelMergerNode = createChannelSplitterNode(context, { numberOfOutputs });
+                                const channelSplitterNode = createChannelSplitterNode(context, { numberOfOutputs });
 
-                                expect(channelMergerNode.numberOfOutputs).to.equal(numberOfOutputs);
+                                expect(channelSplitterNode.numberOfOutputs).to.equal(numberOfOutputs);
                             });
 
                         });
