@@ -688,12 +688,10 @@ describe('OscillatorNode', () => {
 
             describe('disconnect()', () => {
 
-                let renderer;
+                let createPredefinedRenderer;
 
-                beforeEach(function () {
-                    this.timeout(10000);
-
-                    renderer = createRenderer({
+                beforeEach(() => {
+                    createPredefinedRenderer = () => createRenderer({
                         context,
                         length: (context.length === undefined) ? 5 : undefined,
                         prepare (destination) {
@@ -712,72 +710,233 @@ describe('OscillatorNode', () => {
                     });
                 });
 
-                it('should be possible to disconnect a destination', function () {
-                    this.timeout(10000);
+                describe('without any parameters', () => {
 
-                    return renderer({
-                        prepare ({ firstDummyGainNode, oscillatorNode }) {
-                            oscillatorNode.disconnect(firstDummyGainNode);
-                        },
-                        start (startTime, { oscillatorNode }) {
-                            oscillatorNode.start(startTime);
-                        }
-                    })
-                        .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                        });
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createPredefinedRenderer();
+                    });
+
+                    it('should disconnect all destinations', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            prepare ({ oscillatorNode }) {
+                                oscillatorNode.disconnect();
+                            },
+                            start (startTime, { oscillatorNode }) {
+                                oscillatorNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
                 });
 
-                it('should be possible to disconnect another destination in isolation', function () {
-                    this.timeout(10000);
+                describe('with an output', () => {
 
-                    return renderer({
-                        prepare ({ oscillatorNode, secondDummyGainNode }) {
-                            oscillatorNode.disconnect(secondDummyGainNode);
-                        },
-                        start (startTime, { oscillatorNode }) {
-                            oscillatorNode.start(startTime);
-                        }
-                    })
-                        .then((channelData) => {
-                            expect(channelData[0]).to.equal(0);
-                            expect(channelData[1]).to.equal(1);
-                            expect(channelData[2]).to.be.closeTo(0, 0.000001);
-                            expect(channelData[3]).to.equal(-1);
-                            expect(channelData[4]).to.be.closeTo(0, 0.000001);
+                    describe('with a value which is out-of-bound', () => {
+
+                        let oscillatorNode;
+
+                        beforeEach(() => {
+                            oscillatorNode = createOscillatorNode(context);
                         });
+
+                        it('should throw an IndexSizeError', (done) => {
+                            try {
+                                oscillatorNode.disconnect(-1);
+                            } catch (err) {
+                                expect(err.code).to.equal(1);
+                                expect(err.name).to.equal('IndexSizeError');
+
+                                done();
+                            }
+                        });
+
+                    });
+
+                    describe('with a connection from the given output', () => {
+
+                        let renderer;
+
+                        beforeEach(function () {
+                            this.timeout(10000);
+
+                            renderer = createPredefinedRenderer();
+                        });
+
+                        it('should disconnect all destinations from the given output', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare ({ oscillatorNode }) {
+                                    oscillatorNode.disconnect(0);
+                                },
+                                start (startTime, { oscillatorNode }) {
+                                    oscillatorNode.start(startTime);
+                                }
+                            })
+                                .then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                });
+                        });
+
+                    });
+
                 });
 
-                it('should be possible to disconnect all destinations by specifying the output', function () {
-                    this.timeout(10000);
+                describe('with a destination', () => {
 
-                    return renderer({
-                        prepare ({ oscillatorNode }) {
-                            oscillatorNode.disconnect(0);
-                        },
-                        start (startTime, { oscillatorNode }) {
-                            oscillatorNode.start(startTime);
-                        }
-                    })
-                        .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                    describe('without a connection to the given destination', () => {
+
+                        let oscillatorNode;
+
+                        beforeEach(() => {
+                            oscillatorNode = createOscillatorNode(context);
                         });
+
+                        it('should throw an InvalidAccessError', (done) => {
+                            try {
+                                oscillatorNode.disconnect(new GainNode(context));
+                            } catch (err) {
+                                expect(err.code).to.equal(15);
+                                expect(err.name).to.equal('InvalidAccessError');
+
+                                done();
+                            }
+                        });
+
+                    });
+
+                    describe('with a connection to the given destination', () => {
+
+                        let renderer;
+
+                        beforeEach(function () {
+                            this.timeout(10000);
+
+                            renderer = createPredefinedRenderer();
+                        });
+
+                        it('should disconnect the destination', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare ({ firstDummyGainNode, oscillatorNode }) {
+                                    oscillatorNode.disconnect(firstDummyGainNode);
+                                },
+                                start (startTime, { oscillatorNode }) {
+                                    oscillatorNode.start(startTime);
+                                }
+                            })
+                                .then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                });
+                        });
+
+                        it('should disconnect another destination in isolation', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare ({ oscillatorNode, secondDummyGainNode }) {
+                                    oscillatorNode.disconnect(secondDummyGainNode);
+                                },
+                                start (startTime, { oscillatorNode }) {
+                                    oscillatorNode.start(startTime);
+                                }
+                            })
+                                .then((channelData) => {
+                                    expect(channelData[0]).to.equal(0);
+                                    expect(channelData[1]).to.equal(1);
+                                    expect(channelData[2]).to.be.closeTo(0, 0.000001);
+                                    expect(channelData[3]).to.equal(-1);
+                                    expect(channelData[4]).to.be.closeTo(0, 0.000001);
+                                });
+                        });
+
+                    });
+
                 });
 
-                it('should be possible to disconnect all destinations', function () {
-                    this.timeout(10000);
+                describe('with a destination and an output', () => {
 
-                    return renderer({
-                        prepare ({ oscillatorNode }) {
-                            oscillatorNode.disconnect();
-                        },
-                        start (startTime, { oscillatorNode }) {
-                            oscillatorNode.start(startTime);
+                    let oscillatorNode;
+
+                    beforeEach(() => {
+                        oscillatorNode = createOscillatorNode(context);
+                    });
+
+                    it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                        try {
+                            oscillatorNode.disconnect(new GainNode(context), -1);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
                         }
-                    })
-                        .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                        });
+                    });
+
+                    it('should throw an InvalidAccessError if there is no similar connection', (done) => {
+                        try {
+                            oscillatorNode.disconnect(new GainNode(context), 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
+                });
+
+                describe('with a destination, an output and an input', () => {
+
+                    let oscillatorNode;
+
+                    beforeEach(() => {
+                        oscillatorNode = createOscillatorNode(context);
+                    });
+
+                    it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                        try {
+                            oscillatorNode.disconnect(new GainNode(context), -1, 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
+                        }
+                    });
+
+                    it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
+                        try {
+                            oscillatorNode.disconnect(new GainNode(context), 0, -1);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
+                        }
+                    });
+
+                    it('should throw an InvalidAccessError if there is no similar connection', (done) => {
+                        try {
+                            oscillatorNode.disconnect(new GainNode(context), 0, 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
                 });
 
             });

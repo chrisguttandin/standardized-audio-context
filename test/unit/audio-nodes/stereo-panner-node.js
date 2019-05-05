@@ -816,15 +816,10 @@ describe('StereoPannerNode', () => {
 
             describe('disconnect()', () => {
 
-                let renderer;
-                let values;
+                let createPredefinedRenderer;
 
-                beforeEach(function () {
-                    this.timeout(10000);
-
-                    values = [ 1, 1, 1, 1, 1 ];
-
-                    renderer = createRenderer({
+                beforeEach(() => {
+                    createPredefinedRenderer = (values) => createRenderer({
                         context,
                         length: (context.length === undefined) ? 5 : undefined,
                         prepare (destination) {
@@ -850,72 +845,242 @@ describe('StereoPannerNode', () => {
                     });
                 });
 
-                it('should be possible to disconnect a destination', function () {
-                    this.timeout(10000);
+                describe('without any parameters', () => {
 
-                    return renderer({
-                        prepare ({ firstDummyGainNode, stereoPannerNode }) {
-                            stereoPannerNode.disconnect(firstDummyGainNode);
-                        },
-                        start (startTime, { audioBufferSourceNode }) {
-                            audioBufferSourceNode.start(startTime);
-                        }
-                    })
-                        .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                        });
+                    let renderer;
+                    let values;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        values = [ 1, 1, 1, 1, 1 ];
+
+                        renderer = createPredefinedRenderer(values);
+                    });
+
+                    it('should disconnect all destinations', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            prepare ({ stereoPannerNode }) {
+                                stereoPannerNode.disconnect();
+                            },
+                            start (startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
                 });
 
-                it('should be possible to disconnect another destination in isolation', function () {
-                    this.timeout(10000);
+                describe('with an output', () => {
 
-                    return renderer({
-                        prepare ({ stereoPannerNode, secondDummyGainNode }) {
-                            stereoPannerNode.disconnect(secondDummyGainNode);
-                        },
-                        start (startTime, { audioBufferSourceNode }) {
-                            audioBufferSourceNode.start(startTime);
-                        }
-                    })
-                        .then((channelData) => {
-                            expect(channelData[0]).to.be.closeTo(1, 0.0001);
-                            expect(channelData[1]).to.be.closeTo(1, 0.0001);
-                            expect(channelData[2]).to.be.closeTo(1, 0.0001);
-                            expect(channelData[3]).to.be.closeTo(1, 0.0001);
-                            expect(channelData[4]).to.be.closeTo(1, 0.0001);
+                    describe('with a value which is out-of-bound', () => {
+
+                        let stereoPannerNode;
+
+                        beforeEach(() => {
+                            stereoPannerNode = createStereoPannerNode(context);
                         });
+
+                        it('should throw an IndexSizeError', (done) => {
+                            try {
+                                stereoPannerNode.disconnect(-1);
+                            } catch (err) {
+                                expect(err.code).to.equal(1);
+                                expect(err.name).to.equal('IndexSizeError');
+
+                                done();
+                            }
+                        });
+
+                    });
+
+                    describe('with a connection from the given output', () => {
+
+                        let renderer;
+                        let values;
+
+                        beforeEach(function () {
+                            this.timeout(10000);
+
+                            values = [ 1, 1, 1, 1, 1 ];
+
+                            renderer = createPredefinedRenderer(values);
+                        });
+
+                        it('should disconnect all destinations from the given output', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare ({ stereoPannerNode }) {
+                                    stereoPannerNode.disconnect(0);
+                                },
+                                start (startTime, { audioBufferSourceNode }) {
+                                    audioBufferSourceNode.start(startTime);
+                                }
+                            })
+                                .then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                });
+                        });
+
+                    });
+
                 });
 
-                it('should be possible to disconnect all destinations by specifying the output', function () {
-                    this.timeout(10000);
+                describe('with a destination', () => {
 
-                    return renderer({
-                        prepare ({ stereoPannerNode }) {
-                            stereoPannerNode.disconnect(0);
-                        },
-                        start (startTime, { audioBufferSourceNode }) {
-                            audioBufferSourceNode.start(startTime);
-                        }
-                    })
-                        .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                    describe('without a connection to the given destination', () => {
+
+                        let stereoPannerNode;
+
+                        beforeEach(() => {
+                            stereoPannerNode = createStereoPannerNode(context);
                         });
+
+                        it('should throw an InvalidAccessError', (done) => {
+                            try {
+                                stereoPannerNode.disconnect(new GainNode(context));
+                            } catch (err) {
+                                expect(err.code).to.equal(15);
+                                expect(err.name).to.equal('InvalidAccessError');
+
+                                done();
+                            }
+                        });
+
+                    });
+
+                    describe('with a connection to the given destination', () => {
+
+                        let renderer;
+                        let values;
+
+                        beforeEach(function () {
+                            this.timeout(10000);
+
+                            values = [ 1, 1, 1, 1, 1 ];
+
+                            renderer = createPredefinedRenderer(values);
+                        });
+
+                        it('should disconnect the destination', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare ({ firstDummyGainNode, stereoPannerNode }) {
+                                    stereoPannerNode.disconnect(firstDummyGainNode);
+                                },
+                                start (startTime, { audioBufferSourceNode }) {
+                                    audioBufferSourceNode.start(startTime);
+                                }
+                            })
+                                .then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                });
+                        });
+
+                        it('should disconnect another destination in isolation', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare ({ secondDummyGainNode, stereoPannerNode }) {
+                                    stereoPannerNode.disconnect(secondDummyGainNode);
+                                },
+                                start (startTime, { audioBufferSourceNode }) {
+                                    audioBufferSourceNode.start(startTime);
+                                }
+                            })
+                                .then((channelData) => {
+                                    expect(channelData[0]).to.be.closeTo(1, 0.0001);
+                                    expect(channelData[1]).to.be.closeTo(1, 0.0001);
+                                    expect(channelData[2]).to.be.closeTo(1, 0.0001);
+                                    expect(channelData[3]).to.be.closeTo(1, 0.0001);
+                                    expect(channelData[4]).to.be.closeTo(1, 0.0001);
+                                });
+                        });
+
+                    });
+
                 });
 
-                it('should be possible to disconnect all destinations', function () {
-                    this.timeout(10000);
+                describe('with a destination and an output', () => {
 
-                    return renderer({
-                        prepare ({ stereoPannerNode }) {
-                            stereoPannerNode.disconnect();
-                        },
-                        start (startTime, { audioBufferSourceNode }) {
-                            audioBufferSourceNode.start(startTime);
+                    let stereoPannerNode;
+
+                    beforeEach(() => {
+                        stereoPannerNode = createStereoPannerNode(context);
+                    });
+
+                    it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                        try {
+                            stereoPannerNode.disconnect(new GainNode(context), -1);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
                         }
-                    })
-                        .then((channelData) => {
-                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                        });
+                    });
+
+                    it('should throw an InvalidAccessError if there is no similar connection', (done) => {
+                        try {
+                            stereoPannerNode.disconnect(new GainNode(context), 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
+                });
+
+                describe('with a destination, an output and an input', () => {
+
+                    let stereoPannerNode;
+
+                    beforeEach(() => {
+                        stereoPannerNode = createStereoPannerNode(context);
+                    });
+
+                    it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                        try {
+                            stereoPannerNode.disconnect(new GainNode(context), -1, 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
+                        }
+                    });
+
+                    it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
+                        try {
+                            stereoPannerNode.disconnect(new GainNode(context), 0, -1);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
+                        }
+                    });
+
+                    it('should throw an InvalidAccessError if there is no similar connection', (done) => {
+                        try {
+                            stereoPannerNode.disconnect(new GainNode(context), 0, 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
                 });
 
             });

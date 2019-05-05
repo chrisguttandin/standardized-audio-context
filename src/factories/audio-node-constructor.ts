@@ -461,14 +461,15 @@ const deleteConnectionToDestination = <T extends IMinimalBaseAudioContext>(
     destination: IAudioNode<T> | IAudioParam,
     output?: number,
     input?: number
-) => {
+): number => {
     const audioNodeConnectionsOfSource = getAudioNodeConnections(source);
 
-    for (const outputConnection of audioNodeConnectionsOfSource.outputs) {
-        if (outputConnection[0] === destination
+    return Array
+        .from(audioNodeConnectionsOfSource.outputs)
+        .filter((outputConnection) => (outputConnection[0] === destination
             && (output === undefined || outputConnection[1] === output)
-            && (input === undefined || outputConnection[2] === input)
-        ) {
+            && (input === undefined || outputConnection[2] === input)))
+        .reduce((numberOfDeletedConnections, outputConnection) => {
             if (isAudioNodeOutputConnection(outputConnection)) {
                 deleteInputsOfAudioNode(source, ...outputConnection);
             } else {
@@ -476,11 +477,13 @@ const deleteConnectionToDestination = <T extends IMinimalBaseAudioContext>(
             }
 
             audioNodeConnectionsOfSource.outputs.delete(outputConnection);
-        }
-    }
+
+            return numberOfDeletedConnections + 1;
+        }, 0);
 };
 
 export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
+    createIndexSizeError,
     createInvalidAccessError,
     createNotSupportedError,
     isNativeOfflineAudioContext
@@ -686,9 +689,25 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             if (destinationOrOutput === undefined) {
                 deleteAnyConnection(this);
             } else if (typeof destinationOrOutput === 'number') {
+                if (destinationOrOutput < 0 || destinationOrOutput >= this.numberOfOutputs) {
+                    throw createIndexSizeError();
+                }
+
                 deleteConnectionAtOutput(this, destinationOrOutput);
             } else {
-                deleteConnectionToDestination(this, destinationOrOutput, output, input);
+                if (output !== undefined && (output < 0 || output >= this.numberOfOutputs)) {
+                    throw createIndexSizeError();
+                }
+
+                if (isAudioNode(destinationOrOutput)
+                        && input !== undefined
+                        && (input < 0 || input >= destinationOrOutput.numberOfInputs)) {
+                    throw createIndexSizeError();
+                }
+
+                if (deleteConnectionToDestination(this, destinationOrOutput, output, input) === 0) {
+                    throw createInvalidAccessError();
+                }
             }
         }
 

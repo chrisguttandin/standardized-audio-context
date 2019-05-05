@@ -214,7 +214,12 @@ const getBackupNativeContext = createGetBackupNativeContext(
 const createNativeAudioNode = createNativeAudioNodeFactory(getBackupNativeContext);
 const createNativeAnalyserNode = createNativeAnalyserNodeFactory(createIndexSizeError, createNativeAudioNode);
 const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(createNativeAnalyserNode);
-const audioNodeConstructor = createAudioNodeConstructor(createInvalidAccessError, createNotSupportedError, isNativeOfflineAudioContext);
+const audioNodeConstructor = createAudioNodeConstructor(
+    createIndexSizeError,
+    createInvalidAccessError,
+    createNotSupportedError,
+    isNativeOfflineAudioContext
+);
 const noneAudioDestinationNodeConstructor = createNoneAudioDestinationNodeConstructor(audioNodeConstructor);
 const analyserNodeConstructor: TAnalyserNodeConstructor = createAnalyserNodeConstructor(
     createAnalyserNodeRenderer,

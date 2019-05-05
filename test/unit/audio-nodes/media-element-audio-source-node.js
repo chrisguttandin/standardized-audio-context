@@ -334,14 +334,32 @@ describe('MediaElementAudioSourceNode', () => {
 
             });
 
-            // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-            if (!process.env.TRAVIS) { // eslint-disable-line no-undef
+            describe('disconnect()', () => {
 
-                describe('disconnect()', () => {
+                let createPredefinedRenderer;
+                let pauseMediaElement;
+                let playMediaElement;
 
-                    let renderer;
+                beforeEach(() => {
+                    createPredefinedRenderer = () => createRenderer({
+                        context,
+                        length: (context.length === undefined) ? 5 : undefined,
+                        prepare (destination) {
+                            const firstDummyGainNode = new GainNode(context);
+                            const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
+                            const secondDummyGainNode = new GainNode(context);
 
-                    afterEach(() => {
+                            mediaElementAudioSourceNode
+                                .connect(firstDummyGainNode)
+                                .connect(destination);
+
+                            mediaElementAudioSourceNode.connect(secondDummyGainNode);
+
+                            return { firstDummyGainNode, mediaElementAudioSourceNode, secondDummyGainNode };
+                        }
+                    });
+
+                    pauseMediaElement = () => {
                         if (!mediaElement.paused) {
                             return new Promise((resolve, reject) => {
                                 mediaElement.onerror = () => reject(mediaElement.error);
@@ -349,29 +367,9 @@ describe('MediaElementAudioSourceNode', () => {
                                 mediaElement.pause();
                             });
                         }
-                    });
+                    };
 
-                    beforeEach(function () {
-                        this.timeout(10000);
-
-                        renderer = createRenderer({
-                            context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
-                                const firstDummyGainNode = new GainNode(context);
-                                const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
-                                const secondDummyGainNode = new GainNode(context);
-
-                                mediaElementAudioSourceNode
-                                    .connect(firstDummyGainNode)
-                                    .connect(destination);
-
-                                mediaElementAudioSourceNode.connect(secondDummyGainNode);
-
-                                return { firstDummyGainNode, mediaElementAudioSourceNode, secondDummyGainNode };
-                            }
-                        });
-
+                    playMediaElement = () => {
                         /*
                          * Muting the mediaElement seems to be crazy, but Safari only plays muted audio without any user interaction. However even
                          * though the mediaElement is muted the audio gets routed into the audio graph.
@@ -389,68 +387,258 @@ describe('MediaElementAudioSourceNode', () => {
                             mediaElement.oncanplaythrough = resolve;
                             mediaElement.onerror = () => reject(mediaElement.error);
                         });
+                    };
+                });
+
+                describe('without any parameters', () => {
+
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    if (!process.env.TRAVIS) { // eslint-disable-line no-undef
+
+                        let renderer;
+
+                        afterEach(() => pauseMediaElement());
+
+                        beforeEach(function () {
+                            this.timeout(10000);
+
+                            renderer = createPredefinedRenderer();
+
+                            return playMediaElement();
+                        });
+
+                        it('should disconnect all destinations', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare ({ mediaElementAudioSourceNode }) {
+                                    mediaElementAudioSourceNode.disconnect();
+                                },
+                                verifyChannelData: false
+                            })
+                                .then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                });
+                        });
+
+                    }
+
+                });
+
+                describe('with an output', () => {
+
+                    describe('with a value which is out-of-bound', () => {
+
+                        let mediaElementAudioSourceNode;
+
+                        beforeEach(() => {
+                            mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
+                        });
+
+                        it('should throw an IndexSizeError', (done) => {
+                            try {
+                                mediaElementAudioSourceNode.disconnect(-1);
+                            } catch (err) {
+                                expect(err.code).to.equal(1);
+                                expect(err.name).to.equal('IndexSizeError');
+
+                                done();
+                            }
+                        });
+
                     });
 
-                    it('should be possible to disconnect a destination', function () {
-                        this.timeout(10000);
+                    describe('with a connection from the given output', () => {
 
-                        return renderer({
-                            prepare ({ firstDummyGainNode, mediaElementAudioSourceNode }) {
-                                mediaElementAudioSourceNode.disconnect(firstDummyGainNode);
-                            },
-                            verifyChannelData: false
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        if (!process.env.TRAVIS) { // eslint-disable-line no-undef
+
+                            let renderer;
+
+                            afterEach(() => pauseMediaElement());
+
+                            beforeEach(function () {
+                                this.timeout(10000);
+
+                                renderer = createPredefinedRenderer();
+
+                                return playMediaElement();
                             });
-                    });
 
-                    it('should be possible to disconnect another destination in isolation', function () {
-                        this.timeout(10000);
+                            it('should disconnect all destinations from the given output', function () {
+                                this.timeout(10000);
 
-                        return renderer({
-                            prepare ({ mediaElementAudioSourceNode, secondDummyGainNode }) {
-                                mediaElementAudioSourceNode.disconnect(secondDummyGainNode);
-                            },
-                            verifyChannelData: false
-                        })
-                            .then((channelData) => {
-                                // @todo The mediaElement will just play a sine wave. Therefore it is okay to only test for non zero values.
-                                expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                return renderer({
+                                    prepare ({ mediaElementAudioSourceNode }) {
+                                        mediaElementAudioSourceNode.disconnect(0);
+                                    },
+                                    verifyChannelData: false
+                                })
+                                    .then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
                             });
-                    });
 
-                    it('should be possible to disconnect all destinations by specifying the output', function () {
-                        this.timeout(10000);
+                        }
 
-                        return renderer({
-                            prepare ({ mediaElementAudioSourceNode }) {
-                                mediaElementAudioSourceNode.disconnect(0);
-                            },
-                            verifyChannelData: false
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
-                    });
-
-                    it('should be possible to disconnect all destinations', function () {
-                        this.timeout(10000);
-
-                        return renderer({
-                            prepare ({ mediaElementAudioSourceNode }) {
-                                mediaElementAudioSourceNode.disconnect();
-                            },
-                            verifyChannelData: false
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
                     });
 
                 });
 
-            }
+                describe('with a destination', () => {
+
+                    describe('without a connection to the given destination', () => {
+
+                        let mediaElementAudioSourceNode;
+
+                        beforeEach(() => {
+                            mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
+                        });
+
+                        it('should throw an InvalidAccessError', (done) => {
+                            try {
+                                mediaElementAudioSourceNode.disconnect(new GainNode(context));
+                            } catch (err) {
+                                expect(err.code).to.equal(15);
+                                expect(err.name).to.equal('InvalidAccessError');
+
+                                done();
+                            }
+                        });
+
+                    });
+
+                    describe('with a connection to the given destination', () => {
+
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        if (!process.env.TRAVIS) { // eslint-disable-line no-undef
+
+                            let renderer;
+
+                            afterEach(() => pauseMediaElement());
+
+                            beforeEach(function () {
+                                this.timeout(10000);
+
+                                renderer = createPredefinedRenderer();
+
+                                return playMediaElement();
+                            });
+
+                            it('should disconnect the destination', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    prepare ({ firstDummyGainNode, mediaElementAudioSourceNode }) {
+                                        mediaElementAudioSourceNode.disconnect(firstDummyGainNode);
+                                    },
+                                    verifyChannelData: false
+                                })
+                                    .then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
+                            });
+
+                            it('should disconnect another destination in isolation', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    prepare ({ mediaElementAudioSourceNode, secondDummyGainNode }) {
+                                        mediaElementAudioSourceNode.disconnect(secondDummyGainNode);
+                                    },
+                                    verifyChannelData: false
+                                })
+                                    .then((channelData) => {
+                                        /*
+                                         * @todo The mediaElement will just play a sine wave. Therefore it is okay to only test for non
+                                         * zero values.
+                                         */
+                                        expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                    });
+                            });
+
+                        }
+
+                    });
+
+                });
+
+                describe('with a destination and an output', () => {
+
+                    let mediaElementAudioSourceNode;
+
+                    beforeEach(() => {
+                        mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
+                    });
+
+                    it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                        try {
+                            mediaElementAudioSourceNode.disconnect(new GainNode(context), -1);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
+                        }
+                    });
+
+                    it('should throw an InvalidAccessError if there is no similar connection', (done) => {
+                        try {
+                            mediaElementAudioSourceNode.disconnect(new GainNode(context), 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
+                });
+
+                describe('with a destination, an output and an input', () => {
+
+                    let mediaElementAudioSourceNode;
+
+                    beforeEach(() => {
+                        mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
+                    });
+
+                    it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
+                        try {
+                            mediaElementAudioSourceNode.disconnect(new GainNode(context), -1, 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
+                        }
+                    });
+
+                    it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
+                        try {
+                            mediaElementAudioSourceNode.disconnect(new GainNode(context), 0, -1);
+                        } catch (err) {
+                            expect(err.code).to.equal(1);
+                            expect(err.name).to.equal('IndexSizeError');
+
+                            done();
+                        }
+                    });
+
+                    it('should throw an InvalidAccessError if there is no similar connection', (done) => {
+                        try {
+                            mediaElementAudioSourceNode.disconnect(new GainNode(context), 0, 0);
+                        } catch (err) {
+                            expect(err.code).to.equal(15);
+                            expect(err.name).to.equal('InvalidAccessError');
+
+                            done();
+                        }
+                    });
+
+                });
+
+            });
 
         });
 
