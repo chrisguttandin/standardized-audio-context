@@ -82,6 +82,7 @@
   },
   "keywords": [
     "AudioWorklet",
+    "Polyfill",
     "Web Audio API",
     "audio",
     "browser"
