@@ -478,6 +478,30 @@ describe('audioContextConstructor', () => {
                 oscillatorNode = audioContext.createOscillator();
             });
 
+            describe('detune', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #81
+
+                    it('should be the largest possible positive float value', () => {
+                        expect(oscillatorNode.detune.maxValue).to.equal(3.4028234663852886e+38);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #81
+
+                    it('should be the smallest possible negative float value', () => {
+                        expect(oscillatorNode.detune.minValue).to.equal(-3.4028234663852886e+38);
+                    });
+
+                });
+
+            });
+
             describe('start()', () => {
 
                 // bug #44
