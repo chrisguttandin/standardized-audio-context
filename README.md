@@ -290,12 +290,13 @@ isSupported()
 ## Browser Support
 
 The goal of this package is to provide a consistent API. But at the same time this package should
-not grow indefinitely until everything works in IE 6. Whenever something is implemented in every
-supported browser it should not be part of this package anymore. And hopefully at some point in the
-future this package boils down to a file which re-exports built-in objects.
+not grow indefinitely until everything works in IE 6. Whenever a feature is implemented in every
+supported browser which required a polyfill before to work correctly that polyfill gets removed
+from this package. And hopefully at some point in the future this package boils down to a file
+which only re-exports built-in objects.
 
 But until then great care is taken to avoid any unnecessary bloat. This means whenever a workaround
-for a certain browser is added to this library this will be accompanied by a test which checks that
+for a certain browser is added to this library it will be accompanied by a test which checks that
 this particular workaround is still needed. I call those tests expectation tests because they test
 if a browser behaves as expected. An expectation test is designed to fail when the browser
 eventually ships a fix. Once that happens the workaround and the backing expectation test get
@@ -305,6 +306,10 @@ check performed when calling `isSupported()`.
 The list of currently supported browsers includes Chrome v68+, Edge v18, Firefox v62+, Opera v57+
 and Safari v12. Please note that the tests are only executed in the current and upcoming version of
 each browser.
+
+Supporting a browser only means that it is supported on the feature level. It is absolutely
+possible that a transpiler like [Babel](https://babeljs.io) is necessary to use this package in
+every supported browser without encountering any syntax errors.
 
 ## TypeScript
 
