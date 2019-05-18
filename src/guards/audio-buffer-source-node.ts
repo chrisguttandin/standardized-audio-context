@@ -3,5 +3,5 @@ import { IAudioBufferSourceNode, IAudioNode, IMinimalBaseAudioContext } from '..
 export const isAudioBufferSourceNode = <T extends IMinimalBaseAudioContext>(
     audioNode: IAudioNode<T>
 ): audioNode is IAudioBufferSourceNode<T> => {
-    return (<IAudioBufferSourceNode<T>> audioNode).playbackRate !== undefined;
+    return 'playbackRate' in audioNode;
 };
