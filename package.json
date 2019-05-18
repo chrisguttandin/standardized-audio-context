@@ -100,5 +100,5 @@
     "test": "grunt lint && grunt test"
   },
   "types": "build/es2018/module.d.ts",
-  "version": "20.0.0"
+  "version": "20.0.1"
 }
