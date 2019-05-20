@@ -61,7 +61,7 @@ oscillatorNode.start();
 
 ### AudioContext
 
-This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses only the following factory methods: `createMediaStreamDestination()`, `createMediaStreamTrackSource()` and `createScriptProcessor()`. `createMediaStreamDestination()` is not implemented in Edge and unfortunately it is very complicated (if not impossible) to polyfill. `createMediaStreamTrackSource()` has not yet landed in any browser and `createScriptProcessor()` is already deprecated.
+This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses only the following factory methods: `createMediaStreamDestination()` and `createScriptProcessor()`. `createMediaStreamDestination()` is not implemented in Edge and unfortunately it is very complicated (if not impossible) to polyfill and `createScriptProcessor()` is already deprecated.
 
 ⚠️ <!-- Bug #150 --> Only Chrome and Firefox do yet support to set the sampleRate.
 
@@ -94,6 +94,7 @@ interface IAudioContext extends EventTarget {
     createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode<IAudioContext>;
     createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<IAudioContext>;
     createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode<IAudioContext>;
+    createMediaStreamTrackSource (mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<IAudioContext>;
     createOscillator (): IOscillatorNode<IAudioContext>;
     createPanner (): IPannerNode<IAudioContext>;
     createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
@@ -222,6 +223,12 @@ It does only work with an AudioContext but not with an OfflineAudioContext.
 #### createMediaStreamSource() / MediaStreamSourceNode
 
 This is an implementation of the [`createMediaStreamSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediastreamsource) factory method. The [`MediaStreamAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediastreamaudiosourcenode) constructor may be used as an alternative.
+
+It does only work with an AudioContext but not with an OfflineAudioContext.
+
+#### createMediaStreamTrackSource() / MediaStreamTrackAudioSourceNode
+
+This is an implementation of the [`createMediaStreamTrackSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediastreamtracksource) factory method. The [`MediaStreamTrackAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediastreamtrackaudiosourcenode) constructor may be used as an alternative.
 
 It does only work with an AudioContext but not with an OfflineAudioContext.
 

@@ -51,6 +51,8 @@ export * from './media-element-audio-source-node';
 export * from './media-element-audio-source-options';
 export * from './media-stream-audio-source-node';
 export * from './media-stream-audio-source-options';
+export * from './media-stream-track-audio-source-node';
+export * from './media-stream-track-audio-source-options';
 export * from './minimal-audio-context';
 export * from './minimal-base-audio-context';
 export * from './minimal-offline-audio-context';

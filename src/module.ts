@@ -51,6 +51,7 @@ import { createIsSecureContext } from './factories/is-secure-context';
 import { createIsSupportedPromise } from './factories/is-supported-promise';
 import { createMediaElementAudioSourceNodeConstructor } from './factories/media-element-audio-source-node-constructor';
 import { createMediaStreamAudioSourceNodeConstructor } from './factories/media-stream-audio-source-node-constructor';
+import { createMediaStreamTrackAudioSourceNodeConstructor } from './factories/media-stream-track-audio-source-node-constructor';
 import { createMinimalAudioContextConstructor } from './factories/minimal-audio-context-constructor';
 import { createMinimalBaseAudioContextConstructor } from './factories/minimal-base-audio-context-constructor';
 import { createMinimalOfflineAudioContextConstructor } from './factories/minimal-offline-audio-context-constructor';
@@ -76,6 +77,7 @@ import { createNativeIIRFilterNodeFactory } from './factories/native-iir-filter-
 import { createNativeIIRFilterNodeFakerFactory } from './factories/native-iir-filter-node-faker-factory';
 import { createNativeMediaElementAudioSourceNodeFactory } from './factories/native-media-element-audio-source-node-factory';
 import { createNativeMediaStreamAudioSourceNodeFactory } from './factories/native-media-stream-audio-source-node-factory';
+import { createNativeMediaStreamTrackAudioSourceNodeFactory } from './factories/native-media-stream-track-audio-source-node-factory';
 import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
 import { createNativeOscillatorNodeFactory } from './factories/native-oscillator-node-factory';
 import { createNativePannerNodeFactory } from './factories/native-panner-node-factory';
@@ -156,6 +158,7 @@ import {
     IIIRFilterNode,
     IMediaElementAudioSourceNode,
     IMediaStreamAudioSourceNode,
+    IMediaStreamTrackAudioSourceNode,
     IMinimalAudioContext,
     IMinimalOfflineAudioContext,
     IOfflineAudioContext,
@@ -189,6 +192,7 @@ import {
     TIIRFilterNodeConstructor,
     TMediaElementAudioSourceNodeConstructor,
     TMediaStreamAudioSourceNodeConstructor,
+    TMediaStreamTrackAudioSourceNodeConstructor,
     TMinimalAudioContextConstructor,
     TMinimalOfflineAudioContextConstructor,
     TOscillatorNodeConstructor,
@@ -536,6 +540,17 @@ const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstruc
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const createNativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrackAudioSourceNodeFactory(
+    createInvalidStateError,
+    createNativeAudioNode
+);
+const mediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructor
+    = createMediaStreamTrackAudioSourceNodeConstructor(
+        createNativeMediaStreamTrackAudioSourceNode,
+        createNotSupportedError,
+        isNativeOfflineAudioContext,
+        noneAudioDestinationNodeConstructor
+    );
 const audioContextConstructor: TAudioContextConstructor = createAudioContextConstructor(
     baseAudioContextConstructor,
     createInvalidStateError,
@@ -543,6 +558,7 @@ const audioContextConstructor: TAudioContextConstructor = createAudioContextCons
     createUnknownError,
     mediaElementAudioSourceNodeConstructor,
     mediaStreamAudioSourceNodeConstructor,
+    mediaStreamTrackAudioSourceNodeConstructor,
     nativeAudioContextConstructor
 );
 
@@ -645,6 +661,10 @@ export { mediaElementAudioSourceNodeConstructor as MediaElementAudioSourceNode }
 type mediaStreamAudioSourceNodeConstructor<T extends IAudioContext | IMinimalAudioContext> = IMediaStreamAudioSourceNode<T>;
 
 export { mediaStreamAudioSourceNodeConstructor as MediaStreamAudioSourceNode };
+
+type mediaStreamTrackAudioSourceNodeConstructor<T extends IAudioContext | IMinimalAudioContext> = IMediaStreamTrackAudioSourceNode<T>;
+
+export { mediaStreamTrackAudioSourceNodeConstructor as MediaStreamTrackAudioSourceNode };
 
 const minimalAudioContextConstructor: TMinimalAudioContextConstructor = createMinimalAudioContextConstructor(
     createInvalidStateError,
