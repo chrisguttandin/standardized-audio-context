@@ -46,7 +46,8 @@ import {
     TInternalStateEventListener,
     TNativeAudioNode,
     TNativeAudioParam,
-    TNativeAudioWorkletNode
+    TNativeAudioWorkletNode,
+    TOutputConnection
 } from '../types';
 import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
@@ -61,10 +62,15 @@ const addAudioNode = <T extends IMinimalBaseAudioContext>(
     const activeInputs = [ ];
 
     for (let i = 0; i < nativeAudioNode.numberOfInputs; i += 1) {
-        activeInputs.push(new Set());
+        activeInputs.push(new Set<TActiveInputConnection<T>>());
     }
 
-    const audioNodeConnections = { activeInputs, outputs: new Set(), passiveInputs: new WeakMap(), renderer: audioNoderRender };
+    const audioNodeConnections = {
+        activeInputs,
+        outputs: new Set<TOutputConnection<T>>(),
+        passiveInputs: new WeakMap<IAudioNode<T>, Set<[ number, number, null | TInternalStateEventListener ]>>(),
+        renderer: audioNoderRender
+    };
 
     audioGraph.nodes.set(audioNode, audioNodeConnections);
 };
