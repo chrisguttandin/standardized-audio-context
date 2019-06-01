@@ -594,8 +594,8 @@ describe('audioContextConstructor', () => {
                 scriptProcessorNode.onaudioprocess = (event) => {
                     const channelData = event.inputBuffer.getChannelData(1);
 
-                    for (let i = 0, length = channelData.length; i < length; i += 1) {
-                        if (channelData[i] === 1) {
+                    for (const sample of channelData) {
+                        if (sample === 1) {
                             done();
 
                             return;

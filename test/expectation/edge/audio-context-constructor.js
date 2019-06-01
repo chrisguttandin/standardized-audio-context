@@ -895,9 +895,9 @@ describe('audioContextConstructor', () => {
                     audioContext
                         .decodeAudioData(arrayBuffer)
                         .then(() => audioContext.decodeAudioData(arrayBuffer))
-                        .catch((err2) => {
-                            expect(err2.code).to.not.equal(25);
-                            expect(err2.name).to.not.equal('DataCloneError');
+                        .catch((err_) => {
+                            expect(err_.code).to.not.equal(25);
+                            expect(err_.name).to.not.equal('DataCloneError');
 
                             done();
                         });

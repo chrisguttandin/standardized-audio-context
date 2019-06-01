@@ -14,7 +14,7 @@ class GainProcessor extends AudioWorkletProcessor {
         for (const [ channel, inputChannel ] of input.entries()) {
             const outputChannel = output[channel];
 
-            for (let i = 0; i < inputChannel.length; i += 1) {
+            for (let i = 0; i < inputChannel.length; i += 1) { // eslint-disable-line unicorn/no-for-loop
                 outputChannel[i] = inputChannel[i] * ((gain.length === 1) ? gain[0] : gain[i]);
             }
         }

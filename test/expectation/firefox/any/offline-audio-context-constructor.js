@@ -136,8 +136,8 @@ describe('offlineAudioContextConstructor', () => {
 
                     renderedBuffer.copyFromChannel(channelData, 0);
 
-                    for (let i = 0; i < channelData.length; i += 1) {
-                        expect(channelData[i]).to.equal(0);
+                    for (const sample of channelData) {
+                        expect(sample).to.equal(0);
                     }
                 });
         });
@@ -187,9 +187,9 @@ describe('offlineAudioContextConstructor', () => {
 
                             renderedBuffer.copyFromChannel(channelData, 0);
 
-                            for (let i = 0; i < channelData.length; i += 1) {
-                                expect(channelData[i]).to.be.at.least(-1);
-                                expect(channelData[i]).to.be.at.most(1);
+                            for (const sample of channelData) {
+                                expect(sample).to.be.at.least(-1);
+                                expect(sample).to.be.at.most(1);
                             }
                         });
                 });
@@ -333,9 +333,9 @@ describe('offlineAudioContextConstructor', () => {
                 offlineAudioContext
                     .decodeAudioData(arrayBuffer)
                     .then(() => offlineAudioContext.decodeAudioData(arrayBuffer))
-                    .catch((err2) => {
-                        expect(err2.code).to.not.equal(25);
-                        expect(err2.name).to.not.equal('DataCloneError');
+                    .catch((err_) => {
+                        expect(err_.code).to.not.equal(25);
+                        expect(err_.name).to.not.equal('DataCloneError');
 
                         done();
                     });
