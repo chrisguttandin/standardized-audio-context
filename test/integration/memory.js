@@ -52,15 +52,24 @@ const countObjects = async (page, previouslyUsedHeapSize = null) => {
 describe('module', () => {
 
     let browser;
+    let context;
     let page;
 
-    afterEach(() => browser.close());
+    after(() => browser.close());
+
+    afterEach(() => context.close());
+
+    before(async function () {
+        this.timeout(10000);
+
+        browser = await puppeteer.launch();
+    });
 
     beforeEach(async function () {
         this.timeout(10000);
 
-        browser = await puppeteer.launch();
-        ([ page ] = await browser.pages());
+        context = await browser.createIncognitoBrowserContext();
+        page = await context.newPage();
 
         await page.evaluate(await compileBundle());
         await page.evaluate(async () => {
