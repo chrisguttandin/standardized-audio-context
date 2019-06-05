@@ -83,12 +83,16 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         const constantSourceNodes: TNativeConstantSourceNode[] = [ ];
 
         if (processorDefinition.parameterDescriptors !== undefined) {
-            for (const { defaultValue, maxValue, minValue } of processorDefinition.parameterDescriptors) {
+            for (const { defaultValue, maxValue, minValue, name } of processorDefinition.parameterDescriptors) {
                 const constantSourceNode = createNativeConstantSourceNode(nativeContext, {
                     channelCount: 1,
                     channelCountMode: 'explicit',
                     channelInterpretation: 'discrete',
-                    offset: (defaultValue === undefined) ? 0 : defaultValue
+                    offset: (options.parameterData[name] !== undefined)
+                        ? options.parameterData[name]
+                        : (defaultValue === undefined)
+                            ? 0
+                            : defaultValue
                 });
 
                 Object.defineProperties(constantSourceNode.offset, {

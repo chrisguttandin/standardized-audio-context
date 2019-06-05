@@ -221,6 +221,17 @@ describe('AudioWorkletNode', () => {
                                     });
                             });
 
+                            it('should return an instance with a parameter initialized to the given value', async function () {
+                                this.timeout(10000);
+
+                                await addAudioWorkletModule('base/test/fixtures/inspector-processor.js');
+
+                                const parameterData = { gain: 12 };
+                                const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { parameterData });
+
+                                expect(audioWorkletNode.parameters.get('gain').value).to.deep.equal(parameterData.gain);
+                            });
+
                             it('should throw a DataCloneError when provided with an unclonable value', function (done) {
                                 this.timeout(10000);
 
