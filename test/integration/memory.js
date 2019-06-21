@@ -28,25 +28,17 @@ const compileBundle = () => {
         });
     });
 };
-const countInstances = async (page, pageFunction) => {
-    const handle = await page.queryObjects(await page.evaluateHandle(pageFunction));
-    const count = await page.evaluate((instances) => instances.length, handle);
+const countObjects = async (page) => {
+    const prototypeHandle = await page.evaluateHandle(() => Object.prototype);
+    const objectsHandle = await page.queryObjects(prototypeHandle);
+    const numberOfObjects = await page.evaluate((instances) => instances.length, objectsHandle);
 
-    await handle.dispose();
+    await Promise.all([
+        prototypeHandle.dispose(),
+        objectsHandle.dispose()
+    ]);
 
-    return count;
-};
-const countObjects = async (page, previouslyUsedHeapSize = null) => {
-    // Counting the instances will implicitly also trigger the garbage collection.
-    const numberOfObjects = await countInstances(page, () => Object.prototype);
-    const { JSHeapUsedSize: usedHeapSize } = await page.metrics();
-
-    if (previouslyUsedHeapSize === usedHeapSize) {
-        return numberOfObjects;
-    }
-
-    // Rerun the function if it ran for the first time or if the usedHeapSize is not the same anymore.
-    return countObjects(page, usedHeapSize);
+    return numberOfObjects;
 };
 
 describe('module', () => {
