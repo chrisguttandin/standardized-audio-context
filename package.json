@@ -58,7 +58,7 @@
     "mocha": "^6.1.4",
     "puppeteer": "^1.18.0",
     "rollup": "^1.16.2",
-    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-babel": "^4.3.3",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0",
     "ts-loader": "^6.0.4",
