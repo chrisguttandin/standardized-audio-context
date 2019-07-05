@@ -46,7 +46,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 );
             }
 
-            // Bug #150 Only Chrome and Firefox support setting the sampleRate.
+            // Bug #150 Only Chrome, Firefox and Opera support setting the sampleRate.
             if (options.sampleRate !== undefined && nativeAudioContext.sampleRate !== options.sampleRate) {
                 throw createNotSupportedError();
             }
