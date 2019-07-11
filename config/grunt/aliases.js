@@ -3,14 +3,14 @@ const { env } = require('process');
 // eslint-disable-next-line padding-line-between-statements
 const COMMON_TEST_TASKS = [
     'build',
-    'karma:test',
-    'karma:test-chrome',
-    'karma:test-edge',
-    'karma:test-firefox',
-    'karma:test-opera',
-    'karma:test-safari-legacy',
+    'karma:expectation-chrome',
+    'karma:expectation-edge',
+    'karma:expectation-firefox',
+    'karma:expectation-opera',
+    'karma:expectation-safari-legacy',
     'karma:integration',
-    'sh:test-integration'
+    'karma:unit',
+    'sh:test-memory'
 ];
 
 module.exports = {
@@ -33,5 +33,5 @@ module.exports = {
     ],
     test: (env.TRAVIS)
         ? COMMON_TEST_TASKS
-        : [ ...COMMON_TEST_TASKS, 'karma:test-chrome-canary', 'karma:test-firefox-developer', 'karma:test-safari' ]
+        : [ ...COMMON_TEST_TASKS, 'karma:expectation-chrome-canary', 'karma:expectation-firefox-developer', 'karma:expectation-safari' ]
 };
