@@ -8,13 +8,33 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 240000,
 
-        browsers: [
-            'ChromeBrowserStack',
-            'EdgeBrowserStack',
-            'FirefoxBrowserStack',
-            'OperaBrowserStack',
-            'SafariBrowserStack'
-        ],
+        browsers: (env.TARGET === 'chrome')
+            ? [
+                'ChromeBrowserStack'
+            ]
+            : (env.TARGET === 'edge')
+                ? [
+                    'EdgeBrowserStack'
+                ]
+                : (env.TARGET === 'firefox')
+                    ? [
+                        'FirefoxBrowserStack'
+                    ]
+                    : (env.TARGET === 'opera')
+                        ? [
+                            'OperaBrowserStack'
+                        ]
+                        : (env.TARGET === 'safari')
+                            ? [
+                                'SafariBrowserStack'
+                            ]
+                            : [
+                                'ChromeBrowserStack',
+                                'EdgeBrowserStack',
+                                'FirefoxBrowserStack',
+                                'OperaBrowserStack',
+                                'SafariBrowserStack'
+                            ],
 
         concurrency: 2,
 
@@ -109,7 +129,9 @@ module.exports = (config) => {
 
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                username: env.BROWSER_STACK_USERNAME
+                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/integration`,
+                username: env.BROWSER_STACK_USERNAME,
+                video: false
             },
 
             captureTimeout: 120000

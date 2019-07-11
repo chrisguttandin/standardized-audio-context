@@ -45,7 +45,9 @@ module.exports = (config) => {
 
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                username: env.BROWSER_STACK_USERNAME
+                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/expectation-edge`,
+                username: env.BROWSER_STACK_USERNAME,
+                video: false
             }
 
         });

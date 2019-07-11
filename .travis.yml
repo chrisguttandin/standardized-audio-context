@@ -14,4 +14,57 @@ env:
     - secure: aermTWqxs6WqjSiqGwPXHSE1PWJ+tkn8wLTPYi68Pb1wB1grc70jhSfG3Dv08Hg1Zkom4Rg76j+ihkBuVjc9uMODrbIxoqxYKaCHybYTMyCugtdzfKhwZSfYowDCZ/9Pkuu9NcID8/iNYmGzPG8PWyRZ9jhf/t4GvCisk4D94ts1wos0yh6XcTBaxJOMWUVNyBMrIIjuIfw3wzmskVQ110UcrTzp1lwm3KoRWrMo18dTE1/MCTGLc4yRrRpXPNFti1iiX0rRIMGqmdTpYJ29fAWZGMNmVJ+kzMadnpjnNPlfZWHjN0RtTaVmUm5N3DK5UcaHJ4MUD5MmL6nab+mzqmYeatJFSXByOGtyWX/J5nBvuSn7F2+t+rWDOz0ejLZGGYiow7YZhAgdXU7ZOR+vV58e5/LpvJBsi6yhvkwZFSe5PaUl2J1nSHItPwKU2U+YGbQyTeudjvV29cTgbd41H9ME0aXcOuXwcB0XW7Cksw3laob0U4qkyD3IS3hH+ONKOiDl1CAGNkcYQJFCw9Ev32M+6j+ejI/NKflej263JfgvxHgpDQIVpDKYritCKY/TyBAxUsSxxAMYQm80mYDlXyaS4Ey7K2ONc/h//9jaaBodRNY/xs/jQO6kucNFHQldBIwMW+5sf6R+pKVj+xHAvELscP0XwcNXrzPBHT3AsEU=
 install: npm ci || (rm -rf node_modules && npm install)
 language: node_js
-node_js: 12
+matrix:
+  include:
+    - env:
+      - TARGET=chrome
+      - TYPE=expectation
+      node_js: 12
+    - env:
+      - TARGET=chrome
+      - TYPE=integration
+      node_js: 12
+    - env:
+      - TARGET=chromium
+      - TYPE=memory
+      node_js: 12
+    - env:
+      - TARGET=edge
+      - TYPE=expectation
+      node_js: 12
+    - env:
+      - TARGET=edge
+      - TYPE=integration
+      node_js: 12
+    - env:
+      - TARGET=edge
+      - TYPE=unit
+      node_js: 12
+    - env:
+      - TARGET=firefox
+      - TYPE=expectation
+      node_js: 12
+    - env:
+      - TARGET=firefox
+      - TYPE=integration
+      node_js: 12
+    - env:
+      - TARGET=firefox
+      - TYPE=unit
+      node_js: 12
+    - env:
+      - TARGET=opera
+      - TYPE=expectation
+      node_js: 12
+    - env:
+      - TARGET=opera
+      - TYPE=integration
+      node_js: 12
+    - env:
+      - TARGET=safari
+      - TYPE=integration
+      node_js: 12
+    - env:
+      - TARGET=safari-legacy
+      - TYPE=expectation
+      node_js: 12

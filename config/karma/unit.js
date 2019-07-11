@@ -91,17 +91,27 @@ module.exports = (config) => {
 
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                username: env.BROWSER_STACK_USERNAME
+                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/unit`,
+                username: env.BROWSER_STACK_USERNAME,
+                video: false
             },
 
-            browsers: [
-                /*
-                 * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                 * 'ChromeBrowserStack',
-                 */
-                'EdgeBrowserStack',
-                'FirefoxBrowserStack'
-            ],
+            /*
+             * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+             * 'ChromeBrowserStack',
+             */
+            browsers: (env.TARGET === 'edge')
+                ? [
+                    'EdgeBrowserStack'
+                ]
+                : (env.TARGET === 'firefox')
+                    ? [
+                        'FirefoxBrowserStack'
+                    ]
+                    : [
+                        'EdgeBrowserStack',
+                        'FirefoxBrowserStack'
+                    ],
 
             captureTimeout: 120000,
 
@@ -124,9 +134,7 @@ module.exports = (config) => {
                     os: 'Windows',
                     os_version: '10' // eslint-disable-line camelcase
                 }
-            },
-
-            tunnelIdentifier: env.TRAVIS_JOB_NUMBER
+            }
 
         });
 

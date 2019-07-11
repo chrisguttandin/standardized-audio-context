@@ -1,4 +1,3 @@
-const { env } = require('process');
 const common = require('./expectation.js');
 
 module.exports = (config) => {
@@ -6,6 +5,10 @@ module.exports = (config) => {
     common(config);
 
     config.set({
+
+        browsers: [
+            'FirefoxDeveloperHeadless'
+        ],
 
         files: [
             'test/expectation/any/**/*.js',
@@ -25,40 +28,5 @@ module.exports = (config) => {
         }
 
     });
-
-    if (env.TRAVIS) {
-
-        config.set({
-
-            browsers: [
-                'FirefoxDeveloperSauceLabs'
-            ],
-
-            captureTimeout: 120000,
-
-            customLaunchers: {
-                FirefoxDeveloperSauceLabs: {
-                    base: 'SauceLabs',
-                    browserName: 'firefox',
-                    platform: 'OS X 10.14',
-                    version: 'dev'
-                }
-            },
-
-            tunnelIdentifier: env.TRAVIS_JOB_NUMBER
-
-        });
-
-    } else {
-
-        config.set({
-
-            browsers: [
-                'FirefoxDeveloperHeadless'
-            ]
-
-        });
-
-    }
 
 };

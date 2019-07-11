@@ -42,7 +42,9 @@ module.exports = (config) => {
 
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                username: env.BROWSER_STACK_USERNAME
+                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/expectation-opera`,
+                username: env.BROWSER_STACK_USERNAME,
+                video: false
             },
 
             browsers: [
@@ -58,9 +60,7 @@ module.exports = (config) => {
                     os: 'OS X',
                     os_version: 'Mojave' // eslint-disable-line camelcase
                 }
-            },
-
-            tunnelIdentifier: env.TRAVIS_JOB_NUMBER
+            }
 
         });
 

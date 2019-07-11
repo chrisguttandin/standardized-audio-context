@@ -1,18 +1,5 @@
 const { env } = require('process');
 
-// eslint-disable-next-line padding-line-between-statements
-const COMMON_TEST_TASKS = [
-    'build',
-    'karma:expectation-chrome',
-    'karma:expectation-edge',
-    'karma:expectation-firefox',
-    'karma:expectation-opera',
-    'karma:expectation-safari-legacy',
-    'karma:integration',
-    'karma:unit',
-    'sh:test-memory'
-];
-
 module.exports = {
     build: [
         'clean:build',
@@ -31,7 +18,54 @@ module.exports = {
         // @todo Use grunt-lint again when it support the type-check option.
         'sh:lint'
     ],
-    test: (env.TRAVIS)
-        ? COMMON_TEST_TASKS
-        : [ ...COMMON_TEST_TASKS, 'karma:expectation-chrome-canary', 'karma:expectation-firefox-developer', 'karma:expectation-safari' ]
+    test: [
+        'build',
+        ...(env.TARGET === 'chrome' && [ 'expectation', undefined ].includes(env.TYPE))
+            ? [
+                'karma:expectation-chrome'
+            ]
+            : (env.TARGET === 'edge' && [ 'expectation', undefined ].includes(env.TYPE))
+                ? [
+                    'karma:expectation-edge'
+                ]
+                : (env.TARGET === 'firefox' && [ 'expectation', undefined ].includes(env.TYPE))
+                    ? [
+                        'karma:expectation-firefox'
+                    ]
+                    : (env.TARGET === 'opera' && [ 'expectation', undefined ].includes(env.TYPE))
+                        ? [
+                            'karma:expectation-opera'
+                        ]
+                        : (env.TARGET === 'safari-legacy' && [ 'expectation', undefined ].includes(env.TYPE))
+                            ? [
+                                'karma:expectation-safari-legacy'
+                            ]
+                            : (env.TARGET === undefined && [ 'expectation', undefined ].includes(env.TYPE))
+                                ? [
+                                    'karma:expectation-chrome',
+                                    'karma:expectation-chrome-canary',
+                                    'karma:expectation-edge',
+                                    'karma:expectation-firefox',
+                                    'karma:expectation-firefox-developer',
+                                    'karma:expectation-opera',
+                                    'karma:expectation-safari',
+                                    'karma:expectation-safari-legacy'
+                                ]
+                                : [ ],
+        ...([ 'chrome', 'edge', 'firefox', 'opera', 'safari', undefined ].includes(env.TARGET) && [ 'integration', undefined ].includes(env.TYPE))
+            ? [
+                'karma:integration'
+            ]
+            : [ ],
+        ...([ 'edge', 'firefox', undefined ].includes(env.TARGET) && [ 'unit', undefined ].includes(env.TYPE))
+            ? [
+                'karma:unit'
+            ]
+            : [ ],
+        ...([ 'chromium', undefined ].includes(env.TARGET) && [ 'memory', undefined ].includes(env.TYPE))
+            ? [
+                'sh:test-memory'
+            ]
+            : [ ]
+    ]
 };

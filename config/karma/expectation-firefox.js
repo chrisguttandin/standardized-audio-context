@@ -32,7 +32,9 @@ module.exports = (config) => {
 
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                username: env.BROWSER_STACK_USERNAME
+                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/expectation-firefox`,
+                username: env.BROWSER_STACK_USERNAME,
+                video: false
             },
 
             browsers: [
@@ -48,9 +50,7 @@ module.exports = (config) => {
                     os: 'Windows',
                     os_version: '10' // eslint-disable-line camelcase
                 }
-            },
-
-            tunnelIdentifier: env.TRAVIS_JOB_NUMBER
+            }
 
         });
 
