@@ -69,8 +69,8 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
         }
 
         /*
-         * Bug #108: Only Chrome and Opera disallow a channelCount of three and above yet which is why the getter and setter needs to be
-         * overwritten here.
+         * Bug #108: Only Chrome, Firefox and Opera disallow a channelCount of three and above yet which is why the getter and setter needs
+         * to be overwritten here.
          */
         get channelCount (): number {
             return this._nativeDynamicsCompressorNode.channelCount;
@@ -89,7 +89,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
         }
 
         /*
-         * Bug #109: Only Chrome and Opera disallow a channelCountMode of 'max' yet which is why the getter and setter needs to be
+         * Bug #109: Only Chrome, Firefox and Opera disallow a channelCountMode of 'max' yet which is why the getter and setter needs to be
          * overwritten here.
          */
         get channelCountMode (): TChannelCountMode {

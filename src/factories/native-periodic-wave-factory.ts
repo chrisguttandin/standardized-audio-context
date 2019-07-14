@@ -2,7 +2,7 @@ import { TNativePeriodicWaveFactoryFactory } from '../types';
 
 export const createNativePeriodicWaveFactory: TNativePeriodicWaveFactoryFactory = (getBackupNativeContext) => {
     return (nativeContext, { disableNormalization, imag, real }) => {
-        // Bug #50: Only Chrome, Opera and Safari do currently allow to create AudioNodes (and other objects) on a closed context yet.
+        // Bug #50: Only Edge does currently not allow to create AudioNodes (and other objects) on a closed context yet.
         const backupNativeContext = getBackupNativeContext(nativeContext);
 
         // @todo Edge, Firefox & Safari do only accept Float32Arrays.

@@ -8,8 +8,8 @@ export const createGetBackupNativeContext: TGetBackupNativeContextFactory = (
 ) => {
     return <T extends TNativeAudioContext | TNativeOfflineAudioContext>(nativeContext: T): null | T => {
         /*
-         * Bug #50: Only Chrome, Opera and Safari do currently allow to create AudioNodes on a closed context yet which is why there needs
-         * to be no backupNativeContext in that case.
+         * Bug #50: Only Edge does currently not allow to create AudioNodes on a closed context yet which is why there needs to be no
+         * backupNativeContext in that case.
          */
         if (nativeContext.state === 'closed'
                 && nativeAudioContextConstructor !== null

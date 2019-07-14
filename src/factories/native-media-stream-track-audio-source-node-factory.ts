@@ -9,7 +9,7 @@ export const createNativeMediaStreamTrackAudioSourceNodeFactory: TNativeMediaStr
             return createNativeAudioNode(nativeAudioContext, (ntvDCntxt) => ntvDCntxt.createMediaStreamTrackSource(mediaStreamTrack));
         }
 
-        // Bug #121: Only Firefox Developer does yet support the MediaStreamTrackAudioSourceNode.
+        // Bug #121: Only Firefox does yet support the MediaStreamTrackAudioSourceNode.
         return createNativeAudioNode(nativeAudioContext, (ntvDCntxt) => {
             const mediaStream = new MediaStream([ mediaStreamTrack ]);
             const nativeMediaStreamAudioSourceNode = ntvDCntxt.createMediaStreamSource(mediaStream);

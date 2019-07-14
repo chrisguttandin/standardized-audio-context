@@ -124,8 +124,8 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             /*
              * Bug #86 & #87: Every browser but Firefox needs an output to be connected.
              *
-             * Bug #50: Only Chrome, Opera and Safari do yet allow to create AudioNodes on a closed AudioContext. Therefore this is
-             * currently faked by using another AudioContext. And that is the reason why this will fail in case of a closed AudioContext.
+             * Bug #50: Only Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore this is currently faked by
+             * using another AudioContext. And that is the reason why this will fail in case of a closed AudioContext.
              */
             if (context.state !== 'closed') {
                 const gainNode = new gainNodeConstructor(context, { gain: 0 });
