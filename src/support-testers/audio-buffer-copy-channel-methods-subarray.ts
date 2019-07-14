@@ -5,7 +5,7 @@ export const testAudioBufferCopyChannelMethodsSubarraySupport = (nativeAudioBuff
 
     try {
         /*
-         * Only Firefox does not fully support the copyFromChannel() and copyToChannel() methods. Therefore testing one of those
+         * Firefox up to version 67 didn't fully support the copyFromChannel() and copyToChannel() methods. Therefore testing one of those
          * methods is enough to know if the other one it supported as well.
          */
         nativeAudioBuffer.copyToChannel(source, 0, nativeAudioBuffer.length - 1);
@@ -13,5 +13,12 @@ export const testAudioBufferCopyChannelMethodsSubarraySupport = (nativeAudioBuff
         return false;
     }
 
-    return true;
+    // Since Firefox 68 another subtle bug is present which also violates the spec in its current form.
+    try {
+        nativeAudioBuffer.copyToChannel(source, 0, nativeAudioBuffer.length);
+    } catch {
+        return true;
+    }
+
+    return false;
 };
