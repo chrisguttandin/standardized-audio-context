@@ -53,6 +53,10 @@ matrix:
       - TYPE=unit
       node_js: 12
     - env:
+      - TARGET=firefox-legacy
+      - TYPE=expectation
+      node_js: 12
+    - env:
       - TARGET=opera
       - TYPE=expectation
       node_js: 12

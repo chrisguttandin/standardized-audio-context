@@ -43,6 +43,7 @@ module.exports = {
             ...isTarget('edge', 'karma:expectation-edge'),
             ...isTarget('firefox', 'karma:expectation-firefox'),
             ...isTarget(undefined, 'karma:expectation-firefox-developer'),
+            ...isTarget('firefox-legacy', 'karma:expectation-firefox-legacy'),
             ...isTarget('opera', 'karma:expectation-opera'),
             ...isTarget(undefined, 'karma:expectation-safari'),
             ...isTarget('safari-legacy', 'karma:expectation-safari-legacy')

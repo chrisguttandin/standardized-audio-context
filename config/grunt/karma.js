@@ -14,6 +14,9 @@ module.exports = {
     'expectation-firefox-developer': {
         configFile: 'config/karma/expectation-firefox-developer.js'
     },
+    'expectation-firefox-legacy': {
+        configFile: 'config/karma/expectation-firefox-legacy.js'
+    },
     'expectation-opera': {
         configFile: 'config/karma/expectation-opera.js'
     },
