@@ -265,34 +265,29 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('createScriptProcessor()', () => {
 
-        // @todo For some reason this test does currently not pass when running on BrowserStack.
-        if (!process.env.TRAVIS) { // eslint-disable-line no-undef
+        // bug #13
 
-            // bug #13
+        it('should not have any output', () => {
+            const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
+            const channelData = new Float32Array(scriptProcessorNode.bufferSize);
 
-            it('should not have any output', () => {
-                const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
-                const channelData = new Float32Array(scriptProcessorNode.bufferSize);
+            scriptProcessorNode.connect(offlineAudioContext.destination);
+            scriptProcessorNode.onaudioprocess = (event) => {
+                channelData.fill(1);
 
-                scriptProcessorNode.connect(offlineAudioContext.destination);
-                scriptProcessorNode.onaudioprocess = (event) => {
-                    channelData.fill(1);
+                event.outputBuffer.copyToChannel(channelData, 0);
+            };
 
-                    event.outputBuffer.copyToChannel(channelData, 0);
-                };
+            return offlineAudioContext
+                .startRendering()
+                .then((buffer) => {
+                    const chnnlDt = new Float32Array(scriptProcessorNode.bufferSize * 100);
 
-                return offlineAudioContext
-                    .startRendering()
-                    .then((buffer) => {
-                        const chnnlDt = new Float32Array(scriptProcessorNode.bufferSize * 100);
+                    buffer.copyFromChannel(chnnlDt, 0, 256);
 
-                        buffer.copyFromChannel(chnnlDt, 0, 256);
-
-                        expect(Array.from(chnnlDt)).to.not.contain(1);
-                    });
-            });
-
-        }
+                    expect(Array.from(chnnlDt)).to.not.contain(1);
+                });
+        });
 
     });
 
