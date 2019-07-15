@@ -16,59 +16,29 @@ install: npm ci || (rm -rf node_modules && npm install)
 language: node_js
 matrix:
   include:
-    - env:
-      - TARGET=chrome
-      - TYPE=expectation
+    - env: [TARGET=chrome, TYPE=expectation]
       node_js: 12
-    - env:
-      - TARGET=chrome
-      - TYPE=integration
+    - env: [TARGET=chrome, TYPE=integration]
       node_js: 12
-    - env:
-      - TARGET=chromium
-      - TYPE=memory
+    - env: [TARGET=chromium, TYPE=memory]
       node_js: 12
-    - env:
-      - TARGET=edge
-      - TYPE=expectation
+    - env: [TARGET=edge, TYPE=expectation]
       node_js: 12
-    - env:
-      - TARGET=edge
-      - TYPE=integration
+    - env: [TARGET=edge, TYPE=integration]
       node_js: 12
-    - env:
-      - TARGET=edge
-      - TYPE=unit
+    - env: [TARGET=edge, TYPE=unit]
       node_js: 12
-    - env:
-      - TARGET=firefox
-      - TYPE=expectation
+    - env: [TARGET=firefox, TYPE=expectation]
       node_js: 12
-    - env:
-      - TARGET=firefox
-      - TYPE=integration
+    - env: [TARGET=firefox, TYPE=integration]
       node_js: 12
-    - env:
-      - TARGET=firefox
-      - TYPE=unit
+    - env: [TARGET=firefox, TYPE=unit]
       node_js: 12
-    - env:
-      - TARGET=firefox-legacy
-      - TYPE=expectation
+    - env: [TARGET=opera, TYPE=expectation]
       node_js: 12
-    - env:
-      - TARGET=opera
-      - TYPE=expectation
+    - env: [TARGET=opera, TYPE=integration]
       node_js: 12
-    - env:
-      - TARGET=opera
-      - TYPE=integration
+    - env: [TARGET=safari, TYPE=integration]
       node_js: 12
-    - env:
-      - TARGET=safari
-      - TYPE=integration
-      node_js: 12
-    - env:
-      - TARGET=safari-legacy
-      - TYPE=expectation
+    - env: [TARGET=safari-legacy, TYPE=expectation]
       node_js: 12
