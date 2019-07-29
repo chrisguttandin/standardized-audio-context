@@ -229,7 +229,7 @@ describe('AudioWorkletNode', () => {
                                 const parameterData = { gain: 12 };
                                 const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { parameterData });
 
-                                expect(audioWorkletNode.parameters.get('gain').value).to.deep.equal(parameterData.gain);
+                                expect(audioWorkletNode.parameters.get('gain').value).to.equal(parameterData.gain);
                             });
 
                             it('should pass on the processorOptions to the AudioWorkletProcessor', function (done) {
