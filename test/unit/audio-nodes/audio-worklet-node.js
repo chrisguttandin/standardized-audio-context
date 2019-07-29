@@ -232,19 +232,6 @@ describe('AudioWorkletNode', () => {
                                 expect(audioWorkletNode.parameters.get('gain').value).to.deep.equal(parameterData.gain);
                             });
 
-                            it('should throw a DataCloneError when provided with an unclonable value', function (done) {
-                                this.timeout(10000);
-
-                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
-                                    .then(() => createAudioWorkletNode(context, 'inspector-processor', { processorOptions: { fn: () => { } } }))
-                                    .catch((err) => {
-                                        expect(err.code).to.equal(25);
-                                        expect(err.name).to.equal('DataCloneError');
-
-                                        done();
-                                    });
-                            });
-
                             it('should pass on the processorOptions to the AudioWorkletProcessor', function (done) {
                                 this.timeout(10000);
 
@@ -258,6 +245,27 @@ describe('AudioWorkletNode', () => {
                                                 audioWorkletNode.port.onmessage = null;
 
                                                 expect(data.options.processorOptions).to.deep.equal(processorOptions);
+
+                                                done();
+                                            }
+                                        };
+
+                                        audioWorkletNode.port.postMessage(null);
+                                    });
+                            });
+
+                            it('should pass on the default processorOptions to the AudioWorkletProcessor', function (done) {
+                                this.timeout(10000);
+
+                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
+                                    .then(() => {
+                                        const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
+
+                                        audioWorkletNode.port.onmessage = ({ data }) => {
+                                            if ('options' in data) {
+                                                audioWorkletNode.port.onmessage = null;
+
+                                                expect(data.options.processorOptions).to.deep.equal({ });
 
                                                 done();
                                             }
@@ -374,6 +382,23 @@ describe('AudioWorkletNode', () => {
 
                                         done();
                                     }
+                                });
+
+                            });
+
+                            describe('with processorOptions with an unclonable value', () => {
+
+                                it('should throw a DataCloneError', function (done) {
+                                    this.timeout(10000);
+
+                                    addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
+                                        .then(() => createAudioWorkletNode(context, 'inspector-processor', { processorOptions: { fn: () => { } } }))
+                                        .catch((err) => {
+                                            expect(err.code).to.equal(25);
+                                            expect(err.name).to.equal('DataCloneError');
+
+                                            done();
+                                        });
                                 });
 
                             });

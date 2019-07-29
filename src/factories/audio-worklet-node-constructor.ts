@@ -28,7 +28,7 @@ const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
     numberOfOutputs: 1,
     outputChannelCount: undefined,
     parameterData: { },
-    processorOptions: null
+    processorOptions: { }
 };
 
 const createChannelCount = (length: number): number[] => {
@@ -53,9 +53,7 @@ const sanitizedOptions = (options: IAudioWorkletNodeOptions): { outputChannelCou
                  * makes sure the computedNumberOfChannels is equivilant to the channelCount which makes it much easier to compute.
                  */
                 [ options.channelCount ] :
-                createChannelCount(options.numberOfOutputs),
-        // Bug #66: The default value of processorOptions should be null, but Chrome Canary doesn't like it.
-        processorOptions: (options.processorOptions === null) ? { } : options.processorOptions
+                createChannelCount(options.numberOfOutputs)
     };
 };
 

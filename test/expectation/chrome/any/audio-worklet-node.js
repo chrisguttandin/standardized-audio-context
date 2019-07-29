@@ -27,22 +27,6 @@ describe('AudioWorklet', () => {
 
     });
 
-    describe('with processorOptions set to null', () => {
-
-        // bug #66
-
-        it('should throw a TypeError', async function () {
-            this.timeout(10000);
-
-            await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
-
-            expect(() => {
-                new AudioWorkletNode(audioContext, 'gain-processor', { processorOptions: null });
-            }).to.throw(TypeError, "Failed to construct 'AudioWorkletNode': member processorOptions is not an object.");
-        });
-
-    });
-
     describe('without specified maxValue and minValue values', () => {
 
         // bug #82

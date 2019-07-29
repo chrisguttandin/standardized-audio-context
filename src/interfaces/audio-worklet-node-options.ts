@@ -10,6 +10,6 @@ export interface IAudioWorkletNodeOptions extends IAudioNodeOptions {
 
     parameterData: { [ name: string ]: number };
 
-    processorOptions: null | object;
+    processorOptions: object;
 
 }
