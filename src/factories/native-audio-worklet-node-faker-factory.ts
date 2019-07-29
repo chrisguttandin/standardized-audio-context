@@ -332,10 +332,10 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
                             outputChannelSplitterNodeOutput += options.outputChannelCount[j];
                         }
-                    } catch {
+                    } catch (error) {
                         isActive = false;
 
-                        nativeAudioWorkletNodeFaker.dispatchEvent(new ErrorEvent('processorerror'));
+                        nativeAudioWorkletNodeFaker.dispatchEvent(new ErrorEvent('processorerror', { error }));
                     }
 
                     if (!isActive) {

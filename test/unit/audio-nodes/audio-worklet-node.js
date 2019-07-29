@@ -553,9 +553,11 @@ describe('AudioWorkletNode', () => {
                         .then(() => {
                             const audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
 
+
                             audioWorkletNode.onprocessorerror = function (event) {
-                                expect(event).to.be.an.instanceOf(Event);
+                                expect(event).to.be.an.instanceOf(ErrorEvent);
                                 expect(event.currentTarget).to.equal(audioWorkletNode);
+                                expect(event.error).to.be.an.instanceOf(Error);
                                 expect(event.target).to.equal(audioWorkletNode);
                                 expect(event.type).to.equal('processorerror');
 
@@ -1059,8 +1061,9 @@ describe('AudioWorkletNode', () => {
                             const audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
 
                             audioWorkletNode.addEventListener('processorerror', function (event) {
-                                expect(event).to.be.an.instanceOf(Event);
+                                expect(event).to.be.an.instanceOf(ErrorEvent);
                                 expect(event.currentTarget).to.equal(audioWorkletNode);
+                                expect(event.error).to.be.an.instanceOf(Error);
                                 expect(event.target).to.equal(audioWorkletNode);
                                 expect(event.type).to.equal('processorerror');
 

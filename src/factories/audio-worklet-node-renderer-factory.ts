@@ -101,8 +101,8 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
             if (!activeSourceFlag) {
                 break;
             }
-        } catch {
-            proxy.dispatchEvent(new ErrorEvent('processorerror'));
+        } catch (error) {
+            proxy.dispatchEvent(new ErrorEvent('processorerror', { error }));
 
             break;
         }

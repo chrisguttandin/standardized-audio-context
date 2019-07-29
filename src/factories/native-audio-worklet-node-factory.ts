@@ -1,5 +1,5 @@
 import { testClonabilityOfAudioWorkletNodeOptions } from '../helpers/test-clonability-of-audio-worklet-node-options';
-import { TNativeAudioWorkletNodeFactoryFactory } from '../types';
+import { TNativeAudioWorkletNode, TNativeAudioWorkletNodeFactoryFactory } from '../types';
 
 export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactoryFactory = (
     createInvalidStateError,
@@ -22,12 +22,15 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                         }) :
                         new nativeAudioWorkletNodeConstructor(ntvCntxt, name, options);
                 });
+                const patchedEventListeners: Map<NonNullable<TNativeAudioWorkletNode['onprocessorerror']>, NonNullable<TNativeAudioWorkletNode['onprocessorerror']>> = new Map(); // tslint:disable-line:max-line-length
 
-                /*
-                 * Bug #61: Overwriting the property accessors is necessary as long as some browsers have no native implementation to
-                 * achieve a consistent behavior.
-                 */
+                let onprocessorerror: TNativeAudioWorkletNode['onprocessorerror'] = null;
+
                 Object.defineProperties(nativeAudioWorkletNode, {
+                    /*
+                     * Bug #61: Overwriting the property accessors for channelCount and channelCountMode is necessary as long as some
+                     * browsers have no native implementation to achieve a consistent behavior.
+                     */
                     channelCount: {
                         get: () => options.channelCount,
                         set: () => {
@@ -39,8 +42,61 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                         set: () => {
                             throw createInvalidStateError();
                         }
+                    },
+                    // Bug #156: Chrome does not yet fire an ErrorEvent.
+                    onprocessorerror: {
+                        get: () => onprocessorerror,
+                        set: (value) => {
+                            if (typeof onprocessorerror === 'function') {
+                                nativeAudioWorkletNode.removeEventListener('processorerror', onprocessorerror);
+                            }
+
+                            onprocessorerror = (typeof value === 'function') ? value : null;
+
+                            if (typeof onprocessorerror === 'function') {
+                                nativeAudioWorkletNode.addEventListener('processorerror', onprocessorerror);
+                            }
+                        }
                     }
                 });
+
+                nativeAudioWorkletNode.addEventListener = ((addEventListener) => {
+                    return (...args: any[]): void => {
+                        if (typeof args[1] === 'function') {
+                            const patchedEventListener = patchedEventListeners.get(args[1]);
+
+                            if (patchedEventListener !== undefined) {
+                                args[1] = patchedEventListener;
+                            } else {
+                                const unpatchedEventListener = args[1];
+
+                                args[1] = (event: Event) => {
+                                    unpatchedEventListener(new ErrorEvent('processorerror', { ...event, error: new Error(/* @todo */) }));
+                                };
+
+                                patchedEventListeners.set(unpatchedEventListener, args[1]);
+                            }
+                        }
+
+                        return addEventListener.call(nativeAudioWorkletNode, args[0], args[1], args[2]);
+                    };
+                })(nativeAudioWorkletNode.addEventListener);
+
+                nativeAudioWorkletNode.removeEventListener = ((removeEventListener) => {
+                    return (...args: any[]): void => {
+                        if (typeof args[1] === 'function') {
+                            const patchedEventListener = patchedEventListeners.get(args[1]);
+
+                            if (patchedEventListener !== undefined) {
+                                patchedEventListeners.delete(args[1]);
+
+                                args[1] = patchedEventListener;
+                            }
+                        }
+
+                        return removeEventListener.call(nativeAudioWorkletNode, args[0], args[1], args[2]);
+                    };
+                })(nativeAudioWorkletNode.removeEventListener);
 
                 return nativeAudioWorkletNode;
             } catch (err) {
