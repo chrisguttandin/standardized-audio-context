@@ -30,7 +30,7 @@ describe('audioContextConstructor', () => {
 
     describe('createBuffer()', () => {
 
-        // bug #42
+        // bug #157
 
         describe('copyFromChannel()/copyToChannel()', () => {
 
@@ -40,10 +40,10 @@ describe('audioContextConstructor', () => {
                 audioBuffer = audioContext.createBuffer(2, 100, 44100);
             });
 
-            it('should allow to copy values with an offset equal to the the length of the source', () => {
+            it('should not allow to copy values with a bufferOffset greater than the length of the AudioBuffer', () => {
                 const source = new Float32Array(10);
 
-                audioBuffer.copyToChannel(source, 0, 100);
+                expect(() => audioBuffer.copyToChannel(source, 0, 101)).to.throw(Error);
             });
 
         });

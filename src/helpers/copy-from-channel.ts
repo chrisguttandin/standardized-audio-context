@@ -5,14 +5,14 @@ export function copyFromChannel (
     parent: { [ key: number ]: Float32Array },
     key: number,
     channelNumber: number,
-    startInChannel: number
+    bufferOffset: number
 ): void;
 export function copyFromChannel (
     audioBuffer: TNativeAudioBuffer,
     parent: { [ key: string ]: Float32Array },
     key: string,
     channelNumber: number,
-    startInChannel: number
+    bufferOffset: number
 ): void;
 export function copyFromChannel (
     audioBuffer: TNativeAudioBuffer,
@@ -20,7 +20,7 @@ export function copyFromChannel (
     parent: any,
     key: number | string,
     channelNumber: number,
-    startInChannel: number
+    bufferOffset: number
 ): void {
     if (typeof audioBuffer.copyFromChannel === 'function') {
         // The byteLength will be 0 when the ArrayBuffer was transferred.
@@ -28,7 +28,7 @@ export function copyFromChannel (
             parent[key] = new Float32Array(128);
         }
 
-        audioBuffer.copyFromChannel(parent[key], channelNumber, startInChannel);
+        audioBuffer.copyFromChannel(parent[key], channelNumber, bufferOffset);
 
     // Bug #5: Safari does not support copyFromChannel().
     } else {
@@ -36,9 +36,9 @@ export function copyFromChannel (
 
         // The byteLength will be 0 when the ArrayBuffer was transferred.
         if (parent[key].byteLength === 0) {
-            parent[key] = channelData.slice(startInChannel, startInChannel + 128);
+            parent[key] = channelData.slice(bufferOffset, bufferOffset + 128);
         } else {
-            const slicedInput = new Float32Array(channelData.buffer, startInChannel * Float32Array.BYTES_PER_ELEMENT, 128);
+            const slicedInput = new Float32Array(channelData.buffer, bufferOffset * Float32Array.BYTES_PER_ELEMENT, 128);
 
             parent[key].set(slicedInput);
         }

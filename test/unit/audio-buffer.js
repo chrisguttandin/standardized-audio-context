@@ -443,15 +443,17 @@ describe('AudioBuffer', () => {
 
                 let audioBuffer;
                 let destination;
+                let destinationValues;
 
                 beforeEach(async function () {
                     this.timeout(10000);
 
                     audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
-                    destination = new Float32Array(10);
+                    destinationValues = Array.from({ length: 10 }, () => Math.fround(Math.random()));
+                    destination = new Float32Array(destinationValues);
                 });
 
-                it('should not allow to copy a channel with a number greater or equal than the number of channels', (done) => {
+                it('should not allow to copy a channel with an index greater or equal than the number of channels', (done) => {
                     try {
                         audioBuffer.copyFromChannel(destination, 2);
                     } catch (err) {
@@ -462,15 +464,22 @@ describe('AudioBuffer', () => {
                     }
                 });
 
-                it('should not allow to copy values with an offset greater than the length', (done) => {
-                    try {
-                        audioBuffer.copyFromChannel(destination, 0, 1000);
-                    } catch (err) {
-                        expect(err.code).to.equal(1);
-                        expect(err.name).to.equal('IndexSizeError');
+                it('should allow to copy values with a negative bufferOffset', () => {
+                    audioBuffer.copyFromChannel(destination, 0, -1000);
 
-                        done();
-                    }
+                    expect(Array.from(destination)).to.deep.equal(destinationValues);
+                });
+
+                it('should allow to copy values with a bufferOffset equal to the length', () => {
+                    audioBuffer.copyFromChannel(destination, 0, 1000);
+
+                    expect(Array.from(destination)).to.deep.equal(destinationValues);
+                });
+
+                it('should allow to copy values with a bufferOffset greater than the length', () => {
+                    audioBuffer.copyFromChannel(destination, 0, 2000);
+
+                    expect(Array.from(destination)).to.deep.equal(destinationValues);
                 });
 
             });
@@ -479,15 +488,17 @@ describe('AudioBuffer', () => {
 
                 let audioBuffer;
                 let source;
+                let sourceValues;
 
                 beforeEach(async function () {
                     this.timeout(10000);
 
                     audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
-                    source = new Float32Array(10);
+                    sourceValues = Array.from({ length: 10 }, () => Math.fround(Math.random()));
+                    source = new Float32Array(sourceValues);
                 });
 
-                it('should not allow to copy a channel with a number greater or equal than the number of channels', (done) => {
+                it('should not allow to copy a channel with an index greater or equal than the number of channels', (done) => {
                     try {
                         audioBuffer.copyToChannel(source, 2);
                     } catch (err) {
@@ -498,14 +509,33 @@ describe('AudioBuffer', () => {
                     }
                 });
 
-                it('should not allow to copy values with an offset greater than the length', (done) => {
-                    try {
-                        audioBuffer.copyToChannel(source, 0, 1000);
-                    } catch (err) {
-                        expect(err.code).to.equal(1);
-                        expect(err.name).to.equal('IndexSizeError');
+                it('should allow to copy values with a negative bufferOffset', () => {
+                    audioBuffer.copyToChannel(source, 0, -1000);
 
-                        done();
+                    const channelData = audioBuffer.getChannelData(0);
+
+                    for (const sourceValue of sourceValues) {
+                        expect(Array.from(channelData)).to.not.contain(sourceValue);
+                    }
+                });
+
+                it('should allow to copy values with a bufferOffset equal to the length', () => {
+                    audioBuffer.copyToChannel(source, 0, 1000);
+
+                    const channelData = audioBuffer.getChannelData(0);
+
+                    for (const sourceValue of sourceValues) {
+                        expect(Array.from(channelData)).to.not.contain(sourceValue);
+                    }
+                });
+
+                it('should allow to copy values with a bufferOffset greater than the length', () => {
+                    audioBuffer.copyToChannel(source, 0, 2000);
+
+                    const channelData = audioBuffer.getChannelData(0);
+
+                    for (const sourceValue of sourceValues) {
+                        expect(Array.from(channelData)).to.not.contain(sourceValue);
                     }
                 });
 
@@ -530,7 +560,7 @@ describe('AudioBuffer', () => {
                     }
                 });
 
-                it('should copy values with an offset of 0', () => {
+                it('should copy values with a bufferOffset of 0', () => {
                     audioBuffer.copyToChannel(source, 0);
                     audioBuffer.copyFromChannel(destination, 0);
 
@@ -539,7 +569,7 @@ describe('AudioBuffer', () => {
                     }
                 });
 
-                it('should copy values with an offset of 50', () => {
+                it('should copy values with a bufferOffset of 50', () => {
                     audioBuffer.copyToChannel(source, 0, 50);
                     audioBuffer.copyFromChannel(destination, 0, 50);
 
@@ -548,7 +578,7 @@ describe('AudioBuffer', () => {
                     }
                 });
 
-                it('should copy values with an offset large enough to leave a part of the destination untouched', () => {
+                it('should copy values with a bufferOffset large enough to leave a part of the destination untouched', () => {
                     const destinationCopy = Array.from(destination);
 
                     audioBuffer.copyToChannel(source, 0, 1000 - 5);
@@ -563,13 +593,12 @@ describe('AudioBuffer', () => {
                     }
                 });
 
-                it('should copy values with an offset low enough to leave a part of the buffer untouched', () => {
-                    audioBuffer.copyToChannel(source, 0, 35);
-                    audioBuffer.copyToChannel(source, 0, 25);
-                    audioBuffer.copyFromChannel(destination, 0, 35);
+                it('should copy values with a bufferOffset low enough to leave a part of the source unused', () => {
+                    audioBuffer.copyToChannel(source, 0, -5);
+                    audioBuffer.copyFromChannel(destination, 0);
 
-                    for (let i = 0; i < 10; i += 1) {
-                        expect(destination[i]).to.equal(source[i]);
+                    for (let i = 0; i < 5; i += 1) {
+                        expect(destination[i]).to.equal(source[i + 5]);
                     }
                 });
 

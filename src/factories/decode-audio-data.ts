@@ -4,6 +4,7 @@ import { detachArrayBuffer } from '../helpers/detach-array-buffer';
 import { getNativeContext } from '../helpers/get-native-context';
 import { TDecodeAudioDataFactory } from '../types';
 import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
+import { wrapAudioBufferCopyChannelMethodsOutOfBounds } from '../wrappers/audio-buffer-copy-channel-methods-out-of-bounds';
 import { wrapAudioBufferCopyChannelMethodsSubarray } from '../wrappers/audio-buffer-copy-channel-methods-subarray';
 import { wrapAudioBufferGetChannelDataMethod } from '../wrappers/audio-buffer-get-channel-data-method';
 
@@ -13,6 +14,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     nativeOfflineAudioContextConstructor,
     isNativeContext,
     isNativeOfflineAudioContext,
+    testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     testAudioBufferCopyChannelMethodsSubarraySupport,
     testPromiseSupport
 ) => {
@@ -61,6 +63,13 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                         () => testAudioBufferCopyChannelMethodsSubarraySupport(audioBuffer)
                     )) {
                         wrapAudioBufferCopyChannelMethodsSubarray(audioBuffer);
+                        wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
+                    // Bug #157: No browser does allow the bufferOffset to be out-of-bounds.
+                    } else if (!cacheTestResult(
+                        testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
+                        () => testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
+                    )) {
+                        wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
                     }
 
                     return audioBuffer;

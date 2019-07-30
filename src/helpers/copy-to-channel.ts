@@ -5,12 +5,12 @@ export const copyToChannel = (
     parent: { [ key: number ]: Float32Array },
     key: number,
     channelNumber: number,
-    startInChannel: number
+    bufferOffset: number
 ): void => {
     if (typeof audioBuffer.copyToChannel === 'function') {
         // The byteLength will be 0 when the ArrayBuffer was transferred.
         if (parent[key].byteLength !== 0) {
-            audioBuffer.copyToChannel(parent[key], channelNumber, startInChannel);
+            audioBuffer.copyToChannel(parent[key], channelNumber, bufferOffset);
         }
 
     // Bug #5: Safari does not support copyToChannel().
@@ -19,7 +19,7 @@ export const copyToChannel = (
         if (parent[key].byteLength !== 0) {
             audioBuffer
                 .getChannelData(channelNumber)
-                .set(parent[key], startInChannel);
+                .set(parent[key], bufferOffset);
         }
     }
 };

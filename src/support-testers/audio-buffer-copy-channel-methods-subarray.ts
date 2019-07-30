@@ -13,12 +13,5 @@ export const testAudioBufferCopyChannelMethodsSubarraySupport = (nativeAudioBuff
         return false;
     }
 
-    // Since Firefox 68 another subtle bug is present which also violates the spec in its current form.
-    try {
-        nativeAudioBuffer.copyToChannel(source, 0, nativeAudioBuffer.length);
-    } catch {
-        return true;
-    }
-
-    return false;
+    return true;
 };

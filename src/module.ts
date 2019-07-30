@@ -168,6 +168,7 @@ import {
     IStereoPannerNode,
     IWaveShaperNode
 } from './interfaces';
+import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './support-testers/audio-buffer-copy-channel-methods-out-of-bounds';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
 import { testPromiseSupport } from './support-testers/promise';
 import { testTransferablesSupport } from './support-testers/transferables';
@@ -496,6 +497,7 @@ export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     nativeOfflineAudioContextConstructor,
     isNativeContext,
     isNativeOfflineAudioContext,
+    testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     testAudioBufferCopyChannelMethodsSubarraySupport,
     testPromiseSupport
 );
@@ -681,7 +683,11 @@ const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(
     createNotSupportedError,
     nativeOfflineAudioContextConstructor
 );
-const startRendering = createStartRendering(renderNativeOfflineAudioContext, testAudioBufferCopyChannelMethodsSubarraySupport);
+const startRendering = createStartRendering(
+    renderNativeOfflineAudioContext,
+    testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
+    testAudioBufferCopyChannelMethodsSubarraySupport
+);
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     createInvalidStateError,
     createNativeOfflineAudioContext,

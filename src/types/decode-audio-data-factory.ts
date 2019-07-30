@@ -13,6 +13,7 @@ export type TDecodeAudioDataFactory = (
     nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor,
     isNativeContext: TIsNativeContextFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    testAudioBufferCopyChannelMethodsOutOfBoundsSupport: (nativeAudioBuffer: TNativeAudioBuffer) => boolean,
     testAudioBufferCopyChannelMethodsSubarraySupport: (nativeAudioBuffer: TNativeAudioBuffer) => boolean,
     testPromiseSupport: (nativeContext: TNativeContext) => boolean
 ) => TDecodeAudioDataFunction;
