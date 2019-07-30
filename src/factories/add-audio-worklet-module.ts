@@ -1,4 +1,4 @@
-import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
+import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
 import { evaluateSource } from '../helpers/evaluate-source';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isConstructible } from '../helpers/is-constructible';
@@ -171,22 +171,22 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                             throw createNotSupportedError();
                         }
 
-                        const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
+                        const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
 
-                        if (nodeNameToProcessorDefinitionMap !== undefined) {
-                            if (nodeNameToProcessorDefinitionMap.has(name)) {
+                        if (nodeNameToProcessorConstructorMap !== undefined) {
+                            if (nodeNameToProcessorConstructorMap.has(name)) {
                                 throw createNotSupportedError();
                             }
 
                             verifyProcessorCtor(processorCtor);
                             verifyParameterDescriptors(processorCtor.parameterDescriptors);
 
-                            nodeNameToProcessorDefinitionMap.set(name, processorCtor);
+                            nodeNameToProcessorConstructorMap.set(name, processorCtor);
                         } else {
                             verifyProcessorCtor(processorCtor);
                             verifyParameterDescriptors(processorCtor.parameterDescriptors);
 
-                            NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
+                            NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
                         }
                     },
                     globalScope.sampleRate,

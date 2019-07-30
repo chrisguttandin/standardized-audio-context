@@ -1,4 +1,4 @@
-import { NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS } from '../globals';
+import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
 import { getNativeContext } from '../helpers/get-native-context';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
@@ -83,10 +83,10 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
-            const nodeNameToProcessorDefinitionMap = NODE_NAME_TO_PROCESSOR_DEFINITION_MAPS.get(nativeContext);
-            const processorDefinition = (nodeNameToProcessorDefinitionMap === undefined) ?
+            const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
+            const processorDefinition = (nodeNameToProcessorConstructorMap === undefined) ?
                 undefined :
-                nodeNameToProcessorDefinitionMap.get(name);
+                nodeNameToProcessorConstructorMap.get(name);
             const nativeAudioWorkletNode = createNativeAudioWorkletNode(
                 nativeContext,
                 isOffline ? null : (<IMinimalAudioContext> (<any> context)).baseLatency,
