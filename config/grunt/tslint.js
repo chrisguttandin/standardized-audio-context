@@ -1,7 +1,7 @@
 module.exports = {
     src: {
         files: {
-            src: [ 'src/**/*.ts', '!src/browsernizr.ts' ]
+            src: [ 'src/**/*.ts' ]
         },
         options: {
             configuration: 'config/tslint/src.json'

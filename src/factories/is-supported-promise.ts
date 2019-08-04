@@ -2,7 +2,6 @@ import { cacheTestResult } from '../helpers/cache-test-result';
 import { TIsSupportedPromiseFactory } from '../types';
 
 export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
-    browsernizr,
     testAudioContextCloseMethodSupport,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
     testAudioContextOptionsSupport,
@@ -14,10 +13,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testStereoPannerNodeDefaultValueSupport,
     testTransferablesSupport
 ) => {
-    if (browsernizr.promises
-            && browsernizr.typedarrays
-            && browsernizr.webaudio
-            && cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport)
+    if (cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport)
             && cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport)
             && cacheTestResult(testChannelSplitterNodeChannelCountSupport, testChannelSplitterNodeChannelCountSupport)
             && cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport)

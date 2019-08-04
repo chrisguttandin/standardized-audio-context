@@ -45,7 +45,6 @@ export * from './biquad-filter-node-constructor-factory';
 export * from './biquad-filter-node-renderer-factory';
 export * from './biquad-filter-node-renderer-factory-factory';
 export * from './biquad-filter-type';
-export * from './browsernizr';
 export * from './channel-count-mode';
 export * from './channel-interpretation';
 export * from './channel-merger-node-constructor';

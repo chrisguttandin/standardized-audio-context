@@ -6,7 +6,7 @@ module.exports = {
         cmd: 'rollup -c config/rollup/bundle.js'
     },
     'lint': {
-        cmd: 'tslint --config config/tslint/src.json --exclude src/browsernizr.ts --project src/tsconfig.json src/*.ts src/**/*.ts'
+        cmd: 'tslint --config config/tslint/src.json --project src/tsconfig.json src/*.ts src/**/*.ts'
     },
     'test-integration': {
         cmd: 'mocha --bail --recursive --require config/mocha/config-integration.js test/integration'

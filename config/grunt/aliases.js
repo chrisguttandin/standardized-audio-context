@@ -19,9 +19,6 @@ const isType = (type, ...tasks) => {
 module.exports = {
     build: [
         'clean:build',
-        'modernizr',
-        'replace:modernizr',
-        'clean:modernizr',
         'sh:build-es2018',
         'sh:build-es5'
     ],

@@ -1,4 +1,3 @@
-import browsernizr from './browsernizr';
 import { createAbortError } from './factories/abort-error';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
 import { createAnalyserNodeConstructor } from './factories/analyser-node-constructor';
@@ -751,7 +750,6 @@ type waveShaperNodeConstructor<T extends TContext> = IWaveShaperNode<T>;
 export { waveShaperNodeConstructor as WaveShaperNode };
 
 export const isSupported = () => createIsSupportedPromise(
-    browsernizr,
     createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
