@@ -34,6 +34,8 @@ matrix:
       node_js: 12
     - env: [TARGET=firefox, TYPE=unit]
       node_js: 12
+    - env: [TARGET=node, TYPE=integration]
+      node_js: 12
     - env: [TARGET=opera, TYPE=expectation]
       node_js: 12
     - env: [TARGET=opera, TYPE=integration]
