@@ -1,6 +1,6 @@
-import { TNativeAudioBuffer, TWrapAudioBufferCopyChannelMethodsSubArrayFactory } from '../types';
+import { TNativeAudioBuffer, TWrapAudioBufferCopyChannelMethodsSubarrayFactory } from '../types';
 
-export const createWrapAudioBufferCopyChannelMethodsSubArray: TWrapAudioBufferCopyChannelMethodsSubArrayFactory = (
+export const createWrapAudioBufferCopyChannelMethodsSubarray: TWrapAudioBufferCopyChannelMethodsSubarrayFactory = (
     convertNumberToUnsignedLong,
     createIndexSizeError
 ) => {

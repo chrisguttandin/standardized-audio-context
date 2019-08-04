@@ -4,7 +4,7 @@ import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-co
 import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 import { TWrapAudioBufferCopyChannelMethodsFunction } from './wrap-audio-buffer-copy-channel-methods-function';
 import { TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction } from './wrap-audio-buffer-copy-channel-methods-out-of-bounds-function';
-import { TWrapAudioBufferCopyChannelMethodsSubArrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
+import { TWrapAudioBufferCopyChannelMethodsSubarrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
 
 export type TAudioBufferConstructorFactory = (
     createNotSupportedError: TNotSupportedErrorFactory,
@@ -13,5 +13,5 @@ export type TAudioBufferConstructorFactory = (
     testNativeAudioBufferConstructorSupport: () => boolean,
     wrapAudioBufferCopyChannelMethods: TWrapAudioBufferCopyChannelMethodsFunction,
     wrapAudioBufferCopyChannelMethodsOutOfBounds: TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction,
-    wrapAudioBufferCopyChannelMethodsSubArray: TWrapAudioBufferCopyChannelMethodsSubArrayFunction
+    wrapAudioBufferCopyChannelMethodsSubarray: TWrapAudioBufferCopyChannelMethodsSubarrayFunction
 ) => TAudioBufferConstructor;

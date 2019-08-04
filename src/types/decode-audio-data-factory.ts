@@ -8,7 +8,7 @@ import { TNativeContext } from './native-context';
 import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-context-constructor';
 import { TWrapAudioBufferCopyChannelMethodsFunction } from './wrap-audio-buffer-copy-channel-methods-function';
 import { TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction } from './wrap-audio-buffer-copy-channel-methods-out-of-bounds-function';
-import { TWrapAudioBufferCopyChannelMethodsSubArrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
+import { TWrapAudioBufferCopyChannelMethodsSubarrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
 
 export type TDecodeAudioDataFactory = (
     createDataCloneError: TDataCloneErrorFactory,
@@ -21,5 +21,5 @@ export type TDecodeAudioDataFactory = (
     testPromiseSupport: (nativeContext: TNativeContext) => boolean,
     wrapAudioBufferCopyChannelMethods: TWrapAudioBufferCopyChannelMethodsFunction,
     wrapAudioBufferCopyChannelMethodsOutOfBounds: TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction,
-    wrapAudioBufferCopyChannelMethodsSubArray: TWrapAudioBufferCopyChannelMethodsSubArrayFunction
+    wrapAudioBufferCopyChannelMethodsSubarray: TWrapAudioBufferCopyChannelMethodsSubarrayFunction
 ) => TDecodeAudioDataFunction;

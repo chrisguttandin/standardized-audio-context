@@ -3,7 +3,7 @@ import { TRenderNativeOfflineAudioContextFunction } from './render-native-offlin
 import { TStartRenderingFunction } from './start-rendering-function';
 import { TWrapAudioBufferCopyChannelMethodsFunction } from './wrap-audio-buffer-copy-channel-methods-function';
 import { TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction } from './wrap-audio-buffer-copy-channel-methods-out-of-bounds-function';
-import { TWrapAudioBufferCopyChannelMethodsSubArrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
+import { TWrapAudioBufferCopyChannelMethodsSubarrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
 
 export type TStartRenderingFactory = (
     renderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFunction,
@@ -11,5 +11,5 @@ export type TStartRenderingFactory = (
     testAudioBufferCopyChannelMethodsSubarraySupport: (nativeAudioBuffer: TNativeAudioBuffer) => boolean,
     wrapAudioBufferCopyChannelMethods: TWrapAudioBufferCopyChannelMethodsFunction,
     wrapAudioBufferCopyChannelMethodsOutOfBounds: TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction,
-    wrapAudioBufferCopyChannelMethodsSubArray: TWrapAudioBufferCopyChannelMethodsSubArrayFunction
+    wrapAudioBufferCopyChannelMethodsSubarray: TWrapAudioBufferCopyChannelMethodsSubarrayFunction
 ) => TStartRenderingFunction;

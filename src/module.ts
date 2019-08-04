@@ -140,7 +140,7 @@ import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-nod
 import { createWindow } from './factories/window';
 import { createWrapAudioBufferCopyChannelMethods } from './factories/wrap-audio-buffer-copy-channel-methods';
 import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
-import { createWrapAudioBufferCopyChannelMethodsSubArray } from './factories/wrap-audio-buffer-copy-channel-methods-subarray';
+import { createWrapAudioBufferCopyChannelMethodsSubarray } from './factories/wrap-audio-buffer-copy-channel-methods-subarray';
 import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
@@ -246,7 +246,7 @@ const nativeAudioBufferConstructor = createNativeAudioBufferConstructor(window);
 const convertNumberToUnsignedLong = createConvertNumberToUnsignedLong(new Uint32Array(1));
 const wrapAudioBufferCopyChannelMethods = createWrapAudioBufferCopyChannelMethods(convertNumberToUnsignedLong, createIndexSizeError);
 const wrapAudioBufferCopyChannelMethodsOutOfBounds = createWrapAudioBufferCopyChannelMethodsOutOfBounds(convertNumberToUnsignedLong);
-const wrapAudioBufferCopyChannelMethodsSubArray = createWrapAudioBufferCopyChannelMethodsSubArray(
+const wrapAudioBufferCopyChannelMethodsSubarray = createWrapAudioBufferCopyChannelMethodsSubarray(
     convertNumberToUnsignedLong,
     createIndexSizeError
 );
@@ -257,7 +257,7 @@ const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstru
     createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor),
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds,
-    wrapAudioBufferCopyChannelMethodsSubArray
+    wrapAudioBufferCopyChannelMethodsSubarray
 );
 
 type audioBufferConstructor = IAudioBuffer;
@@ -516,7 +516,7 @@ export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     testPromiseSupport,
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds,
-    wrapAudioBufferCopyChannelMethodsSubArray
+    wrapAudioBufferCopyChannelMethodsSubarray
 );
 
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
@@ -706,7 +706,7 @@ const startRendering = createStartRendering(
     testAudioBufferCopyChannelMethodsSubarraySupport,
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds,
-    wrapAudioBufferCopyChannelMethodsSubArray
+    wrapAudioBufferCopyChannelMethodsSubarray
 );
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     createInvalidStateError,
