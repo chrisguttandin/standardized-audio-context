@@ -3,9 +3,6 @@ import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from '../support-testers/audio-buffer-copy-channel-methods-out-of-bounds';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from '../support-testers/audio-buffer-copy-channel-methods-subarray';
 import { TAudioBufferConstructorFactory, TNativeOfflineAudioContext } from '../types';
-import { wrapAudioBufferCopyChannelMethods } from '../wrappers/audio-buffer-copy-channel-methods';
-import { wrapAudioBufferCopyChannelMethodsOutOfBounds } from '../wrappers/audio-buffer-copy-channel-methods-out-of-bounds';
-import { wrapAudioBufferCopyChannelMethodsSubarray } from '../wrappers/audio-buffer-copy-channel-methods-subarray';
 import { wrapAudioBufferGetChannelDataMethod } from '../wrappers/audio-buffer-get-channel-data-method';
 
 const DEFAULT_OPTIONS = {
@@ -16,7 +13,10 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
     createNotSupportedError,
     nativeAudioBufferConstructor,
     nativeOfflineAudioContextConstructor,
-    testNativeAudioBufferConstructorSupport
+    testNativeAudioBufferConstructorSupport,
+    wrapAudioBufferCopyChannelMethods,
+    wrapAudioBufferCopyChannelMethodsOutOfBounds,
+    wrapAudioBufferCopyChannelMethodsSubarray
 ) => {
 
     let nativeOfflineAudioContext: null | TNativeOfflineAudioContext = null;

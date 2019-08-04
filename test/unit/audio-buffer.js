@@ -593,12 +593,21 @@ describe('AudioBuffer', () => {
                     }
                 });
 
-                it('should copy values with a bufferOffset low enough to leave a part of the source unused', () => {
-                    audioBuffer.copyToChannel(source, 0, -5);
-                    audioBuffer.copyFromChannel(destination, 0);
+                it('should copy values with a bufferOffset small enough to get mapped to an existing bufferOffset', () => {
+                    audioBuffer.copyToChannel(source, 0, 10 - (2 ** 32));
+                    audioBuffer.copyFromChannel(destination, 0, 10);
 
-                    for (let i = 0; i < 5; i += 1) {
-                        expect(destination[i]).to.equal(source[i + 5]);
+                    for (let i = 0; i < 10; i += 1) {
+                        expect(destination[i]).to.equal(source[i]);
+                    }
+                });
+
+                it('should copy values with a bufferOffset large enough to get mapped to an existing bufferOffset', () => {
+                    audioBuffer.copyToChannel(source, 0, (2 ** 32) + 10);
+                    audioBuffer.copyFromChannel(destination, 0, 10);
+
+                    for (let i = 0; i < 10; i += 1) {
+                        expect(destination[i]).to.equal(source[i]);
                     }
                 });
 

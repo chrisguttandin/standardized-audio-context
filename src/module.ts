@@ -25,6 +25,7 @@ import { createChannelSplitterNodeRendererFactory } from './factories/channel-sp
 import { createConnectMultipleOutputs } from './factories/connect-multiple-outputs';
 import { createConstantSourceNodeConstructor } from './factories/constant-source-node-constructor';
 import { createConstantSourceNodeRendererFactory } from './factories/constant-source-node-renderer-factory';
+import { createConvertNumberToUnsignedLong } from './factories/convert-number-to-unsigned-long';
 import { createConvolverNodeConstructor } from './factories/convolver-node-constructor';
 import { createConvolverNodeRendererFactory } from './factories/convolver-node-renderer-factory';
 import { createCreateNativeOfflineAudioContext } from './factories/create-native-offline-audio-context';
@@ -137,6 +138,9 @@ import { createUnknownError } from './factories/unknown-error';
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
 import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-node-renderer-factory';
 import { createWindow } from './factories/window';
+import { createWrapAudioBufferCopyChannelMethods } from './factories/wrap-audio-buffer-copy-channel-methods';
+import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
+import { createWrapAudioBufferCopyChannelMethodsSubArray } from './factories/wrap-audio-buffer-copy-channel-methods-subarray';
 import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
@@ -239,11 +243,21 @@ export { analyserNodeConstructor as AnalyserNode };
 
 const nativeAudioBufferConstructor = createNativeAudioBufferConstructor(window);
 
+const convertNumberToUnsignedLong = createConvertNumberToUnsignedLong(new Uint32Array(1));
+const wrapAudioBufferCopyChannelMethods = createWrapAudioBufferCopyChannelMethods(convertNumberToUnsignedLong, createIndexSizeError);
+const wrapAudioBufferCopyChannelMethodsOutOfBounds = createWrapAudioBufferCopyChannelMethodsOutOfBounds(convertNumberToUnsignedLong);
+const wrapAudioBufferCopyChannelMethodsSubArray = createWrapAudioBufferCopyChannelMethodsSubArray(
+    convertNumberToUnsignedLong,
+    createIndexSizeError
+);
 const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstructor(
     createNotSupportedError,
     nativeAudioBufferConstructor,
     nativeOfflineAudioContextConstructor,
-    createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor)
+    createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor),
+    wrapAudioBufferCopyChannelMethods,
+    wrapAudioBufferCopyChannelMethodsOutOfBounds,
+    wrapAudioBufferCopyChannelMethodsSubArray
 );
 
 type audioBufferConstructor = IAudioBuffer;
@@ -499,7 +513,10 @@ export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     isNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     testAudioBufferCopyChannelMethodsSubarraySupport,
-    testPromiseSupport
+    testPromiseSupport,
+    wrapAudioBufferCopyChannelMethods,
+    wrapAudioBufferCopyChannelMethodsOutOfBounds,
+    wrapAudioBufferCopyChannelMethodsSubArray
 );
 
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
@@ -686,7 +703,10 @@ const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(
 const startRendering = createStartRendering(
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    testAudioBufferCopyChannelMethodsSubarraySupport
+    testAudioBufferCopyChannelMethodsSubarraySupport,
+    wrapAudioBufferCopyChannelMethods,
+    wrapAudioBufferCopyChannelMethodsOutOfBounds,
+    wrapAudioBufferCopyChannelMethodsSubArray
 );
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     createInvalidStateError,
