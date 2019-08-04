@@ -1,4 +1,3 @@
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from '../support-testers/audio-buffer-copy-channel-methods-out-of-bounds';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from '../support-testers/audio-buffer-copy-channel-methods-subarray';
@@ -10,6 +9,7 @@ const DEFAULT_OPTIONS = {
 };
 
 export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
+    cacheTestResult,
     createNotSupportedError,
     nativeAudioBufferConstructor,
     nativeOfflineAudioContextConstructor,

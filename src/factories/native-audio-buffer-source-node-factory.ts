@@ -1,7 +1,6 @@
 import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
 import { wrapAudioBufferSourceNodeStartMethodConsecutiveCalls } from '../wrappers/audio-buffer-source-node-start-method-consecutive-calls';
 import {
@@ -15,6 +14,7 @@ import {
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
 
 export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceNodeFactoryFactory = (
+    cacheTestResult,
     createNativeAudioNode,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
     testAudioBufferSourceNodeStartMethodDurationParameterSupport,

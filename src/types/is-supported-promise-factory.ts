@@ -1,4 +1,7 @@
+import { TCacheTestResultFunction } from './cache-test-result-function';
+
 export type TIsSupportedPromiseFactory = (
+    cacheTestResult: TCacheTestResultFunction,
     testAudioContextCloseMethodSupport: () => boolean,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: () => Promise<boolean>,
     testAudioContextOptionsSupport: () => boolean,

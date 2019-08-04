@@ -1,4 +1,3 @@
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import { testPromiseSupport } from '../support-testers/promise';
 import { TAudioContextState, TNativeOfflineAudioContext, TOfflineAudioContextConstructorFactory } from '../types';
@@ -9,6 +8,7 @@ const DEFAULT_OPTIONS = {
 
 export const createOfflineAudioContextConstructor: TOfflineAudioContextConstructorFactory = (
     baseAudioContextConstructor,
+    cacheTestResult,
     createInvalidStateError,
     createNativeOfflineAudioContext,
     startRendering

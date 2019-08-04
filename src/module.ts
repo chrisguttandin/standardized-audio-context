@@ -17,6 +17,7 @@ import { createAudioWorkletNodeRendererFactory } from './factories/audio-worklet
 import { createBaseAudioContextConstructor } from './factories/base-audio-context-constructor';
 import { createBiquadFilterNodeConstructor } from './factories/biquad-filter-node-constructor';
 import { createBiquadFilterNodeRendererFactory } from './factories/biquad-filter-node-renderer-factory';
+import { createCacheTestResult } from './factories/cache-test-result';
 import { createChannelMergerNodeConstructor } from './factories/channel-merger-node-constructor';
 import { createChannelMergerNodeRendererFactory } from './factories/channel-merger-node-renderer-factory';
 import { createChannelSplitterNodeConstructor } from './factories/channel-splitter-node-constructor';
@@ -209,6 +210,7 @@ import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './wrappers/a
 export * from './interfaces';
 export * from './types';
 
+const cacheTestResult = createCacheTestResult(new Map());
 const window = createWindow();
 const nativeOfflineAudioContextConstructor = createNativeOfflineAudioContextConstructor(window);
 const isNativeOfflineAudioContext = createIsNativeOfflineAudioContext(nativeOfflineAudioContextConstructor);
@@ -219,9 +221,10 @@ const getBackupNativeContext = createGetBackupNativeContext(
     nativeOfflineAudioContextConstructor
 );
 const createNativeAudioNode = createNativeAudioNodeFactory(getBackupNativeContext);
-const createNativeAnalyserNode = createNativeAnalyserNodeFactory(createIndexSizeError, createNativeAudioNode);
+const createNativeAnalyserNode = createNativeAnalyserNodeFactory(cacheTestResult, createIndexSizeError, createNativeAudioNode);
 const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(createNativeAnalyserNode);
 const audioNodeConstructor = createAudioNodeConstructor(
+    cacheTestResult,
     createIndexSizeError,
     createInvalidAccessError,
     createNotSupportedError,
@@ -250,6 +253,7 @@ const wrapAudioBufferCopyChannelMethodsSubarray = createWrapAudioBufferCopyChann
     createIndexSizeError
 );
 const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstructor(
+    cacheTestResult,
     createNotSupportedError,
     nativeAudioBufferConstructor,
     nativeOfflineAudioContextConstructor,
@@ -273,6 +277,7 @@ const wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls = createWrapAudioSc
     createNativeAudioNode
 );
 const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFactory(
+    cacheTestResult,
     createNativeAudioNode,
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(createNativeAudioNode),
     createTestAudioBufferSourceNodeStartMethodDurationParameterSupport(nativeOfflineAudioContextConstructor),
@@ -339,6 +344,7 @@ const createNativeConstantSourceNodeFaker = createNativeConstantSourceNodeFakerF
     createNativeGainNode
 );
 const createNativeConstantSourceNode = createNativeConstantSourceNodeFactory(
+    cacheTestResult,
     createNativeAudioNode,
     createNativeConstantSourceNodeFaker,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
@@ -394,7 +400,7 @@ const createNativeIIRFilterNodeFaker = createNativeIIRFilterNodeFakerFactory(
     createNativeScriptProcessorNode,
     createNotSupportedError
 );
-const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(createNativeGainNode);
+const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(cacheTestResult, createNativeGainNode);
 const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(
     createNativeAudioBufferSourceNode,
     createNativeAudioNode,
@@ -417,6 +423,7 @@ const createAudioListener = createAudioListenerFactory(
 );
 const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(audioDestinationNodeConstructor, createAudioListener);
 const createNativeOscillatorNode = createNativeOscillatorNodeFactory(
+    cacheTestResult,
     createNativeAudioNode,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
@@ -505,6 +512,7 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
 const isNativeContext = createIsNativeContext(isNativeOfflineAudioContext, nativeAudioContextConstructor);
 
 export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
+    cacheTestResult,
     createDataCloneError,
     createEncodingError,
     nativeOfflineAudioContextConstructor,
@@ -700,6 +708,7 @@ const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(
     nativeOfflineAudioContextConstructor
 );
 const startRendering = createStartRendering(
+    cacheTestResult,
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     testAudioBufferCopyChannelMethodsSubarraySupport,
@@ -708,6 +717,7 @@ const startRendering = createStartRendering(
     wrapAudioBufferCopyChannelMethodsSubarray
 );
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
+    cacheTestResult,
     createInvalidStateError,
     createNativeOfflineAudioContext,
     minimalBaseAudioContextConstructor,
@@ -720,6 +730,7 @@ export { minimalOfflineAudioContextConstructor as MinimalOfflineAudioContext };
 
 const offlineAudioContextConstructor: IOfflineAudioContextConstructor = createOfflineAudioContextConstructor(
     baseAudioContextConstructor,
+    cacheTestResult,
     createInvalidStateError,
     createNativeOfflineAudioContext,
     startRendering
@@ -750,6 +761,7 @@ type waveShaperNodeConstructor<T extends TContext> = IWaveShaperNode<T>;
 export { waveShaperNodeConstructor as WaveShaperNode };
 
 export const isSupported = () => createIsSupportedPromise(
+    cacheTestResult,
     createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),

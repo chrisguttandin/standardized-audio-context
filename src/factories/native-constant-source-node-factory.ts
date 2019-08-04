@@ -1,6 +1,5 @@
 import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { TNativeConstantSourceNodeFactoryFactory } from '../types';
 import {
     wrapAudioScheduledSourceNodeStartMethodNegativeParameters
@@ -10,6 +9,7 @@ import {
 } from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
 
 export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFactoryFactory = (
+    cacheTestResult,
     createNativeAudioNode,
     createNativeConstantSourceNodeFaker,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,

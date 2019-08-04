@@ -10,7 +10,6 @@ import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
 import { isAudioWorkletNode } from '../guards/audio-worklet-node';
 import { isDelayNode } from '../guards/delay-node';
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
 import { disconnectNativeAudioNodeFromNativeAudioNode } from '../helpers/disconnect-native-audio-node-from-native-audio-node';
@@ -489,6 +488,7 @@ const deleteConnectionToDestination = <T extends IMinimalBaseAudioContext>(
 };
 
 export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
+    cacheTestResult,
     createIndexSizeError,
     createInvalidAccessError,
     createNotSupportedError,

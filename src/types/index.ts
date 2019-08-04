@@ -55,6 +55,8 @@ export * from './channel-splitter-node-constructor';
 export * from './channel-splitter-node-constructor-factory';
 export * from './channel-splitter-node-renderer-factory';
 export * from './channel-splitter-node-renderer-factory-factory';
+export * from './cache-test-result-factory';
+export * from './cache-test-result-function';
 export * from './connect-multiple-outputs-factory';
 export * from './connect-multiple-outputs-function';
 export * from './constant-source-node-constructor';

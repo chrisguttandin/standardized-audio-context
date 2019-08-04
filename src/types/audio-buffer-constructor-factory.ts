@@ -1,4 +1,5 @@
 import { TAudioBufferConstructor } from './audio-buffer-constructor';
+import { TCacheTestResultFunction } from './cache-test-result-function';
 import { TNativeAudioBufferConstructor } from './native-audio-buffer-constructor';
 import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-context-constructor';
 import { TNotSupportedErrorFactory } from './not-supported-error-factory';
@@ -7,6 +8,7 @@ import { TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction } from './wrap-au
 import { TWrapAudioBufferCopyChannelMethodsSubarrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
 
 export type TAudioBufferConstructorFactory = (
+    cacheTestResult: TCacheTestResultFunction,
     createNotSupportedError: TNotSupportedErrorFactory,
     nativeAudioBufferConstructor: null | TNativeAudioBufferConstructor,
     nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor,

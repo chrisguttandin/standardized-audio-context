@@ -1,7 +1,7 @@
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { TIsSupportedPromiseFactory } from '../types';
 
 export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
+    cacheTestResult,
     testAudioContextCloseMethodSupport,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
     testAudioContextOptionsSupport,

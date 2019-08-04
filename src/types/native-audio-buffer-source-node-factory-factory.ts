@@ -1,3 +1,4 @@
+import { TCacheTestResultFunction } from './cache-test-result-function';
 import { TNativeAudioBufferSourceNodeFactory } from './native-audio-buffer-source-node-factory';
 import { TNativeAudioNodeFactory } from './native-audio-node-factory';
 import { TNativeContext } from './native-context';
@@ -9,6 +10,7 @@ import {
 } from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-function';
 
 export type TNativeAudioBufferSourceNodeFactoryFactory = (
+    cacheTestResult: TCacheTestResultFunction,
     createNativeAudioNode: TNativeAudioNodeFactory,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport: (nativeContext: TNativeContext) => boolean,
     testAudioBufferSourceNodeStartMethodDurationParameterSupport: () => Promise<boolean>,

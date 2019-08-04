@@ -1,11 +1,14 @@
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { testAnalyserNodeGetFloatTimeDomainDataMethodSupport } from '../support-testers/analyser-node-get-float-time-domain-data-method';
 import { TNativeAnalyserNodeFactoryFactory } from '../types';
 import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 
-export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory = (createIndexSizeError, createNativeAudioNode) => {
+export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory = (
+    cacheTestResult,
+    createIndexSizeError,
+    createNativeAudioNode
+) => {
     return (nativeContext, options) => {
         const nativeAnalyserNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createAnalyser());
 

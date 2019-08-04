@@ -1,11 +1,11 @@
 import { DETACHED_ARRAY_BUFFERS } from '../globals';
-import { cacheTestResult } from '../helpers/cache-test-result';
 import { detachArrayBuffer } from '../helpers/detach-array-buffer';
 import { getNativeContext } from '../helpers/get-native-context';
 import { TDecodeAudioDataFactory } from '../types';
 import { wrapAudioBufferGetChannelDataMethod } from '../wrappers/audio-buffer-get-channel-data-method';
 
 export const createDecodeAudioData: TDecodeAudioDataFactory = (
+    cacheTestResult,
     createDataCloneError,
     createEncodingError,
     nativeOfflineAudioContextConstructor,
