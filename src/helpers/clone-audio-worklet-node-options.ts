@@ -10,7 +10,7 @@ export const cloneAudioWorkletNodeOptions = (audioWorkletNodeOptions: IAudioWork
 
             resolve(data);
         };
-        port1.onmessageerror = ({ data }: MessageEvent) => {
+        port1.onmessageerror = ({ data }) => {
             port1.close();
             port2.close();
 
