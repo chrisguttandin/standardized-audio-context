@@ -32,7 +32,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
     renderedBuffer: TNativeAudioBuffer,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
-    processorDefinition: undefined | IAudioWorkletProcessorConstructor
+    processorConstructor: undefined | IAudioWorkletProcessorConstructor
 ): Promise<null | TNativeAudioBuffer> => {
     const { length } = renderedBuffer;
     const numberOfInputChannels = options.channelCount * options.numberOfInputs;
@@ -43,7 +43,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
         renderedBuffer.sampleRate
     );
 
-    if (processorDefinition === undefined) {
+    if (processorConstructor === undefined) {
         throw new Error();
     }
 
@@ -62,8 +62,8 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
             }
         }
 
-        if (processorDefinition.parameterDescriptors !== undefined) {
-            processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
+        if (processorConstructor.parameterDescriptors !== undefined) {
+            processorConstructor.parameterDescriptors.forEach(({ name }, index) => {
                 copyFromChannel(renderedBuffer, parameters, name, numberOfInputChannels + index, i);
             });
         }
@@ -126,7 +126,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     return <T extends IMinimalOfflineAudioContext>(
         name: string,
         options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
-        processorDefinition: undefined | IAudioWorkletProcessorConstructor
+        processorConstructor: undefined | IAudioWorkletProcessorConstructor
     ) => {
         let nativeAudioNodePromise: null | Promise<TNativeAudioBufferSourceNode | TNativeAudioWorkletNode> = null;
 
@@ -135,8 +135,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
             // Bug #61: Only Chrome & Opera have an implementation of the AudioWorkletNode yet.
             if (nativeAudioWorkletNodeConstructor === null) {
-                if (processorDefinition === undefined) {
-                    throw new Error('Missing the processor definition.');
+                if (processorConstructor === undefined) {
+                    throw new Error('Missing the processor constructor.');
                 }
 
                 if (nativeOfflineAudioContextConstructor === null) {
@@ -145,9 +145,9 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
                 // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
                 const numberOfInputChannels = proxy.channelCount * proxy.numberOfInputs;
-                const numberOfParameters = (processorDefinition.parameterDescriptors === undefined)
+                const numberOfParameters = (processorConstructor.parameterDescriptors === undefined)
                     ? 0
-                    : processorDefinition.parameterDescriptors.length;
+                    : processorConstructor.parameterDescriptors.length;
                 const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
                     numberOfInputChannels + numberOfParameters,
                     // Ceil the length to the next full render quantum.
@@ -246,7 +246,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             renderedBuffer,
                             nativeOfflineAudioContext,
                             options,
-                            processorDefinition
+                            processorConstructor
                         );
 
                         if (processedBuffer !== null) {

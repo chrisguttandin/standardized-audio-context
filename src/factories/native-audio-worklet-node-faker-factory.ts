@@ -29,7 +29,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
     createNotSupportedError,
     disconnectMultipleOutputs
 ) => {
-    return (nativeContext, baseLatency, processorDefinition, options) => {
+    return (nativeContext, baseLatency, processorConstructor, options) => {
         if (options.numberOfInputs === 0 && options.numberOfOutputs === 0) {
             throw createNotSupportedError();
         }
@@ -52,9 +52,9 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         const numberOfInputChannels = options.channelCount * options.numberOfInputs;
         const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
-        const numberOfParameters = (processorDefinition.parameterDescriptors === undefined)
+        const numberOfParameters = (processorConstructor.parameterDescriptors === undefined)
             ? 0
-            : processorDefinition.parameterDescriptors.length;
+            : processorConstructor.parameterDescriptors.length;
 
         // Bug #61: This is not part of the standard but required for the faker to work.
         if (numberOfInputChannels + numberOfParameters > 6 || numberOfOutputChannels > 6) {
@@ -82,8 +82,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         const constantSourceNodes: TNativeConstantSourceNode[] = [ ];
 
-        if (processorDefinition.parameterDescriptors !== undefined) {
-            for (const { defaultValue, maxValue, minValue, name } of processorDefinition.parameterDescriptors) {
+        if (processorConstructor.parameterDescriptors !== undefined) {
+            for (const { defaultValue, maxValue, minValue, name } of processorConstructor.parameterDescriptors) {
                 const constantSourceNode = createNativeConstantSourceNode(nativeContext, {
                     channelCount: 1,
                     channelCountMode: 'explicit',
@@ -157,9 +157,9 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         }
 
         const parameterMap = new ReadOnlyMap(
-            (processorDefinition.parameterDescriptors === undefined)
+            (processorConstructor.parameterDescriptors === undefined)
                 ? [ ]
-                : processorDefinition.parameterDescriptors
+                : processorConstructor.parameterDescriptors
                     .map(({ name }, index) => {
                         const constantSourceNode = constantSourceNodes[index];
 
@@ -263,14 +263,14 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         };
 
-        processorDefinition.prototype.port = messageChannel.port1;
+        processorConstructor.prototype.port = messageChannel.port1;
 
         let audioWorkletProcessor: null | IAudioWorkletProcessor = null;
 
         const audioWorkletProcessorPromise = createAudioWorkletProcessor(
             nativeContext,
             nativeAudioWorkletNodeFaker,
-            processorDefinition,
+            processorConstructor,
             options
         );
 
@@ -279,9 +279,9 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
         const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
-        const parameters: { [ name: string ]: Float32Array } = (processorDefinition.parameterDescriptors === undefined) ?
+        const parameters: { [ name: string ]: Float32Array } = (processorConstructor.parameterDescriptors === undefined) ?
             [ ] :
-            processorDefinition.parameterDescriptors
+            processorConstructor.parameterDescriptors
                 .reduce((prmtrs, { name }) => ({ ...prmtrs, [ name ]: new Float32Array(128) }), { });
 
         let isActive = true;
@@ -295,8 +295,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                         }
                     }
 
-                    if (processorDefinition.parameterDescriptors !== undefined) {
-                        processorDefinition.parameterDescriptors.forEach(({ name }, index) => {
+                    if (processorConstructor.parameterDescriptors !== undefined) {
+                        processorConstructor.parameterDescriptors.forEach(({ name }, index) => {
                             copyFromChannel(inputBuffer, parameters, name, numberOfInputChannels + index, i);
                         });
                     }

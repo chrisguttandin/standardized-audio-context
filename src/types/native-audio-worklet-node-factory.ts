@@ -8,6 +8,6 @@ export type TNativeAudioWorkletNodeFactory = (
     baseLatency: null | number,
     nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
     name: string,
-    processorDefinition: undefined | IAudioWorkletProcessorConstructor,
+    processorConstructor: undefined | IAudioWorkletProcessorConstructor,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions
 ) => TNativeAudioWorkletNode;

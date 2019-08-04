@@ -84,7 +84,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
             const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
-            const processorDefinition = (nodeNameToProcessorConstructorMap === undefined) ?
+            const processorConstructor = (nodeNameToProcessorConstructorMap === undefined) ?
                 undefined :
                 nodeNameToProcessorConstructorMap.get(name);
             const nativeAudioWorkletNode = createNativeAudioWorkletNode(
@@ -92,11 +92,11 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                 isOffline ? null : (<IMinimalAudioContext> (<any> context)).baseLatency,
                 nativeAudioWorkletNodeConstructor,
                 name,
-                processorDefinition,
+                processorConstructor,
                 mergedOptions
             );
             const audioWorkletNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
-                ? createAudioWorkletNodeRenderer(name, mergedOptions, processorDefinition)
+                ? createAudioWorkletNodeRenderer(name, mergedOptions, processorConstructor)
                 : null);
 
             /*
