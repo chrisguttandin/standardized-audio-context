@@ -505,7 +505,9 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
         createAbortError,
         createNotSupportedError,
         createFetchSource(createAbortError),
-        getBackupNativeContext
+        getBackupNativeContext,
+        new WeakMap(),
+        new WeakMap()
     ) :
     undefined;
 

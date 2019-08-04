@@ -3,7 +3,7 @@ import { evaluateSource } from '../helpers/evaluate-source';
 import { getNativeContext } from '../helpers/get-native-context';
 import { isConstructible } from '../helpers/is-constructible';
 import { splitImportStatements } from '../helpers/split-import-statements';
-import { IAudioWorkletProcessorConstructor, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioWorkletProcessorConstructor } from '../interfaces';
 import { TAddAudioWorkletModuleFactory, TEvaluateAudioWorkletGlobalScopeFunction } from '../types';
 
 const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessorConstructor['parameterDescriptors']) => {
@@ -26,14 +26,13 @@ const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (proce
     }
 };
 
-const ongoingRequests: WeakMap<IMinimalBaseAudioContext, Map<string, Promise<void>>> = new WeakMap();
-const resolvedRequests: WeakMap<IMinimalBaseAudioContext, Set<string>> = new WeakMap();
-
 export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     createAbortError,
     createNotSupportedError,
     fetchSource,
-    getBackupNativeContext
+    getBackupNativeContext,
+    ongoingRequests,
+    resolvedRequests
 ) => {
     return (context, moduleURL, options = { credentials: 'omit' }) => {
         const nativeContext = getNativeContext(context);
