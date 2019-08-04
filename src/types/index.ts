@@ -240,6 +240,8 @@ export * from './panner-node-constructor-factory';
 export * from './panner-node-renderer-factory';
 export * from './panner-node-renderer-factory-factory';
 export * from './panning-model-type';
+export * from './passive-audio-node-input-connection';
+export * from './passive-audio-param-input-connection';
 export * from './periodic-wave-constructor';
 export * from './periodic-wave-constructor-factory';
 export * from './render-native-offline-audio-context-factory';

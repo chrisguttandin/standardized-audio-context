@@ -1,4 +1,4 @@
-import { TActiveInputConnection, TInternalStateEventListener, TOutputConnection } from '../types';
+import { TActiveInputConnection, TOutputConnection, TPassiveAudioNodeInputConnection } from '../types';
 import { IAudioNode } from './audio-node';
 import { IAudioNodeRenderer } from './audio-node-renderer';
 import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
@@ -10,7 +10,7 @@ export interface IAudioNodeConnections<T extends IMinimalBaseAudioContext> {
 
     outputs: Set<TOutputConnection<T>>;
 
-    passiveInputs: WeakMap<IAudioNode<T>, Set<[ number, number, null | TInternalStateEventListener ]>>;
+    passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioNodeInputConnection<T>>>;
 
     renderer: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null;
 
