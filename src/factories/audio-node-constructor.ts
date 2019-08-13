@@ -236,20 +236,20 @@ const addConnectionToAudioNodeOfAudioContext = <T extends IMinimalBaseAudioConte
         }
     });
 
-    eventListeners.add(eventListener);
-
-    if (isActiveAudioNode(source)) {
-        addActiveInputConnectionToAudioNode(activeInputs, source, [ output, input, eventListener ], true);
-    } else {
-        addPassiveInputConnectionToAudioNode(passiveInputs, input, [ source, output, eventListener ], true);
-    }
-
-    insertElementInSet(
+    if (insertElementInSet(
         outputs,
         [ destination, output, input ],
         (outputConnection) => (outputConnection[0] === destination && outputConnection[1] === output && outputConnection[2] === input),
         true
-    );
+    )) {
+        eventListeners.add(eventListener);
+
+        if (isActiveAudioNode(source)) {
+            addActiveInputConnectionToAudioNode(activeInputs, source, [ output, input, eventListener ], true);
+        } else {
+            addPassiveInputConnectionToAudioNode(passiveInputs, input, [ source, output, eventListener ], true);
+        }
+    }
 };
 
 const addConnectionToAudioNodeOfOfflineAudioContext = <T extends IMinimalBaseAudioContext>(
@@ -261,14 +261,14 @@ const addConnectionToAudioNodeOfOfflineAudioContext = <T extends IMinimalBaseAud
     const { activeInputs } = getAudioNodeConnections(destination);
     const { outputs } = getAudioNodeConnections(source);
 
-    addActiveInputConnectionToAudioNode(activeInputs, source, <TPassiveAudioNodeInputConnection<T>> [ output, input, null ], true);
-
-    insertElementInSet(
+    if (insertElementInSet(
         outputs,
         [ destination, output, input ],
         (outputConnection) => (outputConnection[0] === destination && outputConnection[1] === output && outputConnection[2] === input),
         true
-    );
+    )) {
+        addActiveInputConnectionToAudioNode(activeInputs, source, <TPassiveAudioNodeInputConnection<T>> [ output, input, null ], true);
+    }
 };
 
 const addConnectionToAudioParamOfAudioContext = <T extends IMinimalBaseAudioContext>(
@@ -299,20 +299,20 @@ const addConnectionToAudioParamOfAudioContext = <T extends IMinimalBaseAudioCont
         }
     });
 
-    eventListeners.add(eventListener);
-
-    if (isActiveAudioNode(source)) {
-        addActiveInputConnectionToAudioParam(activeInputs, source, [ output, eventListener ], true);
-    } else {
-        addPassiveInputConnectionToAudioParam(passiveInputs, [ source, output, eventListener ], true);
-    }
-
-    insertElementInSet(
+    if (insertElementInSet(
         outputs,
         [ destination, output ],
         (outputConnection) => (outputConnection[0] === destination && outputConnection[1] === output),
         true
-    );
+    )) {
+        eventListeners.add(eventListener);
+
+        if (isActiveAudioNode(source)) {
+            addActiveInputConnectionToAudioParam(activeInputs, source, [ output, eventListener ], true);
+        } else {
+            addPassiveInputConnectionToAudioParam(passiveInputs, [ source, output, eventListener ], true);
+        }
+    }
 };
 
 const addConnectionToAudioParamOfOfflineAudioContext = <T extends IMinimalBaseAudioContext>(
@@ -323,14 +323,14 @@ const addConnectionToAudioParamOfOfflineAudioContext = <T extends IMinimalBaseAu
     const { activeInputs } = getAudioParamConnections(source.context, destination);
     const { outputs } = getAudioNodeConnections(source);
 
-    addActiveInputConnectionToAudioParam(activeInputs, source, <TPassiveAudioParamInputConnection<T>> [ output, null ], true);
-
-    insertElementInSet(
+    if (insertElementInSet(
         outputs,
         [ destination, output ],
         (outputConnection) => (outputConnection[0] === destination && outputConnection[1] === output),
         true
-    );
+    )) {
+        addActiveInputConnectionToAudioParam(activeInputs, source, <TPassiveAudioParamInputConnection<T>> [ output, null ], true);
+    }
 };
 
 const deleteActiveInputConnection = <T extends IMinimalBaseAudioContext>(
