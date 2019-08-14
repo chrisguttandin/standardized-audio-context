@@ -111,7 +111,7 @@ const renderOnOnlineContext = async ({ blockSize, context, length, prepare, prep
 
     return new Promise((resolve, reject) => {
         // Start the impulse at least in 8192 samples from now to make sure there is enough time to set everything up.
-        const impulseStartSample = (Math.ceil((context.currentTime * sampleRate) / blockSize) * blockSize) + 8192;
+        const impulseStartSample = Math.ceil(((context.currentTime * sampleRate) + 8192) / blockSize) * blockSize;
         // Add an additional delay of 8192 samples to the startTime. That's especially useful for testing the MediaElementAudioSourceNode.
         const startTimeOffset = 8192;
         // This renderer is impatient. If it is not done within a reasonable time it will abort the process and try again.
@@ -140,8 +140,7 @@ const renderOnOnlineContext = async ({ blockSize, context, length, prepare, prep
             if (impulseOffset === null) {
                 const impulseChannelData = inputBuffer.getChannelData(0);
 
-                // The impulse will be at the first sample of a block with the given size.
-                for (let i = lastPlaybackOffset % blockSize; i < recorderBufferSize; i += blockSize) {
+                for (let i = 0; i < recorderBufferSize; i += 1) {
                     if (impulseChannelData[i] === 1) {
                         impulseOffset = lastPlaybackOffset + i;
 
