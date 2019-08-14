@@ -53,30 +53,50 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 audioParam.setValueAtTime(value, audioNode.context.currentTime);
             },
             cancelScheduledValues (cancelTime: number): IAudioParam {
+                if (audioParamRenderer === null) {
+                    automationEventList.flush(audioNode.context.currentTime);
+                }
+
                 automationEventList.add(createCancelScheduledValuesAutomationEvent(cancelTime));
                 nativeAudioParam.cancelScheduledValues(cancelTime);
 
                 return audioParam;
             },
             exponentialRampToValueAtTime (value: number, endTime: number): IAudioParam {
+                if (audioParamRenderer === null) {
+                    automationEventList.flush(audioNode.context.currentTime);
+                }
+
                 automationEventList.add(createExponentialRampToValueAutomationEvent(value, endTime));
                 nativeAudioParam.exponentialRampToValueAtTime(value, endTime);
 
                 return audioParam;
             },
             linearRampToValueAtTime (value: number, endTime: number): IAudioParam {
+                if (audioParamRenderer === null) {
+                    automationEventList.flush(audioNode.context.currentTime);
+                }
+
                 automationEventList.add(createLinearRampToValueAutomationEvent(value, endTime));
                 nativeAudioParam.linearRampToValueAtTime(value, endTime);
 
                 return audioParam;
             },
             setTargetAtTime (target: number, startTime: number, timeConstant: number): IAudioParam {
+                if (audioParamRenderer === null) {
+                    automationEventList.flush(audioNode.context.currentTime);
+                }
+
                 automationEventList.add(createSetTargetAutomationEvent(target, startTime, timeConstant));
                 nativeAudioParam.setTargetAtTime(target, startTime, timeConstant);
 
                 return audioParam;
             },
             setValueAtTime (value: number, startTime: number): IAudioParam {
+                if (audioParamRenderer === null) {
+                    automationEventList.flush(audioNode.context.currentTime);
+                }
+
                 automationEventList.add(createSetValueAutomationEvent(value, startTime));
                 nativeAudioParam.setValueAtTime(value, startTime);
 
@@ -107,6 +127,10 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                                 + ((1 - (upperIndex - theoreticIndex)) * values[upperIndex]);
                     }
 
+                    if (audioParamRenderer === null) {
+                        automationEventList.flush(audioNode.context.currentTime);
+                    }
+
                     automationEventList.add(createSetValueCurveAutomationEvent(interpolatedValues, startTime, duration));
                     nativeAudioParam.setValueCurveAtTime(interpolatedValues, startTime, duration);
 
@@ -118,6 +142,10 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                     audioParam.setValueAtTime(values[values.length - 1], endTime);
                 } else {
+                    if (audioParamRenderer === null) {
+                        automationEventList.flush(audioNode.context.currentTime);
+                    }
+
                     automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
                     nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
                 }
