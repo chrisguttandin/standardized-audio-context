@@ -6,6 +6,7 @@ import { createMinimalAudioContext } from '../../helper/create-minimal-audio-con
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { roundToSamples } from '../../helper/round-to-samples';
 
 const createStereoPannerNodeWithConstructor = (context, options = null) => {
     if (options === null) {
@@ -541,10 +542,10 @@ describe('StereoPannerNode', () => {
 
                                             return renderer({
                                                 start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                    stereoPannerNode.pan.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
-                                                    stereoPannerNode.pan.setValueAtTime(0, startTime + (1.9 / context.sampleRate));
-                                                    stereoPannerNode.pan.linearRampToValueAtTime(1, startTime + (5 / context.sampleRate));
-                                                    stereoPannerNode.pan.cancelScheduledValues(startTime + (3 / context.sampleRate));
+                                                    stereoPannerNode.pan.setValueAtTime(0.5, startTime);
+                                                    stereoPannerNode.pan.setValueAtTime(0, roundToSamples(startTime, context.sampleRate, 2));
+                                                    stereoPannerNode.pan.linearRampToValueAtTime(1, roundToSamples(startTime, context.sampleRate, 5));
+                                                    stereoPannerNode.pan.cancelScheduledValues(roundToSamples(startTime, context.sampleRate, 3));
 
                                                     audioBufferSourceNode.start(startTime);
                                                 }
@@ -576,7 +577,7 @@ describe('StereoPannerNode', () => {
 
                                             return renderer({
                                                 start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                    stereoPannerNode.pan.setValueAtTime(0.5, startTime + (1.9 / context.sampleRate));
+                                                    stereoPannerNode.pan.setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
 
                                                     audioBufferSourceNode.start(startTime);
                                                 }
@@ -607,7 +608,7 @@ describe('StereoPannerNode', () => {
 
                                             return renderer({
                                                 start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                    stereoPannerNode.pan.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), (startTime === 0) ? startTime : startTime - (1e-12 / context.sampleRate), (6 / context.sampleRate));
+                                                    stereoPannerNode.pan.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), roundToSamples(startTime, context.sampleRate), 6 / context.sampleRate);
 
                                                     audioBufferSourceNode.start(startTime);
                                                 }

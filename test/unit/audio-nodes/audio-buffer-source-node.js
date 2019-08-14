@@ -7,6 +7,7 @@ import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-of
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
 import { isSafari } from '../../helper/is-safari';
+import { roundToSamples } from '../../helper/round-to-samples';
 import { spy } from 'sinon';
 
 const createAudioBufferSourceNodeWithConstructor = (context, options = null) => {
@@ -562,7 +563,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo
                  * @todo             return renderer({
                  * @todo                 start (startTime, { audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.offset.setValueAtTime(0.5, startTime + (1.9 / context.sampleRate));
+                 * @todo                     audioBufferSourceNode.offset.setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
                  * @todo
                  * @todo                     audioBufferSourceNode.start(startTime);
                  * @todo                 }
@@ -581,7 +582,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo
                  * @todo             return renderer({
                  * @todo                 start (startTime, { audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, (6 / context.sampleRate));
+                 * @todo                     audioBufferSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, 6 / context.sampleRate);
                  * @todo
                  * @todo                     audioBufferSourceNode.start(startTime);
                  * @todo                 }
@@ -893,9 +894,9 @@ describe('AudioBufferSourceNode', () => {
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.2);
+                                            expect(channelData[0]).to.closeTo(1, 0.1);
                                             expect(channelData[1]).to.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.closeTo(1, 0.1);
                                             expect(channelData[3]).to.closeTo(0.5, 0.1);
                                             expect(channelData[4]).to.closeTo(0, 0.1);
                                         });
@@ -910,18 +911,18 @@ describe('AudioBufferSourceNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.playbackRate.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
-                                            audioBufferSourceNode.playbackRate.setValueAtTime(1, startTime + (1.9 / context.sampleRate));
-                                            audioBufferSourceNode.playbackRate.linearRampToValueAtTime(0, startTime + (5 / context.sampleRate));
-                                            audioBufferSourceNode.playbackRate.cancelScheduledValues(startTime + (3 / context.sampleRate));
+                                            audioBufferSourceNode.playbackRate.setValueAtTime(0.5, startTime);
+                                            audioBufferSourceNode.playbackRate.setValueAtTime(1, roundToSamples(startTime, context.sampleRate, 2));
+                                            audioBufferSourceNode.playbackRate.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 5));
+                                            audioBufferSourceNode.playbackRate.cancelScheduledValues(roundToSamples(startTime, context.sampleRate, 3));
 
                                             audioBufferSourceNode.start(startTime);
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.2);
+                                            expect(channelData[0]).to.closeTo(1, 0.1);
                                             expect(channelData[1]).to.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.closeTo(1, 0.1);
                                             expect(channelData[3]).to.closeTo(0.5, 0.1);
                                             expect(channelData[4]).to.closeTo(0, 0.1);
                                         });
@@ -936,15 +937,15 @@ describe('AudioBufferSourceNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.playbackRate.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
+                                            audioBufferSourceNode.playbackRate.setValueAtTime(0.5, startTime);
 
                                             audioBufferSourceNode.start(startTime);
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.2);
+                                            expect(channelData[0]).to.closeTo(1, 0.1);
                                             expect(channelData[1]).to.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.closeTo(1, 0.1);
                                             expect(channelData[3]).to.closeTo(0.5, 0.1);
                                             expect(channelData[4]).to.closeTo(0, 0.1);
                                         });
@@ -959,24 +960,15 @@ describe('AudioBufferSourceNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.playbackRate.setValueCurveAtTime(
-                                                new Float32Array([ 0.5, 0.375, 0.25, 0.125, 0 ]),
-                                                (startTime === 0)
-                                                    ? startTime
-                                                    // @todo Safari needs some extra help to schedule the curve reliably.
-                                                    : isSafari(navigator)
-                                                        ? startTime - (1e-3 / context.sampleRate)
-                                                        : startTime - (1e-12 / context.sampleRate),
-                                                (6 / context.sampleRate)
-                                            );
+                                            audioBufferSourceNode.playbackRate.setValueCurveAtTime(new Float32Array([ 0.5, 0.375, 0.25, 0.125, 0 ]), startTime, 6 / context.sampleRate);
 
                                             audioBufferSourceNode.start(startTime);
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.2);
+                                            expect(channelData[0]).to.closeTo(1, 0.1);
                                             expect(channelData[1]).to.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.closeTo(1, 0.1);
                                             expect(channelData[3]).to.closeTo(0.5, 0.1);
                                             expect(channelData[4]).to.closeTo(0, 0.1);
                                         });
@@ -1013,9 +1005,9 @@ describe('AudioBufferSourceNode', () => {
                                             }
                                         })
                                             .then((channelData) => {
-                                                expect(channelData[0]).to.closeTo(1, 0.2);
+                                                expect(channelData[0]).to.closeTo(1, 0.1);
                                                 expect(channelData[1]).to.closeTo(1, 0.2);
-                                                expect(channelData[2]).to.closeTo(1, 0.2);
+                                                expect(channelData[2]).to.closeTo(1, 0.1);
                                                 expect(channelData[3]).to.closeTo(0.5, 0.1);
                                                 expect(channelData[4]).to.closeTo(0, 0.1);
                                             });
@@ -1731,7 +1723,7 @@ describe('AudioBufferSourceNode', () => {
 
                                 return renderer({
                                     start (startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime, 0, (2 / context.sampleRate));
+                                        audioBufferSourceNode.start(startTime, 0, 2 / context.sampleRate);
                                     }
                                 })
                                     .then((channelData) => {
@@ -1747,13 +1739,13 @@ describe('AudioBufferSourceNode', () => {
                                         audioBufferSourceNode.playbackRate.value = 0.5;
                                     },
                                     start (startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime, 0, (2 / context.sampleRate));
+                                        audioBufferSourceNode.start(startTime, 0, 2 / context.sampleRate);
                                     }
                                 })
                                     .then((channelData) => {
-                                        expect(channelData[0]).to.closeTo(1, 0.2);
+                                        expect(channelData[0]).to.closeTo(1, 0.1);
                                         expect(channelData[1]).to.closeTo(1, 0.2);
-                                        expect(channelData[2]).to.closeTo(1, 0.2);
+                                        expect(channelData[2]).to.closeTo(1, 0.1);
                                         expect(channelData[3]).to.closeTo(0.5, 0.5);
                                         expect(channelData[4]).to.closeTo(0, 0.1);
                                     });
@@ -1835,8 +1827,8 @@ describe('AudioBufferSourceNode', () => {
                                 return renderer({
                                     start (startTime, { audioBufferSourceNode }) {
                                         audioBufferSourceNode.start(startTime);
-                                        audioBufferSourceNode.stop(startTime + (4.9 / context.sampleRate));
-                                        audioBufferSourceNode.stop(startTime + (2.9 / context.sampleRate));
+                                        audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 5));
+                                        audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 3));
                                     }
                                 })
                                     .then((channelData) => {
@@ -1894,8 +1886,8 @@ describe('AudioBufferSourceNode', () => {
 
                                 return renderer({
                                     start (startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime + (2.9 / context.sampleRate));
-                                        audioBufferSourceNode.stop(startTime + (0.9 / context.sampleRate));
+                                        audioBufferSourceNode.start(roundToSamples(startTime, context.sampleRate, 3));
+                                        audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 1));
                                     }
                                 })
                                     .then((channelData) => {

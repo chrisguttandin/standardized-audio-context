@@ -6,6 +6,7 @@ import { createMinimalAudioContext } from '../../helper/create-minimal-audio-con
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { roundToSamples } from '../../helper/round-to-samples';
 import { spy } from 'sinon';
 
 const createConstantSourceNodeWithConstructor = (context, options = null) => {
@@ -425,10 +426,10 @@ describe('ConstantSourceNode', () => {
 
                                     return renderer({
                                         start (startTime, { constantSourceNode }) {
-                                            constantSourceNode.offset.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
-                                            constantSourceNode.offset.setValueAtTime(1, startTime + (1.9 / context.sampleRate));
-                                            constantSourceNode.offset.linearRampToValueAtTime(0, startTime + (5 / context.sampleRate));
-                                            constantSourceNode.offset.cancelScheduledValues(startTime + (3 / context.sampleRate));
+                                            constantSourceNode.offset.setValueAtTime(0.5, startTime);
+                                            constantSourceNode.offset.setValueAtTime(1, roundToSamples(startTime, context.sampleRate, 2));
+                                            constantSourceNode.offset.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 5));
+                                            constantSourceNode.offset.cancelScheduledValues(roundToSamples(startTime, context.sampleRate, 3));
 
                                             constantSourceNode.start(startTime);
                                         }
@@ -447,7 +448,7 @@ describe('ConstantSourceNode', () => {
 
                                     return renderer({
                                         start (startTime, { constantSourceNode }) {
-                                            constantSourceNode.offset.setValueAtTime(0.5, startTime + (1.9 / context.sampleRate));
+                                            constantSourceNode.offset.setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
 
                                             constantSourceNode.start(startTime);
                                         }
@@ -466,7 +467,7 @@ describe('ConstantSourceNode', () => {
 
                                     return renderer({
                                         start (startTime, { constantSourceNode }) {
-                                            constantSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), (startTime === 0) ? startTime : startTime - (1e-12 / context.sampleRate), (6 / context.sampleRate));
+                                            constantSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), roundToSamples(startTime, context.sampleRate), 6 / context.sampleRate);
 
                                             constantSourceNode.start(startTime);
                                         }
@@ -1136,8 +1137,8 @@ describe('ConstantSourceNode', () => {
                                 return renderer({
                                     start (startTime, { constantSourceNode }) {
                                         constantSourceNode.start(startTime);
-                                        constantSourceNode.stop(startTime + (4.9 / context.sampleRate));
-                                        constantSourceNode.stop(startTime + (2.9 / context.sampleRate));
+                                        constantSourceNode.stop(roundToSamples(startTime, context.sampleRate, 5));
+                                        constantSourceNode.stop(roundToSamples(startTime, context.sampleRate, 3));
                                     }
                                 })
                                     .then((channelData) => {
@@ -1191,8 +1192,8 @@ describe('ConstantSourceNode', () => {
 
                                 return renderer({
                                     start (startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime + (2.9 / context.sampleRate));
-                                        constantSourceNode.stop(startTime + (0.9 / context.sampleRate));
+                                        constantSourceNode.start(roundToSamples(startTime, context.sampleRate, 3));
+                                        constantSourceNode.stop(roundToSamples(startTime, context.sampleRate, 1));
                                     }
                                 })
                                     .then((channelData) => {

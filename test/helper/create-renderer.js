@@ -1,5 +1,7 @@
 import { AudioBuffer, AudioBufferSourceNode, AudioContext, ChannelMergerNode, GainNode, MinimalAudioContext } from '../../src/module';
 import { createScriptProcessor } from './create-script-processor';
+import { isSafari } from './is-safari';
+import { roundToSamples } from './round-to-samples';
 
 const createBufferNode = ({ audioNodes, context }) => {
     const bufferSize = Object
@@ -68,7 +70,7 @@ const waitForRunningState = (audioContext) => {
         }
     });
 };
-const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeStart, start }) => {
+const renderOnOnlineContext = async ({ blockSize, context, length, prepare, prepareBeforeStart, start }) => {
     const gainNode = new GainNode(context);
     const audioNodes = await prepare(gainNode);
     const bufferNode = createBufferNode({ audioNodes, context });
@@ -78,7 +80,6 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
     const recorderBufferSize = 8192;
     const recorderScriptProcessorNode = createScriptProcessor(context, recorderBufferSize, 2, 1);
     const sampleRate = context.sampleRate;
-    const renderQuantum = 128 / sampleRate;
     const secondImpulseNode = createImpulseNode({ context, length });
     const thirdImpulseNode = createImpulseNode({ context, length });
 
@@ -109,16 +110,16 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
     };
 
     return new Promise((resolve, reject) => {
-        // Start the impulse in 8192 samples from now to make sure there is enough time to set everything up.
-        const impulseStartTime = (Math.round(context.currentTime / renderQuantum) * renderQuantum) + (8192 / sampleRate);
+        // Start the impulse at least in 8192 samples from now to make sure there is enough time to set everything up.
+        const impulseStartSample = (Math.ceil((context.currentTime * sampleRate) / blockSize) * blockSize) + 8192;
         // Add an additional delay of 8192 samples to the startTime. That's especially useful for testing the MediaElementAudioSourceNode.
         const startTimeOffset = 8192;
-        const startTime = Math.round((impulseStartTime * sampleRate) + startTimeOffset) / sampleRate;
-        // This renderer is impatient. If it is not done within a second it will abort the process and try again.
+        // This renderer is impatient. If it is not done within a reasonable time it will abort the process and try again.
+        const seconds = Math.ceil(blockSize / sampleRate) + 1;
         const timeoutId = setTimeout(() => {
             disconnect();
-            reject(new Error('Recording the sample was not possible in one second.'));
-        }, 1000);
+            reject(new Error(`Recording the sample was not possible within ${ seconds } second(s).`));
+        }, seconds * 1000);
 
         let channelData = null;
         let impulseOffset = null;
@@ -139,8 +140,8 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
             if (impulseOffset === null) {
                 const impulseChannelData = inputBuffer.getChannelData(0);
 
-                // The impulse will be at the first sample of a render quantum.
-                for (let i = 0; i < recorderBufferSize; i += 128) {
+                // The impulse will be at the first sample of a block with the given size.
+                for (let i = lastPlaybackOffset % blockSize; i < recorderBufferSize; i += blockSize) {
                     if (impulseChannelData[i] === 1) {
                         impulseOffset = lastPlaybackOffset + i;
 
@@ -187,9 +188,11 @@ const renderOnOnlineContext = async ({ context, length, prepare, prepareBeforeSt
             }
         };
 
-        firstImpulseNode.start(impulseStartTime);
-        secondImpulseNode.start(impulseStartTime + (startTimeOffset / sampleRate));
-        thirdImpulseNode.start(impulseStartTime + ((startTimeOffset * 2) / sampleRate));
+        const startTime = roundToSamples(0, sampleRate, impulseStartSample + startTimeOffset - (isSafari(navigator) ? 0.1 : 0));
+
+        firstImpulseNode.start(roundToSamples(0, sampleRate, impulseStartSample));
+        secondImpulseNode.start(startTime);
+        thirdImpulseNode.start(roundToSamples(0, sampleRate, impulseStartSample + (startTimeOffset * 2)));
 
         if (typeof start === 'function') {
             // @todo Edge does not yet support the spread operator in objects.
@@ -208,7 +211,7 @@ export const createRenderer = ({ context, create, length, prepare }) => {
             throw new Error('Running tests for longer than 128 samples is not yet possible.');
         }
 
-        return async ({ prepare: prepareBeforeStart, start, verifyChannelData = true }) => {
+        return async ({ blockSize = 128, prepare: prepareBeforeStart, start, verifyChannelData = true }) => {
             const MAX_RETRIES = 9;
 
             let channelData = null;
@@ -218,7 +221,7 @@ export const createRenderer = ({ context, create, length, prepare }) => {
                 await waitForRunningState(context);
 
                 try {
-                    const newChannelData = await renderOnOnlineContext({ context, create, length, prepare, prepareBeforeStart, start });
+                    const newChannelData = await renderOnOnlineContext({ blockSize, context, create, length, prepare, prepareBeforeStart, start });
 
                     if (channelData === null) {
                         channelData = newChannelData;

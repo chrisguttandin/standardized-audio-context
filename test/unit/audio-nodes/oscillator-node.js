@@ -6,6 +6,7 @@ import { createMinimalAudioContext } from '../../helper/create-minimal-audio-con
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { roundToSamples } from '../../helper/round-to-samples';
 import { spy } from 'sinon';
 
 const createOscillatorNodeWithConstructor = (context, options = null) => {
@@ -1102,8 +1103,8 @@ describe('OscillatorNode', () => {
                                 return renderer({
                                     start (startTime, { oscillatorNode }) {
                                         oscillatorNode.start(startTime);
-                                        oscillatorNode.stop(startTime + (4.9 / context.sampleRate));
-                                        oscillatorNode.stop(startTime + (2.9 / context.sampleRate));
+                                        oscillatorNode.stop(roundToSamples(startTime, context.sampleRate, 5));
+                                        oscillatorNode.stop(roundToSamples(startTime, context.sampleRate, 3));
                                     }
                                 })
                                     .then((channelData) => {
@@ -1161,8 +1162,8 @@ describe('OscillatorNode', () => {
 
                                 return renderer({
                                     start (startTime, { oscillatorNode }) {
-                                        oscillatorNode.start(startTime + (2.9 / context.sampleRate));
-                                        oscillatorNode.stop(startTime + (0.9 / context.sampleRate));
+                                        oscillatorNode.start(roundToSamples(startTime, context.sampleRate, 3));
+                                        oscillatorNode.stop(roundToSamples(startTime, context.sampleRate, 1));
                                     }
                                 })
                                     .then((channelData) => {

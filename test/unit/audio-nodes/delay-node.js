@@ -6,6 +6,7 @@ import { createMinimalAudioContext } from '../../helper/create-minimal-audio-con
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { roundToSamples } from '../../helper/round-to-samples';
 
 const createDelayNodeWithConstructor = (context, options = null) => {
     if (options === null) {
@@ -457,10 +458,10 @@ describe('DelayNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, delayNode }) {
-                                            delayNode.delayTime.setValueAtTime(3 / context.sampleRate, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
-                                            delayNode.delayTime.setValueAtTime(0, startTime + (1.9 / context.sampleRate));
-                                            delayNode.delayTime.linearRampToValueAtTime(1, startTime + (5 / context.sampleRate));
-                                            delayNode.delayTime.cancelScheduledValues(startTime + (3 / context.sampleRate));
+                                            delayNode.delayTime.setValueAtTime(3 / context.sampleRate, startTime);
+                                            delayNode.delayTime.setValueAtTime(0, roundToSamples(startTime, context.sampleRate, 2));
+                                            delayNode.delayTime.linearRampToValueAtTime(1, roundToSamples(startTime, context.sampleRate, 5));
+                                            delayNode.delayTime.cancelScheduledValues(roundToSamples(startTime, context.sampleRate, 3));
 
                                             audioBufferSourceNode.start(startTime);
                                         }
@@ -479,7 +480,7 @@ describe('DelayNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, delayNode }) {
-                                            delayNode.delayTime.setValueAtTime(3 / context.sampleRate, startTime + (1.9 / context.sampleRate));
+                                            delayNode.delayTime.setValueAtTime(3 / context.sampleRate, roundToSamples(startTime, context.sampleRate, 2));
 
                                             audioBufferSourceNode.start(startTime);
                                         }
@@ -502,7 +503,7 @@ describe('DelayNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, delayNode }) {
-                                            delayNode.delayTime.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), (startTime === 0) ? startTime : startTime - (1e-12 / context.sampleRate), (6 / context.sampleRate));
+                                            delayNode.delayTime.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), roundToSamples(startTime, context.sampleRate), 6 / context.sampleRate);
 
                                             audioBufferSourceNode.start(startTime);
                                         }

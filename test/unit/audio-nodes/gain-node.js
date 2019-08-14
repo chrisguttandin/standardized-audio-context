@@ -6,6 +6,7 @@ import { createMinimalAudioContext } from '../../helper/create-minimal-audio-con
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { roundToSamples } from '../../helper/round-to-samples';
 
 const createGainNodeWithConstructor = (context, options = null) => {
     if (options === null) {
@@ -430,10 +431,10 @@ describe('GainNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, gainNode }) {
-                                            gainNode.gain.setValueAtTime(0.5, (startTime === 0) ? startTime : startTime - (0.1 / context.sampleRate));
-                                            gainNode.gain.setValueAtTime(1, startTime + (1.9 / context.sampleRate));
-                                            gainNode.gain.linearRampToValueAtTime(0, startTime + (5 / context.sampleRate));
-                                            gainNode.gain.cancelScheduledValues(startTime + (3 / context.sampleRate));
+                                            gainNode.gain.setValueAtTime(0.5, startTime);
+                                            gainNode.gain.setValueAtTime(1, roundToSamples(startTime, context.sampleRate, 2));
+                                            gainNode.gain.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 5));
+                                            gainNode.gain.cancelScheduledValues(roundToSamples(startTime, context.sampleRate, 3));
 
                                             audioBufferSourceNode.start(startTime);
                                         }
@@ -452,7 +453,7 @@ describe('GainNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, gainNode }) {
-                                            gainNode.gain.setValueAtTime(0.5, startTime + (1.9 / context.sampleRate));
+                                            gainNode.gain.setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
 
                                             audioBufferSourceNode.start(startTime);
                                         }
@@ -471,7 +472,7 @@ describe('GainNode', () => {
 
                                     return renderer({
                                         start (startTime, { audioBufferSourceNode, gainNode }) {
-                                            gainNode.gain.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), (startTime === 0) ? startTime : startTime - (1e-12 / context.sampleRate), (6 / context.sampleRate));
+                                            gainNode.gain.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), roundToSamples(startTime, context.sampleRate), 6 / context.sampleRate);
 
                                             audioBufferSourceNode.start(startTime);
                                         }
