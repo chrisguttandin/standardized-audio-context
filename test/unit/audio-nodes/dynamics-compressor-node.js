@@ -268,6 +268,7 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.attack.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.attack.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.attack.defaultValue).to.equal(Math.fround(0.003));
                     expect(dynamicsCompressorNode.attack.exponentialRampToValueAtTime).to.be.a('function');
@@ -284,6 +285,14 @@ describe('DynamicsCompressorNode', () => {
                     expect(() => {
                         dynamicsCompressorNode.attack = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.attack.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.attack);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -425,6 +434,7 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.knee.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.knee.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
                     expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime).to.be.a('function');
@@ -441,6 +451,14 @@ describe('DynamicsCompressorNode', () => {
                     expect(() => {
                         dynamicsCompressorNode.knee = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.knee.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.knee);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -504,6 +522,7 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.ratio.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
                     expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime).to.be.a('function');
@@ -520,6 +539,14 @@ describe('DynamicsCompressorNode', () => {
                     expect(() => {
                         dynamicsCompressorNode.ratio = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.ratio);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -585,6 +612,7 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.release.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.release.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
                     expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime).to.be.a('function');
@@ -601,6 +629,14 @@ describe('DynamicsCompressorNode', () => {
                     expect(() => {
                         dynamicsCompressorNode.release = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.release.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.release);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -664,6 +700,7 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.threshold.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.threshold.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);
                     expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime).to.be.a('function');
@@ -680,6 +717,14 @@ describe('DynamicsCompressorNode', () => {
                     expect(() => {
                         dynamicsCompressorNode.threshold = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.threshold.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.threshold);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {

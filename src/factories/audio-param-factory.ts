@@ -16,6 +16,7 @@ const addAudioParam = <T extends IMinimalBaseAudioContext>(
 
 export const createAudioParamFactory: TAudioParamFactoryFactory = (
     createAudioParamRenderer,
+    createCancelAndHoldAutomationEvent,
     createCancelScheduledValuesAutomationEvent,
     createExponentialRampToValueAutomationEvent,
     createLinearRampToValueAutomationEvent,
@@ -51,6 +52,51 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 // Bug #98: Edge, Firefox & Safari do not yet treat the value setter like a call to setValueAtTime().
                 audioParam.setValueAtTime(value, audioNode.context.currentTime);
+            },
+            cancelAndHoldAtTime (cancelTime: number): IAudioParam {
+                // Bug #28: Edge, Firefox & Safari do not yet implement cancelAndHoldAtTime().
+                if (typeof nativeAudioParam.cancelAndHoldAtTime === 'function') {
+                    if (audioParamRenderer === null) {
+                        automationEventList.flush(audioNode.context.currentTime);
+                    }
+
+                    automationEventList.add(createCancelAndHoldAutomationEvent(cancelTime));
+                    nativeAudioParam.cancelAndHoldAtTime(cancelTime);
+                } else {
+                    const previousLastEvent = Array
+                        .from(automationEventList)
+                        .pop();
+
+                    if (audioParamRenderer === null) {
+                        automationEventList.flush(audioNode.context.currentTime);
+                    }
+
+                    automationEventList.add(createCancelAndHoldAutomationEvent(cancelTime));
+
+                    const currentLastEvent = Array
+                        .from(automationEventList)
+                        .pop();
+
+                    nativeAudioParam.cancelScheduledValues(cancelTime);
+
+                    if (previousLastEvent !== currentLastEvent && currentLastEvent !== undefined) {
+                        if (currentLastEvent.type === 'exponentialRampToValue') {
+                            nativeAudioParam.exponentialRampToValueAtTime(currentLastEvent.value, currentLastEvent.endTime);
+                        } else if (currentLastEvent.type === 'linearRampToValue') {
+                            nativeAudioParam.linearRampToValueAtTime(currentLastEvent.value, currentLastEvent.endTime);
+                        } else if (currentLastEvent.type === 'setValue') {
+                            nativeAudioParam.setValueAtTime(currentLastEvent.value, currentLastEvent.startTime);
+                        } else if (currentLastEvent.type === 'setValueCurve') {
+                            nativeAudioParam.setValueCurveAtTime(
+                                currentLastEvent.values,
+                                currentLastEvent.startTime,
+                                currentLastEvent.duration
+                            );
+                        }
+                    }
+                }
+
+                return audioParam;
             },
             cancelScheduledValues (cancelTime: number): IAudioParam {
                 if (audioParamRenderer === null) {

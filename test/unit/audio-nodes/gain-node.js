@@ -6,6 +6,7 @@ import { createMinimalAudioContext } from '../../helper/create-minimal-audio-con
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { isSafari } from '../../helper/is-safari';
 import { roundToSamples } from '../../helper/round-to-samples';
 
 const createGainNodeWithConstructor = (context, options = null) => {
@@ -236,6 +237,7 @@ describe('GainNode', () => {
                 it('should return an instance of the AudioParam interface', () => {
                     const gainNode = createGainNode(context);
 
+                    expect(gainNode.gain.cancelAndHoldAtTime).to.be.a('function');
                     expect(gainNode.gain.cancelScheduledValues).to.be.a('function');
                     expect(gainNode.gain.defaultValue).to.equal(1);
                     expect(gainNode.gain.exponentialRampToValueAtTime).to.be.a('function');
@@ -254,6 +256,20 @@ describe('GainNode', () => {
                     expect(() => {
                         gainNode.gain = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    let gainNode;
+
+                    beforeEach(() => {
+                        gainNode = createGainNode(context);
+                    });
+
+                    it('should be chainable', () => {
+                        expect(gainNode.gain.cancelAndHoldAtTime(0)).to.equal(gainNode.gain);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -419,6 +435,33 @@ describe('GainNode', () => {
                                     })
                                         .then((channelData) => {
                                             expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
+                                        });
+                                });
+
+                            });
+
+                            describe('with a call to cancelAndHoldAtTime()', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        // @todo For some reason tests run more reliably in Safari when each iteration starts at the same fraction of a second.
+                                        blockSize: isSafari(navigator) ? context.sampleRate : 128,
+                                        start (startTime, { audioBufferSourceNode, gainNode }) {
+                                            gainNode.gain.setValueAtTime(1, roundToSamples(startTime, context.sampleRate));
+                                            gainNode.gain.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 4));
+                                            gainNode.gain.cancelAndHoldAtTime(roundToSamples(startTime, context.sampleRate, 3));
+
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(channelData[0]).to.equal(1);
+                                            expect(channelData[1]).to.be.closeTo(0.375, 0.0005);
+                                            expect(channelData[2]).to.equal(0);
+                                            expect(channelData[3]).to.equal(-0.125);
+                                            expect(channelData[4]).to.equal(-0.25);
                                         });
                                 });
 

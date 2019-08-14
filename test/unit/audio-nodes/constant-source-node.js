@@ -6,6 +6,7 @@ import { createMinimalAudioContext } from '../../helper/create-minimal-audio-con
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { isSafari } from '../../helper/is-safari';
 import { roundToSamples } from '../../helper/round-to-samples';
 import { spy } from 'sinon';
 
@@ -243,6 +244,7 @@ describe('ConstantSourceNode', () => {
                 it('should return an instance of the AudioParam interface', () => {
                     const constantSourceNode = createConstantSourceNode(context);
 
+                    expect(constantSourceNode.offset.cancelAndHoldAtTime).to.be.a('function');
                     expect(constantSourceNode.offset.cancelScheduledValues).to.be.a('function');
                     expect(constantSourceNode.offset.defaultValue).to.equal(1);
                     expect(constantSourceNode.offset.exponentialRampToValueAtTime).to.be.a('function');
@@ -261,6 +263,20 @@ describe('ConstantSourceNode', () => {
                     expect(() => {
                         constantSourceNode.offset = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    let constantSourceNode;
+
+                    beforeEach(() => {
+                        constantSourceNode = createConstantSourceNode(context);
+                    });
+
+                    it('should be chainable', () => {
+                        expect(constantSourceNode.offset.cancelAndHoldAtTime(0)).to.equal(constantSourceNode.offset);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -414,6 +430,33 @@ describe('ConstantSourceNode', () => {
                                     })
                                         .then((channelData) => {
                                             expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 0.5, 0.5, 0.5 ]);
+                                        });
+                                });
+
+                            });
+
+                            describe('with a call to cancelAndHoldAtTime()', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        // @todo For some reason tests run more reliably in Safari when each iteration starts at the same fraction of a second.
+                                        blockSize: isSafari(navigator) ? context.sampleRate : 128,
+                                        start (startTime, { constantSourceNode }) {
+                                            constantSourceNode.offset.setValueAtTime(1, startTime);
+                                            constantSourceNode.offset.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 5));
+                                            constantSourceNode.offset.cancelAndHoldAtTime(roundToSamples(startTime, context.sampleRate, 3));
+
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(channelData[0]).to.equal(1);
+                                            expect(channelData[1]).to.be.closeTo(0.8, 0.01);
+                                            expect(channelData[2]).to.be.closeTo(0.6, 0.01);
+                                            expect(channelData[3]).to.be.closeTo(0.4, 0.01);
+                                            expect(channelData[4]).to.be.closeTo(0.4, 0.01);
                                         });
                                 });
 

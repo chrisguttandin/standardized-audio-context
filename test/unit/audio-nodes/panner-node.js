@@ -637,6 +637,7 @@ describe('PannerNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(pannerNode.orientationX.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.orientationX.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.orientationX.defaultValue).to.equal(1);
                     expect(pannerNode.orientationX.exponentialRampToValueAtTime).to.be.a('function');
@@ -653,6 +654,14 @@ describe('PannerNode', () => {
                     expect(() => {
                         pannerNode.orientationX = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(pannerNode.orientationX.cancelAndHoldAtTime(0)).to.equal(pannerNode.orientationX);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -716,6 +725,7 @@ describe('PannerNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(pannerNode.orientationY.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.orientationY.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.orientationY.defaultValue).to.equal(0);
                     expect(pannerNode.orientationY.exponentialRampToValueAtTime).to.be.a('function');
@@ -732,6 +742,14 @@ describe('PannerNode', () => {
                     expect(() => {
                         pannerNode.orientationY = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(pannerNode.orientationY.cancelAndHoldAtTime(0)).to.equal(pannerNode.orientationY);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -798,6 +816,7 @@ describe('PannerNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(pannerNode.orientationZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.orientationZ.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.orientationZ.defaultValue).to.equal(0);
                     expect(pannerNode.orientationZ.exponentialRampToValueAtTime).to.be.a('function');
@@ -814,6 +833,14 @@ describe('PannerNode', () => {
                     expect(() => {
                         pannerNode.orientationZ = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(pannerNode.orientationZ.cancelAndHoldAtTime(0)).to.equal(pannerNode.orientationZ);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -923,6 +950,7 @@ describe('PannerNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(pannerNode.positionX.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.positionX.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.positionX.defaultValue).to.equal(0);
                     expect(pannerNode.positionX.exponentialRampToValueAtTime).to.be.a('function');
@@ -939,6 +967,14 @@ describe('PannerNode', () => {
                     expect(() => {
                         pannerNode.positionX = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(pannerNode.positionX.cancelAndHoldAtTime(0)).to.equal(pannerNode.positionX);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -1005,6 +1041,7 @@ describe('PannerNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(pannerNode.positionY.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.positionY.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.positionY.defaultValue).to.equal(0);
                     expect(pannerNode.positionY.exponentialRampToValueAtTime).to.be.a('function');
@@ -1021,6 +1058,14 @@ describe('PannerNode', () => {
                     expect(() => {
                         pannerNode.positionY = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(pannerNode.positionY.cancelAndHoldAtTime(0)).to.equal(pannerNode.positionY);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -1087,6 +1132,7 @@ describe('PannerNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(pannerNode.positionZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.positionZ.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.positionZ.defaultValue).to.equal(0);
                     expect(pannerNode.positionZ.exponentialRampToValueAtTime).to.be.a('function');
@@ -1103,6 +1149,14 @@ describe('PannerNode', () => {
                     expect(() => {
                         pannerNode.positionZ = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(pannerNode.positionZ.cancelAndHoldAtTime(0)).to.equal(pannerNode.positionZ);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {

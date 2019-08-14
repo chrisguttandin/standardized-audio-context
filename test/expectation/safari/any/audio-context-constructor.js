@@ -759,6 +759,7 @@ describe('audioContextConstructor', () => {
                 // bug #111
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.reduction.cancelAndHoldAtTime).to.be.undefined;
                     expect(dynamicsCompressorNode.reduction.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.reduction.defaultValue).to.be.a('number');
                     expect(dynamicsCompressorNode.reduction.exponentialRampToValueAtTime).to.be.a('function');

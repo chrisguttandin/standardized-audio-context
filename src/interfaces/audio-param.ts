@@ -8,10 +8,7 @@ export interface IAudioParam {
 
     value: number;
 
-    /*
-     * Bug #28: Edge, Firefox & Safari do not yet implement cancelAndHoldAtTime().
-     * cancelAndHoldAtTime (cancelTime: number): IAudioParam;
-     */
+    cancelAndHoldAtTime (cancelTime: number): IAudioParam;
 
     cancelScheduledValues (cancelTime: number): IAudioParam;
 

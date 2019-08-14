@@ -289,6 +289,7 @@ describe('OscillatorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(oscillatorNode.detune.cancelAndHoldAtTime).to.be.a('function');
                     expect(oscillatorNode.detune.cancelScheduledValues).to.be.a('function');
                     expect(oscillatorNode.detune.defaultValue).to.equal(0);
                     expect(oscillatorNode.detune.exponentialRampToValueAtTime).to.be.a('function');
@@ -305,6 +306,14 @@ describe('OscillatorNode', () => {
                     expect(() => {
                         oscillatorNode.detune = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.detune.cancelAndHoldAtTime(0)).to.equal(oscillatorNode.detune);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -371,6 +380,7 @@ describe('OscillatorNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(oscillatorNode.frequency.cancelAndHoldAtTime).to.be.a('function');
                     expect(oscillatorNode.frequency.cancelScheduledValues).to.be.a('function');
                     expect(oscillatorNode.frequency.defaultValue).to.equal(440);
                     expect(oscillatorNode.frequency.exponentialRampToValueAtTime).to.be.a('function');
@@ -387,6 +397,14 @@ describe('OscillatorNode', () => {
                     expect(() => {
                         oscillatorNode.frequency = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(oscillatorNode.frequency.cancelAndHoldAtTime(0)).to.equal(oscillatorNode.frequency);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {

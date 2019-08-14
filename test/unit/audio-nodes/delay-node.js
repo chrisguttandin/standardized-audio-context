@@ -256,6 +256,7 @@ describe('DelayNode', () => {
                 it('should return an instance of the AudioParam interface', () => {
                     const delayNode = createDelayNode(context);
 
+                    expect(delayNode.delayTime.cancelAndHoldAtTime).to.be.a('function');
                     expect(delayNode.delayTime.cancelScheduledValues).to.be.a('function');
                     expect(delayNode.delayTime.defaultValue).to.equal(0);
                     expect(delayNode.delayTime.exponentialRampToValueAtTime).to.be.a('function');
@@ -274,6 +275,20 @@ describe('DelayNode', () => {
                     expect(() => {
                         delayNode.delayTime = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    let delayNode;
+
+                    beforeEach(() => {
+                        delayNode = createDelayNode(context);
+                    });
+
+                    it('should be chainable', () => {
+                        expect(delayNode.delayTime.cancelAndHoldAtTime(0)).to.equal(delayNode.delayTime);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -448,6 +463,12 @@ describe('DelayNode', () => {
                                             expect(channelData[4]).to.closeTo(0.5, 0.00001);
                                         });
                                 });
+
+                            });
+
+                            describe('with a call to cancelAndHoldAtTime()', () => {
+
+                                // @todo
 
                             });
 

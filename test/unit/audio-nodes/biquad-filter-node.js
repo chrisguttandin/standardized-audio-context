@@ -288,6 +288,7 @@ describe('BiquadFilterNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(biquadFilterNode.detune.cancelAndHoldAtTime).to.be.a('function');
                     expect(biquadFilterNode.detune.cancelScheduledValues).to.be.a('function');
                     expect(biquadFilterNode.detune.defaultValue).to.equal(0);
                     expect(biquadFilterNode.detune.exponentialRampToValueAtTime).to.be.a('function');
@@ -304,6 +305,14 @@ describe('BiquadFilterNode', () => {
                     expect(() => {
                         biquadFilterNode.detune = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.detune.cancelAndHoldAtTime(0)).to.equal(biquadFilterNode.detune);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -370,6 +379,7 @@ describe('BiquadFilterNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(biquadFilterNode.frequency.cancelAndHoldAtTime).to.be.a('function');
                     expect(biquadFilterNode.frequency.cancelScheduledValues).to.be.a('function');
                     expect(biquadFilterNode.frequency.defaultValue).to.equal(350);
                     expect(biquadFilterNode.frequency.exponentialRampToValueAtTime).to.be.a('function');
@@ -386,6 +396,14 @@ describe('BiquadFilterNode', () => {
                     expect(() => {
                         biquadFilterNode.frequency = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.frequency.cancelAndHoldAtTime(0)).to.equal(biquadFilterNode.frequency);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -449,6 +467,7 @@ describe('BiquadFilterNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(biquadFilterNode.gain.cancelAndHoldAtTime).to.be.a('function');
                     expect(biquadFilterNode.gain.cancelScheduledValues).to.be.a('function');
                     expect(biquadFilterNode.gain.defaultValue).to.equal(0);
                     expect(biquadFilterNode.gain.exponentialRampToValueAtTime).to.be.a('function');
@@ -465,6 +484,14 @@ describe('BiquadFilterNode', () => {
                     expect(() => {
                         biquadFilterNode.gain = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.gain.cancelAndHoldAtTime(0)).to.equal(biquadFilterNode.gain);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -556,6 +583,7 @@ describe('BiquadFilterNode', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(biquadFilterNode.Q.cancelAndHoldAtTime).to.be.a('function');
                     expect(biquadFilterNode.Q.cancelScheduledValues).to.be.a('function');
                     expect(biquadFilterNode.Q.defaultValue).to.equal(1);
                     expect(biquadFilterNode.Q.exponentialRampToValueAtTime).to.be.a('function');
@@ -572,6 +600,14 @@ describe('BiquadFilterNode', () => {
                     expect(() => {
                         biquadFilterNode.Q = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(biquadFilterNode.Q.cancelAndHoldAtTime(0)).to.equal(biquadFilterNode.Q);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {

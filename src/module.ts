@@ -1,4 +1,5 @@
 import {
+    createCancelAndHoldAutomationEvent,
     createCancelScheduledValuesAutomationEvent,
     createExponentialRampToValueAutomationEvent,
     createLinearRampToValueAutomationEvent,
@@ -299,6 +300,7 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
 const createAudioBufferSourceNodeRenderer = createAudioBufferSourceNodeRendererFactory(createNativeAudioBufferSourceNode);
 const createAudioParam = createAudioParamFactory(
     createAudioParamRenderer,
+    createCancelAndHoldAutomationEvent,
     createCancelScheduledValuesAutomationEvent,
     createExponentialRampToValueAutomationEvent,
     createLinearRampToValueAutomationEvent,

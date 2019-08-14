@@ -1,5 +1,6 @@
 // @todo Renaming the imports is currently necessary to avoid collissions with the parameter names.
 import {
+    createCancelAndHoldAutomationEvent as createCancelAndHoldAutomationEventFunction,
     createCancelScheduledValuesAutomationEvent as createCancelScheduledValuesAutomationEventFunction,
     createExponentialRampToValueAutomationEvent as createExponentialRampToValueAutomationEventFunction,
     createLinearRampToValueAutomationEvent as createLinearRampToValueAutomationEventFunction,
@@ -13,6 +14,7 @@ import { TNativeAudioContextConstructor } from './native-audio-context-construct
 
 export type TAudioParamFactoryFactory = (
     createAudioParamRenderer: TAudioParamRendererFactory,
+    createCancelAndHoldAutomationEvent: typeof createCancelAndHoldAutomationEventFunction,
     createCancelScheduledValuesAutomationEvent: typeof createCancelScheduledValuesAutomationEventFunction,
     createExponentialRampToValueAutomationEvent: typeof createExponentialRampToValueAutomationEventFunction,
     createLinearRampToValueAutomationEvent: typeof createLinearRampToValueAutomationEventFunction,

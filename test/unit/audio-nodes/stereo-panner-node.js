@@ -308,6 +308,7 @@ describe('StereoPannerNode', () => {
                 it('should return an instance of the AudioParam interface', () => {
                     const stereoPannerNode = createStereoPannerNode(context);
 
+                    expect(stereoPannerNode.pan.cancelAndHoldAtTime).to.be.a('function');
                     expect(stereoPannerNode.pan.cancelScheduledValues).to.be.a('function');
                     expect(stereoPannerNode.pan.defaultValue).to.equal(0);
                     expect(stereoPannerNode.pan.exponentialRampToValueAtTime).to.be.a('function');
@@ -326,6 +327,20 @@ describe('StereoPannerNode', () => {
                     expect(() => {
                         stereoPannerNode.pan = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    let stereoPannerNode;
+
+                    beforeEach(() => {
+                        stereoPannerNode = createStereoPannerNode(context);
+                    });
+
+                    it('should be chainable', () => {
+                        expect(stereoPannerNode.pan.cancelAndHoldAtTime(0)).to.equal(stereoPannerNode.pan);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -532,6 +547,12 @@ describe('StereoPannerNode', () => {
                                                     }
                                                 });
                                         });
+
+                                    });
+
+                                    describe('with a call to cancelAndHoldAtTime()', () => {
+
+                                        // @todo
 
                                     });
 

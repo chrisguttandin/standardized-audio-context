@@ -432,6 +432,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo });
                  * @todo
                  * @todo it('should return an instance of the AudioParam interface', () => {
+                 * @todo     expect(audioBufferSourceNode.detune.cancelAndHoldAtTime).to.be.a('function');
                  * @todo     expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
                  * @todo     expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
                  * @todo     expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a('function');
@@ -449,6 +450,8 @@ describe('AudioBufferSourceNode', () => {
                  * @todo         audioBufferSourceNode.detune = 'anything';
                  * @todo     }).to.throw(TypeError);
                  * @todo });
+                 * @todo
+                 * @todo describe('cancelAndHoldAtTime()', () => { });
                  * @todo
                  * @todo describe('cancelScheduledValues()', () => {
                  * @todo
@@ -720,6 +723,7 @@ describe('AudioBufferSourceNode', () => {
                 it('should return an instance of the AudioParam interface', () => {
                     const audioBufferSourceNode = createAudioBufferSourceNode(context);
 
+                    expect(audioBufferSourceNode.playbackRate.cancelAndHoldAtTime).to.be.a('function');
                     expect(audioBufferSourceNode.playbackRate.cancelScheduledValues).to.be.a('function');
                     expect(audioBufferSourceNode.playbackRate.defaultValue).to.equal(1);
                     expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime).to.be.a('function');
@@ -738,6 +742,20 @@ describe('AudioBufferSourceNode', () => {
                     expect(() => {
                         audioBufferSourceNode.playbackRate = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = createAudioBufferSourceNode(context);
+                    });
+
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.playbackRate.cancelAndHoldAtTime(0)).to.equal(audioBufferSourceNode.playbackRate);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -901,6 +919,12 @@ describe('AudioBufferSourceNode', () => {
                                             expect(channelData[4]).to.closeTo(0, 0.1);
                                         });
                                 });
+
+                            });
+
+                            describe('with a call to cancelAndHoldAtTime()', () => {
+
+                                // @todo
 
                             });
 

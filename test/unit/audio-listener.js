@@ -44,6 +44,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.forwardX.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.forwardX.cancelScheduledValues).to.be.a('function');
                     expect(listener.forwardX.defaultValue).to.equal(0);
                     expect(listener.forwardX.exponentialRampToValueAtTime).to.be.a('function');
@@ -60,6 +61,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.forwardX = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.forwardX.cancelAndHoldAtTime(0)).to.equal(listener.forwardX);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -126,6 +135,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.forwardY.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.forwardY.cancelScheduledValues).to.be.a('function');
                     expect(listener.forwardY.defaultValue).to.equal(0);
                     expect(listener.forwardY.exponentialRampToValueAtTime).to.be.a('function');
@@ -142,6 +152,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.forwardY = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.forwardY.cancelAndHoldAtTime(0)).to.equal(listener.forwardY);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -208,6 +226,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.forwardZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.forwardZ.cancelScheduledValues).to.be.a('function');
                     expect(listener.forwardZ.defaultValue).to.equal(-1);
                     expect(listener.forwardZ.exponentialRampToValueAtTime).to.be.a('function');
@@ -224,6 +243,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.forwardZ = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.forwardZ.cancelAndHoldAtTime(0)).to.equal(listener.forwardZ);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -290,6 +317,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.positionX.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.positionX.cancelScheduledValues).to.be.a('function');
                     expect(listener.positionX.defaultValue).to.equal(0);
                     expect(listener.positionX.exponentialRampToValueAtTime).to.be.a('function');
@@ -306,6 +334,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.positionX = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.positionX.cancelAndHoldAtTime(0)).to.equal(listener.positionX);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -372,6 +408,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.positionY.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.positionY.cancelScheduledValues).to.be.a('function');
                     expect(listener.positionY.defaultValue).to.equal(0);
                     expect(listener.positionY.exponentialRampToValueAtTime).to.be.a('function');
@@ -388,6 +425,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.positionY = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.positionY.cancelAndHoldAtTime(0)).to.equal(listener.positionY);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -454,6 +499,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.positionZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.positionZ.cancelScheduledValues).to.be.a('function');
                     expect(listener.positionZ.defaultValue).to.equal(0);
                     expect(listener.positionZ.exponentialRampToValueAtTime).to.be.a('function');
@@ -470,6 +516,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.positionZ = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.positionZ.cancelAndHoldAtTime(0)).to.equal(listener.positionZ);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -536,6 +590,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.upX.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.upX.cancelScheduledValues).to.be.a('function');
                     expect(listener.upX.defaultValue).to.equal(0);
                     expect(listener.upX.exponentialRampToValueAtTime).to.be.a('function');
@@ -552,6 +607,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.upX = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.upX.cancelAndHoldAtTime(0)).to.equal(listener.upX);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -618,6 +681,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.upY.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.upY.cancelScheduledValues).to.be.a('function');
                     expect(listener.upY.defaultValue).to.equal(1);
                     expect(listener.upY.exponentialRampToValueAtTime).to.be.a('function');
@@ -634,6 +698,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.upY = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.upY.cancelAndHoldAtTime(0)).to.equal(listener.upY);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
@@ -700,6 +772,7 @@ describe('AudioListener', () => {
                 });
 
                 it('should return an instance of the AudioParam interface', () => {
+                    expect(listener.upZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.upZ.cancelScheduledValues).to.be.a('function');
                     expect(listener.upZ.defaultValue).to.equal(0);
                     expect(listener.upZ.exponentialRampToValueAtTime).to.be.a('function');
@@ -716,6 +789,14 @@ describe('AudioListener', () => {
                     expect(() => {
                         listener.upZ = 'anything';
                     }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+
+                    it('should be chainable', () => {
+                        expect(listener.upZ.cancelAndHoldAtTime(0)).to.equal(listener.upZ);
+                    });
+
                 });
 
                 describe('cancelScheduledValues()', () => {
