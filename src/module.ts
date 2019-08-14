@@ -1,3 +1,11 @@
+import {
+    createCancelScheduledValuesAutomationEvent,
+    createExponentialRampToValueAutomationEvent,
+    createLinearRampToValueAutomationEvent,
+    createSetTargetAutomationEvent,
+    createSetValueAutomationEvent,
+    createSetValueCurveAutomationEvent
+} from 'automation-events';
 import { createAbortError } from './factories/abort-error';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
 import { createAnalyserNodeConstructor } from './factories/analyser-node-constructor';
@@ -289,7 +297,16 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 );
 const createAudioBufferSourceNodeRenderer = createAudioBufferSourceNodeRendererFactory(createNativeAudioBufferSourceNode);
-const createAudioParam = createAudioParamFactory(createAudioParamRenderer, nativeAudioContextConstructor);
+const createAudioParam = createAudioParamFactory(
+    createAudioParamRenderer,
+    createCancelScheduledValuesAutomationEvent,
+    createExponentialRampToValueAutomationEvent,
+    createLinearRampToValueAutomationEvent,
+    createSetTargetAutomationEvent,
+    createSetValueAutomationEvent,
+    createSetValueCurveAutomationEvent,
+    nativeAudioContextConstructor
+);
 const audioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructor = createAudioBufferSourceNodeConstructor(
     createAudioBufferSourceNodeRenderer,
     createAudioParam,

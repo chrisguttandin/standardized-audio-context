@@ -1,37 +1,27 @@
-import { IAudioParam } from '../interfaces';
-import { TAudioParamRendererFactory, TAutomation, TNativeAudioParam } from '../types';
+import { TAudioParamRendererFactory, TNativeAudioParam } from '../types';
 
-export const createAudioParamRenderer: TAudioParamRendererFactory = () => {
-    const automations: TAutomation[] = [ ];
-
+export const createAudioParamRenderer: TAudioParamRendererFactory = (automationEventList) => {
     return {
-        record (automation: TAutomation): void {
-            automations.push(automation);
-        },
-        replay (audioParam: IAudioParam | TNativeAudioParam): void {
-            for (const automation of automations) {
-                if (automation.type === 'cancelScheduledValues') {
-                    const { cancelTime } = automation;
-
-                    audioParam.cancelScheduledValues(cancelTime);
-                } else if (automation.type === 'exponentialRampToValue') {
-                    const { endTime, value } = automation;
+        replay (audioParam: TNativeAudioParam): void {
+            for (const automationEvent of automationEventList) {
+                if (automationEvent.type === 'exponentialRampToValue') {
+                    const { endTime, value } = automationEvent;
 
                     audioParam.exponentialRampToValueAtTime(value, endTime);
-                } else if (automation.type === 'linearRampToValue') {
-                    const { endTime, value } = automation;
+                } else if (automationEvent.type === 'linearRampToValue') {
+                    const { endTime, value } = automationEvent;
 
                     audioParam.linearRampToValueAtTime(value, endTime);
-                } else if (automation.type === 'setTarget') {
-                    const { startTime, target, timeConstant } = automation;
+                } else if (automationEvent.type === 'setTarget') {
+                    const { startTime, target, timeConstant } = automationEvent;
 
                     audioParam.setTargetAtTime(target, startTime, timeConstant);
-                } else if (automation.type === 'setValue') {
-                    const { startTime, value } = automation;
+                } else if (automationEvent.type === 'setValue') {
+                    const { startTime, value } = automationEvent;
 
                     audioParam.setValueAtTime(value, startTime);
-                } else if (automation.type === 'setValueCurve') {
-                    const { duration, startTime, values } = automation;
+                } else if (automationEvent.type === 'setValueCurve') {
+                    const { duration, startTime, values } = automationEvent;
 
                     audioParam.setValueCurveAtTime(values, startTime, duration);
                 } else {

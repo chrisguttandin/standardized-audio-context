@@ -37,7 +37,6 @@ export * from './audio-worklet-node-constructor';
 export * from './audio-worklet-node-constructor-factory';
 export * from './audio-worklet-node-renderer-factory';
 export * from './audio-worklet-node-renderer-factory-factory';
-export * from './automation';
 export * from './base-audio-context-constructor';
 export * from './base-audio-context-constructor-factory';
 export * from './biquad-filter-node-constructor';

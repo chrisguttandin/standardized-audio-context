@@ -1,10 +1,7 @@
-import { TAutomation, TNativeAudioParam } from '../types';
-import { IAudioParam } from './audio-param';
+import { TNativeAudioParam } from '../types';
 
 export interface IAudioParamRenderer {
 
-    record (automation: TAutomation): void;
-
-    replay (audioParam: IAudioParam | TNativeAudioParam): void;
+    replay (audioParam: TNativeAudioParam): void;
 
 }

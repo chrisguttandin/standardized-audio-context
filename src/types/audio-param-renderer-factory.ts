@@ -1,3 +1,4 @@
+import { AutomationEventList } from 'automation-events';
 import { IAudioParamRenderer } from '../interfaces';
 
-export type TAudioParamRendererFactory = () => IAudioParamRenderer;
+export type TAudioParamRendererFactory = (automationEventList: AutomationEventList) => IAudioParamRenderer;

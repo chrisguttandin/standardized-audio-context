@@ -1,3 +1,4 @@
+import { AutomationEventList } from 'automation-events';
 import { AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE } from '../globals';
 import { getAudioGraph } from '../helpers/get-audio-graph';
 import { IAudioNode, IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
@@ -13,7 +14,16 @@ const addAudioParam = <T extends IMinimalBaseAudioContext>(
     audioGraph.params.set(audioParam, { activeInputs: new Set(), passiveInputs: new WeakMap(), renderer: audioParamRenderer });
 };
 
-export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioParamRenderer, nativeAudioContextConstructor) => {
+export const createAudioParamFactory: TAudioParamFactoryFactory = (
+    createAudioParamRenderer,
+    createCancelScheduledValuesAutomationEvent,
+    createExponentialRampToValueAutomationEvent,
+    createLinearRampToValueAutomationEvent,
+    createSetTargetAutomationEvent,
+    createSetValueAutomationEvent,
+    createSetValueCurveAutomationEvent,
+    nativeAudioContextConstructor
+) => {
     return <T extends IMinimalBaseAudioContext>(
         audioNode: IAudioNode<T>,
         isAudioParamOfOfflineAudioContext: boolean,
@@ -21,7 +31,8 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
         maxValue: null | number = null,
         minValue: null | number = null
     ): IAudioParam => {
-        const audioParamRenderer = (isAudioParamOfOfflineAudioContext) ? createAudioParamRenderer() : null;
+        const automationEventList = new AutomationEventList(nativeAudioParam.defaultValue);
+        const audioParamRenderer = (isAudioParamOfOfflineAudioContext) ? createAudioParamRenderer(automationEventList) : null;
         const audioParam = {
             get defaultValue (): number {
                 return nativeAudioParam.defaultValue;
@@ -42,53 +53,36 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
                 audioParam.setValueAtTime(value, audioNode.context.currentTime);
             },
             cancelScheduledValues (cancelTime: number): IAudioParam {
+                automationEventList.add(createCancelScheduledValuesAutomationEvent(cancelTime));
                 nativeAudioParam.cancelScheduledValues(cancelTime);
-
-                if (audioParamRenderer !== null) {
-                    audioParamRenderer.record({ cancelTime, type: 'cancelScheduledValues' });
-                }
 
                 return audioParam;
             },
             exponentialRampToValueAtTime (value: number, endTime: number): IAudioParam {
+                automationEventList.add(createExponentialRampToValueAutomationEvent(value, endTime));
                 nativeAudioParam.exponentialRampToValueAtTime(value, endTime);
-
-                if (audioParamRenderer !== null) {
-                    audioParamRenderer.record({ endTime, type: 'exponentialRampToValue', value });
-                }
 
                 return audioParam;
             },
             linearRampToValueAtTime (value: number, endTime: number): IAudioParam {
+                automationEventList.add(createLinearRampToValueAutomationEvent(value, endTime));
                 nativeAudioParam.linearRampToValueAtTime(value, endTime);
-
-                if (audioParamRenderer !== null) {
-                    audioParamRenderer.record({ endTime, type: 'linearRampToValue', value });
-                }
 
                 return audioParam;
             },
             setTargetAtTime (target: number, startTime: number, timeConstant: number): IAudioParam {
+                automationEventList.add(createSetTargetAutomationEvent(target, startTime, timeConstant));
                 nativeAudioParam.setTargetAtTime(target, startTime, timeConstant);
-
-                if (audioParamRenderer !== null) {
-                    audioParamRenderer.record({ startTime, target, timeConstant, type: 'setTarget' });
-                }
 
                 return audioParam;
             },
             setValueAtTime (value: number, startTime: number): IAudioParam {
+                automationEventList.add(createSetValueAutomationEvent(value, startTime));
                 nativeAudioParam.setValueAtTime(value, startTime);
-
-                if (audioParamRenderer !== null) {
-                    audioParamRenderer.record({ startTime, type: 'setValue', value });
-                }
 
                 return audioParam;
             },
             setValueCurveAtTime (values: Float32Array, startTime: number, duration: number): IAudioParam {
-                const type = 'setValueCurve';
-
                 /*
                  * Bug #152: Safari does not correctly interpolate the values of the curve.
                  * @todo Unfortunately there is no way to test for this behavior in synchronous fashion which is why testing for the
@@ -113,11 +107,8 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
                                 + ((1 - (upperIndex - theoreticIndex)) * values[upperIndex]);
                     }
 
+                    automationEventList.add(createSetValueCurveAutomationEvent(interpolatedValues, startTime, duration));
                     nativeAudioParam.setValueCurveAtTime(interpolatedValues, startTime, duration);
-
-                    if (audioParamRenderer !== null) {
-                        audioParamRenderer.record({ duration, startTime, type, values: interpolatedValues });
-                    }
 
                     const timeOfLastSample = lastSample / sampleRate;
 
@@ -127,11 +118,8 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (createAudioPa
 
                     audioParam.setValueAtTime(values[values.length - 1], endTime);
                 } else {
+                    automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
                     nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
-
-                    if (audioParamRenderer !== null) {
-                        audioParamRenderer.record({ duration, startTime, type, values });
-                    }
                 }
 
                 return audioParam;
