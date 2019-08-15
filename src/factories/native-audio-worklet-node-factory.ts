@@ -22,7 +22,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                         }) :
                         new nativeAudioWorkletNodeConstructor(ntvCntxt, name, options);
                 });
-                const patchedEventListeners: Map<NonNullable<TNativeAudioWorkletNode['onprocessorerror']>, NonNullable<TNativeAudioWorkletNode['onprocessorerror']>> = new Map(); // tslint:disable-line:max-line-length
+                const patchedEventListeners: Map<EventListenerOrEventListenerObject, NonNullable<TNativeAudioWorkletNode['onprocessorerror']>> = new Map(); // tslint:disable-line:max-line-length
 
                 let onprocessorerror: TNativeAudioWorkletNode['onprocessorerror'] = null;
 
@@ -61,20 +61,26 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                 });
 
                 nativeAudioWorkletNode.addEventListener = ((addEventListener) => {
-                    return (...args: any[]): void => {
-                        if (typeof args[1] === 'function') {
-                            const patchedEventListener = patchedEventListeners.get(args[1]);
+                    return (...args: [ string, EventListenerOrEventListenerObject, (boolean | AddEventListenerOptions)? ]): void => {
+                        if (args[0] === 'processorerror') {
+                            const unpatchedEventListener = (typeof args[1] === 'function')
+                                ? args[1]
+                                : (typeof args[1] === 'object' && args[1] !== null && typeof args[1].handleEvent === 'function')
+                                    ? args[1].handleEvent
+                                    : null;
 
-                            if (patchedEventListener !== undefined) {
-                                args[1] = patchedEventListener;
-                            } else {
-                                const unpatchedEventListener = args[1];
+                            if (unpatchedEventListener !== null) {
+                                const patchedEventListener = patchedEventListeners.get(args[1]);
 
-                                args[1] = (event: Event) => {
-                                    unpatchedEventListener(new ErrorEvent('processorerror', { ...event, error: new Error(/* @todo */) }));
-                                };
+                                if (patchedEventListener !== undefined) {
+                                    args[1] = patchedEventListener;
+                                } else {
+                                    args[1] = (event: Event) => {
+                                        unpatchedEventListener(new ErrorEvent(args[0], { ...event, error: new Error(/* @todo */) }));
+                                    };
 
-                                patchedEventListeners.set(unpatchedEventListener, args[1]);
+                                    patchedEventListeners.set(unpatchedEventListener, args[1]);
+                                }
                             }
                         }
 
@@ -84,7 +90,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
 
                 nativeAudioWorkletNode.removeEventListener = ((removeEventListener) => {
                     return (...args: any[]): void => {
-                        if (typeof args[1] === 'function') {
+                        if (args[0] === 'processorerror') {
                             const patchedEventListener = patchedEventListeners.get(args[1]);
 
                             if (patchedEventListener !== undefined) {
