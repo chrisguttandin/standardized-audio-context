@@ -46,6 +46,7 @@ import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple
 import { createDynamicsCompressorNodeConstructor } from './factories/dynamics-compressor-node-constructor';
 import { createDynamicsCompressorNodeRendererFactory } from './factories/dynamics-compressor-node-renderer-factory';
 import { createEncodingError } from './factories/encoding-error';
+import { createExposeCurrentFrameAndCurrentTime } from './factories/expose-current-frame-and-current-time';
 import { createFetchSource } from './factories/fetch-source';
 import { createGainNodeConstructor } from './factories/gain-node-constructor';
 import { createGainNodeRendererFactory } from './factories/gain-node-renderer-factory';
@@ -517,12 +518,14 @@ const waveShaperNodeConstructor: TWaveShaperNodeConstructor = createWaveShaperNo
     noneAudioDestinationNodeConstructor
 );
 const isSecureContext = createIsSecureContext(window);
+const exposeCurrentFrameAndCurrentTime = createExposeCurrentFrameAndCurrentTime(window);
 
 // The addAudioWorkletModule() function is only available in a SecureContext.
 export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction = (isSecureContext) ?
     createAddAudioWorkletModule(
         createAbortError,
         createNotSupportedError,
+        exposeCurrentFrameAndCurrentTime,
         createFetchSource(createAbortError),
         getBackupNativeContext,
         new WeakMap(),
@@ -624,7 +627,8 @@ const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFacto
     createNativeGainNode,
     createNativeScriptProcessorNode,
     createNotSupportedError,
-    disconnectMultipleOutputs
+    disconnectMultipleOutputs,
+    exposeCurrentFrameAndCurrentTime
 );
 const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
     createInvalidStateError,

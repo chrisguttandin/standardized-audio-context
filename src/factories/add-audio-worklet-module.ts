@@ -29,6 +29,7 @@ const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (proce
 export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     createAbortError,
     createNotSupportedError,
+    exposeCurrentFrameAndCurrentTime,
     fetchSource,
     getBackupNativeContext,
     ongoingRequests,
@@ -121,7 +122,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                  * ${ importStatements };
                  * ((a, b) => {
                  *     (a[b] = a[b] || [ ]).push(
-                 *         (AudioWorkletProcessor, currentFrame, currentTime, global, egisterProcessor, sampleRate, self, window) => {
+                 *         (AudioWorkletProcessor, global, registerProcessor, sampleRate, self, window) => {
                  *             ${ sourceWithoutImportStatements }
                  *         }
                  *     );
@@ -129,68 +130,51 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                  * ```
                  */
                 // tslint:disable-next-line:max-line-length
-                const wrappedSource = `${ importStatements };((a,b)=>{(a[b]=a[b]||[]).push((AudioWorkletProcessor,currentFrame,currentTime,global,registerProcessor,sampleRate,self,window)=>{${ sourceWithoutImportStatements }
+                const wrappedSource = `${ importStatements };((a,b)=>{(a[b]=a[b]||[]).push((AudioWorkletProcessor,global,registerProcessor,sampleRate,self,window)=>{${ sourceWithoutImportStatements }
 })})(window,'_AWGS')`;
 
                 // @todo Evaluating the given source code is a possible security problem.
                 return evaluateSource(wrappedSource);
             })
             .then(() => {
-                const globalScope = Object.create(null, {
-                    currentFrame: {
-                        get: () => {
-                            return nativeContext.currentTime * nativeContext.sampleRate;
-                        }
-                    },
-                    currentTime: {
-                        get: () => {
-                            return nativeContext.currentTime;
-                        }
-                    },
-                    sampleRate: {
-                        get: () => {
-                            return nativeContext.sampleRate;
-                        }
-                    }
-                });
-
                 const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]> (<any> window)._AWGS).pop();
 
                 if (evaluateAudioWorkletGlobalScope === undefined) {
                     throw new SyntaxError();
                 }
 
-                evaluateAudioWorkletGlobalScope(
-                    class AudioWorkletProcessor { },
-                    globalScope.currentFrame,
-                    globalScope.currentTime,
-                    undefined,
-                    (name, processorCtor) => {
-                        if (name.trim() === '') {
-                            throw createNotSupportedError();
-                        }
-
-                        const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
-
-                        if (nodeNameToProcessorConstructorMap !== undefined) {
-                            if (nodeNameToProcessorConstructorMap.has(name)) {
+                exposeCurrentFrameAndCurrentTime(
+                    nativeContext,
+                    () => evaluateAudioWorkletGlobalScope(
+                        class AudioWorkletProcessor { },
+                        undefined,
+                        (name, processorCtor) => {
+                            if (name.trim() === '') {
                                 throw createNotSupportedError();
                             }
 
-                            verifyProcessorCtor(processorCtor);
-                            verifyParameterDescriptors(processorCtor.parameterDescriptors);
+                            const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
 
-                            nodeNameToProcessorConstructorMap.set(name, processorCtor);
-                        } else {
-                            verifyProcessorCtor(processorCtor);
-                            verifyParameterDescriptors(processorCtor.parameterDescriptors);
+                            if (nodeNameToProcessorConstructorMap !== undefined) {
+                                if (nodeNameToProcessorConstructorMap.has(name)) {
+                                    throw createNotSupportedError();
+                                }
 
-                            NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
-                        }
-                    },
-                    globalScope.sampleRate,
-                    undefined,
-                    undefined
+                                verifyProcessorCtor(processorCtor);
+                                verifyParameterDescriptors(processorCtor.parameterDescriptors);
+
+                                nodeNameToProcessorConstructorMap.set(name, processorCtor);
+                            } else {
+                                verifyProcessorCtor(processorCtor);
+                                verifyParameterDescriptors(processorCtor.parameterDescriptors);
+
+                                NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
+                            }
+                        },
+                        nativeContext.sampleRate,
+                        undefined,
+                        undefined
+                    )
                 );
             })
             .catch((err) => {

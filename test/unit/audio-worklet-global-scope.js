@@ -72,6 +72,34 @@ describe('AudioWorkletGlobalScope', () => {
                     audioWorkletNode.port.postMessage(null);
                 });
 
+                it('should advance over time', (done) => {
+                    let firstValue = null;
+
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.currentFrame === undefined) {
+                            return;
+                        }
+
+                        if (firstValue === null) {
+                            firstValue = data.currentFrame;
+
+                            setTimeout(() => audioWorkletNode.port.postMessage(null), 1000);
+
+                            if (context.startRendering !== undefined) {
+                                context.startRendering();
+                            }
+                        } else {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.currentFrame).to.above(firstValue);
+
+                            done();
+                        }
+                    };
+
+                    audioWorkletNode.port.postMessage(null);
+                });
+
             });
 
             describe('currentTime', () => {
@@ -88,10 +116,38 @@ describe('AudioWorkletGlobalScope', () => {
 
                 it('should expose the currentTime of the context', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if ('currentFrame' in data) {
+                        if ('currentTime' in data) {
                             audioWorkletNode.port.onmessage = null;
 
                             expect(data.currentTime).to.be.a('number');
+
+                            done();
+                        }
+                    };
+
+                    audioWorkletNode.port.postMessage(null);
+                });
+
+                it('should advance over time', (done) => {
+                    let firstValue = null;
+
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.currentTime === undefined) {
+                            return;
+                        }
+
+                        if (firstValue === null) {
+                            firstValue = data.currentTime;
+
+                            setTimeout(() => audioWorkletNode.port.postMessage(null), 1000);
+
+                            if (context.startRendering !== undefined) {
+                                context.startRendering();
+                            }
+                        } else {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.currentTime).to.above(firstValue);
 
                             done();
                         }

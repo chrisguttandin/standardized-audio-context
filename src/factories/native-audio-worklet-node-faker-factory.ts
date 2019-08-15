@@ -27,7 +27,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
     createNativeGainNode,
     createNativeScriptProcessorNode,
     createNotSupportedError,
-    disconnectMultipleOutputs
+    disconnectMultipleOutputs,
+    exposeCurrentFrameAndCurrentTime
 ) => {
     return (nativeContext, baseLatency, processorConstructor, options) => {
         if (options.numberOfInputs === 0 && options.numberOfOutputs === 0) {
@@ -263,6 +264,69 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         };
 
+        const patchedEventListeners: Map<EventListenerOrEventListenerObject, NonNullable<MessagePort['onmessage']>> = new Map(); // tslint:disable-line:max-line-length
+
+        messageChannel.port1.addEventListener = ((addEventListener) => {
+            return (...args: [ string, EventListenerOrEventListenerObject, (boolean | AddEventListenerOptions)? ]): void => {
+                if (args[0] === 'message') {
+                    const unpatchedEventListener = (typeof args[1] === 'function')
+                        ? args[1]
+                        : (typeof args[1] === 'object' && args[1] !== null && typeof args[1].handleEvent === 'function')
+                            ? args[1].handleEvent
+                            : null;
+
+                    if (unpatchedEventListener !== null) {
+                        const patchedEventListener = patchedEventListeners.get(args[1]);
+
+                        if (patchedEventListener !== undefined) {
+                            args[1] = <EventListenerOrEventListenerObject> patchedEventListener;
+                        } else {
+                            args[1] = (event: Event) => {
+                                exposeCurrentFrameAndCurrentTime(nativeContext, () => unpatchedEventListener(event));
+                            };
+
+                            patchedEventListeners.set(unpatchedEventListener, args[1]);
+                        }
+                    }
+                }
+
+                return addEventListener.call(messageChannel.port1, args[0], args[1], args[2]);
+            };
+        })(messageChannel.port1.addEventListener);
+
+        messageChannel.port1.removeEventListener = ((removeEventListener) => {
+            return (...args: any[]): void => {
+                if (args[0] === 'message') {
+                    const patchedEventListener = patchedEventListeners.get(args[1]);
+
+                    if (patchedEventListener !== undefined) {
+                        patchedEventListeners.delete(args[1]);
+
+                        args[1] = patchedEventListener;
+                    }
+                }
+
+                return removeEventListener.call(messageChannel.port1, args[0], args[1], args[2]);
+            };
+        })(messageChannel.port1.removeEventListener);
+
+        let onmessage: MessagePort['onmessage'] = null;
+
+        Object.defineProperty(messageChannel.port1, 'onmessage', {
+            get: () => onmessage,
+            set: (value) => {
+                if (typeof onmessage === 'function') {
+                    messageChannel.port1.removeEventListener('message', onmessage);
+                }
+
+                onmessage = (typeof value === 'function') ? value : null;
+
+                if (typeof onmessage === 'function') {
+                    messageChannel.port1.addEventListener('message', onmessage);
+                }
+            }
+        });
+
         processorConstructor.prototype.port = messageChannel.port1;
 
         let audioWorkletProcessor: null | IAudioWorkletProcessor = null;
@@ -321,7 +385,11 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
                                 return input;
                             });
-                        const activeSourceFlag = audioWorkletProcessor.process(potentiallyEmptyInputs, outputs, parameters);
+
+                        const activeSourceFlag = exposeCurrentFrameAndCurrentTime(
+                            nativeContext,
+                            () => (<IAudioWorkletProcessor> audioWorkletProcessor).process(potentiallyEmptyInputs, outputs, parameters)
+                        );
 
                         isActive = activeSourceFlag;
 
