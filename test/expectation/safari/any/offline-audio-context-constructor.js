@@ -289,10 +289,10 @@ describe('offlineAudioContextConstructor', () => {
                 // Bug #5: Safari does not support copyFromChannel().
                 const channelData = event.renderedBuffer.getChannelData(0);
 
-                expect(channelData[0]).to.closeTo(eightRandomValues[0], 0.0000001);
-                expect(channelData[1]).to.closeTo(eightRandomValues[2], 0.0000001);
-                expect(channelData[2]).to.closeTo(eightRandomValues[4], 0.0000001);
-                expect(channelData[3]).to.closeTo(eightRandomValues[6], 0.0000001);
+                expect(channelData[0]).to.be.closeTo(eightRandomValues[0], 0.0000001);
+                expect(channelData[1]).to.be.closeTo(eightRandomValues[2], 0.0000001);
+                expect(channelData[2]).to.be.closeTo(eightRandomValues[4], 0.0000001);
+                expect(channelData[3]).to.be.closeTo(eightRandomValues[6], 0.0000001);
 
                 done();
             };

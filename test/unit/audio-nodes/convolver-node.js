@@ -865,11 +865,11 @@ describe('ConvolverNode', () => {
                                 }
                             })
                                 .then((channelData) => {
-                                    expect(channelData[0]).to.closeTo(0.8, 0.00001);
-                                    expect(channelData[1]).to.closeTo(0.8, 0.00001);
-                                    expect(channelData[2]).to.closeTo(0.8, 0.00001);
-                                    expect(channelData[3]).to.closeTo(0.8, 0.00001);
-                                    expect(channelData[4]).to.closeTo(0.8, 0.00001);
+                                    expect(channelData[0]).to.be.closeTo(0.8, 0.00001);
+                                    expect(channelData[1]).to.be.closeTo(0.8, 0.00001);
+                                    expect(channelData[2]).to.be.closeTo(0.8, 0.00001);
+                                    expect(channelData[3]).to.be.closeTo(0.8, 0.00001);
+                                    expect(channelData[4]).to.be.closeTo(0.8, 0.00001);
                                 });
                         });
 

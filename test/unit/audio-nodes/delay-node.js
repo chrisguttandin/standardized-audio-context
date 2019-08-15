@@ -456,11 +456,11 @@ describe('DelayNode', () => {
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(0, 0.00001);
-                                            expect(channelData[1]).to.closeTo(0, 0.00001);
-                                            expect(channelData[2]).to.closeTo(0, 0.00001);
-                                            expect(channelData[3]).to.closeTo(1, 0.00001);
-                                            expect(channelData[4]).to.closeTo(0.5, 0.00001);
+                                            expect(channelData[0]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[1]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[2]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
+                                            expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
                                         });
                                 });
 
@@ -510,8 +510,8 @@ describe('DelayNode', () => {
                                             expect(channelData[0]).to.equal(1);
                                             expect(channelData[1]).to.equal(0.5);
                                             expect(channelData[2]).to.equal(0);
-                                            expect(channelData[3]).to.closeTo(1, 0.00001);
-                                            expect(channelData[4]).to.closeTo(0.5, 0.00001);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
+                                            expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
                                         });
                                 });
 
@@ -563,11 +563,11 @@ describe('DelayNode', () => {
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(0, 0.00001);
-                                            expect(channelData[1]).to.closeTo(0, 0.00001);
-                                            expect(channelData[2]).to.closeTo(0, 0.00001);
-                                            expect(channelData[3]).to.closeTo(1, 0.00001);
-                                            expect(channelData[4]).to.closeTo(0.5, 0.00001);
+                                            expect(channelData[0]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[1]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[2]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
+                                            expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
                                         });
                                 });
 

@@ -912,11 +912,11 @@ describe('AudioBufferSourceNode', () => {
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.closeTo(0, 0.1);
+                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
                                         });
                                 });
 
@@ -944,11 +944,11 @@ describe('AudioBufferSourceNode', () => {
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.closeTo(0, 0.1);
+                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
                                         });
                                 });
 
@@ -967,11 +967,11 @@ describe('AudioBufferSourceNode', () => {
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.closeTo(0, 0.1);
+                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
                                         });
                                 });
 
@@ -990,11 +990,11 @@ describe('AudioBufferSourceNode', () => {
                                         }
                                     })
                                         .then((channelData) => {
-                                            expect(channelData[0]).to.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.closeTo(0, 0.1);
+                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
                                         });
                                 });
 
@@ -1029,11 +1029,11 @@ describe('AudioBufferSourceNode', () => {
                                             }
                                         })
                                             .then((channelData) => {
-                                                expect(channelData[0]).to.closeTo(1, 0.1);
-                                                expect(channelData[1]).to.closeTo(1, 0.2);
-                                                expect(channelData[2]).to.closeTo(1, 0.1);
-                                                expect(channelData[3]).to.closeTo(0.5, 0.1);
-                                                expect(channelData[4]).to.closeTo(0, 0.1);
+                                                expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                                expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                                expect(channelData[4]).to.be.closeTo(0, 0.1);
                                             });
                                     });
 
@@ -1767,11 +1767,11 @@ describe('AudioBufferSourceNode', () => {
                                     }
                                 })
                                     .then((channelData) => {
-                                        expect(channelData[0]).to.closeTo(1, 0.1);
-                                        expect(channelData[1]).to.closeTo(1, 0.2);
-                                        expect(channelData[2]).to.closeTo(1, 0.1);
-                                        expect(channelData[3]).to.closeTo(0.5, 0.5);
-                                        expect(channelData[4]).to.closeTo(0, 0.1);
+                                        expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                        expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                        expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                        expect(channelData[3]).to.be.closeTo(0.5, 0.5);
+                                        expect(channelData[4]).to.be.closeTo(0, 0.1);
                                     });
                             });
 

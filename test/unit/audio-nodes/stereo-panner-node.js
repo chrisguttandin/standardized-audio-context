@@ -637,7 +637,7 @@ describe('StereoPannerNode', () => {
                                                 .then((channelData) => {
                                                     if (channelLayout === 'mono') {
                                                         expect(channelData[0]).to.equal(0.7071067690849304);
-                                                        expect(channelData[1]).to.closeTo(0.3505287, 0.0000001);
+                                                        expect(channelData[1]).to.be.closeTo(0.3505287, 0.0000001);
                                                         expect(channelData[2]).to.equal(0);
                                                         expect(channelData[3]).to.equal(-0.3266407251358032);
                                                         expect(channelData[4]).to.equal(-0.6123723983764648);
