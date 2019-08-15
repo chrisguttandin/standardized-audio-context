@@ -323,6 +323,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
                 if (typeof onmessage === 'function') {
                     messageChannel.port1.addEventListener('message', onmessage);
+                    messageChannel.port1.start();
                 }
             }
         });
