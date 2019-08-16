@@ -420,7 +420,11 @@ const createNativeIIRFilterNodeFaker = createNativeIIRFilterNodeFakerFactory(
     createNativeScriptProcessorNode,
     createNotSupportedError
 );
-const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(cacheTestResult, createNativeGainNode);
+const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(
+    cacheTestResult,
+    createNativeGainNode,
+    createNativeScriptProcessorNode
+);
 const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(
     createNativeAudioBufferSourceNode,
     createNativeAudioNode,

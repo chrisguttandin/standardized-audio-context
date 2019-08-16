@@ -2,10 +2,25 @@ import { IOfflineAudioCompletionEvent } from '../interfaces';
 import { testPromiseSupport } from '../support-testers/promise';
 import { TNativeAudioBuffer, TRenderNativeOfflineAudioContextFactory } from '../types';
 
-export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFactory = (cacheTestResult, createNativeGainNode) => {
+export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFactory = (
+    cacheTestResult,
+    createNativeGainNode,
+    createNativeScriptProcessorNode
+) => {
     return (nativeOfflineAudioContext) => {
         // Bug #21: Safari does not support promises yet.
         if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeOfflineAudioContext))) {
+            // Bug #158: Edge does not advance currentTime if it is not accessed while rendering the audio.
+            const scriptProcessorNode = createNativeScriptProcessorNode(nativeOfflineAudioContext, 512, 0, 1);
+
+            nativeOfflineAudioContext.oncomplete = () => {
+                scriptProcessorNode.onaudioprocess = null; // tslint:disable-line:deprecation
+                scriptProcessorNode.disconnect();
+            };
+            scriptProcessorNode.onaudioprocess = () => nativeOfflineAudioContext.currentTime; // tslint:disable-line:deprecation
+
+            scriptProcessorNode.connect(nativeOfflineAudioContext.destination);
+
             return nativeOfflineAudioContext.startRendering();
         }
 
