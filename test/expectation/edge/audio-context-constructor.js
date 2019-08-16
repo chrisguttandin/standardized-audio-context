@@ -696,6 +696,26 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createMediaStreamSource()', () => {
+
+            describe('mediaStream', () => {
+
+                let mediaStreamAudioSourceNode;
+
+                beforeEach(() => {
+                    mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(audioContext.createMediaStreamDestination().stream);
+                });
+
+                // bug #63
+
+                it('should not be implemented', () => {
+                    expect(mediaStreamAudioSourceNode.mediaStream).to.be.undefined;
+                });
+
+            });
+
+        });
+
         describe('createMediaStreamDestination()', () => {
 
             // bug #64

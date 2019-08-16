@@ -5,27 +5,27 @@ export const createNativeMediaStreamAudioSourceNodeFactory: TNativeMediaStreamAu
     createNativeAudioNode
 ) => {
     return (nativeAudioContext, { mediaStream }) => {
-        const nativeMediaElementAudioSourceNode = createNativeAudioNode(nativeAudioContext, (ntvDCntxt) => {
+        const audioStreamTracks = mediaStream.getAudioTracks();
+        const nativeMediaStreamAudioSourceNode = createNativeAudioNode(nativeAudioContext, (ntvDCntxt) => {
             /*
-             * Bug #63: Edge & Firefox do not expose the mediaStream yet. This bug gets used here to know if the following bug needs to be
-             * handled.
              * Bug #151: Firefox does not use the audio track as input anymore if it gets removed from the mediaStream after construction.
+             * Bug #159: Chrome and Firefox pick the first audio track if the MediaStream has more than one audio track.
              */
-            return ntvDCntxt.createMediaStreamSource(
-                // @todo This is using a global object without any previous checks.
-                ('mediaStream' in MediaStreamAudioSourceNode.prototype)
-                    ? mediaStream
-                    : mediaStream.clone()
-            );
+            const filteredAudioStreamTracks = audioStreamTracks
+                .sort((a, b) => ((a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0))
+                .slice(0, 1);
+
+            return ntvDCntxt.createMediaStreamSource(new MediaStream(filteredAudioStreamTracks));
         });
 
         // Bug #120: Firefox does not throw an error if the mediaStream has no audio track.
-        const audioTracks = mediaStream.getAudioTracks();
-
-        if (audioTracks.length === 0) {
+        if (audioStreamTracks.length === 0) {
             throw createInvalidStateError();
         }
 
-        return nativeMediaElementAudioSourceNode;
+        // Bug #63: Edge & Firefox do not expose the mediaStream yet.
+        Object.defineProperty(nativeMediaStreamAudioSourceNode, 'mediaStream', { value: mediaStream });
+
+        return nativeMediaStreamAudioSourceNode;
     };
 };

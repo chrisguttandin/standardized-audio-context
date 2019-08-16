@@ -166,6 +166,86 @@ describe('MediaStreamAudioSourceNode', () => {
                                     expect(mediaStreamAudioSourceNode.mediaStream).to.be.an.instanceOf(MediaStream);
                                 });
 
+                                if (audioContextState === 'running') {
+
+                                    describe('with a mediaStream that has more than one audio track', () => {
+
+                                        let audioStreamTrackIds;
+                                        let renderer;
+
+                                        beforeEach(() => {
+                                            mediaStream.addTrack(mediaStream.getAudioTracks()[0].clone());
+
+                                            audioStreamTrackIds = mediaStream
+                                                .getAudioTracks()
+                                                .map((audioStreamTrack) => audioStreamTrack.id)
+                                                .sort();
+
+                                            renderer = createRenderer({
+                                                context,
+                                                length: (context.length === undefined) ? 5 : undefined,
+                                                prepare (destination) {
+                                                    const firstDummyGainNode = new GainNode(context);
+                                                    const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+                                                    const secondDummyGainNode = new GainNode(context);
+
+                                                    mediaStreamAudioSourceNode
+                                                        .connect(firstDummyGainNode)
+                                                        .connect(destination);
+
+                                                    mediaStreamAudioSourceNode.connect(secondDummyGainNode);
+
+                                                    return { firstDummyGainNode, mediaStreamAudioSourceNode, secondDummyGainNode };
+                                                }
+                                            });
+                                        });
+
+                                        describe('with a noisy and a silent audio track', () => {
+
+                                            beforeEach(() => {
+                                                for (const audioStreamTrack of mediaStream.getAudioTracks()) {
+                                                    if (audioStreamTrack.id === audioStreamTrackIds[1]) {
+                                                        audioStreamTrack.stop();
+                                                    }
+                                                }
+                                            });
+
+                                            it('should pick the correct audio track', function () {
+                                                this.timeout(10000);
+
+                                                return renderer({ verifyChannelData: false })
+                                                    .then((channelData) => {
+                                                        expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                                    });
+                                            });
+
+                                        });
+
+                                        describe('with a silent and a noisy audio track', () => {
+
+                                            beforeEach(() => {
+                                                for (const audioStreamTrack of mediaStream.getAudioTracks()) {
+                                                    if (audioStreamTrack.id === audioStreamTrackIds[0]) {
+                                                        audioStreamTrack.stop();
+                                                    }
+                                                }
+                                            });
+
+                                            it('should pick the correct audio track', function () {
+                                                this.timeout(10000);
+
+                                                return renderer({ verifyChannelData: false })
+                                                    .then((channelData) => {
+                                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                                                    });
+                                            });
+
+                                        });
+
+                                    });
+
+                                }
+
                             });
 
                             describe('with invalid options', () => {
