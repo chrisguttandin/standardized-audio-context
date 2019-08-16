@@ -46,30 +46,27 @@ describe('MediaStreamAudioSourceNode', () => {
 
     /*
      * Bug #65: Only Chrome & Opera implement captureStream() so far. But Firefox can be configured to allow user media access without any
-     * user interaction. This leaves Edge and Safari as the browsers which can't be tested so far.
+     * user interaction. Safari already supports createMediaStreamDestination(). This leaves Edge as the only browser which can't be tested
+     * so far.
      * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
      */
-    if (!process.env.TRAVIS && !/Edge/.test(navigator.userAgent) && !isSafari(navigator)) { // eslint-disable-line no-undef
+    if (!process.env.TRAVIS && !/Edge/.test(navigator.userAgent)) { // eslint-disable-line no-undef
 
         for (const [ description, { createContext, createMediaStreamAudioSourceNode } ] of Object.entries(testCases)) {
 
             describe(`with the ${ description }`, () => {
 
-                let audioElement;
                 let context;
                 let mediaStream;
+                let teardownMediaStream;
 
                 afterEach(async () => {
                     for (const mediaStreamTrack of mediaStream.getTracks()) {
                         mediaStreamTrack.stop();
                     }
 
-                    if (typeof audioElement.captureStream === 'function') {
-                        await new Promise((resolve, reject) => {
-                            audioElement.onerror = () => reject(audioElement.error);
-                            audioElement.onpause = resolve;
-                            audioElement.pause();
-                        });
+                    if (typeof teardownMediaStream === 'function') {
+                        await teardownMediaStream();
                     }
 
                     if (context.close !== undefined) {
@@ -80,7 +77,7 @@ describe('MediaStreamAudioSourceNode', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioElement = new Audio();
+                    const audioElement = new Audio();
 
                     if (typeof audioElement.captureStream === 'function') {
                         audioElement.src = 'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
@@ -94,6 +91,26 @@ describe('MediaStreamAudioSourceNode', () => {
                         });
 
                         mediaStream = audioElement.captureStream();
+                        teardownMediaStream = () => new Promise((resolve, reject) => {
+                            audioElement.onerror = () => reject(audioElement.error);
+                            audioElement.onpause = resolve;
+                            audioElement.pause();
+                        });
+                    } else if (isSafari(navigator)) {
+                        const audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
+                        const oscillatorNode = audioContext.createOscillator();
+                        const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
+
+                        oscillatorNode.connect(mediaStreamAudioDestinationNode);
+                        oscillatorNode.start();
+
+                        mediaStream = mediaStreamAudioDestinationNode.stream;
+                        teardownMediaStream = () => {
+                            oscillatorNode.stop();
+                            oscillatorNode.disconnect();
+
+                            return audioContext.close();
+                        };
                     } else {
                         mediaStream = await navigator.mediaDevices.getUserMedia({
                             audio: {
@@ -103,6 +120,7 @@ describe('MediaStreamAudioSourceNode', () => {
                                 noiseSuppression: false
                             }
                         });
+                        teardownMediaStream = null;
                     }
 
                     context = createContext();
@@ -174,7 +192,35 @@ describe('MediaStreamAudioSourceNode', () => {
                                         let renderer;
 
                                         beforeEach(() => {
-                                            mediaStream.addTrack(mediaStream.getAudioTracks()[0].clone());
+                                            if (isSafari(navigator)) {
+                                                const gainNodes = [
+                                                    context._nativeContext.createGain(),
+                                                    context._nativeContext.createGain()
+                                                ];
+                                                const mediaStreamAudioDestinationNodes = [
+                                                    context._nativeContext.createMediaStreamDestination(),
+                                                    context._nativeContext.createMediaStreamDestination()
+                                                ];
+                                                const mediaStreamAudioSourceNode = context._nativeContext.createMediaStreamSource(mediaStream);
+
+                                                mediaStreamAudioSourceNode
+                                                    .connect(gainNodes[0])
+                                                    .connect(mediaStreamAudioDestinationNodes[0]);
+
+                                                mediaStreamAudioSourceNode
+                                                    .connect(gainNodes[1])
+                                                    .connect(mediaStreamAudioDestinationNodes[1]);
+
+                                                const audioStreamTracks = mediaStreamAudioDestinationNodes
+                                                    .map(({ stream }) => stream.getAudioTracks()[0]);
+
+                                                mediaStream = new MediaStream(audioStreamTracks);
+
+                                                // @todo For some reason Safari doesn't care if a MediaStreamTrack gets stopped.
+                                                audioStreamTracks.forEach((audioStreamTrack, index) => audioStreamTrack.stop = () => gainNodes[index].gain.value = 0);
+                                            } else {
+                                                mediaStream.addTrack(mediaStream.getAudioTracks()[0].clone());
+                                            }
 
                                             audioStreamTrackIds = mediaStream
                                                 .getAudioTracks()
