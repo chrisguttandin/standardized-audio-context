@@ -2,7 +2,7 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IMinimalBaseAudioContext, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
 import { TAudioNodeRenderer, TStereoPannerNodeConstructorFactory } from '../types';
 
-const DEFAULT_OPTIONS: IStereoPannerOptions = {
+const DEFAULT_OPTIONS = {
     channelCount: 2,
     /*
      * Bug #105: The channelCountMode should be 'clamped-max' according to the spec but is set to 'explicit' to achieve consistent
@@ -11,7 +11,7 @@ const DEFAULT_OPTIONS: IStereoPannerOptions = {
     channelCountMode: 'explicit',
     channelInterpretation: 'speakers',
     pan: 0
-};
+} as const;
 
 export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFactory = (
     createAudioParam,

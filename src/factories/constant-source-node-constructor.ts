@@ -13,12 +13,12 @@ import {
 } from '../interfaces';
 import { TConstantSourceNodeConstructorFactory, TConstantSourceNodeRenderer, TNativeConstantSourceNode } from '../types';
 
-const DEFAULT_OPTIONS: IConstantSourceOptions = {
+const DEFAULT_OPTIONS = {
     channelCount: 2,
     channelCountMode: 'max',
     channelInterpretation: 'speakers',
     offset: 1
-};
+} as const;
 
 export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructorFactory = (
     createAudioParam,

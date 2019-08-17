@@ -2,13 +2,13 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IMinimalBaseAudioContext, IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
 import { TAudioNodeRenderer, TNativeWaveShaperNode, TOverSampleType, TWaveShaperNodeConstructorFactory } from '../types';
 
-const DEFAULT_OPTIONS: IWaveShaperOptions = {
+const DEFAULT_OPTIONS = {
     channelCount: 2,
     channelCountMode: 'max',
     channelInterpretation: 'speakers',
     curve: null,
     oversample: 'none'
-};
+} as const;
 
 export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory = (
     createInvalidStateError,

@@ -3,12 +3,11 @@ import { IIIRFilterNode, IIIRFilterOptions, IMinimalAudioContext, IMinimalBaseAu
 import { TAudioNodeRenderer, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
 
-// The DEFAULT_OPTIONS are only of type Partial<IIIRFilterOptions> because there are no default values for feedback and feedforward.
-const DEFAULT_OPTIONS: Partial<AudioNodeOptions> = {
+const DEFAULT_OPTIONS = {
     channelCount: 2,
     channelCountMode: 'max',
     channelInterpretation: 'speakers'
-};
+} as const;
 
 export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = (
     createNativeIIRFilterNode,
@@ -29,7 +28,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
         ) {
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const mergedOptions = <IIIRFilterOptions> { ...DEFAULT_OPTIONS, ...options };
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeIIRFilterNode = createNativeIIRFilterNode(
                 nativeContext,
                 isOffline ? null : (<IMinimalAudioContext> (<any> context)).baseLatency,

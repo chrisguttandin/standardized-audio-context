@@ -8,7 +8,7 @@ import {
     TNativeDynamicsCompressorNode
 } from '../types';
 
-const DEFAULT_OPTIONS: IDynamicsCompressorOptions = {
+const DEFAULT_OPTIONS = {
     attack: 0.003,
     channelCount: 2,
     channelCountMode: 'clamped-max',
@@ -17,7 +17,7 @@ const DEFAULT_OPTIONS: IDynamicsCompressorOptions = {
     ratio: 12,
     release: 0.25,
     threshold: -24
-};
+} as const;
 
 export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeConstructorFactory = (
     createAudioParam,

@@ -18,7 +18,7 @@ import {
     TNativeAudioBufferSourceNode
 } from '../types';
 
-const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
+const DEFAULT_OPTIONS = {
     buffer: null,
     channelCount: 2,
     channelCountMode: 'max',
@@ -28,7 +28,7 @@ const DEFAULT_OPTIONS: IAudioBufferSourceOptions = {
     loopEnd: 0,
     loopStart: 0,
     playbackRate: 1
-};
+} as const;
 
 export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructorFactory = (
     createAudioBufferSourceNodeRenderer,

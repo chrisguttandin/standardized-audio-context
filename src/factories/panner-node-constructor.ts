@@ -3,7 +3,7 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IMinimalBaseAudioContext, IPannerNode, IPannerOptions } from '../interfaces';
 import { TAudioNodeRenderer, TDistanceModelType, TNativePannerNode, TPannerNodeConstructorFactory, TPanningModelType } from '../types';
 
-const DEFAULT_OPTIONS: IPannerOptions = {
+const DEFAULT_OPTIONS = {
     channelCount: 2,
     channelCountMode: 'clamped-max',
     channelInterpretation: 'speakers',
@@ -21,7 +21,7 @@ const DEFAULT_OPTIONS: IPannerOptions = {
     positionZ: 0,
     refDistance: 1,
     rolloffFactor: 1
-};
+} as const;
 
 export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
     createAudioParam,

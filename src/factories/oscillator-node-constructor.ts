@@ -12,15 +12,14 @@ import {
 } from '../interfaces';
 import { TNativeOscillatorNode, TOscillatorNodeConstructorFactory, TOscillatorNodeRenderer, TOscillatorType } from '../types';
 
-// The DEFAULT_OPTIONS are only of type Partial<IOscillatorOptions> because there is no default value for periodicWave.
-const DEFAULT_OPTIONS: Partial<IOscillatorOptions> = {
+const DEFAULT_OPTIONS = {
     channelCount: 2,
     channelCountMode: 'max', // This attribute has no effect for nodes with no inputs.
     channelInterpretation: 'speakers', // This attribute has no effect for nodes with no inputs.
     detune: 0,
     frequency: 440,
     type: 'sine'
-};
+} as const;
 
 export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory = (
     createAudioParam,
@@ -47,7 +46,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         constructor (context: T, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = <IOscillatorOptions> { ...DEFAULT_OPTIONS, ...options };
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeOscillatorNode = createNativeOscillatorNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const oscillatorNodeRenderer = <TOscillatorNodeRenderer<T>> ((isOffline) ? createOscillatorNodeRenderer() : null);

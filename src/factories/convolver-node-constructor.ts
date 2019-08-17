@@ -2,13 +2,13 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IConvolverNode, IConvolverOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAnyAudioBuffer, TAudioNodeRenderer, TConvolverNodeConstructorFactory, TNativeConvolverNode } from '../types';
 
-const DEFAULT_OPTIONS: IConvolverOptions = {
+const DEFAULT_OPTIONS = {
     buffer: null,
     channelCount: 2,
     channelCountMode: 'clamped-max',
     channelInterpretation: 'speakers',
     disableNormalization: false
-};
+} as const;
 
 export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = (
     createConvolverNodeRenderer,

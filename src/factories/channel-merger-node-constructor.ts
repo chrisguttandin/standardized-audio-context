@@ -2,12 +2,12 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IChannelMergerOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TChannelMergerNodeConstructorFactory } from '../types';
 
-const DEFAULT_OPTIONS: IChannelMergerOptions = {
+const DEFAULT_OPTIONS = {
     channelCount: 1,
     channelCountMode: 'explicit',
     channelInterpretation: 'speakers',
     numberOfInputs: 6
-};
+} as const;
 
 export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFactory = (
     createChannelMergerNodeRenderer,

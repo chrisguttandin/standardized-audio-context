@@ -19,7 +19,7 @@ import {
     TNativeAudioWorkletNode
 } from '../types';
 
-const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
+const DEFAULT_OPTIONS = {
     channelCount: 2,
     // Bug #61: The channelCountMode should be 'max' according to the spec but is set to 'explicit' to achieve consistent behavior.
     channelCountMode: 'explicit',
@@ -29,7 +29,7 @@ const DEFAULT_OPTIONS: IAudioWorkletNodeOptions = {
     outputChannelCount: undefined,
     parameterData: { },
     processorOptions: { }
-};
+} as const;
 
 const createChannelCount = (length: number): number[] => {
     const channelCount: number[] = [ ];

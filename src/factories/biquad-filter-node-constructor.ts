@@ -3,7 +3,7 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TBiquadFilterNodeConstructorFactory, TBiquadFilterType, TNativeBiquadFilterNode } from '../types';
 
-const DEFAULT_OPTIONS: IBiquadFilterOptions = {
+const DEFAULT_OPTIONS = {
     Q: 1,
     channelCount: 2,
     channelCountMode: 'max',
@@ -12,7 +12,7 @@ const DEFAULT_OPTIONS: IBiquadFilterOptions = {
     frequency: 350,
     gain: 0,
     type: 'lowpass'
-};
+} as const;
 
 export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFactory = (
     createAudioParam,

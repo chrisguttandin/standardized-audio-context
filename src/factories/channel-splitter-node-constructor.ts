@@ -2,12 +2,12 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IChannelSplitterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TChannelSplitterNodeConstructorFactory } from '../types';
 
-const DEFAULT_OPTIONS: IChannelSplitterOptions = {
+const DEFAULT_OPTIONS = {
     channelCount: 6,
     channelCountMode: 'explicit',
     channelInterpretation: 'discrete',
     numberOfOutputs: 6
-};
+} as const;
 
 const sanitizedOptions = (options: IChannelSplitterOptions) => {
     return { ...options, channelCount: options.numberOfOutputs };

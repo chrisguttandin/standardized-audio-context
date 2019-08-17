@@ -2,7 +2,7 @@ import { getNativeContext } from '../helpers/get-native-context';
 import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAnalyserNodeConstructorFactory, TAudioNodeRenderer, TNativeAnalyserNode } from '../types';
 
-const DEFAULT_OPTIONS: IAnalyserOptions = {
+const DEFAULT_OPTIONS = {
     channelCount: 2,
     channelCountMode: 'max',
     channelInterpretation: 'speakers',
@@ -10,7 +10,7 @@ const DEFAULT_OPTIONS: IAnalyserOptions = {
     maxDecibels: -30,
     minDecibels: -100,
     smoothingTimeConstant: 0.8
-};
+} as const;
 
 export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
     createAnalyserNodeRenderer,

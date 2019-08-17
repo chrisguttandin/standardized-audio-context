@@ -6,7 +6,7 @@ import { wrapAudioBufferGetChannelDataMethod } from '../wrappers/audio-buffer-ge
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
-};
+} as const;
 
 export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
     cacheTestResult,
@@ -40,10 +40,7 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
                 throw new Error(); // @todo
             }
 
-            const { length, numberOfChannels, sampleRate } = <typeof DEFAULT_OPTIONS & IAudioBufferOptions> {
-                ...DEFAULT_OPTIONS,
-                ...options
-            };
+            const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS, ...options };
 
             if (nativeOfflineAudioContext === null) {
                 nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
