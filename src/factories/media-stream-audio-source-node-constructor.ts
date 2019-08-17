@@ -1,12 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioNodeOptions, IMediaStreamAudioSourceNode, IMediaStreamAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
+import { IMediaStreamAudioSourceNode, IMediaStreamAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TMediaStreamAudioSourceNodeConstructorFactory, TNativeMediaStreamAudioSourceNode } from '../types';
-
-const DEFAULT_OPTIONS: IAudioNodeOptions = {
-    channelCount: 2,
-    channelCountMode: 'max',
-    channelInterpretation: 'speakers'
-};
 
 export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructorFactory = (
     createNativeMediaStreamAudioSourceNode,
@@ -28,8 +22,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
                 throw createNotSupportedError();
             }
 
-            const mergedOptions = <IAudioNodeOptions & IMediaStreamAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, mergedOptions);
+            const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, options);
 
             super(context, 'active', nativeMediaStreamAudioSourceNode, <TAudioNodeRenderer<T>> null);
 

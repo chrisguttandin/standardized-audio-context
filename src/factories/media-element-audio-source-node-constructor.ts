@@ -1,12 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { IAudioNodeOptions, IMediaElementAudioSourceNode, IMediaElementAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
+import { IMediaElementAudioSourceNode, IMediaElementAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TMediaElementAudioSourceNodeConstructorFactory, TNativeMediaElementAudioSourceNode } from '../types';
-
-const DEFAULT_OPTIONS: IAudioNodeOptions = {
-    channelCount: 2,
-    channelCountMode: 'max',
-    channelInterpretation: 'speakers'
-};
 
 export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstructorFactory = (
     createNativeMediaElementAudioSourceNode,
@@ -30,13 +24,12 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
                 throw createNotSupportedError();
             }
 
-            const mergedOptions = <IAudioNodeOptions & IMediaElementAudioSourceOptions> { ...DEFAULT_OPTIONS, ...options };
-            const nativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNode(nativeContext, mergedOptions);
+            const nativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNode(nativeContext, options);
 
             super(context, 'active', nativeMediaElementAudioSourceNode, <TAudioNodeRenderer<T>> null);
 
             // Bug #63: Edge & Firefox do not expose the mediaElement yet.
-            this._mediaElement = mergedOptions.mediaElement;
+            this._mediaElement = options.mediaElement;
             this._nativeMediaElementAudioSourceNode = nativeMediaElementAudioSourceNode;
         }
 
