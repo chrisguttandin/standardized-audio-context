@@ -27,6 +27,7 @@ import { isPassiveAudioNode } from '../helpers/is-passive-audio-node';
 import { pickElementFromSet } from '../helpers/pick-element-from-set';
 import { setInternalState } from '../helpers/set-internal-state';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
+import { testAudioNodeDisconnectMethodSupport } from '../helpers/test-audio-node-disconnect-method-support';
 import {
     IAudioNode,
     IAudioNodeRenderer,
@@ -35,7 +36,6 @@ import {
     IMinimalOfflineAudioContext,
     INativeAudioNodeFaker
 } from '../interfaces';
-import { testAudioNodeDisconnectMethodSupport } from '../support-testers/audio-node-disconnect-method';
 import {
     TActiveInputConnection,
     TAudioNodeConstructorFactory,

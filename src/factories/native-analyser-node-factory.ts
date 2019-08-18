@@ -1,6 +1,8 @@
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { testAnalyserNodeGetFloatTimeDomainDataMethodSupport } from '../support-testers/analyser-node-get-float-time-domain-data-method';
+import {
+    testAnalyserNodeGetFloatTimeDomainDataMethodSupport
+} from '../helpers/test-analyser-node-get-float-time-domain-data-method-support';
 import { TNativeAnalyserNodeFactoryFactory } from '../types';
 import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 

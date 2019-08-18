@@ -1,5 +1,5 @@
+import { testPromiseSupport } from '../helpers/test-promise-support';
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
-import { testPromiseSupport } from '../support-testers/promise';
 import { TAudioContextState, TNativeOfflineAudioContext, TOfflineAudioContextConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS = {

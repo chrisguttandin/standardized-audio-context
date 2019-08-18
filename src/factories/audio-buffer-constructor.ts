@@ -1,6 +1,8 @@
+import {
+    testAudioBufferCopyChannelMethodsOutOfBoundsSupport
+} from '../helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
+import { testAudioBufferCopyChannelMethodsSubarraySupport } from '../helpers/test-audio-buffer-copy-channel-methods-subarray-support';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
-import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from '../support-testers/audio-buffer-copy-channel-methods-out-of-bounds';
-import { testAudioBufferCopyChannelMethodsSubarraySupport } from '../support-testers/audio-buffer-copy-channel-methods-subarray';
 import { TAudioBufferConstructorFactory, TNativeOfflineAudioContext } from '../types';
 import { wrapAudioBufferGetChannelDataMethod } from '../wrappers/audio-buffer-get-channel-data-method';
 

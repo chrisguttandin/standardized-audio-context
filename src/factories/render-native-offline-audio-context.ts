@@ -1,5 +1,5 @@
+import { testPromiseSupport } from '../helpers/test-promise-support';
 import { IOfflineAudioCompletionEvent } from '../interfaces';
-import { testPromiseSupport } from '../support-testers/promise';
 import { TNativeAudioBuffer, TRenderNativeOfflineAudioContextFactory } from '../types';
 
 export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFactory = (

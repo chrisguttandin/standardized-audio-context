@@ -157,6 +157,12 @@ import {
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
 import {
+    testAudioBufferCopyChannelMethodsOutOfBoundsSupport
+} from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
+import { testAudioBufferCopyChannelMethodsSubarraySupport } from './helpers/test-audio-buffer-copy-channel-methods-subarray-support';
+import { testPromiseSupport } from './helpers/test-promise-support';
+import { testTransferablesSupport } from './helpers/test-transferables-support';
+import {
     IAnalyserNode,
     IAudioBuffer,
     IAudioBufferSourceNode,
@@ -183,10 +189,6 @@ import {
     IStereoPannerNode,
     IWaveShaperNode
 } from './interfaces';
-import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './support-testers/audio-buffer-copy-channel-methods-out-of-bounds';
-import { testAudioBufferCopyChannelMethodsSubarraySupport } from './support-testers/audio-buffer-copy-channel-methods-subarray';
-import { testPromiseSupport } from './support-testers/promise';
-import { testTransferablesSupport } from './support-testers/transferables';
 import {
     TAddAudioWorkletModuleFunction,
     TAnalyserNodeConstructor,
