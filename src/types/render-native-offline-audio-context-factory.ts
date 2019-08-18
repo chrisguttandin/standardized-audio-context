@@ -6,5 +6,6 @@ import { TRenderNativeOfflineAudioContextFunction } from './render-native-offlin
 export type TRenderNativeOfflineAudioContextFactory = (
     cacheTestResult: TCacheTestResultFunction,
     createNativeGainNode: TNativeGainNodeFactory,
-    createNativeScriptProcessorNode: TNativeScriptProcessorNodeFactory
+    createNativeScriptProcessorNode: TNativeScriptProcessorNodeFactory,
+    testOfflineAudioContextCurrentTimeSupport: () => Promise<boolean>
 ) => TRenderNativeOfflineAudioContextFunction;

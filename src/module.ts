@@ -143,6 +143,7 @@ import {
 } from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createTestConvolverNodeBufferReassignabilitySupport } from './factories/test-convolver-node-buffer-reassignability-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
+import { createTestOfflineAudioContextCurrentTimeSupport } from './factories/test-offline-audio-context-current-time-support';
 import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
 import { createUnknownError } from './factories/unknown-error';
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
@@ -423,7 +424,8 @@ const createNativeIIRFilterNodeFaker = createNativeIIRFilterNodeFakerFactory(
 const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(
     cacheTestResult,
     createNativeGainNode,
-    createNativeScriptProcessorNode
+    createNativeScriptProcessorNode,
+    createTestOfflineAudioContextCurrentTimeSupport(createNativeGainNode, nativeOfflineAudioContextConstructor)
 );
 const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(
     createNativeAudioBufferSourceNode,
