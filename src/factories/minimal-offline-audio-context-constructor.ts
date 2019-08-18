@@ -4,7 +4,7 @@ import { TAudioContextState, TMinimalOfflineAudioContextConstructorFactory, TNat
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
-};
+} as const;
 
 export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructorFactory = (
     cacheTestResult,
@@ -23,10 +23,7 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
         private _state: null | TAudioContextState;
 
         constructor (options: IOfflineAudioContextOptions) {
-            const { length, numberOfChannels, sampleRate } = <typeof DEFAULT_OPTIONS & IOfflineAudioContextOptions> {
-                ...DEFAULT_OPTIONS,
-                ...options
-            };
+            const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS, ...options };
 
             const nativeOfflineAudioContext = createNativeOfflineAudioContext(numberOfChannels, length, sampleRate);
 
