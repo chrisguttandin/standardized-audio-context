@@ -1,6 +1,6 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
+import { wrapChannelSplitterNode } from '../helpers/wrap-channel-splitter-node';
 import { TNativeChannelSplitterNodeFactoryFactory } from '../types';
-import { wrapChannelSplitterNode } from '../wrappers/channel-splitter-node';
 
 export const createNativeChannelSplitterNodeFactory: TNativeChannelSplitterNodeFactoryFactory = (createNativeAudioNode) => {
     return (nativeContext, options) => {

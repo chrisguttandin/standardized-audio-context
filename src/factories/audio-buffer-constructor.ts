@@ -2,9 +2,9 @@ import {
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport
 } from '../helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from '../helpers/test-audio-buffer-copy-channel-methods-subarray-support';
+import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffer-get-channel-data-method';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
 import { TAudioBufferConstructorFactory, TNativeOfflineAudioContext } from '../types';
-import { wrapAudioBufferGetChannelDataMethod } from '../wrappers/audio-buffer-get-channel-data-method';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1

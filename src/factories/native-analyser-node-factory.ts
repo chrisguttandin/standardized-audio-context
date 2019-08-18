@@ -3,8 +3,8 @@ import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-nod
 import {
     testAnalyserNodeGetFloatTimeDomainDataMethodSupport
 } from '../helpers/test-analyser-node-get-float-time-domain-data-method-support';
+import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../helpers/wrap-analyser-node-get-float-time-domain-data-method';
 import { TNativeAnalyserNodeFactoryFactory } from '../types';
-import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../wrappers/analyser-node-get-float-time-domain-data-method';
 
 export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory = (
     cacheTestResult,

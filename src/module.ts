@@ -162,6 +162,7 @@ import {
 import { testAudioBufferCopyChannelMethodsSubarraySupport } from './helpers/test-audio-buffer-copy-channel-methods-subarray-support';
 import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
+import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
 import {
     IAnalyserNode,
     IAudioBuffer,
@@ -218,7 +219,6 @@ import {
     TStereoPannerNodeConstructor,
     TWaveShaperNodeConstructor
 } from './types';
-import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './wrappers/audio-buffer-source-node-start-method-offset-clamping';
 
 export * from './interfaces';
 export * from './types';

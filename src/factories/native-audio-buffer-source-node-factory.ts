@@ -1,17 +1,19 @@
 import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
-import { wrapAudioBufferSourceNodeStartMethodConsecutiveCalls } from '../wrappers/audio-buffer-source-node-start-method-consecutive-calls';
+import {
+    wrapAudioBufferSourceNodeStartMethodConsecutiveCalls
+} from '../helpers/wrap-audio-buffer-source-node-start-method-consecutive-calls';
 import {
     wrapAudioBufferSourceNodeStartMethodDurationParameter
-} from '../wrappers/audio-buffer-source-node-start-method-duration-parameter';
+} from '../helpers/wrap-audio-buffer-source-node-start-method-duration-parameter';
 import {
     wrapAudioScheduledSourceNodeStartMethodNegativeParameters
-} from '../wrappers/audio-scheduled-source-node-start-method-negative-parameters';
+} from '../helpers/wrap-audio-scheduled-source-node-start-method-negative-parameters';
 import {
     wrapAudioScheduledSourceNodeStopMethodNegativeParameters
-} from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
+} from '../helpers/wrap-audio-scheduled-source-node-stop-method-negative-parameters';
+import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
 
 export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceNodeFactoryFactory = (
     cacheTestResult,

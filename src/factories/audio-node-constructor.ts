@@ -28,6 +28,7 @@ import { pickElementFromSet } from '../helpers/pick-element-from-set';
 import { setInternalState } from '../helpers/set-internal-state';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
 import { testAudioNodeDisconnectMethodSupport } from '../helpers/test-audio-node-disconnect-method-support';
+import { wrapAudioNodeDisconnectMethod } from '../helpers/wrap-audio-node-disconnect-method';
 import {
     IAudioNode,
     IAudioNodeRenderer,
@@ -50,7 +51,6 @@ import {
     TPassiveAudioNodeInputConnection,
     TPassiveAudioParamInputConnection
 } from '../types';
-import { wrapAudioNodeDisconnectMethod } from '../wrappers/audio-node-disconnect-method';
 
 const addAudioNode = <T extends IMinimalBaseAudioContext>(
     context: T,

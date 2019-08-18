@@ -1,7 +1,7 @@
 import { getNativeContext } from '../helpers/get-native-context';
+import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../helpers/wrap-iir-filter-node-get-frequency-response-method';
 import { IIIRFilterNode, IIIRFilterOptions, IMinimalAudioContext, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
-import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../wrappers/iir-filter-node-get-frequency-response-method';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,

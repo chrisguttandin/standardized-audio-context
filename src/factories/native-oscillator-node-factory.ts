@@ -1,13 +1,13 @@
 import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { TNativeOscillatorNodeFactoryFactory } from '../types';
 import {
     wrapAudioScheduledSourceNodeStartMethodNegativeParameters
-} from '../wrappers/audio-scheduled-source-node-start-method-negative-parameters';
+} from '../helpers/wrap-audio-scheduled-source-node-start-method-negative-parameters';
 import {
     wrapAudioScheduledSourceNodeStopMethodNegativeParameters
-} from '../wrappers/audio-scheduled-source-node-stop-method-negative-parameters';
+} from '../helpers/wrap-audio-scheduled-source-node-stop-method-negative-parameters';
+import { TNativeOscillatorNodeFactoryFactory } from '../types';
 
 export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFactory = (
     cacheTestResult,
