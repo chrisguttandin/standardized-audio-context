@@ -1,15 +1,8 @@
 import { EventTarget } from '../event-target';
-import {
-    ACTIVE_AUDIO_NODE_STORE,
-    AUDIO_NODE_STORE,
-    AUDIO_PARAM_AUDIO_NODE_STORE,
-    AUXILIARY_GAIN_NODE_STORE,
-    EVENT_LISTENERS
-} from '../globals';
+import { ACTIVE_AUDIO_NODE_STORE, AUDIO_NODE_STORE, AUXILIARY_GAIN_NODE_STORE, EVENT_LISTENERS } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
 import { isAudioWorkletNode } from '../guards/audio-worklet-node';
-import { isDelayNode } from '../guards/delay-node';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
 import { disconnectNativeAudioNodeFromNativeAudioNode } from '../helpers/disconnect-native-audio-node-from-native-audio-node';
@@ -492,6 +485,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     createIndexSizeError,
     createInvalidAccessError,
     createNotSupportedError,
+    detectCycles,
     isNativeOfflineAudioContext
 ) => {
 
@@ -573,26 +567,6 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
         public connect <U extends IAudioNode<T>> (destination: U | IAudioParam, output = 0, input = 0): void | U {
             const nativeContext = getNativeContext(this._context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-
-            const detectCycles = (source: IAudioNode<T>, dstntn: IAudioNode<T> | IAudioParam) => {
-                const audioNodeOfDestination = (isAudioNode(dstntn))
-                    ? dstntn
-                    : <IAudioNode<T>> getValueForKey(AUDIO_PARAM_AUDIO_NODE_STORE, dstntn);
-
-                if (source === audioNodeOfDestination) {
-                    throw createNotSupportedError();
-                }
-
-                if (isDelayNode(audioNodeOfDestination)) {
-                    return;
-                }
-
-                const { outputs } = getAudioNodeConnections(audioNodeOfDestination);
-
-                for (const outputConnection of outputs) {
-                    detectCycles(source, outputConnection[0]);
-                }
-            };
 
             if (isAudioNode(destination)) {
                 const nativeDestinationAudioNode = getNativeAudioNode(destination);

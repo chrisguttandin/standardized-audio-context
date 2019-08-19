@@ -42,6 +42,7 @@ import { createDataCloneError } from './factories/data-clone-error';
 import { createDecodeAudioData } from './factories/decode-audio-data';
 import { createDelayNodeConstructor } from './factories/delay-node-constructor';
 import { createDelayNodeRendererFactory } from './factories/delay-node-renderer-factory';
+import { createDetectCycles } from './factories/detect-cycles';
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
 import { createDynamicsCompressorNodeConstructor } from './factories/dynamics-compressor-node-constructor';
 import { createDynamicsCompressorNodeRendererFactory } from './factories/dynamics-compressor-node-renderer-factory';
@@ -156,6 +157,9 @@ import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
+import { AUDIO_PARAM_AUDIO_NODE_STORE } from './globals';
+import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
+import { getValueForKey } from './helpers/get-value-for-key';
 import {
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport
 } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
@@ -241,6 +245,7 @@ const audioNodeConstructor = createAudioNodeConstructor(
     createIndexSizeError,
     createInvalidAccessError,
     createNotSupportedError,
+    createDetectCycles(AUDIO_PARAM_AUDIO_NODE_STORE, createNotSupportedError, getAudioNodeConnections, getValueForKey),
     isNativeOfflineAudioContext
 );
 const noneAudioDestinationNodeConstructor = createNoneAudioDestinationNodeConstructor(audioNodeConstructor);

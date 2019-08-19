@@ -1,4 +1,6 @@
-export const getValueForKey = <T, U>(map: T extends object ? Map<T, U> | WeakMap<T, U> : Map<T, U>, key: T): U => {
+import { TGetValueForKeyFunction } from '../types';
+
+export const getValueForKey: TGetValueForKeyFunction = (map, key) => {
     const value = map.get(key);
 
     if (value === undefined) {
