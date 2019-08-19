@@ -13,12 +13,12 @@ export const createDetectCycles: TDetectCyclesFactory = (
             ? destination
             : getValueForKey(audioParamAudioNodeStore, destination);
 
-        if (source === audioNodeOfDestination) {
-            throw createNotSupportedError();
-        }
-
         if (isDelayNode(audioNodeOfDestination)) {
             return true;
+        }
+
+        if (source === audioNodeOfDestination) {
+            throw createNotSupportedError();
         }
 
         const { outputs } = getAudioNodeConnections(audioNodeOfDestination);

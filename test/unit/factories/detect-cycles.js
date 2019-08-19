@@ -45,6 +45,24 @@ describe('detectCycles()', () => {
 
     });
 
+    describe('with an existing connection to a DelayNode', () => {
+
+        let audioNode;
+        let delayNode;
+
+        beforeEach(() => {
+            audioNode = { context: 'a fake AudioContext' };
+            delayNode = { context: 'a fake AudioContext', delayTime: 'a fake delayTime AudioParam' };
+
+            outputs.add([ delayNode, 1, 1 ]);
+        });
+
+        it('should detect no cycle', () => {
+            expect(detectCycles(delayNode, audioNode)).to.be.true;
+        });
+
+    });
+
     describe('with an existing connection from a DelayNode', () => {
 
         let audioNode;
