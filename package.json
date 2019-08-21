@@ -42,7 +42,6 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-karma": "^3.0.2",
     "grunt-sh": "^0.2.0",
-    "grunt-tslint": "^5.0.2",
     "husky": "^3.0.4",
     "karma": "^4.2.0",
     "karma-browserstack-launcher": "^1.5.1",
