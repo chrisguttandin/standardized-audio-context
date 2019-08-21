@@ -1,15 +1,12 @@
 import { interceptConnections } from '../helpers/intercept-connections';
 import { INativeWaveShaperNodeFaker } from '../interfaces';
 import {
-    TChannelCountMode,
-    TChannelInterpretation,
     TNativeAudioNode,
     TNativeChannelMergerNode,
     TNativeContext,
     TNativeGainNode,
     TNativeStereoPannerNode,
-    TNativeStereoPannerNodeFakerFactoryFactory,
-    TOverSampleType
+    TNativeStereoPannerNodeFakerFactoryFactory
 } from '../types';
 
 export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFakerFactoryFactory = (
@@ -23,12 +20,8 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
     const CURVE_SIZE = 16385;
     const DC_CURVE = new Float32Array([ 1, 1 ]);
     const HALF_PI = Math.PI / 2;
-    const SINGLE_CHANNEL_OPTIONS = {
-        channelCount: 1,
-        channelCountMode: <TChannelCountMode> 'explicit',
-        channelInterpretation: <TChannelInterpretation> 'discrete'
-    };
-    const SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS = { ...SINGLE_CHANNEL_OPTIONS, oversample: <TOverSampleType> 'none' };
+    const SINGLE_CHANNEL_OPTIONS = { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'discrete' } as const;
+    const SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS = { ...SINGLE_CHANNEL_OPTIONS, oversample: 'none' } as const;
 
     const buildInternalGraphForMono = (
         nativeContext: TNativeContext,

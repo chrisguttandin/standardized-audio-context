@@ -1,13 +1,7 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { interceptConnections } from '../helpers/intercept-connections';
-import {
-    TChannelCountMode,
-    TChannelInterpretation,
-    TNativeAudioNode,
-    TNativePannerNode,
-    TNativePannerNodeFakerFactoryFactory
-} from '../types';
+import { TNativeAudioNode, TNativePannerNode, TNativePannerNodeFakerFactoryFactory } from '../types';
 
 export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFactory = (
     createInvalidStateError,
@@ -54,13 +48,13 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
 
         const SINGLE_CHANNEL_OPTIONS = {
             channelCount: 1,
-            channelCountMode: <TChannelCountMode> 'explicit',
-            channelInterpretation: <TChannelInterpretation> 'discrete'
-        };
+            channelCountMode: 'explicit',
+            channelInterpretation: 'discrete'
+        } as const;
 
         const channelMergerNode = createNativeChannelMergerNode(
             nativeContext,
-            { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'speakers', numberOfInputs: 6 }
+            { ...SINGLE_CHANNEL_OPTIONS, channelInterpretation: 'speakers', numberOfInputs: 6 }
         );
         const inputGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: 1 });
         const orientationXGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 1 });
