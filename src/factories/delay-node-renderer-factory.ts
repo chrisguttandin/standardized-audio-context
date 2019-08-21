@@ -8,7 +8,7 @@ import { TDelayNodeRendererFactoryFactory, TNativeDelayNode, TNativeOfflineAudio
 
 export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = (createNativeDelayNode) => {
     return <T extends IMinimalOfflineAudioContext>(maxDelayTime: number) => {
-        let nativeDelayNodePromise: null | Promise<TNativeDelayNode> = null;
+        const renderedNativeDelayNodes = new WeakMap<TNativeOfflineAudioContext, TNativeDelayNode>();
 
         const createDelayNode = async (proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeDelayNode = getNativeAudioNode<T, TNativeDelayNode>(proxy);
@@ -24,7 +24,12 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
                 };
 
                 nativeDelayNode = createNativeDelayNode(nativeOfflineAudioContext, options);
+            }
 
+            renderedNativeDelayNodes.set(nativeOfflineAudioContext, nativeDelayNode);
+
+            // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
+            if (!isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext)) {
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
             } else {
                 await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.delayTime);
@@ -37,11 +42,13 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
 
         return {
             render (proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeDelayNode> {
-                if (nativeDelayNodePromise === null) {
-                    nativeDelayNodePromise = createDelayNode(proxy, nativeOfflineAudioContext);
+                const renderedNativeNode = renderedNativeDelayNodes.get(nativeOfflineAudioContext);
+
+                if (renderedNativeNode !== undefined) {
+                    return Promise.resolve(renderedNativeNode);
                 }
 
-                return nativeDelayNodePromise;
+                return createDelayNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

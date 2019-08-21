@@ -585,22 +585,18 @@ describe('DelayNode', () => {
 
             describe('connect()', () => {
 
-                let delayNode;
-
-                beforeEach(() => {
-                    delayNode = createDelayNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let delayNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            delayNode = createDelayNode(context);
                         });
 
                         if (type === 'AudioNode') {
@@ -666,6 +662,7 @@ describe('DelayNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let delayNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -679,6 +676,7 @@ describe('DelayNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            delayNode = createDelayNode(context);
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -695,6 +693,41 @@ describe('DelayNode', () => {
                     });
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const delayNode = createDelayNode(context);
+                                const gainNode = new GainNode(context);
+
+                                delayNode
+                                    .connect(destination);
+
+                                gainNode
+                                    .connect(delayNode)
+                                    .connect(gainNode);
+
+                                return { delayNode, gainNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({ })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 
