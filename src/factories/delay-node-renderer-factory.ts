@@ -3,7 +3,7 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IDelayNode, IDelayOptions, IMinimalOfflineAudioContext } from '../interfaces';
+import { IDelayNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TDelayNodeRendererFactoryFactory, TNativeDelayNode, TNativeOfflineAudioContext } from '../types';
 
 export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = (createNativeDelayNode) => {
@@ -15,7 +15,7 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
 
             // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext)) {
-                const options: IDelayOptions = {
+                const options = {
                     channelCount: nativeDelayNode.channelCount,
                     channelCountMode: nativeDelayNode.channelCountMode,
                     channelInterpretation: nativeDelayNode.channelInterpretation,

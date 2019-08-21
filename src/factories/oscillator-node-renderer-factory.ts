@@ -3,7 +3,7 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IMinimalOfflineAudioContext, IOscillatorNode, IOscillatorOptions, IPeriodicWave } from '../interfaces';
+import { IMinimalOfflineAudioContext, IOscillatorNode, IPeriodicWave } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeOscillatorNode, TOscillatorNodeRendererFactoryFactory } from '../types';
 
 export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactoryFactory = (
@@ -20,18 +20,15 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
 
             // If the initially used nativeOscillatorNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativeOscillatorNode, nativeOfflineAudioContext)) {
-                const options: IOscillatorOptions = {
+                const options = {
                     channelCount: nativeOscillatorNode.channelCount,
                     channelCountMode: nativeOscillatorNode.channelCountMode,
                     channelInterpretation: nativeOscillatorNode.channelInterpretation,
                     detune: nativeOscillatorNode.detune.value,
                     frequency: nativeOscillatorNode.frequency.value,
+                    periodicWave: (periodicWave === null) ? undefined : periodicWave,
                     type: nativeOscillatorNode.type
                 };
-
-                if (periodicWave !== null) {
-                    options.periodicWave = periodicWave;
-                }
 
                 nativeOscillatorNode = createNativeOscillatorNode(nativeOfflineAudioContext, options);
 

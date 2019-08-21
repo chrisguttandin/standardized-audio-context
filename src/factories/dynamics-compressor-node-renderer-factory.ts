@@ -3,7 +3,7 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IDynamicsCompressorNode, IDynamicsCompressorOptions, IMinimalOfflineAudioContext } from '../interfaces';
+import { IDynamicsCompressorNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TDynamicsCompressorNodeRendererFactoryFactory, TNativeDynamicsCompressorNode, TNativeOfflineAudioContext } from '../types';
 
 export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNodeRendererFactoryFactory = (
@@ -23,7 +23,7 @@ export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNod
              * created again.
              */
             if (!isOwnedByContext(nativeDynamicsCompressorNode, nativeOfflineAudioContext)) {
-                const options: IDynamicsCompressorOptions = {
+                const options = {
                     attack: nativeDynamicsCompressorNode.attack.value,
                     channelCount: nativeDynamicsCompressorNode.channelCount,
                     channelCountMode: nativeDynamicsCompressorNode.channelCountMode,

@@ -3,7 +3,7 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IBiquadFilterNode, IBiquadFilterOptions, IMinimalOfflineAudioContext } from '../interfaces';
+import { IBiquadFilterNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TBiquadFilterNodeRendererFactoryFactory, TNativeBiquadFilterNode, TNativeOfflineAudioContext } from '../types';
 
 export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFactoryFactory = (createNativeBiquadFilterNode) => {
@@ -18,7 +18,7 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
              * again.
              */
             if (!isOwnedByContext(nativeBiquadFilterNode, nativeOfflineAudioContext)) {
-                const options: IBiquadFilterOptions = {
+                const options = {
                     Q: nativeBiquadFilterNode.Q.value,
                     channelCount: nativeBiquadFilterNode.channelCount,
                     channelCountMode: nativeBiquadFilterNode.channelCountMode,

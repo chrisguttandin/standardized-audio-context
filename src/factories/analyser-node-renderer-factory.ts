@@ -1,7 +1,7 @@
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IAnalyserNode, IAnalyserOptions, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAnalyserNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAnalyserNodeRendererFactoryFactory, TNativeAnalyserNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFactory = (createNativeAnalyserNode) => {
@@ -13,7 +13,7 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
 
             // If the initially used nativeAnalyserNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativeAnalyserNode, nativeOfflineAudioContext)) {
-                const options: IAnalyserOptions = {
+                const options = {
                     channelCount: nativeAnalyserNode.channelCount,
                     channelCountMode: nativeAnalyserNode.channelCountMode,
                     channelInterpretation: nativeAnalyserNode.channelInterpretation,

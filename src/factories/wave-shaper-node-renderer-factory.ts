@@ -1,7 +1,7 @@
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IMinimalOfflineAudioContext, INativeWaveShaperNodeFaker, IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
+import { IMinimalOfflineAudioContext, INativeWaveShaperNodeFaker, IWaveShaperNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeWaveShaperNode, TWaveShaperNodeRendererFactoryFactory } from '../types';
 
 export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactoryFactory = (createNativeWaveShaperNode) => {
@@ -13,7 +13,7 @@ export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactory
 
             // If the initially used nativeWaveShaperNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativeWaveShaperNode, nativeOfflineAudioContext)) {
-                const options: IWaveShaperOptions = {
+                const options = {
                     channelCount: nativeWaveShaperNode.channelCount,
                     channelCountMode: nativeWaveShaperNode.channelCountMode,
                     channelInterpretation: nativeWaveShaperNode.channelInterpretation,

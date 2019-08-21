@@ -3,7 +3,7 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IMinimalOfflineAudioContext, INativePannerNodeFaker, IPannerNode, IPannerOptions } from '../interfaces';
+import { IMinimalOfflineAudioContext, INativePannerNodeFaker, IPannerNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativePannerNode, TPannerNodeRendererFactoryFactory } from '../types';
 
 export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory = (createNativePannerNode) => {
@@ -15,7 +15,7 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
 
             // If the initially used nativePannerNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!isOwnedByContext(nativePannerNode, nativeOfflineAudioContext)) {
-                const options: IPannerOptions = {
+                const options = {
                     channelCount: nativePannerNode.channelCount,
                     channelCountMode: nativePannerNode.channelCountMode,
                     channelInterpretation: nativePannerNode.channelInterpretation,

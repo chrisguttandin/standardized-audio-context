@@ -3,7 +3,7 @@ import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { renderAutomation } from '../helpers/render-automation';
 import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
-import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioBufferSourceNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAudioBufferSourceNodeRendererFactoryFactory, TNativeAudioBufferSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeRendererFactoryFactory = (
@@ -25,7 +25,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
              * again.
              */
             if (!isOwnedByContext(nativeAudioBufferSourceNode, nativeOfflineAudioContext)) {
-                const options: IAudioBufferSourceOptions = {
+                const options = {
                     buffer: nativeAudioBufferSourceNode.buffer,
                     channelCount: nativeAudioBufferSourceNode.channelCount,
                     channelCountMode: nativeAudioBufferSourceNode.channelCountMode,
