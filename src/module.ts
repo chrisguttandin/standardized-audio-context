@@ -57,6 +57,7 @@ import { createIIRFilterNodeRendererFactory } from './factories/iir-filter-node-
 import { createIndexSizeError } from './factories/index-size-error';
 import { createInvalidAccessError } from './factories/invalid-access-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
+import { createIsAnyAudioNode } from './factories/is-any-audio-node';
 import { createIsNativeContext } from './factories/is-native-context';
 import { createIsNativeOfflineAudioContext } from './factories/is-native-offline-audio-context';
 import { createIsSecureContext } from './factories/is-secure-context';
@@ -157,7 +158,7 @@ import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
-import { AUDIO_PARAM_AUDIO_NODE_STORE } from './globals';
+import { AUDIO_NODE_STORE, AUDIO_PARAM_AUDIO_NODE_STORE } from './globals';
 import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
 import { getValueForKey } from './helpers/get-value-for-key';
 import {
@@ -797,6 +798,8 @@ export { stereoPannerNodeConstructor as StereoPannerNode };
 type waveShaperNodeConstructor<T extends TContext> = IWaveShaperNode<T>;
 
 export { waveShaperNodeConstructor as WaveShaperNode };
+
+export const isAnyAudioNode = createIsAnyAudioNode(AUDIO_NODE_STORE, window);
 
 export const isSupported = () => createIsSupportedPromise(
     cacheTestResult,

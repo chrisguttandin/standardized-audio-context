@@ -4,12 +4,11 @@ import {
     IAudioParam,
     IAudioWorkletProcessor,
     IAudioWorkletProcessorConstructor,
-    IMinimalBaseAudioContext,
-    INativeAudioNodeFaker
+    IMinimalBaseAudioContext
 } from './interfaces';
 import {
+    TAudioNodeStore,
     TInternalStateEventListener,
-    TNativeAudioNode,
     TNativeAudioParam,
     TNativeAudioWorkletNode,
     TNativeContext,
@@ -18,7 +17,7 @@ import {
 
 export const ACTIVE_AUDIO_NODE_STORE: WeakSet<IAudioNode<IMinimalBaseAudioContext>> = new WeakSet();
 
-export const AUDIO_NODE_STORE: WeakMap<IAudioNode<IMinimalBaseAudioContext>, TNativeAudioNode | INativeAudioNodeFaker> = new WeakMap();
+export const AUDIO_NODE_STORE: TAudioNodeStore = new WeakMap();
 
 export const AUDIO_GRAPHS: WeakMap<IMinimalBaseAudioContext, IAudioGraph<IMinimalBaseAudioContext>> = new WeakMap();
 

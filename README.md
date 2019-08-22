@@ -277,6 +277,24 @@ const arrayBuffer = await response.arrayBuffer();
 const audioBuffer = await decodeAudioData(nativeAudioContext, arrayBuffer);
 ```
 
+### isAnyAudioNode()
+
+This is a helper function which allows to identify an AudioNode without any custom instanceof or property checks. It returns true if the given value is an AudioNode or false if not. It doesn't matter if the given value is an AudioNode which has been created with `standardized-audio-context` or not.
+
+```js
+import { OfflineAudioContext, isAnyAudioNode } from 'standardized-audio-context';
+
+// This will create a native AudioContext.
+const nativeAudioContext = new AudioContext();
+
+isAnyAudioNode(nativeAudioContext.createGain()); // true
+
+// This will create an OfflineAudioContext from standardized-audio-context.
+const offlineAudioContext = new OfflineAudioContext({ length: 10, sampleRate: 44100 });
+
+isAnyAudioNode(offlineAudioContext.createGain()); // true
+```
+
 ### isSupported()
 
  `standardized-audio-context` is also exporting a promise which can be accessed by calling `isSupported()`. This promise resolves to a boolean which indicates if the functionality is supported within the currently used browser. This is not part of the specification.

@@ -26,6 +26,7 @@ import {
     WaveShaperNode,
     addAudioWorkletModule,
     decodeAudioData,
+    isAnyAudioNode,
     isSupported
 } from '../../src/module';
 
@@ -133,6 +134,10 @@ describe('module', () => {
 
     it('should export the decodeAudioData function', () => {
         expect(decodeAudioData).to.be.a('function');
+    });
+
+    it('should export the isAnyAudioNode function', () => {
+        expect(isAnyAudioNode).to.be.a('function');
     });
 
     it('should export the isSupported function', () => {

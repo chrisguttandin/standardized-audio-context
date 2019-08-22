@@ -18,6 +18,12 @@ interface Window { // tslint:disable-line:interface-name
 
     };
 
+    AudioNode: {
+
+        prototype: AudioNode;
+
+    };
+
     AudioWorkletNode: {
 
         prototype: AudioWorkletNode;
