@@ -14,7 +14,9 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
             let nativeDelayNode = getNativeAudioNode<T, TNativeDelayNode>(proxy);
 
             // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
-            if (!isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext)) {
+            const nativeDelayNodeIsOwnedByContext = isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext);
+
+            if (!nativeDelayNodeIsOwnedByContext) {
                 const options = {
                     channelCount: nativeDelayNode.channelCount,
                     channelCountMode: nativeDelayNode.channelCountMode,
@@ -29,7 +31,7 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
             renderedNativeDelayNodes.set(nativeOfflineAudioContext, nativeDelayNode);
 
             // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
-            if (!isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext)) {
+            if (!nativeDelayNodeIsOwnedByContext) {
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
             } else {
                 await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.delayTime);
