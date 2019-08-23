@@ -6,7 +6,7 @@ export const createCreateNativeOfflineAudioContext: TCreateNativeOfflineAudioCon
 ) => {
     return (numberOfChannels, length, sampleRate) => {
         if (nativeOfflineAudioContextConstructor === null) {
-            throw new Error(); // @todo
+            throw new Error('Missing the native OfflineAudioContext constructor.');
         }
 
         try {

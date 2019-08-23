@@ -44,7 +44,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
     );
 
     if (processorConstructor === undefined) {
-        throw new Error();
+        throw new Error('Missing the processor constructor.');
     }
 
     const audioNodeConnections = getAudioNodeConnections(proxy);
@@ -140,7 +140,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 }
 
                 if (nativeOfflineAudioContextConstructor === null) {
-                    throw new Error('Missing the native (Offline)AudioContext constructor.');
+                    throw new Error('Missing the native OfflineAudioContext constructor.');
                 }
 
                 // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.

@@ -20,7 +20,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
 
         constructor (options: IAudioContextOptions = { }) {
             if (nativeAudioContextConstructor === null) {
-                throw new Error(); // @todo
+                throw new Error('Missing the native AudioContext constructor.');
             }
 
             const nativeAudioContext = new nativeAudioContextConstructor(options);

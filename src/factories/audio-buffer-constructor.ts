@@ -39,7 +39,7 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
 
         constructor (options: IAudioBufferOptions) {
             if (nativeOfflineAudioContextConstructor === null) {
-                throw new Error(); // @todo
+                throw new Error('Missing the native OfflineAudioContext constructor.');
             }
 
             const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS, ...options };

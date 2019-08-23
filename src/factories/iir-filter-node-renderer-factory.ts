@@ -73,7 +73,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
             let nativeAudioNode = getNativeAudioNode<T, TNativeIIRFilterNode>(proxy);
 
             if (nativeOfflineAudioContextConstructor === null) {
-                throw new Error(); // @todo
+                throw new Error('Missing the native OfflineAudioContext constructor.');
             }
 
             // Bug #9: Safari does not support IIRFilterNodes.
