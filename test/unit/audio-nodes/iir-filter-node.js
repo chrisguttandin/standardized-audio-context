@@ -160,9 +160,9 @@ describe('IIRFilterNode', () => {
 
                                 describe('rendering', () => {
 
-                                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                                             let renderer;
 
@@ -183,22 +183,26 @@ describe('IIRFilterNode', () => {
                                                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                                             const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
                                                             const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1, -0.5 ], feedforward: [ 1, -1 ] });
+                                                            const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
 
                                                             audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0, 0, 0 ]), 0);
                                                             // @todo Render a second channel with the following values: 0, 1, 1 ...
 
                                                             audioBufferSourceNode.buffer = audioBuffer;
 
-                                                            if (withAnAppendedAudioWorklet) {
-                                                                audioBufferSourceNode
-                                                                    .connect(iIRFilterNode)
-                                                                    .connect(audioWorkletNode)
-                                                                    .connect(destination);
-                                                            } else {
-                                                                audioBufferSourceNode
-                                                                    .connect(iIRFilterNode)
-                                                                    .connect(destination);
+                                                            audioBufferSourceNode.connect(iIRFilterNode);
+
+                                                            if (withADirectConnection) {
+                                                                iIRFilterNode.connect(masterGainNode);
                                                             }
+
+                                                            if (withAnAppendedAudioWorklet) {
+                                                                iIRFilterNode
+                                                                    .connect(audioWorkletNode)
+                                                                    .connect(masterGainNode);
+                                                            }
+
+                                                            masterGainNode.connect(destination);
 
                                                             return { audioBufferSourceNode, iIRFilterNode };
                                                         }

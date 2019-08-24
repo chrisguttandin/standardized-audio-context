@@ -313,9 +313,9 @@ describe('ConvolverNode', () => {
 
                 describe('with a nullified AudioBuffer', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -334,6 +334,7 @@ describe('ConvolverNode', () => {
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
                                         const convolverNode = createConvolverNode(context, { disableNormalization: true });
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
 
                                         audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
 
@@ -346,16 +347,19 @@ describe('ConvolverNode', () => {
                                         convolverNode.buffer = convolverBuffer;
                                         convolverNode.buffer = null;
 
-                                        if (withAnAppendedAudioWorklet) {
-                                            audioBufferSourceNode
-                                                .connect(convolverNode)
-                                                .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode
-                                                .connect(convolverNode)
-                                                .connect(destination);
+                                        audioBufferSourceNode.connect(convolverNode);
+
+                                        if (withADirectConnection) {
+                                            convolverNode.connect(masterGainNode);
                                         }
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            convolverNode
+                                                .connect(audioWorkletNode)
+                                                .connect(masterGainNode);
+                                        }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode, convolverNode };
                                     }
@@ -383,9 +387,9 @@ describe('ConvolverNode', () => {
 
                 describe('with a reassigned AudioBuffer', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -404,6 +408,7 @@ describe('ConvolverNode', () => {
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
                                         const convolverNode = createConvolverNode(context, { disableNormalization: true });
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
 
                                         audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
 
@@ -421,16 +426,19 @@ describe('ConvolverNode', () => {
 
                                         convolverNode.buffer = reassignedConvolverBuffer;
 
-                                        if (withAnAppendedAudioWorklet) {
-                                            audioBufferSourceNode
-                                                .connect(convolverNode)
-                                                .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode
-                                                .connect(convolverNode)
-                                                .connect(destination);
+                                        audioBufferSourceNode.connect(convolverNode);
+
+                                        if (withADirectConnection) {
+                                            convolverNode.connect(masterGainNode);
                                         }
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            convolverNode
+                                                .connect(audioWorkletNode)
+                                                .connect(masterGainNode);
+                                        }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode, convolverNode };
                                     }

@@ -358,9 +358,9 @@ describe('GainNode', () => {
 
                 describe('automation', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
                             let values;
@@ -382,21 +382,25 @@ describe('GainNode', () => {
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
                                         const gainNode = createGainNode(context);
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
 
                                         audioBuffer.copyToChannel(new Float32Array(values), 0);
 
                                         audioBufferSourceNode.buffer = audioBuffer;
 
-                                        if (withAnAppendedAudioWorklet) {
-                                            audioBufferSourceNode
-                                                .connect(gainNode)
-                                                .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode
-                                                .connect(gainNode)
-                                                .connect(destination);
+                                        audioBufferSourceNode.connect(gainNode);
+
+                                        if (withADirectConnection) {
+                                            gainNode.connect(masterGainNode);
                                         }
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            gainNode
+                                                .connect(audioWorkletNode)
+                                                .connect(masterGainNode);
+                                        }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode, gainNode };
                                     }

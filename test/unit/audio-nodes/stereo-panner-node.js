@@ -432,9 +432,9 @@ describe('StereoPannerNode', () => {
 
                 describe('automation', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             for (const channelLayout of [ 'mono', 'stereo' ]) {
 
@@ -463,6 +463,7 @@ describe('StereoPannerNode', () => {
                                                 });
                                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                                 const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                                const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
                                                 const stereoPannerNode = createStereoPannerNode(context, { channelCount: (channelLayout === 'mono') ? 1 : 2 });
 
                                                 audioBuffer.copyToChannel(new Float32Array(values), 0);
@@ -473,16 +474,19 @@ describe('StereoPannerNode', () => {
 
                                                 audioBufferSourceNode.buffer = audioBuffer;
 
-                                                if (withAnAppendedAudioWorklet) {
-                                                    audioBufferSourceNode
-                                                        .connect(stereoPannerNode)
-                                                        .connect(audioWorkletNode)
-                                                        .connect(destination);
-                                                } else {
-                                                    audioBufferSourceNode
-                                                        .connect(stereoPannerNode)
-                                                        .connect(destination);
+                                                audioBufferSourceNode.connect(stereoPannerNode);
+
+                                                if (withADirectConnection) {
+                                                    stereoPannerNode.connect(masterGainNode);
                                                 }
+
+                                                if (withAnAppendedAudioWorklet) {
+                                                    stereoPannerNode
+                                                        .connect(audioWorkletNode)
+                                                        .connect(masterGainNode);
+                                                }
+
+                                                masterGainNode.connect(destination);
 
                                                 return { audioBufferSourceNode, stereoPannerNode };
                                             }

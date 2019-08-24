@@ -308,9 +308,9 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('with a nullified AudioBuffer', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -331,16 +331,21 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
 
                                         audioBufferSourceNode.buffer = null;
+
+                                        if (withADirectConnection) {
+                                            audioBufferSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             audioBufferSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode };
                                     }
@@ -844,9 +849,9 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('automation', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -867,14 +872,19 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+
+                                        if (withADirectConnection) {
+                                            audioBufferSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             audioBufferSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode };
                                     }
@@ -1621,9 +1631,9 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('with a set offset parameter', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -1644,14 +1654,19 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+
+                                        if (withADirectConnection) {
+                                            audioBufferSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             audioBufferSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode };
                                     }
@@ -1705,9 +1720,9 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('with a set duration parameter', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -1728,14 +1743,19 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+
+                                        if (withADirectConnection) {
+                                            audioBufferSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             audioBufferSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode };
                                     }
@@ -1808,9 +1828,9 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('with a previous call to stop()', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -1831,14 +1851,19 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+
+                                        if (withADirectConnection) {
+                                            audioBufferSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             audioBufferSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode };
                                     }
@@ -1868,9 +1893,9 @@ describe('AudioBufferSourceNode', () => {
 
                 describe('with a stop time reached prior to the start time', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -1891,14 +1916,19 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+
+                                        if (withADirectConnection) {
+                                            audioBufferSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             audioBufferSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            audioBufferSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { audioBufferSourceNode };
                                     }

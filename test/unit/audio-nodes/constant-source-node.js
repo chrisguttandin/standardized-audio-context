@@ -365,9 +365,9 @@ describe('ConstantSourceNode', () => {
 
                 describe('automation', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -384,14 +384,19 @@ describe('ConstantSourceNode', () => {
                                     prepare (destination) {
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
                                         const constantSourceNode = createConstantSourceNode(context);
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+
+                                        if (withADirectConnection) {
+                                            constantSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             constantSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            constantSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { constantSourceNode };
                                     }
@@ -1141,9 +1146,9 @@ describe('ConstantSourceNode', () => {
 
                 describe('with a previous call to stop()', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -1160,14 +1165,19 @@ describe('ConstantSourceNode', () => {
                                     prepare (destination) {
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
                                         const constantSourceNode = createConstantSourceNode(context);
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+
+                                        if (withADirectConnection) {
+                                            constantSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             constantSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            constantSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { constantSourceNode };
                                     }
@@ -1197,9 +1207,9 @@ describe('ConstantSourceNode', () => {
 
                 describe('with a stop time reached prior to the start time', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -1216,14 +1226,19 @@ describe('ConstantSourceNode', () => {
                                     prepare (destination) {
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
                                         const constantSourceNode = createConstantSourceNode(context);
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+
+                                        if (withADirectConnection) {
+                                            constantSourceNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             constantSourceNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            constantSourceNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { constantSourceNode };
                                     }

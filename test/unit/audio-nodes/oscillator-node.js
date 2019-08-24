@@ -1082,9 +1082,9 @@ describe('OscillatorNode', () => {
 
                 describe('with a previous call to stop()', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -1100,15 +1100,20 @@ describe('OscillatorNode', () => {
                                     length: (context.length === undefined) ? 5 : undefined,
                                     prepare (destination) {
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
                                         const oscillatorNode = createOscillatorNode(context, { frequency: 11025 });
+
+                                        if (withADirectConnection) {
+                                            oscillatorNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             oscillatorNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            oscillatorNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { oscillatorNode };
                                     }
@@ -1142,9 +1147,9 @@ describe('OscillatorNode', () => {
 
                 describe('with a stop time reached prior to the start time', () => {
 
-                    for (const withAnAppendedAudioWorklet of (description.includes('Offline') ? [ true, false ] : [ false ])) {
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
 
-                        describe(`${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
 
                             let renderer;
 
@@ -1160,15 +1165,20 @@ describe('OscillatorNode', () => {
                                     length: (context.length === undefined) ? 5 : undefined,
                                     prepare (destination) {
                                         const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
                                         const oscillatorNode = createOscillatorNode(context);
+
+                                        if (withADirectConnection) {
+                                            oscillatorNode.connect(masterGainNode);
+                                        }
 
                                         if (withAnAppendedAudioWorklet) {
                                             oscillatorNode
                                                 .connect(audioWorkletNode)
-                                                .connect(destination);
-                                        } else {
-                                            oscillatorNode.connect(destination);
+                                                .connect(masterGainNode);
                                         }
+
+                                        masterGainNode.connect(destination);
 
                                         return { oscillatorNode };
                                     }
