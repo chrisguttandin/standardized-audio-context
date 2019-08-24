@@ -4,4 +4,4 @@ export type TAddAudioWorkletModuleFunction = (
     context: IMinimalBaseAudioContext,
     moduleURL: string,
     options?: IWorkletOptions
-) => Promise<void>;
+) => Promise<void>; // tslint:disable-line:invalid-void

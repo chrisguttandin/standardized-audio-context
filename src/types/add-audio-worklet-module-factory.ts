@@ -12,6 +12,6 @@ export type TAddAudioWorkletModuleFactory = (
     exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction,
     fetchSource: TFetchSourceFunction,
     getBackupNativeContext: TGetBackupNativeContextFunction,
-    ongoingRequests: WeakMap<IMinimalBaseAudioContext, Map<string, Promise<void>>>,
+    ongoingRequests: WeakMap<IMinimalBaseAudioContext, Map<string, Promise<void>>>, // tslint:disable-line:invalid-void
     resolvedRequests: WeakMap<IMinimalBaseAudioContext, Set<string>>
 ) => TAddAudioWorkletModuleFunction;

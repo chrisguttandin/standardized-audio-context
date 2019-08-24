@@ -6,4 +6,4 @@ export type TConnectMultipleOutputsFunction = (
     destination: TNativeAudioNode | TNativeAudioParam,
     output?: number,
     input?: number
-) => void | TNativeAudioNode;
+) => void | TNativeAudioNode; // tslint:disable-line:invalid-void

@@ -564,7 +564,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
 
         public connect <U extends IAudioNode<T>> (destinationNode: U, output?: number, input?: number): U;
         public connect (destinationParam: IAudioParam, output?: number): void;
-        public connect <U extends IAudioNode<T>> (destination: U | IAudioParam, output = 0, input = 0): void | U {
+        public connect <U extends IAudioNode<T>> (destination: U | IAudioParam, output = 0, input = 0): void | U { // tslint:disable-line:invalid-void max-line-length
             const nativeContext = getNativeContext(this._context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
 

@@ -100,7 +100,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             return (this._state !== null) ? this._state : this._nativeAudioContext.state;
         }
 
-        public close (): Promise<void> {
+        public close (): Promise<void> { // tslint:disable-line:invalid-void
             // Bug #35: Firefox does not throw an error if the AudioContext was closed before.
             if (this.state === 'closed') {
                 return this._nativeAudioContext
@@ -135,7 +135,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             return new mediaStreamTrackAudioSourceNodeConstructor(this, { mediaStreamTrack });
         }
 
-        public resume (): Promise<void> {
+        public resume (): Promise<void> { // tslint:disable-line:invalid-void
             if (this._state === 'suspended') {
                 return new Promise((resolve, reject) => {
                     const resolvePromise = () => {
@@ -167,7 +167,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 });
         }
 
-        public suspend (): Promise<void> {
+        public suspend (): Promise<void> { // tslint:disable-line:invalid-void
             return this._nativeAudioContext
                 .suspend()
                 .catch((err) => {
