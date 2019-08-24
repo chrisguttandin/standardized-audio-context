@@ -30,7 +30,6 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
 
             renderedNativeDelayNodes.set(nativeOfflineAudioContext, nativeDelayNode);
 
-            // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
             if (!nativeDelayNodeIsOwnedByContext) {
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
             } else {
@@ -44,10 +43,10 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
 
         return {
             render (proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeDelayNode> {
-                const renderedNativeNode = renderedNativeDelayNodes.get(nativeOfflineAudioContext);
+                const renderedNativeDelayNode = renderedNativeDelayNodes.get(nativeOfflineAudioContext);
 
-                if (renderedNativeNode !== undefined) {
-                    return Promise.resolve(renderedNativeNode);
+                if (renderedNativeDelayNode !== undefined) {
+                    return Promise.resolve(renderedNativeDelayNode);
                 }
 
                 return createDelayNode(proxy, nativeOfflineAudioContext);

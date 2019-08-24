@@ -10,7 +10,8 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
     createNativeConstantSourceNode
 ) => {
     return <T extends IMinimalOfflineAudioContext>() => {
-        let nativeConstantSourceNodePromise: null | Promise<TNativeConstantSourceNode> = null;
+        const renderedNativeConstantSourceNodes = new WeakMap<TNativeOfflineAudioContext, TNativeConstantSourceNode>();
+
         let start: null | number = null;
         let stop: null | number = null;
 
@@ -21,7 +22,9 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
              * If the initially used nativeConstantSourceNode was not constructed on the same OfflineAudioContext it needs to be created
              * again.
              */
-            if (!isOwnedByContext(nativeConstantSourceNode, nativeOfflineAudioContext)) {
+            const nativeConstantSourceNodeIsOwnedByContext = isOwnedByContext(nativeConstantSourceNode, nativeOfflineAudioContext);
+
+            if (!nativeConstantSourceNodeIsOwnedByContext) {
                 const options = {
                     channelCount: nativeConstantSourceNode.channelCount,
                     channelCountMode: nativeConstantSourceNode.channelCountMode,
@@ -38,7 +41,11 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
                 if (stop !== null) {
                     nativeConstantSourceNode.stop(stop);
                 }
+            }
 
+            renderedNativeConstantSourceNodes.set(nativeOfflineAudioContext, nativeConstantSourceNode);
+
+            if (!nativeConstantSourceNodeIsOwnedByContext) {
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
             } else {
                 await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.offset);
@@ -60,11 +67,13 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
                 proxy: IConstantSourceNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeConstantSourceNode> {
-                if (nativeConstantSourceNodePromise === null) {
-                    nativeConstantSourceNodePromise = createConstantSourceNode(proxy, nativeOfflineAudioContext);
+                const renderedNativeConstantSourceNode = renderedNativeConstantSourceNodes.get(nativeOfflineAudioContext);
+
+                if (renderedNativeConstantSourceNode !== undefined) {
+                    return Promise.resolve(renderedNativeConstantSourceNode);
                 }
 
-                return nativeConstantSourceNodePromise;
+                return createConstantSourceNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

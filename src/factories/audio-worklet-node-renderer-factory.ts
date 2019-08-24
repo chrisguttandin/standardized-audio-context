@@ -18,11 +18,11 @@ import {
 import {
     TAudioWorkletNodeRendererFactoryFactory,
     TNativeAudioBuffer,
-    TNativeAudioBufferSourceNode,
     TNativeAudioNode,
     TNativeAudioParam,
     TNativeAudioWorkletNode,
     TNativeChannelMergerNode,
+    TNativeChannelSplitterNode,
     TNativeGainNode,
     TNativeOfflineAudioContext
 } from '../types';
@@ -128,13 +128,67 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
         options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
         processorConstructor: undefined | IAudioWorkletProcessorConstructor
     ) => {
-        let nativeAudioNodePromise: null | Promise<TNativeAudioBufferSourceNode | TNativeAudioWorkletNode> = null;
+        const renderedNativeAudioNodes = new WeakMap<
+            TNativeOfflineAudioContext,
+            [ TNativeChannelSplitterNode, TNativeChannelMergerNode[], TNativeGainNode ] | TNativeAudioWorkletNode
+        >();
 
-        const createNativeAudioNode = async (proxy: IAudioWorkletNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeAudioNode = getNativeAudioNode<T, TNativeAudioWorkletNode>(proxy);
+        const createAudioNode = async (proxy: IAudioWorkletNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+            let nativeAudioWorkletNode = getNativeAudioNode<T, TNativeAudioWorkletNode>(proxy);
+            let nativeOutputNodes: null | [ TNativeChannelSplitterNode, TNativeChannelMergerNode[], TNativeGainNode ] = null;
+
+            const nativeAudioWorkletNodeIsOwnedByContext = isOwnedByContext(nativeAudioWorkletNode, nativeOfflineAudioContext);
 
             // Bug #61: Only Chrome & Opera have an implementation of the AudioWorkletNode yet.
             if (nativeAudioWorkletNodeConstructor === null) {
+                const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
+                const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeOfflineAudioContext, {
+                    channelCount: Math.max(1, numberOfOutputChannels),
+                    channelCountMode: 'explicit',
+                    channelInterpretation: 'discrete',
+                    numberOfOutputs: Math.max(1, numberOfOutputChannels)
+                });
+                const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
+
+                for (let i = 0; i < proxy.numberOfOutputs; i += 1) {
+                    outputChannelMergerNodes.push(createNativeChannelMergerNode(
+                        nativeOfflineAudioContext,
+                        {
+                            channelCount: 1,
+                            channelCountMode: 'explicit',
+                            channelInterpretation: 'speakers',
+                            numberOfInputs: options.outputChannelCount[i]
+                        }
+                    ));
+                }
+
+                // Bug #87: Expose at least one output to make this node connectable.
+                const outputAudioNodes = (options.numberOfOutputs === 0) ?
+                    [ outputChannelSplitterNode ] :
+                    outputChannelMergerNodes;
+                const outputGainNode = createNativeGainNode(nativeOfflineAudioContext, {
+                    channelCount: options.channelCount,
+                    channelCountMode: options.channelCountMode,
+                    channelInterpretation: options.channelInterpretation,
+                    gain: 1
+                });
+
+                outputGainNode.connect = <TNativeAudioNode['connect']> connectMultipleOutputs.bind(null, outputAudioNodes);
+                outputGainNode.disconnect = <TNativeAudioNode['disconnect']> disconnectMultipleOutputs.bind(null, outputAudioNodes);
+
+                nativeOutputNodes = [ outputChannelSplitterNode, outputChannelMergerNodes, outputGainNode ];
+            } else if (!nativeAudioWorkletNodeIsOwnedByContext) {
+                nativeAudioWorkletNode = new nativeAudioWorkletNodeConstructor(nativeOfflineAudioContext, name);
+            }
+
+            renderedNativeAudioNodes.set(
+                nativeOfflineAudioContext,
+                (nativeOutputNodes === null) ? nativeAudioWorkletNode : nativeOutputNodes
+            );
+
+            if (nativeOutputNodes !== null) {
+                const [ outputChannelSplitterNode, outputChannelMergerNodes, outputGainNode ] = nativeOutputNodes;
+
                 if (processorConstructor === undefined) {
                     throw new Error('Missing the processor constructor.');
                 }
@@ -220,27 +274,6 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     .then(() => renderNativeOfflineAudioContext(partialOfflineAudioContext))
                     .then(async (renderedBuffer) => {
                         const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext);
-                        const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
-                        const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeOfflineAudioContext, {
-                            channelCount: Math.max(1, numberOfOutputChannels),
-                            channelCountMode: 'explicit',
-                            channelInterpretation: 'discrete',
-                            numberOfOutputs: Math.max(1, numberOfOutputChannels)
-                        });
-                        const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
-
-                        for (let i = 0; i < proxy.numberOfOutputs; i += 1) {
-                            outputChannelMergerNodes.push(createNativeChannelMergerNode(
-                                nativeOfflineAudioContext,
-                                {
-                                    channelCount: 1,
-                                    channelCountMode: 'explicit',
-                                    channelInterpretation: 'speakers',
-                                    numberOfInputs: options.outputChannelCount[i]
-                                }
-                            ));
-                        }
-
                         const processedBuffer = await processBuffer(
                             proxy,
                             renderedBuffer,
@@ -266,30 +299,18 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             outputChannelSplitterNodeOutput += options.outputChannelCount[i];
                         }
 
-                        // Bug #87: Expose at least one output to make this node connectable.
-                        const outputAudioNodes = (options.numberOfOutputs === 0) ?
-                            [ outputChannelSplitterNode ] :
-                            outputChannelMergerNodes;
-
-                        audioBufferSourceNode.connect = <TNativeAudioNode['connect']> connectMultipleOutputs.bind(null, outputAudioNodes);
-                        audioBufferSourceNode.disconnect =
-                            <TNativeAudioNode['disconnect']> disconnectMultipleOutputs.bind(null, outputAudioNodes);
-
-                        return audioBufferSourceNode;
+                        return outputGainNode;
                     });
             }
 
-            // If the initially used nativeAudioNode was not constructed on the same OfflineAudioContext it needs to be created again.
-            if (!isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext)) {
-                nativeAudioNode = new nativeAudioWorkletNodeConstructor(nativeOfflineAudioContext, name);
-
+            if (!nativeAudioWorkletNodeIsOwnedByContext) {
                 for (const [ nm, audioParam ] of proxy.parameters.entries()) {
                     await renderAutomation(
                         proxy.context,
                         nativeOfflineAudioContext,
                         audioParam,
                         // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
-                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioNode.parameters).get(nm)
+                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioWorkletNode.parameters).get(nm)
                     );
                 }
             } else {
@@ -299,26 +320,32 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         nativeOfflineAudioContext,
                         audioParam,
                         // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
-                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioNode.parameters).get(nm)
+                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioWorkletNode.parameters).get(nm)
                     );
                 }
             }
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioWorkletNode);
 
-            return nativeAudioNode;
+            return nativeAudioWorkletNode;
         };
 
         return {
             render (
                 proxy: IAudioWorkletNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
-            ): Promise<TNativeAudioBufferSourceNode | TNativeAudioWorkletNode> {
-                if (nativeAudioNodePromise === null) {
-                    nativeAudioNodePromise = createNativeAudioNode(proxy, nativeOfflineAudioContext);
+            ): Promise<TNativeGainNode | TNativeAudioWorkletNode> {
+                const renderedNativeAudioWorkletNodeOrOutputNodes = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
+
+                if (renderedNativeAudioWorkletNodeOrOutputNodes !== undefined) {
+                    const renderedNativeAudioWorkletNodeOrGainNode = Array.isArray(renderedNativeAudioWorkletNodeOrOutputNodes)
+                        ? renderedNativeAudioWorkletNodeOrOutputNodes[2]
+                        : renderedNativeAudioWorkletNodeOrOutputNodes;
+
+                    return Promise.resolve(renderedNativeAudioWorkletNodeOrGainNode);
                 }
 
-                return nativeAudioNodePromise;
+                return createAudioNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

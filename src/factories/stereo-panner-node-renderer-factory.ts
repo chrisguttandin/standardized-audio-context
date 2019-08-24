@@ -8,7 +8,7 @@ import { TNativeOfflineAudioContext, TNativeStereoPannerNode, TStereoPannerNodeR
 
 export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFactoryFactory = (createNativeStereoPannerNode) => {
     return <T extends IMinimalOfflineAudioContext>() => {
-        let nativeStereoPannerNodePromise: null | Promise<TNativeStereoPannerNode> = null;
+        const renderedNativeStereoPannerNodes = new WeakMap<TNativeOfflineAudioContext, TNativeStereoPannerNode>();
 
         const createStereoPannerNode = async (proxy: IStereoPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeStereoPannerNode = getNativeAudioNode<T, TNativeStereoPannerNode>(proxy);
@@ -17,7 +17,9 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
              * If the initially used nativeStereoPannerNode was not constructed on the same OfflineAudioContext it needs to be created
              * again.
              */
-            if (!isOwnedByContext(nativeStereoPannerNode, nativeOfflineAudioContext)) {
+            const nativeStereoPannerNodeIsOwnedByContext = isOwnedByContext(nativeStereoPannerNode, nativeOfflineAudioContext);
+
+            if (!nativeStereoPannerNodeIsOwnedByContext) {
                 const options = {
                     channelCount: nativeStereoPannerNode.channelCount,
                     channelCountMode: nativeStereoPannerNode.channelCountMode,
@@ -26,7 +28,11 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
                 };
 
                 nativeStereoPannerNode = createNativeStereoPannerNode(nativeOfflineAudioContext, options);
+            }
 
+            renderedNativeStereoPannerNodes.set(nativeOfflineAudioContext, nativeStereoPannerNode);
+
+            if (!nativeStereoPannerNodeIsOwnedByContext) {
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
             } else {
                 await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.pan);
@@ -47,11 +53,13 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
 
         return {
             render (proxy: IStereoPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeStereoPannerNode> {
-                if (nativeStereoPannerNodePromise === null) {
-                    nativeStereoPannerNodePromise = createStereoPannerNode(proxy, nativeOfflineAudioContext);
+                const renderedNativeStereoPannerNode = renderedNativeStereoPannerNodes.get(nativeOfflineAudioContext);
+
+                if (renderedNativeStereoPannerNode !== undefined) {
+                    return Promise.resolve(renderedNativeStereoPannerNode);
                 }
 
-                return nativeStereoPannerNodePromise;
+                return createStereoPannerNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

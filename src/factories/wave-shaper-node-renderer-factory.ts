@@ -6,13 +6,15 @@ import { TNativeOfflineAudioContext, TNativeWaveShaperNode, TWaveShaperNodeRende
 
 export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactoryFactory = (createNativeWaveShaperNode) => {
     return <T extends IMinimalOfflineAudioContext>() => {
-        let nativeWaveShaperNodePromise: null | Promise<TNativeWaveShaperNode> = null;
+        const renderedNativeWaveShaperNodes = new WeakMap<TNativeOfflineAudioContext, TNativeWaveShaperNode>();
 
         const createWaveShaperNode = async (proxy: IWaveShaperNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeWaveShaperNode = getNativeAudioNode<T, TNativeWaveShaperNode>(proxy);
 
             // If the initially used nativeWaveShaperNode was not constructed on the same OfflineAudioContext it needs to be created again.
-            if (!isOwnedByContext(nativeWaveShaperNode, nativeOfflineAudioContext)) {
+            const nativeWaveShaperNodeIsOwnedByContext = isOwnedByContext(nativeWaveShaperNode, nativeOfflineAudioContext);
+
+            if (!nativeWaveShaperNodeIsOwnedByContext) {
                 const options = {
                     channelCount: nativeWaveShaperNode.channelCount,
                     channelCountMode: nativeWaveShaperNode.channelCountMode,
@@ -23,6 +25,8 @@ export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactory
 
                 nativeWaveShaperNode = createNativeWaveShaperNode(nativeOfflineAudioContext, options);
             }
+
+            renderedNativeWaveShaperNodes.set(nativeOfflineAudioContext, nativeWaveShaperNode);
 
             if ((<INativeWaveShaperNodeFaker> nativeWaveShaperNode).inputs !== undefined) {
                 await renderInputsOfAudioNode(
@@ -39,11 +43,13 @@ export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactory
 
         return {
             render (proxy: IWaveShaperNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeWaveShaperNode> {
-                if (nativeWaveShaperNodePromise === null) {
-                    nativeWaveShaperNodePromise = createWaveShaperNode(proxy, nativeOfflineAudioContext);
+                const renderedNativeWaveShaperNode = renderedNativeWaveShaperNodes.get(nativeOfflineAudioContext);
+
+                if (renderedNativeWaveShaperNode !== undefined) {
+                    return Promise.resolve(renderedNativeWaveShaperNode);
                 }
 
-                return nativeWaveShaperNodePromise;
+                return createWaveShaperNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

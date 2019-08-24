@@ -6,13 +6,15 @@ import { TAnalyserNodeRendererFactoryFactory, TNativeAnalyserNode, TNativeOfflin
 
 export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFactory = (createNativeAnalyserNode) => {
     return <T extends IMinimalOfflineAudioContext>() => {
-        let nativeAnalyserNodePromise: null | Promise<TNativeAnalyserNode> = null;
+        const renderedNativeAnalyserNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAnalyserNode>();
 
         const createAnalyserNode = async (proxy: IAnalyserNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeAnalyserNode = getNativeAudioNode<T, TNativeAnalyserNode>(proxy);
 
             // If the initially used nativeAnalyserNode was not constructed on the same OfflineAudioContext it needs to be created again.
-            if (!isOwnedByContext(nativeAnalyserNode, nativeOfflineAudioContext)) {
+            const nativeAnalyserNodeIsOwnedByContext = isOwnedByContext(nativeAnalyserNode, nativeOfflineAudioContext);
+
+            if (!nativeAnalyserNodeIsOwnedByContext) {
                 const options = {
                     channelCount: nativeAnalyserNode.channelCount,
                     channelCountMode: nativeAnalyserNode.channelCountMode,
@@ -26,6 +28,8 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
                 nativeAnalyserNode = createNativeAnalyserNode(nativeOfflineAudioContext, options);
             }
 
+            renderedNativeAnalyserNodes.set(nativeOfflineAudioContext, nativeAnalyserNode);
+
             await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAnalyserNode);
 
             return nativeAnalyserNode;
@@ -33,11 +37,13 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
 
         return {
             render (proxy: IAnalyserNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> {
-                if (nativeAnalyserNodePromise === null) {
-                    nativeAnalyserNodePromise = createAnalyserNode(proxy, nativeOfflineAudioContext);
+                const renderedNativeAnalyserNode = renderedNativeAnalyserNodes.get(nativeOfflineAudioContext);
+
+                if (renderedNativeAnalyserNode !== undefined) {
+                    return Promise.resolve(renderedNativeAnalyserNode);
                 }
 
-                return nativeAnalyserNodePromise;
+                return createAnalyserNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

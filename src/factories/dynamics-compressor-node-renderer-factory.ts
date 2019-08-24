@@ -10,9 +10,9 @@ export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNod
     createNativeDynamicsCompressorNode
 ) => {
     return <T extends IMinimalOfflineAudioContext>() => {
-        let nativeDynamicsCompressorNodePromise: null | Promise<TNativeDynamicsCompressorNode> = null;
+        const renderedNativeDynamicsCompressorNodes = new WeakMap<TNativeOfflineAudioContext, TNativeDynamicsCompressorNode>();
 
-        const createDynamicsCompressorNodes = async (
+        const createDynamicsCompressorNode = async (
             proxy: IDynamicsCompressorNode<T>,
             nativeOfflineAudioContext: TNativeOfflineAudioContext
         ) => {
@@ -22,7 +22,9 @@ export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNod
              * If the initially used nativeDynamicsCompressorNode was not constructed on the same OfflineAudioContext it needs to be
              * created again.
              */
-            if (!isOwnedByContext(nativeDynamicsCompressorNode, nativeOfflineAudioContext)) {
+            const nativeDynamicsCompressorNodeIsOwnedByContext = isOwnedByContext(nativeDynamicsCompressorNode, nativeOfflineAudioContext);
+
+            if (!nativeDynamicsCompressorNodeIsOwnedByContext) {
                 const options = {
                     attack: nativeDynamicsCompressorNode.attack.value,
                     channelCount: nativeDynamicsCompressorNode.channelCount,
@@ -35,7 +37,11 @@ export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNod
                 };
 
                 nativeDynamicsCompressorNode = createNativeDynamicsCompressorNode(nativeOfflineAudioContext, options);
+            }
 
+            renderedNativeDynamicsCompressorNodes.set(nativeOfflineAudioContext, nativeDynamicsCompressorNode);
+
+            if (!nativeDynamicsCompressorNodeIsOwnedByContext) {
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.attack, nativeDynamicsCompressorNode.attack);
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.knee, nativeDynamicsCompressorNode.knee);
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.ratio, nativeDynamicsCompressorNode.ratio);
@@ -64,11 +70,13 @@ export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNod
                 proxy: IDynamicsCompressorNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeDynamicsCompressorNode> {
-                if (nativeDynamicsCompressorNodePromise === null) {
-                    nativeDynamicsCompressorNodePromise = createDynamicsCompressorNodes(proxy, nativeOfflineAudioContext);
+                const renderedNativeDynamicsCompressorNode = renderedNativeDynamicsCompressorNodes.get(nativeOfflineAudioContext);
+
+                if (renderedNativeDynamicsCompressorNode !== undefined) {
+                    return Promise.resolve(renderedNativeDynamicsCompressorNode);
                 }
 
-                return nativeDynamicsCompressorNodePromise;
+                return createDynamicsCompressorNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

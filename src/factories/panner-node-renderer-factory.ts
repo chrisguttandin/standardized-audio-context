@@ -8,13 +8,15 @@ import { TNativeOfflineAudioContext, TNativePannerNode, TPannerNodeRendererFacto
 
 export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory = (createNativePannerNode) => {
     return <T extends IMinimalOfflineAudioContext>() => {
-        let nativePannerNodePromise: null | Promise<TNativePannerNode> = null;
+        const renderedNativePannerNodes = new WeakMap<TNativeOfflineAudioContext, TNativePannerNode>();
 
         const createPannerNode = async (proxy: IPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativePannerNode = getNativeAudioNode<T, TNativePannerNode>(proxy);
 
             // If the initially used nativePannerNode was not constructed on the same OfflineAudioContext it needs to be created again.
-            if (!isOwnedByContext(nativePannerNode, nativeOfflineAudioContext)) {
+            const nativePannerNodeIsOwnedByContext = isOwnedByContext(nativePannerNode, nativeOfflineAudioContext);
+
+            if (!nativePannerNodeIsOwnedByContext) {
                 const options = {
                     channelCount: nativePannerNode.channelCount,
                     channelCountMode: nativePannerNode.channelCountMode,
@@ -36,7 +38,11 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
                 };
 
                 nativePannerNode = createNativePannerNode(nativeOfflineAudioContext, options);
+            }
 
+            renderedNativePannerNodes.set(nativeOfflineAudioContext, nativePannerNode);
+
+            if (!nativePannerNodeIsOwnedByContext) {
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.orientationX, nativePannerNode.orientationX);
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.orientationY, nativePannerNode.orientationY);
                 await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.orientationZ, nativePannerNode.orientationZ);
@@ -67,11 +73,13 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
 
         return {
             render (proxy: IPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativePannerNode> {
-                if (nativePannerNodePromise === null) {
-                    nativePannerNodePromise = createPannerNode(proxy, nativeOfflineAudioContext);
+                const renderedNativePannerNode = renderedNativePannerNodes.get(nativeOfflineAudioContext);
+
+                if (renderedNativePannerNode !== undefined) {
+                    return Promise.resolve(renderedNativePannerNode);
                 }
 
-                return nativePannerNodePromise;
+                return createPannerNode(proxy, nativeOfflineAudioContext);
             }
         };
     };
