@@ -219,6 +219,16 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('close()', () => {
+
+        // bug #94
+
+        it('should expose a close method', () => {
+            expect(offlineAudioContext.close).to.be.a('function');
+        });
+
+    });
+
     describe('createBiquadFilter()', () => {
 
         let biquadFilterNode;

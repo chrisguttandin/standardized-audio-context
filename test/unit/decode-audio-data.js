@@ -5,6 +5,7 @@ import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offli
 import { createNativeAudioContext } from '../helper/create-native-audio-context';
 import { createNativeOfflineAudioContext } from '../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
+import { isSafari } from '../helper/is-safari';
 import { loadFixture } from '../helper/load-fixture';
 import { spy } from 'sinon';
 import { decodeAudioData as standaloneDecodeAudioData } from '../../src/module';
@@ -59,8 +60,12 @@ describe('decodeAudioData()', () => {
             let context;
 
             afterEach(() => {
-                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why the extra check for the startRendering() method is necessary.
-                if (context.close !== undefined && context.startRendering === undefined) {
+                /*
+                 * Bug #94: Edge & Safari also expose a close() method on an OfflineAudioContext which is why the extra check for the
+                 * startRendering() method is necessary.
+                 * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
+                 */
+                if (context.close !== undefined && (context.startRendering === undefined || isSafari(navigator))) {
                     return context.close();
                 }
             });

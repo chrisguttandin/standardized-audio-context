@@ -1210,6 +1210,16 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('startRendering()', () => {
+
+            // bug #160
+
+            it('should expose a startRendering method', () => {
+                expect(audioContext.startRendering).to.be.a('function');
+            });
+
+        });
+
         describe('suspend()', () => {
 
             afterEach(() => {
