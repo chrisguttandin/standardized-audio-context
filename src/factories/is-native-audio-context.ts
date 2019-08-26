@@ -1,7 +1,7 @@
 import { TIsNativeAudioContextFactory, TNativeAudioContext } from '../types';
 
 export const createIsNativeAudioContext: TIsNativeAudioContextFactory = (nativeAudioContextConstructor) => {
-    return (anyContext): anyContext is TNativeAudioContext => {
-        return (nativeAudioContextConstructor !== null && anyContext instanceof nativeAudioContextConstructor);
+    return (anything): anything is TNativeAudioContext => {
+        return (nativeAudioContextConstructor !== null && anything instanceof nativeAudioContextConstructor);
     };
 };
