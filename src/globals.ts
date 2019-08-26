@@ -9,6 +9,7 @@ import {
 import {
     TAudioNodeStore,
     TAudioParamStore,
+    TContextStore,
     TInternalStateEventListener,
     TNativeAudioWorkletNode,
     TNativeContext,
@@ -29,7 +30,7 @@ export const AUXILIARY_GAIN_NODE_STORE: WeakMap<TNativeAudioWorkletNode, Map<num
 
 export const BACKUP_NATIVE_CONTEXT_STORE: WeakMap<TNativeContext, TNativeContext> = new WeakMap();
 
-export const CONTEXT_STORE: WeakMap<IMinimalBaseAudioContext, TNativeContext> = new WeakMap();
+export const CONTEXT_STORE: TContextStore = new WeakMap();
 
 export const DETACHED_ARRAY_BUFFERS: WeakSet<ArrayBuffer> = new WeakSet();
 

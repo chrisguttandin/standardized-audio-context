@@ -277,6 +277,24 @@ const arrayBuffer = await response.arrayBuffer();
 const audioBuffer = await decodeAudioData(nativeAudioContext, arrayBuffer);
 ```
 
+### isAnyAudioContext()
+
+This is a utility function which determines if the given value is an AudioContext or not. It does not differentiate between an AudioContext created by `standardized-audio-context` or a native one. But it will return false for an OfflineAudioContext.
+
+```js
+import { AudioContext, isAnyAudioContext } from 'standardized-audio-context';
+
+// This will create an AudioContext from standardized-audio-context.
+const audioContext = new AudioContext();
+
+isAnyAudioContext(audioContext); // true
+
+// This will create a native AudioContext.
+const nativeAudioContext = new window.AudioContext();
+
+isAnyAudioContext(nativeAudioContext); // true
+```
+
 ### isAnyAudioNode()
 
 This is a helper function which allows to identify an AudioNode without any custom instanceof or property checks. It returns true if the given value is an AudioNode or false if not. It doesn't matter if the given value is an AudioNode which has been created with `standardized-audio-context` or not.
@@ -297,7 +315,7 @@ isAnyAudioNode(offlineAudioContext.createGain()); // true
 
 ### isAnyAudioParam()
 
-This is a helper function similiar to `isAnyAudioNode()` but for AudioParams. It also allows to identify them without any custom instanceof or property checks. It returns true if the given value is an AudioParam or false in case it isn't. It doesn't matter if the given value is an AudioParam which has been created with `standardized-audio-context` or not.
+This is a helper function similiar to `isAnyAudioNode()` but for AudioParams. It returns true if the given value is an AudioParam or false in case it isn't. It doesn't matter if the given value is an AudioParam which has been created with `standardized-audio-context` or not.
 
 ```js
 import { OfflineAudioContext, isAnyAudioParam } from 'standardized-audio-context';
@@ -311,6 +329,24 @@ isAnyAudioParam(nativeAudioContext.createGain().gain); // true
 const offlineAudioContext = new OfflineAudioContext({ length: 10, sampleRate: 44100 });
 
 isAnyAudioParam(offlineAudioContext.createGain().gain); // true
+```
+
+### isAnyOfflineAudioContext()
+
+This is a utility function which determines if the given value is an OfflineAudioContext or not. It does not differentiate between an OfflineAudioContext created by `standardized-audio-context` or a native one.
+
+```js
+import { OfflineAudioContext, isAnyOfflineAudioContext } from 'standardized-audio-context';
+
+// This will create an OfflineAudioContext from standardized-audio-context.
+const offlineAudioContext = new OfflineAudioContext({ length: 10, sampleRate: 44100 });
+
+isAnyOfflineAudioContext(offlineAudioContext); // true
+
+// This will create a native OfflineAudioContext.
+const nativeOfflineAudioContext = new window.OfflineAudioContext(1, 10, 44100);
+
+isAnyOfflineAudioContext(nativeOfflineAudioContext); // true
 ```
 
 ### isSupported()

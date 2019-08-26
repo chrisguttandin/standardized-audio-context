@@ -57,8 +57,10 @@ import { createIIRFilterNodeRendererFactory } from './factories/iir-filter-node-
 import { createIndexSizeError } from './factories/index-size-error';
 import { createInvalidAccessError } from './factories/invalid-access-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
+import { createIsAnyAudioContext } from './factories/is-any-audio-context';
 import { createIsAnyAudioNode } from './factories/is-any-audio-node';
 import { createIsAnyAudioParam } from './factories/is-any-audio-param';
+import { createIsAnyOfflineAudioContext } from './factories/is-any-offline-audio-context';
 import { createIsNativeAudioContext } from './factories/is-native-audio-context';
 import { createIsNativeAudioNode } from './factories/is-native-audio-node';
 import { createIsNativeAudioParam } from './factories/is-native-audio-param';
@@ -162,7 +164,7 @@ import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
-import { AUDIO_NODE_STORE, AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE } from './globals';
+import { AUDIO_NODE_STORE, AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE, CONTEXT_STORE } from './globals';
 import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
 import { getValueForKey } from './helpers/get-value-for-key';
 import {
@@ -808,9 +810,13 @@ type waveShaperNodeConstructor<T extends TContext> = IWaveShaperNode<T>;
 
 export { waveShaperNodeConstructor as WaveShaperNode };
 
+export const isAnyAudioContext = createIsAnyAudioContext(CONTEXT_STORE, isNativeAudioContext);
+
 export const isAnyAudioNode = createIsAnyAudioNode(AUDIO_NODE_STORE, isNativeAudioNode);
 
 export const isAnyAudioParam = createIsAnyAudioParam(AUDIO_PARAM_STORE, isNativeAudioParam);
+
+export const isAnyOfflineAudioContext = createIsAnyOfflineAudioContext(CONTEXT_STORE, isNativeOfflineAudioContext);
 
 export const isSupported = () => createIsSupportedPromise(
     cacheTestResult,
