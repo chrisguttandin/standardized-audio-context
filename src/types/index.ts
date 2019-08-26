@@ -120,6 +120,8 @@ export * from './is-any-audio-node-factory';
 export * from './is-any-audio-node-function';
 export * from './is-any-audio-param-factory';
 export * from './is-any-audio-param-function';
+export * from './is-native-audio-context-factory';
+export * from './is-native-audio-context-function';
 export * from './is-native-audio-node-factory';
 export * from './is-native-audio-node-function';
 export * from './is-native-audio-param-factory';

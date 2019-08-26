@@ -59,6 +59,7 @@ import { createInvalidAccessError } from './factories/invalid-access-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
 import { createIsAnyAudioNode } from './factories/is-any-audio-node';
 import { createIsAnyAudioParam } from './factories/is-any-audio-param';
+import { createIsNativeAudioContext } from './factories/is-native-audio-context';
 import { createIsNativeAudioNode } from './factories/is-native-audio-node';
 import { createIsNativeAudioParam } from './factories/is-native-audio-param';
 import { createIsNativeContext } from './factories/is-native-context';
@@ -554,7 +555,8 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
     ) :
     undefined;
 
-const isNativeContext = createIsNativeContext(isNativeOfflineAudioContext, nativeAudioContextConstructor);
+const isNativeAudioContext = createIsNativeAudioContext(nativeAudioContextConstructor);
+const isNativeContext = createIsNativeContext(isNativeAudioContext, isNativeOfflineAudioContext);
 
 export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     cacheTestResult,
