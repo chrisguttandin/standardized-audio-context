@@ -58,6 +58,8 @@ import { createIndexSizeError } from './factories/index-size-error';
 import { createInvalidAccessError } from './factories/invalid-access-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
 import { createIsAnyAudioNode } from './factories/is-any-audio-node';
+import { createIsNativeAudioNode } from './factories/is-native-audio-node';
+import { createIsNativeAudioParam } from './factories/is-native-audio-param';
 import { createIsNativeContext } from './factories/is-native-context';
 import { createIsNativeOfflineAudioContext } from './factories/is-native-offline-audio-context';
 import { createIsSecureContext } from './factories/is-secure-context';
@@ -241,12 +243,16 @@ const getBackupNativeContext = createGetBackupNativeContext(
 const createNativeAudioNode = createNativeAudioNodeFactory(getBackupNativeContext);
 const createNativeAnalyserNode = createNativeAnalyserNodeFactory(cacheTestResult, createIndexSizeError, createNativeAudioNode);
 const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(createNativeAnalyserNode);
+const isNativeAudioNode = createIsNativeAudioNode(window);
+const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     cacheTestResult,
     createIndexSizeError,
     createInvalidAccessError,
     createNotSupportedError,
     createDetectCycles(AUDIO_PARAM_AUDIO_NODE_STORE, createNotSupportedError, getAudioNodeConnections, getValueForKey),
+    isNativeAudioNode,
+    isNativeAudioParam,
     isNativeOfflineAudioContext
 );
 const noneAudioDestinationNodeConstructor = createNoneAudioDestinationNodeConstructor(audioNodeConstructor);
@@ -799,7 +805,7 @@ type waveShaperNodeConstructor<T extends TContext> = IWaveShaperNode<T>;
 
 export { waveShaperNodeConstructor as WaveShaperNode };
 
-export const isAnyAudioNode = createIsAnyAudioNode(AUDIO_NODE_STORE, window);
+export const isAnyAudioNode = createIsAnyAudioNode(AUDIO_NODE_STORE, isNativeAudioNode);
 
 export const isSupported = () => createIsSupportedPromise(
     cacheTestResult,

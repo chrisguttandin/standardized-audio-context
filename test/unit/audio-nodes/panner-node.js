@@ -4,8 +4,11 @@ import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
+import { createNativeAudioContext } from '../../helper/create-native-audio-context';
+import { createNativeOfflineAudioContext } from '../../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
+import { isSafari } from '../../helper/is-safari';
 
 const createPannerNodeWithConstructor = (context, options = null) => {
     if (options === null) {
@@ -1386,6 +1389,47 @@ describe('PannerNode', () => {
                         });
 
                     });
+
+                    if (description.includes('factory')) {
+
+                        describe(`with an ${ type } of a native context`, () => {
+
+                            let nativeAudioNodeOrAudioParam;
+                            let nativeContext;
+
+                            afterEach(() => {
+                                /*
+                                 * Bug #94: Edge & Safari also expose a close() method on an OfflineAudioContext which is why the extra
+                                 * check for the startRendering() method is necessary.
+                                 * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
+                                 */
+                                if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || isSafari(navigator))) {
+                                    return nativeContext.close();
+                                }
+                            });
+
+                            beforeEach(() => {
+                                nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+
+                                const nativeGainNode = nativeContext.createGain();
+
+                                nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            });
+
+                            it('should throw an InvalidAccessError', (done) => {
+                                try {
+                                    pannerNode.connect(nativeAudioNodeOrAudioParam);
+                                } catch (err) {
+                                    expect(err.code).to.equal(15);
+                                    expect(err.name).to.equal('InvalidAccessError');
+
+                                    done();
+                                }
+                            });
+
+                        });
+
+                    }
 
                 }
 

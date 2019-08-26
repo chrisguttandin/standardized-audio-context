@@ -24,6 +24,12 @@ interface Window { // tslint:disable-line:interface-name
 
     };
 
+    AudioParam: {
+
+        prototype: AudioParam;
+
+    };
+
     AudioWorkletNode: {
 
         prototype: AudioWorkletNode;

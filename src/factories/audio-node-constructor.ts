@@ -486,6 +486,8 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     createInvalidAccessError,
     createNotSupportedError,
     detectCycles,
+    isNativeAudioNode,
+    isNativeAudioParam,
     isNativeOfflineAudioContext
 ) => {
 
@@ -567,6 +569,10 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
         public connect <U extends IAudioNode<T>> (destination: U | IAudioParam, output = 0, input = 0): void | U { // tslint:disable-line:invalid-void max-line-length
             const nativeContext = getNativeContext(this._context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
+
+            if (isNativeAudioNode(destination) || isNativeAudioParam(destination)) {
+                throw createInvalidAccessError();
+            }
 
             if (isAudioNode(destination)) {
                 const nativeDestinationAudioNode = getNativeAudioNode(destination);

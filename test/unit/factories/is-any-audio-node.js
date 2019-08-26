@@ -1,22 +1,24 @@
 import { createIsAnyAudioNode } from '../../../src/factories/is-any-audio-node';
+import { stub } from 'sinon';
 
 describe('isAnyAudioNode()', () => {
 
-    let audioNodeConstructor;
     let audioNodeStore;
     let isAnyAudioNode;
+    let isNativeAudioNode;
 
     beforeEach(() => {
-        class AudioNode { };
-        const window = { AudioNode };
-
-        audioNodeConstructor = window.AudioNode;
         audioNodeStore = new WeakMap();
+        isNativeAudioNode = stub();
 
-        isAnyAudioNode = createIsAnyAudioNode(audioNodeStore, window);
+        isAnyAudioNode = createIsAnyAudioNode(audioNodeStore, isNativeAudioNode);
     });
 
     describe('without any AudioNode in the store', () => {
+
+        beforeEach(() => {
+            isNativeAudioNode.returns(false);
+        });
 
         it('should not identify any AudioNode', () => {
             expect(isAnyAudioNode({ a: 'fake AudioNode' })).to.be.false;
@@ -32,6 +34,7 @@ describe('isAnyAudioNode()', () => {
             audioNode = { a: 'fake AudioNode' };
 
             audioNodeStore.set(audioNode, { a: 'fake native AudioNode' });
+            isNativeAudioNode.returns(false);
         });
 
         it('should identify the stored AudioNode', () => {
@@ -44,16 +47,14 @@ describe('isAnyAudioNode()', () => {
 
     });
 
-    describe('with a native AudioNode', () => {
-
-        let gainNode;
+    describe('with an AudioNode which gets identified as native', () => {
 
         beforeEach(() => {
-            gainNode = new (class extends audioNodeConstructor { })();
+            isNativeAudioNode.returns(true);
         });
 
         it('should identify a native AudioNode', () => {
-            expect(isAnyAudioNode(gainNode)).to.be.true;
+            expect(isAnyAudioNode({ a: 'fake AudioNode' })).to.be.true;
         });
 
     });
