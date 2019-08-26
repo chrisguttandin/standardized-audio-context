@@ -58,6 +58,7 @@ import { createIndexSizeError } from './factories/index-size-error';
 import { createInvalidAccessError } from './factories/invalid-access-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
 import { createIsAnyAudioNode } from './factories/is-any-audio-node';
+import { createIsAnyAudioParam } from './factories/is-any-audio-param';
 import { createIsNativeAudioNode } from './factories/is-native-audio-node';
 import { createIsNativeAudioParam } from './factories/is-native-audio-param';
 import { createIsNativeContext } from './factories/is-native-context';
@@ -160,7 +161,7 @@ import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
-import { AUDIO_NODE_STORE, AUDIO_PARAM_AUDIO_NODE_STORE } from './globals';
+import { AUDIO_NODE_STORE, AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE } from './globals';
 import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
 import { getValueForKey } from './helpers/get-value-for-key';
 import {
@@ -806,6 +807,8 @@ type waveShaperNodeConstructor<T extends TContext> = IWaveShaperNode<T>;
 export { waveShaperNodeConstructor as WaveShaperNode };
 
 export const isAnyAudioNode = createIsAnyAudioNode(AUDIO_NODE_STORE, isNativeAudioNode);
+
+export const isAnyAudioParam = createIsAnyAudioParam(AUDIO_PARAM_STORE, isNativeAudioParam);
 
 export const isSupported = () => createIsSupportedPromise(
     cacheTestResult,

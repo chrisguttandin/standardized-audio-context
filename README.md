@@ -295,6 +295,24 @@ const offlineAudioContext = new OfflineAudioContext({ length: 10, sampleRate: 44
 isAnyAudioNode(offlineAudioContext.createGain()); // true
 ```
 
+### isAnyAudioParam()
+
+This is a helper function similiar to `isAnyAudioNode()` but for AudioParams. It also allows to identify them without any custom instanceof or property checks. It returns true if the given value is an AudioParam or false in case it isn't. It doesn't matter if the given value is an AudioParam which has been created with `standardized-audio-context` or not.
+
+```js
+import { OfflineAudioContext, isAnyAudioParam } from 'standardized-audio-context';
+
+// This will create a native AudioContext.
+const nativeAudioContext = new AudioContext();
+
+isAnyAudioParam(nativeAudioContext.createGain().gain); // true
+
+// This will create an OfflineAudioContext from standardized-audio-context.
+const offlineAudioContext = new OfflineAudioContext({ length: 10, sampleRate: 44100 });
+
+isAnyAudioParam(offlineAudioContext.createGain().gain); // true
+```
+
 ### isSupported()
 
  `standardized-audio-context` is also exporting a promise which can be accessed by calling `isSupported()`. This promise resolves to a boolean which indicates if the functionality is supported within the currently used browser. This is not part of the specification.

@@ -27,6 +27,7 @@ import {
     addAudioWorkletModule,
     decodeAudioData,
     isAnyAudioNode,
+    isAnyAudioParam,
     isSupported
 } from '../../src/module';
 
@@ -138,6 +139,10 @@ describe('module', () => {
 
     it('should export the isAnyAudioNode function', () => {
         expect(isAnyAudioNode).to.be.a('function');
+    });
+
+    it('should export the isAnyAudioParam function', () => {
+        expect(isAnyAudioParam).to.be.a('function');
     });
 
     it('should export the isSupported function', () => {
