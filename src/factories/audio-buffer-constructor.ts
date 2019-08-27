@@ -27,7 +27,16 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
     return class AudioBuffer implements IAudioBuffer {
 
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
+        public copyFromChannel!: (destination: Float32Array, channelNumber: number, bufferOffset?: number) => void;
+
+        // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
+        public copyToChannel!: (source: Float32Array, channelNumber: number, bufferOffset?: number) => void;
+
+        // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public duration!: number;
+
+        // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
+        public getChannelData!: (channel: number) => Float32Array;
 
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public length!: number;
@@ -90,17 +99,6 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
              * (Offline)AudioContexts.
              */
             return audioBuffer;
-        }
-
-        // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-        public copyFromChannel (_1: Float32Array, _2: number, _3 = 0): void { } // tslint:disable-line:no-empty
-
-        // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-        public copyToChannel (_1: Float32Array, _2: number, _3 = 0): void { } // tslint:disable-line:no-empty
-
-        // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-        public getChannelData (_: number): Float32Array {
-            return new Float32Array(0);
         }
 
         public static [ Symbol.hasInstance ] (instance: unknown): boolean {
