@@ -7,6 +7,7 @@ import {
     IMinimalBaseAudioContext
 } from './interfaces';
 import {
+    TAudioBufferStore,
     TAudioNodeStore,
     TAudioParamStore,
     TContextStore,
@@ -17,6 +18,8 @@ import {
 } from './types';
 
 export const ACTIVE_AUDIO_NODE_STORE: WeakSet<IAudioNode<IMinimalBaseAudioContext>> = new WeakSet();
+
+export const AUDIO_BUFFER_STORE: TAudioBufferStore = new WeakSet();
 
 export const AUDIO_NODE_STORE: TAudioNodeStore = new WeakMap();
 

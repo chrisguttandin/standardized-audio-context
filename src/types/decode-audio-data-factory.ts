@@ -1,3 +1,4 @@
+import { TAudioBufferStore } from './audio-buffer-store';
 import { TCacheTestResultFunction } from './cache-test-result-function';
 import { TDataCloneErrorFactory } from './data-clone-error-factory';
 import { TDecodeAudioDataFunction } from './decode-audio-data-function';
@@ -12,6 +13,7 @@ import { TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction } from './wrap-au
 import { TWrapAudioBufferCopyChannelMethodsSubarrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
 
 export type TDecodeAudioDataFactory = (
+    audioBufferStore: TAudioBufferStore,
     cacheTestResult: TCacheTestResultFunction,
     createDataCloneError: TDataCloneErrorFactory,
     createEncodingError: TEncodingErrorFactory,

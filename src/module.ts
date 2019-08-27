@@ -164,7 +164,7 @@ import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
-import { AUDIO_NODE_STORE, AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE, CONTEXT_STORE } from './globals';
+import { AUDIO_BUFFER_STORE, AUDIO_NODE_STORE, AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE, CONTEXT_STORE } from './globals';
 import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
 import { getValueForKey } from './helpers/get-value-for-key';
 import {
@@ -282,6 +282,7 @@ const wrapAudioBufferCopyChannelMethodsSubarray = createWrapAudioBufferCopyChann
     createIndexSizeError
 );
 const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstructor(
+    AUDIO_BUFFER_STORE,
     cacheTestResult,
     createNotSupportedError,
     nativeAudioBufferConstructor,
@@ -561,6 +562,7 @@ const isNativeAudioContext = createIsNativeAudioContext(nativeAudioContextConstr
 const isNativeContext = createIsNativeContext(isNativeAudioContext, isNativeOfflineAudioContext);
 
 export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
+    AUDIO_BUFFER_STORE,
     cacheTestResult,
     createDataCloneError,
     createEncodingError,
@@ -758,6 +760,7 @@ const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(
     nativeOfflineAudioContextConstructor
 );
 const startRendering = createStartRendering(
+    AUDIO_BUFFER_STORE,
     cacheTestResult,
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,

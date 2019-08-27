@@ -3,6 +3,7 @@ import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffe
 import { TStartRenderingFactory } from '../types';
 
 export const createStartRendering: TStartRenderingFactory = (
+    audioBufferStore,
     cacheTestResult,
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
@@ -34,6 +35,8 @@ export const createStartRendering: TStartRenderingFactory = (
             )) {
                 wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
             }
+
+            audioBufferStore.add(audioBuffer);
 
             return audioBuffer;
         });

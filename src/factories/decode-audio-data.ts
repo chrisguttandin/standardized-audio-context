@@ -5,6 +5,7 @@ import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffe
 import { TDecodeAudioDataFactory } from '../types';
 
 export const createDecodeAudioData: TDecodeAudioDataFactory = (
+    audioBufferStore,
     cacheTestResult,
     createDataCloneError,
     createEncodingError,
@@ -72,6 +73,8 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                         wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
                     }
 
+                    audioBufferStore.add(audioBuffer);
+
                     return audioBuffer;
                 });
         }
@@ -100,6 +103,8 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                         wrapAudioBufferCopyChannelMethods(audioBuffer);
                         wrapAudioBufferGetChannelDataMethod(audioBuffer);
                     }
+
+                    audioBufferStore.add(audioBuffer);
 
                     complete();
                     resolve(audioBuffer);

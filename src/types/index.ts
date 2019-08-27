@@ -15,6 +15,7 @@ export * from './audio-buffer-source-node-constructor-factory';
 export * from './audio-buffer-source-node-renderer';
 export * from './audio-buffer-source-node-renderer-factory';
 export * from './audio-buffer-source-node-renderer-factory-factory';
+export * from './audio-buffer-store';
 export * from './audio-context-constructor';
 export * from './audio-context-constructor-factory';
 export * from './audio-context-latency-category';

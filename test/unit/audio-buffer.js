@@ -164,7 +164,11 @@ describe('AudioBuffer', () => {
                                 audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
                             });
 
-                            it('should return an instance of the AudioBuffer interface', () => {
+                            it('should return an instance of the AudioBuffer constructor', () => {
+                                expect(audioBuffer).to.be.an.instanceOf(AudioBuffer);
+                            });
+
+                            it('should return an implementation of the AudioBuffer interface', () => {
                                 const length = 1000;
 
                                 expect(audioBuffer.duration).to.be.closeTo(length / 44100, 0.001);

@@ -11,6 +11,7 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
+    audioBufferStore,
     cacheTestResult,
     createNotSupportedError,
     nativeAudioBufferConstructor,
@@ -82,6 +83,8 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
                 wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
             }
 
+            audioBufferStore.add(audioBuffer);
+
             /*
              * This does violate all good pratices but it is necessary to allow this AudioBuffer to be used with native
              * (Offline)AudioContexts.
@@ -98,6 +101,10 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
         // This method needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public getChannelData (_: number): Float32Array {
             return new Float32Array(0);
+        }
+
+        public static [ Symbol.hasInstance ] (instance: unknown): boolean {
+            return audioBufferStore.has(<any> instance);
         }
 
     };
