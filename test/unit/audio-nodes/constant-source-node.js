@@ -245,6 +245,22 @@ describe('ConstantSourceNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let constantSourceNode;
+
+                beforeEach(() => {
+                    constantSourceNode = createConstantSourceNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        constantSourceNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('offset', () => {
 
                 it('should return an implementation of the AudioParam interface', () => {

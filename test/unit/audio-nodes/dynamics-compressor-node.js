@@ -520,6 +520,22 @@ describe('DynamicsCompressorNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('ratio', () => {
 
                 let dynamicsCompressorNode;

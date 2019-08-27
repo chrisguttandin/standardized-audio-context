@@ -594,6 +594,22 @@ describe('DelayNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let delayNode;
+
+                beforeEach(() => {
+                    delayNode = createDelayNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        delayNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('connect()', () => {
 
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {

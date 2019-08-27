@@ -635,6 +635,22 @@ describe('PannerNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let pannerNode;
+
+                beforeEach(() => {
+                    pannerNode = createPannerNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        pannerNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('orientationX', () => {
 
                 let pannerNode;

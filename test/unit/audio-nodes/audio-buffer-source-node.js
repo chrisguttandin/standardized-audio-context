@@ -666,6 +666,22 @@ describe('AudioBufferSourceNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let audioBufferSourceNode;
+
+                beforeEach(() => {
+                    audioBufferSourceNode = createAudioBufferSourceNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        audioBufferSourceNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('onended', () => {
 
                 let audioBufferSourceNode;

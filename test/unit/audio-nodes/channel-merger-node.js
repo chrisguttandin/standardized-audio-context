@@ -220,6 +220,22 @@ describe('ChannelMergerNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let channelMergerNode;
+
+                beforeEach(() => {
+                    channelMergerNode = createChannelMergerNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        channelMergerNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('connect()', () => {
 
                 let channelMergerNode;

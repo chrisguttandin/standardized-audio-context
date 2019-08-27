@@ -421,6 +421,22 @@ describe('AnalyserNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let analyserNode;
+
+                beforeEach(() => {
+                    analyserNode = createAnalyserNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        analyserNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('smoothingTimeConstant', () => {
 
                 // @todo

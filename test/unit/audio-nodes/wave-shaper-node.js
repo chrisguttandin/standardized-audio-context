@@ -318,6 +318,22 @@ describe('WaveShaperNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let waveShaperNode;
+
+                beforeEach(() => {
+                    waveShaperNode = createWaveShaperNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        waveShaperNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('oversample', () => {
 
                 let waveShaperNode;

@@ -310,6 +310,22 @@ describe('StereoPannerNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let stereoPannerNode;
+
+                beforeEach(() => {
+                    stereoPannerNode = createStereoPannerNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        stereoPannerNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('pan', () => {
 
                 it('should return an implementation of the AudioParam interface', () => {

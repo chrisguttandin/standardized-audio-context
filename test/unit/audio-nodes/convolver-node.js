@@ -563,6 +563,22 @@ describe('ConvolverNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let convolverNode;
+
+                beforeEach(() => {
+                    convolverNode = createConvolverNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        convolverNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('connect()', () => {
 
                 let convolverNode;

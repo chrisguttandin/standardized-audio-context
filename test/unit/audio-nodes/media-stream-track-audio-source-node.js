@@ -324,6 +324,24 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                 });
 
+                describe('numberOfOutputs', () => {
+
+                    let mediaStreamTrackAudioSourceNode;
+
+                    beforeEach(() => {
+                        const mediaStreamTrack = mediaStream.getAudioTracks()[0];
+
+                        mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
+                    });
+
+                    it('should be readonly', () => {
+                        expect(() => {
+                            mediaStreamTrackAudioSourceNode.numberOfOutputs = 2;
+                        }).to.throw(TypeError);
+                    });
+
+                });
+
                 describe('connect()', () => {
 
                     let mediaStreamTrackAudioSourceNode;

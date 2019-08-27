@@ -459,6 +459,22 @@ describe('IIRFilterNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let iIRFilterNode;
+
+                beforeEach(() => {
+                    iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        iIRFilterNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('connect()', () => {
 
                 let iIRFilterNode;

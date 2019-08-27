@@ -579,6 +579,22 @@ describe('GainNode', () => {
 
             });
 
+            describe('numberOfOutputs', () => {
+
+                let gainNode;
+
+                beforeEach(() => {
+                    gainNode = createGainNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        gainNode.numberOfOutputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('connect()', () => {
 
                 let gainNode;
