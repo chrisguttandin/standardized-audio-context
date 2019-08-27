@@ -57,6 +57,11 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
                 new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate }) :
                 nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
+            // Bug #99: Safari does not throw an error when the numberOfChannels is zero.
+            if (audioBuffer.numberOfChannels === 0) {
+                throw createNotSupportedError();
+            }
+
             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
             // Bug #100: Safari does throw a wrong error when calling getChannelData() with an out-of-bounds value.
             if (typeof audioBuffer.copyFromChannel !== 'function') {
@@ -75,11 +80,6 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
                 () => testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
             )) {
                 wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
-            }
-
-            // Bug #99: Safari does not throw an error when the numberOfChannels is zero.
-            if (audioBuffer.numberOfChannels === 0) {
-                throw createNotSupportedError();
             }
 
             /*
