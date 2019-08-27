@@ -269,6 +269,7 @@ export * from './passive-audio-node-input-connection';
 export * from './passive-audio-param-input-connection';
 export * from './periodic-wave-constructor';
 export * from './periodic-wave-constructor-factory';
+export * from './periodic-wave-store';
 export * from './render-native-offline-audio-context-factory';
 export * from './render-native-offline-audio-context-function';
 export * from './start-rendering-factory';

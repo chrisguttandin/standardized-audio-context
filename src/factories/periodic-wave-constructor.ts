@@ -6,7 +6,7 @@ const DEFAULT_OPTIONS = {
     disableNormalization: false
 } as const;
 
-export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (createNativePeriodicWave) => {
+export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (createNativePeriodicWave, periodicWaveStore) => {
 
     return class PeriodicWave<T extends IMinimalBaseAudioContext> implements IPeriodicWave {
 
@@ -17,8 +17,16 @@ export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (c
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
 
+            const periodicWave = createNativePeriodicWave(nativeContext, mergedOptions);
+
+            periodicWaveStore.add(periodicWave);
+
             // This does violate all good pratices but it is used here to simplify the handling of periodic waves.
-            return createNativePeriodicWave(nativeContext, mergedOptions);
+            return periodicWave;
+        }
+
+        public static [ Symbol.hasInstance ] (instance: unknown): boolean {
+            return periodicWaveStore.has(<any> instance);
         }
 
     };

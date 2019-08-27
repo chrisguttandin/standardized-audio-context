@@ -164,7 +164,14 @@ import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
-import { AUDIO_BUFFER_STORE, AUDIO_NODE_STORE, AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE, CONTEXT_STORE } from './globals';
+import {
+    AUDIO_BUFFER_STORE,
+    AUDIO_NODE_STORE,
+    AUDIO_PARAM_AUDIO_NODE_STORE,
+    AUDIO_PARAM_STORE,
+    CONTEXT_STORE,
+    PERIODIC_WAVE_STORE
+} from './globals';
 import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
 import { getValueForKey } from './helpers/get-value-for-key';
 import {
@@ -513,7 +520,7 @@ const pannerNodeConstructor: TPannerNodeConstructor = createPannerNodeConstructo
     noneAudioDestinationNodeConstructor
 );
 const createNativePeriodicWave = createNativePeriodicWaveFactory(getBackupNativeContext);
-const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(createNativePeriodicWave);
+const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(createNativePeriodicWave, PERIODIC_WAVE_STORE);
 const nativeStereoPannerNodeFakerFactory = createNativeStereoPannerNodeFakerFactory(
     createNativeChannelMergerNode,
     createNativeChannelSplitterNode,

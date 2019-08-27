@@ -14,7 +14,8 @@ import {
     TInternalStateEventListener,
     TNativeAudioWorkletNode,
     TNativeContext,
-    TNativeGainNode
+    TNativeGainNode,
+    TPeriodicWaveStore
 } from './types';
 
 export const ACTIVE_AUDIO_NODE_STORE: WeakSet<IAudioNode<IMinimalBaseAudioContext>> = new WeakSet();
@@ -49,5 +50,7 @@ export const NODE_TO_PROCESSOR_MAPS: WeakMap<
     TNativeContext,
     WeakMap<TNativeAudioWorkletNode, Promise<IAudioWorkletProcessor>>
 > = new WeakMap();
+
+export const PERIODIC_WAVE_STORE: TPeriodicWaveStore = new WeakSet();
 
 export const TEST_RESULTS: WeakMap<object, boolean> = new WeakMap();

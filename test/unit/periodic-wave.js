@@ -92,7 +92,13 @@ describe('PeriodicWave', () => {
 
                         describe('without any options', () => {
 
-                            it('should return an instance of the PeriodicWave interface', () => {
+                            it('should return an instance of the PeriodicWave constructor', () => {
+                                const periodicWave = createPeriodicWave(context, { imag: [ 1 ], real: [ 1 ] });
+
+                                expect(periodicWave).to.be.an.instanceOf(PeriodicWave);
+                            });
+
+                            it('should return an implementation of the PeriodicWave interface', () => {
                                 createPeriodicWave(context, { imag: [ 1 ], real: [ 1 ] });
 
                                 // The PeriodicWave interface has no methods or properties.
