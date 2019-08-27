@@ -119,13 +119,17 @@ describe('StereoPannerNode', () => {
                                 stereoPannerNode = createStereoPannerNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the StereoPannerNode constructor', () => {
+                                expect(stereoPannerNode).to.be.an.instanceOf(StereoPannerNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(stereoPannerNode.addEventListener).to.be.a('function');
                                 expect(stereoPannerNode.dispatchEvent).to.be.a('function');
                                 expect(stereoPannerNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(stereoPannerNode.channelCount).to.equal(2);
                                 // Bug #105: The channelCountMode should have a default value of 'clamped-max'.
                                 expect(stereoPannerNode.channelCountMode).to.equal('explicit');
@@ -137,7 +141,7 @@ describe('StereoPannerNode', () => {
                                 expect(stereoPannerNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the StereoPannerNode interface', () => {
+                            it('should return an implementation of the StereoPannerNode interface', () => {
                                 expect(stereoPannerNode.pan).not.to.be.undefined;
                             });
 
@@ -308,7 +312,7 @@ describe('StereoPannerNode', () => {
 
             describe('pan', () => {
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     const stereoPannerNode = createStereoPannerNode(context);
 
                     expect(stereoPannerNode.pan.cancelAndHoldAtTime).to.be.a('function');

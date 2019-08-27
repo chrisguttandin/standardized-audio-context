@@ -134,13 +134,17 @@ describe('DynamicsCompressorNode', () => {
                                 dynamicsCompressorNode = createDynamicsCompressorNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the DynamicsCompressorNode constructor', () => {
+                                expect(dynamicsCompressorNode).to.be.an.instanceOf(DynamicsCompressorNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(dynamicsCompressorNode.addEventListener).to.be.a('function');
                                 expect(dynamicsCompressorNode.dispatchEvent).to.be.a('function');
                                 expect(dynamicsCompressorNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(dynamicsCompressorNode.channelCount).to.equal(2);
                                 expect(dynamicsCompressorNode.channelCountMode).to.equal('clamped-max');
                                 expect(dynamicsCompressorNode.channelInterpretation).to.equal('speakers');
@@ -151,7 +155,7 @@ describe('DynamicsCompressorNode', () => {
                                 expect(dynamicsCompressorNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the DynamicsCompressorNode interface', () => {
+                            it('should return an implementation of the DynamicsCompressorNode interface', () => {
                                 expect(dynamicsCompressorNode.attack).not.to.be.undefined;
                                 expect(dynamicsCompressorNode.knee).not.to.be.undefined;
                                 expect(dynamicsCompressorNode.ratio).not.to.be.undefined;
@@ -270,7 +274,7 @@ describe('DynamicsCompressorNode', () => {
                     dynamicsCompressorNode = createDynamicsCompressorNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(dynamicsCompressorNode.attack.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.attack.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.attack.defaultValue).to.equal(Math.fround(0.003));
@@ -436,7 +440,7 @@ describe('DynamicsCompressorNode', () => {
                     dynamicsCompressorNode = createDynamicsCompressorNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(dynamicsCompressorNode.knee.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.knee.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
@@ -524,7 +528,7 @@ describe('DynamicsCompressorNode', () => {
                     dynamicsCompressorNode = createDynamicsCompressorNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.ratio.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
@@ -614,7 +618,7 @@ describe('DynamicsCompressorNode', () => {
                     dynamicsCompressorNode = createDynamicsCompressorNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(dynamicsCompressorNode.release.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.release.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
@@ -702,7 +706,7 @@ describe('DynamicsCompressorNode', () => {
                     dynamicsCompressorNode = createDynamicsCompressorNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(dynamicsCompressorNode.threshold.cancelAndHoldAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.threshold.cancelScheduledValues).to.be.a('function');
                     expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);

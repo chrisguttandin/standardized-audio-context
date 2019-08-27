@@ -142,13 +142,17 @@ describe('AudioBufferSourceNode', () => {
                                 audioBufferSourceNode = createAudioBufferSourceNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the AudioBufferSourceNode constructor', () => {
+                                expect(audioBufferSourceNode).to.be.an.instanceOf(AudioBufferSourceNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(audioBufferSourceNode.addEventListener).to.be.a('function');
                                 expect(audioBufferSourceNode.dispatchEvent).to.be.a('function');
                                 expect(audioBufferSourceNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(audioBufferSourceNode.channelCount).to.equal(2);
                                 expect(audioBufferSourceNode.channelCountMode).to.equal('max');
                                 expect(audioBufferSourceNode.channelInterpretation).to.equal('speakers');
@@ -159,13 +163,13 @@ describe('AudioBufferSourceNode', () => {
                                 expect(audioBufferSourceNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the AudioScheduledSourceNode interface', () => {
+                            it('should return an implementation of the AudioScheduledSourceNode interface', () => {
                                 expect(audioBufferSourceNode.onended).to.be.null;
                                 expect(audioBufferSourceNode.start).to.be.a('function');
                                 expect(audioBufferSourceNode.stop).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioBufferSourceNode interface', () => {
+                            it('should return an implementation of the AudioBufferSourceNode interface', () => {
                                 expect(audioBufferSourceNode.buffer).to.be.null;
                                 // expect(audioBufferSourceNode.detune).not.to.be.undefined;
                                 expect(audioBufferSourceNode.loop).to.be.false;
@@ -438,7 +442,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo     audioBufferSourceNode = createAudioBufferSourceNode(context);
                  * @todo });
                  * @todo
-                 * @todo it('should return an instance of the AudioParam interface', () => {
+                 * @todo it('should return an implementation of the AudioParam interface', () => {
                  * @todo     expect(audioBufferSourceNode.detune.cancelAndHoldAtTime).to.be.a('function');
                  * @todo     expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
                  * @todo     expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
@@ -727,7 +731,7 @@ describe('AudioBufferSourceNode', () => {
 
             describe('playbackRate', () => {
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     const audioBufferSourceNode = createAudioBufferSourceNode(context);
 
                     expect(audioBufferSourceNode.playbackRate.cancelAndHoldAtTime).to.be.a('function');

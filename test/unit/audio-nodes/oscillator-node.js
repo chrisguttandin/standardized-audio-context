@@ -132,13 +132,17 @@ describe('OscillatorNode', () => {
                                 oscillatorNode = createOscillatorNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the OscillatorNode constructor', () => {
+                                expect(oscillatorNode).to.be.an.instanceOf(OscillatorNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(oscillatorNode.addEventListener).to.be.a('function');
                                 expect(oscillatorNode.dispatchEvent).to.be.a('function');
                                 expect(oscillatorNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(oscillatorNode.channelCount).to.equal(2);
                                 expect(oscillatorNode.channelCountMode).to.equal('max');
                                 expect(oscillatorNode.channelInterpretation).to.equal('speakers');
@@ -149,13 +153,13 @@ describe('OscillatorNode', () => {
                                 expect(oscillatorNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the AudioScheduledSourceNode interface', () => {
+                            it('should return an implementation of the AudioScheduledSourceNode interface', () => {
                                 expect(oscillatorNode.onended).to.be.null;
                                 expect(oscillatorNode.start).to.be.a('function');
                                 expect(oscillatorNode.stop).to.be.a('function');
                             });
 
-                            it('should return an instance of the ConstantSourceNode interface', () => {
+                            it('should return an implementation of the OscillatorNode interface', () => {
                                 expect(oscillatorNode.detune).not.to.be.undefined;
                                 expect(oscillatorNode.frequency).not.to.be.undefined;
                                 expect(oscillatorNode.setPeriodicWave).to.be.a('function');
@@ -291,7 +295,7 @@ describe('OscillatorNode', () => {
                     oscillatorNode = createOscillatorNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(oscillatorNode.detune.cancelAndHoldAtTime).to.be.a('function');
                     expect(oscillatorNode.detune.cancelScheduledValues).to.be.a('function');
                     expect(oscillatorNode.detune.defaultValue).to.equal(0);
@@ -382,7 +386,7 @@ describe('OscillatorNode', () => {
                     oscillatorNode = createOscillatorNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(oscillatorNode.frequency.cancelAndHoldAtTime).to.be.a('function');
                     expect(oscillatorNode.frequency.cancelScheduledValues).to.be.a('function');
                     expect(oscillatorNode.frequency.defaultValue).to.equal(440);

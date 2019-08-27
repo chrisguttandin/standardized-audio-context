@@ -158,7 +158,13 @@ describe('MediaStreamAudioSourceNode', () => {
 
                             describe('with valid options', () => {
 
-                                it('should return an instance of the EventTarget interface', () => {
+                                it('should return an instance of the MediaStreamAudioSourceNode constructor', () => {
+                                    const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+
+                                    expect(mediaStreamAudioSourceNode).to.be.an.instanceOf(MediaStreamAudioSourceNode);
+                                });
+
+                                it('should return an implementation of the EventTarget interface', () => {
                                     const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
 
                                     expect(mediaStreamAudioSourceNode.addEventListener).to.be.a('function');
@@ -166,7 +172,7 @@ describe('MediaStreamAudioSourceNode', () => {
                                     expect(mediaStreamAudioSourceNode.removeEventListener).to.be.a('function');
                                 });
 
-                                it('should return an instance of the AudioNode interface', () => {
+                                it('should return an implementation of the AudioNode interface', () => {
                                     const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
 
                                     expect(mediaStreamAudioSourceNode.channelCount).to.equal(2);
@@ -179,7 +185,7 @@ describe('MediaStreamAudioSourceNode', () => {
                                     expect(mediaStreamAudioSourceNode.numberOfOutputs).to.equal(1);
                                 });
 
-                                it('should return an instance of the MediaStreamAudioSourceNode interface', () => {
+                                it('should return an implementation of the MediaStreamAudioSourceNode interface', () => {
                                     const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
 
                                     expect(mediaStreamAudioSourceNode.mediaStream).to.be.an.instanceOf(MediaStream);

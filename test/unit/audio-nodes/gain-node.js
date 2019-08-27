@@ -119,13 +119,17 @@ describe('GainNode', () => {
                                 gainNode = createGainNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the GainNode constructor', () => {
+                                expect(gainNode).to.be.an.instanceOf(GainNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(gainNode.addEventListener).to.be.a('function');
                                 expect(gainNode.dispatchEvent).to.be.a('function');
                                 expect(gainNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(gainNode.channelCount).to.equal(2);
                                 expect(gainNode.channelCountMode).to.equal('max');
                                 expect(gainNode.channelInterpretation).to.equal('speakers');
@@ -136,7 +140,7 @@ describe('GainNode', () => {
                                 expect(gainNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the GainNode interface', () => {
+                            it('should return an implementation of the GainNode interface', () => {
                                 expect(gainNode.gain).not.to.be.undefined;
                             });
 
@@ -236,7 +240,7 @@ describe('GainNode', () => {
 
             describe('gain', () => {
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     const gainNode = createGainNode(context);
 
                     expect(gainNode.gain.cancelAndHoldAtTime).to.be.a('function');

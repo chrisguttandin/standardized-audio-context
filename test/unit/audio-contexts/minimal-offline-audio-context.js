@@ -14,15 +14,15 @@ describe('MinimalOfflineAudioContext', () => {
                 minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length: 1, sampleRate: 44100 });
             });
 
-            it('should return an instance of the EventTarget interface', () => {
+            it('should return an implementation of the EventTarget interface', () => {
                 expect(minimalOfflineAudioContext.addEventListener).to.be.a('function');
                 expect(minimalOfflineAudioContext.dispatchEvent).to.be.a('function');
                 expect(minimalOfflineAudioContext.removeEventListener).to.be.a('function');
             });
 
-            // @todo it('should return an instance of the IMinimalBaseAudioContext interface');
+            // @todo it('should return an implementation of the IMinimalBaseAudioContext interface');
 
-            // @todo it('should return an instance of the IMinimalOfflineAudioContext interface');
+            // @todo it('should return an implementation of the IMinimalOfflineAudioContext interface');
 
         });
 
@@ -153,7 +153,7 @@ describe('MinimalOfflineAudioContext', () => {
             sampleRate = 44100;
         });
 
-        it('should be an instance of the AudioDestinationNode interface', () => {
+        it('should be an implementation of the AudioDestinationNode interface', () => {
             const minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length, sampleRate });
             const destination = minimalOfflineAudioContext.destination;
 
@@ -276,7 +276,7 @@ describe('MinimalOfflineAudioContext', () => {
             minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length: 1, sampleRate: 44100 });
         });
 
-        it('should be an instance of the AudioListener interface', () => {
+        it('should be an implementation of the AudioListener interface', () => {
             const listener = minimalOfflineAudioContext.listener;
 
             expect(listener.positionX).not.to.be.undefined;

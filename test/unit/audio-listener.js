@@ -43,7 +43,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.forwardX.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.forwardX.cancelScheduledValues).to.be.a('function');
                     expect(listener.forwardX.defaultValue).to.equal(0);
@@ -134,7 +134,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.forwardY.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.forwardY.cancelScheduledValues).to.be.a('function');
                     expect(listener.forwardY.defaultValue).to.equal(0);
@@ -225,7 +225,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.forwardZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.forwardZ.cancelScheduledValues).to.be.a('function');
                     expect(listener.forwardZ.defaultValue).to.equal(-1);
@@ -316,7 +316,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.positionX.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.positionX.cancelScheduledValues).to.be.a('function');
                     expect(listener.positionX.defaultValue).to.equal(0);
@@ -407,7 +407,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.positionY.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.positionY.cancelScheduledValues).to.be.a('function');
                     expect(listener.positionY.defaultValue).to.equal(0);
@@ -498,7 +498,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.positionZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.positionZ.cancelScheduledValues).to.be.a('function');
                     expect(listener.positionZ.defaultValue).to.equal(0);
@@ -589,7 +589,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.upX.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.upX.cancelScheduledValues).to.be.a('function');
                     expect(listener.upX.defaultValue).to.equal(0);
@@ -680,7 +680,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.upY.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.upY.cancelScheduledValues).to.be.a('function');
                     expect(listener.upY.defaultValue).to.equal(1);
@@ -771,7 +771,7 @@ describe('AudioListener', () => {
                     listener = context.listener;
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(listener.upZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(listener.upZ.cancelScheduledValues).to.be.a('function');
                     expect(listener.upZ.defaultValue).to.equal(0);

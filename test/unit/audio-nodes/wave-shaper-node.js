@@ -122,13 +122,17 @@ describe('WaveShaperNode', () => {
                                 waveShaperNode = createWaveShaperNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the WaveShaperNode constructor', () => {
+                                expect(waveShaperNode).to.be.an.instanceOf(WaveShaperNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(waveShaperNode.addEventListener).to.be.a('function');
                                 expect(waveShaperNode.dispatchEvent).to.be.a('function');
                                 expect(waveShaperNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(waveShaperNode.channelCount).to.equal(2);
                                 expect(waveShaperNode.channelCountMode).to.equal('max');
                                 expect(waveShaperNode.channelInterpretation).to.equal('speakers');
@@ -139,7 +143,7 @@ describe('WaveShaperNode', () => {
                                 expect(waveShaperNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the WaveShaperNode interface', () => {
+                            it('should return an implementation of the WaveShaperNode interface', () => {
                                 expect(waveShaperNode.curve).to.be.null;
                                 expect(waveShaperNode.oversample).to.equal('none');
                             });

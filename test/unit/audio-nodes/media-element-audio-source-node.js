@@ -94,7 +94,13 @@ describe('MediaElementAudioSourceNode', () => {
 
                         describe('with valid options', () => {
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the MediaElementAudioSourceNode constructor', () => {
+                                const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
+
+                                expect(mediaElementAudioSourceNode).to.be.an.instanceOf(MediaElementAudioSourceNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
 
                                 expect(mediaElementAudioSourceNode.addEventListener).to.be.a('function');
@@ -102,7 +108,7 @@ describe('MediaElementAudioSourceNode', () => {
                                 expect(mediaElementAudioSourceNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
 
                                 expect(mediaElementAudioSourceNode.channelCount).to.equal(2);
@@ -115,7 +121,7 @@ describe('MediaElementAudioSourceNode', () => {
                                 expect(mediaElementAudioSourceNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the MediaElementAudioSourceNode interface', () => {
+                            it('should return an implementation of the MediaElementAudioSourceNode interface', () => {
                                 const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
 
                                 expect(mediaElementAudioSourceNode.mediaElement).to.be.an.instanceOf(HTMLMediaElement);

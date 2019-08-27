@@ -123,7 +123,13 @@ describe('AudioWorkletNode', () => {
                                 audioWorkletNode.port.postMessage(null);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the AudioWorkletNode constructor', () => {
+                                const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
+
+                                expect(audioWorkletNode).to.be.an.instanceOf(AudioWorkletNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
 
                                 expect(audioWorkletNode.addEventListener).to.be.a('function');
@@ -131,7 +137,7 @@ describe('AudioWorkletNode', () => {
                                 expect(audioWorkletNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
 
                                 expect(audioWorkletNode.channelCount).to.equal(2);
@@ -145,7 +151,7 @@ describe('AudioWorkletNode', () => {
                                 expect(audioWorkletNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the AudioWorkletNode interface', () => {
+                            it('should return an implementation of the AudioWorkletNode interface', () => {
                                 const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
 
                                 expect(audioWorkletNode.onprocessorerror).to.be.null;
@@ -582,7 +588,7 @@ describe('AudioWorkletNode', () => {
 
             describe('parameters', () => {
 
-                it('should return an instance of the AudioParamMap interface', async function () {
+                it('should return an implementation of the AudioParamMap interface', async function () {
                     this.timeout(10000);
 
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
@@ -620,7 +626,7 @@ describe('AudioWorkletNode', () => {
                         entries = parameters.entries();
                     });
 
-                    it('should return an instance of the Iterator interface', () => {
+                    it('should return an implementation of the Iterator interface', () => {
                         expect(entries.next).to.be.a('function');
                     });
 
@@ -690,7 +696,7 @@ describe('AudioWorkletNode', () => {
                             gain = parameters.get('gain');
                         });
 
-                        it('should return an instance of the AudioParam interface', () => {
+                        it('should return an implementation of the AudioParam interface', () => {
                             expect(gain.cancelAndHoldAtTime).to.be.a('function');
                             expect(gain.cancelScheduledValues).to.be.a('function');
                             expect(gain.defaultValue).to.equal(1);
@@ -813,7 +819,7 @@ describe('AudioWorkletNode', () => {
                         keys = audioWorkletNode.parameters.keys();
                     });
 
-                    it('should return an instance of the Iterator interface', () => {
+                    it('should return an implementation of the Iterator interface', () => {
                         expect(keys.next).to.be.a('function');
                     });
 
@@ -839,7 +845,7 @@ describe('AudioWorkletNode', () => {
                         values = parameters.values();
                     });
 
-                    it('should return an instance of the Iterator interface', () => {
+                    it('should return an implementation of the Iterator interface', () => {
                         expect(values.next).to.be.a('function');
                     });
 

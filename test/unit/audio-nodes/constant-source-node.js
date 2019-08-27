@@ -120,13 +120,17 @@ describe('ConstantSourceNode', () => {
                                 constantSourceNode = createConstantSourceNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the ConstantSourceNode constructor', () => {
+                                expect(constantSourceNode).to.be.an.instanceOf(ConstantSourceNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(constantSourceNode.addEventListener).to.be.a('function');
                                 expect(constantSourceNode.dispatchEvent).to.be.a('function');
                                 expect(constantSourceNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(constantSourceNode.channelCount).to.equal(2);
                                 expect(constantSourceNode.channelCountMode).to.equal('max');
                                 expect(constantSourceNode.channelInterpretation).to.equal('speakers');
@@ -137,13 +141,13 @@ describe('ConstantSourceNode', () => {
                                 expect(constantSourceNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the AudioScheduledSourceNode interface', () => {
+                            it('should return an implementation of the AudioScheduledSourceNode interface', () => {
                                 expect(constantSourceNode.onended).to.be.null;
                                 expect(constantSourceNode.start).to.be.a('function');
                                 expect(constantSourceNode.stop).to.be.a('function');
                             });
 
-                            it('should return an instance of the ConstantSourceNode interface', () => {
+                            it('should return an implementation of the ConstantSourceNode interface', () => {
                                 expect(constantSourceNode.offset).not.to.be.undefined;
                             });
 
@@ -243,7 +247,7 @@ describe('ConstantSourceNode', () => {
 
             describe('offset', () => {
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     const constantSourceNode = createConstantSourceNode(context);
 
                     expect(constantSourceNode.offset.cancelAndHoldAtTime).to.be.a('function');

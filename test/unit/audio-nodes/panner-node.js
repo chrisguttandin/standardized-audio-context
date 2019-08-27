@@ -170,13 +170,17 @@ describe('PannerNode', () => {
                                 pannerNode = createPannerNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the PannerNode constructor', () => {
+                                expect(pannerNode).to.be.an.instanceOf(PannerNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(pannerNode.addEventListener).to.be.a('function');
                                 expect(pannerNode.dispatchEvent).to.be.a('function');
                                 expect(pannerNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(pannerNode.channelCount).to.equal(2);
                                 expect(pannerNode.channelCountMode).to.equal('clamped-max');
                                 expect(pannerNode.channelInterpretation).to.equal('speakers');
@@ -187,7 +191,7 @@ describe('PannerNode', () => {
                                 expect(pannerNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the PannerNode interface', () => {
+                            it('should return an implementation of the PannerNode interface', () => {
                                 expect(pannerNode.coneInnerAngle).to.equal(360);
                                 expect(pannerNode.coneOuterAngle).to.equal(360);
                                 expect(pannerNode.coneOuterGain).to.equal(0);
@@ -639,7 +643,7 @@ describe('PannerNode', () => {
                     pannerNode = createPannerNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(pannerNode.orientationX.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.orientationX.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.orientationX.defaultValue).to.equal(1);
@@ -727,7 +731,7 @@ describe('PannerNode', () => {
                     pannerNode = createPannerNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(pannerNode.orientationY.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.orientationY.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.orientationY.defaultValue).to.equal(0);
@@ -818,7 +822,7 @@ describe('PannerNode', () => {
                     pannerNode = createPannerNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(pannerNode.orientationZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.orientationZ.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.orientationZ.defaultValue).to.equal(0);
@@ -952,7 +956,7 @@ describe('PannerNode', () => {
                     pannerNode = createPannerNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(pannerNode.positionX.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.positionX.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.positionX.defaultValue).to.equal(0);
@@ -1043,7 +1047,7 @@ describe('PannerNode', () => {
                     pannerNode = createPannerNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(pannerNode.positionY.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.positionY.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.positionY.defaultValue).to.equal(0);
@@ -1134,7 +1138,7 @@ describe('PannerNode', () => {
                     pannerNode = createPannerNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(pannerNode.positionZ.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.positionZ.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.positionZ.defaultValue).to.equal(0);

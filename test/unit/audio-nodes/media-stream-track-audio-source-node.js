@@ -164,7 +164,13 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     mediaStreamTrack = mediaStream.getAudioTracks()[0];
                                 });
 
-                                it('should return an instance of the EventTarget interface', () => {
+                                it('should return an instance of the MediaStreamTrackAudioSourceNode constructor', () => {
+                                    const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
+
+                                    expect(mediaStreamTrackAudioSourceNode).to.be.an.instanceOf(MediaStreamTrackAudioSourceNode);
+                                });
+
+                                it('should return an implementation of the EventTarget interface', () => {
                                     const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
 
                                     expect(mediaStreamTrackAudioSourceNode.addEventListener).to.be.a('function');
@@ -172,7 +178,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     expect(mediaStreamTrackAudioSourceNode.removeEventListener).to.be.a('function');
                                 });
 
-                                it('should return an instance of the AudioNode interface', () => {
+                                it('should return an implementation of the AudioNode interface', () => {
                                     const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
 
                                     expect(mediaStreamTrackAudioSourceNode.channelCount).to.equal(2);

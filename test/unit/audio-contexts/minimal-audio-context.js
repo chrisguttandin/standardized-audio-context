@@ -198,7 +198,7 @@ describe('MinimalAudioContext', () => {
 
         describe('destination', () => {
 
-            it('should be an instance of the AudioDestinationNode interface', () => {
+            it('should be an implementation of the AudioDestinationNode interface', () => {
                 const destination = minimalAudioContext.destination;
 
                 expect(destination.channelCount).to.equal(2);
@@ -238,7 +238,7 @@ describe('MinimalAudioContext', () => {
 
         describe('listener', () => {
 
-            it('should be an instance of the AudioListener interface', () => {
+            it('should be an implementation of the AudioListener interface', () => {
                 const listener = minimalAudioContext.listener;
 
                 expect(listener.positionX).not.to.be.undefined;

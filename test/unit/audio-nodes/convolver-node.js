@@ -122,13 +122,17 @@ describe('ConvolverNode', () => {
                                 convolverNode = createConvolverNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the ConvolverNode constructor', () => {
+                                expect(convolverNode).to.be.an.instanceOf(ConvolverNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(convolverNode.addEventListener).to.be.a('function');
                                 expect(convolverNode.dispatchEvent).to.be.a('function');
                                 expect(convolverNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(convolverNode.channelCount).to.equal(2);
                                 expect(convolverNode.channelCountMode).to.equal('clamped-max');
                                 expect(convolverNode.channelInterpretation).to.equal('speakers');
@@ -139,7 +143,7 @@ describe('ConvolverNode', () => {
                                 expect(convolverNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the ConvolverNode interface', () => {
+                            it('should return an implementation of the ConvolverNode interface', () => {
                                 expect(convolverNode.buffer).to.be.null;
                                 expect(convolverNode.normalize).to.be.true;
                             });

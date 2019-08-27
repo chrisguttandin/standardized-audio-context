@@ -116,13 +116,17 @@ describe('ChannelSplitterNode', () => {
                                 channelSplitterNode = createChannelSplitterNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the ChannelSplitterNode constructor', () => {
+                                expect(channelSplitterNode).to.be.an.instanceOf(ChannelSplitterNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(channelSplitterNode.addEventListener).to.be.a('function');
                                 expect(channelSplitterNode.dispatchEvent).to.be.a('function');
                                 expect(channelSplitterNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(channelSplitterNode.channelCount).to.equal(6);
                                 expect(channelSplitterNode.channelCountMode).to.equal('explicit');
                                 expect(channelSplitterNode.channelInterpretation).to.equal('discrete');

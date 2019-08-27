@@ -151,7 +151,7 @@ describe('AudioContext', () => {
 
         describe('audioWorklet', () => {
 
-            it('should be an instance of the AudioWorklet interface', () => {
+            it('should be an implementation of the AudioWorklet interface', () => {
                 const audioWorklet = audioContext.audioWorklet;
 
                 expect(audioWorklet.addModule).to.be.a('function');
@@ -208,7 +208,7 @@ describe('AudioContext', () => {
 
         describe('destination', () => {
 
-            it('should be an instance of the AudioDestinationNode interface', () => {
+            it('should be an implementation of the AudioDestinationNode interface', () => {
                 const destination = audioContext.destination;
 
                 expect(destination.channelCount).to.equal(2);
@@ -248,7 +248,7 @@ describe('AudioContext', () => {
 
         describe('listener', () => {
 
-            it('should be an instance of the AudioListener interface', () => {
+            it('should be an implementation of the AudioListener interface', () => {
                 const listener = audioContext.listener;
 
                 expect(listener.positionX).not.to.be.undefined;

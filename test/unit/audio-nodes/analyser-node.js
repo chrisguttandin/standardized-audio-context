@@ -130,13 +130,17 @@ describe('AnalyserNode', () => {
                                 analyserNode = createAnalyserNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the AnalyserNode constructor', () => {
+                                expect(analyserNode).to.be.an.instanceOf(AnalyserNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(analyserNode.addEventListener).to.be.a('function');
                                 expect(analyserNode.dispatchEvent).to.be.a('function');
                                 expect(analyserNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(analyserNode.channelCount).to.equal(2);
                                 expect(analyserNode.channelCountMode).to.equal('max');
                                 expect(analyserNode.channelInterpretation).to.equal('speakers');
@@ -147,7 +151,7 @@ describe('AnalyserNode', () => {
                                 expect(analyserNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the AnalyserNode interface', () => {
+                            it('should return an implementation of the AnalyserNode interface', () => {
                                 expect(analyserNode.fftSize).to.equal(2048);
                                 expect(analyserNode.frequencyBinCount).to.equal(1024);
                                 expect(analyserNode.getByteFrequencyData).to.be.a('function');

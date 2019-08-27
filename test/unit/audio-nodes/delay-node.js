@@ -119,13 +119,17 @@ describe('DelayNode', () => {
                                 delayNode = createDelayNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the DelayNode constructor', () => {
+                                expect(delayNode).to.be.an.instanceOf(DelayNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(delayNode.addEventListener).to.be.a('function');
                                 expect(delayNode.dispatchEvent).to.be.a('function');
                                 expect(delayNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(delayNode.channelCount).to.equal(2);
                                 expect(delayNode.channelCountMode).to.equal('max');
                                 expect(delayNode.channelInterpretation).to.equal('speakers');
@@ -136,7 +140,7 @@ describe('DelayNode', () => {
                                 expect(delayNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the DelayNode interface', () => {
+                            it('should return an implementation of the DelayNode interface', () => {
                                 expect(delayNode.delayTime).not.to.be.undefined;
                             });
 
@@ -256,7 +260,7 @@ describe('DelayNode', () => {
 
             describe('delayTime', () => {
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     const delayNode = createDelayNode(context);
 
                     expect(delayNode.delayTime.cancelAndHoldAtTime).to.be.a('function');

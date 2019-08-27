@@ -134,13 +134,17 @@ describe('BiquadFilterNode', () => {
                                 biquadFilterNode = createBiquadFilterNode(context);
                             });
 
-                            it('should return an instance of the EventTarget interface', () => {
+                            it('should return an instance of the BiquadFilterNode constructor', () => {
+                                expect(biquadFilterNode).to.be.an.instanceOf(BiquadFilterNode);
+                            });
+
+                            it('should return an implementation of the EventTarget interface', () => {
                                 expect(biquadFilterNode.addEventListener).to.be.a('function');
                                 expect(biquadFilterNode.dispatchEvent).to.be.a('function');
                                 expect(biquadFilterNode.removeEventListener).to.be.a('function');
                             });
 
-                            it('should return an instance of the AudioNode interface', () => {
+                            it('should return an implementation of the AudioNode interface', () => {
                                 expect(biquadFilterNode.channelCount).to.equal(2);
                                 expect(biquadFilterNode.channelCountMode).to.equal('max');
                                 expect(biquadFilterNode.channelInterpretation).to.equal('speakers');
@@ -151,7 +155,7 @@ describe('BiquadFilterNode', () => {
                                 expect(biquadFilterNode.numberOfOutputs).to.equal(1);
                             });
 
-                            it('should return an instance of the BiquadFilterNode interface', () => {
+                            it('should return an implementation of the BiquadFilterNode interface', () => {
                                 expect(biquadFilterNode.detune).not.to.be.undefined;
                                 expect(biquadFilterNode.frequency).not.to.be.undefined;
                                 expect(biquadFilterNode.gain).not.to.be.undefined;
@@ -290,7 +294,7 @@ describe('BiquadFilterNode', () => {
                     biquadFilterNode = createBiquadFilterNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(biquadFilterNode.detune.cancelAndHoldAtTime).to.be.a('function');
                     expect(biquadFilterNode.detune.cancelScheduledValues).to.be.a('function');
                     expect(biquadFilterNode.detune.defaultValue).to.equal(0);
@@ -381,7 +385,7 @@ describe('BiquadFilterNode', () => {
                     biquadFilterNode = createBiquadFilterNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(biquadFilterNode.frequency.cancelAndHoldAtTime).to.be.a('function');
                     expect(biquadFilterNode.frequency.cancelScheduledValues).to.be.a('function');
                     expect(biquadFilterNode.frequency.defaultValue).to.equal(350);
@@ -469,7 +473,7 @@ describe('BiquadFilterNode', () => {
                     biquadFilterNode = createBiquadFilterNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(biquadFilterNode.gain.cancelAndHoldAtTime).to.be.a('function');
                     expect(biquadFilterNode.gain.cancelScheduledValues).to.be.a('function');
                     expect(biquadFilterNode.gain.defaultValue).to.equal(0);
@@ -585,7 +589,7 @@ describe('BiquadFilterNode', () => {
                     biquadFilterNode = createBiquadFilterNode(context);
                 });
 
-                it('should return an instance of the AudioParam interface', () => {
+                it('should return an implementation of the AudioParam interface', () => {
                     expect(biquadFilterNode.Q.cancelAndHoldAtTime).to.be.a('function');
                     expect(biquadFilterNode.Q.cancelScheduledValues).to.be.a('function');
                     expect(biquadFilterNode.Q.defaultValue).to.equal(1);
