@@ -497,6 +497,26 @@ describe('AudioWorkletNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let audioWorkletNode;
+
+                beforeEach(async function () {
+                    this.timeout(10000);
+
+                    await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+
+                    audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        audioWorkletNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let audioWorkletNode;

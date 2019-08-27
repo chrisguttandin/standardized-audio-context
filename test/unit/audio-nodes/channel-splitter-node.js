@@ -225,6 +225,22 @@ describe('ChannelSplitterNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let channelSplitterNode;
+
+                beforeEach(() => {
+                    channelSplitterNode = createChannelSplitterNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        channelSplitterNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let channelSplitterNode;

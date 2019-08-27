@@ -310,6 +310,22 @@ describe('StereoPannerNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let stereoPannerNode;
+
+                beforeEach(() => {
+                    stereoPannerNode = createStereoPannerNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        stereoPannerNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let stereoPannerNode;

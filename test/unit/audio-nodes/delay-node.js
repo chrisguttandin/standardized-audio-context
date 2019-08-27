@@ -594,6 +594,22 @@ describe('DelayNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let delayNode;
+
+                beforeEach(() => {
+                    delayNode = createDelayNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        delayNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let delayNode;

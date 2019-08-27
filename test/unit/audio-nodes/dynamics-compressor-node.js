@@ -520,6 +520,22 @@ describe('DynamicsCompressorNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let dynamicsCompressorNode;

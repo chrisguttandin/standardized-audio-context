@@ -466,6 +466,22 @@ describe('OscillatorNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let oscillatorNode;
+
+                beforeEach(() => {
+                    oscillatorNode = createOscillatorNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        oscillatorNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let oscillatorNode;

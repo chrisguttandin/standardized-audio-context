@@ -556,6 +556,22 @@ describe('BiquadFilterNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let biquadFilterNode;
+
+                beforeEach(() => {
+                    biquadFilterNode = createBiquadFilterNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        biquadFilterNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let biquadFilterNode;

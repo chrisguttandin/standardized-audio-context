@@ -421,6 +421,22 @@ describe('AnalyserNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let analyserNode;
+
+                beforeEach(() => {
+                    analyserNode = createAnalyserNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        analyserNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let analyserNode;

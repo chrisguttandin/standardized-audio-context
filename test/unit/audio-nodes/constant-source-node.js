@@ -245,6 +245,22 @@ describe('ConstantSourceNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let constantSourceNode;
+
+                beforeEach(() => {
+                    constantSourceNode = createConstantSourceNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        constantSourceNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let constantSourceNode;

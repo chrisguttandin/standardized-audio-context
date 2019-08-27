@@ -442,6 +442,22 @@ describe('MediaStreamAudioSourceNode', () => {
 
                 });
 
+                describe('numberOfInputs', () => {
+
+                    let mediaStreamAudioSourceNode;
+
+                    beforeEach(() => {
+                        mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
+                    });
+
+                    it('should be readonly', () => {
+                        expect(() => {
+                            mediaStreamAudioSourceNode.numberOfInputs = 2;
+                        }).to.throw(TypeError);
+                    });
+
+                });
+
                 describe('numberOfOutputs', () => {
 
                     let mediaStreamAudioSourceNode;

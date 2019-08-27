@@ -635,6 +635,22 @@ describe('PannerNode', () => {
 
             });
 
+            describe('numberOfInputs', () => {
+
+                let pannerNode;
+
+                beforeEach(() => {
+                    pannerNode = createPannerNode(context);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        pannerNode.numberOfInputs = 2;
+                    }).to.throw(TypeError);
+                });
+
+            });
+
             describe('numberOfOutputs', () => {
 
                 let pannerNode;
