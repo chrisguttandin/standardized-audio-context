@@ -93,12 +93,6 @@ describe('offlineAudioContextConstructor', () => {
             channelMergerNode.channelCountMode = '2';
         });
 
-        it('should allow to set the channelCountMode', () => {
-            const channelMergerNode = offlineAudioContext.createChannelMerger();
-
-            channelMergerNode.channelCountMode = 'max';
-        });
-
     });
 
     describe('createDynamicsCompressor()', () => {
