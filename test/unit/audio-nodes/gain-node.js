@@ -749,7 +749,7 @@ describe('GainNode', () => {
                                  * check for the startRendering() method is necessary.
                                  * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                                  */
-                                if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || isSafari(navigator))) {
+                                if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
                                     return nativeContext.close();
                                 }
                             });

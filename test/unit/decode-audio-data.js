@@ -5,7 +5,6 @@ import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offli
 import { createNativeAudioContext } from '../helper/create-native-audio-context';
 import { createNativeOfflineAudioContext } from '../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
-import { isSafari } from '../helper/is-safari';
 import { loadFixture } from '../helper/load-fixture';
 import { spy } from 'sinon';
 import { decodeAudioData as standaloneDecodeAudioData } from '../../src/module';
@@ -65,7 +64,7 @@ describe('decodeAudioData()', () => {
                  * startRendering() method is necessary.
                  * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                  */
-                if (context.close !== undefined && (context.startRendering === undefined || isSafari(navigator))) {
+                if (context.close !== undefined && (context.startRendering === undefined || !context.constructor.name.includes('Offline'))) {
                     return context.close();
                 }
             });

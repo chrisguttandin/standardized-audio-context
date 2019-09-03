@@ -8,7 +8,6 @@ import { createNativeAudioContext } from '../../helper/create-native-audio-conte
 import { createNativeOfflineAudioContext } from '../../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
-import { isSafari } from '../../helper/is-safari';
 
 const createChannelSplitterNodeWithConstructor = (context, options = null) => {
     if (options === null) {
@@ -395,7 +394,7 @@ describe('ChannelSplitterNode', () => {
                                  * check for the startRendering() method is necessary.
                                  * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                                  */
-                                if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || isSafari(navigator))) {
+                                if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
                                     return nativeContext.close();
                                 }
                             });
