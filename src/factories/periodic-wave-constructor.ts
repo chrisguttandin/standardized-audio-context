@@ -26,7 +26,7 @@ export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (c
         }
 
         public static [ Symbol.hasInstance ] (instance: unknown): boolean {
-            return periodicWaveStore.has(<any> instance);
+            return (instance instanceof PeriodicWave) || (periodicWaveStore.has(<any> instance));
         }
 
     };
