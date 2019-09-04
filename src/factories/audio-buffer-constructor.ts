@@ -102,7 +102,8 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
         }
 
         public static [ Symbol.hasInstance ] (instance: unknown): boolean {
-            return (Object.getPrototypeOf(instance) === AudioBuffer.prototype) || (audioBufferStore.has(<any> instance));
+            return (instance !== null && typeof instance === 'object' && Object.getPrototypeOf(instance) === AudioBuffer.prototype)
+                || (audioBufferStore.has(<any> instance));
         }
 
     };
