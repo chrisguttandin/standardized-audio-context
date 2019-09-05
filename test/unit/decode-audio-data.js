@@ -5,7 +5,7 @@ import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offli
 import { createNativeAudioContext } from '../helper/create-native-audio-context';
 import { createNativeOfflineAudioContext } from '../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
-import { loadFixture } from '../helper/load-fixture';
+import { loadFixtureAsArrayBuffer } from '../helper/load-fixture';
 import { spy } from 'sinon';
 import { decodeAudioData as standaloneDecodeAudioData } from '../../src/module';
 
@@ -127,17 +127,11 @@ describe('decodeAudioData()', () => {
 
                 let arrayBuffer;
 
-                beforeEach(function (done) {
+                beforeEach(async function () {
                     this.timeout(10000);
 
                     // PNG files are not supported by any browser :-)
-                    loadFixture('one-pixel-of-transparency.png', (err, rrBffr) => {
-                        expect(err).to.be.null;
-
-                        arrayBuffer = rrBffr;
-
-                        done();
-                    });
+                    arrayBuffer = await loadFixtureAsArrayBuffer('one-pixel-of-transparency.png');
                 });
 
                 it('should throw an error', function (done) {
@@ -188,16 +182,11 @@ describe('decodeAudioData()', () => {
 
                 let arrayBuffer;
 
-                beforeEach(function (done) {
+                beforeEach(async function () {
                     this.timeout(10000);
 
-                    loadFixture('1000-frames-of-noise-stereo.wav', (err, rrBffr) => {
-                        expect(err).to.be.null;
-
-                        arrayBuffer = rrBffr;
-
-                        done();
-                    });
+                    // PNG files are not supported by any browser :-)
+                    arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
                 });
 
                 it('should resolve to the promise', function () {

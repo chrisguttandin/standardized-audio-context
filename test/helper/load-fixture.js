@@ -1,13 +1,2 @@
-export const loadFixture = (fixture, callback) => {
-    const request = new XMLHttpRequest();
-
-    request.onerror = () => {
-        callback('request-failed');
-    };
-    request.onload = (event) => {
-        callback(null, event.target.response);
-    };
-    request.open('GET', 'base/test/fixtures/' + fixture);
-    request.responseType = 'arraybuffer';
-    request.send();
-};
+export const loadFixtureAsArrayBuffer = (fixture) => fetch(`/base/test/fixtures/${ fixture }`)
+    .then((response) => response.arrayBuffer());

@@ -1,5 +1,5 @@
 import { spy, stub } from 'sinon';
-import { loadFixture } from '../../../helper/load-fixture';
+import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 
 describe('offlineAudioContextConstructor', () => {
 
@@ -861,18 +861,14 @@ describe('offlineAudioContextConstructor', () => {
 
         // bug #1
 
-        it('should require the success callback function as a parameter', function (done) {
+        it('should require the success callback function as a parameter', async function () {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
-                expect(err).to.be.null;
+            const arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
 
-                expect(() => {
-                    offlineAudioContext.decodeAudioData(arrayBuffer);
-                }).to.throw(TypeError, 'Not enough arguments');
-
-                done();
-            });
+            expect(() => {
+                offlineAudioContext.decodeAudioData(arrayBuffer);
+            }).to.throw(TypeError, 'Not enough arguments');
         });
 
         // bug #4
@@ -881,15 +877,14 @@ describe('offlineAudioContextConstructor', () => {
             this.timeout(10000);
 
             // PNG files are not supported by any browser :-)
-            loadFixture('one-pixel-of-transparency.png', (err, arrayBuffer) => {
-                expect(err).to.be.null;
+            loadFixtureAsArrayBuffer('one-pixel-of-transparency.png')
+                .then((arrayBuffer) => {
+                    offlineAudioContext.decodeAudioData(arrayBuffer, () => {}, (err) => {
+                        expect(err).to.be.null;
 
-                offlineAudioContext.decodeAudioData(arrayBuffer, () => {}, (rr) => {
-                    expect(rr).to.be.null;
-
-                    done();
+                        done();
+                    });
                 });
-            });
         });
 
         // bug #5
@@ -897,30 +892,25 @@ describe('offlineAudioContextConstructor', () => {
         it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
-                expect(err).to.be.null;
+            loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
+                .then((arrayBuffer) => {
+                    offlineAudioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
+                        expect(audioBuffer.copyFromChannel).to.be.undefined;
+                        expect(audioBuffer.copyToChannel).to.be.undefined;
 
-                offlineAudioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
-                    expect(audioBuffer.copyFromChannel).to.be.undefined;
-                    expect(audioBuffer.copyToChannel).to.be.undefined;
-
-                    done();
+                        done();
+                    });
                 });
-            });
         });
 
         // bug #21
 
-        it('should not return a promise', function (done) {
+        it('should not return a promise', async function () {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
-                expect(err).to.be.null;
+            const arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
 
-                expect(offlineAudioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
-
-                done();
-            });
+            expect(offlineAudioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
         });
 
         // bug #26
@@ -938,15 +928,14 @@ describe('offlineAudioContextConstructor', () => {
         it('should not throw a DataCloneError', function (done) {
             this.timeout(10000);
 
-            loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
-                expect(err).to.be.null;
-
-                offlineAudioContext
-                    .decodeAudioData(arrayBuffer, () => {
-                        offlineAudioContext
-                            .decodeAudioData(arrayBuffer, () => done());
-                    });
-            });
+            loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
+                .then((arrayBuffer) => {
+                    offlineAudioContext
+                        .decodeAudioData(arrayBuffer, () => {
+                            offlineAudioContext
+                                .decodeAudioData(arrayBuffer, () => done());
+                        });
+                });
         });
 
     });

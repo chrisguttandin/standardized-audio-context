@@ -1,4 +1,4 @@
-import { loadFixture } from '../../../helper/load-fixture';
+import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 
 describe('audioContextConstructor', () => {
@@ -312,19 +312,18 @@ describe('audioContextConstructor', () => {
             it('should not throw a DataCloneError', function (done) {
                 this.timeout(10000);
 
-                loadFixture('1000-frames-of-noise-stereo.wav', (err, arrayBuffer) => {
-                    expect(err).to.be.null;
+                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
+                    .then((arrayBuffer) => {
+                        audioContext
+                            .decodeAudioData(arrayBuffer)
+                            .then(() => audioContext.decodeAudioData(arrayBuffer))
+                            .catch((err) => {
+                                expect(err.code).to.not.equal(25);
+                                expect(err.name).to.not.equal('DataCloneError');
 
-                    audioContext
-                        .decodeAudioData(arrayBuffer)
-                        .then(() => audioContext.decodeAudioData(arrayBuffer))
-                        .catch((err_) => {
-                            expect(err_.code).to.not.equal(25);
-                            expect(err_.name).to.not.equal('DataCloneError');
-
-                            done();
-                        });
-                });
+                                done();
+                            });
+                    });
             });
 
         });

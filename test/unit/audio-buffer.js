@@ -7,7 +7,7 @@ import { createNativeAudioContext } from '../helper/create-native-audio-context'
 import { createNativeOfflineAudioContext } from '../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
 import { isSafari } from '../helper/is-safari';
-import { loadFixture } from '../helper/load-fixture';
+import { loadFixtureAsArrayBuffer } from '../helper/load-fixture';
 
 const createAudioBufferWithDecodeAudioDataPromiseFunction = (context, { length, numberOfChannels = 1, sampleRate }) => {
     if (length !== 1000) {
@@ -22,17 +22,8 @@ const createAudioBufferWithDecodeAudioDataPromiseFunction = (context, { length, 
         throw new Error("The sampleRate can't be changed when creating an AudioBuffer through decoding.");
     }
 
-    return new Promise((resolve, reject) => {
-        loadFixture('1000-frames-of-noise-mono.wav', (err, arrayBuffer) => {
-            if (err === null) {
-                context
-                    .decodeAudioData(arrayBuffer)
-                    .then(resolve, reject);
-            } else {
-                reject(err);
-            }
-        });
-    });
+    return loadFixtureAsArrayBuffer('1000-frames-of-noise-mono.wav')
+        .then((arrayBuffer) => context.decodeAudioData(arrayBuffer));
 };
 const createAudioBufferWithDecodeAudioDataSuccessCallbackFunction = (context, { length, numberOfChannels = 1, sampleRate }) => {
     if (length !== 1000) {
@@ -47,15 +38,8 @@ const createAudioBufferWithDecodeAudioDataSuccessCallbackFunction = (context, { 
         throw new Error("The sampleRate can't be changed when creating an AudioBuffer through decoding.");
     }
 
-    return new Promise((resolve, reject) => {
-        loadFixture('1000-frames-of-noise-mono.wav', (err, arrayBuffer) => {
-            if (err === null) {
-                context.decodeAudioData(arrayBuffer, resolve, reject);
-            } else {
-                reject(err);
-            }
-        });
-    });
+    return loadFixtureAsArrayBuffer('1000-frames-of-noise-mono.wav')
+        .then((arrayBuffer) => context.decodeAudioData(arrayBuffer));
 };
 const createAudioBufferWithConstructor = (_, { length, numberOfChannels = 1, sampleRate }) => {
     return Promise.resolve(new AudioBuffer({ length, numberOfChannels, sampleRate }));
