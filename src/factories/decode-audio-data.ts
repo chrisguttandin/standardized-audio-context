@@ -13,11 +13,9 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     isNativeContext,
     isNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    testAudioBufferCopyChannelMethodsSubarraySupport,
     testPromiseSupport,
     wrapAudioBufferCopyChannelMethods,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds,
-    wrapAudioBufferCopyChannelMethodsSubarray
+    wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
     return (anyContext, audioData) => {
         const nativeContext = isNativeContext(anyContext) ? anyContext : getNativeContext(anyContext);
@@ -58,15 +56,8 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
 
             return promise
                 .then((audioBuffer) => {
-                    // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
-                    if (!cacheTestResult(
-                        testAudioBufferCopyChannelMethodsSubarraySupport,
-                        () => testAudioBufferCopyChannelMethodsSubarraySupport(audioBuffer)
-                    )) {
-                        wrapAudioBufferCopyChannelMethodsSubarray(audioBuffer);
-                        wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
                     // Bug #157: No browser does allow the bufferOffset to be out-of-bounds.
-                    } else if (!cacheTestResult(
+                    if (!cacheTestResult(
                         testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
                         () => testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
                     )) {

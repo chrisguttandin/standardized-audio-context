@@ -121,6 +121,9 @@ import { createStereoPannerNodeConstructor } from './factories/stereo-panner-nod
 import { createStereoPannerNodeRendererFactory } from './factories/stereo-panner-node-renderer-factory';
 import { createTestAudioBufferConstructorSupport } from './factories/test-audio-buffer-constructor-support';
 import {
+    createTestAudioBufferCopyChannelMethodsSubarraySupport
+} from './factories/test-audio-buffer-copy-channel-methods-subarray-support';
+import {
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport
 } from './factories/test-audio-buffer-source-node-start-method-consecutive-calls-support';
 import {
@@ -159,7 +162,6 @@ import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-nod
 import { createWindow } from './factories/window';
 import { createWrapAudioBufferCopyChannelMethods } from './factories/wrap-audio-buffer-copy-channel-methods';
 import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
-import { createWrapAudioBufferCopyChannelMethodsSubarray } from './factories/wrap-audio-buffer-copy-channel-methods-subarray';
 import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
@@ -177,7 +179,6 @@ import { getValueForKey } from './helpers/get-value-for-key';
 import {
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport
 } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
-import { testAudioBufferCopyChannelMethodsSubarraySupport } from './helpers/test-audio-buffer-copy-channel-methods-subarray-support';
 import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
@@ -284,10 +285,6 @@ const nativeAudioBufferConstructor = createNativeAudioBufferConstructor(window);
 const convertNumberToUnsignedLong = createConvertNumberToUnsignedLong(new Uint32Array(1));
 const wrapAudioBufferCopyChannelMethods = createWrapAudioBufferCopyChannelMethods(convertNumberToUnsignedLong, createIndexSizeError);
 const wrapAudioBufferCopyChannelMethodsOutOfBounds = createWrapAudioBufferCopyChannelMethodsOutOfBounds(convertNumberToUnsignedLong);
-const wrapAudioBufferCopyChannelMethodsSubarray = createWrapAudioBufferCopyChannelMethodsSubarray(
-    convertNumberToUnsignedLong,
-    createIndexSizeError
-);
 const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstructor(
     AUDIO_BUFFER_STORE,
     cacheTestResult,
@@ -296,8 +293,7 @@ const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstru
     nativeOfflineAudioContextConstructor,
     createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor),
     wrapAudioBufferCopyChannelMethods,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds,
-    wrapAudioBufferCopyChannelMethodsSubarray
+    wrapAudioBufferCopyChannelMethodsOutOfBounds
 );
 
 type audioBufferConstructor = IAudioBuffer;
@@ -577,11 +573,9 @@ export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     isNativeContext,
     isNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    testAudioBufferCopyChannelMethodsSubarraySupport,
     testPromiseSupport,
     wrapAudioBufferCopyChannelMethods,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds,
-    wrapAudioBufferCopyChannelMethodsSubarray
+    wrapAudioBufferCopyChannelMethodsOutOfBounds
 );
 
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
@@ -771,10 +765,8 @@ const startRendering = createStartRendering(
     cacheTestResult,
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    testAudioBufferCopyChannelMethodsSubarraySupport,
     wrapAudioBufferCopyChannelMethods,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds,
-    wrapAudioBufferCopyChannelMethodsSubarray
+    wrapAudioBufferCopyChannelMethodsOutOfBounds
 );
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     cacheTestResult,
@@ -830,6 +822,7 @@ export const isAnyOfflineAudioContext = createIsAnyOfflineAudioContext(CONTEXT_S
 
 export const isSupported = () => createIsSupportedPromise(
     cacheTestResult,
+    createTestAudioBufferCopyChannelMethodsSubarraySupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),

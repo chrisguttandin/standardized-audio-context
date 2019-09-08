@@ -10,7 +10,6 @@ import { TNativeContext } from './native-context';
 import { TNativeOfflineAudioContextConstructor } from './native-offline-audio-context-constructor';
 import { TWrapAudioBufferCopyChannelMethodsFunction } from './wrap-audio-buffer-copy-channel-methods-function';
 import { TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction } from './wrap-audio-buffer-copy-channel-methods-out-of-bounds-function';
-import { TWrapAudioBufferCopyChannelMethodsSubarrayFunction } from './wrap-audio-buffer-copy-channel-methods-subarray-function';
 
 export type TDecodeAudioDataFactory = (
     audioBufferStore: TAudioBufferStore,
@@ -21,9 +20,7 @@ export type TDecodeAudioDataFactory = (
     isNativeContext: TIsNativeContextFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport: (nativeAudioBuffer: TNativeAudioBuffer) => boolean,
-    testAudioBufferCopyChannelMethodsSubarraySupport: (nativeAudioBuffer: TNativeAudioBuffer) => boolean,
     testPromiseSupport: (nativeContext: TNativeContext) => boolean,
     wrapAudioBufferCopyChannelMethods: TWrapAudioBufferCopyChannelMethodsFunction,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds: TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction,
-    wrapAudioBufferCopyChannelMethodsSubarray: TWrapAudioBufferCopyChannelMethodsSubarrayFunction
+    wrapAudioBufferCopyChannelMethodsOutOfBounds: TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction
 ) => TDecodeAudioDataFunction;

@@ -2,6 +2,7 @@ import { TIsSupportedPromiseFactory } from '../types';
 
 export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     cacheTestResult,
+    testAudioBufferCopyChannelMethodsSubarraySupport,
     testAudioContextCloseMethodSupport,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
     testAudioContextOptionsSupport,
@@ -13,7 +14,8 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testStereoPannerNodeDefaultValueSupport,
     testTransferablesSupport
 ) => {
-    if (cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport)
+    if (cacheTestResult(testAudioBufferCopyChannelMethodsSubarraySupport, testAudioBufferCopyChannelMethodsSubarraySupport)
+            && cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport)
             && cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport)
             && cacheTestResult(testChannelSplitterNodeChannelCountSupport, testChannelSplitterNodeChannelCountSupport)
             && cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport)

@@ -1,7 +1,6 @@
 import {
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport
 } from '../helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
-import { testAudioBufferCopyChannelMethodsSubarraySupport } from '../helpers/test-audio-buffer-copy-channel-methods-subarray-support';
 import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffer-get-channel-data-method';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
 import { TAudioBufferConstructorFactory, TNativeOfflineAudioContext } from '../types';
@@ -18,8 +17,7 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
     nativeOfflineAudioContextConstructor,
     testNativeAudioBufferConstructorSupport,
     wrapAudioBufferCopyChannelMethods,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds,
-    wrapAudioBufferCopyChannelMethodsSubarray
+    wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
 
     let nativeOfflineAudioContext: null | TNativeOfflineAudioContext = null;
@@ -77,13 +75,6 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
             if (typeof audioBuffer.copyFromChannel !== 'function') {
                 wrapAudioBufferCopyChannelMethods(audioBuffer);
                 wrapAudioBufferGetChannelDataMethod(audioBuffer);
-            // Bug #42: Firefox does not yet fully support copyFromChannel() and copyToChannel().
-            } else if (!cacheTestResult(
-                testAudioBufferCopyChannelMethodsSubarraySupport,
-                () => testAudioBufferCopyChannelMethodsSubarraySupport(audioBuffer)
-            )) {
-                wrapAudioBufferCopyChannelMethodsSubarray(audioBuffer);
-                wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
             // Bug #157: No browser does allow the bufferOffset to be out-of-bounds.
             } else if (!cacheTestResult(
                 testAudioBufferCopyChannelMethodsOutOfBoundsSupport,

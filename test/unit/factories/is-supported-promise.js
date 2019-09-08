@@ -6,6 +6,7 @@ import { createIsSupportedPromise } from '../../../src/factories/is-supported-pr
 describe('createIsSupportedPromise()', () => {
 
     let cacheTestResult;
+    let fakeTestAudioBufferCopyChannelMethodsSubarraySupport;
     let fakeTestAudioContextCloseMethodSupport;
     let fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport;
     let fakeTestAudioContextOptionsSupport;
@@ -18,6 +19,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestTransferablesSupport;
 
     afterEach(() => {
+        TEST_RESULTS.delete(fakeTestAudioBufferCopyChannelMethodsSubarraySupport);
         TEST_RESULTS.delete(fakeTestAudioContextCloseMethodSupport);
         TEST_RESULTS.delete(fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport);
         TEST_RESULTS.delete(fakeTestAudioContextOptionsSupport);
@@ -32,6 +34,7 @@ describe('createIsSupportedPromise()', () => {
 
     beforeEach(() => {
         cacheTestResult = createCacheTestResult(new Map());
+        fakeTestAudioBufferCopyChannelMethodsSubarraySupport = () => true;
         fakeTestAudioContextCloseMethodSupport = () => true;
         fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.resolve(true);
         fakeTestAudioContextOptionsSupport = () => true;
@@ -47,6 +50,7 @@ describe('createIsSupportedPromise()', () => {
     it('should resolve to true if all test pass', async () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -62,11 +66,33 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.true;
     });
 
+    it('should resolve to false if the test for copyFromChannel and copyToChannel methods subarray support of an AudioBuffer fails', async () => {
+        fakeTestAudioBufferCopyChannelMethodsSubarraySupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelSplitterNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
     it('should resolve to false if the test for close support fails', async () => {
         fakeTestAudioContextCloseMethodSupport = () => false;
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -87,6 +113,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -107,6 +134,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -127,6 +155,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -147,6 +176,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -167,6 +197,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -187,6 +218,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -207,6 +239,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -227,6 +260,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
@@ -247,6 +281,7 @@ describe('createIsSupportedPromise()', () => {
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
