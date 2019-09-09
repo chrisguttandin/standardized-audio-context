@@ -6,13 +6,8 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
     createNativeGainNode
 ) => {
     return (nativeContext, { offset, ...audioNodeOptions }) => {
-        const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext);
-        /*
-         * @todo Edge will throw a NotSupportedError when calling createBuffer() on a closed context. That's why the audioBuffer is created
-         * after the audioBufferSourceNode in this case. If the context is closed createNativeAudioBufferSourceNode() will throw the
-         * expected error and createBuffer() never gets called.
-         */
         const audioBuffer = nativeContext.createBuffer(1, 2, nativeContext.sampleRate);
+        const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext);
         const gainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: offset });
 
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
