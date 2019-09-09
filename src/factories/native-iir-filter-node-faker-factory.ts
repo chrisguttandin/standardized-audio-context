@@ -80,7 +80,6 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
             const xBuffer = new Float32Array(bufferLength);
             const yBuffer = new Float32Array(bufferLength);
 
-            // @todo Add a test which checks support for TypedArray.prototype.fill().
             xBuffer.fill(0);
             yBuffer.fill(0);
 

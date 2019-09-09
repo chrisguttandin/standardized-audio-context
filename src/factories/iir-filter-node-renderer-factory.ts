@@ -48,7 +48,6 @@ const filterFullBuffer = (
         const input = renderedBuffer.getChannelData(i);
         const output = filteredBuffer.getChannelData(i);
 
-        // @todo Add a test which checks support for TypedArray.prototype.fill().
         xBuffer.fill(0);
         yBuffer.fill(0);
 
