@@ -33,7 +33,7 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
 
             super(context, 'passive', nativeDelayNode, delayNodeRenderer);
 
-            // @todo Edge does not export the correct values for maxValue and minValue.
+            // Bug #161: Edge does not export the correct values for maxValue and minValue.
             this._delayTime = createAudioParam(
                 this,
                 isOffline,

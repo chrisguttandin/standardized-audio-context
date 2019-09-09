@@ -632,6 +632,40 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createDelay()', () => {
+
+            describe('delayTime', () => {
+
+                let delayNode;
+
+                beforeEach(() => {
+                    delayNode = audioContext.createDelay();
+                });
+
+                describe('maxValue', () => {
+
+                    // bug #161
+
+                    it('should be undefined', () => {
+                        expect(delayNode.delayTime.maxValue).to.be.undefined;
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #161
+
+                    it('should be undefined', () => {
+                        expect(delayNode.delayTime.minValue).to.be.undefined;
+                    });
+
+                });
+
+            });
+
+        });
+
         describe('createGain()', () => {
 
             describe('gain', () => {
