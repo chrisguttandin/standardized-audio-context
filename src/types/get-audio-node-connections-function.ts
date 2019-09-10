@@ -1,5 +1,4 @@
-import { IAudioNode, IAudioNodeConnections, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
+import { TAudioNodeConnections } from './audio-node-connections';
 
-export type TGetAudioNodeConnectionsFunction = <T extends IMinimalBaseAudioContext>(
-    audioNode: IAudioNode<T>
-) => Readonly<IAudioNodeConnections<T>>;
+export type TGetAudioNodeConnectionsFunction = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>) => TAudioNodeConnections<T>;

@@ -1,6 +1,4 @@
-import { IAudioNode, IAudioNodeConnections, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
+import { TAudioNodeConnections } from './audio-node-connections';
 
-export type TAudioNodeConnectionsStore = WeakMap<
-    IAudioNode<IMinimalBaseAudioContext>,
-    Readonly<IAudioNodeConnections<IMinimalBaseAudioContext>>
->;
+export type TAudioNodeConnectionsStore = WeakMap<IAudioNode<IMinimalBaseAudioContext>, TAudioNodeConnections<IMinimalBaseAudioContext>>;
