@@ -182,7 +182,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #49
 
         it('should transition directly from suspended to closed', (done) => {
-            const runTest = (callback) => {
+            const runTest = (evaluateTest) => {
                 offlineAudioContext = new webkitOfflineAudioContext(1, 1, 44100); // eslint-disable-line new-cap, no-undef
 
                 let previousState = offlineAudioContext.state;
@@ -193,7 +193,7 @@ describe('offlineAudioContextConstructor', () => {
                     if (currentState === 'closed') {
                         offlineAudioContext.onstatechange = null;
 
-                        callback(previousState === 'suspended');
+                        evaluateTest(previousState === 'suspended');
                     }
 
                     previousState = currentState;
@@ -206,15 +206,15 @@ describe('offlineAudioContextConstructor', () => {
 
                 offlineAudioContext.startRendering();
             };
-            const callback = (hasTransitionedDirectlyFromSuspendedToClosed) => {
+            const evaluateTest = (hasTransitionedDirectlyFromSuspendedToClosed) => {
                 if (hasTransitionedDirectlyFromSuspendedToClosed) {
                     done();
                 } else {
-                    runTest(callback);
+                    runTest(evaluateTest);
                 }
             };
 
-            runTest(callback);
+            runTest(evaluateTest);
         });
 
     });
