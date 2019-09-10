@@ -70,7 +70,7 @@ const waitForRunningState = (audioContext) => {
         }
     });
 };
-const renderOnOnlineContext = async ({ blockSize, context, length, prepare, prepareBeforeStart, start }) => {
+const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, prepareBeforeStart, start }) => {
     const gainNode = new GainNode(context);
     const audioNodes = await prepare(gainNode);
     const bufferNode = createBufferNode({ audioNodes, context });
@@ -220,7 +220,7 @@ export const createRenderer = ({ context, create, length, prepare }) => {
                 await waitForRunningState(context);
 
                 try {
-                    const newChannelData = await renderOnOnlineContext({ blockSize, context, create, length, prepare, prepareBeforeStart, start });
+                    const newChannelData = await renderOnRealTimeContext({ blockSize, context, create, length, prepare, prepareBeforeStart, start });
 
                     if (channelData === null) {
                         channelData = newChannelData;
