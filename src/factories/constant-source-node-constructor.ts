@@ -93,14 +93,14 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             } else {
                 setInternalState(this, 'active');
 
-                const setInternalStateToInactive = () => {
-                    this._nativeConstantSourceNode.removeEventListener('ended', setInternalStateToInactive);
+                const setInternalStateToPassive = () => {
+                    this._nativeConstantSourceNode.removeEventListener('ended', setInternalStateToPassive);
 
                     // @todo Determine a meaningful delay instead of just using one second.
                     setTimeout(() => setInternalState(this, 'passive'), 1000);
                 };
 
-                this._nativeConstantSourceNode.addEventListener('ended', setInternalStateToInactive);
+                this._nativeConstantSourceNode.addEventListener('ended', setInternalStateToPassive);
             }
         }
 

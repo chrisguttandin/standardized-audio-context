@@ -173,14 +173,14 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             } else {
                 setInternalState(this, 'active');
 
-                const setInternalStateToInactive = () => {
-                    this._nativeAudioBufferSourceNode.removeEventListener('ended', setInternalStateToInactive);
+                const setInternalStateToPassive = () => {
+                    this._nativeAudioBufferSourceNode.removeEventListener('ended', setInternalStateToPassive);
 
                     // @todo Determine a meaningful delay instead of just using one second.
                     setTimeout(() => setInternalState(this, 'passive'), 1000);
                 };
 
-                this._nativeAudioBufferSourceNode.addEventListener('ended', setInternalStateToInactive);
+                this._nativeAudioBufferSourceNode.addEventListener('ended', setInternalStateToPassive);
             }
         }
 

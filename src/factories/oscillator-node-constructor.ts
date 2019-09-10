@@ -123,14 +123,14 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             } else {
                 setInternalState(this, 'active');
 
-                const setInternalStateToInactive = () => {
-                    this._nativeOscillatorNode.removeEventListener('ended', setInternalStateToInactive);
+                const setInternalStateToPassive = () => {
+                    this._nativeOscillatorNode.removeEventListener('ended', setInternalStateToPassive);
 
                     // @todo Determine a meaningful delay instead of just using one second.
                     setTimeout(() => setInternalState(this, 'passive'), 1000);
                 };
 
-                this._nativeOscillatorNode.addEventListener('ended', setInternalStateToInactive);
+                this._nativeOscillatorNode.addEventListener('ended', setInternalStateToPassive);
             }
         }
 
