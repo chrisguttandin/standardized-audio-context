@@ -31,7 +31,7 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
                 ? createDelayNodeRenderer(mergedOptions.maxDelayTime)
                 : null);
 
-            super(context, 'passive', nativeDelayNode, delayNodeRenderer);
+            super(context, false, nativeDelayNode, delayNodeRenderer);
 
             // Bug #161: Edge does not export the correct values for maxValue and minValue.
             this._delayTime = createAudioParam(

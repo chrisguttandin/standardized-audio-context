@@ -50,7 +50,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
                 ? createConstantSourceNodeRendererFactory()
                 : null);
 
-            super(context, 'passive', nativeConstantSourceNode, constantSourceNodeRenderer);
+            super(context, false, nativeConstantSourceNode, constantSourceNodeRenderer);
 
             this._constantSourceNodeRenderer = constantSourceNodeRenderer;
             this._nativeConstantSourceNode = nativeConstantSourceNode;

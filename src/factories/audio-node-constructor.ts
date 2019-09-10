@@ -18,7 +18,6 @@ import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { isPassiveAudioNode } from '../helpers/is-passive-audio-node';
 import { pickElementFromSet } from '../helpers/pick-element-from-set';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
-import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
 import { testAudioNodeDisconnectMethodSupport } from '../helpers/test-audio-node-disconnect-method-support';
 import { wrapAudioNodeDisconnectMethod } from '../helpers/wrap-audio-node-disconnect-method';
@@ -35,7 +34,6 @@ import {
     TAudioNodeConstructorFactory,
     TChannelCountMode,
     TChannelInterpretation,
-    TInternalState,
     TInternalStateEventListener,
     TNativeAudioNode,
     TNativeAudioParam,
@@ -181,11 +179,11 @@ const addConnectionToAudioNodeOfAudioContext = <T extends IMinimalBaseAudioConte
     const { outputs } = getAudioNodeConnections(source);
     const eventListeners = getEventListenersOfAudioNode(source);
 
-    const eventListener = <T extends IMinimalOfflineAudioContext ? null : TInternalStateEventListener> ((type) => {
+    const eventListener = <T extends IMinimalOfflineAudioContext ? null : TInternalStateEventListener> ((isActive) => {
         const nativeDestinationAudioNode = getNativeAudioNode(destination);
         const nativeSourceAudioNode = getNativeAudioNode(source);
 
-        if (type === 'active') {
+        if (isActive) {
             const partialConnection = deletePassiveInputConnectionToAudioNode(passiveInputs, source, output, input);
 
             addActiveInputConnectionToAudioNode(activeInputs, source, partialConnection, false);
@@ -194,7 +192,7 @@ const addConnectionToAudioNodeOfAudioContext = <T extends IMinimalBaseAudioConte
             if (isPassiveAudioNode(destination)) {
                 setInternalStateToActive(destination);
             }
-        } else if (type === 'passive') {
+        } else {
             const partialConnection = deleteActiveInputConnectionToAudioNode(activeInputs, source, output, input);
 
             addPassiveInputConnectionToAudioNode(passiveInputs, input, partialConnection, false);
@@ -250,17 +248,17 @@ const addConnectionToAudioParamOfAudioContext = <T extends IMinimalBaseAudioCont
     const { outputs } = getAudioNodeConnections(source);
     const eventListeners = getEventListenersOfAudioNode(source);
 
-    const eventListener = <T extends IMinimalOfflineAudioContext ? null : TInternalStateEventListener> ((type) => {
+    const eventListener = <T extends IMinimalOfflineAudioContext ? null : TInternalStateEventListener> ((isActive) => {
         const nativeAudioNode = getNativeAudioNode(source);
         const nativeAudioParam = getNativeAudioParam(destination);
 
-        if (type === 'active') {
+        if (isActive) {
             const partialConnection = deletePassiveInputConnectionToAudioParam(passiveInputs, source, output);
 
             addActiveInputConnectionToAudioParam(activeInputs, source, partialConnection, false);
 
             nativeAudioNode.connect(nativeAudioParam, output);
-        } else if (type === 'passive') {
+        } else {
             const partialConnection = deleteActiveInputConnectionToAudioParam(activeInputs, source, output);
 
             addPassiveInputConnectionToAudioParam(passiveInputs, partialConnection, false);
@@ -324,7 +322,7 @@ const deleteInputConnectionOfAudioNode = <T extends IMinimalBaseAudioContext>(
     destination: IAudioNode<T>,
     output: number,
     input: number
-): [ null | TInternalStateEventListener, TInternalState ] => {
+): [ null | TInternalStateEventListener, boolean ] => {
     const { activeInputs, passiveInputs } = getAudioNodeConnections(destination);
 
     const activeInputConnection = deleteActiveInputConnection(activeInputs[input], source, output);
@@ -332,17 +330,17 @@ const deleteInputConnectionOfAudioNode = <T extends IMinimalBaseAudioContext>(
     if (activeInputConnection === null) {
         const passiveInputConnection = deletePassiveInputConnectionToAudioNode(passiveInputs, source, output, input);
 
-        return [ passiveInputConnection[2], 'passive' ];
+        return [ passiveInputConnection[2], false ];
     }
 
-    return [ activeInputConnection[2], 'active' ];
+    return [ activeInputConnection[2], true ];
 };
 
 const deleteInputConnectionOfAudioParam = <T extends IMinimalBaseAudioContext>(
     source: IAudioNode<T>,
     destination: IAudioParam,
     output: number
-): [ null | TInternalStateEventListener, TInternalState ] => {
+): [ null | TInternalStateEventListener, boolean ] => {
     const { activeInputs, passiveInputs } = getAudioParamConnections<T>(destination);
 
     const activeInputConnection = deleteActiveInputConnection(activeInputs, source, output);
@@ -350,10 +348,10 @@ const deleteInputConnectionOfAudioParam = <T extends IMinimalBaseAudioContext>(
     if (activeInputConnection === null) {
         const passiveInputConnection = deletePassiveInputConnectionToAudioParam(passiveInputs, source, output);
 
-        return [ passiveInputConnection[1], 'passive' ];
+        return [ passiveInputConnection[1], false ];
     }
 
-    return [ activeInputConnection[2], 'active' ];
+    return [ activeInputConnection[2], true ];
 };
 
 const deleteInputsOfAudioNode = <T extends IMinimalBaseAudioContext>(
@@ -362,12 +360,12 @@ const deleteInputsOfAudioNode = <T extends IMinimalBaseAudioContext>(
     output: number,
     input: number
 ) => {
-    const [ listener, internalState ] = deleteInputConnectionOfAudioNode(source, destination, output, input);
+    const [ listener, isActive ] = deleteInputConnectionOfAudioNode(source, destination, output, input);
 
     if (listener !== null) {
         deleteEventListenerOfAudioNode(source, listener);
 
-        if (internalState === 'active') {
+        if (isActive) {
             disconnectNativeAudioNodeFromNativeAudioNode(
                 getNativeAudioNode(source),
                 getNativeAudioNode(destination),
@@ -389,12 +387,12 @@ const deleteInputsOfAudioParam = <T extends IMinimalBaseAudioContext>(
     destination: IAudioParam,
     output: number
 ) => {
-    const [ listener, internalState ] = deleteInputConnectionOfAudioParam(source, destination, output);
+    const [ listener, isActive ] = deleteInputConnectionOfAudioParam(source, destination, output);
 
     if (listener !== null) {
         deleteEventListenerOfAudioNode(source, listener);
 
-        if (internalState === 'active') {
+        if (isActive) {
             getNativeAudioNode(source)
                 .disconnect(getNativeAudioParam(destination), output);
         }
@@ -477,7 +475,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
 
         constructor (
             context: T,
-            internalState: TInternalState,
+            isActive: boolean,
             nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
             audioNodeRenderer: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null
         ) {
@@ -496,10 +494,8 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                 wrapAudioNodeDisconnectMethod(nativeAudioNode);
             }
 
-            if (internalState === 'active') {
+            if (isActive) {
                 setInternalStateToActive(this);
-            } else {
-                setInternalStateToPassive(this);
             }
 
             AUDIO_NODE_STORE.set(this, nativeAudioNode);

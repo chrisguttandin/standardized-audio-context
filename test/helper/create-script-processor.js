@@ -12,7 +12,7 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
 
                 ACTIVE_AUDIO_NODE_STORE.add(destination);
 
-                eventListeners.forEach((eventListener) => eventListener('active'));
+                eventListeners.forEach((eventListener) => eventListener(true));
             }
 
             const { activeInputs } = AUDIO_NODE_CONNECTIONS_STORE.get(destination);

@@ -10,5 +10,5 @@ export const setInternalStateToActive = <T extends IMinimalBaseAudioContext>(aud
     ACTIVE_AUDIO_NODE_STORE.add(audioNode);
 
     getEventListenersOfAudioNode(audioNode)
-        .forEach((eventListener) => eventListener('active'));
+        .forEach((eventListener) => eventListener(true));
 };

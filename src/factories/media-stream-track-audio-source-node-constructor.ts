@@ -22,7 +22,7 @@ export const createMediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrack
 
             const nativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrackAudioSourceNode(nativeContext, options);
 
-            super(context, 'active', nativeMediaStreamTrackAudioSourceNode, <TAudioNodeRenderer<T>> null);
+            super(context, true, nativeMediaStreamTrackAudioSourceNode, <TAudioNodeRenderer<T>> null);
         }
 
     };

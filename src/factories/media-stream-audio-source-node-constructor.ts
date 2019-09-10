@@ -24,7 +24,7 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
 
             const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, options);
 
-            super(context, 'active', nativeMediaStreamAudioSourceNode, <TAudioNodeRenderer<T>> null);
+            super(context, true, nativeMediaStreamAudioSourceNode, <TAudioNodeRenderer<T>> null);
 
             this._nativeMediaStreamAudioSourceNode = nativeMediaStreamAudioSourceNode;
         }

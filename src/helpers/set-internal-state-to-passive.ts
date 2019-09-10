@@ -10,5 +10,5 @@ export const setInternalStateToPassive = <T extends IMinimalBaseAudioContext>(au
     ACTIVE_AUDIO_NODE_STORE.delete(audioNode);
 
     getEventListenersOfAudioNode(audioNode)
-        .forEach((eventListener) => eventListener('passive'));
+        .forEach((eventListener) => eventListener(false));
 };

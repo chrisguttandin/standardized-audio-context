@@ -33,7 +33,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const waveShaperNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createWaveShaperNodeRenderer() : null);
 
-            super(context, 'passive', nativeWaveShaperNode, waveShaperNodeRenderer);
+            super(context, false, nativeWaveShaperNode, waveShaperNodeRenderer);
 
             this._isCurveNullified = false;
             this._nativeWaveShaperNode = nativeWaveShaperNode;

@@ -25,7 +25,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             const nativeAudioDestinationNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
             const audioDestinationNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createAudioDestinationNodeRenderer() : null);
 
-            super(context, 'passive', nativeAudioDestinationNode, audioDestinationNodeRenderer);
+            super(context, false, nativeAudioDestinationNode, audioDestinationNodeRenderer);
 
             this._isNodeOfNativeOfflineAudioContext = isOffline;
             this._nativeAudioDestinationNode = nativeAudioDestinationNode;

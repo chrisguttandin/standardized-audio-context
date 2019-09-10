@@ -44,7 +44,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const biquadFilterNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createBiquadFilterNodeRenderer() : null);
 
-            super(context, 'passive', nativeBiquadFilterNode, biquadFilterNodeRenderer);
+            super(context, false, nativeBiquadFilterNode, biquadFilterNodeRenderer);
 
             // Bug #80: Edge & Safari do not export the correct values for maxValue and minValue.
             this._Q = createAudioParam(

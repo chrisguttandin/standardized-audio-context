@@ -38,7 +38,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
                 ? createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward)
                 : null);
 
-            super(context, 'passive', nativeIIRFilterNode, iirFilterNodeRenderer);
+            super(context, false, nativeIIRFilterNode, iirFilterNodeRenderer);
 
             // Bug #23 & #24: FirefoxDeveloper does not throw an InvalidAccessError.
             // @todo Write a test which allows other browsers to remain unpatched.

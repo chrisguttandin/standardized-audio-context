@@ -65,7 +65,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
                 ? createAudioBufferSourceNodeRenderer()
                 : null);
 
-            super(context, 'passive', nativeAudioBufferSourceNode, audioBufferSourceNodeRenderer);
+            super(context, false, nativeAudioBufferSourceNode, audioBufferSourceNodeRenderer);
 
             this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
             this._isBufferNullified = false;

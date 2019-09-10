@@ -1,5 +1,5 @@
 import { IAudioNode, IAudioNodeRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
-import { TInternalState, TNativeAudioNode, TNoneAudioDestinationNodeConstructorFactory } from '../types';
+import { TNativeAudioNode, TNoneAudioDestinationNodeConstructorFactory } from '../types';
 
 export const createNoneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructorFactory = (audioNodeConstructor) => {
 
@@ -7,11 +7,11 @@ export const createNoneAudioDestinationNodeConstructor: TNoneAudioDestinationNod
 
         constructor (
             context: T,
-            internalState: TInternalState,
+            isActive: boolean,
             nativeAudioNode: TNativeAudioNode,
             audioNodeRenderer: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null
         ) {
-            super(context, internalState, nativeAudioNode, audioNodeRenderer);
+            super(context, isActive, nativeAudioNode, audioNodeRenderer);
         }
 
     };

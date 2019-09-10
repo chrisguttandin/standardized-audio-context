@@ -103,7 +103,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
              * @todo Add a mechanism to switch an AudioWorkletNode to passive once the process() function of the AudioWorkletProcessor
              * returns false.
              */
-            super(context, 'active', nativeAudioWorkletNode, audioWorkletNodeRenderer);
+            super(context, true, nativeAudioWorkletNode, audioWorkletNodeRenderer);
 
             const parameters: [ string, IAudioParam ][] = [ ];
 

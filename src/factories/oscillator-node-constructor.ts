@@ -53,7 +53,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             const oscillatorNodeRenderer = <TOscillatorNodeRenderer<T>> ((isOffline) ? createOscillatorNodeRenderer() : null);
             const nyquist = context.sampleRate / 2;
 
-            super(context, 'passive', nativeOscillatorNode, oscillatorNodeRenderer);
+            super(context, false, nativeOscillatorNode, oscillatorNodeRenderer);
 
             // Bug #81: Edge, Firefox & Safari do not export the correct values for maxValue and minValue.
             this._detune = createAudioParam(this, isOffline, nativeOscillatorNode.detune, 153600, -153600);

@@ -1,10 +1,9 @@
 import { IAudioNode, IAudioNodeRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
-import { TInternalState } from './internal-state';
 import { TNativeAudioNode } from './native-audio-node';
 
 export type TNoneAudioDestinationNodeConstructor = new <T extends IMinimalBaseAudioContext>(
     context: T,
-    internalState: TInternalState,
+    isActive: boolean,
     nativeAudioNode: TNativeAudioNode,
     audioNodeRenderer: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null
 ) => IAudioNode<T>;

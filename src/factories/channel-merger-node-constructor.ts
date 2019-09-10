@@ -26,7 +26,7 @@ export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFa
                 ? createChannelMergerNodeRenderer()
                 : null);
 
-            super(context, 'passive', nativeChannelMergerNode, channelMergerNodeRenderer);
+            super(context, false, nativeChannelMergerNode, channelMergerNodeRenderer);
         }
 
     };

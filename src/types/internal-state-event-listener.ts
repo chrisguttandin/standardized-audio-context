@@ -1,3 +1,1 @@
-import { TInternalState } from './internal-state';
-
-export type TInternalStateEventListener = (type: TInternalState) => void;
+export type TInternalStateEventListener = (isActive: boolean) => void;

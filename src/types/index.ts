@@ -122,7 +122,6 @@ export * from './iir-filter-node-constructor-factory';
 export * from './iir-filter-node-renderer-factory';
 export * from './iir-filter-node-renderer-factory-factory';
 export * from './index-size-error-factory';
-export * from './internal-state';
 export * from './internal-state-event-listener';
 export * from './invalid-access-error-factory';
 export * from './invalid-state-error-factory';
