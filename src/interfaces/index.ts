@@ -8,7 +8,6 @@ export * from './audio-buffer-source-options';
 export * from './audio-context';
 export * from './audio-context-options';
 export * from './audio-destination-node';
-export * from './audio-graph';
 export * from './audio-listener';
 export * from './audio-node';
 export * from './audio-node-connections';

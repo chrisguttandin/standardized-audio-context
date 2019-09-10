@@ -55,15 +55,10 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
 
             if (!nativeAudioBufferSourceNodeIsOwnedByContext) {
                 // Bug #149: Safari does not yet support the detune AudioParam.
-                await renderAutomation(
-                    proxy.context,
-                    nativeOfflineAudioContext,
-                    proxy.playbackRate,
-                    nativeAudioBufferSourceNode.playbackRate
-                );
+                await renderAutomation(nativeOfflineAudioContext, proxy.playbackRate, nativeAudioBufferSourceNode.playbackRate);
             } else {
                 // Bug #149: Safari does not yet support the detune AudioParam.
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.playbackRate);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.playbackRate);
             }
 
             await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioBufferSourceNode);

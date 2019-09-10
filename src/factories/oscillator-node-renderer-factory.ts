@@ -47,11 +47,11 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
             renderedNativeOscillatorNodes.set(nativeOfflineAudioContext, nativeOscillatorNode);
 
             if (!nativeOscillatorNodeIsOwnedByContext) {
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
+                await renderAutomation(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
+                await renderAutomation(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
             } else {
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.detune);
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.frequency);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.detune);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.frequency);
             }
 
             await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeOscillatorNode);

@@ -238,7 +238,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                                 offset: audioParam.value
                             });
 
-                            await renderAutomation(proxy.context, partialOfflineAudioContext, audioParam, constantSourceNode.offset);
+                            await renderAutomation(partialOfflineAudioContext, audioParam, constantSourceNode.offset);
 
                             return constantSourceNode;
                         }));
@@ -306,7 +306,6 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
             if (!nativeAudioWorkletNodeIsOwnedByContext) {
                 for (const [ nm, audioParam ] of proxy.parameters.entries()) {
                     await renderAutomation(
-                        proxy.context,
                         nativeOfflineAudioContext,
                         audioParam,
                         // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
@@ -316,7 +315,6 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
             } else {
                 for (const [ nm, audioParam ] of proxy.parameters.entries()) {
                     await connectAudioParam(
-                        proxy.context,
                         nativeOfflineAudioContext,
                         audioParam,
                         // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.

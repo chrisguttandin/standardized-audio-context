@@ -31,9 +31,9 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
             renderedNativeDelayNodes.set(nativeOfflineAudioContext, nativeDelayNode);
 
             if (!nativeDelayNodeIsOwnedByContext) {
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
+                await renderAutomation(nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
             } else {
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.delayTime);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.delayTime);
             }
 
             await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeDelayNode);

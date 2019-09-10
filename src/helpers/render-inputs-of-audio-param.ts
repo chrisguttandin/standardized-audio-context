@@ -4,12 +4,11 @@ import { getAudioNodeRenderer } from './get-audio-node-renderer';
 import { getAudioParamConnections } from './get-audio-param-connections';
 
 export const renderInputsOfAudioParam = <T extends IMinimalOfflineAudioContext>(
-    context: T,
     audioParam: IAudioParam,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     nativeAudioParam: TNativeAudioParam
 ) => {
-    const audioParamConnections = getAudioParamConnections<T>(context, audioParam);
+    const audioParamConnections = getAudioParamConnections<T>(audioParam);
 
     return Promise
         .all(Array

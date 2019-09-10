@@ -8,11 +8,13 @@ import {
     createSetValueAutomationEvent as createSetValueAutomationEventFunction,
     createSetValueCurveAutomationEvent as createSetValueCurveAutomationEventFunction
 } from 'automation-events';
+import { TAddAudioParamConnectionsFunction } from './add-audio-param-connections-function';
 import { TAudioParamFactory } from './audio-param-factory';
 import { TAudioParamRendererFactory } from './audio-param-renderer-factory';
 import { TNativeAudioContextConstructor } from './native-audio-context-constructor';
 
 export type TAudioParamFactoryFactory = (
+    addAudioParamConnections: TAddAudioParamConnectionsFunction,
     createAudioParamRenderer: TAudioParamRendererFactory,
     createCancelAndHoldAutomationEvent: typeof createCancelAndHoldAutomationEventFunction,
     createCancelScheduledValuesAutomationEvent: typeof createCancelScheduledValuesAutomationEventFunction,

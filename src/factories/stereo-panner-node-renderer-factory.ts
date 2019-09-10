@@ -33,9 +33,9 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
             renderedNativeStereoPannerNodes.set(nativeOfflineAudioContext, nativeStereoPannerNode);
 
             if (!nativeStereoPannerNodeIsOwnedByContext) {
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
+                await renderAutomation(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
             } else {
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.pan);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.pan);
             }
 
             if ((<INativeStereoPannerNodeFaker> nativeStereoPannerNode).inputs !== undefined) {

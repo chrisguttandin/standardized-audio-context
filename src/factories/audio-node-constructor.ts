@@ -6,7 +6,6 @@ import { isAudioWorkletNode } from '../guards/audio-worklet-node';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
 import { disconnectNativeAudioNodeFromNativeAudioNode } from '../helpers/disconnect-native-audio-node-from-native-audio-node';
-import { getAudioGraph } from '../helpers/get-audio-graph';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
 import { getEventListenersOfAudioNode } from '../helpers/get-event-listeners-of-audio-node';
@@ -40,32 +39,9 @@ import {
     TNativeAudioNode,
     TNativeAudioParam,
     TNativeAudioWorkletNode,
-    TOutputConnection,
     TPassiveAudioNodeInputConnection,
     TPassiveAudioParamInputConnection
 } from '../types';
-
-const addAudioNode = <T extends IMinimalBaseAudioContext>(
-    context: T,
-    audioNode: IAudioNode<T>,
-    audioNoderRender: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null,
-    nativeAudioNode: TNativeAudioNode
-) => {
-    const activeInputs: Set<TActiveInputConnection<T>>[] = [ ];
-
-    for (let i = 0; i < nativeAudioNode.numberOfInputs; i += 1) {
-        activeInputs.push(new Set());
-    }
-
-    const { nodes } = getAudioGraph(context);
-
-    nodes.set(audioNode, {
-        activeInputs,
-        outputs: new Set<TOutputConnection<T>>(),
-        passiveInputs: new WeakMap<IAudioNode<T>, Set<TPassiveAudioNodeInputConnection<T>>>(),
-        renderer: audioNoderRender
-    });
-};
 
 const addActiveInputConnectionToAudioNode = <T extends IMinimalBaseAudioContext>(
     activeInputs: Set<TActiveInputConnection<T>>[],
@@ -269,7 +245,7 @@ const addConnectionToAudioParamOfAudioContext = <T extends IMinimalBaseAudioCont
     destination: IAudioParam,
     output: number
 ) => {
-    const { activeInputs, passiveInputs } = getAudioParamConnections(source.context, destination);
+    const { activeInputs, passiveInputs } = getAudioParamConnections<T>(destination);
     const { outputs } = getAudioNodeConnections(source);
     const eventListeners = getEventListenersOfAudioNode(source);
 
@@ -313,7 +289,7 @@ const addConnectionToAudioParamOfOfflineAudioContext = <T extends IMinimalBaseAu
     destination: IAudioParam,
     output: number
 ) => {
-    const { activeInputs } = getAudioParamConnections(source.context, destination);
+    const { activeInputs } = getAudioParamConnections<T>(destination);
     const { outputs } = getAudioNodeConnections(source);
 
     if (insertElementInSet(
@@ -366,7 +342,7 @@ const deleteInputConnectionOfAudioParam = <T extends IMinimalBaseAudioContext>(
     destination: IAudioParam,
     output: number
 ): [ null | TInternalStateEventListener, TInternalState ] => {
-    const { activeInputs, passiveInputs } = getAudioParamConnections(source.context, destination);
+    const { activeInputs, passiveInputs } = getAudioParamConnections<T>(destination);
 
     const activeInputConnection = deleteActiveInputConnection(activeInputs, source, output);
 
@@ -481,6 +457,7 @@ const deleteConnectionToDestination = <T extends IMinimalBaseAudioContext>(
 };
 
 export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
+    addAudioNodeConnections,
     cacheTestResult,
     createIndexSizeError,
     createInvalidAccessError,
@@ -525,7 +502,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             AUDIO_NODE_STORE.set(this, nativeAudioNode);
             EVENT_LISTENERS.set(this, new Set());
 
-            addAudioNode(context, this, audioNodeRenderer, nativeAudioNode);
+            addAudioNodeConnections(this, audioNodeRenderer, nativeAudioNode);
         }
 
         get channelCount (): number {

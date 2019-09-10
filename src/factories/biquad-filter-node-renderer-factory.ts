@@ -37,15 +37,15 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
             renderedNativeBiquadFilterNodes.set(nativeOfflineAudioContext, nativeBiquadFilterNode);
 
             if (!nativeBiquadFilterNodeIsOwnedByContext) {
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q);
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune);
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency);
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain);
+                await renderAutomation(nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q);
+                await renderAutomation(nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune);
+                await renderAutomation(nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency);
+                await renderAutomation(nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain);
             } else {
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.Q);
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.detune);
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.frequency);
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.gain);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.Q);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.detune);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.frequency);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.gain);
             }
 
             await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeBiquadFilterNode);

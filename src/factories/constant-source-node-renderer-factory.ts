@@ -46,9 +46,9 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
             renderedNativeConstantSourceNodes.set(nativeOfflineAudioContext, nativeConstantSourceNode);
 
             if (!nativeConstantSourceNodeIsOwnedByContext) {
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
+                await renderAutomation(nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
             } else {
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.offset);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.offset);
             }
 
             await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConstantSourceNode);

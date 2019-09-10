@@ -42,22 +42,17 @@ export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNod
             renderedNativeDynamicsCompressorNodes.set(nativeOfflineAudioContext, nativeDynamicsCompressorNode);
 
             if (!nativeDynamicsCompressorNodeIsOwnedByContext) {
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.attack, nativeDynamicsCompressorNode.attack);
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.knee, nativeDynamicsCompressorNode.knee);
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.ratio, nativeDynamicsCompressorNode.ratio);
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.release, nativeDynamicsCompressorNode.release);
-                await renderAutomation(
-                    proxy.context,
-                    nativeOfflineAudioContext,
-                    proxy.threshold,
-                    nativeDynamicsCompressorNode.threshold
-                );
+                await renderAutomation(nativeOfflineAudioContext, proxy.attack, nativeDynamicsCompressorNode.attack);
+                await renderAutomation(nativeOfflineAudioContext, proxy.knee, nativeDynamicsCompressorNode.knee);
+                await renderAutomation(nativeOfflineAudioContext, proxy.ratio, nativeDynamicsCompressorNode.ratio);
+                await renderAutomation(nativeOfflineAudioContext, proxy.release, nativeDynamicsCompressorNode.release);
+                await renderAutomation(nativeOfflineAudioContext, proxy.threshold, nativeDynamicsCompressorNode.threshold);
             } else {
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.attack);
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.knee);
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.ratio);
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.release);
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.threshold);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.attack);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.knee);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.ratio);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.release);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.threshold);
             }
 
             await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeDynamicsCompressorNode);

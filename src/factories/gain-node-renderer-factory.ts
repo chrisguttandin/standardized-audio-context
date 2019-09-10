@@ -30,9 +30,9 @@ export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (c
             renderedNativeGainNodes.set(nativeOfflineAudioContext, nativeGainNode);
 
             if (!nativeGainNodeIsOwnedByContext) {
-                await renderAutomation(proxy.context, nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
+                await renderAutomation(nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
             } else {
-                await connectAudioParam(proxy.context, nativeOfflineAudioContext, proxy.gain);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.gain);
             }
 
             await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeGainNode);

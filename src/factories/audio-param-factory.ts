@@ -1,20 +1,10 @@
 import { AutomationEventList } from 'automation-events';
 import { AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE } from '../globals';
-import { getAudioGraph } from '../helpers/get-audio-graph';
 import { IAudioNode, IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAudioParamFactoryFactory, TNativeAudioParam } from '../types';
 
-const addAudioParam = <T extends IMinimalBaseAudioContext>(
-    context: T,
-    audioParam: IAudioParam,
-    audioParamRenderer: T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null
-) => {
-    const audioGraph = getAudioGraph(context);
-
-    audioGraph.params.set(audioParam, { activeInputs: new Set(), passiveInputs: new WeakMap(), renderer: audioParamRenderer });
-};
-
 export const createAudioParamFactory: TAudioParamFactoryFactory = (
+    addAudioParamConnections,
     createAudioParamRenderer,
     createCancelAndHoldAutomationEvent,
     createCancelScheduledValuesAutomationEvent,
@@ -203,11 +193,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
         AUDIO_PARAM_STORE.set(audioParam, nativeAudioParam);
         AUDIO_PARAM_AUDIO_NODE_STORE.set(audioParam, audioNode);
 
-        addAudioParam(
-            audioNode.context,
-            audioParam,
-            <T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer
-        );
+        addAudioParamConnections(audioParam, <T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer);
 
         return audioParam;
     };

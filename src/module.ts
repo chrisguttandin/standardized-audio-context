@@ -8,6 +8,8 @@ import {
     createSetValueCurveAutomationEvent
 } from 'automation-events';
 import { createAbortError } from './factories/abort-error';
+import { createAddAudioNodeConnections } from './factories/add-audio-node-connections';
+import { createAddAudioParamConnections } from './factories/add-audio-param-connections';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
 import { createAnalyserNodeConstructor } from './factories/analyser-node-constructor';
 import { createAnalyserNodeRendererFactory } from './factories/analyser-node-renderer-factory';
@@ -168,8 +170,10 @@ import {
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
 import {
     AUDIO_BUFFER_STORE,
+    AUDIO_NODE_CONNECTIONS_STORE,
     AUDIO_NODE_STORE,
     AUDIO_PARAM_AUDIO_NODE_STORE,
+    AUDIO_PARAM_CONNECTIONS_STORE,
     AUDIO_PARAM_STORE,
     CONTEXT_STORE,
     PERIODIC_WAVE_STORE
@@ -258,6 +262,7 @@ const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(createNativ
 const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
+    createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
     cacheTestResult,
     createIndexSizeError,
     createInvalidAccessError,
@@ -323,6 +328,7 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
 );
 const createAudioBufferSourceNodeRenderer = createAudioBufferSourceNodeRendererFactory(createNativeAudioBufferSourceNode);
 const createAudioParam = createAudioParamFactory(
+    createAddAudioParamConnections(AUDIO_PARAM_CONNECTIONS_STORE),
     createAudioParamRenderer,
     createCancelAndHoldAutomationEvent,
     createCancelScheduledValuesAutomationEvent,
