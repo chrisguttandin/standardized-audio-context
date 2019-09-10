@@ -1,5 +1,6 @@
 import { getNativeContext } from '../helpers/get-native-context';
-import { setInternalState } from '../helpers/set-internal-state';
+import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
+import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioParam,
@@ -121,16 +122,16 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             if (this._oscillatorNodeRenderer !== null) {
                 this._oscillatorNodeRenderer.start = when;
             } else {
-                setInternalState(this, 'active');
+                setInternalStateToActive(this);
 
-                const setInternalStateToPassive = () => {
-                    this._nativeOscillatorNode.removeEventListener('ended', setInternalStateToPassive);
+                const resetInternalStateToPassive = () => {
+                    this._nativeOscillatorNode.removeEventListener('ended', resetInternalStateToPassive);
 
                     // @todo Determine a meaningful delay instead of just using one second.
-                    setTimeout(() => setInternalState(this, 'passive'), 1000);
+                    setTimeout(() => setInternalStateToPassive(this), 1000);
                 };
 
-                this._nativeOscillatorNode.addEventListener('ended', setInternalStateToPassive);
+                this._nativeOscillatorNode.addEventListener('ended', resetInternalStateToPassive);
             }
         }
 

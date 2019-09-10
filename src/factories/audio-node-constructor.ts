@@ -1,5 +1,5 @@
 import { EventTarget } from '../event-target';
-import { ACTIVE_AUDIO_NODE_STORE, AUDIO_NODE_STORE, AUXILIARY_GAIN_NODE_STORE, EVENT_LISTENERS } from '../globals';
+import { AUDIO_NODE_STORE, AUXILIARY_GAIN_NODE_STORE, EVENT_LISTENERS } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
 import { isAudioWorkletNode } from '../guards/audio-worklet-node';
@@ -17,7 +17,8 @@ import { insertElementInSet } from '../helpers/insert-element-in-set';
 import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { isPassiveAudioNode } from '../helpers/is-passive-audio-node';
 import { pickElementFromSet } from '../helpers/pick-element-from-set';
-import { setInternalState } from '../helpers/set-internal-state';
+import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
+import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
 import { testAudioNodeDisconnectMethodSupport } from '../helpers/test-audio-node-disconnect-method-support';
 import { wrapAudioNodeDisconnectMethod } from '../helpers/wrap-audio-node-disconnect-method';
@@ -191,7 +192,7 @@ const addConnectionToAudioNodeOfAudioContext = <T extends IMinimalBaseAudioConte
             connectNativeAudioNodeToNativeAudioNode(nativeSourceAudioNode, nativeDestinationAudioNode, output, input);
 
             if (isPassiveAudioNode(destination)) {
-                setInternalState(destination, 'active');
+                setInternalStateToActive(destination);
             }
         } else if (type === 'passive') {
             const partialConnection = deleteActiveInputConnectionToAudioNode(activeInputs, source, output, input);
@@ -496,7 +497,9 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             }
 
             if (internalState === 'active') {
-                ACTIVE_AUDIO_NODE_STORE.add(this);
+                setInternalStateToActive(this);
+            } else {
+                setInternalStateToPassive(this);
             }
 
             AUDIO_NODE_STORE.set(this, nativeAudioNode);
@@ -565,7 +568,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                     if (isOffline || isPassiveAudioNode(this)) {
                         this._nativeAudioNode.disconnect(...connection);
                     } else if (isPassiveAudioNode(destination)) {
-                        setInternalState(destination, 'active');
+                        setInternalStateToActive(destination);
                     }
 
                     // An AudioWorklet needs a connection because it otherwise may truncate the input array.

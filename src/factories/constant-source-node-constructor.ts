@@ -1,6 +1,7 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { getNativeContext } from '../helpers/get-native-context';
-import { setInternalState } from '../helpers/set-internal-state';
+import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
+import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioParam,
@@ -91,16 +92,16 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             if (this._constantSourceNodeRenderer !== null) {
                 this._constantSourceNodeRenderer.start = when;
             } else {
-                setInternalState(this, 'active');
+                setInternalStateToActive(this);
 
-                const setInternalStateToPassive = () => {
-                    this._nativeConstantSourceNode.removeEventListener('ended', setInternalStateToPassive);
+                const resetInternalStateToPassive = () => {
+                    this._nativeConstantSourceNode.removeEventListener('ended', resetInternalStateToPassive);
 
                     // @todo Determine a meaningful delay instead of just using one second.
-                    setTimeout(() => setInternalState(this, 'passive'), 1000);
+                    setTimeout(() => setInternalStateToPassive(this), 1000);
                 };
 
-                this._nativeConstantSourceNode.addEventListener('ended', setInternalStateToPassive);
+                this._nativeConstantSourceNode.addEventListener('ended', resetInternalStateToPassive);
             }
         }
 
