@@ -1,32 +1,26 @@
 import { isNativeAudioNode } from '../guards/native-audio-node';
 import { TNativeAudioNode, TNativeAudioParam } from '../types';
 
-export const interceptConnections = <T extends Object> (
+export const interceptConnections = <T extends object> (
     original: T,
     interceptor: TNativeAudioNode
 ): T & { connect: TNativeAudioNode['connect']; disconnect: TNativeAudioNode['disconnect'] } => {
-    (<T & { connect: TNativeAudioNode['connect'] }> original).connect = ((
-        destination: TNativeAudioNode | TNativeAudioParam,
-        // @todo TypeScript can't infer the type for the parameters output and input in this case.
-        output: number = 0, // tslint:disable-line:no-inferrable-types
-        input: number = 0 // tslint:disable-line:no-inferrable-types
-    ) => {
+    function connect (destinationNode: TNativeAudioNode, output?: number, input?: number): TNativeAudioNode;
+    function connect (destinationParam: TNativeAudioParam, output?: number): void;
+    function connect (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0): void | TNativeAudioNode { // tslint:disable-line:invalid-void max-line-length
         if (isNativeAudioNode(destination)) {
-            // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
-            (<any> interceptor.connect).call(interceptor, destination, output, input);
+            interceptor.connect(destination, output, input);
 
             // Bug #11: Safari does not support chaining yet.
             return destination;
         }
 
-        // @todo TypeScript does still assume that connect() returns void.
-        return <TNativeAudioNode> (<any> interceptor.connect.call(interceptor, destination, output));
-    });
+        return interceptor.connect(destination, output);
+    }
 
-    (<T & { disconnect: TNativeAudioNode['disconnect'] }> original).disconnect = function (): void {
-        // @todo TypeScript cannot infer all the signatures yet.
-        (<any> interceptor.disconnect).apply(interceptor, arguments);
-    };
+    (<T & { connect: TNativeAudioNode['connect'] }> original).connect = connect;
+
+    (<T & { disconnect: TNativeAudioNode['disconnect'] }> original).disconnect = interceptor.disconnect.bind(interceptor);
 
     return <T & { connect: TNativeAudioNode['connect']; disconnect: TNativeAudioNode['disconnect'] }> original;
 };
