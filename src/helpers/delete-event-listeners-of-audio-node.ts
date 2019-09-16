@@ -9,6 +9,6 @@ export const deleteEventListenerOfAudioNode = <T extends IMinimalBaseAudioContex
     const eventListeners = getEventListenersOfAudioNode(audioNode);
 
     if (!eventListeners.delete(eventListener)) {
-        throw new Error('Missing the expected event listener');
+        throw new Error('Missing the expected event listener.');
     }
 };
