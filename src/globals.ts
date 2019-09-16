@@ -12,6 +12,7 @@ import {
     TAudioParamConnectionsStore,
     TAudioParamStore,
     TContextStore,
+    TCycleCounters,
     TInternalStateEventListener,
     TNativeAudioWorkletNode,
     TNativeContext,
@@ -42,6 +43,8 @@ export const CONTEXT_STORE: TContextStore = new WeakMap();
 export const DETACHED_ARRAY_BUFFERS: WeakSet<ArrayBuffer> = new WeakSet();
 
 export const EVENT_LISTENERS: WeakMap<IAudioNode<IMinimalBaseAudioContext>, Set<TInternalStateEventListener>> = new WeakMap();
+
+export const CYCLE_COUNTERS: TCycleCounters = new WeakMap();
 
 // This clunky name is borrowed from the spec. :-)
 export const NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS: WeakMap<

@@ -2,6 +2,7 @@ import { IAudioNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
 import { getAudioNodeConnections } from './get-audio-node-connections';
 import { getAudioNodeRenderer } from './get-audio-node-renderer';
+import { isPartOfACycle } from './is-part-of-a-cycle';
 
 export const renderInputsOfAudioNode = <T extends IMinimalOfflineAudioContext>(
     audioNode: IAudioNode<T>,
@@ -17,7 +18,11 @@ export const renderInputsOfAudioNode = <T extends IMinimalOfflineAudioContext>(
                 .map(([ source, output ]) => {
                     return getAudioNodeRenderer(source)
                         .render(source, nativeOfflineAudioContext)
-                        .then((node) => node.connect(nativeAudioNode, output, input));
+                        .then((node) => {
+                            if (!isPartOfACycle(source)) {
+                                node.connect(nativeAudioNode, output, input);
+                            }
+                        });
                 }))
             .reduce((allRenderingPromises, renderingPromises) => [ ...allRenderingPromises, ...renderingPromises ], [ ]));
 };

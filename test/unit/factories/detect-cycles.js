@@ -1,28 +1,49 @@
 import { createDetectCycles } from '../../../src/factories/detect-cycles';
+import { stub } from 'sinon';
 
 describe('detectCycles()', () => {
 
     let audioParamAudioNodeStore;
-    let createNotSupportedError;
     let detectCycles;
     let getAudioNodeConnections;
     let getValueForKey;
-    let outputs;
 
     beforeEach(() => {
         audioParamAudioNodeStore = new WeakMap();
-        createNotSupportedError = () => { throw new Error('fake error'); };
-        outputs = new Set();
-        getAudioNodeConnections = () => ({ outputs });
+        getAudioNodeConnections = stub();
         getValueForKey = () => { };
 
-        detectCycles = createDetectCycles(audioParamAudioNodeStore, createNotSupportedError, getAudioNodeConnections, getValueForKey);
+        detectCycles = createDetectCycles(audioParamAudioNodeStore, getAudioNodeConnections, getValueForKey);
     });
 
     describe('without any connection', () => {
 
-        it('should detect no cycle', () => {
-            expect(detectCycles({ context: 'a fake AudioContext' }, { context: 'a fake AudioContext' })).to.be.false;
+        beforeEach(() => {
+            const outputs = new Set();
+
+            getAudioNodeConnections.returns({ outputs });
+        });
+
+        describe('with two different AudioNodes', () => {
+
+            it('should detect no cycle', () => {
+                expect(detectCycles({ context: 'a fake AudioContext' }, { context: 'a fake AudioContext' })).to.deep.equal([ ]);
+            });
+
+        });
+
+        describe('with one AudioNode', () => {
+
+            let audioNode;
+
+            beforeEach(() => {
+                audioNode = { context: 'a fake AudioContext' };
+            });
+
+            it('should detect a cycle', () => {
+                expect(detectCycles(audioNode, audioNode)).to.deep.equal([ [ audioNode ] ]);
+            });
+
         });
 
     });
@@ -30,17 +51,19 @@ describe('detectCycles()', () => {
     describe('with an existing connection to a regular AudioNode', () => {
 
         let audioNode;
-        let anotherAudioNodeb;
+        let anotherAudioNode;
 
         beforeEach(() => {
             audioNode = { context: 'a fake AudioContext' };
-            anotherAudioNodeb = { context: 'a fake AudioContext' };
+            anotherAudioNode = { context: 'a fake AudioContext' };
 
-            outputs.add([ audioNode, 1, 1 ]);
+            const outputs = new Set([ [ audioNode, 1, 1 ] ]);
+
+            getAudioNodeConnections.returns({ outputs });
         });
 
         it('should detect a cycle', () => {
-            expect(() => detectCycles(audioNode, anotherAudioNodeb)).to.throw('fake error');
+            expect(detectCycles(audioNode, anotherAudioNode)).to.deep.equal([ [ audioNode, anotherAudioNode ] ]);
         });
 
     });
@@ -54,11 +77,13 @@ describe('detectCycles()', () => {
             audioNode = { context: 'a fake AudioContext' };
             delayNode = { context: 'a fake AudioContext', delayTime: 'a fake delayTime AudioParam' };
 
-            outputs.add([ delayNode, 1, 1 ]);
+            const outputs = new Set([ [ delayNode, 1, 1 ] ]);
+
+            getAudioNodeConnections.returns({ outputs });
         });
 
         it('should detect no cycle', () => {
-            expect(detectCycles(delayNode, audioNode)).to.be.true;
+            expect(detectCycles(delayNode, audioNode)).to.deep.equal([ ]);
         });
 
     });
@@ -72,11 +97,44 @@ describe('detectCycles()', () => {
             audioNode = { context: 'a fake AudioContext' };
             delayNode = { context: 'a fake AudioContext', delayTime: 'a fake delayTime AudioParam' };
 
-            outputs.add([ audioNode, 1, 1 ]);
+            const outputs = new Set([ [ audioNode, 1, 1 ] ]);
+
+            getAudioNodeConnections.returns({ outputs });
         });
 
         it('should detect no cycle', () => {
-            expect(detectCycles(audioNode, delayNode)).to.be.true;
+            expect(detectCycles(audioNode, delayNode)).to.deep.equal([ ]);
+        });
+
+    });
+
+    describe('with various connections to other regular AudioNode', () => {
+
+        let audioNode;
+        let anotherAudioNode;
+        let yetAnotherAudioNode;
+
+        beforeEach(() => {
+            audioNode = { context: 'a fake AudioContext' };
+            anotherAudioNode = { any: 'unique property', context: 'a fake AudioContext' };
+            yetAnotherAudioNode = { any: 'other unique property', context: 'a fake AudioContext' };
+
+            const outputsOfAnotherAudioNode = new Set([ [ audioNode, 1, 1 ], [ yetAnotherAudioNode, 1, 1 ] ]);
+            const outputsOfYetAnotherAudioNode = new Set([ [ audioNode, 1, 1 ] ]);
+
+            getAudioNodeConnections
+                .withArgs(anotherAudioNode)
+                .returns({ outputs: outputsOfAnotherAudioNode });
+            getAudioNodeConnections
+                .withArgs(yetAnotherAudioNode)
+                .returns({ outputs: outputsOfYetAnotherAudioNode });
+        });
+
+        it('should detect a cycle', () => {
+            expect(detectCycles(audioNode, anotherAudioNode)).to.deep.equal([
+                [ audioNode, anotherAudioNode ],
+                [ audioNode, anotherAudioNode, yetAnotherAudioNode ]
+            ]);
         });
 
     });

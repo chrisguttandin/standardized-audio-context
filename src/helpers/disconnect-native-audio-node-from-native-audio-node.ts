@@ -1,17 +1,15 @@
 import { INativeAudioNodeFaker } from '../interfaces';
-import { TNativeAudioNode } from '../types';
+import { TDisconnectNativeAudioNodeFromNativeAudioNodeFunction } from '../types';
 
-export const disconnectNativeAudioNodeFromNativeAudioNode = (
-    nativeSourceAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
-    nativeDestinationAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
-    output?: number,
-    input?: number
-): void => {
+export const disconnectNativeAudioNodeFromNativeAudioNode: TDisconnectNativeAudioNodeFromNativeAudioNodeFunction = (
+    nativeSourceAudioNode,
+    nativeDestinationAudioNode,
+    output,
+    input
+) => {
     const inputs = (<INativeAudioNodeFaker> nativeDestinationAudioNode).inputs;
 
-    if (input === undefined || output === undefined) {
-        nativeSourceAudioNode.disconnect(nativeDestinationAudioNode);
-    } else if (inputs !== undefined) {
+    if (inputs !== undefined) {
         nativeSourceAudioNode.disconnect(inputs[input], output, 0);
     } else {
         nativeSourceAudioNode.disconnect(nativeDestinationAudioNode, output, input);

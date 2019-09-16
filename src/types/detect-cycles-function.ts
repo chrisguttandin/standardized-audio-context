@@ -2,5 +2,6 @@ import { IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces
 
 export type TDetectCyclesFunction = <T extends IMinimalBaseAudioContext>(
     source: IAudioNode<T>,
-    destination: IAudioNode<T> | IAudioParam
-) => boolean;
+    destination: IAudioNode<T> | IAudioParam,
+    cycle?: IAudioNode<T>[]
+) => IAudioNode<T>[][];

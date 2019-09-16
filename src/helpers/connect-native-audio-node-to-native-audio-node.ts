@@ -1,7 +1,7 @@
 import { INativeAudioNodeFaker } from '../interfaces';
-import { TNativeAudioNode } from '../types';
+import { TConnectNativeAudioNodeToNativeAudioNodeFunction, TNativeAudioNode } from '../types';
 
-export const connectNativeAudioNodeToNativeAudioNode = (
+export const connectNativeAudioNodeToNativeAudioNode: TConnectNativeAudioNodeToNativeAudioNodeFunction = (
     nativeSourceAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
     nativeDestinationAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
     output: number,

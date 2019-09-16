@@ -42,6 +42,7 @@ import { createConvolverNodeRendererFactory } from './factories/convolver-node-r
 import { createCreateNativeOfflineAudioContext } from './factories/create-native-offline-audio-context';
 import { createDataCloneError } from './factories/data-clone-error';
 import { createDecodeAudioData } from './factories/decode-audio-data';
+import { createDecrementCycleCounter } from './factories/decrement-cycle-counter';
 import { createDelayNodeConstructor } from './factories/delay-node-constructor';
 import { createDelayNodeRendererFactory } from './factories/delay-node-renderer-factory';
 import { createDetectCycles } from './factories/detect-cycles';
@@ -56,6 +57,7 @@ import { createGainNodeRendererFactory } from './factories/gain-node-renderer-fa
 import { createGetBackupNativeContext } from './factories/get-backup-native-context';
 import { createIIRFilterNodeConstructor } from './factories/iir-filter-node-constructor';
 import { createIIRFilterNodeRendererFactory } from './factories/iir-filter-node-renderer-factory';
+import { createIncrementCycleCounterFactory } from './factories/increment-cycle-counter-factory';
 import { createIndexSizeError } from './factories/index-size-error';
 import { createInvalidAccessError } from './factories/invalid-access-error';
 import { createInvalidStateError } from './factories/invalid-state-error';
@@ -176,10 +178,17 @@ import {
     AUDIO_PARAM_CONNECTIONS_STORE,
     AUDIO_PARAM_STORE,
     CONTEXT_STORE,
+    CYCLE_COUNTERS,
     PERIODIC_WAVE_STORE
 } from './globals';
+import { connectNativeAudioNodeToNativeAudioNode } from './helpers/connect-native-audio-node-to-native-audio-node';
+import { disconnectNativeAudioNodeFromNativeAudioNode } from './helpers/disconnect-native-audio-node-from-native-audio-node';
 import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
+import { getNativeAudioNode } from './helpers/get-native-audio-node';
+import { getNativeAudioParam } from './helpers/get-native-audio-param';
+import { getNativeContext } from './helpers/get-native-context';
 import { getValueForKey } from './helpers/get-value-for-key';
+import { isActiveAudioNode } from './helpers/is-active-audio-node';
 import {
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport
 } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
@@ -264,10 +273,28 @@ const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
     cacheTestResult,
+    createIncrementCycleCounterFactory(
+        CYCLE_COUNTERS,
+        disconnectNativeAudioNodeFromNativeAudioNode,
+        getAudioNodeConnections,
+        getNativeAudioNode,
+        getNativeAudioParam,
+        isActiveAudioNode
+    ),
     createIndexSizeError,
     createInvalidAccessError,
     createNotSupportedError,
-    createDetectCycles(AUDIO_PARAM_AUDIO_NODE_STORE, createNotSupportedError, getAudioNodeConnections, getValueForKey),
+    createDecrementCycleCounter(
+        connectNativeAudioNodeToNativeAudioNode,
+        CYCLE_COUNTERS,
+        getAudioNodeConnections,
+        getNativeAudioNode,
+        getNativeAudioParam,
+        getNativeContext,
+        isActiveAudioNode,
+        isNativeOfflineAudioContext
+    ),
+    createDetectCycles(AUDIO_PARAM_AUDIO_NODE_STORE, getAudioNodeConnections, getValueForKey),
     isNativeAudioNode,
     isNativeAudioParam,
     isNativeOfflineAudioContext
