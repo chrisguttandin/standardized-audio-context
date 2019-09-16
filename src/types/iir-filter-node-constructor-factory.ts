@@ -1,3 +1,4 @@
+import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIIRFilterNodeConstructor } from './iir-filter-node-constructor';
 import { TIIRFilterNodeRendererFactory } from './iir-filter-node-renderer-factory';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
@@ -7,6 +8,7 @@ import { TNoneAudioDestinationNodeConstructor } from './none-audio-destination-n
 export type TIIRFilterNodeConstructorFactory = (
     createNativeIIRFilterNode: TNativeIIRFilterNodeFactory,
     createIIRFilterNodeRenderer: TIIRFilterNodeRendererFactory,
+    getNativeContext: TGetNativeContextFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
     noneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructor
 ) => TIIRFilterNodeConstructor;

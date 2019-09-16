@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IMinimalBaseAudioContext, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
 import { TAudioNodeRenderer, TStereoPannerNodeConstructorFactory } from '../types';
 
@@ -17,6 +16,7 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
     createAudioParam,
     createNativeStereoPannerNode,
     createStereoPannerNodeRenderer,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

@@ -1,12 +1,14 @@
-import { connectAudioParam } from '../helpers/connect-audio-param';
-import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { renderAutomation } from '../helpers/render-automation';
-import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IMinimalOfflineAudioContext, INativePannerNodeFaker, IPannerNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativePannerNode, TPannerNodeRendererFactoryFactory } from '../types';
 
-export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory = (createNativePannerNode) => {
+export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory = (
+    connectAudioParam,
+    createNativePannerNode,
+    getNativeAudioNode,
+    renderAutomation,
+    renderInputsOfAudioNode
+) => {
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativePannerNodes = new WeakMap<TNativeOfflineAudioContext, TNativePannerNode>();
 

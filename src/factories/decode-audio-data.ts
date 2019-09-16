@@ -1,6 +1,4 @@
-import { DETACHED_ARRAY_BUFFERS } from '../globals';
 import { detachArrayBuffer } from '../helpers/detach-array-buffer';
-import { getNativeContext } from '../helpers/get-native-context';
 import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffer-get-channel-data-method';
 import { TDecodeAudioDataFactory } from '../types';
 
@@ -9,9 +7,11 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     cacheTestResult,
     createDataCloneError,
     createEncodingError,
-    nativeOfflineAudioContextConstructor,
+    detachedArrayBuffers,
+    getNativeContext,
     isNativeContext,
     isNativeOfflineAudioContext,
+    nativeOfflineAudioContextConstructor,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     testPromiseSupport,
     wrapAudioBufferCopyChannelMethods,
@@ -21,7 +21,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
         const nativeContext = isNativeContext(anyContext) ? anyContext : getNativeContext(anyContext);
 
         // Bug #43: Only Chrome and Opera do throw a DataCloneError.
-        if (DETACHED_ARRAY_BUFFERS.has(audioData)) {
+        if (detachedArrayBuffers.has(audioData)) {
             const err = createDataCloneError();
 
             return Promise.reject(err);
@@ -29,7 +29,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
 
         // The audioData parameter maybe of a type which can't be added to a WeakSet.
         try {
-            DETACHED_ARRAY_BUFFERS.add(audioData);
+            detachedArrayBuffers.add(audioData);
         } catch {
             // Ignore errors.
         }

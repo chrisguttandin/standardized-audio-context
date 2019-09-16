@@ -1,7 +1,5 @@
 import { filterBuffer } from '../helpers/filter-buffer';
-import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IIIRFilterNode, IMinimalOfflineAudioContext } from '../interfaces';
 import {
     TIIRFilterNodeRendererFactoryFactory,
@@ -62,7 +60,9 @@ const filterFullBuffer = (
 export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFactory = (
     createNativeAudioBufferSourceNode,
     createNativeAudioNode,
+    getNativeAudioNode,
     nativeOfflineAudioContextConstructor,
+    renderInputsOfAudioNode,
     renderNativeOfflineAudioContext
 ) => {
     return <T extends IMinimalOfflineAudioContext>(feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) => {

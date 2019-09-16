@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IChannelMergerOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TChannelMergerNodeConstructorFactory } from '../types';
 
@@ -12,6 +11,7 @@ const DEFAULT_OPTIONS = {
 export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFactory = (
     createChannelMergerNodeRenderer,
     createNativeChannelMergerNode,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

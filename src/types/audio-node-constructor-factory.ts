@@ -1,8 +1,10 @@
 import { TAddAudioNodeConnectionsFunction } from './add-audio-node-connections-function';
 import { TAudioNodeConstructor } from './audio-node-constructor';
+import { TAuxiliaryGainNodeStore } from './auxiliary-gain-node-store';
 import { TCacheTestResultFunction } from './cache-test-result-function';
 import { TDecrementCycleCounterFunction } from './decrement-cycle-counter-function';
 import { TDetectCyclesFunction } from './detect-cycles-function';
+import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIncrementCycleCounterFactory } from './increment-cycle-counter-factory';
 import { TIndexSizeErrorFactory } from './index-size-error-factory';
 import { TInvalidAccessErrorFactory } from './invalid-access-error-factory';
@@ -13,6 +15,7 @@ import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 
 export type TAudioNodeConstructorFactory = (
     addAudioNodeConnections: TAddAudioNodeConnectionsFunction,
+    auxiliaryGainNodeStore: TAuxiliaryGainNodeStore,
     cacheTestResult: TCacheTestResultFunction,
     createIncrementCycleCounter: TIncrementCycleCounterFactory,
     createIndexSizeError: TIndexSizeErrorFactory,
@@ -20,6 +23,7 @@ export type TAudioNodeConstructorFactory = (
     createNotSupportedError: TNotSupportedErrorFactory,
     decrementCycleCounter: TDecrementCycleCounterFunction,
     detectCycles: TDetectCyclesFunction,
+    getNativeContext: TGetNativeContextFunction,
     isNativeAudioNode: TIsNativeAudioNodeFunction,
     isNativeAudioParam: TIsNativeAudioParamFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction

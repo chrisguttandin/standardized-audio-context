@@ -1,13 +1,9 @@
-import { connectAudioParam } from '../helpers/connect-audio-param';
 import { copyFromChannel } from '../helpers/copy-from-channel';
 import { copyToChannel } from '../helpers/copy-to-channel';
 import { createNestedArrays } from '../helpers/create-nested-arrays';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioWorkletProcessor } from '../helpers/get-audio-worklet-processor';
-import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { renderAutomation } from '../helpers/render-automation';
-import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import {
     IAudioWorkletNode,
     IAudioWorkletNodeOptions,
@@ -112,6 +108,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
 };
 
 export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFactoryFactory = (
+    connectAudioParam,
     connectMultipleOutputs,
     createNativeAudioBufferSourceNode,
     createNativeChannelMergerNode,
@@ -119,8 +116,11 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     createNativeConstantSourceNode,
     createNativeGainNode,
     disconnectMultipleOutputs,
+    getNativeAudioNode,
     nativeAudioWorkletNodeConstructor,
     nativeOfflineAudioContextConstructor,
+    renderAutomation,
+    renderInputsOfAudioNode,
     renderNativeOfflineAudioContext
 ) => {
     return <T extends IMinimalOfflineAudioContext>(

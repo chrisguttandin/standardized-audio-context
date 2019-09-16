@@ -1,10 +1,10 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IMediaStreamTrackAudioSourceNode, IMediaStreamTrackAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TMediaStreamTrackAudioSourceNodeConstructorFactory } from '../types';
 
 export const createMediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructorFactory = (
     createNativeMediaStreamTrackAudioSourceNode,
     createNotSupportedError,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

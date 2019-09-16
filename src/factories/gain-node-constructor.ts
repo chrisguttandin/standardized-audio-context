@@ -1,5 +1,4 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
-import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TGainNodeConstructorFactory } from '../types';
 
@@ -14,6 +13,7 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
     createAudioParam,
     createGainNodeRenderer,
     createNativeGainNode,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

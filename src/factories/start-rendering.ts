@@ -1,10 +1,10 @@
-import { getAudioNodeRenderer } from '../helpers/get-audio-node-renderer';
 import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffer-get-channel-data-method';
 import { TStartRenderingFactory } from '../types';
 
 export const createStartRendering: TStartRenderingFactory = (
     audioBufferStore,
     cacheTestResult,
+    getAudioNodeRenderer,
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     wrapAudioBufferCopyChannelMethods,

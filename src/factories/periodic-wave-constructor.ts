@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IMinimalBaseAudioContext, IPeriodicWave, IPeriodicWaveOptions } from '../interfaces';
 import { TPeriodicWaveConstructorFactory } from '../types';
 
@@ -6,7 +5,11 @@ const DEFAULT_OPTIONS = {
     disableNormalization: false
 } as const;
 
-export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (createNativePeriodicWave, periodicWaveStore) => {
+export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (
+    createNativePeriodicWave,
+    getNativeContext,
+    periodicWaveStore
+) => {
 
     return class PeriodicWave<T extends IMinimalBaseAudioContext> implements IPeriodicWave {
 

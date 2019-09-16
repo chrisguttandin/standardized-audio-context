@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IDelayNode, IDelayOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TDelayNodeConstructorFactory } from '../types';
 
@@ -14,6 +13,7 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
     createAudioParam,
     createDelayNodeRenderer,
     createNativeDelayNode,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

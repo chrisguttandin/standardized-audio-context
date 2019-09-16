@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IMinimalBaseAudioContext, IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
 import { TAudioNodeRenderer, TNativeWaveShaperNode, TOverSampleType, TWaveShaperNodeConstructorFactory } from '../types';
 
@@ -14,6 +13,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
     createInvalidStateError,
     createNativeWaveShaperNode,
     createWaveShaperNodeRenderer,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

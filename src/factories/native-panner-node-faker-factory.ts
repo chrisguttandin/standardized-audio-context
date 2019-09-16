@@ -1,9 +1,9 @@
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { interceptConnections } from '../helpers/intercept-connections';
 import { TNativeAudioNode, TNativePannerNode, TNativePannerNodeFakerFactoryFactory } from '../types';
 
 export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFactory = (
+    connectNativeAudioNodeToNativeAudioNode,
     createInvalidStateError,
     createNativeAudioNode,
     createNativeChannelMergerNode,

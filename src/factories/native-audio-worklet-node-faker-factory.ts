@@ -1,5 +1,4 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
-import { AUXILIARY_GAIN_NODE_STORE } from '../globals';
 import { computeBufferSize } from '../helpers/compute-buffer-size';
 import { copyFromChannel } from '../helpers/copy-from-channel';
 import { copyToChannel } from '../helpers/copy-to-channel';
@@ -18,6 +17,7 @@ import {
 } from '../types';
 
 export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFakerFactoryFactory = (
+    auxiliaryGainNodeStore,
     connectMultipleOutputs,
     createIndexSizeError,
     createInvalidStateError,
@@ -378,7 +378,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     try {
                         const potentiallyEmptyInputs = inputs
                             .map((input, index) => {
-                                const auxiliaryGainNodes = AUXILIARY_GAIN_NODE_STORE.get(nativeAudioWorkletNodeFaker);
+                                const auxiliaryGainNodes = auxiliaryGainNodeStore.get(nativeAudioWorkletNodeFaker);
 
                                 if (auxiliaryGainNodes === undefined || auxiliaryGainNodes.get(index) === undefined) {
                                     return [ new Float32Array(0) ];

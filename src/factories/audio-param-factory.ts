@@ -1,10 +1,11 @@
 import { AutomationEventList } from 'automation-events';
-import { AUDIO_PARAM_AUDIO_NODE_STORE, AUDIO_PARAM_STORE } from '../globals';
 import { IAudioNode, IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAudioParamFactoryFactory, TNativeAudioParam } from '../types';
 
 export const createAudioParamFactory: TAudioParamFactoryFactory = (
     addAudioParamConnections,
+    audioParamAudioNodeStore,
+    audioParamStore,
     createAudioParamRenderer,
     createCancelAndHoldAutomationEvent,
     createCancelScheduledValuesAutomationEvent,
@@ -190,8 +191,8 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
             }
         };
 
-        AUDIO_PARAM_STORE.set(audioParam, nativeAudioParam);
-        AUDIO_PARAM_AUDIO_NODE_STORE.set(audioParam, audioNode);
+        audioParamStore.set(audioParam, nativeAudioParam);
+        audioParamAudioNodeStore.set(audioParam, audioNode);
 
         addAudioParamConnections(audioParam, <T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer);
 

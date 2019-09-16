@@ -1,8 +1,10 @@
+import { IPeriodicWave } from '../interfaces';
+import { TGetNativeContextFunction } from './get-native-context-function';
 import { TNativePeriodicWaveFactory } from './native-periodic-wave-factory';
 import { TPeriodicWaveConstructor } from './periodic-wave-constructor';
-import { TPeriodicWaveStore } from './periodic-wave-store';
 
 export type TPeriodicWaveConstructorFactory = (
     createNativePeriodicWave: TNativePeriodicWaveFactory,
-    periodicWaveStore: TPeriodicWaveStore
+    getNativeContext: TGetNativeContextFunction,
+    periodicWaveStore: WeakSet<IPeriodicWave>
 ) => TPeriodicWaveConstructor;

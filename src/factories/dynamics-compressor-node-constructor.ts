@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IDynamicsCompressorNode, IDynamicsCompressorOptions, IMinimalBaseAudioContext } from '../interfaces';
 import {
     TAudioNodeRenderer,
@@ -24,6 +23,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
     createDynamicsCompressorNodeRenderer,
     createNativeDynamicsCompressorNode,
     createNotSupportedError,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

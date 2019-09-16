@@ -1,5 +1,6 @@
 import { TAudioBufferStore } from './audio-buffer-store';
 import { TCacheTestResultFunction } from './cache-test-result-function';
+import { TGetAudioNodeRendererFunction } from './get-audio-node-renderer-function';
 import { TNativeAudioBuffer } from './native-audio-buffer';
 import { TRenderNativeOfflineAudioContextFunction } from './render-native-offline-audio-context-function';
 import { TStartRenderingFunction } from './start-rendering-function';
@@ -9,6 +10,7 @@ import { TWrapAudioBufferCopyChannelMethodsOutOfBoundsFunction } from './wrap-au
 export type TStartRenderingFactory = (
     audioBufferStore: TAudioBufferStore,
     cacheTestResult: TCacheTestResultFunction,
+    getAudioNodeRenderer: TGetAudioNodeRendererFunction,
     renderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFunction,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport: (nativeAudioBuffer: TNativeAudioBuffer) => boolean,
     wrapAudioBufferCopyChannelMethods: TWrapAudioBufferCopyChannelMethodsFunction,

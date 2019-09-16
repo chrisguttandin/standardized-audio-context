@@ -1,5 +1,4 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
-import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TBiquadFilterNodeConstructorFactory, TBiquadFilterType, TNativeBiquadFilterNode } from '../types';
 
@@ -19,6 +18,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
     createBiquadFilterNodeRenderer,
     createInvalidAccessError,
     createNativeBiquadFilterNode,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

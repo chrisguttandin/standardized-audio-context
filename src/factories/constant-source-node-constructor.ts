@@ -1,5 +1,4 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
-import { getNativeContext } from '../helpers/get-native-context';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
@@ -25,6 +24,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
     createAudioParam,
     createConstantSourceNodeRendererFactory,
     createNativeConstantSourceNode,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

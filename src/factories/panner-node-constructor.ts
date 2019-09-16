@@ -1,5 +1,4 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
-import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioParam, IMinimalBaseAudioContext, IPannerNode, IPannerOptions } from '../interfaces';
 import { TAudioNodeRenderer, TDistanceModelType, TNativePannerNode, TPannerNodeConstructorFactory, TPanningModelType } from '../types';
 
@@ -27,6 +26,7 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
     createAudioParam,
     createNativePannerNode,
     createPannerNodeRenderer,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

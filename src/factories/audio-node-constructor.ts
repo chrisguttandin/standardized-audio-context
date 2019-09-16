@@ -1,5 +1,5 @@
 import { EventTarget } from '../event-target';
-import { AUDIO_NODE_STORE, AUXILIARY_GAIN_NODE_STORE, EVENT_LISTENERS } from '../globals';
+import { AUDIO_NODE_STORE, EVENT_LISTENERS } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
 import { isAudioWorkletNode } from '../guards/audio-worklet-node';
@@ -11,7 +11,6 @@ import { getAudioParamConnections } from '../helpers/get-audio-param-connections
 import { getEventListenersOfAudioNode } from '../helpers/get-event-listeners-of-audio-node';
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { getNativeAudioParam } from '../helpers/get-native-audio-param';
-import { getNativeContext } from '../helpers/get-native-context';
 import { getValueForKey } from '../helpers/get-value-for-key';
 import { insertElementInSet } from '../helpers/insert-element-in-set';
 import { isActiveAudioNode } from '../helpers/is-active-audio-node';
@@ -499,6 +498,7 @@ const deleteConnectionToDestination = <T extends IMinimalBaseAudioContext>(
 
 export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     addAudioNodeConnections,
+    auxiliaryGainNodeStore,
     cacheTestResult,
     createIncrementCycleCounter,
     createIndexSizeError,
@@ -506,6 +506,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     createNotSupportedError,
     decrementCycleCounter,
     detectCycles,
+    getNativeContext,
     isNativeAudioNode,
     isNativeAudioParam,
     isNativeOfflineAudioContext
@@ -614,14 +615,14 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                     // An AudioWorklet needs a connection because it otherwise may truncate the input array.
                     // @todo Count the number of connections which depend on this auxiliary GainNode to know when it can be removed again.
                     if (isAudioWorkletNode(destination)) {
-                        const auxiliaryGainNodes = AUXILIARY_GAIN_NODE_STORE.get(<TNativeAudioWorkletNode> nativeDestinationAudioNode);
+                        const auxiliaryGainNodes = auxiliaryGainNodeStore.get(<TNativeAudioWorkletNode> nativeDestinationAudioNode);
 
                         if (auxiliaryGainNodes === undefined) {
                             const nativeGainNode = nativeContext.createGain();
 
                             nativeGainNode.connect(connection[0], 0, connection[2]);
 
-                            AUXILIARY_GAIN_NODE_STORE.set(
+                            auxiliaryGainNodeStore.set(
                                 <TNativeAudioWorkletNode> nativeDestinationAudioNode,
                                 new Map([ [ input, nativeGainNode ] ])
                             );

@@ -1,6 +1,5 @@
 import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
 import { evaluateSource } from '../helpers/evaluate-source';
-import { getNativeContext } from '../helpers/get-native-context';
 import { isConstructible } from '../helpers/is-constructible';
 import { splitImportStatements } from '../helpers/split-import-statements';
 import { IAudioWorkletProcessorConstructor } from '../interfaces';
@@ -32,6 +31,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     exposeCurrentFrameAndCurrentTime,
     fetchSource,
     getBackupNativeContext,
+    getNativeContext,
     ongoingRequests,
     resolvedRequests
 ) => {

@@ -1,3 +1,4 @@
+import { TAuxiliaryGainNodeStore } from './auxiliary-gain-node-store';
 import { TConnectMultipleOutputsFunction } from './connect-multiple-outputs-function';
 import { TDisconnectMultipleOutputsFunction } from './disconnect-multiple-outputs-function';
 import { TExposeCurrentFrameAndCurrentTimeFunction } from './expose-current-frame-and-current-time-function';
@@ -12,6 +13,7 @@ import { TNativeScriptProcessorNodeFactory } from './native-script-processor-nod
 import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 
 export type TNativeAudioWorkletNodeFakerFactoryFactory = (
+    auxiliaryGainNodeStore: TAuxiliaryGainNodeStore,
     connectMultipleOutputs: TConnectMultipleOutputsFunction,
     createIndexSizeError: TIndexSizeErrorFactory,
     createInvalidStateError: TInvalidStateErrorFactory,

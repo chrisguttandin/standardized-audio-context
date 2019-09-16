@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
@@ -27,6 +26,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
     createInvalidStateError,
     createNativeOscillatorNode,
     createOscillatorNodeRenderer,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

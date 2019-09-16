@@ -1,10 +1,12 @@
-import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IMinimalOfflineAudioContext, INativeWaveShaperNodeFaker, IWaveShaperNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeWaveShaperNode, TWaveShaperNodeRendererFactoryFactory } from '../types';
 
-export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactoryFactory = (createNativeWaveShaperNode) => {
+export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactoryFactory = (
+    createNativeWaveShaperNode,
+    getNativeAudioNode,
+    renderInputsOfAudioNode
+) => {
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativeWaveShaperNodes = new WeakMap<TNativeOfflineAudioContext, TNativeWaveShaperNode>();
 

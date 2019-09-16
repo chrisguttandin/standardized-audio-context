@@ -1,4 +1,5 @@
 import { TAudioParamFactory } from './audio-param-factory';
+import { TGetNativeContextFunction } from './get-native-context-function';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeOscillatorNodeFactory } from './native-oscillator-node-factory';
@@ -11,6 +12,7 @@ export type TOscillatorNodeConstructorFactory = (
     createInvalidStateError: TInvalidStateErrorFactory,
     createNativeOscillatorNode: TNativeOscillatorNodeFactory,
     createOscillatorNodeRenderer: TOscillatorNodeRendererFactory,
+    getNativeContext: TGetNativeContextFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
     noneAudioDestinationNodeConstructor: TNoneAudioDestinationNodeConstructor
 ) => TOscillatorNodeConstructor;

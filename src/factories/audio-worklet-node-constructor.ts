@@ -1,5 +1,4 @@
 import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
-import { getNativeContext } from '../helpers/get-native-context';
 import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioParam,
@@ -62,6 +61,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     createAudioWorkletNodeRenderer,
     createNativeAudioWorkletNode,
     gainNodeConstructor,
+    getNativeContext,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
     noneAudioDestinationNodeConstructor

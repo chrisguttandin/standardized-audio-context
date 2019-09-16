@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../helpers/wrap-iir-filter-node-get-frequency-response-method';
 import { IIIRFilterNode, IIIRFilterOptions, IMinimalAudioContext, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
@@ -12,6 +11,7 @@ const DEFAULT_OPTIONS = {
 export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = (
     createNativeIIRFilterNode,
     createIIRFilterNodeRenderer,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

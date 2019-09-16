@@ -1,13 +1,13 @@
-import { connectAudioParam } from '../helpers/connect-audio-param';
-import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { renderAutomation } from '../helpers/render-automation';
-import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IAudioBufferSourceNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAudioBufferSourceNodeRendererFactoryFactory, TNativeAudioBufferSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeRendererFactoryFactory = (
-    createNativeAudioBufferSourceNode
+    connectAudioParam,
+    createNativeAudioBufferSourceNode,
+    getNativeAudioNode,
+    renderAutomation,
+    renderInputsOfAudioNode
 ) => {
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativeAudioBufferSourceNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioBufferSourceNode>();

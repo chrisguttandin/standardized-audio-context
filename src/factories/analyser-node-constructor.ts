@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAnalyserNodeConstructorFactory, TAudioNodeRenderer, TNativeAnalyserNode } from '../types';
 
@@ -16,6 +15,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
     createAnalyserNodeRenderer,
     createIndexSizeError,
     createNativeAnalyserNode,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

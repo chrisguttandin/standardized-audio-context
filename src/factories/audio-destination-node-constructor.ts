@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
 import { TAudioDestinationNodeConstructorFactory, TAudioNodeRenderer, TChannelCountMode, TNativeAudioDestinationNode } from '../types';
 
@@ -8,7 +7,9 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
     createIndexSizeError,
     createInvalidStateError,
     createNativeAudioDestinationNode,
-    isNativeOfflineAudioContext
+    getNativeContext,
+    isNativeOfflineAudioContext,
+    renderInputsOfAudioNode
 ) => {
 
     return class AudioDestinationNode<T extends IMinimalBaseAudioContext>
@@ -23,7 +24,9 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const nativeAudioDestinationNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
-            const audioDestinationNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createAudioDestinationNodeRenderer() : null);
+            const audioDestinationNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
+                ? createAudioDestinationNodeRenderer(renderInputsOfAudioNode)
+                : null);
 
             super(context, false, nativeAudioDestinationNode, audioDestinationNodeRenderer);
 

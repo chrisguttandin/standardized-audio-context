@@ -1,4 +1,3 @@
-import { getNativeContext } from '../helpers/get-native-context';
 import { IConvolverNode, IConvolverOptions, IMinimalBaseAudioContext } from '../interfaces';
 import { TAnyAudioBuffer, TAudioNodeRenderer, TConvolverNodeConstructorFactory, TNativeConvolverNode } from '../types';
 
@@ -13,6 +12,7 @@ const DEFAULT_OPTIONS = {
 export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = (
     createConvolverNodeRenderer,
     createNativeConvolverNode,
+    getNativeContext,
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 ) => {

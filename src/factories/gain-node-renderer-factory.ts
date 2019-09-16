@@ -1,12 +1,14 @@
-import { connectAudioParam } from '../helpers/connect-audio-param';
-import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { renderAutomation } from '../helpers/render-automation';
-import { renderInputsOfAudioNode } from '../helpers/render-inputs-of-audio-node';
 import { IGainNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TGainNodeRendererFactoryFactory, TNativeGainNode, TNativeOfflineAudioContext } from '../types';
 
-export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (createNativeGainNode) => {
+export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (
+    connectAudioParam,
+    createNativeGainNode,
+    getNativeAudioNode,
+    renderAutomation,
+    renderInputsOfAudioNode
+) => {
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativeGainNodes = new WeakMap<TNativeOfflineAudioContext, TNativeGainNode>();
 
