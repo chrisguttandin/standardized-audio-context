@@ -4,6 +4,6 @@ export interface INativeAudioNodeFaker extends TNativeAudioNode {
 
     bufferSize?: number;
 
-    inputs?: TNativeAudioNode[];
+    inputs: TNativeAudioNode[];
 
 }

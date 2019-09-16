@@ -1,5 +1,5 @@
 import { interceptConnections } from '../helpers/intercept-connections';
-import { TNativeAudioBufferSourceNode, TNativeConstantSourceNode, TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
+import { TNativeAudioBufferSourceNode, TNativeAudioNode, TNativeConstantSourceNode, TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
 
 export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNodeFakerFactoryFactory = (
     createNativeAudioBufferSourceNode,
@@ -47,8 +47,8 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
             get context (): TNativeConstantSourceNode['context'] {
                 return gainNode.context;
             },
-            get inputs (): undefined {
-                return undefined;
+            get inputs (): TNativeAudioNode[] {
+                return [ ];
             },
             get numberOfInputs (): number {
                 return audioBufferSourceNode.numberOfInputs;
