@@ -128,10 +128,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
         options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
         processorConstructor: undefined | IAudioWorkletProcessorConstructor
     ) => {
-        const renderedNativeAudioNodes = new WeakMap<
-            TNativeOfflineAudioContext,
-            [ TNativeChannelSplitterNode, TNativeChannelMergerNode[], TNativeGainNode ] | TNativeAudioWorkletNode
-        >();
+        const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioWorkletNode | TNativeGainNode>();
 
         const createAudioNode = async (proxy: IAudioWorkletNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeAudioWorkletNode = getNativeAudioNode<T, TNativeAudioWorkletNode>(proxy);
@@ -183,7 +180,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
             renderedNativeAudioNodes.set(
                 nativeOfflineAudioContext,
-                (nativeOutputNodes === null) ? nativeAudioWorkletNode : nativeOutputNodes
+                (nativeOutputNodes === null) ? nativeAudioWorkletNode : nativeOutputNodes[2]
             );
 
             if (nativeOutputNodes !== null) {
@@ -333,13 +330,9 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 proxy: IAudioWorkletNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeGainNode | TNativeAudioWorkletNode> {
-                const renderedNativeAudioWorkletNodeOrOutputNodes = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
+                const renderedNativeAudioWorkletNodeOrGainNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
 
-                if (renderedNativeAudioWorkletNodeOrOutputNodes !== undefined) {
-                    const renderedNativeAudioWorkletNodeOrGainNode = Array.isArray(renderedNativeAudioWorkletNodeOrOutputNodes)
-                        ? renderedNativeAudioWorkletNodeOrOutputNodes[2]
-                        : renderedNativeAudioWorkletNodeOrOutputNodes;
-
+                if (renderedNativeAudioWorkletNodeOrGainNode !== undefined) {
                     return Promise.resolve(renderedNativeAudioWorkletNodeOrGainNode);
                 }
 
