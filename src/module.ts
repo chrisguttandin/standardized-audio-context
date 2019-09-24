@@ -143,6 +143,9 @@ import {
 import {
     createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport
 } from './factories/test-audio-buffer-source-node-start-method-offset-clamping-support';
+import {
+    createTestAudioBufferSourceNodeStopMethodNullifiedBufferSupport
+} from './factories/test-audio-buffer-source-node-stop-method-nullified-buffer-support';
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method-support';
 import {
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport
@@ -200,6 +203,7 @@ import {
 import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
+import { wrapAudioBufferSourceNodeStopMethodNullifiedBuffer } from './helpers/wrap-audio-buffer-source-node-stop-method-nullified-buffer';
 import {
     IAnalyserNode,
     IAudioBuffer,
@@ -369,10 +373,12 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(createNativeAudioNode),
     createTestAudioBufferSourceNodeStartMethodDurationParameterSupport(nativeOfflineAudioContextConstructor),
     createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport(createNativeAudioNode),
+    createTestAudioBufferSourceNodeStopMethodNullifiedBufferSupport(createNativeAudioNode),
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
     wrapAudioBufferSourceNodeStartMethodOffsetClamping,
+    wrapAudioBufferSourceNodeStopMethodNullifiedBuffer,
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 );
 const renderAutomation = createRenderAutomation(createGetAudioParamRenderer(getAudioParamConnections), renderInputsOfAudioParam);

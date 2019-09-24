@@ -21,10 +21,12 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
     testAudioBufferSourceNodeStartMethodDurationParameterSupport,
     testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
+    testAudioBufferSourceNodeStopMethodNullifiedBufferSupport,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
     wrapAudioBufferSourceNodeStartMethodOffsetClampling,
+    wrapAudioBufferSourceNodeStopMethodNullifiedBuffer,
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 ) => {
     return (nativeContext, options = { }) => {
@@ -65,6 +67,14 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
             () => testAudioBufferSourceNodeStartMethodOffsetClampingSupport(nativeContext)
         )) {
             wrapAudioBufferSourceNodeStartMethodOffsetClampling(nativeAudioBufferSourceNode);
+        }
+
+        // Bug #162: Safari does throw an error when stop() is called on an AudioBufferSourceNode which has no buffer assigned to it.
+        if (!cacheTestResult(
+            testAudioBufferSourceNodeStopMethodNullifiedBufferSupport,
+            () => testAudioBufferSourceNodeStopMethodNullifiedBufferSupport(nativeContext)
+        )) {
+            wrapAudioBufferSourceNodeStopMethodNullifiedBuffer(nativeAudioBufferSourceNode, nativeContext);
         }
 
         // Bug #44: Only Chrome, Firefox & Opera throw a RangeError yet.
