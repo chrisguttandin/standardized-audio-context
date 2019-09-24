@@ -409,26 +409,6 @@ describe('audioContextConstructor', () => {
                 }).to.throw(Error);
             });
 
-            // bug #19
-
-            it('should not ignore calls to stop() of an already stopped AudioBufferSourceNode', (done) => {
-                const audioBuffer = audioContext.createBuffer(1, 100, 44100);
-                const audioBufferSourceNode = audioContext.createBufferSource();
-
-                audioBufferSourceNode.onended = () => {
-                    expect(() => {
-                        audioBufferSourceNode.stop();
-                    }).to.throw(Error);
-
-                    done();
-                };
-
-                audioBufferSourceNode.buffer = audioBuffer;
-                audioBufferSourceNode.connect(audioContext.destination);
-                audioBufferSourceNode.start();
-                audioBufferSourceNode.stop();
-            });
-
             describe('buffer', () => {
 
                 // bug #72
@@ -582,48 +562,6 @@ describe('audioContextConstructor', () => {
                 expect(channelMergerNode.channelCountMode).to.not.equal('explicit');
             });
 
-            // bug #20
-
-            it('should not handle unconnected channels as silence', (done) => {
-                const sampleRate = audioContext.sampleRate;
-                // Bug #95: Safari does not play/loop one sample buffers.
-                const audioBuffer = audioContext.createBuffer(1, 2, sampleRate);
-                const audioBufferSourceNode = audioContext.createBufferSource();
-                const channelMergerNode = audioContext.createChannelMerger();
-                const scriptProcessorNode = audioContext.createScriptProcessor(256, 2, 2);
-
-                // Bug #5: Safari does not support copyFromChannel().
-                audioBuffer.getChannelData(0)[0] = 1;
-                audioBuffer.getChannelData(0)[1] = 1;
-
-                audioBufferSourceNode.buffer = audioBuffer;
-                audioBufferSourceNode.loop = true;
-
-                const startTime = audioContext.currentTime;
-
-                scriptProcessorNode.onaudioprocess = (event) => {
-                    const channelData = event.inputBuffer.getChannelData(1);
-
-                    for (const sample of channelData) {
-                        if (sample === 1) {
-                            done();
-
-                            return;
-                        }
-                    }
-
-                    if (startTime + (1 / sampleRate) < event.playbackTime) {
-                        done(new Error('It should process a buffer containing a wrong sample within one second.'));
-                    }
-                };
-
-                audioBufferSourceNode.connect(channelMergerNode, 0, 0);
-                channelMergerNode.connect(scriptProcessorNode);
-                scriptProcessorNode.connect(audioContext.destination);
-
-                audioBufferSourceNode.start(startTime);
-            });
-
         });
 
         describe('createChannelSplitter()', () => {
@@ -730,82 +668,6 @@ describe('audioContextConstructor', () => {
 
                 it('should not throw an error', () => {
                     convolverNode.channelCountMode = 'max';
-                });
-
-            });
-
-        });
-
-        describe('createDelay()', () => {
-
-            describe('with a delayTime of 128 samples', () => {
-
-                let audioBufferSourceNode;
-                let delayNode;
-                let gainNode;
-                let scriptProcessorNode;
-
-                afterEach(() => {
-                    audioBufferSourceNode.disconnect(gainNode);
-                    delayNode.disconnect(gainNode);
-                    gainNode.disconnect(delayNode);
-                    gainNode.disconnect(scriptProcessorNode);
-                    scriptProcessorNode.disconnect(audioContext.destination);
-                });
-
-                beforeEach(() => {
-                    audioBufferSourceNode = audioContext.createBufferSource();
-                    delayNode = audioContext.createDelay();
-                    gainNode = audioContext.createGain();
-                    scriptProcessorNode = audioContext.createScriptProcessor(512);
-
-                    // Bug #95: Safari does not play/loop one sample buffers.
-                    const audioBuffer = audioContext.createBuffer(1, 2, audioContext.sampleRate);
-
-                    audioBuffer.getChannelData(0)[0] = 2;
-
-                    audioBufferSourceNode.buffer = audioBuffer;
-
-                    delayNode.delayTime.value = 128 / audioContext.sampleRate;
-
-                    gainNode.gain.value = 0.5;
-
-                    audioBufferSourceNode.connect(gainNode);
-                    gainNode.connect(delayNode);
-                    delayNode.connect(gainNode);
-                    gainNode.connect(scriptProcessorNode);
-                    scriptProcessorNode.connect(audioContext.destination);
-                });
-
-                // bug #163
-
-                it('should have a maximum delayTime of 256 samples', function (done) {
-                    this.timeout(10000);
-
-                    let offsetOfFirstImpulse = null;
-
-                    scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
-                        // Bug #5: Safari does not support copyFromChannel().
-                        const channelData = inputBuffer.getChannelData(0);
-
-                        if (offsetOfFirstImpulse !== null) {
-                            offsetOfFirstImpulse -= 512;
-                        }
-
-                        for (let i = 0; i < 512; i += 1) {
-                            if (channelData[i] > 0.99 && channelData[i] < 1.01) {
-                                offsetOfFirstImpulse = i;
-                            } else if (channelData[i] > 0.49 && channelData[i] < 0.51) {
-                                expect(i - offsetOfFirstImpulse).to.equal(256);
-
-                                done();
-
-                                break;
-                            }
-                        }
-                    };
-
-                    audioBufferSourceNode.start();
                 });
 
             });

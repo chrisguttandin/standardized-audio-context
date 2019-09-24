@@ -546,6 +546,39 @@ describe('offlineAudioContextConstructor', () => {
             expect(channelMergerNode.channelCountMode).to.not.equal('explicit');
         });
 
+        // bug #20
+
+        it('should not handle unconnected channels as silence', (done) => {
+            const sampleRate = offlineAudioContext.sampleRate;
+            // Bug #95: Safari does not play/loop one sample buffers.
+            const audioBuffer = offlineAudioContext.createBuffer(1, 2, sampleRate);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const channelMergerNode = offlineAudioContext.createChannelMerger(2);
+
+            // Bug #5: Safari does not support copyFromChannel().
+            audioBuffer.getChannelData(0)[0] = 1;
+            audioBuffer.getChannelData(0)[1] = 1;
+
+            audioBufferSourceNode.buffer = audioBuffer;
+
+            channelMergerNode.channelCountMode = 'explicit';
+
+            audioBufferSourceNode.connect(channelMergerNode, 0, 0);
+            channelMergerNode.connect(offlineAudioContext.destination);
+
+            audioBufferSourceNode.start(0);
+
+            offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
+                // Bug #5: Safari does not support copyFromChannel().
+                const channelData = renderedBuffer.getChannelData(0);
+
+                expect(channelData[0]).to.equal(1);
+
+                done();
+            };
+            offlineAudioContext.startRendering();
+        });
+
     });
 
     describe('createChannelSplitter()', () => {
@@ -609,6 +642,67 @@ describe('offlineAudioContextConstructor', () => {
 
         it('should not be implemented', () => {
             expect(offlineAudioContext.createConstantSource).to.be.undefined;
+        });
+
+    });
+
+    describe('createDelay()', () => {
+
+        describe('with a delayTime of 128 samples', () => {
+
+            let audioBufferSourceNode;
+            let delayNode;
+            let gainNode;
+
+            afterEach(() => {
+                audioBufferSourceNode.disconnect(gainNode);
+                delayNode.disconnect(gainNode);
+                gainNode.disconnect(delayNode);
+                gainNode.disconnect(offlineAudioContext.destination);
+            });
+
+            beforeEach(() => {
+                audioBufferSourceNode = offlineAudioContext.createBufferSource();
+                delayNode = offlineAudioContext.createDelay();
+                gainNode = offlineAudioContext.createGain();
+
+                // Bug #95: Safari does not play/loop one sample buffers.
+                const audioBuffer = offlineAudioContext.createBuffer(1, 2, offlineAudioContext.sampleRate);
+
+                audioBuffer.getChannelData(0)[0] = 2;
+
+                audioBufferSourceNode.buffer = audioBuffer;
+
+                delayNode.delayTime.value = 128 / offlineAudioContext.sampleRate;
+
+                gainNode.gain.value = 0.5;
+
+                audioBufferSourceNode.connect(gainNode);
+                gainNode.connect(delayNode);
+                delayNode.connect(gainNode);
+                gainNode.connect(offlineAudioContext.destination);
+            });
+
+            // bug #163
+
+            it('should have a maximum delayTime of 256 samples', function (done) {
+                this.timeout(10000);
+
+                audioBufferSourceNode.start(0);
+
+                offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
+                    // Bug #5: Safari does not support copyFromChannel().
+                    const channelData = renderedBuffer.getChannelData(0);
+
+                    expect(channelData[0]).to.equal(1);
+                    expect(channelData[256]).to.be.above(0.49);
+                    expect(channelData[256]).to.be.below(0.51);
+
+                    done();
+                };
+                offlineAudioContext.startRendering();
+            });
+
         });
 
     });
