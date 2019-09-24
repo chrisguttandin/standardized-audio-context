@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioBufferSourceNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioBufferSourceNode, IAudioNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAudioBufferSourceNodeRendererFactoryFactory, TNativeAudioBufferSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeRendererFactoryFactory = (
@@ -17,7 +17,8 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
 
         const createAudioBufferSourceNode = async (
             proxy: IAudioBufferSourceNode<T>,
-            nativeOfflineAudioContext: TNativeOfflineAudioContext
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
         ) => {
             let nativeAudioBufferSourceNode = getNativeAudioNode<T, TNativeAudioBufferSourceNode>(proxy);
 
@@ -55,13 +56,13 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
 
             if (!nativeAudioBufferSourceNodeIsOwnedByContext) {
                 // Bug #149: Safari does not yet support the detune AudioParam.
-                await renderAutomation(nativeOfflineAudioContext, proxy.playbackRate, nativeAudioBufferSourceNode.playbackRate);
+                await renderAutomation(nativeOfflineAudioContext, proxy.playbackRate, nativeAudioBufferSourceNode.playbackRate, trace);
             } else {
                 // Bug #149: Safari does not yet support the detune AudioParam.
-                await connectAudioParam(nativeOfflineAudioContext, proxy.playbackRate);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.playbackRate, nativeAudioBufferSourceNode.playbackRate, trace);
             }
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioBufferSourceNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioBufferSourceNode, trace);
 
             return nativeAudioBufferSourceNode;
         };
@@ -75,7 +76,8 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
             },
             render (
                 proxy: IAudioBufferSourceNode<T>,
-                nativeOfflineAudioContext: TNativeOfflineAudioContext
+                nativeOfflineAudioContext: TNativeOfflineAudioContext,
+                trace: readonly IAudioNode<T>[]
             ): Promise<TNativeAudioBufferSourceNode> {
                 const renderedNativeAudioBufferSourceNode = renderedNativeAudioBufferSourceNodes.get(nativeOfflineAudioContext);
 
@@ -83,7 +85,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
                     return Promise.resolve(renderedNativeAudioBufferSourceNode);
                 }
 
-                return createAudioBufferSourceNode(proxy, nativeOfflineAudioContext);
+                return createAudioBufferSourceNode(proxy, nativeOfflineAudioContext, trace);
             }
         };
     };

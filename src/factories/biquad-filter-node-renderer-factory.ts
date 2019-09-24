@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IBiquadFilterNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IBiquadFilterNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TBiquadFilterNodeRendererFactoryFactory, TNativeBiquadFilterNode, TNativeOfflineAudioContext } from '../types';
 
 export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFactoryFactory = (
@@ -12,7 +12,11 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativeBiquadFilterNodes = new WeakMap<TNativeOfflineAudioContext, TNativeBiquadFilterNode>();
 
-        const createBiquadFilterNode = async (proxy: IBiquadFilterNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+        const createBiquadFilterNode = async (
+            proxy: IBiquadFilterNode<T>,
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
+        ) => {
             let nativeBiquadFilterNode = getNativeAudioNode<T, TNativeBiquadFilterNode>(proxy);
 
             /*
@@ -39,31 +43,35 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
             renderedNativeBiquadFilterNodes.set(nativeOfflineAudioContext, nativeBiquadFilterNode);
 
             if (!nativeBiquadFilterNodeIsOwnedByContext) {
-                await renderAutomation(nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q);
-                await renderAutomation(nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune);
-                await renderAutomation(nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency);
-                await renderAutomation(nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain);
+                await renderAutomation(nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain, trace);
             } else {
-                await connectAudioParam(nativeOfflineAudioContext, proxy.Q);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.detune);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.frequency);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.gain);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain, trace);
             }
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeBiquadFilterNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeBiquadFilterNode, trace);
 
             return nativeBiquadFilterNode;
         };
 
         return {
-            render (proxy: IBiquadFilterNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeBiquadFilterNode> {
+            render (
+                proxy: IBiquadFilterNode<T>,
+                nativeOfflineAudioContext: TNativeOfflineAudioContext,
+                trace: readonly IAudioNode<T>[]
+            ): Promise<TNativeBiquadFilterNode> {
                 const renderedNativeBiquadFilterNode = renderedNativeBiquadFilterNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeBiquadFilterNode !== undefined) {
                     return Promise.resolve(renderedNativeBiquadFilterNode);
                 }
 
-                return createBiquadFilterNode(proxy, nativeOfflineAudioContext);
+                return createBiquadFilterNode(proxy, nativeOfflineAudioContext, trace);
             }
         };
     };

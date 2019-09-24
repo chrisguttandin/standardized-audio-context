@@ -10,7 +10,11 @@ export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRende
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioNode>();
 
-        const createAudioNode = async (proxy: IAudioNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+        const createAudioNode = async (
+            proxy: IAudioNode<T>,
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
+        ) => {
             let nativeAudioNode = getNativeAudioNode<T, TNativeAudioNode>(proxy);
 
             // If the initially used nativeAudioNode was not constructed on the same OfflineAudioContext it needs to be created again.
@@ -29,20 +33,24 @@ export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRende
 
             renderedNativeAudioNodes.set(nativeOfflineAudioContext, nativeAudioNode);
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode, trace);
 
             return nativeAudioNode;
         };
 
         return {
-            render (proxy: IAudioNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> {
+            render (
+                proxy: IAudioNode<T>,
+                nativeOfflineAudioContext: TNativeOfflineAudioContext,
+                trace: readonly IAudioNode<T>[]
+            ): Promise<TNativeAudioNode> {
                 const renderedNativeAudioNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeAudioNode !== undefined) {
                     return Promise.resolve(renderedNativeAudioNode);
                 }
 
-                return createAudioNode(proxy, nativeOfflineAudioContext);
+                return createAudioNode(proxy, nativeOfflineAudioContext, trace);
             }
         };
     };

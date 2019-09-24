@@ -5,5 +5,6 @@ import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 export type TRenderInputsOfAudioNodeFunction = <T extends IMinimalOfflineAudioContext>(
     audioNode: IAudioNode<T>,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
-    nativeAudioNode: TNativeAudioNode
+    nativeAudioNode: TNativeAudioNode,
+    trace: readonly IAudioNode<T>[]
 ) => Promise<void>; // tslint:disable-line:invalid-void

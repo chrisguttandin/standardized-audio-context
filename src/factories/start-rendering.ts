@@ -11,7 +11,7 @@ export const createStartRendering: TStartRenderingFactory = (
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
     return (destination, nativeOfflineAudioContext) => getAudioNodeRenderer(destination)
-        .render(destination, nativeOfflineAudioContext)
+        .render(destination, nativeOfflineAudioContext, [ ])
         .then(() => renderNativeOfflineAudioContext(nativeOfflineAudioContext))
         .then((audioBuffer) => {
             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().

@@ -1,11 +1,12 @@
 import { TConnectAudioParamFactory } from '../types';
 
-export const createConnectAudioParam: TConnectAudioParamFactory = (getNativeAudioParam, renderInputsOfAudioParam) => {
+export const createConnectAudioParam: TConnectAudioParamFactory = (renderInputsOfAudioParam) => {
     return (
         nativeOfflineAudioContext,
         audioParam,
-        nativeAudioParam = getNativeAudioParam(audioParam)
+        nativeAudioParam,
+        trace
     ) => {
-        return renderInputsOfAudioParam(audioParam, nativeOfflineAudioContext, nativeAudioParam);
+        return renderInputsOfAudioParam(audioParam, nativeOfflineAudioContext, nativeAudioParam, trace);
     };
 };

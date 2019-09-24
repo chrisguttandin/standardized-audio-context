@@ -1,4 +1,4 @@
-import { IAudioDestinationNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioDestinationNode, IAudioNode, IMinimalOfflineAudioContext } from '../interfaces';
 import {
     TAudioDestinationNodeRendererFactory,
     TNativeAudioDestinationNode,
@@ -11,10 +11,14 @@ export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFa
 ) => {
     let nativeAudioDestinationNodePromise: null | Promise<TNativeAudioDestinationNode> = null;
 
-    const createAudioDestinationNode = async (proxy: IAudioDestinationNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+    const createAudioDestinationNode = async (
+        proxy: IAudioDestinationNode<T>,
+        nativeOfflineAudioContext: TNativeOfflineAudioContext,
+        trace: readonly IAudioNode<T>[]
+    ) => {
         const nativeAudioDestinationNode = nativeOfflineAudioContext.destination;
 
-        await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
+        await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode, trace);
 
         return nativeAudioDestinationNode;
     };
@@ -22,10 +26,11 @@ export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFa
     return {
         render (
             proxy: IAudioDestinationNode<T>,
-            nativeOfflineAudioContext: TNativeOfflineAudioContext
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
         ): Promise<TNativeAudioDestinationNode> {
             if (nativeAudioDestinationNodePromise === null) {
-                nativeAudioDestinationNodePromise = createAudioDestinationNode(proxy, nativeOfflineAudioContext);
+                nativeAudioDestinationNodePromise = createAudioDestinationNode(proxy, nativeOfflineAudioContext, trace);
             }
 
             return nativeAudioDestinationNodePromise;

@@ -362,7 +362,7 @@ const wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls = createWrapAudioSc
     createNativeAudioNode
 );
 const renderInputsOfAudioParam = createRenderInputsOfAudioParam(getAudioNodeRenderer, getAudioParamConnections, isPartOfACycle);
-const connectAudioParam = createConnectAudioParam(getNativeAudioParam, renderInputsOfAudioParam);
+const connectAudioParam = createConnectAudioParam(renderInputsOfAudioParam);
 const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFactory(
     cacheTestResult,
     createNativeAudioNode,

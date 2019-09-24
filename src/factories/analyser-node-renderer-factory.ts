@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAnalyserNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAnalyserNode, IAudioNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TAnalyserNodeRendererFactoryFactory, TNativeAnalyserNode, TNativeOfflineAudioContext } from '../types';
 
 export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFactory = (
@@ -10,7 +10,11 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativeAnalyserNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAnalyserNode>();
 
-        const createAnalyserNode = async (proxy: IAnalyserNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+        const createAnalyserNode = async (
+            proxy: IAnalyserNode<T>,
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
+        ) => {
             let nativeAnalyserNode = getNativeAudioNode<T, TNativeAnalyserNode>(proxy);
 
             // If the initially used nativeAnalyserNode was not constructed on the same OfflineAudioContext it needs to be created again.
@@ -32,20 +36,24 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
 
             renderedNativeAnalyserNodes.set(nativeOfflineAudioContext, nativeAnalyserNode);
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAnalyserNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAnalyserNode, trace);
 
             return nativeAnalyserNode;
         };
 
         return {
-            render (proxy: IAnalyserNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAnalyserNode> {
+            render (
+                proxy: IAnalyserNode<T>,
+                nativeOfflineAudioContext: TNativeOfflineAudioContext,
+                trace: readonly IAudioNode<T>[]
+            ): Promise<TNativeAnalyserNode> {
                 const renderedNativeAnalyserNode = renderedNativeAnalyserNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeAnalyserNode !== undefined) {
                     return Promise.resolve(renderedNativeAnalyserNode);
                 }
 
-                return createAnalyserNode(proxy, nativeOfflineAudioContext);
+                return createAnalyserNode(proxy, nativeOfflineAudioContext, trace);
             }
         };
     };

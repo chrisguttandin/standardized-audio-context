@@ -1,6 +1,6 @@
 import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IMinimalOfflineAudioContext, IStereoPannerNode } from '../interfaces';
+import { IAudioNode, IMinimalOfflineAudioContext, IStereoPannerNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeStereoPannerNode, TStereoPannerNodeRendererFactoryFactory } from '../types';
 
 export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFactoryFactory = (
@@ -13,7 +13,11 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativeStereoPannerNodes = new WeakMap<TNativeOfflineAudioContext, TNativeStereoPannerNode>();
 
-        const createStereoPannerNode = async (proxy: IStereoPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+        const createStereoPannerNode = async (
+            proxy: IStereoPannerNode<T>,
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
+        ) => {
             let nativeStereoPannerNode = getNativeAudioNode<T, TNativeStereoPannerNode>(proxy);
 
             /*
@@ -36,33 +40,33 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
             renderedNativeStereoPannerNodes.set(nativeOfflineAudioContext, nativeStereoPannerNode);
 
             if (!nativeStereoPannerNodeIsOwnedByContext) {
-                await renderAutomation(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
+                await renderAutomation(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan, trace);
             } else {
-                await connectAudioParam(nativeOfflineAudioContext, proxy.pan);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan, trace);
             }
 
             if (isNativeAudioNodeFaker(nativeStereoPannerNode)) {
-                await renderInputsOfAudioNode(
-                    proxy,
-                    nativeOfflineAudioContext,
-                    nativeStereoPannerNode.inputs[0]
-                );
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeStereoPannerNode.inputs[0], trace);
             } else {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeStereoPannerNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeStereoPannerNode, trace);
             }
 
             return nativeStereoPannerNode;
         };
 
         return {
-            render (proxy: IStereoPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeStereoPannerNode> {
+            render (
+                proxy: IStereoPannerNode<T>,
+                nativeOfflineAudioContext: TNativeOfflineAudioContext,
+                trace: readonly IAudioNode<T>[]
+            ): Promise<TNativeStereoPannerNode> {
                 const renderedNativeStereoPannerNode = renderedNativeStereoPannerNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeStereoPannerNode !== undefined) {
                     return Promise.resolve(renderedNativeStereoPannerNode);
                 }
 
-                return createStereoPannerNode(proxy, nativeOfflineAudioContext);
+                return createStereoPannerNode(proxy, nativeOfflineAudioContext, trace);
             }
         };
     };

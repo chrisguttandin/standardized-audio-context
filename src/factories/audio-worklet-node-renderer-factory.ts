@@ -5,6 +5,7 @@ import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioWorkletProcessor } from '../helpers/get-audio-worklet-processor';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import {
+    IAudioNode,
     IAudioWorkletNode,
     IAudioWorkletNodeOptions,
     IAudioWorkletProcessorConstructor,
@@ -130,7 +131,11 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     ) => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioWorkletNode | TNativeGainNode>();
 
-        const createAudioNode = async (proxy: IAudioWorkletNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+        const createAudioNode = async (
+            proxy: IAudioWorkletNode<T>,
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
+        ) => {
             let nativeAudioWorkletNode = getNativeAudioNode<T, TNativeAudioWorkletNode>(proxy);
             let nativeOutputNodes: null | [ TNativeChannelSplitterNode, TNativeChannelMergerNode[], TNativeGainNode ] = null;
 
@@ -235,7 +240,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                                 offset: audioParam.value
                             });
 
-                            await renderAutomation(partialOfflineAudioContext, audioParam, constantSourceNode.offset);
+                            await renderAutomation(partialOfflineAudioContext, audioParam, constantSourceNode.offset, trace);
 
                             return constantSourceNode;
                         }));
@@ -267,7 +272,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
                 return Promise
                     .all(gainNodes
-                        .map((gainNode) => renderInputsOfAudioNode(proxy, partialOfflineAudioContext, gainNode)))
+                        .map((gainNode) => renderInputsOfAudioNode(proxy, partialOfflineAudioContext, gainNode, trace)))
                     .then(() => renderNativeOfflineAudioContext(partialOfflineAudioContext))
                     .then(async (renderedBuffer) => {
                         const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext);
@@ -306,7 +311,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         nativeOfflineAudioContext,
                         audioParam,
                         // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
-                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioWorkletNode.parameters).get(nm)
+                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioWorkletNode.parameters).get(nm),
+                        trace
                     );
                 }
             } else {
@@ -315,12 +321,13 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         nativeOfflineAudioContext,
                         audioParam,
                         // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
-                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioWorkletNode.parameters).get(nm)
+                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioWorkletNode.parameters).get(nm),
+                        trace
                     );
                 }
             }
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioWorkletNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioWorkletNode, trace);
 
             return nativeAudioWorkletNode;
         };
@@ -328,7 +335,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
         return {
             render (
                 proxy: IAudioWorkletNode<T>,
-                nativeOfflineAudioContext: TNativeOfflineAudioContext
+                nativeOfflineAudioContext: TNativeOfflineAudioContext,
+                trace: readonly IAudioNode<T>[]
             ): Promise<TNativeGainNode | TNativeAudioWorkletNode> {
                 const renderedNativeAudioWorkletNodeOrGainNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
 
@@ -336,7 +344,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     return Promise.resolve(renderedNativeAudioWorkletNodeOrGainNode);
                 }
 
-                return createAudioNode(proxy, nativeOfflineAudioContext);
+                return createAudioNode(proxy, nativeOfflineAudioContext, trace);
             }
         };
     };

@@ -1,6 +1,6 @@
 import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IMinimalOfflineAudioContext, IPannerNode } from '../interfaces';
+import { IAudioNode, IMinimalOfflineAudioContext, IPannerNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativePannerNode, TPannerNodeRendererFactoryFactory } from '../types';
 
 export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory = (
@@ -13,7 +13,11 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
     return <T extends IMinimalOfflineAudioContext>() => {
         const renderedNativePannerNodes = new WeakMap<TNativeOfflineAudioContext, TNativePannerNode>();
 
-        const createPannerNode = async (proxy: IPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+        const createPannerNode = async (
+            proxy: IPannerNode<T>,
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
+        ) => {
             let nativePannerNode = getNativeAudioNode<T, TNativePannerNode>(proxy);
 
             // If the initially used nativePannerNode was not constructed on the same OfflineAudioContext it needs to be created again.
@@ -46,43 +50,43 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
             renderedNativePannerNodes.set(nativeOfflineAudioContext, nativePannerNode);
 
             if (!nativePannerNodeIsOwnedByContext) {
-                await renderAutomation(nativeOfflineAudioContext, proxy.orientationX, nativePannerNode.orientationX);
-                await renderAutomation(nativeOfflineAudioContext, proxy.orientationY, nativePannerNode.orientationY);
-                await renderAutomation(nativeOfflineAudioContext, proxy.orientationZ, nativePannerNode.orientationZ);
-                await renderAutomation(nativeOfflineAudioContext, proxy.positionX, nativePannerNode.positionX);
-                await renderAutomation(nativeOfflineAudioContext, proxy.positionY, nativePannerNode.positionY);
-                await renderAutomation(nativeOfflineAudioContext, proxy.positionZ, nativePannerNode.positionZ);
+                await renderAutomation(nativeOfflineAudioContext, proxy.orientationX, nativePannerNode.orientationX, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.orientationY, nativePannerNode.orientationY, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.orientationZ, nativePannerNode.orientationZ, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.positionX, nativePannerNode.positionX, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.positionY, nativePannerNode.positionY, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.positionZ, nativePannerNode.positionZ, trace);
             } else {
-                await connectAudioParam(nativeOfflineAudioContext, proxy.orientationX);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.orientationY);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.orientationZ);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.positionX);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.positionY);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.positionZ);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.orientationX, nativePannerNode.orientationX, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.orientationY, nativePannerNode.orientationY, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.orientationZ, nativePannerNode.orientationZ, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.positionX, nativePannerNode.positionX, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.positionY, nativePannerNode.positionY, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.positionZ, nativePannerNode.positionZ, trace);
             }
 
             if (isNativeAudioNodeFaker(nativePannerNode)) {
-                await renderInputsOfAudioNode(
-                    proxy,
-                    nativeOfflineAudioContext,
-                    nativePannerNode.inputs[0]
-                );
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativePannerNode.inputs[0], trace);
             } else {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativePannerNode);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativePannerNode, trace);
             }
 
             return nativePannerNode;
         };
 
         return {
-            render (proxy: IPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativePannerNode> {
+            render (
+                proxy: IPannerNode<T>,
+                nativeOfflineAudioContext: TNativeOfflineAudioContext,
+                trace: readonly IAudioNode<T>[]
+            ): Promise<TNativePannerNode> {
                 const renderedNativePannerNode = renderedNativePannerNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativePannerNode !== undefined) {
                     return Promise.resolve(renderedNativePannerNode);
                 }
 
-                return createPannerNode(proxy, nativeOfflineAudioContext);
+                return createPannerNode(proxy, nativeOfflineAudioContext, trace);
             }
         };
     };

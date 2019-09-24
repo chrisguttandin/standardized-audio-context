@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IConstantSourceNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IConstantSourceNode, IMinimalOfflineAudioContext } from '../interfaces';
 import { TConstantSourceNodeRendererFactoryFactory, TNativeConstantSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendererFactoryFactory = (
@@ -15,7 +15,11 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
         let start: null | number = null;
         let stop: null | number = null;
 
-        const createConstantSourceNode = async (proxy: IConstantSourceNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
+        const createConstantSourceNode = async (
+            proxy: IConstantSourceNode<T>,
+            nativeOfflineAudioContext: TNativeOfflineAudioContext,
+            trace: readonly IAudioNode<T>[]
+        ) => {
             let nativeConstantSourceNode = getNativeAudioNode<T, TNativeConstantSourceNode>(proxy);
 
             /*
@@ -46,12 +50,12 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
             renderedNativeConstantSourceNodes.set(nativeOfflineAudioContext, nativeConstantSourceNode);
 
             if (!nativeConstantSourceNodeIsOwnedByContext) {
-                await renderAutomation(nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
+                await renderAutomation(nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset, trace);
             } else {
-                await connectAudioParam(nativeOfflineAudioContext, proxy.offset);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset, trace);
             }
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConstantSourceNode);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConstantSourceNode, trace);
 
             return nativeConstantSourceNode;
         };
@@ -65,7 +69,8 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
             },
             render (
                 proxy: IConstantSourceNode<T>,
-                nativeOfflineAudioContext: TNativeOfflineAudioContext
+                nativeOfflineAudioContext: TNativeOfflineAudioContext,
+                trace: readonly IAudioNode<T>[]
             ): Promise<TNativeConstantSourceNode> {
                 const renderedNativeConstantSourceNode = renderedNativeConstantSourceNodes.get(nativeOfflineAudioContext);
 
@@ -73,7 +78,7 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
                     return Promise.resolve(renderedNativeConstantSourceNode);
                 }
 
-                return createConstantSourceNode(proxy, nativeOfflineAudioContext);
+                return createConstantSourceNode(proxy, nativeOfflineAudioContext, trace);
             }
         };
     };
