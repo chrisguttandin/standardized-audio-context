@@ -18,8 +18,8 @@ module.exports = (config) => {
                 base: 'BrowserStack',
                 browser: 'Safari',
                 os: 'OS X',
-                os_version: 'High Sierra', // eslint-disable-line camelcase
-                version: '11.1'
+                os_version: 'Mojave', // eslint-disable-line camelcase
+                version: '12.1'
             }
         },
 
