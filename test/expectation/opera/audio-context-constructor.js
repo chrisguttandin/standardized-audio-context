@@ -216,6 +216,81 @@ describe('audioContextConstructor', () => {
 
     });
 
+    describe('createDelay()', () => {
+
+        describe('with a delayTime of 128 samples', () => {
+
+            let audioBufferSourceNode;
+            let delayNode;
+            let gainNode;
+            let scriptProcessorNode;
+
+            afterEach(() => {
+                audioBufferSourceNode.disconnect(gainNode);
+                delayNode.disconnect(gainNode);
+                gainNode.disconnect(delayNode);
+                gainNode.disconnect(scriptProcessorNode);
+                scriptProcessorNode.disconnect(audioContext.destination);
+            });
+
+            beforeEach(() => {
+                audioBufferSourceNode = audioContext.createBufferSource();
+                delayNode = audioContext.createDelay();
+                gainNode = audioContext.createGain();
+                scriptProcessorNode = audioContext.createScriptProcessor(512);
+
+                const audioBuffer = audioContext.createBuffer(1, 1, audioContext.sampleRate);
+
+                audioBuffer.getChannelData(0)[0] = 2;
+
+                audioBufferSourceNode.buffer = audioBuffer;
+
+                delayNode.delayTime.value = 128 / audioContext.sampleRate;
+
+                gainNode.gain.value = 0.5;
+
+                audioBufferSourceNode
+                    .connect(gainNode)
+                    .connect(delayNode)
+                    .connect(gainNode)
+                    .connect(scriptProcessorNode)
+                    .connect(audioContext.destination);
+            });
+
+            // bug #163
+
+            it('should have a maximum delayTime of 256 samples', (done) => {
+                const channelData = new Float32Array(512);
+
+                let offsetOfFirstImpulse = null;
+
+                scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                    inputBuffer.copyFromChannel(channelData, 0);
+
+                    if (offsetOfFirstImpulse !== null) {
+                        offsetOfFirstImpulse -= 512;
+                    }
+
+                    for (let i = 0; i < 512; i += 1) {
+                        if (channelData[i] > 0.99 && channelData[i] < 1.01) {
+                            offsetOfFirstImpulse = i;
+                        } else if (channelData[i] > 0.49 && channelData[i] < 0.51) {
+                            expect(i - offsetOfFirstImpulse).to.equal(256);
+
+                            done();
+
+                            break;
+                        }
+                    }
+                };
+
+                audioBufferSourceNode.start();
+            });
+
+        });
+
+    });
+
     describe('createMediaStreamTrackSource()', () => {
 
         // bug #121
