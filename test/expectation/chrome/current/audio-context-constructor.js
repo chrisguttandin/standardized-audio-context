@@ -122,40 +122,6 @@ describe('audioContextConstructor', () => {
                 }
             });
 
-            // bug #159
-
-            it('should pick the first track', (done) => {
-                const channelData = new Float32Array(512);
-                const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStream);
-                const scriptProcessorNode = audioContext.createScriptProcessor(512);
-
-                scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
-                    inputBuffer.copyFromChannel(channelData, 0);
-
-                    for (let i = 0; i < 512; i += 1) {
-                        if (channelData[i] !== 0) {
-                            mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
-                            scriptProcessorNode.disconnect(audioContext.destination);
-
-                            done(new Error('The signal is expected to be zero at all time.'));
-
-                            break;
-                        }
-                    }
-                };
-
-                mediaStreamAudioSourceNode
-                    .connect(scriptProcessorNode)
-                    .connect(audioContext.destination);
-
-                setTimeout(() => {
-                    mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
-                    scriptProcessorNode.disconnect(audioContext.destination);
-
-                    done();
-                }, 1000);
-            });
-
         });
 
         describe('decodeAudioData()', () => {
