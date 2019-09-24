@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode, addAudioWorkletModule } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -613,22 +613,18 @@ describe('GainNode', () => {
 
             describe('connect()', () => {
 
-                let gainNode;
-
-                beforeEach(() => {
-                    gainNode = createGainNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let gainNode;
 
                         beforeEach(() => {
                             const anotherGainNode = createGainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? anotherGainNode : anotherGainNode.gain;
+                            gainNode = createGainNode(context);
                         });
 
                         if (type === 'AudioNode') {
@@ -674,30 +670,16 @@ describe('GainNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(gainNode)
-                                        .connect(audioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(gainNode)
+                                    .connect(audioNodeOrAudioParam);
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(gainNode)
-                                        .connect(audioNodeOrAudioParam.gain);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(gainNode)
+                                    .connect(audioNodeOrAudioParam.gain);
                             });
 
                         }
@@ -708,6 +690,7 @@ describe('GainNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let gainNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -721,6 +704,7 @@ describe('GainNode', () => {
                             const anotherGainNode = createGainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? anotherGainNode : anotherGainNode.gain;
+                            gainNode = createGainNode(context);
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -740,6 +724,7 @@ describe('GainNode', () => {
 
                         describe(`with an ${ type } of a native context`, () => {
 
+                            let gainNode;
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
 
@@ -755,6 +740,7 @@ describe('GainNode', () => {
                             });
 
                             beforeEach(() => {
+                                gainNode = createGainNode(context);
                                 nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
 
                                 const nativeGainNode = nativeContext.createGain();
@@ -778,6 +764,47 @@ describe('GainNode', () => {
                     }
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const anotherGainNode = createGainNode(context);
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const gainNode = createGainNode(context);
+
+                                constantSourceNode
+                                    .connect(gainNode)
+                                    .connect(destination);
+
+                                gainNode
+                                    .connect(anotherGainNode)
+                                    .connect(gainNode);
+
+                                return { anotherGainNode, constantSourceNode, gainNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { constantSourceNode }) {
+                                constantSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 

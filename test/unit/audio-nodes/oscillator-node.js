@@ -629,22 +629,18 @@ describe('OscillatorNode', () => {
 
             describe('connect()', () => {
 
-                let oscillatorNode;
-
-                beforeEach(() => {
-                    oscillatorNode = createOscillatorNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let oscillatorNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            oscillatorNode = createOscillatorNode(context);
                         });
 
                         if (type === 'AudioNode') {
@@ -690,17 +686,10 @@ describe('OscillatorNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
-                                    oscillatorNode
-                                        .connect(audioNodeOrAudioParam)
-                                        .connect(oscillatorNode.frequency);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                oscillatorNode
+                                    .connect(audioNodeOrAudioParam)
+                                    .connect(oscillatorNode.frequency);
                             });
 
                         }
@@ -711,6 +700,7 @@ describe('OscillatorNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let oscillatorNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -724,6 +714,7 @@ describe('OscillatorNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            oscillatorNode = createOscillatorNode(context);
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -745,6 +736,7 @@ describe('OscillatorNode', () => {
 
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
+                            let oscillatorNode;
 
                             afterEach(() => {
                                 /*
@@ -763,6 +755,7 @@ describe('OscillatorNode', () => {
                                 const nativeGainNode = nativeContext.createGain();
 
                                 nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                                oscillatorNode = createOscillatorNode(context);
                             });
 
                             it('should throw an InvalidAccessError', (done) => {
@@ -781,6 +774,47 @@ describe('OscillatorNode', () => {
                     }
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const anotherGainNode = new GainNode(context);
+                                const gainNode = new GainNode(context);
+                                const oscillatorNode = createOscillatorNode(context);
+
+                                oscillatorNode
+                                    .connect(gainNode)
+                                    .connect(destination);
+
+                                gainNode
+                                    .connect(anotherGainNode)
+                                    .connect(gainNode);
+
+                                return { anotherGainNode, gainNode, oscillatorNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { oscillatorNode }) {
+                                oscillatorNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 

@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, GainNode, WaveShaperNode } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, ConstantSourceNode, GainNode, WaveShaperNode } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -376,22 +376,18 @@ describe('WaveShaperNode', () => {
 
             describe('connect()', () => {
 
-                let waveShaperNode;
-
-                beforeEach(() => {
-                    waveShaperNode = createWaveShaperNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let waveShaperNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            waveShaperNode = createWaveShaperNode(context);
                         });
 
                         if (type === 'AudioNode') {
@@ -437,30 +433,16 @@ describe('WaveShaperNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(waveShaperNode)
-                                        .connect(audioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(waveShaperNode)
+                                    .connect(audioNodeOrAudioParam);
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(waveShaperNode)
-                                        .connect(audioNodeOrAudioParam.gain);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(waveShaperNode)
+                                    .connect(audioNodeOrAudioParam.gain);
                             });
 
                         }
@@ -471,6 +453,7 @@ describe('WaveShaperNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let waveShaperNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -484,6 +467,7 @@ describe('WaveShaperNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            waveShaperNode = createWaveShaperNode(context);
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -505,6 +489,7 @@ describe('WaveShaperNode', () => {
 
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
+                            let waveShaperNode;
 
                             afterEach(() => {
                                 /*
@@ -523,6 +508,7 @@ describe('WaveShaperNode', () => {
                                 const nativeGainNode = nativeContext.createGain();
 
                                 nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                                waveShaperNode = createWaveShaperNode(context);
                             });
 
                             it('should throw an InvalidAccessError', (done) => {
@@ -541,6 +527,47 @@ describe('WaveShaperNode', () => {
                     }
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const gainNode = new GainNode(context);
+                                const waveShaperNode = createWaveShaperNode(context);
+
+                                constantSourceNode
+                                    .connect(waveShaperNode)
+                                    .connect(destination);
+
+                                waveShaperNode
+                                    .connect(gainNode)
+                                    .connect(waveShaperNode);
+
+                                return { constantSourceNode, gainNode, waveShaperNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { constantSourceNode }) {
+                                constantSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 

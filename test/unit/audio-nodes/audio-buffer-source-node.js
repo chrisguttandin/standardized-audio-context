@@ -1190,19 +1190,16 @@ describe('AudioBufferSourceNode', () => {
 
             describe('connect()', () => {
 
-                let audioBufferSourceNode;
-
-                beforeEach(() => {
-                    audioBufferSourceNode = createAudioBufferSourceNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
+                        let audioBufferSourceNode;
                         let audioNodeOrAudioParam;
 
                         beforeEach(() => {
+                            audioBufferSourceNode = createAudioBufferSourceNode(context);
+
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
@@ -1251,18 +1248,31 @@ describe('AudioBufferSourceNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
+                            // Bug #147: Safari does not support connecting something to the playbackRate AudioParam.
+                            if (!isSafari(navigator)) {
+
+                                it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
                                     audioBufferSourceNode
                                         .connect(audioNodeOrAudioParam)
                                         .connect(audioBufferSourceNode.playbackRate);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
+                                });
 
-                                    done();
-                                }
-                            });
+                            } else {
+
+                                it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
+                                    try {
+                                        audioBufferSourceNode
+                                            .connect(audioNodeOrAudioParam)
+                                            .connect(audioBufferSourceNode.playbackRate);
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            }
 
                         }
 
@@ -1271,6 +1281,7 @@ describe('AudioBufferSourceNode', () => {
                     describe(`with an ${ type } of another context`, () => {
 
                         let anotherContext;
+                        let audioBufferSourceNode;
                         let audioNodeOrAudioParam;
 
                         afterEach(() => {
@@ -1284,6 +1295,7 @@ describe('AudioBufferSourceNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
+                            audioBufferSourceNode = createAudioBufferSourceNode(context);
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
                         });
 
@@ -1304,6 +1316,7 @@ describe('AudioBufferSourceNode', () => {
 
                         describe(`with an ${ type } of a native context`, () => {
 
+                            let audioBufferSourceNode;
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
 
@@ -1319,6 +1332,7 @@ describe('AudioBufferSourceNode', () => {
                             });
 
                             beforeEach(() => {
+                                audioBufferSourceNode = createAudioBufferSourceNode(context);
                                 nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
 
                                 const nativeGainNode = nativeContext.createGain();
@@ -1342,6 +1356,52 @@ describe('AudioBufferSourceNode', () => {
                     }
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const anotherGainNode = new GainNode(context);
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context);
+                                const gainNode = new GainNode(context);
+
+                                audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+
+                                audioBufferSourceNode.buffer = audioBuffer;
+
+                                audioBufferSourceNode
+                                    .connect(gainNode)
+                                    .connect(destination);
+
+                                gainNode
+                                    .connect(anotherGainNode)
+                                    .connect(gainNode);
+
+                                return { anotherGainNode, audioBufferSourceNode, gainNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 

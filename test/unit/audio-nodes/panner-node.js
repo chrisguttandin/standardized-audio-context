@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, GainNode, PannerNode } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, ConstantSourceNode, GainNode, PannerNode } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -1302,22 +1302,18 @@ describe('PannerNode', () => {
 
             describe('connect()', () => {
 
-                let pannerNode;
-
-                beforeEach(() => {
-                    pannerNode = createPannerNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let pannerNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            pannerNode = createPannerNode(context);
                         });
 
                         if (type === 'AudioNode') {
@@ -1363,30 +1359,16 @@ describe('PannerNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(pannerNode)
-                                        .connect(audioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(pannerNode)
+                                    .connect(audioNodeOrAudioParam);
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(pannerNode)
-                                        .connect(audioNodeOrAudioParam.gain);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(pannerNode)
+                                    .connect(audioNodeOrAudioParam.gain);
                             });
 
                         }
@@ -1397,6 +1379,7 @@ describe('PannerNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let pannerNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -1410,6 +1393,7 @@ describe('PannerNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            pannerNode = createPannerNode(context);
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -1431,6 +1415,7 @@ describe('PannerNode', () => {
 
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
+                            let pannerNode;
 
                             afterEach(() => {
                                 /*
@@ -1449,6 +1434,7 @@ describe('PannerNode', () => {
                                 const nativeGainNode = nativeContext.createGain();
 
                                 nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                                pannerNode = createPannerNode(context);
                             });
 
                             it('should throw an InvalidAccessError', (done) => {
@@ -1467,6 +1453,47 @@ describe('PannerNode', () => {
                     }
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const gainNode = new GainNode(context);
+                                const pannerNode = createPannerNode(context);
+
+                                constantSourceNode
+                                    .connect(pannerNode)
+                                    .connect(destination);
+
+                                pannerNode
+                                    .connect(gainNode)
+                                    .connect(pannerNode);
+
+                                return { constantSourceNode, gainNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { constantSourceNode }) {
+                                constantSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 

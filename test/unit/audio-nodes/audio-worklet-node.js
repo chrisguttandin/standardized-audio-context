@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -1166,14 +1166,10 @@ describe('AudioWorkletNode', () => {
 
             describe('connect()', () => {
 
-                let audioWorkletNode;
-
                 beforeEach(async function () {
                     this.timeout(10000);
 
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
-
-                    audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                 });
 
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
@@ -1181,11 +1177,13 @@ describe('AudioWorkletNode', () => {
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let audioWorkletNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                         });
 
                         if (type === 'AudioNode') {
@@ -1231,30 +1229,16 @@ describe('AudioWorkletNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(audioWorkletNode)
-                                        .connect(audioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(audioWorkletNode)
+                                    .connect(audioNodeOrAudioParam);
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(audioWorkletNode)
-                                        .connect(audioNodeOrAudioParam.gain);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(audioWorkletNode)
+                                    .connect(audioNodeOrAudioParam.gain);
                             });
 
                         }
@@ -1265,6 +1249,7 @@ describe('AudioWorkletNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let audioWorkletNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -1278,6 +1263,7 @@ describe('AudioWorkletNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -1293,10 +1279,12 @@ describe('AudioWorkletNode', () => {
 
                     });
 
-                    if (description.includes('factory')) {
+                    // @todo Remove this for all tests if (description.includes('factory')) {
+                    /* eslint-disable indent */
 
                         describe(`with an ${ type } of a native context`, () => {
 
+                            let audioWorkletNode;
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
 
@@ -1312,6 +1300,7 @@ describe('AudioWorkletNode', () => {
                             });
 
                             beforeEach(() => {
+                                audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                                 nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
 
                                 const nativeGainNode = nativeContext.createGain();
@@ -1332,9 +1321,50 @@ describe('AudioWorkletNode', () => {
 
                         });
 
-                    }
+                    /* eslint-enable indent */
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const gainNode = new GainNode(context);
+
+                                constantSourceNode
+                                    .connect(audioWorkletNode)
+                                    .connect(destination);
+
+                                audioWorkletNode
+                                    .connect(gainNode)
+                                    .connect(audioWorkletNode);
+
+                                return { audioWorkletNode, constantSourceNode, gainNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { constantSourceNode }) {
+                                constantSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 

@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, BiquadFilterNode, GainNode } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, BiquadFilterNode, ConstantSourceNode, GainNode } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -702,22 +702,18 @@ describe('BiquadFilterNode', () => {
 
             describe('connect()', () => {
 
-                let biquadFilterNode;
-
-                beforeEach(() => {
-                    biquadFilterNode = createBiquadFilterNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let biquadFilterNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            biquadFilterNode = createBiquadFilterNode(context);
                         });
 
                         if (type === 'AudioNode') {
@@ -763,30 +759,16 @@ describe('BiquadFilterNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(biquadFilterNode)
-                                        .connect(audioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(biquadFilterNode)
+                                    .connect(audioNodeOrAudioParam);
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(biquadFilterNode)
-                                        .connect(audioNodeOrAudioParam.gain);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(biquadFilterNode)
+                                    .connect(audioNodeOrAudioParam.gain);
                             });
 
                         }
@@ -797,6 +779,7 @@ describe('BiquadFilterNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let biquadFilterNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -810,6 +793,7 @@ describe('BiquadFilterNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            biquadFilterNode = createBiquadFilterNode(context);
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -829,6 +813,7 @@ describe('BiquadFilterNode', () => {
 
                         describe(`with an ${ type } of a native context`, () => {
 
+                            let biquadFilterNode;
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
 
@@ -844,6 +829,7 @@ describe('BiquadFilterNode', () => {
                             });
 
                             beforeEach(() => {
+                                biquadFilterNode = createBiquadFilterNode(context);
                                 nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
 
                                 const nativeGainNode = nativeContext.createGain();
@@ -867,6 +853,47 @@ describe('BiquadFilterNode', () => {
                     }
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const biquadFilterNode = createBiquadFilterNode(context);
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const gainNode = new GainNode(context);
+
+                                constantSourceNode
+                                    .connect(biquadFilterNode)
+                                    .connect(destination);
+
+                                biquadFilterNode
+                                    .connect(gainNode)
+                                    .connect(biquadFilterNode);
+
+                                return { biquadFilterNode, constantSourceNode, gainNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { constantSourceNode }) {
+                                constantSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 

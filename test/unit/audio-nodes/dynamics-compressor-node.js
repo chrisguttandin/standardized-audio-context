@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, DynamicsCompressorNode, GainNode } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, ConstantSourceNode, DynamicsCompressorNode, GainNode } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -819,22 +819,18 @@ describe('DynamicsCompressorNode', () => {
 
             describe('connect()', () => {
 
-                let dynamicsCompressorNode;
-
-                beforeEach(() => {
-                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let dynamicsCompressorNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
                         });
 
                         if (type === 'AudioNode') {
@@ -880,30 +876,16 @@ describe('DynamicsCompressorNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(dynamicsCompressorNode)
-                                        .connect(audioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(dynamicsCompressorNode)
+                                    .connect(audioNodeOrAudioParam);
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
-                                    audioNodeOrAudioParam
-                                        .connect(dynamicsCompressorNode)
-                                        .connect(audioNodeOrAudioParam.gain);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                audioNodeOrAudioParam
+                                    .connect(dynamicsCompressorNode)
+                                    .connect(audioNodeOrAudioParam.gain);
                             });
 
                         }
@@ -914,6 +896,7 @@ describe('DynamicsCompressorNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let dynamicsCompressorNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -927,6 +910,7 @@ describe('DynamicsCompressorNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -946,6 +930,7 @@ describe('DynamicsCompressorNode', () => {
 
                         describe(`with an ${ type } of a native context`, () => {
 
+                            let dynamicsCompressorNode;
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
 
@@ -961,6 +946,7 @@ describe('DynamicsCompressorNode', () => {
                             });
 
                             beforeEach(() => {
+                                dynamicsCompressorNode = createDynamicsCompressorNode(context);
                                 nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
 
                                 const nativeGainNode = nativeContext.createGain();
@@ -984,6 +970,47 @@ describe('DynamicsCompressorNode', () => {
                     }
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                                const gainNode = new GainNode(context);
+
+                                constantSourceNode
+                                    .connect(dynamicsCompressorNode)
+                                    .connect(destination);
+
+                                dynamicsCompressorNode
+                                    .connect(gainNode)
+                                    .connect(dynamicsCompressorNode);
+
+                                return { constantSourceNode, dynamicsCompressorNode, gainNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { constantSourceNode }) {
+                                constantSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 

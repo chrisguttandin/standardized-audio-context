@@ -1,5 +1,5 @@
 import '../../helper/play-silence';
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, DelayNode, GainNode, addAudioWorkletModule } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, DelayNode, GainNode, addAudioWorkletModule } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -788,17 +788,19 @@ describe('DelayNode', () => {
                             context,
                             length: (context.length === undefined) ? 5 : undefined,
                             prepare (destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
                                 const delayNode = createDelayNode(context);
                                 const gainNode = new GainNode(context);
 
-                                delayNode
+                                constantSourceNode
+                                    .connect(delayNode)
                                     .connect(destination);
 
-                                gainNode
-                                    .connect(delayNode)
-                                    .connect(gainNode);
+                                delayNode
+                                    .connect(gainNode)
+                                    .connect(delayNode);
 
-                                return { delayNode, gainNode };
+                                return { constantSourceNode, delayNode, gainNode };
                             }
                         });
                     });
@@ -806,7 +808,11 @@ describe('DelayNode', () => {
                     it('should render silence', function () {
                         this.timeout(10000);
 
-                        return renderer({ })
+                        return renderer({
+                            start (startTime, { constantSourceNode }) {
+                                constantSourceNode.start(startTime);
+                            }
+                        })
                             .then((channelData) => {
                                 expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
                             });

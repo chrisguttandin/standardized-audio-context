@@ -703,22 +703,18 @@ describe('ConstantSourceNode', () => {
 
             describe('connect()', () => {
 
-                let constantSourceNode;
-
-                beforeEach(() => {
-                    constantSourceNode = createConstantSourceNode(context);
-                });
-
                 for (const type of [ 'AudioNode', 'AudioParam' ]) {
 
                     describe(`with an ${ type }`, () => {
 
                         let audioNodeOrAudioParam;
+                        let constantSourceNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            constantSourceNode = createConstantSourceNode(context);
                         });
 
                         if (type === 'AudioNode') {
@@ -764,17 +760,10 @@ describe('ConstantSourceNode', () => {
                                 }
                             });
 
-                            it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                try {
-                                    constantSourceNode
-                                        .connect(audioNodeOrAudioParam)
-                                        .connect(constantSourceNode.offset);
-                                } catch (err) {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
-
-                                    done();
-                                }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                constantSourceNode
+                                    .connect(audioNodeOrAudioParam)
+                                    .connect(constantSourceNode.offset);
                             });
 
                         }
@@ -785,6 +774,7 @@ describe('ConstantSourceNode', () => {
 
                         let anotherContext;
                         let audioNodeOrAudioParam;
+                        let constantSourceNode;
 
                         afterEach(() => {
                             if (anotherContext.close !== undefined) {
@@ -798,6 +788,7 @@ describe('ConstantSourceNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            constantSourceNode = createConstantSourceNode(context);
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -817,6 +808,7 @@ describe('ConstantSourceNode', () => {
 
                         describe(`with an ${ type } of a native context`, () => {
 
+                            let constantSourceNode;
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
 
@@ -832,6 +824,7 @@ describe('ConstantSourceNode', () => {
                             });
 
                             beforeEach(() => {
+                                constantSourceNode = createConstantSourceNode(context);
                                 nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
 
                                 const nativeGainNode = nativeContext.createGain();
@@ -855,6 +848,47 @@ describe('ConstantSourceNode', () => {
                     }
 
                 }
+
+                describe('with a cycle', () => {
+
+                    let renderer;
+
+                    beforeEach(() => {
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const anotherGainNode = new GainNode(context);
+                                const constantSourceNode = createConstantSourceNode(context);
+                                const gainNode = new GainNode(context);
+
+                                constantSourceNode
+                                    .connect(gainNode)
+                                    .connect(destination);
+
+                                gainNode
+                                    .connect(anotherGainNode)
+                                    .connect(gainNode);
+
+                                return { anotherGainNode, constantSourceNode, gainNode };
+                            }
+                        });
+                    });
+
+                    it('should render silence', function () {
+                        this.timeout(10000);
+
+                        return renderer({
+                            start (startTime, { constantSourceNode }) {
+                                constantSourceNode.start(startTime);
+                            }
+                        })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            });
+                    });
+
+                });
 
             });
 
