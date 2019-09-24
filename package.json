@@ -15,7 +15,7 @@
     }
   ],
   "dependencies": {
-    "@babel/runtime": "^7.6.0",
+    "@babel/runtime": "^7.6.2",
     "automation-events": "^1.0.1",
     "grunt-modernizr": "^2.0.1",
     "tslib": "^1.10.0"
