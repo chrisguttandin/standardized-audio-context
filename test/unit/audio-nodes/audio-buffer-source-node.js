@@ -282,6 +282,37 @@ describe('AudioBufferSourceNode', () => {
 
                 });
 
+                describe('with a initially assigned AudioBuffer', () => {
+
+                    let audioBufferSourceNode;
+
+                    beforeEach(() => {
+                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+
+                        audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                    });
+
+                    it('should throw an InvalidStateError', (done) => {
+                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+
+                        try {
+                            audioBufferSourceNode.buffer = audioBuffer;
+                        } catch (err) {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            done();
+                        }
+                    });
+
+                    it('should be assignable to null', () => {
+                        audioBufferSourceNode.buffer = null;
+
+                        expect(audioBufferSourceNode.buffer).to.be.null;
+                    });
+
+                });
+
                 describe('with a previously assigned AudioBuffer', () => {
 
                     let audioBufferSourceNode;
