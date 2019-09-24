@@ -68,6 +68,8 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
     return <T extends IMinimalOfflineAudioContext>(feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioBufferSourceNode | TNativeIIRFilterNode>();
 
+        let filteredBufferPromise: null | Promise<null | TNativeAudioBuffer> = null;
+
         const createAudioNode = async (
             proxy: IIIRFilterNode<T>,
             nativeOfflineAudioContext: TNativeOfflineAudioContext,
@@ -94,28 +96,36 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
             );
 
             if (nativeAudioBufferSourceNode !== null) {
-                if (nativeOfflineAudioContextConstructor === null) {
-                    throw new Error('Missing the native OfflineAudioContext constructor.');
+                if (filteredBufferPromise === null) {
+                    if (nativeOfflineAudioContextConstructor === null) {
+                        throw new Error('Missing the native OfflineAudioContext constructor.');
+                    }
+
+                    const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
+                        // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
+                        proxy.context.destination.channelCount,
+                        // Bug #17: Safari does not yet expose the length.
+                        proxy.context.length,
+                        nativeOfflineAudioContext.sampleRate
+                    );
+
+                    filteredBufferPromise = (async () => {
+                        await renderInputsOfAudioNode(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination, trace);
+
+                        const renderedBuffer = await renderNativeOfflineAudioContext(partialOfflineAudioContext);
+
+                        return filterFullBuffer(
+                            renderedBuffer,
+                            nativeOfflineAudioContext,
+                            feedback,
+                            feedforward
+                        );
+                    })();
                 }
 
-                const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
-                    // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
-                    proxy.context.destination.channelCount,
-                    // Bug #17: Safari does not yet expose the length.
-                    proxy.context.length,
-                    nativeOfflineAudioContext.sampleRate
-                );
+                const filteredBuffer = await filteredBufferPromise;
 
-                await renderInputsOfAudioNode(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination, trace);
-
-                const renderedBuffer = await renderNativeOfflineAudioContext(partialOfflineAudioContext);
-
-                nativeAudioBufferSourceNode.buffer = filterFullBuffer(
-                    renderedBuffer,
-                    nativeOfflineAudioContext,
-                    feedback,
-                    feedforward
-                );
+                nativeAudioBufferSourceNode.buffer = filteredBuffer;
                 nativeAudioBufferSourceNode.start(0);
 
                 return nativeAudioBufferSourceNode;
