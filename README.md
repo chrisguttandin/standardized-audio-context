@@ -200,6 +200,8 @@ This is an implementation of the [`createConvolver()`](https://webaudio.github.i
 
 This is an implementation of the [`createDelay()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createdelay) factory method. The [`DelayNode`](https://webaudio.github.io/web-audio-api/#DelayNode) constructor may be used as an alternative.
 
+⚠️ <!-- Bug #163 --> The [delayTime AudioParam](https://webaudio.github.io/web-audio-api/#dom-delaynode-delaytime) can't be set to very small values in any browser except Firefox.
+
 #### createDynamicsCompressor() / DynamicsCompressorNode
 
 This is an implementation of the [`createDynamicsCompressor()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createdynamicscompressor) factory method. The [`DynamicsCompressorNode`](https://webaudio.github.io/web-audio-api/#dynamicscompressornode) constructor may be used as an alternative.
