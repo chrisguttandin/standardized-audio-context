@@ -56,7 +56,7 @@
     "karma-webpack": "^4.0.2",
     "load-grunt-config": "^3.0.1",
     "mocha": "^6.2.0",
-    "puppeteer": "^1.19.0",
+    "puppeteer": "^1.20.0",
     "rollup": "^1.21.2",
     "rollup-plugin-babel": "^4.3.3",
     "sinon": "^7.4.2",
