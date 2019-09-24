@@ -791,6 +791,12 @@ describe('DelayNode', () => {
                                 const delayNode = createDelayNode(context);
                                 const gainNode = new GainNode(context);
 
+                                /*
+                                 * Bug #164: Only Firefox detects cycles and therefore is the only browser which clamps the delayTime to
+                                 * the minimum amount.
+                                 */
+                                delayNode.delayTime.value = 128 / context.sampleRate;
+
                                 constantSourceNode
                                     .connect(delayNode)
                                     .connect(destination);

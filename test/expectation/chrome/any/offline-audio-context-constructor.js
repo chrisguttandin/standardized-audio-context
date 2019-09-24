@@ -40,6 +40,39 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createConstantSourceNode()', () => {
+
+        // bug #164
+
+        it('should not mute cycles', function () {
+            this.timeout(10000);
+
+            const constantSourceNode = offlineAudioContext.createConstantSource();
+            const gainNode = offlineAudioContext.createGain();
+
+            constantSourceNode
+                .connect(gainNode)
+                .connect(offlineAudioContext.destination);
+
+            gainNode.connect(gainNode);
+
+            constantSourceNode.start(0);
+
+            return offlineAudioContext
+                .startRendering()
+                .then((renderedBuffer) => {
+                    const channelData = new Float32Array(renderedBuffer.length);
+
+                    renderedBuffer.copyFromChannel(channelData, 0);
+
+                    for (const sample of channelData) {
+                        expect(sample).to.not.equal(0);
+                    }
+                });
+        });
+
+    });
+
     describe('createScriptProcessor()', () => {
 
         describe('without any output channels', () => {

@@ -647,6 +647,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                     ? addConnectionToAudioNodeOfOfflineAudioContext(this, destination, output, input)
                     : addConnectionToAudioNodeOfAudioContext(this, destination, output, input);
 
+                // Bug #164: Only Firefox detects cycles so far.
                 if (isNewConnectionToAudioNode) {
                     const cycles = detectCycles([ this ], destination);
 
@@ -686,6 +687,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                 ? addConnectionToAudioParamOfOfflineAudioContext(this, destination, output)
                 : addConnectionToAudioParamOfAudioContext(this, destination, output);
 
+            // Bug #164: Only Firefox detects cycles so far.
             if (isNewConnectionToAudioParam) {
                 const cycles = detectCycles([ this ], destination);
 
@@ -725,6 +727,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                 }
             }
 
+            // Bug #164: Only Firefox detects cycles so far.
             for (const destination of destinations) {
                 const cycles = detectCycles([ this ], destination);
 

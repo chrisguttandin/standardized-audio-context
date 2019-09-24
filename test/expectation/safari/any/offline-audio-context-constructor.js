@@ -346,6 +346,40 @@ describe('offlineAudioContextConstructor', () => {
             offlineAudioContext.startRendering();
         });
 
+        // bug #164
+
+        it('should not mute cycles', function (done) {
+            this.timeout(10000);
+
+            const audioBuffer = offlineAudioContext.createBuffer(1, 25600, offlineAudioContext.sampleRate);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const gainNode = offlineAudioContext.createGain();
+
+            for (let i = 0; i < 25600; i += 1) {
+                audioBuffer.getChannelData(0)[i] = 1;
+            }
+
+            audioBufferSourceNode.buffer = audioBuffer;
+
+            audioBufferSourceNode.connect(gainNode);
+            gainNode.connect(gainNode);
+            gainNode.connect(offlineAudioContext.destination);
+
+            audioBufferSourceNode.start(0);
+
+            offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
+                // Bug #5: Safari does not support copyFromChannel().
+                const channelData = renderedBuffer.getChannelData(0);
+
+                for (const sample of channelData) {
+                    expect(sample).to.not.equal(0);
+                }
+
+                done();
+            };
+            offlineAudioContext.startRendering();
+        });
+
         describe('buffer', () => {
 
             // bug #72

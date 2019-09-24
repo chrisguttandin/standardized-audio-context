@@ -194,6 +194,42 @@ describe('offlineAudioContextConstructor', () => {
                 });
         });
 
+        // bug #164
+
+        it('should not mute cycles', function () {
+            this.timeout(20000);
+
+            const audioBuffer = offlineAudioContext.createBuffer(1, offlineAudioContext.length, offlineAudioContext.sampleRate);
+            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const gainNode = offlineAudioContext.createGain();
+
+            for (let i = 0; i < offlineAudioContext.length; i += 1) {
+                audioBuffer.getChannelData(0)[i] = 1;
+            }
+
+            audioBufferSourceNode.buffer = audioBuffer;
+
+            audioBufferSourceNode
+                .connect(gainNode)
+                .connect(offlineAudioContext.destination);
+
+            gainNode.connect(gainNode);
+
+            audioBufferSourceNode.start(0);
+
+            return offlineAudioContext
+                .startRendering()
+                .then((renderedBuffer) => {
+                    const channelData = new Float32Array(renderedBuffer.length);
+
+                    renderedBuffer.copyFromChannel(channelData, 0);
+
+                    for (const sample of channelData) {
+                        expect(sample).to.not.equal(0);
+                    }
+                });
+        });
+
         describe('start()', () => {
 
             // bug #44
