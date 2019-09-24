@@ -77,6 +77,8 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
     const channelMergerNode = new ChannelMergerNode(context, { numberOfInputs: 2 });
     const firstImpulseNode = createImpulseNode({ context, length });
     const newAudioNodes = (typeof prepareBeforeStart !== 'function') ? undefined : prepareBeforeStart(audioNodes);
+    // @todo Edge does not yet support the spread operator in objects.
+    const allAudioNodes = (newAudioNodes === undefined) ? audioNodes : Object.assign({ }, audioNodes, newAudioNodes); // eslint-disable-line prefer-object-spread
     const recorderBufferSize = 8192;
     const recorderScriptProcessorNode = createScriptProcessor(context, recorderBufferSize, 2, 1);
     const sampleRate = context.sampleRate;
@@ -104,6 +106,14 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
         bufferNode.disconnect(channelMergerNode);
         channelMergerNode.disconnect(recorderScriptProcessorNode);
         recorderScriptProcessorNode.disconnect(context.destination);
+
+        for (const audioNode of Object.values(allAudioNodes)) {
+            audioNode.disconnect();
+
+            if (typeof audioNode.stop === 'function') {
+                audioNode.stop();
+            }
+        }
 
         bufferNode.onaudioprocess = null;
         recorderScriptProcessorNode.onaudioprocess = null;
@@ -194,8 +204,7 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
         thirdImpulseNode.start(roundToSamples(0, sampleRate, impulseStartSample + (startTimeOffset * 2)));
 
         if (typeof start === 'function') {
-            // @todo Edge does not yet support the spread operator in objects.
-            start(startTime, (newAudioNodes === undefined) ? audioNodes : Object.assign({ }, audioNodes, newAudioNodes)); // eslint-disable-line prefer-object-spread
+            start(startTime, allAudioNodes);
         }
     });
 };

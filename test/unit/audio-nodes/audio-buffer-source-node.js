@@ -1133,6 +1133,9 @@ describe('AudioBufferSourceNode', () => {
                                                     expect(err.code).to.equal(9);
                                                     expect(err.name).to.equal('NotSupportedError');
                                                 }
+                                            },
+                                            start (startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime);
                                             }
                                         });
                                     });
