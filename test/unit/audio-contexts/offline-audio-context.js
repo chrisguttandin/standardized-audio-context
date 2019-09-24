@@ -1,4 +1,3 @@
-import '../../helper/play-silence';
 import { OfflineAudioContext } from '../../../src/module';
 import { isSafari } from '../../helper/is-safari';
 

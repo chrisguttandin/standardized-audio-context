@@ -1,4 +1,3 @@
-import '../helper/play-silence';
 import { AudioWorkletNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../src/module';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';

@@ -1,4 +1,3 @@
-import '../../helper/play-silence';
 import { createNativeAudioContextConstructor } from '../../../src/factories/native-audio-context-constructor';
 
 describe('createNativeAudioContextConstructor()', () => {

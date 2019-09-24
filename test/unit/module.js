@@ -1,4 +1,3 @@
-import '../helper/play-silence';
 import {
     AnalyserNode,
     AudioBuffer,

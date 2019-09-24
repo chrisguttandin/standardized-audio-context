@@ -1,4 +1,3 @@
-import '../../helper/play-silence';
 import { createWindow } from '../../../src/factories/window';
 
 describe('createWindow()', () => {

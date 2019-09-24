@@ -1,4 +1,3 @@
-import '../../helper/play-silence';
 import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, DelayNode, GainNode, addAudioWorkletModule } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';

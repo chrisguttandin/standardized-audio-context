@@ -1,4 +1,3 @@
-import '../../helper/play-silence';
 import { TEST_RESULTS } from '../../../src/globals';
 import { createCacheTestResult } from '../../../src/factories/cache-test-result';
 import { createIsSupportedPromise } from '../../../src/factories/is-supported-promise';

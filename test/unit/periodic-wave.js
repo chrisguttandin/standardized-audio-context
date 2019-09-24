@@ -1,4 +1,3 @@
-import '../helper/play-silence';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../src/globals';
 import { PeriodicWave } from '../../src/module';
 import { createAudioContext } from '../helper/create-audio-context';
