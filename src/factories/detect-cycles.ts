@@ -5,27 +5,30 @@ import { TDetectCyclesFactory } from '../types';
 
 export const createDetectCycles: TDetectCyclesFactory = (audioParamAudioNodeStore, getAudioNodeConnections, getValueForKey) => {
     return function detectCycles <T extends IMinimalBaseAudioContext> (
-        source: IAudioNode<T>,
-        destination: IAudioNode<T> | IAudioParam,
-        chain: IAudioNode<T>[] = [ source ]
+        chain: IAudioNode<T>[],
+        nextLink: IAudioNode<T> | IAudioParam
     ): IAudioNode<T>[][] {
-        const audioNodeOfDestination = (isAudioNode(destination))
-            ? destination
-            : <IAudioNode<T>> getValueForKey(audioParamAudioNodeStore, destination);
+        const audioNode = (isAudioNode(nextLink))
+            ? nextLink
+            : <IAudioNode<T>> getValueForKey(audioParamAudioNodeStore, nextLink);
 
-        if (isDelayNode(audioNodeOfDestination)) {
+        if (isDelayNode(audioNode)) {
             return [ ];
         }
 
-        if (source === audioNodeOfDestination) {
+        if (chain[0] === audioNode) {
             return [ chain ];
         }
 
-        const { outputs } = getAudioNodeConnections(audioNodeOfDestination);
+        if (chain.includes(audioNode)) {
+            return [ ];
+        }
+
+        const { outputs } = getAudioNodeConnections(audioNode);
 
         return Array
             .from(outputs)
-            .map((outputConnection) => detectCycles(source, outputConnection[0], [ ...chain, audioNodeOfDestination ]))
+            .map((outputConnection) => detectCycles([ ...chain, audioNode ], outputConnection[0]))
             .reduce((mergedCycles, nestedCycles) => mergedCycles.concat(nestedCycles), [ ]);
     };
 };

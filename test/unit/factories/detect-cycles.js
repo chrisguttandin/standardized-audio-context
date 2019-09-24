@@ -27,7 +27,7 @@ describe('detectCycles()', () => {
         describe('with two different AudioNodes', () => {
 
             it('should detect no cycle', () => {
-                expect(detectCycles({ context: 'a fake AudioContext' }, { context: 'a fake AudioContext' })).to.deep.equal([ ]);
+                expect(detectCycles([ { context: 'a fake AudioContext' } ], { context: 'a fake AudioContext' })).to.deep.equal([ ]);
             });
 
         });
@@ -41,7 +41,7 @@ describe('detectCycles()', () => {
             });
 
             it('should detect a cycle', () => {
-                expect(detectCycles(audioNode, audioNode)).to.deep.equal([ [ audioNode ] ]);
+                expect(detectCycles([ audioNode ], audioNode)).to.deep.equal([ [ audioNode ] ]);
             });
 
         });
@@ -63,7 +63,7 @@ describe('detectCycles()', () => {
         });
 
         it('should detect a cycle', () => {
-            expect(detectCycles(audioNode, anotherAudioNode)).to.deep.equal([ [ audioNode, anotherAudioNode ] ]);
+            expect(detectCycles([ audioNode ], anotherAudioNode)).to.deep.equal([ [ audioNode, anotherAudioNode ] ]);
         });
 
     });
@@ -83,7 +83,7 @@ describe('detectCycles()', () => {
         });
 
         it('should detect no cycle', () => {
-            expect(detectCycles(delayNode, audioNode)).to.deep.equal([ ]);
+            expect(detectCycles([ delayNode ], audioNode)).to.deep.equal([ ]);
         });
 
     });
@@ -103,12 +103,12 @@ describe('detectCycles()', () => {
         });
 
         it('should detect no cycle', () => {
-            expect(detectCycles(audioNode, delayNode)).to.deep.equal([ ]);
+            expect(detectCycles([ audioNode ], delayNode)).to.deep.equal([ ]);
         });
 
     });
 
-    describe('with various connections to other regular AudioNode', () => {
+    describe('with various connections to other regular AudioNodes', () => {
 
         let audioNode;
         let anotherAudioNode;
@@ -131,10 +131,38 @@ describe('detectCycles()', () => {
         });
 
         it('should detect a cycle', () => {
-            expect(detectCycles(audioNode, anotherAudioNode)).to.deep.equal([
+            expect(detectCycles([ audioNode ], anotherAudioNode)).to.deep.equal([
                 [ audioNode, anotherAudioNode ],
                 [ audioNode, anotherAudioNode, yetAnotherAudioNode ]
             ]);
+        });
+
+    });
+
+    describe('with an existing cycle', () => {
+
+        let audioNode;
+        let anotherAudioNode;
+        let yetAnotherAudioNode;
+
+        beforeEach(() => {
+            audioNode = { context: 'a fake AudioContext' };
+            anotherAudioNode = { any: 'unique property', context: 'a fake AudioContext' };
+            yetAnotherAudioNode = { any: 'other unique property', context: 'a fake AudioContext' };
+
+            const outputsOfAnotherAudioNode = new Set([ [ yetAnotherAudioNode, 1, 1 ] ]);
+            const outputsOfYetAnotherAudioNode = new Set([ [ anotherAudioNode, 1, 1 ] ]);
+
+            getAudioNodeConnections
+                .withArgs(anotherAudioNode)
+                .returns({ outputs: outputsOfAnotherAudioNode });
+            getAudioNodeConnections
+                .withArgs(yetAnotherAudioNode)
+                .returns({ outputs: outputsOfYetAnotherAudioNode });
+        });
+
+        it('should detect a cycle', () => {
+            expect(detectCycles([ audioNode ], anotherAudioNode)).to.deep.equal([ ]);
         });
 
     });

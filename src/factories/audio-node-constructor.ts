@@ -648,7 +648,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                     : addConnectionToAudioNodeOfAudioContext(this, destination, output, input);
 
                 if (isNewConnectionToAudioNode) {
-                    const cycles = detectCycles(this, destination);
+                    const cycles = detectCycles([ this ], destination);
 
                     visitEachAudioNodeOnce(cycles, createIncrementCycleCounter(isOffline));
                 }
@@ -687,7 +687,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                 : addConnectionToAudioParamOfAudioContext(this, destination, output);
 
             if (isNewConnectionToAudioParam) {
-                const cycles = detectCycles(this, destination);
+                const cycles = detectCycles([ this ], destination);
 
                 visitEachAudioNodeOnce(cycles, createIncrementCycleCounter(isOffline));
             }
@@ -726,7 +726,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             }
 
             for (const destination of destinations) {
-                const cycles = detectCycles(this, destination);
+                const cycles = detectCycles([ this ], destination);
 
                 visitEachAudioNodeOnce(cycles, decrementCycleCounter);
             }
