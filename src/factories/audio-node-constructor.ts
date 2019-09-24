@@ -394,7 +394,7 @@ const deleteInputsOfAudioNode = <T extends IMinimalBaseAudioContext>(
     if (listener !== null) {
         deleteEventListenerOfAudioNode(source, listener);
 
-        if (isActive) {
+        if (isActive && !isPartOfACycle(source)) {
             disconnectNativeAudioNodeFromNativeAudioNode(
                 getNativeAudioNode(source),
                 getNativeAudioNode(destination),
@@ -421,7 +421,7 @@ const deleteInputsOfAudioParam = <T extends IMinimalBaseAudioContext>(
     if (listener !== null) {
         deleteEventListenerOfAudioNode(source, listener);
 
-        if (isActive) {
+        if (isActive && !isPartOfACycle(source)) {
             getNativeAudioNode(source)
                 .disconnect(getNativeAudioParam(destination), output);
         }
