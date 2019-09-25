@@ -9,7 +9,7 @@ export const createTestConvolverNodeBufferReassignabilitySupport: TTestConvolver
             return false;
         }
 
-        const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 128, 3200);
+        const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
         const nativeConvolverNode = offlineAudioContext.createConvolver();
 
         nativeConvolverNode.buffer = offlineAudioContext.createBuffer(1, 1, offlineAudioContext.sampleRate);

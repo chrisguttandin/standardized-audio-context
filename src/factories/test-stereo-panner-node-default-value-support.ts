@@ -23,6 +23,11 @@ export const createTestStereoPannerNodeDefaultValueSupport:
             return Promise.resolve(true);
         }
 
+        // Bug #62: Edge & Safari do not support ConstantSourceNodes.
+        if (nativeOfflineAudioContext.createConstantSource === undefined) {
+            return Promise.resolve(true);
+        }
+
         const constantSourceNode = nativeOfflineAudioContext.createConstantSource();
         const stereoPanner = nativeOfflineAudioContext.createStereoPanner();
 
