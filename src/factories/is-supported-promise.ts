@@ -1,6 +1,6 @@
 import { TIsSupportedPromiseFactory } from '../types';
 
-export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
+export const createIsSupportedPromise: TIsSupportedPromiseFactory = async (
     cacheTestResult,
     testAudioBufferCopyChannelMethodsSubarraySupport,
     testAudioContextCloseMethodSupport,
@@ -14,25 +14,28 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testStereoPannerNodeDefaultValueSupport,
     testTransferablesSupport
 ) => {
-    if (cacheTestResult(testAudioBufferCopyChannelMethodsSubarraySupport, testAudioBufferCopyChannelMethodsSubarraySupport)
-            && cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport)
-            && cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport)
-            && cacheTestResult(testAudioNodeConnectMethodSupport, testAudioNodeConnectMethodSupport)
-            && cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport)
-            && cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport)
-            && cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport)) {
-        return Promise
-            .all([
-                cacheTestResult(
-                    testAudioContextDecodeAudioDataMethodTypeErrorSupport,
-                    testAudioContextDecodeAudioDataMethodTypeErrorSupport
-                ),
-                cacheTestResult(testAudioWorkletProcessorNoOutputsSupport, testAudioWorkletProcessorNoOutputsSupport),
-                cacheTestResult(testStereoPannerNodeDefaultValueSupport, testStereoPannerNodeDefaultValueSupport),
-                cacheTestResult(testTransferablesSupport, testTransferablesSupport)
-            ])
-            .then((results) => results.every((result) => result));
-    }
+    try {
+        if (cacheTestResult(testAudioBufferCopyChannelMethodsSubarraySupport, testAudioBufferCopyChannelMethodsSubarraySupport)
+                && cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport)
+                && cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport)
+                && cacheTestResult(testAudioNodeConnectMethodSupport, testAudioNodeConnectMethodSupport)
+                && cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport)
+                && cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport)
+                && cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport)) {
+            const results = await Promise
+                .all([
+                    cacheTestResult(
+                        testAudioContextDecodeAudioDataMethodTypeErrorSupport,
+                        testAudioContextDecodeAudioDataMethodTypeErrorSupport
+                    ),
+                    cacheTestResult(testAudioWorkletProcessorNoOutputsSupport, testAudioWorkletProcessorNoOutputsSupport),
+                    cacheTestResult(testStereoPannerNodeDefaultValueSupport, testStereoPannerNodeDefaultValueSupport),
+                    cacheTestResult(testTransferablesSupport, testTransferablesSupport)
+                ]);
+
+            return results.every((result) => result);
+        }
+    } catch { /* Ignore errors. */ }
 
     return Promise.resolve(false);
 };

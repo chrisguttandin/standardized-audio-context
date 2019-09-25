@@ -86,8 +86,50 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
+    it('should resolve to false if the test for copyFromChannel and copyToChannel methods subarray support of an AudioBuffer throws', async () => {
+        fakeTestAudioBufferCopyChannelMethodsSubarraySupport = () => { throw new Error('A fake error thrown by the test.'); };
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
     it('should resolve to false if the test for close support fails', async () => {
         fakeTestAudioContextCloseMethodSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for close support throws', async () => {
+        fakeTestAudioContextCloseMethodSupport = () => { throw new Error('A fake error thrown by the test.'); };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -128,8 +170,50 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
+    it('should resolve to false if the test for decodeAudioData TypeError support throws', async () => {
+        fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.reject(new Error('A fake error thrown by the test.'));
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
     it('should resolve to false if the test for AudioContextOptions support fails', async () => {
         fakeTestAudioContextOptionsSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for AudioContextOptions support throws', async () => {
+        fakeTestAudioContextOptionsSupport = () => { throw new Error('A fake error thrown by the test.'); };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -170,8 +254,50 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
+    it('should resolve to false if the test for connect support of an AudioNode throws', async () => {
+        fakeTestAudioNodeConnectMethodSupport = () => { throw new Error('A fake error thrown by the test.'); };
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
     it('should resolve to false if the test for process support of an AudioWorkletProcessor fails', async () => {
         fakeTestAudioWorkletProcessorNoOutputsSupport = () => Promise.resolve(false);
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for process support of an AudioWorkletProcessor throws', async () => {
+        fakeTestAudioWorkletProcessorNoOutputsSupport = () => Promise.rejcet(new Error('A fake error thrown by the test.'));
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -212,8 +338,50 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
+    it('should resolve to false if the test for accurate scheduling support of a ConstantSourceNode throws', async () => {
+        fakeTestConstantSourceNodeAccurateSchedulingSupport = () => { throw new Error('A fake error thrown by the test.'); };
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
     it('should resolve to false if the test for buffer reassignability support of a ConvolverNode fails', async () => {
         fakeTestConvolverNodeBufferReassignabilitySupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for buffer reassignability support of a ConvolverNode throws', async () => {
+        fakeTestConvolverNodeBufferReassignabilitySupport = () => { throw new Error('A fake error thrown by the test.'); };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -254,6 +422,27 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
+    it('should resolve to false if the test for isSecureContext support throws', async () => {
+        fakeTestIsSecureContextSupport = () => { throw new Error('A fake error thrown by the test.'); };
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
     it('should resolve to false if the test for default value support of a StereoPannerNode fails', async () => {
         fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.resolve(false);
 
@@ -275,8 +464,50 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
+    it('should resolve to false if the test for default value support of a StereoPannerNode throws', async () => {
+        fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.reject(new Error('A fake error thrown by the test.'));
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
     it('should resolve to false if the test for transferables support fails', async () => {
         fakeTestTransferablesSupport = () => Promise.resolve(false);
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for transferables support throws', async () => {
+        fakeTestTransferablesSupport = () => Promise.reject(new Error('A fake error thrown by the test.'));
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
