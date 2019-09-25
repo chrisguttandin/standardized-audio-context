@@ -182,7 +182,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #49
 
         it('should transition directly from suspended to closed', (done) => {
-            const runTest = (evaluateTest) => {
+            const runTest = (evaluateTest) => { // eslint-disable-line unicorn/consistent-function-scoping
                 offlineAudioContext = new webkitOfflineAudioContext(1, 1, 44100); // eslint-disable-line new-cap, no-undef
 
                 let previousState = offlineAudioContext.state;

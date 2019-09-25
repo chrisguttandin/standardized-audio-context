@@ -270,7 +270,7 @@ describe('AudioContext', () => {
             });
 
             it('should be assignable to a function', () => {
-                const fn = () => {};
+                const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
                 const onstatechange = audioContext.onstatechange = fn; // eslint-disable-line no-multi-assign
 
                 expect(onstatechange).to.equal(fn);

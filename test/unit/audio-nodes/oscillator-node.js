@@ -509,7 +509,7 @@ describe('OscillatorNode', () => {
                 });
 
                 it('should be assignable to a function', () => {
-                    const fn = () => {};
+                    const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
                     const onended = oscillatorNode.onended = fn; // eslint-disable-line no-multi-assign
 
                     expect(onended).to.equal(fn);

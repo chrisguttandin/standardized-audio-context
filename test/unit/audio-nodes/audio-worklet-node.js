@@ -554,7 +554,7 @@ describe('AudioWorkletNode', () => {
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
-                    const fn = () => {};
+                    const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
                     const onprocessorerror = audioWorkletNode.onprocessorerror = fn; // eslint-disable-line no-multi-assign
 
                     expect(onprocessorerror).to.equal(fn);
