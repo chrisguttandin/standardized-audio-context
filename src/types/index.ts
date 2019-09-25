@@ -322,6 +322,7 @@ export * from './test-audio-buffer-source-node-stop-method-nullified-buffer-supp
 export * from './test-audio-context-close-method-support-factory';
 export * from './test-audio-context-decode-audio-data-method-type-error-support-factory';
 export * from './test-audio-context-options-support-factory';
+export * from './test-audio-node-connect-method-support-factory';
 export * from './test-audio-scheduled-source-node-start-method-consecutive-calls-support-factory';
 export * from './test-audio-scheduled-source-node-stop-method-consecutive-calls-support-factory';
 export * from './test-audio-scheduled-source-node-stop-method-negative-parameters-support-factory';

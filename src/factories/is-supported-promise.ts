@@ -6,6 +6,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     testAudioContextCloseMethodSupport,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport,
     testAudioContextOptionsSupport,
+    testAudioNodeConnectMethodSupport,
     testAudioWorkletProcessorNoOutputsSupport,
     testConstantSourceNodeAccurateSchedulingSupport,
     testConvolverNodeBufferReassignabilitySupport,
@@ -16,6 +17,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = (
     if (cacheTestResult(testAudioBufferCopyChannelMethodsSubarraySupport, testAudioBufferCopyChannelMethodsSubarraySupport)
             && cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport)
             && cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport)
+            && cacheTestResult(testAudioNodeConnectMethodSupport, testAudioNodeConnectMethodSupport)
             && cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport)
             && cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport)
             && cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport)) {

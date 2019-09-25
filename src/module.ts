@@ -151,6 +151,7 @@ import {
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport
 } from './factories/test-audio-context-decode-audio-data-method-type-error-support';
 import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options-support';
+import { createTestAudioNodeConnectMethodSupport } from './factories/test-audio-node-connect-method-support';
 import {
     createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport
 } from './factories/test-audio-scheduled-source-node-start-method-negative-parameters-support';
@@ -995,6 +996,7 @@ export const isSupported = () => createIsSupportedPromise(
     createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
     createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
+    createTestAudioNodeConnectMethodSupport(nativeOfflineAudioContextConstructor),
     createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
     createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
     createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),

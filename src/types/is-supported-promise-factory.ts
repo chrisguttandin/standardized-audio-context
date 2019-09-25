@@ -6,6 +6,7 @@ export type TIsSupportedPromiseFactory = (
     testAudioContextCloseMethodSupport: () => boolean,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: () => Promise<boolean>,
     testAudioContextOptionsSupport: () => boolean,
+    testAudioNodeConnectMethodSupport: () => boolean,
     testAudioWorkletProcessorNoOutputsSupport: () => Promise<boolean>,
     testConstantSourceNodeAccurateSchedulingSupport: () => boolean,
     testConvolverNodeBufferReassignabilitySupport: () => boolean,
