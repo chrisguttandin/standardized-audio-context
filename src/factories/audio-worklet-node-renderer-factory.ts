@@ -86,7 +86,8 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
                     return input;
                 });
             const activeSourceFlag = exposeCurrentFrameAndCurrentTime(
-                nativeOfflineAudioContext,
+                i / nativeOfflineAudioContext.sampleRate,
+                nativeOfflineAudioContext.sampleRate,
                 () => audioWorkletProcessor.process(potentiallyEmptyInputs, outputs, parameters)
             );
 

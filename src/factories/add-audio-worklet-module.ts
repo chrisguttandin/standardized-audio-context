@@ -144,7 +144,8 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 }
 
                 exposeCurrentFrameAndCurrentTime(
-                    nativeContext,
+                    nativeContext.currentTime,
+                    nativeContext.sampleRate,
                     () => evaluateAudioWorkletGlobalScope(
                         class AudioWorkletProcessor { },
                         undefined,

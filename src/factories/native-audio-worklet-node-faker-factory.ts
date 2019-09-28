@@ -282,7 +282,11 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                             args[1] = <EventListenerOrEventListenerObject> patchedEventListener;
                         } else {
                             args[1] = (event: Event) => {
-                                exposeCurrentFrameAndCurrentTime(nativeContext, () => unpatchedEventListener(event));
+                                exposeCurrentFrameAndCurrentTime(
+                                    nativeContext.currentTime,
+                                    nativeContext.sampleRate,
+                                    () => unpatchedEventListener(event)
+                                );
                             };
 
                             patchedEventListeners.set(unpatchedEventListener, args[1]);
@@ -388,7 +392,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                             });
 
                         const activeSourceFlag = exposeCurrentFrameAndCurrentTime(
-                            nativeContext,
+                            nativeContext.currentTime + (i / nativeContext.sampleRate),
+                            nativeContext.sampleRate,
                             () => (<IAudioWorkletProcessor> audioWorkletProcessor).process(potentiallyEmptyInputs, outputs, parameters)
                         );
 

@@ -1,18 +1,18 @@
 import { TExposeCurrentFrameAndCurrentTimeFactory } from '../types';
 
 export const createExposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFactory = (window) => {
-    return (nativeContext, fn) => {
+    return (currentTime, sampleRate, fn) => {
         Object.defineProperties(window, {
             currentFrame: {
                 configurable: true,
                 get (): number {
-                    return Math.round(nativeContext.currentTime * nativeContext.sampleRate);
+                    return Math.round(currentTime * sampleRate);
                 }
             },
             currentTime: {
                 configurable: true,
                 get (): number {
-                    return nativeContext.currentTime;
+                    return currentTime;
                 }
             }
         });
