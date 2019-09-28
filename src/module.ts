@@ -839,6 +839,7 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     createNativeConstantSourceNode,
     createNativeGainNode,
     disconnectMultipleOutputs,
+    exposeCurrentFrameAndCurrentTime,
     getNativeAudioNode,
     nativeAudioWorkletNodeConstructor,
     nativeOfflineAudioContextConstructor,

@@ -2,6 +2,7 @@ import { TAudioWorkletNodeRendererFactory } from './audio-worklet-node-renderer-
 import { TConnectAudioParamFunction } from './connect-audio-param-function';
 import { TConnectMultipleOutputsFunction } from './connect-multiple-outputs-function';
 import { TDisconnectMultipleOutputsFunction } from './disconnect-multiple-outputs-function';
+import { TExposeCurrentFrameAndCurrentTimeFunction } from './expose-current-frame-and-current-time-function';
 import { TGetNativeAudioNodeFunction } from './get-native-audio-node-function';
 import { TNativeAudioBufferSourceNodeFactory } from './native-audio-buffer-source-node-factory';
 import { TNativeAudioWorkletNodeConstructor } from './native-audio-worklet-node-constructor';
@@ -23,6 +24,7 @@ export type TAudioWorkletNodeRendererFactoryFactory = (
     createNativeConstantSourceNode: TNativeConstantSourceNodeFactory,
     createNativeGainNode: TNativeGainNodeFactory,
     disconnectMultipleOutputs: TDisconnectMultipleOutputsFunction,
+    exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction,
     getNativeAudioNode: TGetNativeAudioNodeFunction,
     nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
     nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor,

@@ -14,6 +14,7 @@ import {
 } from '../interfaces';
 import {
     TAudioWorkletNodeRendererFactoryFactory,
+    TExposeCurrentFrameAndCurrentTimeFunction,
     TNativeAudioBuffer,
     TNativeAudioNode,
     TNativeAudioParam,
@@ -29,7 +30,8 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
     renderedBuffer: TNativeAudioBuffer,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
-    processorConstructor: undefined | IAudioWorkletProcessorConstructor
+    processorConstructor: undefined | IAudioWorkletProcessorConstructor,
+    exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction
 ): Promise<null | TNativeAudioBuffer> => {
     const { length } = renderedBuffer;
     const numberOfInputChannels = options.channelCount * options.numberOfInputs;
@@ -83,7 +85,10 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
 
                     return input;
                 });
-            const activeSourceFlag = audioWorkletProcessor.process(potentiallyEmptyInputs, outputs, parameters);
+            const activeSourceFlag = exposeCurrentFrameAndCurrentTime(
+                nativeOfflineAudioContext,
+                () => audioWorkletProcessor.process(potentiallyEmptyInputs, outputs, parameters)
+            );
 
             if (processedBuffer !== null) {
                 for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
@@ -117,6 +122,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     createNativeConstantSourceNode,
     createNativeGainNode,
     disconnectMultipleOutputs,
+    exposeCurrentFrameAndCurrentTime,
     getNativeAudioNode,
     nativeAudioWorkletNodeConstructor,
     nativeOfflineAudioContextConstructor,
@@ -283,7 +289,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             renderedBuffer,
                             nativeOfflineAudioContext,
                             options,
-                            processorConstructor
+                            processorConstructor,
+                            exposeCurrentFrameAndCurrentTime
                         );
                     })();
                 }
