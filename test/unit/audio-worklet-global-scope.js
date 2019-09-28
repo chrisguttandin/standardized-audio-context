@@ -57,9 +57,9 @@ describe('AudioWorkletGlobalScope', () => {
                     audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
                 });
 
-                it('should expose the currentFrame of the context', (done) => {
+                it('should expose the currentFrame of the context in a callback', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if ('currentFrame' in data) {
+                        if ('currentFrame' in data && 'options' in data) {
                             audioWorkletNode.port.onmessage = null;
 
                             expect(data.currentFrame).to.be.a('number');
@@ -71,11 +71,27 @@ describe('AudioWorkletGlobalScope', () => {
                     audioWorkletNode.port.postMessage(null);
                 });
 
-                it('should advance over time', (done) => {
+                it('should expose the currentFrame of the context in the process() function', (done) => {
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        if ('currentFrame' in data && 'inputs' in data) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.currentFrame).to.be.a('number');
+
+                            done();
+                        }
+                    };
+
+                    if (context.startRendering !== undefined) {
+                        context.startRendering();
+                    }
+                });
+
+                it('should advance over time in a callback', (done) => {
                     let firstValue = null;
 
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if (data.currentFrame === undefined) {
+                        if (data.currentFrame === undefined || data.options === undefined) {
                             return;
                         }
 
@@ -99,6 +115,30 @@ describe('AudioWorkletGlobalScope', () => {
                     audioWorkletNode.port.postMessage(null);
                 });
 
+                it('should advance over time in the process() function', (done) => {
+                    let firstValue = null;
+
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.currentFrame === undefined || data.inputs === undefined) {
+                            return;
+                        }
+
+                        if (firstValue === null) {
+                            firstValue = data.currentFrame;
+                        } else {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.currentFrame).to.above(firstValue);
+
+                            done();
+                        }
+                    };
+
+                    if (context.startRendering !== undefined) {
+                        context.startRendering();
+                    }
+                });
+
             });
 
             describe('currentTime', () => {
@@ -113,9 +153,9 @@ describe('AudioWorkletGlobalScope', () => {
                     audioWorkletNode = new AudioWorkletNode(context, 'inspector-processor');
                 });
 
-                it('should expose the currentTime of the context', (done) => {
+                it('should expose the currentTime of the context in a callback', (done) => {
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if ('currentTime' in data) {
+                        if ('currentTime' in data && 'options' in data) {
                             audioWorkletNode.port.onmessage = null;
 
                             expect(data.currentTime).to.be.a('number');
@@ -127,11 +167,27 @@ describe('AudioWorkletGlobalScope', () => {
                     audioWorkletNode.port.postMessage(null);
                 });
 
-                it('should advance over time', (done) => {
+                it('should expose the currentTime of the context in the process() function', (done) => {
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        if ('currentTime' in data && 'inputs' in data) {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.currentTime).to.be.a('number');
+
+                            done();
+                        }
+                    };
+
+                    if (context.startRendering !== undefined) {
+                        context.startRendering();
+                    }
+                });
+
+                it('should advance over time in a callback', (done) => {
                     let firstValue = null;
 
                     audioWorkletNode.port.onmessage = ({ data }) => {
-                        if (data.currentTime === undefined) {
+                        if (data.currentTime === undefined || data.options === undefined) {
                             return;
                         }
 
@@ -153,6 +209,30 @@ describe('AudioWorkletGlobalScope', () => {
                     };
 
                     audioWorkletNode.port.postMessage(null);
+                });
+
+                it('should advance over time in the process() function', (done) => {
+                    let firstValue = null;
+
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        if (data.currentTime === undefined || data.inputs === undefined) {
+                            return;
+                        }
+
+                        if (firstValue === null) {
+                            firstValue = data.currentTime;
+                        } else {
+                            audioWorkletNode.port.onmessage = null;
+
+                            expect(data.currentTime).to.above(firstValue);
+
+                            done();
+                        }
+                    };
+
+                    if (context.startRendering !== undefined) {
+                        context.startRendering();
+                    }
                 });
 
             });

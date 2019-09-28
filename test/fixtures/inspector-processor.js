@@ -13,7 +13,7 @@ class InspectorProcessor extends AudioWorkletProcessor {
     }
 
     process (inputs, outputs, parameters) {
-        this.port.postMessage({ inputs, outputs, parameters });
+        this.port.postMessage({ currentFrame, currentTime, inputs, outputs, parameters }); // eslint-disable-line no-undef
 
         return true;
     }
