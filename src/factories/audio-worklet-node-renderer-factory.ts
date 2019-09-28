@@ -27,19 +27,21 @@ import {
 
 const processBuffer = async <T extends IMinimalOfflineAudioContext>(
     proxy: IAudioWorkletNode<T>,
-    renderedBuffer: TNativeAudioBuffer,
+    renderedBuffer: null | TNativeAudioBuffer,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
     processorConstructor: undefined | IAudioWorkletProcessorConstructor,
     exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction
 ): Promise<null | TNativeAudioBuffer> => {
-    const { length } = renderedBuffer;
+    // Ceil the length to the next full render quantum.
+    // Bug #17: Safari does not yet expose the length.
+    const length = (renderedBuffer === null) ? (Math.ceil(proxy.context.length / 128) * 128) : renderedBuffer.length;
     const numberOfInputChannels = options.channelCount * options.numberOfInputs;
     const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
     const processedBuffer = (numberOfOutputChannels === 0) ? null : nativeOfflineAudioContext.createBuffer(
         numberOfOutputChannels,
         length,
-        renderedBuffer.sampleRate
+        nativeOfflineAudioContext.sampleRate
     );
 
     if (processorConstructor === undefined) {
@@ -55,13 +57,15 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext>(
         .reduce((prmtrs, name) => ({ ...prmtrs, [ name ]: new Float32Array(128) }), { });
 
     for (let i = 0; i < length; i += 128) {
-        for (let j = 0; j < options.numberOfInputs; j += 1) {
-            for (let k = 0; k < options.channelCount; k += 1) {
-                copyFromChannel(renderedBuffer, inputs[j], k, k, i);
+        if (options.numberOfInputs > 0 && renderedBuffer !== null) {
+            for (let j = 0; j < options.numberOfInputs; j += 1) {
+                for (let k = 0; k < options.channelCount; k += 1) {
+                    copyFromChannel(renderedBuffer, inputs[j], k, k, i);
+                }
             }
         }
 
-        if (processorConstructor.parameterDescriptors !== undefined) {
+        if (processorConstructor.parameterDescriptors !== undefined && renderedBuffer !== null) {
             processorConstructor.parameterDescriptors.forEach(({ name }, index) => {
                 copyFromChannel(renderedBuffer, parameters, name, numberOfInputChannels + index, i);
             });
@@ -212,32 +216,34 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     const numberOfParameters = (processorConstructor.parameterDescriptors === undefined)
                         ? 0
                         : processorConstructor.parameterDescriptors.length;
-                    const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
-                        numberOfInputChannels + numberOfParameters,
-                        // Ceil the length to the next full render quantum.
-                        // Bug #17: Safari does not yet expose the length.
-                        Math.ceil(proxy.context.length / 128) * 128,
-                        nativeOfflineAudioContext.sampleRate
-                    );
-                    const gainNodes: TNativeGainNode[] = [ ];
-                    const inputChannelSplitterNodes = [ ];
+                    const numberOfChannels = numberOfInputChannels + numberOfParameters;
 
-                    for (let i = 0; i < options.numberOfInputs; i += 1) {
-                        gainNodes.push(createNativeGainNode(partialOfflineAudioContext, {
-                            channelCount: options.channelCount,
-                            channelCountMode: options.channelCountMode,
-                            channelInterpretation: options.channelInterpretation,
-                            gain: 1
-                        }));
-                        inputChannelSplitterNodes.push(createNativeChannelSplitterNode(partialOfflineAudioContext, {
-                            channelCount: options.channelCount,
-                            channelCountMode: 'explicit',
-                            channelInterpretation: 'discrete',
-                            numberOfOutputs: options.channelCount
-                        }));
-                    }
+                    const renderBuffer = async () => {
+                        const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
+                            numberOfChannels,
+                            // Ceil the length to the next full render quantum.
+                            // Bug #17: Safari does not yet expose the length.
+                            Math.ceil(proxy.context.length / 128) * 128,
+                            nativeOfflineAudioContext.sampleRate
+                        );
+                        const gainNodes: TNativeGainNode[] = [ ];
+                        const inputChannelSplitterNodes = [ ];
 
-                    processedBufferPromise = (async () => {
+                        for (let i = 0; i < options.numberOfInputs; i += 1) {
+                            gainNodes.push(createNativeGainNode(partialOfflineAudioContext, {
+                                channelCount: options.channelCount,
+                                channelCountMode: options.channelCountMode,
+                                channelInterpretation: options.channelInterpretation,
+                                gain: 1
+                            }));
+                            inputChannelSplitterNodes.push(createNativeChannelSplitterNode(partialOfflineAudioContext, {
+                                channelCount: options.channelCount,
+                                channelCountMode: 'explicit',
+                                channelInterpretation: 'discrete',
+                                numberOfOutputs: options.channelCount
+                            }));
+                        }
+
                         const constantSourceNodes = await Promise
                             .all(Array
                                 .from(proxy.parameters.values())
@@ -283,17 +289,17 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             .all(gainNodes
                                 .map((gainNode) => renderInputsOfAudioNode(proxy, partialOfflineAudioContext, gainNode, trace)));
 
-                        const renderedBuffer = await renderNativeOfflineAudioContext(partialOfflineAudioContext);
+                        return renderNativeOfflineAudioContext(partialOfflineAudioContext);
+                    };
 
-                        return processBuffer(
-                            proxy,
-                            renderedBuffer,
-                            nativeOfflineAudioContext,
-                            options,
-                            processorConstructor,
-                            exposeCurrentFrameAndCurrentTime
-                        );
-                    })();
+                    processedBufferPromise = processBuffer(
+                        proxy,
+                        (numberOfChannels === 0) ? null : await renderBuffer(),
+                        nativeOfflineAudioContext,
+                        options,
+                        processorConstructor,
+                        exposeCurrentFrameAndCurrentTime
+                    );
                 }
 
                 const processedBuffer = await processedBufferPromise;
