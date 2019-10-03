@@ -744,9 +744,11 @@ describe('audioContextConstructor', () => {
                 source.buffer = ones;
                 source.loop = true;
 
-                source.connect(candidate);
-                candidate.connect(analyzer);
-                analyzer.connect(audioContext.destination);
+                source
+                    .connect(candidate)
+                    .connect(analyzer)
+                    .connect(audioContext.destination);
+
                 candidate.connect(dummy);
                 candidate.disconnect(dummy);
 

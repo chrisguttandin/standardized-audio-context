@@ -19,13 +19,15 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
         const outputGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: 1 });
         const revertGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: -1 });
 
-        inputGainNode.connect(negativeWaveShaperNode);
-        negativeWaveShaperNode.connect(outputGainNode);
+        inputGainNode
+            .connect(negativeWaveShaperNode)
+            .connect(outputGainNode);
 
-        inputGainNode.connect(invertGainNode);
-        invertGainNode.connect(positiveWaveShaperNode);
-        positiveWaveShaperNode.connect(revertGainNode);
-        revertGainNode.connect(outputGainNode);
+        inputGainNode
+            .connect(invertGainNode)
+            .connect(positiveWaveShaperNode)
+            .connect(revertGainNode)
+            .connect(outputGainNode);
 
         let unmodifiedCurve: null | TNativeWaveShaperNode['curve'] = null;
 

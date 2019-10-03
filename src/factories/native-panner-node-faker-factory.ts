@@ -103,20 +103,24 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
         // Bug #119: Safari does not fully support the WaveShaperNode.
         connectNativeAudioNodeToNativeAudioNode(inputGainNode, waveShaperNode, 0, 0);
 
-        waveShaperNode.connect(orientationXGainNode);
-        waveShaperNode.connect(orientationYGainNode);
-        waveShaperNode.connect(orientationZGainNode);
-        waveShaperNode.connect(positionXGainNode);
-        waveShaperNode.connect(positionYGainNode);
-        waveShaperNode.connect(positionZGainNode);
-
-        orientationXGainNode.connect(channelMergerNode);
-        orientationYGainNode.connect(channelMergerNode);
-        orientationZGainNode.connect(channelMergerNode);
-
-        positionXGainNode.connect(channelMergerNode);
-        positionYGainNode.connect(channelMergerNode);
-        positionZGainNode.connect(channelMergerNode);
+        waveShaperNode
+            .connect(orientationXGainNode)
+            .connect(channelMergerNode);
+        waveShaperNode
+            .connect(orientationYGainNode)
+            .connect(channelMergerNode);
+        waveShaperNode
+            .connect(orientationZGainNode)
+            .connect(channelMergerNode);
+        waveShaperNode
+            .connect(positionXGainNode)
+            .connect(channelMergerNode);
+        waveShaperNode
+            .connect(positionYGainNode)
+            .connect(channelMergerNode);
+        waveShaperNode
+            .connect(positionZGainNode)
+            .connect(channelMergerNode);
 
         channelMergerNode.connect(scriptProcessorNode);
 

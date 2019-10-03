@@ -385,8 +385,8 @@ removed. The expectation test however gets recycled and will now be used as part
 check performed when calling `isSupported()`.
 
 The list of currently supported browsers includes Chrome v68+, Edge v18, Firefox v68+, Opera v57+
-and Safari v12+. Please note that the tests are only executed in the current and upcoming version of
-each browser.
+and Safari v12.1+. Please note that the tests are only executed in the current and upcoming version
+of each browser.
 
 Supporting a browser only means that it is supported on the feature level. It is absolutely
 possible that a transpiler like [Babel](https://babeljs.io) is necessary to use this package in

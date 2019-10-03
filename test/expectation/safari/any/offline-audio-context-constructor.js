@@ -361,9 +361,11 @@ describe('offlineAudioContextConstructor', () => {
 
             audioBufferSourceNode.buffer = audioBuffer;
 
-            audioBufferSourceNode.connect(gainNode);
+            audioBufferSourceNode
+                .connect(gainNode)
+                .connect(offlineAudioContext.destination);
+
             gainNode.connect(gainNode);
-            gainNode.connect(offlineAudioContext.destination);
 
             audioBufferSourceNode.start(0);
 
@@ -563,8 +565,9 @@ describe('offlineAudioContextConstructor', () => {
 
             channelMergerNode.channelCountMode = 'explicit';
 
-            audioBufferSourceNode.connect(channelMergerNode, 0, 0);
-            channelMergerNode.connect(offlineAudioContext.destination);
+            audioBufferSourceNode
+                .connect(channelMergerNode, 0, 0)
+                .connect(offlineAudioContext.destination);
 
             audioBufferSourceNode.start(0);
 
@@ -677,10 +680,11 @@ describe('offlineAudioContextConstructor', () => {
 
                 gainNode.gain.value = 0.5;
 
-                audioBufferSourceNode.connect(gainNode);
-                gainNode.connect(delayNode);
-                delayNode.connect(gainNode);
-                gainNode.connect(offlineAudioContext.destination);
+                audioBufferSourceNode
+                    .connect(gainNode)
+                    .connect(delayNode)
+                    .connect(gainNode)
+                    .connect(offlineAudioContext.destination);
             });
 
             // bug #163
@@ -722,8 +726,9 @@ describe('offlineAudioContextConstructor', () => {
 
             audioBufferSourceNode.buffer = audioBuffer;
 
-            audioBufferSourceNode.connect(dynamicsCompressorNode);
-            dynamicsCompressorNode.connect(offlineAudioContext.destination);
+            audioBufferSourceNode
+                .connect(dynamicsCompressorNode)
+                .connect(offlineAudioContext.destination);
 
             audioBufferSourceNode.start(0);
 
@@ -759,8 +764,10 @@ describe('offlineAudioContextConstructor', () => {
 
             source.buffer = ones;
 
-            source.connect(candidate);
-            candidate.connect(offlineAudioContext.destination);
+            source
+                .connect(candidate)
+                .connect(offlineAudioContext.destination);
+
             candidate.connect(dummy);
             candidate.disconnect(dummy);
 
@@ -804,8 +811,9 @@ describe('offlineAudioContextConstructor', () => {
 
                     gainNode.gain.value = 100;
 
-                    audioBufferSourceNode.connect(gainNode);
-                    gainNode.connect(offlineAudioContext.destination);
+                    audioBufferSourceNode
+                        .connect(gainNode)
+                        .connect(offlineAudioContext.destination);
 
                     audioBufferSourceNode.start();
 
@@ -859,8 +867,9 @@ describe('offlineAudioContextConstructor', () => {
 
                 gainNode.gain.setValueCurveAtTime(new Float32Array([ 1, 3 ]), 0, 2 / offlineAudioContext.sampleRate);
 
-                audioBufferSourceNode.connect(gainNode);
-                gainNode.connect(offlineAudioContext.destination);
+                audioBufferSourceNode
+                    .connect(gainNode)
+                    .connect(offlineAudioContext.destination);
 
                 audioBufferSourceNode.start(0);
 
@@ -970,8 +979,9 @@ describe('offlineAudioContextConstructor', () => {
 
             waveShaperNode.curve = new Float32Array([ 1, 0.5, 0 ]);
 
-            audioBufferSourceNode.connect(waveShaperNode);
-            waveShaperNode.connect(offlineAudioContext.destination);
+            audioBufferSourceNode
+                .connect(waveShaperNode)
+                .connect(offlineAudioContext.destination);
 
             audioBufferSourceNode.start(0);
 

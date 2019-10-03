@@ -354,8 +354,9 @@ describe('offlineAudioContextConstructor', () => {
                     gainNode.gain.setValueAtTime(-1, 0);
                     gainNode.gain.linearRampToValueAtTime(1, 0.5);
 
-                    audioBufferSourceNode.connect(gainNode);
-                    gainNode.connect(offlineAudioContext.destination);
+                    audioBufferSourceNode
+                        .connect(gainNode)
+                        .connect(offlineAudioContext.destination);
 
                     audioBufferSourceNode.start();
 

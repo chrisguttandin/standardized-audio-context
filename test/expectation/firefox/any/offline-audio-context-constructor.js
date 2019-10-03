@@ -159,8 +159,9 @@ describe('offlineAudioContextConstructor', () => {
 
                     gainNode.gain.value = 100;
 
-                    constantSourceNode.connect(gainNode);
-                    gainNode.connect(offlineAudioContext.destination);
+                    constantSourceNode
+                        .connect(gainNode)
+                        .connect(offlineAudioContext.destination);
 
                     constantSourceNode.start();
 

@@ -19,8 +19,10 @@ export const testAudioNodeDisconnectMethodSupport = (nativeAudioContext: TNative
         source.buffer = ones;
         source.loop = true;
 
-        source.connect(analyzer);
-        analyzer.connect(nativeAudioContext.destination);
+        source
+            .connect(analyzer)
+            .connect(nativeAudioContext.destination);
+
         source.connect(dummy);
         source.disconnect(dummy);
 
