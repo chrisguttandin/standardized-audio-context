@@ -1,3 +1,5 @@
+![logo](https://repository-images.githubusercontent.com/47925308/9fbb5e00-e6b0-11e9-9a9f-ba142abbeb7b)
+
 # standardized-audio-context
 
 **A cross-browser implementation of the AudioContext which aims to closely follow the standard.**
