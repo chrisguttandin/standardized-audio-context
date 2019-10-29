@@ -827,6 +827,56 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createMediaStreamSource()', () => {
+
+            // bug #165
+
+            it('output silence after being disconnected', function (done) {
+                this.timeout(10000);
+
+                const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
+                const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStreamAudioDestinationNode.stream);
+                const oscillatorNode = audioContext.createOscillator();
+                const scriptProcessorNode = audioContext.createScriptProcessor(256, 1, 1);
+
+                oscillatorNode.connect(mediaStreamAudioDestinationNode);
+                mediaStreamAudioSourceNode
+                    .connect(scriptProcessorNode)
+                    .connect(audioContext.destination);
+
+                oscillatorNode.start();
+
+                setTimeout(() => {
+                    mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                    setTimeout(() => {
+                        mediaStreamAudioSourceNode.connect(scriptProcessorNode);
+
+                        scriptProcessorNode.onaudioprocess = (event) => {
+                            const channelData = event.inputBuffer.getChannelData(0);
+
+                            if (Array.prototype.some.call(channelData, (sample) => sample !== 0)) {
+                                done(new Error('This should never be called.'));
+                            }
+                        };
+
+                        setTimeout(() => {
+                            oscillatorNode.stop();
+
+                            scriptProcessorNode.onaudioprocess = null;
+
+                            oscillatorNode.disconnect(mediaStreamAudioDestinationNode);
+                            mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+                            scriptProcessorNode.disconnect(audioContext.destination);
+
+                            done();
+                        }, 2000);
+                    }, 2000);
+                }, 500);
+            });
+
+        });
+
         describe('createMediaStreamTrackSource()', () => {
 
             // bug #121
