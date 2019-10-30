@@ -1,5 +1,7 @@
 import { TConnectNativeAudioNodeToNativeAudioNodeFunction } from './connect-native-audio-node-to-native-audio-node-function';
+import { TDisconnectNativeAudioNodeFromNativeAudioNodeFunction } from './disconnect-native-audio-node-from-native-audio-node-function';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
+import { TMonitorConnectionsFunction } from './monitor-connections-function';
 import { TNativeAudioNodeFactory } from './native-audio-node-factory';
 import { TNativeChannelMergerNodeFactory } from './native-channel-merger-node-factory';
 import { TNativeGainNodeFactory } from './native-gain-node-factory';
@@ -16,5 +18,7 @@ export type TNativePannerNodeFakerFactoryFactory = (
     createNativeGainNode: TNativeGainNodeFactory,
     createNativeScriptProcessorNode: TNativeScriptProcessorNodeFactory,
     createNativeWaveShaperNode: TNativeWaveShaperNodeFactory,
-    createNotSupportedError: TNotSupportedErrorFactory
+    createNotSupportedError: TNotSupportedErrorFactory,
+    disconnectNativeAudioNodeToNativeAudioNode: TDisconnectNativeAudioNodeFromNativeAudioNodeFunction,
+    monitorConnections: TMonitorConnectionsFunction
 ) => TNativePannerNodeFakerFactory;

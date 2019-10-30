@@ -10,7 +10,9 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
     createNativeGainNode,
     createNativeScriptProcessorNode,
     createNativeWaveShaperNode,
-    createNotSupportedError
+    createNotSupportedError,
+    disconnectNativeAudioNodeFromNativeAudioNode,
+    monitorConnections
 ) => {
     return (
         nativeContext,
@@ -97,32 +99,6 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 lastPosition = positon;
             }
         };
-
-        inputGainNode.connect(pannerNode);
-
-        // Bug #119: Safari does not fully support the WaveShaperNode.
-        connectNativeAudioNodeToNativeAudioNode(inputGainNode, waveShaperNode, 0, 0);
-
-        waveShaperNode
-            .connect(orientationXGainNode)
-            .connect(channelMergerNode);
-        waveShaperNode
-            .connect(orientationYGainNode)
-            .connect(channelMergerNode);
-        waveShaperNode
-            .connect(orientationZGainNode)
-            .connect(channelMergerNode);
-        waveShaperNode
-            .connect(positionXGainNode)
-            .connect(channelMergerNode);
-        waveShaperNode
-            .connect(positionYGainNode)
-            .connect(channelMergerNode);
-        waveShaperNode
-            .connect(positionZGainNode)
-            .connect(channelMergerNode);
-
-        channelMergerNode.connect(scriptProcessorNode);
 
         Object.defineProperty(orientationYGainNode.gain, 'defaultValue', { get: () => 0 });
         Object.defineProperty(orientationZGainNode.gain, 'defaultValue', { get: () => 0 });
@@ -335,6 +311,55 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             nativePannerNodeFaker.rolloffFactor = rolloffFactor;
         }
 
-        return interceptConnections(nativePannerNodeFaker, pannerNode);
+        const whenConnected = () => {
+            inputGainNode.connect(pannerNode);
+
+            // Bug #119: Safari does not fully support the WaveShaperNode.
+            connectNativeAudioNodeToNativeAudioNode(inputGainNode, waveShaperNode, 0, 0);
+
+            waveShaperNode
+                .connect(orientationXGainNode)
+                .connect(channelMergerNode);
+            waveShaperNode
+                .connect(orientationYGainNode)
+                .connect(channelMergerNode);
+            waveShaperNode
+                .connect(orientationZGainNode)
+                .connect(channelMergerNode);
+            waveShaperNode
+                .connect(positionXGainNode)
+                .connect(channelMergerNode);
+            waveShaperNode
+                .connect(positionYGainNode)
+                .connect(channelMergerNode);
+            waveShaperNode
+                .connect(positionZGainNode)
+                .connect(channelMergerNode);
+
+            channelMergerNode.connect(scriptProcessorNode);
+        };
+        const whenDisconnected = () => {
+            inputGainNode.disconnect(pannerNode);
+
+            // Bug #119: Safari does not fully support the WaveShaperNode.
+            disconnectNativeAudioNodeFromNativeAudioNode(inputGainNode, waveShaperNode, 0, 0);
+
+            waveShaperNode.disconnect(orientationXGainNode);
+            orientationXGainNode.disconnect(channelMergerNode);
+            waveShaperNode.disconnect(orientationYGainNode);
+            orientationYGainNode.disconnect(channelMergerNode);
+            waveShaperNode.disconnect(orientationZGainNode);
+            orientationZGainNode.disconnect(channelMergerNode);
+            waveShaperNode.disconnect(positionXGainNode);
+            positionXGainNode.disconnect(channelMergerNode);
+            waveShaperNode.disconnect(positionYGainNode);
+            positionYGainNode.disconnect(channelMergerNode);
+            waveShaperNode.disconnect(positionZGainNode);
+            positionZGainNode.disconnect(channelMergerNode);
+
+            channelMergerNode.disconnect(scriptProcessorNode);
+        };
+
+        return monitorConnections(interceptConnections(nativePannerNodeFaker, pannerNode), whenConnected, whenDisconnected);
     };
 };

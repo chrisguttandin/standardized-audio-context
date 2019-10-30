@@ -12,6 +12,7 @@ import {
     TNativeAudioWorkletNode,
     TNativeAudioWorkletNodeFakerFactoryFactory,
     TNativeChannelMergerNode,
+    TNativeChannelSplitterNode,
     TNativeConstantSourceNode,
     TNativeGainNode
 } from '../types';
@@ -28,7 +29,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
     createNativeScriptProcessorNode,
     createNotSupportedError,
     disconnectMultipleOutputs,
-    exposeCurrentFrameAndCurrentTime
+    exposeCurrentFrameAndCurrentTime,
+    monitorConnections
 ) => {
     return (nativeContext, baseLatency, processorConstructor, options) => {
         if (options.numberOfInputs === 0 && options.numberOfOutputs === 0) {
@@ -64,7 +66,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         const messageChannel = new MessageChannel();
         const gainNodes: TNativeGainNode[] = [ ];
-        const inputChannelSplitterNodes = [ ];
+        const inputChannelSplitterNodes: TNativeChannelSplitterNode[] = [ ];
 
         for (let i = 0; i < options.numberOfInputs; i += 1) {
             gainNodes.push(createNativeGainNode(nativeContext, {
@@ -171,20 +173,6 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }));
 
         inputChannelMergerNode.connect(scriptProcessorNode);
-
-        if (options.numberOfOutputs > 0) {
-            scriptProcessorNode.connect(outputChannelSplitterNode);
-        }
-
-        for (let i = 0, outputChannelSplitterNodeOutput = 0; i < options.numberOfOutputs; i += 1) {
-            const outputChannelMergerNode = outputChannelMergerNodes[i];
-
-            for (let j = 0; j < options.outputChannelCount[i]; j += 1) {
-                outputChannelSplitterNode.connect(outputChannelMergerNode, outputChannelSplitterNodeOutput + j, j);
-            }
-
-            outputChannelSplitterNodeOutput += options.outputChannelCount[i];
-        }
 
         let channelInterpretation = options.channelInterpretation;
         let onprocessorerror: TNativeAudioWorkletNode['onprocessorerror'] = null;
@@ -355,6 +343,22 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         let isActive = true;
 
+        const disconnectOutputsGraph = () => {
+            if (options.numberOfOutputs > 0) {
+                scriptProcessorNode.disconnect(outputChannelSplitterNode);
+            }
+
+            for (let i = 0, outputChannelSplitterNodeOutput = 0; i < options.numberOfOutputs; i += 1) {
+                const outputChannelMergerNode = outputChannelMergerNodes[i];
+
+                for (let j = 0; j < options.outputChannelCount[i]; j += 1) {
+                    outputChannelSplitterNode.disconnect(outputChannelMergerNode, outputChannelSplitterNodeOutput + j, j);
+                }
+
+                outputChannelSplitterNodeOutput += options.outputChannelCount[i];
+            }
+        };
+
         scriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }: AudioProcessingEvent) => { // tslint:disable-line:deprecation
             if (audioWorkletProcessor !== null) {
                 for (let i = 0; i < bufferSize; i += 128) {
@@ -413,7 +417,32 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }
 
                     if (!isActive) {
+                        for (let j = 0; j < options.numberOfInputs; j += 1) {
+                            gainNodes[j].disconnect(inputChannelSplitterNodes[j]);
+
+                            for (let k = 0; k < options.channelCount; k += 1) {
+                                inputChannelSplitterNodes[i].disconnect(inputChannelMergerNode, k, (j * options.channelCount) + k);
+                            }
+                        }
+
+                        if (processorConstructor.parameterDescriptors !== undefined) {
+                            const length = processorConstructor.parameterDescriptors.length;
+
+                            for (let j = 0; j < length; j += 1) {
+                                const constantSourceNode = constantSourceNodes[j];
+
+                                constantSourceNode.disconnect(inputChannelMergerNode, 0, numberOfInputChannels + j);
+                                constantSourceNode.stop();
+                            }
+                        }
+
+                        inputChannelMergerNode.disconnect(scriptProcessorNode);
+
                         scriptProcessorNode.onaudioprocess = null; // tslint:disable-line:deprecation
+
+                        if (isConnected) {
+                            disconnectOutputsGraph();
+                        }
 
                         break;
                     }
@@ -421,6 +450,35 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         };
 
-        return nativeAudioWorkletNodeFaker;
+        let isConnected = false;
+
+        const whenConnected = () => {
+            if (isActive) {
+                if (options.numberOfOutputs > 0) {
+                    scriptProcessorNode.connect(outputChannelSplitterNode);
+                }
+
+                for (let i = 0, outputChannelSplitterNodeOutput = 0; i < options.numberOfOutputs; i += 1) {
+                    const outputChannelMergerNode = outputChannelMergerNodes[i];
+
+                    for (let j = 0; j < options.outputChannelCount[i]; j += 1) {
+                        outputChannelSplitterNode.connect(outputChannelMergerNode, outputChannelSplitterNodeOutput + j, j);
+                    }
+
+                    outputChannelSplitterNodeOutput += options.outputChannelCount[i];
+                }
+            }
+
+            isConnected = true;
+        };
+        const whenDisconnected = () => {
+            if (isActive) {
+                disconnectOutputsGraph();
+            }
+
+            isConnected = false;
+        };
+
+        return monitorConnections(nativeAudioWorkletNodeFaker, whenConnected, whenDisconnected);
     };
 };

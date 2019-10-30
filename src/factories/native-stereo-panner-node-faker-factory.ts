@@ -14,7 +14,8 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
     createNativeChannelSplitterNode,
     createNativeGainNode,
     createNativeWaveShaperNode,
-    createNotSupportedError
+    createNotSupportedError,
+    monitorConnections
 ) => {
     // The curve has a size of 14bit plus 1 value to have an exact representation for zero. This value has been determined experimentally.
     const CURVE_SIZE = 16385;
@@ -57,22 +58,40 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightWaveShaperCurve }
         );
 
-        inputGainNode.connect(leftGainNode);
-        inputGainNode.connect(panWaveShaperNode.inputs[0]);
-        inputGainNode.connect(rightGainNode);
+        return {
+            connectGraph (): void {
+                inputGainNode.connect(leftGainNode);
+                inputGainNode.connect(panWaveShaperNode.inputs[0]);
+                inputGainNode.connect(rightGainNode);
 
-        panWaveShaperNode.connect(panGainNode);
+                panWaveShaperNode.connect(panGainNode);
 
-        panGainNode.connect(leftWaveShaperNode.inputs[0]);
-        panGainNode.connect(rightWaveShaperNode.inputs[0]);
+                panGainNode.connect(leftWaveShaperNode.inputs[0]);
+                panGainNode.connect(rightWaveShaperNode.inputs[0]);
 
-        leftWaveShaperNode.connect(leftGainNode.gain);
-        rightWaveShaperNode.connect(rightGainNode.gain);
+                leftWaveShaperNode.connect(leftGainNode.gain);
+                rightWaveShaperNode.connect(rightGainNode.gain);
 
-        leftGainNode.connect(channelMergerNode, 0, 0);
-        rightGainNode.connect(channelMergerNode, 0, 1);
+                leftGainNode.connect(channelMergerNode, 0, 0);
+                rightGainNode.connect(channelMergerNode, 0, 1);
+            },
+            disconnectGraph (): void {
+                inputGainNode.disconnect(leftGainNode);
+                inputGainNode.disconnect(panWaveShaperNode.inputs[0]);
+                inputGainNode.disconnect(rightGainNode);
 
-        return [ leftGainNode, rightGainNode ];
+                panWaveShaperNode.disconnect(panGainNode);
+
+                panGainNode.disconnect(leftWaveShaperNode.inputs[0]);
+                panGainNode.disconnect(rightWaveShaperNode.inputs[0]);
+
+                leftWaveShaperNode.disconnect(leftGainNode.gain);
+                rightWaveShaperNode.disconnect(rightGainNode.gain);
+
+                leftGainNode.disconnect(channelMergerNode, 0, 0);
+                rightGainNode.disconnect(channelMergerNode, 0, 1);
+            }
+        };
     };
 
     const buildInternalGraphForStereo = (
@@ -141,38 +160,62 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightInputForRightOutputWaveShaperCurve }
         );
 
-        inputGainNode.connect(channelSplitterNode);
-        inputGainNode.connect(panWaveShaperNode.inputs[0]);
+        return {
+            connectGraph (): void {
+                inputGainNode.connect(channelSplitterNode);
+                inputGainNode.connect(panWaveShaperNode.inputs[0]);
 
-        channelSplitterNode.connect(leftInputForLeftOutputGainNode, 1);
-        channelSplitterNode.connect(leftInputForRightOutputGainNode, 1);
-        channelSplitterNode.connect(rightInputForLeftOutputGainNode, 1);
-        channelSplitterNode.connect(rightInputForRightOutputGainNode, 1);
+                channelSplitterNode.connect(leftInputForLeftOutputGainNode, 1);
+                channelSplitterNode.connect(leftInputForRightOutputGainNode, 1);
+                channelSplitterNode.connect(rightInputForLeftOutputGainNode, 1);
+                channelSplitterNode.connect(rightInputForRightOutputGainNode, 1);
 
-        panWaveShaperNode.connect(panGainNode);
+                panWaveShaperNode.connect(panGainNode);
 
-        panGainNode.connect(leftInputForLeftOutputWaveShaperNode.inputs[0]);
-        panGainNode.connect(leftInputForRightOutputWaveShaperNode.inputs[0]);
-        panGainNode.connect(rightInputForLeftOutputWaveShaperNode.inputs[0]);
-        panGainNode.connect(rightInputForRightOutputWaveShaperNode.inputs[0]);
+                panGainNode.connect(leftInputForLeftOutputWaveShaperNode.inputs[0]);
+                panGainNode.connect(leftInputForRightOutputWaveShaperNode.inputs[0]);
+                panGainNode.connect(rightInputForLeftOutputWaveShaperNode.inputs[0]);
+                panGainNode.connect(rightInputForRightOutputWaveShaperNode.inputs[0]);
 
-        leftInputForLeftOutputWaveShaperNode.connect(leftInputForLeftOutputGainNode.gain);
-        leftInputForRightOutputWaveShaperNode.connect(leftInputForRightOutputGainNode.gain);
-        rightInputForLeftOutputWaveShaperNode.connect(rightInputForLeftOutputGainNode.gain);
-        rightInputForRightOutputWaveShaperNode.connect(rightInputForRightOutputGainNode.gain);
+                leftInputForLeftOutputWaveShaperNode.connect(leftInputForLeftOutputGainNode.gain);
+                leftInputForRightOutputWaveShaperNode.connect(leftInputForRightOutputGainNode.gain);
+                rightInputForLeftOutputWaveShaperNode.connect(rightInputForLeftOutputGainNode.gain);
+                rightInputForRightOutputWaveShaperNode.connect(rightInputForRightOutputGainNode.gain);
 
-        leftInputForLeftOutputGainNode.connect(channelMergerNode, 0, 0);
-        rightInputForLeftOutputGainNode.connect(channelMergerNode, 0, 0);
+                leftInputForLeftOutputGainNode.connect(channelMergerNode, 0, 0);
+                rightInputForLeftOutputGainNode.connect(channelMergerNode, 0, 0);
 
-        leftInputForRightOutputGainNode.connect(channelMergerNode, 0, 1);
-        rightInputForRightOutputGainNode.connect(channelMergerNode, 0, 1);
+                leftInputForRightOutputGainNode.connect(channelMergerNode, 0, 1);
+                rightInputForRightOutputGainNode.connect(channelMergerNode, 0, 1);
+            },
+            disconnectGraph (): void {
+                inputGainNode.disconnect(channelSplitterNode);
+                inputGainNode.disconnect(panWaveShaperNode.inputs[0]);
 
-        return [
-            leftInputForLeftOutputGainNode,
-            rightInputForLeftOutputGainNode,
-            leftInputForRightOutputGainNode,
-            rightInputForRightOutputGainNode
-        ];
+                channelSplitterNode.disconnect(leftInputForLeftOutputGainNode, 1);
+                channelSplitterNode.disconnect(leftInputForRightOutputGainNode, 1);
+                channelSplitterNode.disconnect(rightInputForLeftOutputGainNode, 1);
+                channelSplitterNode.disconnect(rightInputForRightOutputGainNode, 1);
+
+                panWaveShaperNode.disconnect(panGainNode);
+
+                panGainNode.disconnect(leftInputForLeftOutputWaveShaperNode.inputs[0]);
+                panGainNode.disconnect(leftInputForRightOutputWaveShaperNode.inputs[0]);
+                panGainNode.disconnect(rightInputForLeftOutputWaveShaperNode.inputs[0]);
+                panGainNode.disconnect(rightInputForRightOutputWaveShaperNode.inputs[0]);
+
+                leftInputForLeftOutputWaveShaperNode.disconnect(leftInputForLeftOutputGainNode.gain);
+                leftInputForRightOutputWaveShaperNode.disconnect(leftInputForRightOutputGainNode.gain);
+                rightInputForLeftOutputWaveShaperNode.disconnect(rightInputForLeftOutputGainNode.gain);
+                rightInputForRightOutputWaveShaperNode.disconnect(rightInputForRightOutputGainNode.gain);
+
+                leftInputForLeftOutputGainNode.disconnect(channelMergerNode, 0, 0);
+                rightInputForLeftOutputGainNode.disconnect(channelMergerNode, 0, 0);
+
+                leftInputForRightOutputGainNode.disconnect(channelMergerNode, 0, 1);
+                rightInputForRightOutputGainNode.disconnect(channelMergerNode, 0, 1);
+            }
+        };
     };
 
     const buildInternalGraph = (
@@ -212,7 +255,13 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             gain: pan
         });
 
-        let outputNodes = buildInternalGraph(nativeContext, channelCount, inputGainNode, panGainNode, channelMergerNode);
+        let { connectGraph, disconnectGraph } = buildInternalGraph(
+            nativeContext,
+            channelCount,
+            inputGainNode,
+            panGainNode,
+            channelMergerNode
+        );
 
         Object.defineProperty(panGainNode.gain, 'defaultValue', { get: () => 0 });
 
@@ -225,10 +274,21 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             },
             set channelCount (value) {
                 if (inputGainNode.channelCount !== value) {
-                    inputGainNode.disconnect();
-                    outputNodes.forEach((outputNode) => outputNode.disconnect());
+                    if (isConnected) {
+                        disconnectGraph();
+                    }
 
-                    outputNodes = buildInternalGraph(nativeContext, value, inputGainNode, panGainNode, channelMergerNode);
+                    ({ connectGraph, disconnectGraph } = buildInternalGraph(
+                        nativeContext,
+                        value,
+                        inputGainNode,
+                        panGainNode,
+                        channelMergerNode
+                    ));
+
+                    if (isConnected) {
+                        connectGraph();
+                    }
                 }
 
                 inputGainNode.channelCount = value;
@@ -275,6 +335,23 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             }
         };
 
-        return interceptConnections(nativeStereoPannerNodeFakerFactory, channelMergerNode);
+        let isConnected = false;
+
+        const whenConnected = () => {
+            connectGraph();
+
+            isConnected = true;
+        };
+        const whenDisconnected = () => {
+            disconnectGraph();
+
+            isConnected = false;
+        };
+
+        return monitorConnections(
+            interceptConnections(nativeStereoPannerNodeFakerFactory, channelMergerNode),
+            whenConnected,
+            whenDisconnected
+        );
     };
 };

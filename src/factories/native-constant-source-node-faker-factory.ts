@@ -3,7 +3,8 @@ import { TNativeAudioBufferSourceNode, TNativeAudioNode, TNativeConstantSourceNo
 
 export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNodeFakerFactoryFactory = (
     createNativeAudioBufferSourceNode,
-    createNativeGainNode
+    createNativeGainNode,
+    monitorConnections
 ) => {
     return (nativeContext, { offset, ...audioNodeOptions }) => {
         const audioBuffer = nativeContext.createBuffer(1, 2, nativeContext.sampleRate);
@@ -19,8 +20,6 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
 
         audioBufferSourceNode.buffer = audioBuffer;
         audioBufferSourceNode.loop = true;
-
-        audioBufferSourceNode.connect(gainNode);
 
         const nativeConstantSourceNodeFaker = {
             get bufferSize (): undefined {
@@ -82,6 +81,9 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
             }
         };
 
-        return interceptConnections(nativeConstantSourceNodeFaker, gainNode);
+        const whenConnected = () => audioBufferSourceNode.connect(gainNode);
+        const whenDisconnected = () => audioBufferSourceNode.disconnect(gainNode);
+
+        return monitorConnections(interceptConnections(nativeConstantSourceNodeFaker, gainNode), whenConnected, whenDisconnected);
     };
 };

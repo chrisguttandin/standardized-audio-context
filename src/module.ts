@@ -82,6 +82,7 @@ import { createMediaStreamTrackAudioSourceNodeConstructor } from './factories/me
 import { createMinimalAudioContextConstructor } from './factories/minimal-audio-context-constructor';
 import { createMinimalBaseAudioContextConstructor } from './factories/minimal-base-audio-context-constructor';
 import { createMinimalOfflineAudioContextConstructor } from './factories/minimal-offline-audio-context-constructor';
+import { createMonitorConnections } from './factories/monitor-connections';
 import { createNativeAnalyserNodeFactory } from './factories/native-analyser-node-factory';
 import { createNativeAudioBufferConstructor } from './factories/native-audio-buffer-constructor';
 import { createNativeAudioBufferSourceNodeFactory } from './factories/native-audio-buffer-source-node-factory';
@@ -444,7 +445,8 @@ const biquadFilterNodeConstructor: TBiquadFilterNodeConstructor = createBiquadFi
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const wrapChannelMergerNode = createWrapChannelMergerNode(createInvalidStateError, createNativeAudioNode);
+const monitorConnections = createMonitorConnections(insertElementInSet, isNativeAudioNode);
+const wrapChannelMergerNode = createWrapChannelMergerNode(createInvalidStateError, createNativeAudioNode, monitorConnections);
 const createNativeChannelMergerNode = createNativeChannelMergerNodeFactory(createNativeAudioNode, wrapChannelMergerNode);
 const createChannelMergerNodeRenderer = createChannelMergerNodeRendererFactory(
     createNativeChannelMergerNode,
@@ -474,7 +476,8 @@ const channelSplitterNodeConstructor: TChannelSplitterNodeConstructor = createCh
 const createNativeGainNode = createNativeGainNodeFactory(createNativeAudioNode);
 const createNativeConstantSourceNodeFaker = createNativeConstantSourceNodeFakerFactory(
     createNativeAudioBufferSourceNode,
-    createNativeGainNode
+    createNativeGainNode,
+    monitorConnections
 );
 const createNativeConstantSourceNode = createNativeConstantSourceNodeFactory(
     cacheTestResult,
@@ -638,7 +641,9 @@ const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
     createNativeGainNode,
     createNativeScriptProcessorNode,
     createNativeWaveShaperNode,
-    createNotSupportedError
+    createNotSupportedError,
+    disconnectNativeAudioNodeFromNativeAudioNode,
+    monitorConnections
 );
 const createNativePannerNode = createNativePannerNodeFactory(createNativeAudioNode, createNativePannerNodeFaker);
 const createPannerNodeRenderer = createPannerNodeRendererFactory(
@@ -667,7 +672,8 @@ const nativeStereoPannerNodeFakerFactory = createNativeStereoPannerNodeFakerFact
     createNativeChannelSplitterNode,
     createNativeGainNode,
     createNativeWaveShaperNode,
-    createNotSupportedError
+    createNotSupportedError,
+    monitorConnections
 );
 const createNativeStereoPannerNode = createNativeStereoPannerNodeFactory(
     createNativeAudioNode,
@@ -820,7 +826,8 @@ const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFacto
     createNativeScriptProcessorNode,
     createNotSupportedError,
     disconnectMultipleOutputs,
-    exposeCurrentFrameAndCurrentTime
+    exposeCurrentFrameAndCurrentTime,
+    monitorConnections
 );
 const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
     createInvalidStateError,

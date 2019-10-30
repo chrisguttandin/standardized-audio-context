@@ -1,3 +1,4 @@
+import { TMonitorConnectionsFunction } from './monitor-connections-function';
 import { TNativeChannelMergerNodeFactory } from './native-channel-merger-node-factory';
 import { TNativeChannelSplitterNodeFactory } from './native-channel-splitter-node-factory';
 import { TNativeGainNodeFactory } from './native-gain-node-factory';
@@ -10,5 +11,6 @@ export type TNativeStereoPannerNodeFakerFactoryFactory = (
     createNativeChannelSplitterNode: TNativeChannelSplitterNodeFactory,
     createNativeGainNode: TNativeGainNodeFactory,
     createNativeWaveShaperNode: TNativeWaveShaperNodeFactory,
-    createNotSupportedError: TNotSupportedErrorFactory
+    createNotSupportedError: TNotSupportedErrorFactory,
+    monitorConnections: TMonitorConnectionsFunction
 ) => TNativeStereoPannerNodeFakerFactory;

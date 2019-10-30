@@ -4,6 +4,7 @@ import { TDisconnectMultipleOutputsFunction } from './disconnect-multiple-output
 import { TExposeCurrentFrameAndCurrentTimeFunction } from './expose-current-frame-and-current-time-function';
 import { TIndexSizeErrorFactory } from './index-size-error-factory';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
+import { TMonitorConnectionsFunction } from './monitor-connections-function';
 import { TNativeAudioWorkletNodeFakerFactory } from './native-audio-worklet-node-faker-factory';
 import { TNativeChannelMergerNodeFactory } from './native-channel-merger-node-factory';
 import { TNativeChannelSplitterNodeFactory } from './native-channel-splitter-node-factory';
@@ -24,5 +25,6 @@ export type TNativeAudioWorkletNodeFakerFactoryFactory = (
     createNativeScriptProcessorNode: TNativeScriptProcessorNodeFactory,
     createNotSupportedError: TNotSupportedErrorFactory,
     disconnectMultipleOutputs: TDisconnectMultipleOutputsFunction,
-    exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction
+    exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction,
+    monitorConnections: TMonitorConnectionsFunction
 ) => TNativeAudioWorkletNodeFakerFactory;

@@ -180,6 +180,8 @@ export * from './minimal-base-audio-context-constructor';
 export * from './minimal-base-audio-context-constructor-factory';
 export * from './minimal-offline-audio-context-constructor';
 export * from './minimal-offline-audio-context-constructor-factory';
+export * from './monitor-connections-factory';
+export * from './monitor-connections-function';
 export * from './native-analyser-node';
 export * from './native-analyser-node-factory';
 export * from './native-analyser-node-factory-factory';
