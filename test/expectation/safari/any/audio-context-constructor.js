@@ -829,6 +829,159 @@ describe('audioContextConstructor', () => {
 
         describe('createMediaStreamSource()', () => {
 
+            describe('with an audio track that gets removed from the mediaStream after construction', () => {
+
+                let mediaStream;
+                let mediaStreamTracks;
+                let oscillatorNode;
+
+                afterEach(() => {
+                    for (const mediaStreamTrack of mediaStreamTracks) {
+                        mediaStreamTrack.stop();
+                    }
+
+                    oscillatorNode.stop();
+                });
+
+                beforeEach(() => {
+                    const mediaStreamDestinationNode = audioContext.createMediaStreamDestination();
+
+                    oscillatorNode = audioContext.createOscillator();
+
+                    oscillatorNode.connect(mediaStreamDestinationNode);
+                    oscillatorNode.start();
+
+                    mediaStream = mediaStreamDestinationNode.stream;
+                    mediaStreamTracks = mediaStream.getTracks();
+                });
+
+                // bug #151
+
+                it('should not use the audio track as input anymore', (done) => {
+                    const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStream);
+                    const scriptProcessorNode = audioContext.createScriptProcessor(512);
+
+                    for (const mediaStreamTrack of mediaStreamTracks) {
+                        mediaStream.removeTrack(mediaStreamTrack);
+                    }
+
+                    scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                        const channelData = inputBuffer.getChannelData(0);
+
+                        for (let i = 0; i < 512; i += 1) {
+                            if (channelData[i] !== 0) {
+                                mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                                done(new Error('The signal is expected to be zero at all time.'));
+
+                                break;
+                            }
+                        }
+                    };
+
+                    mediaStreamAudioSourceNode.connect(scriptProcessorNode);
+
+                    setTimeout(() => {
+                        mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                        done();
+                    }, 1000);
+                });
+
+            });
+
+            describe('with a mediaStream with two audio tracks', () => {
+
+                let audioBufferSourceNode;
+                let gainNodes;
+                let mediaStream;
+                let mediaStreamAudioDestinationNodes;
+
+                afterEach(() => {
+                    audioBufferSourceNode.stop();
+
+                    audioBufferSourceNode.disconnect(gainNodes[0]);
+                    audioBufferSourceNode.disconnect(gainNodes[1]);
+                    gainNodes[0].disconnect(mediaStreamAudioDestinationNodes[0]);
+                    gainNodes[1].disconnect(mediaStreamAudioDestinationNodes[1]);
+                });
+
+                beforeEach(() => {
+                    audioBufferSourceNode = audioContext.createBufferSource();
+                    gainNodes = [
+                        audioContext.createGain(),
+                        audioContext.createGain()
+                    ];
+                    mediaStreamAudioDestinationNodes = [
+                        audioContext.createMediaStreamDestination(),
+                        audioContext.createMediaStreamDestination()
+                    ];
+
+                    const audioBuffer = audioContext.createBuffer(1, 2, audioContext.sampleRate);
+
+                    audioBuffer.getChannelData(0)[0] = 1;
+                    audioBuffer.getChannelData(0)[1] = 1;
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+                    audioBufferSourceNode.loop = true;
+
+                    audioBufferSourceNode
+                        .connect(gainNodes[0])
+                        .connect(mediaStreamAudioDestinationNodes[0]);
+                    audioBufferSourceNode
+                        .connect(gainNodes[1])
+                        .connect(mediaStreamAudioDestinationNodes[1]);
+
+                    audioBufferSourceNode.start();
+
+                    const audioStreamTracks = mediaStreamAudioDestinationNodes
+                        .map(({ stream }) => stream.getAudioTracks()[0]);
+
+                    if (audioStreamTracks[0].id > audioStreamTracks[1].id) {
+                        mediaStream = mediaStreamAudioDestinationNodes[0].stream;
+
+                        gainNodes[0].gain.value = 0;
+                        mediaStream.addTrack(audioStreamTracks[1]);
+                    } else {
+                        mediaStream = mediaStreamAudioDestinationNodes[1].stream;
+
+                        gainNodes[1].gain.value = 0;
+                        mediaStream.addTrack(audioStreamTracks[0]);
+                    }
+                });
+
+                // bug #159
+
+                it('should pick the first track', (done) => {
+                    const channelData = new Float32Array(512);
+                    const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStream);
+                    const scriptProcessorNode = audioContext.createScriptProcessor(512);
+
+                    scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                        inputBuffer.copyFromChannel(channelData, 0);
+
+                        for (let i = 0; i < 512; i += 1) {
+                            if (channelData[i] !== 0) {
+                                mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                                done(new Error('The signal is expected to be zero at all time.'));
+
+                                break;
+                            }
+                        }
+                    };
+
+                    mediaStreamAudioSourceNode.connect(scriptProcessorNode);
+
+                    setTimeout(() => {
+                        mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                        done();
+                    }, 1000);
+                });
+
+            });
+
             // bug #165
 
             it('output silence after being disconnected', function (done) {

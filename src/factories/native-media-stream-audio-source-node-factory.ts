@@ -8,8 +8,8 @@ export const createNativeMediaStreamAudioSourceNodeFactory: TNativeMediaStreamAu
         const audioStreamTracks = mediaStream.getAudioTracks();
         const nativeMediaStreamAudioSourceNode = createNativeAudioNode(nativeAudioContext, (ntvDCntxt) => {
             /*
-             * Bug #151: Firefox does not use the audio track as input anymore if it gets removed from the mediaStream after construction.
-             * Bug #159: Firefox picks the first audio track if the MediaStream has more than one audio track.
+             * Bug #151: Firefox & Safari do not use the audio track as input anymore if it gets removed from the mediaStream after construction.
+             * Bug #159: Firefox & Safari pick the first audio track if the MediaStream has more than one audio track.
              */
             const filteredAudioStreamTracks = audioStreamTracks
                 .sort((a, b) => ((a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0))
