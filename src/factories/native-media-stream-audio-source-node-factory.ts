@@ -1,9 +1,6 @@
 import { TNativeMediaStreamAudioSourceNodeFactoryFactory } from '../types';
 
-export const createNativeMediaStreamAudioSourceNodeFactory: TNativeMediaStreamAudioSourceNodeFactoryFactory = (
-    createInvalidStateError,
-    createNativeAudioNode
-) => {
+export const createNativeMediaStreamAudioSourceNodeFactory: TNativeMediaStreamAudioSourceNodeFactoryFactory = (createNativeAudioNode) => {
     return (nativeAudioContext, { mediaStream }) => {
         const audioStreamTracks = mediaStream.getAudioTracks();
         const nativeMediaStreamAudioSourceNode = createNativeAudioNode(nativeAudioContext, (ntvDCntxt) => {
@@ -17,11 +14,6 @@ export const createNativeMediaStreamAudioSourceNodeFactory: TNativeMediaStreamAu
 
             return ntvDCntxt.createMediaStreamSource(new MediaStream(filteredAudioStreamTracks));
         });
-
-        // Bug #120: Firefox does not throw an error if the mediaStream has no audio track.
-        if (audioStreamTracks.length === 0) {
-            throw createInvalidStateError();
-        }
 
         // Bug #63: Edge & Firefox do not expose the mediaStream yet.
         Object.defineProperty(nativeMediaStreamAudioSourceNode, 'mediaStream', { value: mediaStream });

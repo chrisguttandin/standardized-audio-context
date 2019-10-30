@@ -14,6 +14,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestConstantSourceNodeAccurateSchedulingSupport;
     let fakeTestConvolverNodeBufferReassignabilitySupport;
     let fakeTestIsSecureContextSupport;
+    let fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport;
     let fakeTestStereoPannerNodeDefaultValueSupport;
     let fakeTestTransferablesSupport;
 
@@ -27,6 +28,7 @@ describe('createIsSupportedPromise()', () => {
         TEST_RESULTS.delete(fakeTestConstantSourceNodeAccurateSchedulingSupport);
         TEST_RESULTS.delete(fakeTestConvolverNodeBufferReassignabilitySupport);
         TEST_RESULTS.delete(fakeTestIsSecureContextSupport);
+        TEST_RESULTS.delete(fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport);
         TEST_RESULTS.delete(fakeTestStereoPannerNodeDefaultValueSupport);
         TEST_RESULTS.delete(fakeTestTransferablesSupport);
     });
@@ -42,6 +44,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestConstantSourceNodeAccurateSchedulingSupport = () => true;
         fakeTestConvolverNodeBufferReassignabilitySupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
+        fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport = () => true;
         fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.resolve(true);
         fakeTestTransferablesSupport = () => Promise.resolve(true);
     });
@@ -58,6 +61,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -79,6 +83,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -100,6 +105,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -121,6 +127,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -142,6 +149,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -163,6 +171,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -184,6 +193,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -205,6 +215,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -226,6 +237,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -247,6 +259,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -268,6 +281,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -289,6 +303,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -310,6 +325,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -331,6 +347,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -352,6 +369,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -373,6 +391,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -394,6 +413,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -415,6 +435,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -436,6 +457,51 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for support for creating a MediaStreamAudioSourceNode with MediaStream without an audio track fails', async () => {
+        fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for support for creating a MediaStreamAudioSourceNode with MediaStream without an audio track throws', async () => {
+        fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport = () => { throw new Error('A fake error thrown by the test.'); };
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -457,6 +523,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -478,6 +545,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -499,6 +567,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -520,6 +589,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );

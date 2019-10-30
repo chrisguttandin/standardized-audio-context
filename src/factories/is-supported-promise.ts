@@ -11,6 +11,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = async (
     testConstantSourceNodeAccurateSchedulingSupport,
     testConvolverNodeBufferReassignabilitySupport,
     testIsSecureContextSupport,
+    testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
     testStereoPannerNodeDefaultValueSupport,
     testTransferablesSupport
 ) => {
@@ -21,7 +22,11 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = async (
                 && cacheTestResult(testAudioNodeConnectMethodSupport, testAudioNodeConnectMethodSupport)
                 && cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport)
                 && cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport)
-                && cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport)) {
+                && cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport)
+                && cacheTestResult(
+                    testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+                    testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport
+                )) {
             const results = await Promise
                 .all([
                     cacheTestResult(

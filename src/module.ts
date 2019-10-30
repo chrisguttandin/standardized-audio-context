@@ -170,6 +170,9 @@ import {
 } from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createTestConvolverNodeBufferReassignabilitySupport } from './factories/test-convolver-node-buffer-reassignability-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
+import {
+    createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport
+} from './factories/test-media-stream-audio-source-node-media-stream-without-audio-track-support';
 import { createTestOfflineAudioContextCurrentTimeSupport } from './factories/test-offline-audio-context-current-time-support';
 import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
 import { createUnknownError } from './factories/unknown-error';
@@ -784,10 +787,7 @@ const mediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstr
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const createNativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNodeFactory(
-    createInvalidStateError,
-    createNativeAudioNode
-);
+const createNativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNodeFactory(createNativeAudioNode);
 const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
     createNativeMediaStreamAudioSourceNode,
     createNotSupportedError,
@@ -1019,6 +1019,7 @@ export const isSupported = () => createIsSupportedPromise(
     createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
     createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),
     createTestIsSecureContextSupport(window),
+    createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport(nativeAudioContextConstructor),
     createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),
     testTransferablesSupport
 );

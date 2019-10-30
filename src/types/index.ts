@@ -336,6 +336,7 @@ export * from './test-audio-worklet-processor-no-outputs-support-factory';
 export * from './test-constant-source-node-accurate-scheduling-support-factory';
 export * from './test-convolver-node-buffer-reassignability-support-factory';
 export * from './test-is-secure-context-support-factory';
+export * from './test-media-stream-audio-source-node-media-stream-without-audio-track-support';
 export * from './test-offline-audio-context-current-time-support-factory';
 export * from './test-stereo-panner-node-default-value-support-factory';
 export * from './typed-array';
