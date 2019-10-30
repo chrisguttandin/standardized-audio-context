@@ -269,13 +269,13 @@ describe('WaveShaperNode', () => {
 
             describe('curve', () => {
 
-                let waveShaperNode;
-
-                beforeEach(() => {
-                    waveShaperNode = createWaveShaperNode(context);
-                });
-
                 describe('with a valid curve', () => {
+
+                    let waveShaperNode;
+
+                    beforeEach(() => {
+                        waveShaperNode = createWaveShaperNode(context);
+                    });
 
                     it('should be assignable to a Float32Array', () => {
                         const curve = new Float32Array([ -1, 0, 1 ]);
@@ -290,6 +290,12 @@ describe('WaveShaperNode', () => {
 
                 describe('with a previously assigned curve', () => {
 
+                    let waveShaperNode;
+
+                    beforeEach(() => {
+                        waveShaperNode = createWaveShaperNode(context);
+                    });
+
                     it('should be assignable to null', () => {
                         waveShaperNode.curve = new Float32Array([ 0.4, 0, 0.4 ]);
                         waveShaperNode.curve = null;
@@ -301,6 +307,12 @@ describe('WaveShaperNode', () => {
 
                 describe('with a curve of less than two samples', () => {
 
+                    let waveShaperNode;
+
+                    beforeEach(() => {
+                        waveShaperNode = createWaveShaperNode(context);
+                    });
+
                     it('should throw an InvalidStateError', (done) => {
                         try {
                             waveShaperNode.curve = new Float32Array([ 1 ]);
@@ -310,6 +322,37 @@ describe('WaveShaperNode', () => {
 
                             done();
                         }
+                    });
+
+                });
+
+                describe('with a curve that produces a DC signal', () => {
+
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: (context.length === undefined) ? 5 : undefined,
+                            prepare (destination) {
+                                const waveShaperNode = createWaveShaperNode(context, { curve: new Float32Array([ 1, 1 ]) });
+
+                                waveShaperNode.connect(destination);
+
+                                return { waveShaperNode };
+                            }
+                        });
+                    });
+
+                    it('should render a constant signal', function () {
+                        this.timeout(10000);
+
+                        return renderer({ })
+                            .then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
+                            });
                     });
 
                 });

@@ -3,9 +3,12 @@ import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-nod
 import { TNativeWaveShaperNodeFactoryFactory } from '../types';
 
 export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFactory = (
+    createConnectedNativeAudioBufferSourceNode,
     createInvalidStateError,
     createNativeAudioNode,
-    createNativeWaveShaperNodeFaker
+    createNativeWaveShaperNodeFaker,
+    isDCCurve,
+    monitorConnections
 ) => {
     return (nativeContext, options) => {
         const nativeWaveShaperNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createWaveShaper());
@@ -30,6 +33,50 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
         assignNativeAudioNodeOption(nativeWaveShaperNode, options, 'curve');
         assignNativeAudioNodeOption(nativeWaveShaperNode, options, 'oversample');
 
-        return nativeWaveShaperNode;
+        let disconnectNativeAudioBufferSourceNode: null | (() => void) = null;
+        let isConnected = false;
+
+        const prototype = Object.getPrototypeOf(nativeWaveShaperNode);
+
+        const { get, set } = <Required<PropertyDescriptor>> Object.getOwnPropertyDescriptor(prototype, 'curve');
+
+        Object.defineProperty(nativeWaveShaperNode, 'curve', {
+            get: () => get.call(nativeWaveShaperNode),
+            set: (value) => {
+                set.call(nativeWaveShaperNode, value);
+
+                if (isConnected) {
+                    if (isDCCurve(value) && disconnectNativeAudioBufferSourceNode === null) {
+                        disconnectNativeAudioBufferSourceNode = createConnectedNativeAudioBufferSourceNode(
+                            nativeContext,
+                            nativeWaveShaperNode
+                        );
+                    } else if (!isDCCurve(value) && disconnectNativeAudioBufferSourceNode !== null) {
+                        disconnectNativeAudioBufferSourceNode();
+                        disconnectNativeAudioBufferSourceNode = null;
+                    }
+                }
+
+                return value;
+            }
+        });
+
+        const whenConnected = () => {
+            isConnected = true;
+
+            if (isDCCurve(nativeWaveShaperNode.curve)) {
+                disconnectNativeAudioBufferSourceNode = createConnectedNativeAudioBufferSourceNode(nativeContext, nativeWaveShaperNode);
+            }
+        };
+        const whenDisconnected = () => {
+            isConnected = false;
+
+            if (disconnectNativeAudioBufferSourceNode !== null) {
+                disconnectNativeAudioBufferSourceNode();
+                disconnectNativeAudioBufferSourceNode = null;
+            }
+        };
+
+        return monitorConnections(nativeWaveShaperNode, whenConnected, whenDisconnected);
     };
 };

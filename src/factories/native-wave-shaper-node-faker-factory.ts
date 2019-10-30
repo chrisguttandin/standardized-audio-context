@@ -3,9 +3,12 @@ import { interceptConnections } from '../helpers/intercept-connections';
 import { TNativeAudioNode, TNativeWaveShaperNode, TNativeWaveShaperNodeFakerFactoryFactory } from '../types';
 
 export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerFactoryFactory = (
+    createConnectedNativeAudioBufferSourceNode,
     createInvalidStateError,
     createNativeAudioNode,
-    createNativeGainNode
+    createNativeGainNode,
+    isDCCurve,
+    monitorConnections
 ) => {
     return (nativeContext, { curve, oversample, ...audioNodeOptions }) => {
         const negativeWaveShaperNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createWaveShaper());
@@ -19,16 +22,8 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
         const outputGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: 1 });
         const revertGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: -1 });
 
-        inputGainNode
-            .connect(negativeWaveShaperNode)
-            .connect(outputGainNode);
-
-        inputGainNode
-            .connect(invertGainNode)
-            .connect(positiveWaveShaperNode)
-            .connect(revertGainNode)
-            .connect(outputGainNode);
-
+        let disconnectNativeAudioBufferSourceNode: null | (() => void) = null;
+        let isConnected = false;
         let unmodifiedCurve: null | TNativeWaveShaperNode['curve'] = null;
 
         const nativeWaveShaperNodeFaker = {
@@ -118,6 +113,15 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
                 }
 
                 unmodifiedCurve = value;
+
+                if (isConnected) {
+                    if (isDCCurve(unmodifiedCurve) && disconnectNativeAudioBufferSourceNode === null) {
+                        disconnectNativeAudioBufferSourceNode = createConnectedNativeAudioBufferSourceNode(nativeContext, inputGainNode);
+                    } else if (disconnectNativeAudioBufferSourceNode !== null) {
+                        disconnectNativeAudioBufferSourceNode();
+                        disconnectNativeAudioBufferSourceNode = null;
+                    }
+                }
             },
             get inputs (): TNativeAudioNode[] {
                 return [ inputGainNode ];
@@ -154,6 +158,40 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
             nativeWaveShaperNodeFaker.oversample = oversample;
         }
 
-        return interceptConnections(nativeWaveShaperNodeFaker, outputGainNode);
+        const whenConnected = () => {
+            inputGainNode
+                .connect(negativeWaveShaperNode)
+                .connect(outputGainNode);
+
+            inputGainNode
+                .connect(invertGainNode)
+                .connect(positiveWaveShaperNode)
+                .connect(revertGainNode)
+                .connect(outputGainNode);
+
+            isConnected = true;
+
+            if (isDCCurve(unmodifiedCurve)) {
+                disconnectNativeAudioBufferSourceNode = createConnectedNativeAudioBufferSourceNode(nativeContext, inputGainNode);
+            }
+        };
+        const whenDisconnected = () => {
+            inputGainNode.disconnect(negativeWaveShaperNode);
+            negativeWaveShaperNode.disconnect(outputGainNode);
+
+            inputGainNode.disconnect(invertGainNode);
+            invertGainNode.disconnect(positiveWaveShaperNode);
+            positiveWaveShaperNode.disconnect(revertGainNode);
+            revertGainNode.disconnect(outputGainNode);
+
+            isConnected = false;
+
+            if (disconnectNativeAudioBufferSourceNode !== null) {
+                disconnectNativeAudioBufferSourceNode();
+                disconnectNativeAudioBufferSourceNode = null;
+            }
+        };
+
+        return monitorConnections(interceptConnections(nativeWaveShaperNodeFaker, outputGainNode), whenConnected, whenDisconnected);
     };
 };

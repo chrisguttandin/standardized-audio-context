@@ -33,7 +33,8 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const waveShaperNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createWaveShaperNodeRenderer() : null);
 
-            super(context, false, nativeWaveShaperNode, waveShaperNodeRenderer);
+            // @todo Add a mechanism to only switch a WaveShaperNode to active while it is connected.
+            super(context, true, nativeWaveShaperNode, waveShaperNodeRenderer);
 
             this._isCurveNullified = false;
             this._nativeWaveShaperNode = nativeWaveShaperNode;

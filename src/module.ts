@@ -35,6 +35,7 @@ import { createChannelSplitterNodeConstructor } from './factories/channel-splitt
 import { createChannelSplitterNodeRendererFactory } from './factories/channel-splitter-node-renderer-factory';
 import { createConnectAudioParam } from './factories/connect-audio-param';
 import { createConnectMultipleOutputs } from './factories/connect-multiple-outputs';
+import { createConnectedNativeAudioBufferSourceNodeFactory } from './factories/connected-native-audio-buffer-source-node-factory';
 import { createConstantSourceNodeConstructor } from './factories/constant-source-node-constructor';
 import { createConstantSourceNodeRendererFactory } from './factories/constant-source-node-renderer-factory';
 import { createConvertNumberToUnsignedLong } from './factories/convert-number-to-unsigned-long';
@@ -196,7 +197,9 @@ import { getAudioParamConnections } from './helpers/get-audio-param-connections'
 import { getNativeAudioNode } from './helpers/get-native-audio-node';
 import { getNativeAudioParam } from './helpers/get-native-audio-param';
 import { getValueForKey } from './helpers/get-value-for-key';
+import { insertElementInSet } from './helpers/insert-element-in-set';
 import { isActiveAudioNode } from './helpers/is-active-audio-node';
+import { isDCCurve } from './helpers/is-dc-curve';
 import { isPartOfACycle } from './helpers/is-part-of-a-cycle';
 import {
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport
@@ -623,15 +626,22 @@ const oscillatorNodeConstructor: TOscillatorNodeConstructor = createOscillatorNo
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
+const createConnectedNativeAudioBufferSourceNode = createConnectedNativeAudioBufferSourceNodeFactory(createNativeAudioBufferSourceNode);
 const createNativeWaveShaperNodeFaker = createNativeWaveShaperNodeFakerFactory(
+    createConnectedNativeAudioBufferSourceNode,
     createInvalidStateError,
     createNativeAudioNode,
-    createNativeGainNode
+    createNativeGainNode,
+    isDCCurve,
+    monitorConnections
 );
 const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(
+    createConnectedNativeAudioBufferSourceNode,
     createInvalidStateError,
     createNativeAudioNode,
-    createNativeWaveShaperNodeFaker
+    createNativeWaveShaperNodeFaker,
+    isDCCurve,
+    monitorConnections
 );
 const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
     connectNativeAudioNodeToNativeAudioNode,

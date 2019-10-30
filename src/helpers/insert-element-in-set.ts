@@ -1,4 +1,6 @@
-export const insertElementInSet = <T>(set: Set<T>, element: T, predicate: (element: T) => boolean, ignoreDuplicates: boolean): boolean => {
+import { TInsertElementInSetFunction } from '../types';
+
+export const insertElementInSet: TInsertElementInSetFunction = (set, element, predicate, ignoreDuplicates) => {
     for (const lmnt of set) {
         if (predicate(lmnt)) {
             if (ignoreDuplicates) {
