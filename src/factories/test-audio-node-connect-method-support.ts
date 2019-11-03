@@ -11,7 +11,10 @@ export const createTestAudioNodeConnectMethodSupport: TTestAudioNodeConnectMetho
 
         const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
         const nativeGainNode = nativeOfflineAudioContext.createGain();
+        const isSupported = (nativeGainNode.connect(nativeGainNode) === nativeGainNode);
 
-        return (nativeGainNode.connect(nativeGainNode) === nativeGainNode);
+        nativeGainNode.disconnect(nativeGainNode);
+
+        return isSupported;
     };
 };
