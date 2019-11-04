@@ -181,6 +181,7 @@ import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-nod
 import { createWindow } from './factories/window';
 import { createWrapAudioBufferCopyChannelMethods } from './factories/wrap-audio-buffer-copy-channel-methods';
 import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
+import { createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer } from './factories/wrap-audio-buffer-source-node-stop-method-nullified-buffer';
 import {
     createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
@@ -204,13 +205,13 @@ import { insertElementInSet } from './helpers/insert-element-in-set';
 import { isActiveAudioNode } from './helpers/is-active-audio-node';
 import { isDCCurve } from './helpers/is-dc-curve';
 import { isPartOfACycle } from './helpers/is-part-of-a-cycle';
+import { overwriteAccessors } from './helpers/overwrite-accessors';
 import {
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport
 } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
-import { wrapAudioBufferSourceNodeStopMethodNullifiedBuffer } from './helpers/wrap-audio-buffer-source-node-stop-method-nullified-buffer';
 import {
     IAnalyserNode,
     IAudioBuffer,
@@ -385,7 +386,7 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
     testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
     wrapAudioBufferSourceNodeStartMethodOffsetClamping,
-    wrapAudioBufferSourceNodeStopMethodNullifiedBuffer,
+    createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer(overwriteAccessors),
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 );
 const renderAutomation = createRenderAutomation(createGetAudioParamRenderer(getAudioParamConnections), renderInputsOfAudioParam);
@@ -507,7 +508,7 @@ const constantSourceNodeConstructor: TConstantSourceNodeConstructor = createCons
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const createNativeConvolverNode = createNativeConvolverNodeFactory(createNativeAudioNode, createNotSupportedError);
+const createNativeConvolverNode = createNativeConvolverNodeFactory(createNativeAudioNode, createNotSupportedError, overwriteAccessors);
 const createConvolverNodeRenderer = createConvolverNodeRendererFactory(
     createNativeConvolverNode,
     getNativeAudioNode,
@@ -644,7 +645,8 @@ const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(
     createNativeAudioNode,
     createNativeWaveShaperNodeFaker,
     isDCCurve,
-    monitorConnections
+    monitorConnections,
+    overwriteAccessors
 );
 const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
     connectNativeAudioNodeToNativeAudioNode,

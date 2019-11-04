@@ -8,7 +8,8 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
     createNativeAudioNode,
     createNativeWaveShaperNodeFaker,
     isDCCurve,
-    monitorConnections
+    monitorConnections,
+    overwriteAccessors
 ) => {
     return (nativeContext, options) => {
         const nativeWaveShaperNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createWaveShaper());
@@ -36,13 +37,11 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
         let disconnectNativeAudioBufferSourceNode: null | (() => void) = null;
         let isConnected = false;
 
-        const prototype = Object.getPrototypeOf(nativeWaveShaperNode);
-
-        const { get, set } = <Required<PropertyDescriptor>> Object.getOwnPropertyDescriptor(prototype, 'curve');
-
-        Object.defineProperty(nativeWaveShaperNode, 'curve', {
-            get: () => get.call(nativeWaveShaperNode),
-            set: (value) => {
+        overwriteAccessors(
+            nativeWaveShaperNode,
+            'curve',
+            (get) => () => get.call(nativeWaveShaperNode),
+            (set) => (value) => {
                 set.call(nativeWaveShaperNode, value);
 
                 if (isConnected) {
@@ -59,7 +58,7 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
 
                 return value;
             }
-        });
+        );
 
         const whenConnected = () => {
             isConnected = true;

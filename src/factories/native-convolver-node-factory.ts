@@ -2,7 +2,11 @@ import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeConvolverNodeFactoryFactory } from '../types';
 
-export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactory = (createNativeAudioNode, createNotSupportedError) => {
+export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactory = (
+    createNativeAudioNode,
+    createNotSupportedError,
+    overwriteAccessors
+) => {
     return (nativeContext, options) => {
         const nativeConvolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
 
@@ -20,28 +24,32 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
             throw createNotSupportedError();
         }
 
-        Object.defineProperty(nativeConvolverNode, 'channelCount', {
-            get: () => options.channelCount,
-            set: (value) => {
+        overwriteAccessors(
+            nativeConvolverNode,
+            'channelCount',
+            (get) => () => get.call(nativeConvolverNode),
+            () => (value) => {
                 if (value !== options.channelCount) {
                     throw createNotSupportedError();
                 }
             }
-        });
+        );
 
         // Bug #114: Edge & Safari allow to change the channelCountMode
         if (options.channelCountMode !== 'clamped-max') {
             throw createNotSupportedError();
         }
 
-        Object.defineProperty(nativeConvolverNode, 'channelCountMode', {
-            get: () => options.channelCountMode,
-            set: (value) => {
+        overwriteAccessors(
+            nativeConvolverNode,
+            'channelCountMode',
+            (get) => () => get.call(nativeConvolverNode),
+            () => (value) => {
                 if (value !== options.channelCountMode) {
                     throw createNotSupportedError();
                 }
             }
-        });
+        );
 
         return nativeConvolverNode;
     };

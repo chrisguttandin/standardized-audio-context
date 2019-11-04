@@ -5,6 +5,7 @@ import { TMonitorConnectionsFunction } from './monitor-connections-function';
 import { TNativeAudioNodeFactory } from './native-audio-node-factory';
 import { TNativeWaveShaperNodeFactory } from './native-wave-shaper-node-factory';
 import { TNativeWaveShaperNodeFakerFactory } from './native-wave-shaper-node-faker-factory';
+import { TOverwriteAccessorsFunction } from './overwrite-accessors-function';
 
 export type TNativeWaveShaperNodeFactoryFactory = (
     createConnectedNativeAudioBufferSourceNode: TConnectedNativeAudioBufferSourceNodeFactory,
@@ -12,5 +13,6 @@ export type TNativeWaveShaperNodeFactoryFactory = (
     createNativeAudioNode: TNativeAudioNodeFactory,
     createNativeWaveShaperNodeFaker: TNativeWaveShaperNodeFakerFactory,
     isDCCurve: TIsDCCurveFunction,
-    monitorConnections: TMonitorConnectionsFunction
+    monitorConnections: TMonitorConnectionsFunction,
+    overwriteAccessors: TOverwriteAccessorsFunction
 ) => TNativeWaveShaperNodeFactory;
