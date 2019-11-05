@@ -164,6 +164,20 @@ describe('ConvolverNode', () => {
                                 expect(convolverNode.buffer).to.equal(buffer);
                             });
 
+                            it('should return an instance with the given channelCount', () => {
+                                const channelCount = 1;
+                                const convolverNode = createConvolverNode(context, { channelCount });
+
+                                expect(convolverNode.channelCount).to.equal(channelCount);
+                            });
+
+                            it('should return an instance with the given channelCountMode', () => {
+                                const channelCountMode = 'explicit';
+                                const convolverNode = createConvolverNode(context, { channelCountMode });
+
+                                expect(convolverNode.channelCountMode).to.equal(channelCountMode);
+                            });
+
                             it('should return an instance with the given channelInterpretation', () => {
                                 const channelInterpretation = 'discrete';
                                 const convolverNode = createConvolverNode(context, { channelInterpretation });
@@ -181,6 +195,36 @@ describe('ConvolverNode', () => {
                         });
 
                         describe('with invalid options', () => {
+
+                            describe('with a channelCount greater than 2', () => {
+
+                                it('should throw a NotSupportedError', (done) => {
+                                    try {
+                                        createConvolverNode(context, { channelCount: 4 });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
+
+                            describe("with a channelCountMode of 'max'", () => {
+
+                                it('should throw a NotSupportedError', (done) => {
+                                    try {
+                                        createConvolverNode(context, { channelCountMode: 'max' });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(9);
+                                        expect(err.name).to.equal('NotSupportedError');
+
+                                        done();
+                                    }
+                                });
+
+                            });
 
                             describe('with a buffer with an unsupported numberOfChannels', () => {
 
@@ -479,7 +523,15 @@ describe('ConvolverNode', () => {
                     convolverNode = createConvolverNode(context);
                 });
 
-                it('should not be assignable to another value', (done) => {
+                it('should be assignable to a value smaller than 3', () => {
+                    const channelCount = 1;
+
+                    convolverNode.channelCount = channelCount;
+
+                    expect(convolverNode.channelCount).to.equal(channelCount);
+                });
+
+                it('should not be assignable to a value larger than 2', (done) => {
                     const channelCount = 4;
 
                     try {
@@ -502,11 +554,17 @@ describe('ConvolverNode', () => {
                     convolverNode = createConvolverNode(context);
                 });
 
-                it('should not be assignable to another value', (done) => {
-                    const channelCountMode = 'max';
+                it("should be assignable to 'explicit'", () => {
+                    const channelCountMode = 'explicit';
 
+                    convolverNode.channelCountMode = channelCountMode;
+
+                    expect(convolverNode.channelCountMode).to.equal(channelCountMode);
+                });
+
+                it("should not be assignable to 'max'", (done) => {
                     try {
-                        convolverNode.channelCountMode = channelCountMode;
+                        convolverNode.channelCountMode = 'max';
                     } catch (err) {
                         expect(err.code).to.equal(9);
                         expect(err.name).to.equal('NotSupportedError');

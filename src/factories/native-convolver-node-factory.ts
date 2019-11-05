@@ -4,11 +4,19 @@ import { TNativeConvolverNodeFactoryFactory } from '../types';
 
 export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactory = (
     createNativeAudioNode,
+    createNativeConvolverNodeFaker,
     createNotSupportedError,
     overwriteAccessors
 ) => {
     return (nativeContext, options) => {
         const nativeConvolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
+
+        try {
+            // Bug #166: Chrome & Opera do not allow yet to set the channelCount to 1.
+            nativeConvolverNode.channelCount = 1;
+        } catch (err) {
+            return createNativeConvolverNodeFaker(nativeContext, options);
+        }
 
         assignNativeAudioNodeOptions(nativeConvolverNode, options);
 
@@ -19,8 +27,8 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
 
         assignNativeAudioNodeOption(nativeConvolverNode, options, 'buffer');
 
-        // Bug #113: Edge & Safari allow to change the channelCount
-        if (options.channelCount !== 2) {
+        // Bug #113: Edge & Safari allow to set the channelCount to a value larger than 2.
+        if (options.channelCount > 2) {
             throw createNotSupportedError();
         }
 
@@ -28,15 +36,17 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
             nativeConvolverNode,
             'channelCount',
             (get) => () => get.call(nativeConvolverNode),
-            () => (value) => {
-                if (value !== options.channelCount) {
+            (set) => (value) => {
+                if (value > 2) {
                     throw createNotSupportedError();
                 }
+
+                return set.call(nativeConvolverNode, value);
             }
         );
 
-        // Bug #114: Edge & Safari allow to change the channelCountMode
-        if (options.channelCountMode !== 'clamped-max') {
+        // Bug #114: Edge & Safari allow to set the channelCountMode to 'max'.
+        if (options.channelCountMode === 'max') {
             throw createNotSupportedError();
         }
 
@@ -44,10 +54,12 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
             nativeConvolverNode,
             'channelCountMode',
             (get) => () => get.call(nativeConvolverNode),
-            () => (value) => {
-                if (value !== options.channelCountMode) {
+            (set) => (value) => {
+                if (value === 'max') {
                     throw createNotSupportedError();
                 }
+
+                return set.call(nativeConvolverNode, value);
             }
         );
 

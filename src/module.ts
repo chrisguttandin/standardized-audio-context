@@ -99,6 +99,7 @@ import { createNativeChannelSplitterNodeFactory } from './factories/native-chann
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConstantSourceNodeFakerFactory } from './factories/native-constant-source-node-faker-factory';
 import { createNativeConvolverNodeFactory } from './factories/native-convolver-node-factory';
+import { createNativeConvolverNodeFakerFactory } from './factories/native-convolver-node-faker-factory';
 import { createNativeDelayNodeFactory } from './factories/native-delay-node-factory';
 import { createNativeDynamicsCompressorNodeFactory } from './factories/native-dynamics-compressor-node-factory';
 import { createNativeGainNodeFactory } from './factories/native-gain-node-factory';
@@ -508,7 +509,17 @@ const constantSourceNodeConstructor: TConstantSourceNodeConstructor = createCons
     isNativeOfflineAudioContext,
     noneAudioDestinationNodeConstructor
 );
-const createNativeConvolverNode = createNativeConvolverNodeFactory(createNativeAudioNode, createNotSupportedError, overwriteAccessors);
+const createNativeConvolverNodeFaker = createNativeConvolverNodeFakerFactory(
+    createNativeAudioNode,
+    createNativeGainNode,
+    monitorConnections
+);
+const createNativeConvolverNode = createNativeConvolverNodeFactory(
+    createNativeAudioNode,
+    createNativeConvolverNodeFaker,
+    createNotSupportedError,
+    overwriteAccessors
+);
 const createConvolverNodeRenderer = createConvolverNodeRendererFactory(
     createNativeConvolverNode,
     getNativeAudioNode,

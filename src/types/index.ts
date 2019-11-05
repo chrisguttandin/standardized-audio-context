@@ -233,6 +233,8 @@ export * from './native-context';
 export * from './native-convolver-node';
 export * from './native-convolver-node-factory';
 export * from './native-convolver-node-factory-factory';
+export * from './native-convolver-node-faker-factory';
+export * from './native-convolver-node-faker-factory-factory';
 export * from './native-delay-node-factory';
 export * from './native-delay-node-factory-factory';
 export * from './native-delay-node';
