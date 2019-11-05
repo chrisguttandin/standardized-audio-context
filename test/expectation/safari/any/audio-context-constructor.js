@@ -245,16 +245,6 @@ describe('audioContextConstructor', () => {
 
             describe('frequency', () => {
 
-                describe('maxValue', () => {
-
-                    // bug #77
-
-                    it('should be the nyquist frequency', () => {
-                        expect(biquadFilterNode.frequency.maxValue).to.equal(audioContext.sampleRate / 2);
-                    });
-
-                });
-
                 describe('minValue', () => {
 
                     // bug #77

@@ -97,17 +97,31 @@ describe('audioContextConstructor', () => {
 
             });
 
-            describe('frequency', () => {
+            describe('detune', () => {
 
                 describe('maxValue', () => {
 
-                    // bug #77
+                    // bug #78
 
-                    it('should be the nyquist frequency', () => {
-                        expect(biquadFilterNode.frequency.maxValue).to.equal(audioContext.sampleRate / 2);
+                    it('should be the largest possible positive float value', () => {
+                        expect(biquadFilterNode.detune.maxValue).to.equal(3.4028234663852886e+38);
                     });
 
                 });
+
+                describe('minValue', () => {
+
+                    // bug #78
+
+                    it('should be the smallest possible negative float value', () => {
+                        expect(biquadFilterNode.detune.minValue).to.equal(-3.4028234663852886e+38);
+                    });
+
+                });
+
+            });
+
+            describe('frequency', () => {
 
                 describe('minValue', () => {
 
@@ -115,6 +129,30 @@ describe('audioContextConstructor', () => {
 
                     it('should be the negative nyquist frequency', () => {
                         expect(biquadFilterNode.frequency.minValue).to.equal(-(audioContext.sampleRate / 2));
+                    });
+
+                });
+
+            });
+
+            describe('gain', () => {
+
+                describe('maxValue', () => {
+
+                    // bug #79
+
+                    it('should be the largest possible positive float value', () => {
+                        expect(biquadFilterNode.gain.maxValue).to.equal(3.4028234663852886e+38);
+                    });
+
+                });
+
+                describe('minValue', () => {
+
+                    // bug #79
+
+                    it('should be the smallest possible negative float value', () => {
+                        expect(biquadFilterNode.gain.minValue).to.equal(-3.4028234663852886e+38);
                     });
 
                 });

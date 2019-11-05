@@ -54,29 +54,26 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
                 MOST_POSITIVE_SINGLE_FLOAT,
                 MOST_NEGATIVE_SINGLE_FLOAT
             );
-            // Bug #78: Edge & Safari do not export the correct values for maxValue and minValue.
+            // Bug #78: Chrome, Edge, Firefox, Opera & Safari do not export the correct values for maxValue and minValue.
             this._detune = createAudioParam(
                 this,
                 isOffline,
                 nativeBiquadFilterNode.detune,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
+                1200 * Math.log2(MOST_POSITIVE_SINGLE_FLOAT),
+                -1200 * Math.log2(MOST_POSITIVE_SINGLE_FLOAT)
             );
-            // Bug #77: Chrome, Edge, Firefox, Opera & Safari do not export the correct values for maxValue and minValue.
-            this._frequency = createAudioParam(
-                this,
-                isOffline,
-                nativeBiquadFilterNode.frequency,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
-            // Bug #79: Edge & Safari do not export the correct values for maxValue and minValue.
+            /*
+             * Bug #77: Edge does not export the correct values for maxValue and minValue. Firefox & Safari do not export the correct value
+             * for minValue.
+             */
+            this._frequency = createAudioParam(this, isOffline, nativeBiquadFilterNode.frequency, context.sampleRate / 2, 0);
+            // Bug #79: Chrome, Edge, Firefox, Opera & Safari do not export the correct values for maxValue and minValue.
             this._gain = createAudioParam(
                 this,
                 isOffline,
                 nativeBiquadFilterNode.gain,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
+                40 * Math.log10(MOST_POSITIVE_SINGLE_FLOAT),
+                -40 * Math.log10(MOST_POSITIVE_SINGLE_FLOAT)
             );
             this._nativeBiquadFilterNode = nativeBiquadFilterNode;
         }
