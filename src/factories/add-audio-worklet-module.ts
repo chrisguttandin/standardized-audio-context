@@ -1,5 +1,4 @@
 import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
-import { evaluateSource } from '../helpers/evaluate-source';
 import { isConstructible } from '../helpers/is-constructible';
 import { splitImportStatements } from '../helpers/split-import-statements';
 import { IAudioWorkletProcessorConstructor } from '../interfaces';
@@ -28,6 +27,7 @@ const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (proce
 export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     createAbortError,
     createNotSupportedError,
+    evaluateSource,
     exposeCurrentFrameAndCurrentTime,
     fetchSource,
     getBackupNativeContext,

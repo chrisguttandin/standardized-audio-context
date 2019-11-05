@@ -52,6 +52,7 @@ import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple
 import { createDynamicsCompressorNodeConstructor } from './factories/dynamics-compressor-node-constructor';
 import { createDynamicsCompressorNodeRendererFactory } from './factories/dynamics-compressor-node-renderer-factory';
 import { createEncodingError } from './factories/encoding-error';
+import { createEvaluateSource } from './factories/evaluate-source';
 import { createExposeCurrentFrameAndCurrentTime } from './factories/expose-current-frame-and-current-time';
 import { createFetchSource } from './factories/fetch-source';
 import { createGainNodeConstructor } from './factories/gain-node-constructor';
@@ -742,6 +743,7 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
     createAddAudioWorkletModule(
         createAbortError,
         createNotSupportedError,
+        createEvaluateSource(window),
         exposeCurrentFrameAndCurrentTime,
         createFetchSource(createAbortError),
         getBackupNativeContext,

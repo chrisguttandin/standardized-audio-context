@@ -116,6 +116,8 @@ export * from './dynamics-compressor-node-renderer-factory';
 export * from './dynamics-compressor-node-renderer-factory-factory';
 export * from './encoding-error-factory';
 export * from './evaluate-audio-worklet-global-scope-function';
+export * from './evaluate-source-factory';
+export * from './evaluate-source-function';
 export * from './expose-current-frame-and-current-time-factory';
 export * from './expose-current-frame-and-current-time-function';
 export * from './fetch-source-factory';

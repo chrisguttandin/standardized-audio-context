@@ -1,11 +1,19 @@
-export const evaluateSource = (source: string) => {
-    return new Promise((resolve, reject) => {
-        const head = document.head;
+import { TEvaluateSourceFactory } from '../types';
+
+export const createEvaluateSource: TEvaluateSourceFactory = (window) => {
+    return (source) => new Promise((resolve, reject) => {
+        if (window === null) {
+            reject(new SyntaxError());
+
+            return;
+        }
+
+        const head = window.document.head;
 
         if (head === null) {
             reject(new SyntaxError());
         } else {
-            const script = document.createElement('script');
+            const script = window.document.createElement('script');
             // @todo Safari doesn't like URLs with a type of 'application/javascript; charset=utf-8'.
             const blob = new Blob([ source ], { type: 'application/javascript' });
             const url = URL.createObjectURL(blob);
