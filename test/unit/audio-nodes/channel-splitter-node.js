@@ -146,6 +146,13 @@ describe('ChannelSplitterNode', () => {
                                 expect(channelSplitterNode.numberOfOutputs).to.equal(numberOfOutputs);
                             });
 
+                            it('should return an instance with the given numberOfOutputs as channelCount', () => {
+                                const numberOfOutputs = 4;
+                                const channelSplitterNode = createChannelSplitterNode(context, { numberOfOutputs });
+
+                                expect(channelSplitterNode.channelCount).to.equal(numberOfOutputs);
+                            });
+
                         });
 
                     });
