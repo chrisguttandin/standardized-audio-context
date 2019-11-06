@@ -145,7 +145,7 @@ describe('offlineAudioContextConstructor', () => {
 
             // bug #163
 
-            it('should have a maximum delayTime of 256 samples', () => {
+            it('should have a minimum delayTime of 256 samples', () => {
                 audioBufferSourceNode.start(0);
 
                 return offlineAudioContext

@@ -525,7 +525,7 @@ describe('audioContextConstructor', () => {
 
                 // bug #163
 
-                it('should have a maximum delayTime of 255 samples', (done) => {
+                it('should have a minimum delayTime of 255 samples', (done) => {
                     const channelData = new Float32Array(512);
 
                     let offsetOfFirstImpulse = null;
