@@ -21,17 +21,15 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioParam,
     createConstantSourceNodeRendererFactory,
     createNativeConstantSourceNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class ConstantSourceNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
-            implements IConstantSourceNode<T> {
+    return class ConstantSourceNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IConstantSourceNode<T> {
 
         private _constantSourceNodeRenderer: null | IConstantSourceNodeRenderer<IMinimalOfflineAudioContext>;
 

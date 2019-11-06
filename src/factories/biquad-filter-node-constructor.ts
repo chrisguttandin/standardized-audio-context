@@ -14,18 +14,16 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioParam,
     createBiquadFilterNodeRenderer,
     createInvalidAccessError,
     createNativeBiquadFilterNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class BiquadFilterNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
-            implements IBiquadFilterNode<T> {
+    return class BiquadFilterNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IBiquadFilterNode<T> {
 
         private _detune: IAudioParam;
 

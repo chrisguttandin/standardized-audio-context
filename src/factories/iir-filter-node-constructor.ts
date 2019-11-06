@@ -9,16 +9,14 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = (
+    audioNodeConstructor,
     createNativeIIRFilterNode,
     createIIRFilterNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class IIRFilterNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
-            implements IIIRFilterNode<T> {
+    return class IIRFilterNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IIIRFilterNode<T> {
 
         private _nativeIIRFilterNode: TNativeIIRFilterNode;
 

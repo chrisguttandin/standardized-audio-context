@@ -19,17 +19,17 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioParam,
     createDynamicsCompressorNodeRenderer,
     createNativeDynamicsCompressorNode,
     createNotSupportedError,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
     return class DynamicsCompressorNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
+            extends audioNodeConstructor<T>
             implements IDynamicsCompressorNode<T> {
 
         private _attack: IAudioParam;

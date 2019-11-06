@@ -23,15 +23,15 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioParam,
     createNativePannerNode,
     createPannerNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class PannerNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> implements IPannerNode<T> {
+    return class PannerNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IPannerNode<T> {
 
         private _nativePannerNode: TNativePannerNode;
 

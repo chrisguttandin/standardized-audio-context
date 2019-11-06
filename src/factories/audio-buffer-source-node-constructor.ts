@@ -31,17 +31,17 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioBufferSourceNodeRenderer,
     createAudioParam,
     createInvalidStateError,
     createNativeAudioBufferSourceNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
     return class AudioBufferSourceNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
+            extends audioNodeConstructor<T>
             implements IAudioBufferSourceNode<T> {
 
         private _audioBufferSourceNodeRenderer: null | IAudioBufferSourceNodeRenderer<IMinimalOfflineAudioContext>;

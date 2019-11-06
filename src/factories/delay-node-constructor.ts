@@ -10,15 +10,15 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioParam,
     createDelayNodeRenderer,
     createNativeDelayNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class DelayNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> implements IDelayNode<T> {
+    return class DelayNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IDelayNode<T> {
 
         private _delayTime: IAudioParam;
 

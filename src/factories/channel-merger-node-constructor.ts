@@ -9,14 +9,14 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFactory = (
+    audioNodeConstructor,
     createChannelMergerNodeRenderer,
     createNativeChannelMergerNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class ChannelMergerNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> {
+    return class ChannelMergerNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> {
 
         constructor (context: T, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);

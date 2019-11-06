@@ -13,14 +13,14 @@ const sanitizedOptions = (options: IChannelSplitterOptions) => {
 };
 
 export const createChannelSplitterNodeConstructor: TChannelSplitterNodeConstructorFactory = (
+    audioNodeConstructor,
     createChannelSplitterNodeRenderer,
     createNativeChannelSplitterNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class ChannelSplitterNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> {
+    return class ChannelSplitterNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> {
 
         constructor (context: T, options: Partial<IChannelSplitterOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);

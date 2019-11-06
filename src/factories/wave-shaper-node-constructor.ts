@@ -10,17 +10,15 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory = (
+    audioNodeConstructor,
     createInvalidStateError,
     createNativeWaveShaperNode,
     createWaveShaperNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class WaveShaperNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
-            implements IWaveShaperNode<T> {
+    return class WaveShaperNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IWaveShaperNode<T> {
 
         private _isCurveNullified: boolean;
 

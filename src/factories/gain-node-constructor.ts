@@ -10,15 +10,15 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createGainNodeConstructor: TGainNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioParam,
     createGainNodeRenderer,
     createNativeGainNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class GainNode<T extends IMinimalBaseAudioContext> extends noneAudioDestinationNodeConstructor<T> implements IGainNode<T> {
+    return class GainNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IGainNode<T> {
 
         private _gain: IAudioParam;
 

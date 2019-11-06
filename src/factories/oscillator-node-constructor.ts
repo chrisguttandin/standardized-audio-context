@@ -22,18 +22,16 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioParam,
     createInvalidStateError,
     createNativeOscillatorNode,
     createOscillatorNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class OscillatorNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
-            implements IOscillatorNode<T> {
+    return class OscillatorNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IOscillatorNode<T> {
 
         private _detune: IAudioParam;
 

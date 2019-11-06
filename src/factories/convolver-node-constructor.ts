@@ -10,16 +10,14 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = (
+    audioNodeConstructor,
     createConvolverNodeRenderer,
     createNativeConvolverNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class ConvolverNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
-            implements IConvolverNode<T> {
+    return class ConvolverNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IConvolverNode<T> {
 
         private _isBufferNullified: boolean;
 

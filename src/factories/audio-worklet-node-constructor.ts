@@ -57,19 +57,17 @@ const sanitizedOptions = (options: IAudioWorkletNodeOptions): { outputChannelCou
 };
 
 export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFactory = (
+    audioNodeConstructor,
     createAudioParam,
     createAudioWorkletNodeRenderer,
     createNativeAudioWorkletNode,
     gainNodeConstructor,
     getNativeContext,
     isNativeOfflineAudioContext,
-    nativeAudioWorkletNodeConstructor,
-    noneAudioDestinationNodeConstructor
+    nativeAudioWorkletNodeConstructor
 ) => {
 
-    return class AudioWorkletNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
-            implements IAudioWorkletNode<T> {
+    return class AudioWorkletNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IAudioWorkletNode<T> {
 
         private _nativeAudioWorkletNode: TNativeAudioWorkletNode;
 

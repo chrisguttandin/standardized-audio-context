@@ -12,17 +12,15 @@ const DEFAULT_OPTIONS = {
 } as const;
 
 export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
+    audionNodeConstructor,
     createAnalyserNodeRenderer,
     createIndexSizeError,
     createNativeAnalyserNode,
     getNativeContext,
-    isNativeOfflineAudioContext,
-    noneAudioDestinationNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
 
-    return class AnalyserNode<T extends IMinimalBaseAudioContext>
-            extends noneAudioDestinationNodeConstructor<T>
-            implements IAnalyserNode<T> {
+    return class AnalyserNode<T extends IMinimalBaseAudioContext> extends audionNodeConstructor<T> implements IAnalyserNode<T> {
 
         private _nativeAnalyserNode: TNativeAnalyserNode;
 
