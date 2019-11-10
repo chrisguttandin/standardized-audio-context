@@ -89,7 +89,7 @@ import { createNativeAnalyserNodeFactory } from './factories/native-analyser-nod
 import { createNativeAudioBufferConstructor } from './factories/native-audio-buffer-constructor';
 import { createNativeAudioBufferSourceNodeFactory } from './factories/native-audio-buffer-source-node-factory';
 import { createNativeAudioContextConstructor } from './factories/native-audio-context-constructor';
-import { createNativeAudioDestinationNode } from './factories/native-audio-destination-node';
+import { createNativeAudioDestinationNodeFactory } from './factories/native-audio-destination-node';
 import { createNativeAudioNodeFactory } from './factories/native-audio-node-factory';
 import { createNativeAudioWorkletNodeConstructor } from './factories/native-audio-worklet-node-constructor';
 import { createNativeAudioWorkletNodeFactory } from './factories/native-audio-worklet-node-factory';
@@ -425,12 +425,13 @@ type audioBufferSourceNodeConstructor<T extends TContext> = IAudioBufferSourceNo
 
 export { audioBufferSourceNodeConstructor as AudioBufferSourceNode };
 
+const createNativeGainNode = createNativeGainNodeFactory(createNativeAudioNode);
 const audioDestinationNodeConstructor = createAudioDestinationNodeConstructor(
     audioNodeConstructor,
     createAudioDestinationNodeRenderer,
     createIndexSizeError,
     createInvalidStateError,
-    createNativeAudioDestinationNode,
+    createNativeAudioDestinationNodeFactory(createNativeGainNode, overwriteAccessors),
     getNativeContext,
     isNativeOfflineAudioContext,
     renderInputsOfAudioNode
@@ -480,7 +481,6 @@ const channelSplitterNodeConstructor: TChannelSplitterNodeConstructor = createCh
     getNativeContext,
     isNativeOfflineAudioContext
 );
-const createNativeGainNode = createNativeGainNodeFactory(createNativeAudioNode);
 const createNativeConstantSourceNodeFaker = createNativeConstantSourceNodeFakerFactory(
     createNativeAudioBufferSourceNode,
     createNativeGainNode,

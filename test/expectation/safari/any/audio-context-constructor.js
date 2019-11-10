@@ -90,6 +90,32 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('destination', () => {
+
+            describe('channelCount', () => {
+
+                // bug #169
+
+                it('should throw an error', () => {
+                    expect(() => {
+                        audioContext.destination.channelCount = 1;
+                    }).to.throw(DOMException);
+                });
+
+            });
+
+            describe('numberOfOutputs', () => {
+
+                // bug #168
+
+                it('should be zero', () => {
+                    expect(audioContext.destination.numberOfOutputs).to.equal(0);
+                });
+
+            });
+
+        });
+
         describe('listener', () => {
 
             // bug #117

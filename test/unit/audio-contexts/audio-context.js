@@ -215,32 +215,13 @@ describe('AudioContext', () => {
                 expect(destination.channelInterpretation).to.equal('speakers');
                 expect(destination.maxChannelCount).to.be.a('number');
                 expect(destination.numberOfInputs).to.equal(1);
-                expect(destination.numberOfOutputs).to.equal(0);
+                expect(destination.numberOfOutputs).to.equal(1);
             });
 
             it('should be readonly', () => {
                 expect(() => {
                     audioContext.destination = 'a fake AudioDestinationNode';
                 }).to.throw(TypeError);
-            });
-
-            it('should have maxChannelCount which is at least the channelCount', () => {
-                const destination = audioContext.destination;
-
-                expect(destination.maxChannelCount).to.be.at.least(destination.channelCount);
-            });
-
-            it('should not allow to change the value of the channelCount property to a value above the maxChannelCount', (done) => {
-                const destination = audioContext.destination;
-
-                try {
-                    destination.channelCount = destination.maxChannelCount + 1;
-                } catch (err) {
-                    expect(err.code).to.equal(1);
-                    expect(err.name).to.equal('IndexSizeError');
-
-                    done();
-                }
             });
 
         });

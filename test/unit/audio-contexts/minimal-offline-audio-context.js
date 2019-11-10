@@ -161,7 +161,7 @@ describe('MinimalOfflineAudioContext', () => {
             expect(destination.channelInterpretation).to.equal('speakers');
             expect(destination.maxChannelCount).to.equal(1);
             expect(destination.numberOfInputs).to.equal(1);
-            expect(destination.numberOfOutputs).to.equal(0);
+            expect(destination.numberOfOutputs).to.equal(1);
         });
 
         it('should be readonly', () => {
@@ -170,39 +170,6 @@ describe('MinimalOfflineAudioContext', () => {
             expect(() => {
                 minimalOfflineAudioContext.destination = 'a fake AudioDestinationNode';
             }).to.throw(TypeError);
-        });
-
-        it('should have maxChannelCount which is at least the channelCount', () => {
-            const minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length, sampleRate });
-            const destination = minimalOfflineAudioContext.destination;
-
-            expect(destination.maxChannelCount).to.be.at.least(destination.channelCount);
-        });
-
-        it('should not allow to change the value of the channelCount property', (done) => {
-            const minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length, sampleRate });
-
-            try {
-                minimalOfflineAudioContext.destination.channelCount = 2;
-            } catch (err) {
-                expect(err.code).to.equal(11);
-                expect(err.name).to.equal('InvalidStateError');
-
-                done();
-            }
-        });
-
-        it('should not allow to change the value of the channelCountMode property', (done) => {
-            const minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length, sampleRate });
-
-            try {
-                minimalOfflineAudioContext.destination.channelCountMode = 'max';
-            } catch (err) {
-                expect(err.code).to.equal(11);
-                expect(err.name).to.equal('InvalidStateError');
-
-                done();
-            }
         });
 
         describe('without a specified value for numberOfChannels', () => {

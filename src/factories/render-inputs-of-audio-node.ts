@@ -18,7 +18,7 @@ export const createRenderInputsOfAudioNode: TRenderInputsOfAudioNodeFactory = (
                         const audioNodeRenderer = getAudioNodeRenderer(source);
                         const renderedNativeAudioNode = await audioNodeRenderer.render(source, nativeOfflineAudioContext, nextTrace);
 
-                        if (!isPartOfACycle(source)) {
+                        if (!isPartOfACycle(source) && !(audioNode === audioNode.context.destination && isPartOfACycle(audioNode))) {
                             renderedNativeAudioNode.connect(nativeAudioNode, output, input);
                         }
                     }))

@@ -202,6 +202,7 @@ export * from './native-audio-context-constructor';
 export * from './native-audio-context-constructor-factory';
 export * from './native-audio-destination-node';
 export * from './native-audio-destination-node-factory';
+export * from './native-audio-destination-node-factory-factory';
 export * from './native-audio-listener';
 export * from './native-audio-node';
 export * from './native-audio-node-factory';
