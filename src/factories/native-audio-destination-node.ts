@@ -9,7 +9,14 @@ export const createNativeAudioDestinationNodeFactory: TNativeAudioDestinationNod
 
         // Bug #132: Edge & Safari do not have the correct channelCount.
         if (nativeAudioDestinationNode.channelCount !== channelCount) {
-            nativeAudioDestinationNode.channelCount = channelCount;
+            try {
+                nativeAudioDestinationNode.channelCount = channelCount;
+            } catch (err) {
+                // Bug #169: Safari throws an error on each attempt to change the channelCount.
+                if (channelCount !== nativeAudioDestinationNode.channelCount) {
+                    throw err;
+                }
+            }
         }
 
         // Bug #83: Edge & Safari do not have the correct channelCountMode.
@@ -20,13 +27,13 @@ export const createNativeAudioDestinationNodeFactory: TNativeAudioDestinationNod
         // Bug #47: The AudioDestinationNode in Edge and Safari does not initialize the maxChannelCount property correctly.
         if (nativeAudioDestinationNode.maxChannelCount === 0) {
             Object.defineProperty(nativeAudioDestinationNode, 'maxChannelCount', {
-                value: nativeAudioDestinationNode.channelCount
+                value: channelCount
             });
         }
 
         // Bug #168: No browser does yet have an AudioDestinationNode with an output.
         const gainNode = createNativeGainNode(nativeContext, {
-            channelCount: nativeAudioDestinationNode.channelCount,
+            channelCount,
             channelCountMode: nativeAudioDestinationNode.channelCountMode,
             channelInterpretation: nativeAudioDestinationNode.channelInterpretation,
             gain: 1
