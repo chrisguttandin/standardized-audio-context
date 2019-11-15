@@ -42,7 +42,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 throw createNotSupportedError();
             }
 
-            super(nativeAudioContext, nativeAudioContext.destination.channelCount);
+            super(nativeAudioContext, 2);
 
             const { latencyHint } = options;
             const { sampleRate } = nativeAudioContext;
