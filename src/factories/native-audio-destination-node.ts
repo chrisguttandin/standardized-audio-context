@@ -11,11 +11,8 @@ export const createNativeAudioDestinationNodeFactory: TNativeAudioDestinationNod
         if (nativeAudioDestinationNode.channelCount !== channelCount) {
             try {
                 nativeAudioDestinationNode.channelCount = channelCount;
-            } catch (err) {
+            } catch {
                 // Bug #169: Safari throws an error on each attempt to change the channelCount.
-                if (channelCount !== nativeAudioDestinationNode.channelCount) {
-                    throw err;
-                }
             }
         }
 
