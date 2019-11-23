@@ -11,7 +11,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
     return (nativeContext, baseLatency, nativeAudioWorkletNodeConstructor, name, processorConstructor, options) => {
         if (nativeAudioWorkletNodeConstructor !== null) {
             try {
-                // Bug #86: Chrome Canary does not invoke the process() function if the corresponding AudioWorkletNode has no output.
+                // Bug #86: Chrome & Opera do not invoke the process() function if the corresponding AudioWorkletNode has no output.
                 const nativeAudioWorkletNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
                     return (isNativeOfflineAudioContext(ntvCntxt) && options.numberOfInputs !== 0 && options.numberOfOutputs === 0) ?
                         new nativeAudioWorkletNodeConstructor(ntvCntxt, name, {
@@ -43,7 +43,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             throw createInvalidStateError();
                         }
                     },
-                    // Bug #156: Chrome does not yet fire an ErrorEvent.
+                    // Bug #156: Chrome & Opera do not yet fire an ErrorEvent.
                     onprocessorerror: {
                         get: () => onprocessorerror,
                         set: (value) => {
@@ -106,7 +106,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
 
                 return nativeAudioWorkletNode;
             } catch (err) {
-                // Bug #60: Chrome Canary throws an InvalidStateError instead of a NotSupportedError.
+                // Bug #60: Chrome & Opera throw an InvalidStateError instead of a NotSupportedError.
                 if (err.code === 11) {
                     throw createNotSupportedError();
                 }

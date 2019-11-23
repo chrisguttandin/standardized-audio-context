@@ -608,7 +608,7 @@ describe('AudioWorkletNode', () => {
                             expect(event).to.be.an.instanceOf(ErrorEvent);
                             expect(event.currentTarget).to.equal(audioWorkletNode);
 
-                            // Bug #156: Chrome does not yet fire an ErrorEvent.
+                            // Bug #156: Chrome & Opera do not yet fire an ErrorEvent.
                             if (window.AudioWorkletNode === undefined) {
                                 expect(event.error).to.be.an.instanceOf(TypeError);
                             } else {
@@ -786,7 +786,7 @@ describe('AudioWorkletNode', () => {
                             expect(gain.defaultValue).to.equal(1);
                             expect(gain.exponentialRampToValueAtTime).to.be.a('function');
                             expect(gain.linearRampToValueAtTime).to.be.a('function');
-                            // Bug #82: Chrome's native implementation is a little different from other AudioParams.
+                            // Bug #82: Chrome & Opera's native implementation is a little different from other AudioParams.
                             expect(gain.maxValue).to.be.at.most(3.4028234663852886e+38);
                             expect(gain.maxValue).to.be.at.least(3.402820018375656e+38);
                             expect(gain.minValue).to.be.at.most(-3.402820018375656e+38);

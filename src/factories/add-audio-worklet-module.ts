@@ -41,7 +41,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 .then((source) => {
                     const [ importStatements, sourceWithoutImportStatements ] = splitImportStatements(source, absoluteUrl);
                     /*
-                     * Bug #86: Chrome Canary does not invoke the process() function if the corresponding AudioWorkletNode has no output.
+                     * Bug #86: Chrome and Opera do not invoke the process() function if the corresponding AudioWorkletNode has no output.
                      *
                      * This is the unminified version of the code used below:
                      *
