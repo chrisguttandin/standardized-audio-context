@@ -38,13 +38,13 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         }
 
         if (options.outputChannelCount !== undefined) {
-            if (options.outputChannelCount.length !== options.numberOfOutputs) {
-                throw createIndexSizeError();
-            }
-
             // @todo Check if any of the channelCount values is greater than the implementation's maximum number of channels.
             if (options.outputChannelCount.some((channelCount) => (channelCount < 1))) {
                 throw createNotSupportedError();
+            }
+
+            if (options.outputChannelCount.length !== options.numberOfOutputs) {
+                throw createIndexSizeError();
             }
         }
 
