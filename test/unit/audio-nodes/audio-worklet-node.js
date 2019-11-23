@@ -589,32 +589,83 @@ describe('AudioWorkletNode', () => {
                     expect(audioWorkletNode.onprocessorerror).to.be.null;
                 });
 
-                it('should fire an assigned processorerror event listener', function (done) {
-                    this.timeout(10000);
+                describe('with a processor without a process function', () => {
 
-                    addAudioWorkletModule('base/test/fixtures/failing-processor.js')
-                        .then(() => {
-                            const audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
+                    let audioWorkletNode;
 
+                    beforeEach(async function () {
+                        this.timeout(10000);
 
-                            audioWorkletNode.onprocessorerror = function (event) {
-                                expect(event).to.be.an.instanceOf(ErrorEvent);
-                                expect(event.currentTarget).to.equal(audioWorkletNode);
+                        await addAudioWorkletModule('base/test/fixtures/processless-processor.js');
+
+                        audioWorkletNode = createAudioWorkletNode(context, 'processless-processor');
+                    });
+
+                    it('should fire an assigned processorerror event listener', function (done) {
+                        this.timeout(10000);
+
+                        audioWorkletNode.onprocessorerror = function (event) {
+                            expect(event).to.be.an.instanceOf(ErrorEvent);
+                            expect(event.currentTarget).to.equal(audioWorkletNode);
+
+                            // Bug #156: Chrome does not yet fire an ErrorEvent.
+                            if (window.AudioWorkletNode === undefined) {
+                                expect(event.error).to.be.an.instanceOf(TypeError);
+                            } else {
                                 expect(event.error).to.be.an.instanceOf(Error);
-                                expect(event.target).to.equal(audioWorkletNode);
-                                expect(event.type).to.equal('processorerror');
-
-                                expect(this).to.equal(audioWorkletNode);
-
-                                done();
-                            };
-
-                            audioWorkletNode.connect(context.destination);
-
-                            if (context.startRendering !== undefined) {
-                                context.startRendering();
                             }
-                        });
+
+                            expect(event.target).to.equal(audioWorkletNode);
+                            expect(event.type).to.equal('processorerror');
+
+                            expect(this).to.equal(audioWorkletNode);
+
+                            done();
+                        };
+
+                        audioWorkletNode.connect(context.destination);
+
+                        if (context.startRendering !== undefined) {
+                            context.startRendering();
+                        }
+                    });
+
+                });
+
+                describe('with a failing processor', () => {
+
+                    let audioWorkletNode;
+
+                    beforeEach(async function () {
+                        this.timeout(10000);
+
+                        await addAudioWorkletModule('base/test/fixtures/failing-processor.js');
+
+                        audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
+                    });
+
+                    it('should fire an assigned processorerror event listener', function (done) {
+                        this.timeout(10000);
+
+                        audioWorkletNode.onprocessorerror = function (event) {
+                            expect(event).to.be.an.instanceOf(ErrorEvent);
+                            expect(event.currentTarget).to.equal(audioWorkletNode);
+                            expect(event.error).to.be.an.instanceOf(Error);
+                            expect(event.target).to.equal(audioWorkletNode);
+                            expect(event.type).to.equal('processorerror');
+
+                            expect(this).to.equal(audioWorkletNode);
+
+                            done();
+                        };
+
+                        audioWorkletNode.connect(context.destination);
+
+                        if (context.startRendering !== undefined) {
+                            context.startRendering();
+                        }
+                    });
+
                 });
 
             });

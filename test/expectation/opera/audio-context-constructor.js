@@ -68,18 +68,6 @@ describe('audioContextConstructor', () => {
 
             });
 
-            describe('with a processor without a process function', () => {
-
-                // Bug #138
-
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/processless-processor.js');
-                });
-
-            });
-
             describe('with a processor with an invalid parameterDescriptors property', () => {
 
                 // Bug #139

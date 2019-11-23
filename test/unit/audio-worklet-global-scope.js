@@ -743,21 +743,11 @@ describe('AudioWorkletGlobalScope', () => {
 
                     describe('with a processor without a process function', () => {
 
-                        // Bug #138: Chrome & Opera have the only native implementation so far and don't throw the expected error.
-                        if (window.AudioWorkletNode === undefined) {
+                        it('should return a promise', function () {
+                            this.timeout(10000);
 
-                            it('should throw an error', function (done) {
-                                this.timeout(10000);
-
-                                addAudioWorkletModule(context, 'processless-processor')
-                                    .catch((err) => {
-                                        expect(err).to.be.an.instanceOf(TypeError);
-
-                                        done();
-                                    });
-                            });
-
-                        }
+                            return addAudioWorkletModule(context, 'processless-processor');
+                        });
 
                     });
 

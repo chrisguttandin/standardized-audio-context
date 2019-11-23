@@ -18,10 +18,6 @@ const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (proce
     if (processorCtor.prototype === null || typeof processorCtor.prototype !== 'object') {
         throw new TypeError('The given value for processorCtor should have a prototype.');
     }
-
-    if (typeof processorCtor.prototype.process !== 'function') {
-        throw new TypeError('The given value for processorCtor should have a callable process() function.');
-    }
 };
 
 export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
