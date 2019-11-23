@@ -19,7 +19,7 @@ export const createStartRendering: TStartRenderingFactory = (
             if (typeof audioBuffer.copyFromChannel !== 'function') {
                 wrapAudioBufferCopyChannelMethods(audioBuffer);
                 wrapAudioBufferGetChannelDataMethod(audioBuffer);
-            // Bug #157: Only Chrome does allow the bufferOffset to be out-of-bounds.
+            // Bug #157: Only Chrome & Opera do allow the bufferOffset to be out-of-bounds.
             } else if (!cacheTestResult(
                 testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
                 () => testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)

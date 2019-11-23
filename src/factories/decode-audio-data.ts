@@ -56,7 +56,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
 
             return promise
                 .then((audioBuffer) => {
-                    // Bug #157: Only Chrome does allow the bufferOffset to be out-of-bounds.
+                    // Bug #157: Only Chrome & Opera do allow the bufferOffset to be out-of-bounds.
                     if (!cacheTestResult(
                         testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
                         () => testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
