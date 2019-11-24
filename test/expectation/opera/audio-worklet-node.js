@@ -111,6 +111,8 @@ describe('AudioWorklet', () => {
         // bug #156
 
         it('should fire a regular event', function (done) {
+            this.timeout(10000);
+
             const audioWorkletNode = new AudioWorkletNode(audioContext, 'failing-processor');
 
             audioWorkletNode.onprocessorerror = function (event) {
