@@ -273,8 +273,12 @@ import {
     TWaveShaperNodeConstructor
 } from './types';
 
-export * from './interfaces';
-export * from './types';
+/*
+ * @todo Explicitly referencing the barrel file seems to be necessary when enabling the
+ * isolatedModules compiler option.
+ */
+export * from './interfaces/index';
+export * from './types/index';
 
 const cacheTestResult = createCacheTestResult(new Map());
 const window = createWindow();
