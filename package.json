@@ -58,7 +58,7 @@
     "puppeteer": "^2.0.0",
     "rollup": "^1.27.14",
     "rollup-plugin-babel": "^4.3.3",
-    "sinon": "^7.5.0",
+    "sinon": "^8.0.1",
     "sinon-chai": "^3.3.0",
     "ts-loader": "^6.2.1",
     "tsconfig-holy-grail": "^10.0.36",
