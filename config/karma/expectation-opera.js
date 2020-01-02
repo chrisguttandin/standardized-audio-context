@@ -9,7 +9,6 @@ module.exports = (config) => {
     config.set({
 
         files: [
-            'test/expectation/any/**/*.js',
             'test/expectation/opera/**/*.js',
             {
                 included: false,
@@ -19,7 +18,6 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            'test/expectation/any/**/*.js': 'webpack',
             'test/expectation/opera/**/*.js': 'webpack'
         },
 

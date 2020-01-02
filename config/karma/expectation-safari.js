@@ -11,9 +11,7 @@ module.exports = (config) => {
         ],
 
         files: [
-            'test/expectation/any/**/*.js',
             'test/expectation/safari/any/**/*.js',
-            'test/expectation/safari/current/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
@@ -22,9 +20,7 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            'test/expectation/any/**/*.js': 'webpack',
-            'test/expectation/safari/any/**/*.js': 'webpack',
-            'test/expectation/safari/current/**/*.js': 'webpack'
+            'test/expectation/safari/any/**/*.js': 'webpack'
         }
 
     });

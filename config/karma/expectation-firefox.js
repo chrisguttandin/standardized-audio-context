@@ -8,7 +8,6 @@ module.exports = (config) => {
     config.set({
 
         files: [
-            'test/expectation/any/**/*.js',
             'test/expectation/firefox/any/**/*.js',
             'test/expectation/firefox/current/**/*.js',
             {
@@ -19,7 +18,6 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            'test/expectation/any/**/*.js': 'webpack',
             'test/expectation/firefox/any/**/*.js': 'webpack',
             'test/expectation/firefox/current/**/*.js': 'webpack'
         }

@@ -23,7 +23,6 @@ module.exports = (config) => {
         },
 
         files: [
-            'test/expectation/any/**/*.js',
             'test/expectation/edge/**/*.js',
             {
                 included: false,
@@ -33,7 +32,6 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            'test/expectation/any/**/*.js': 'webpack',
             'test/expectation/edge/**/*.js': 'webpack'
         }
 

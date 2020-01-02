@@ -11,7 +11,6 @@ module.exports = (config) => {
         ],
 
         files: [
-            'test/expectation/any/**/*.js',
             'test/expectation/firefox/any/**/*.js',
             'test/expectation/firefox/developer/**/*.js',
             {
@@ -22,7 +21,6 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            'test/expectation/any/**/*.js': 'webpack',
             'test/expectation/firefox/any/**/*.js': 'webpack',
             'test/expectation/firefox/developer/**/*.js': 'webpack'
         }
