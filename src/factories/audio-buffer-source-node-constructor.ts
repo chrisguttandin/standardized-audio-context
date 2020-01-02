@@ -1,7 +1,6 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
-import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioBufferSourceNode,
     IAudioBufferSourceNodeRenderer,
@@ -37,7 +36,8 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
     createInvalidStateError,
     createNativeAudioBufferSourceNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    wrapEventListener
 ) => {
 
     return class AudioBufferSourceNode<T extends IMinimalBaseAudioContext>
@@ -129,13 +129,13 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         }
 
         set onended (value) {
-            const wrappedListener = <TNativeAudioBufferSourceNode['onended']> wrapEventListener(this, value);
+            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
 
             this._nativeAudioBufferSourceNode.onended = wrappedListener;
 
-            const nativeOnEnded = <null | IEndedEventHandler<T, this>> this._nativeAudioBufferSourceNode.onended;
+            const nativeOnEnded = this._nativeAudioBufferSourceNode.onended;
 
-            this._onended = (nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
+            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
         }
 
         get loop (): boolean {

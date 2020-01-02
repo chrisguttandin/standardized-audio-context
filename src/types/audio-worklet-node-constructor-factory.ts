@@ -7,6 +7,7 @@ import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeAudioWorkletNodeConstructor } from './native-audio-worklet-node-constructor';
 import { TNativeAudioWorkletNodeFactory } from './native-audio-worklet-node-factory';
+import { TWrapEventListenerFunction } from './wrap-event-listener-function';
 
 export type TAudioWorkletNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
@@ -16,5 +17,6 @@ export type TAudioWorkletNodeConstructorFactory = (
     gainNodeConstructor: TGainNodeConstructor,
     getNativeContext: TGetNativeContextFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
-    nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor
+    nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
+    wrapEventListener: TWrapEventListenerFunction
 ) => TAudioWorkletNodeConstructor;

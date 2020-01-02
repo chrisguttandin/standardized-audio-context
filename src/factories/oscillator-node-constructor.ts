@@ -1,6 +1,5 @@
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
-import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioParam,
     IEndedEventHandler,
@@ -28,7 +27,8 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
     createNativeOscillatorNode,
     createOscillatorNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    wrapEventListener
 ) => {
 
     return class OscillatorNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IOscillatorNode<T> {
@@ -80,13 +80,13 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
         }
 
         set onended (value) {
-            const wrappedListener = <TNativeOscillatorNode['onended']> wrapEventListener(this, value);
+            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
 
             this._nativeOscillatorNode.onended = wrappedListener;
 
-            const nativeOnEnded = <null | IEndedEventHandler<T, this>> this._nativeOscillatorNode.onended;
+            const nativeOnEnded = this._nativeOscillatorNode.onended;
 
-            this._onended = (nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
+            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
         }
 
         get type (): TOscillatorType {

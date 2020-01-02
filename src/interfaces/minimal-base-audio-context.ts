@@ -1,9 +1,9 @@
-import { TAudioContextState } from '../types';
+import { TAudioContextState, TNativeEventTarget } from '../types';
 import { IAudioDestinationNode } from './audio-destination-node';
 import { IAudioListener } from './audio-listener';
 import { IStateChangeEventHandler } from './state-change-event-handler';
 
-export interface IMinimalBaseAudioContext extends EventTarget {
+export interface IMinimalBaseAudioContext extends TNativeEventTarget {
 
     readonly currentTime: number;
 

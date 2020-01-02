@@ -6,6 +6,7 @@ import { TGetNativeContextFunction } from './get-native-context-function';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeAudioBufferSourceNodeFactory } from './native-audio-buffer-source-node-factory';
+import { TWrapEventListenerFunction } from './wrap-event-listener-function';
 
 export type TAudioBufferSourceNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
@@ -14,5 +15,6 @@ export type TAudioBufferSourceNodeConstructorFactory = (
     createInvalidStateError: TInvalidStateErrorFactory,
     createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFactory,
     getNativeContext: TGetNativeContextFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    wrapEventListener: TWrapEventListenerFunction
 ) => TAudioBufferSourceNodeConstructor;

@@ -118,6 +118,8 @@ export * from './encoding-error-factory';
 export * from './evaluate-audio-worklet-global-scope-function';
 export * from './evaluate-source-factory';
 export * from './evaluate-source-function';
+export * from './event-target-constructor';
+export * from './event-target-constructor-factory';
 export * from './expose-current-frame-and-current-time-factory';
 export * from './expose-current-frame-and-current-time-function';
 export * from './fetch-source-factory';
@@ -361,3 +363,4 @@ export * from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-
 export * from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-function';
 export * from './wrap-channel-merger-node-factory';
 export * from './wrap-channel-merger-node-function';
+export * from './wrap-event-listener-function';

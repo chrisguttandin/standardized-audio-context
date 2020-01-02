@@ -4,6 +4,7 @@ import { TAuxiliaryGainNodeStore } from './auxiliary-gain-node-store';
 import { TCacheTestResultFunction } from './cache-test-result-function';
 import { TDecrementCycleCounterFunction } from './decrement-cycle-counter-function';
 import { TDetectCyclesFunction } from './detect-cycles-function';
+import { TEventTargetConstructor } from './event-target-constructor';
 import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIncrementCycleCounterFactory } from './increment-cycle-counter-factory';
 import { TIndexSizeErrorFactory } from './index-size-error-factory';
@@ -23,6 +24,7 @@ export type TAudioNodeConstructorFactory = (
     createNotSupportedError: TNotSupportedErrorFactory,
     decrementCycleCounter: TDecrementCycleCounterFunction,
     detectCycles: TDetectCyclesFunction,
+    eventTargetConstructor: TEventTargetConstructor,
     getNativeContext: TGetNativeContextFunction,
     isNativeAudioNode: TIsNativeAudioNodeFunction,
     isNativeAudioParam: TIsNativeAudioParamFunction,

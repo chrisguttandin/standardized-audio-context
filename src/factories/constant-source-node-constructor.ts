@@ -1,7 +1,6 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
-import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioParam,
     IConstantSourceNode,
@@ -26,7 +25,8 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
     createConstantSourceNodeRendererFactory,
     createNativeConstantSourceNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    wrapEventListener
 ) => {
 
     return class ConstantSourceNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IConstantSourceNode<T> {
@@ -75,13 +75,13 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
         }
 
         set onended (value) {
-            const wrappedListener = <TNativeConstantSourceNode['onended']> wrapEventListener(this, value);
+            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
 
             this._nativeConstantSourceNode.onended = wrappedListener;
 
-            const nativeOnEnded = <null | IEndedEventHandler<T, this>> this._nativeConstantSourceNode.onended;
+            const nativeOnEnded = this._nativeConstantSourceNode.onended;
 
-            this._onended = (nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
+            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
         }
 
         public start (when = 0): void {

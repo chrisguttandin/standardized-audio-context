@@ -1,8 +1,8 @@
-import { TChannelCountMode, TChannelInterpretation } from '../types';
+import { TChannelCountMode, TChannelInterpretation, TNativeEventTarget } from '../types';
 import { IAudioParam } from './audio-param';
 import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IAudioNode<T extends IMinimalBaseAudioContext> extends EventTarget {
+export interface IAudioNode<T extends IMinimalBaseAudioContext> extends TNativeEventTarget {
 
     channelCount: number;
 

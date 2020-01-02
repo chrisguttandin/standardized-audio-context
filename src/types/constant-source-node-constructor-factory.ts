@@ -5,6 +5,7 @@ import { TConstantSourceNodeRendererFactory } from './constant-source-node-rende
 import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeConstantSourceNodeFactory } from './native-constant-source-node-factory';
+import { TWrapEventListenerFunction } from './wrap-event-listener-function';
 
 export type TConstantSourceNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
@@ -12,5 +13,6 @@ export type TConstantSourceNodeConstructorFactory = (
     createConstantSourceNodeRenderer: TConstantSourceNodeRendererFactory,
     createNativeConstantSourceNode: TNativeConstantSourceNodeFactory,
     getNativeContext: TGetNativeContextFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    wrapEventListener: TWrapEventListenerFunction
 ) => TConstantSourceNodeConstructor;

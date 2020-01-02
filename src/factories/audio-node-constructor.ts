@@ -1,4 +1,3 @@
-import { EventTarget } from '../event-target';
 import { AUDIO_NODE_STORE, EVENT_LISTENERS } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
@@ -506,13 +505,14 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     createNotSupportedError,
     decrementCycleCounter,
     detectCycles,
+    eventTargetConstructor,
     getNativeContext,
     isNativeAudioNode,
     isNativeAudioParam,
     isNativeOfflineAudioContext
 ) => {
 
-    return class AudioNode<T extends IMinimalBaseAudioContext> extends EventTarget implements IAudioNode<T> {
+    return class AudioNode<T extends IMinimalBaseAudioContext> extends eventTargetConstructor implements IAudioNode<T> {
 
         private _context: T;
 

@@ -53,6 +53,7 @@ import { createDynamicsCompressorNodeConstructor } from './factories/dynamics-co
 import { createDynamicsCompressorNodeRendererFactory } from './factories/dynamics-compressor-node-renderer-factory';
 import { createEncodingError } from './factories/encoding-error';
 import { createEvaluateSource } from './factories/evaluate-source';
+import { createEventTargetConstructor } from './factories/event-target-constructor';
 import { createExposeCurrentFrameAndCurrentTime } from './factories/expose-current-frame-and-current-time';
 import { createFetchSource } from './factories/fetch-source';
 import { createGainNodeConstructor } from './factories/gain-node-constructor';
@@ -213,6 +214,7 @@ import {
 import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
+import { wrapEventListener } from './helpers/wrap-event-listener';
 import {
     IAnalyserNode,
     IAudioBuffer,
@@ -302,6 +304,7 @@ const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(
 const auxiliaryGainNodeStore: TAuxiliaryGainNodeStore = new WeakMap();
 const getNativeContext = createGetNativeContext(CONTEXT_STORE);
 const audioParamAudioNodeStore: TAudioParamAudioNodeStore = new WeakMap();
+const eventTargetConstructor = createEventTargetConstructor(wrapEventListener);
 const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
@@ -330,6 +333,7 @@ const audioNodeConstructor = createAudioNodeConstructor(
         isNativeOfflineAudioContext
     ),
     createDetectCycles(audioParamAudioNodeStore, getAudioNodeConnections, getValueForKey),
+    eventTargetConstructor,
     getNativeContext,
     isNativeAudioNode,
     isNativeAudioParam,
@@ -422,7 +426,8 @@ const audioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructor = crea
     createInvalidStateError,
     createNativeAudioBufferSourceNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    wrapEventListener
 );
 
 type audioBufferSourceNodeConstructor<T extends TContext> = IAudioBufferSourceNode<T>;
@@ -510,7 +515,8 @@ const constantSourceNodeConstructor: TConstantSourceNodeConstructor = createCons
     createConstantSourceNodeRenderer,
     createNativeConstantSourceNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    wrapEventListener
 );
 const createNativeConvolverNodeFaker = createNativeConvolverNodeFakerFactory(
     createNativeAudioNode,
@@ -619,7 +625,12 @@ const createAudioListener = createAudioListenerFactory(
     createNativeScriptProcessorNode,
     isNativeOfflineAudioContext
 );
-const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(audioDestinationNodeConstructor, createAudioListener);
+const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(
+    audioDestinationNodeConstructor,
+    createAudioListener,
+    eventTargetConstructor,
+    wrapEventListener
+);
 const createNativeOscillatorNode = createNativeOscillatorNodeFactory(
     cacheTestResult,
     createNativeAudioNode,
@@ -642,7 +653,8 @@ const oscillatorNodeConstructor: TOscillatorNodeConstructor = createOscillatorNo
     createNativeOscillatorNode,
     createOscillatorNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    wrapEventListener
 );
 const createConnectedNativeAudioBufferSourceNode = createConnectedNativeAudioBufferSourceNodeFactory(createNativeAudioBufferSourceNode);
 const createNativeWaveShaperNodeFaker = createNativeWaveShaperNodeFakerFactory(
@@ -892,7 +904,8 @@ const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = (i
         gainNodeConstructor,
         getNativeContext,
         isNativeOfflineAudioContext,
-        nativeAudioWorkletNodeConstructor
+        nativeAudioWorkletNodeConstructor,
+        wrapEventListener
     ) :
     undefined;
 

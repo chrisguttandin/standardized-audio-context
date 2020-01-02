@@ -1,15 +1,15 @@
-import { EventTarget } from '../event-target';
 import { CONTEXT_STORE } from '../globals';
-import { wrapEventListener } from '../helpers/wrap-event-listener';
 import { IAudioDestinationNode, IAudioListener, IMinimalBaseAudioContext, IStateChangeEventHandler } from '../interfaces';
 import { TAudioContextState, TMinimalBaseAudioContextConstructorFactory, TNativeContext } from '../types';
 
 export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = (
     audioDestinationNodeConstructor,
-    createAudioListener
+    createAudioListener,
+    eventTargetConstructor,
+    wrapEventListener
 ) => {
 
-    return class MinimalBaseAudioContext extends EventTarget implements IMinimalBaseAudioContext {
+    return class MinimalBaseAudioContext extends eventTargetConstructor implements IMinimalBaseAudioContext {
 
         private _destination: IAudioDestinationNode<this>;
 
@@ -51,13 +51,13 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
         }
 
         set onstatechange (value) {
-            const wrappedListener = <TNativeContext['onstatechange']> wrapEventListener(this, value);
+            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
 
             this._nativeContext.onstatechange = wrappedListener;
 
-            const nativeOnStateChange = <null | IStateChangeEventHandler<this>> this._nativeContext.onstatechange;
+            const nativeOnStateChange = this._nativeContext.onstatechange;
 
-            this._onstatechange = (nativeOnStateChange === wrappedListener) ? value : nativeOnStateChange;
+            this._onstatechange = (nativeOnStateChange !== null && nativeOnStateChange === wrappedListener) ? value : nativeOnStateChange;
         }
 
         get sampleRate (): number {

@@ -6,6 +6,7 @@ import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-
 import { TNativeOscillatorNodeFactory } from './native-oscillator-node-factory';
 import { TOscillatorNodeConstructor } from './oscillator-node-constructor';
 import { TOscillatorNodeRendererFactory } from './oscillator-node-renderer-factory';
+import { TWrapEventListenerFunction } from './wrap-event-listener-function';
 
 export type TOscillatorNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
@@ -14,5 +15,6 @@ export type TOscillatorNodeConstructorFactory = (
     createNativeOscillatorNode: TNativeOscillatorNodeFactory,
     createOscillatorNodeRenderer: TOscillatorNodeRendererFactory,
     getNativeContext: TGetNativeContextFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    wrapEventListener: TWrapEventListenerFunction
 ) => TOscillatorNodeConstructor;

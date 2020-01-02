@@ -1,5 +1,4 @@
 import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
-import { wrapEventListener } from '../helpers/wrap-event-listener';
 import {
     IAudioParam,
     IAudioWorkletNode,
@@ -64,7 +63,8 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     gainNodeConstructor,
     getNativeContext,
     isNativeOfflineAudioContext,
-    nativeAudioWorkletNodeConstructor
+    nativeAudioWorkletNodeConstructor,
+    wrapEventListener
 ) => {
 
     return class AudioWorkletNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IAudioWorkletNode<T> {
@@ -147,13 +147,17 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
         }
 
         set onprocessorerror (value) {
-            const wrappedListener = <TNativeAudioWorkletNode['onprocessorerror']> wrapEventListener(this, value);
+            const wrappedListener = (typeof value === 'function')
+                ? wrapEventListener(this, <EventListenerOrEventListenerObject> value)
+                : null;
 
             this._nativeAudioWorkletNode.onprocessorerror = wrappedListener;
 
             const nativeOnProcessorError = <null | IProcessorErrorEventHandler<T, this>> this._nativeAudioWorkletNode.onprocessorerror;
 
-            this._onprocessorerror = (nativeOnProcessorError === wrappedListener) ? value : nativeOnProcessorError;
+            this._onprocessorerror = (nativeOnProcessorError !== null && nativeOnProcessorError === wrappedListener)
+                ? value
+                : nativeOnProcessorError;
         }
 
         get parameters (): TAudioParamMap {
