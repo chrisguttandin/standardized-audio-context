@@ -768,6 +768,17 @@ describe('AudioBufferSourceNode', () => {
                     expect(audioBufferSourceNode.onended).to.be.null;
                 });
 
+                it('should register an independent event listener', () => {
+                    const onended = spy();
+
+                    audioBufferSourceNode.onended = onended;
+                    audioBufferSourceNode.addEventListener('ended', onended);
+
+                    audioBufferSourceNode.dispatchEvent(new Event('ended'));
+
+                    expect(onended).to.have.been.calledTwice;
+                });
+
                 it('should fire an assigned ended event listener', (done) => {
                     audioBufferSourceNode.onended = function (event) {
                         expect(event).to.be.an.instanceOf(Event);

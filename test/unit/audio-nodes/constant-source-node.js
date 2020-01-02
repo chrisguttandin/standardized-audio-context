@@ -644,6 +644,17 @@ describe('ConstantSourceNode', () => {
                     expect(constantSourceNode.onended).to.be.null;
                 });
 
+                it('should register an independent event listener', () => {
+                    const onended = spy();
+
+                    constantSourceNode.onended = onended;
+                    constantSourceNode.addEventListener('ended', onended);
+
+                    constantSourceNode.dispatchEvent(new Event('ended'));
+
+                    expect(onended).to.have.been.calledTwice;
+                });
+
                 it('should fire an assigned ended event listener', (done) => {
                     constantSourceNode.onended = function (event) {
                         expect(event).to.be.an.instanceOf(Event);

@@ -1,5 +1,6 @@
 import { AudioContext } from '../../../src/module';
 import { isSafari } from '../../helper/is-safari';
+import { spy } from 'sinon';
 
 describe('AudioContext', () => {
 
@@ -274,6 +275,17 @@ describe('AudioContext', () => {
 
                 expect(onstatechange).to.equal(string);
                 expect(audioContext.onstatechange).to.be.null;
+            });
+
+            it('should register an independent event listener', () => {
+                const onstatechange = spy();
+
+                audioContext.onstatechange = onstatechange;
+                audioContext.addEventListener('statechange', onstatechange);
+
+                audioContext.dispatchEvent(new Event('statechange'));
+
+                expect(onstatechange).to.have.been.calledTwice;
             });
 
             it('should fire an assigned statechange event listener', (done) => {

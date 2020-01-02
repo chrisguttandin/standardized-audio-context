@@ -1,5 +1,6 @@
 import { GainNode, MinimalAudioContext } from '../../../src/module';
 import { isSafari } from '../../helper/is-safari';
+import { spy } from 'sinon';
 
 describe('MinimalAudioContext', () => {
 
@@ -264,6 +265,17 @@ describe('MinimalAudioContext', () => {
 
                 expect(onstatechange).to.equal(string);
                 expect(minimalAudioContext.onstatechange).to.be.null;
+            });
+
+            it('should register an independent event listener', () => {
+                const onstatechange = spy();
+
+                minimalAudioContext.onstatechange = onstatechange;
+                minimalAudioContext.addEventListener('statechange', onstatechange);
+
+                minimalAudioContext.dispatchEvent(new Event('statechange'));
+
+                expect(onstatechange).to.have.been.calledTwice;
             });
 
             it('should fire an assigned statechange event listener', (done) => {

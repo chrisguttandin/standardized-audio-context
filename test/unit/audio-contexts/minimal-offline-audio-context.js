@@ -1,5 +1,6 @@
 import { AudioBuffer, AudioBufferSourceNode, MinimalOfflineAudioContext } from '../../../src/module';
 import { isSafari } from '../../helper/is-safari';
+import { spy } from 'sinon';
 
 describe('MinimalOfflineAudioContext', () => {
 
@@ -294,6 +295,17 @@ describe('MinimalOfflineAudioContext', () => {
 
             expect(onstatechange).to.equal(string);
             expect(minimalOfflineAudioContext.onstatechange).to.be.null;
+        });
+
+        it('should register an independent event listener', () => {
+            const onstatechange = spy();
+
+            minimalOfflineAudioContext.onstatechange = onstatechange;
+            minimalOfflineAudioContext.addEventListener('statechange', onstatechange);
+
+            minimalOfflineAudioContext.dispatchEvent(new Event('statechange'));
+
+            expect(onstatechange).to.have.been.calledTwice;
         });
 
         it('should fire an assigned statechange event listener when starting to render', (done) => {

@@ -9,6 +9,7 @@ import { createOfflineAudioContext } from '../../helper/create-offline-audio-con
 import { createRenderer } from '../../helper/create-renderer';
 import { isSafari } from '../../helper/is-safari';
 import { roundToSamples } from '../../helper/round-to-samples';
+import { spy } from 'sinon';
 
 const createAddAudioWorkletModuleWithAudioWorkletOfContext = (context) => {
     return context.audioWorklet.addModule;
@@ -587,6 +588,22 @@ describe('AudioWorkletNode', () => {
 
                     expect(onprocessorerror).to.equal(string);
                     expect(audioWorkletNode.onprocessorerror).to.be.null;
+                });
+
+                it('should register an independent event listener', async function () {
+                    this.timeout(10000);
+
+                    await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+
+                    const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
+                    const onprocessorerror = spy();
+
+                    audioWorkletNode.onprocessorerror = onprocessorerror;
+                    audioWorkletNode.addEventListener('processorerror', onprocessorerror);
+
+                    audioWorkletNode.dispatchEvent(new Event('processorerror'));
+
+                    expect(onprocessorerror).to.have.been.calledTwice;
                 });
 
                 describe('with a processor without a process function', () => {
