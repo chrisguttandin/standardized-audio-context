@@ -27,7 +27,7 @@
     "@babel/preset-env": "^7.7.7",
     "@babel/register": "^7.7.7",
     "@commitlint/cli": "^8.3.4",
-    "@commitlint/config-angular": "^8.3.0",
+    "@commitlint/config-angular": "^8.3.4",
     "chai": "^4.2.0",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
