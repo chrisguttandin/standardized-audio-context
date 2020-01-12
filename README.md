@@ -6,7 +6,7 @@
 
 [![tests](https://img.shields.io/travis/chrisguttandin/standardized-audio-context/master.svg?style=flat-square)](https://travis-ci.org/chrisguttandin/standardized-audio-context)
 [![dependencies](https://img.shields.io/david/chrisguttandin/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
-[![version](https://img.shields.io/npm/v/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
+[![version](https://img.shields.io/npm/v/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context) [![Greenkeeper badge](https://badges.greenkeeper.io/chrisguttandin/standardized-audio-context.svg)](https://greenkeeper.io/)
 
 This package provides a subset of the [Web Audio API](https://webaudio.github.io/web-audio-api) which works in a reliable and consistent way in every supported browser. In contrast to other popular polyfills `standardized-audio-context` does not patch or modify anything on the global scope. In other words, it does not cause any side effects. It can therefore be used safely inside of libraries.
 
