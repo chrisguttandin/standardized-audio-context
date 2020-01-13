@@ -39,5 +39,3 @@ export const NODE_TO_PROCESSOR_MAPS: WeakMap<
     TNativeContext,
     WeakMap<TNativeAudioWorkletNode, Promise<IAudioWorkletProcessor>>
 > = new WeakMap();
-
-export const TEST_RESULTS: WeakMap<object, boolean> = new WeakMap();

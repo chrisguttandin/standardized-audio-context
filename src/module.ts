@@ -282,7 +282,7 @@ import {
 export * from './interfaces/index';
 export * from './types/index';
 
-const cacheTestResult = createCacheTestResult(new Map());
+const cacheTestResult = createCacheTestResult(new Map(), new WeakMap());
 const window = createWindow();
 const nativeOfflineAudioContextConstructor = createNativeOfflineAudioContextConstructor(window);
 const isNativeOfflineAudioContext = createIsNativeOfflineAudioContext(nativeOfflineAudioContextConstructor);

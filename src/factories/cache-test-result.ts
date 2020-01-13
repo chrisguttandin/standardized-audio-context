@@ -1,9 +1,8 @@
-import { TEST_RESULTS } from '../globals';
 import { TCacheTestResultFactory } from '../types';
 
-export const createCacheTestResult: TCacheTestResultFactory = (ongoingTests) => {
+export const createCacheTestResult: TCacheTestResultFactory = (ongoingTests, testResults) => {
     return (tester, test) => {
-        const cachedTestResult = TEST_RESULTS.get(tester);
+        const cachedTestResult = testResults.get(tester);
 
         if (cachedTestResult !== undefined) {
             return cachedTestResult;
@@ -15,22 +14,29 @@ export const createCacheTestResult: TCacheTestResultFactory = (ongoingTests) => 
             return ongoingTest;
         }
 
-        const synchronousTestResult = test();
+        try {
+            const synchronousTestResult = test();
 
-        if (synchronousTestResult instanceof Promise) {
-            ongoingTests.set(tester, synchronousTestResult);
+            if (synchronousTestResult instanceof Promise) {
+                ongoingTests.set(tester, synchronousTestResult);
 
-            return synchronousTestResult
-                .then((finalTestResult) => {
-                    ongoingTests.delete(tester);
-                    TEST_RESULTS.set(tester, finalTestResult);
+                return synchronousTestResult
+                    .catch(() => false)
+                    .then((finalTestResult) => {
+                        ongoingTests.delete(tester);
+                        testResults.set(tester, finalTestResult);
 
-                    return finalTestResult;
-                });
+                        return finalTestResult;
+                    });
+            }
+
+            testResults.set(tester, synchronousTestResult);
+
+            return synchronousTestResult;
+        } catch {
+            testResults.set(tester, false);
+
+            return false;
         }
-
-        TEST_RESULTS.set(tester, synchronousTestResult);
-
-        return synchronousTestResult;
     };
 };

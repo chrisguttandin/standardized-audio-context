@@ -1,4 +1,3 @@
-import { TEST_RESULTS } from '../../../src/globals';
 import { createCacheTestResult } from '../../../src/factories/cache-test-result';
 import { createIsSupportedPromise } from '../../../src/factories/is-supported-promise';
 
@@ -18,23 +17,8 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestStereoPannerNodeDefaultValueSupport;
     let fakeTestTransferablesSupport;
 
-    afterEach(() => {
-        TEST_RESULTS.delete(fakeTestAudioBufferCopyChannelMethodsSubarraySupport);
-        TEST_RESULTS.delete(fakeTestAudioContextCloseMethodSupport);
-        TEST_RESULTS.delete(fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport);
-        TEST_RESULTS.delete(fakeTestAudioContextOptionsSupport);
-        TEST_RESULTS.delete(fakeTestAudioNodeConnectMethodSupport);
-        TEST_RESULTS.delete(fakeTestAudioWorkletProcessorNoOutputsSupport);
-        TEST_RESULTS.delete(fakeTestConstantSourceNodeAccurateSchedulingSupport);
-        TEST_RESULTS.delete(fakeTestConvolverNodeBufferReassignabilitySupport);
-        TEST_RESULTS.delete(fakeTestIsSecureContextSupport);
-        TEST_RESULTS.delete(fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport);
-        TEST_RESULTS.delete(fakeTestStereoPannerNodeDefaultValueSupport);
-        TEST_RESULTS.delete(fakeTestTransferablesSupport);
-    });
-
     beforeEach(() => {
-        cacheTestResult = createCacheTestResult(new Map());
+        cacheTestResult = createCacheTestResult(new Map(), new WeakMap());
         fakeTestAudioBufferCopyChannelMethodsSubarraySupport = () => true;
         fakeTestAudioContextCloseMethodSupport = () => true;
         fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.resolve(true);
