@@ -127,41 +127,7 @@ describe('audioContextConstructor', () => {
             biquadFilterNode = audioContext.createBiquadFilter();
         });
 
-        describe('detune', () => {
-
-            describe('maxValue', () => {
-
-                // bug #78
-
-                it('should be the largest possible positive float value', () => {
-                    expect(biquadFilterNode.detune.maxValue).to.equal(3.4028234663852886e+38);
-                });
-
-            });
-
-            describe('minValue', () => {
-
-                // bug #78
-
-                it('should be the smallest possible negative float value', () => {
-                    expect(biquadFilterNode.detune.minValue).to.equal(-3.4028234663852886e+38);
-                });
-
-            });
-
-        });
-
         describe('gain', () => {
-
-            describe('maxValue', () => {
-
-                // bug #79
-
-                it('should be the largest possible positive float value', () => {
-                    expect(biquadFilterNode.gain.maxValue).to.equal(3.4028234663852886e+38);
-                });
-
-            });
 
             describe('minValue', () => {
 
