@@ -14,7 +14,7 @@ export const createOfflineAudioContextConstructor: TOfflineAudioContextConstruct
     startRendering
 ) => {
 
-    return class OfflineAudioContext extends baseAudioContextConstructor implements IOfflineAudioContext {
+    return class OfflineAudioContext extends baseAudioContextConstructor<IOfflineAudioContext> implements IOfflineAudioContext {
 
         private _length: number;
 

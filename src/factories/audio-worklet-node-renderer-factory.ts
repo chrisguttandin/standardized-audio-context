@@ -10,6 +10,7 @@ import {
     IAudioWorkletNodeOptions,
     IAudioWorkletProcessorConstructor,
     IMinimalOfflineAudioContext,
+    IOfflineAudioContext,
     IReadOnlyMap
 } from '../interfaces';
 import {
@@ -25,7 +26,7 @@ import {
     TNativeOfflineAudioContext
 } from '../types';
 
-const processBuffer = async <T extends IMinimalOfflineAudioContext>(
+const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
     proxy: IAudioWorkletNode<T>,
     renderedBuffer: null | TNativeAudioBuffer,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
@@ -135,7 +136,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     renderInputsOfAudioNode,
     renderNativeOfflineAudioContext
 ) => {
-    return <T extends IMinimalOfflineAudioContext>(
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
         name: string,
         options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
         processorConstructor: undefined | IAudioWorkletProcessorConstructor

@@ -1,4 +1,4 @@
-import { IMediaStreamTrackAudioSourceNode, IMediaStreamTrackAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
+import { IAudioContext, IMediaStreamTrackAudioSourceNode, IMediaStreamTrackAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
 import { TAudioNodeRenderer, TMediaStreamTrackAudioSourceNodeConstructorFactory } from '../types';
 
 export const createMediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructorFactory = (
@@ -9,7 +9,7 @@ export const createMediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrack
     isNativeOfflineAudioContext
 ) => {
 
-    return class MediaStreamTrackAudioSourceNode<T extends IMinimalAudioContext>
+    return class MediaStreamTrackAudioSourceNode<T extends IAudioContext | IMinimalAudioContext>
             extends audioNodeConstructor<T>
             implements IMediaStreamTrackAudioSourceNode<T> {
 

@@ -1,6 +1,6 @@
-import { IMinimalBaseAudioContext } from '../interfaces';
 import { TAbortErrorFactory } from './abort-error-factory';
 import { TAddAudioWorkletModuleFunction } from './add-audio-worklet-module-function';
+import { TContext } from './context';
 import { TEvaluateSourceFunction } from './evaluate-source-function';
 import { TExposeCurrentFrameAndCurrentTimeFunction } from './expose-current-frame-and-current-time-function';
 import { TFetchSourceFunction } from './fetch-source-function';
@@ -16,6 +16,6 @@ export type TAddAudioWorkletModuleFactory = (
     fetchSource: TFetchSourceFunction,
     getBackupNativeContext: TGetBackupNativeContextFunction,
     getNativeContext: TGetNativeContextFunction,
-    ongoingRequests: WeakMap<IMinimalBaseAudioContext, Map<string, Promise<void>>>, // tslint:disable-line:invalid-void
-    resolvedRequests: WeakMap<IMinimalBaseAudioContext, Set<string>>
+    ongoingRequests: WeakMap<TContext, Map<string, Promise<void>>>, // tslint:disable-line:invalid-void
+    resolvedRequests: WeakMap<TContext, Set<string>>
 ) => TAddAudioWorkletModuleFunction;

@@ -1,6 +1,6 @@
 import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IMinimalOfflineAudioContext, IStereoPannerNode } from '../interfaces';
+import { IAudioNode, IMinimalOfflineAudioContext, IOfflineAudioContext, IStereoPannerNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeStereoPannerNode, TStereoPannerNodeRendererFactoryFactory } from '../types';
 
 export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFactoryFactory = (
@@ -10,7 +10,7 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
     renderAutomation,
     renderInputsOfAudioNode
 ) => {
-    return <T extends IMinimalOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeStereoPannerNodes = new WeakMap<TNativeOfflineAudioContext, TNativeStereoPannerNode>();
 
         const createStereoPannerNode = async (

@@ -78,7 +78,7 @@ interface IAudioContext extends EventTarget {
     readonly currentTime: number;
     readonly destination: IAudioDestinationNode<IAudioContext>;
     readonly listener: IAudioListener;
-    onstatechange: null | IStateChangeEventHandler<IAudioContext>;
+    onstatechange: null | TStateChangeEventHandler<IAudioContext>;
     readonly sampleRate: number;
     readonly state: TAudioContextState;
     close (): Promise<void>;
@@ -125,7 +125,7 @@ interface IOfflineAudioContext extends EventTarget {
     readonly currentTime: number;
     readonly destination: IAudioDestinationNode<IOfflineAudioContext>;
     readonly listener: IAudioListener;
-    onstatechange: null | IStateChangeEventHandler<IOfflineAudioContext>;
+    onstatechange: null | TStateChangeEventHandler<IOfflineAudioContext>;
     readonly sampleRate: number;
     readonly state: TAudioContextState;
     createAnalyser (): IAnalyserNode<IOfflineAudioContext>;

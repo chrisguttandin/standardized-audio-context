@@ -1,4 +1,5 @@
-import { IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioParam } from '../interfaces';
 import { TAudioParamConnections } from './audio-param-connections';
+import { TContext } from './context';
 
-export type TGetAudioParamConnectionsFunction = <T extends IMinimalBaseAudioContext>(audioParam: IAudioParam) => TAudioParamConnections<T>;
+export type TGetAudioParamConnectionsFunction = <T extends TContext>(audioParam: IAudioParam) => TAudioParamConnections<T>;

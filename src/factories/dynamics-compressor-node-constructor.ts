@@ -1,7 +1,8 @@
-import { IAudioParam, IDynamicsCompressorNode, IDynamicsCompressorOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioParam, IDynamicsCompressorNode, IDynamicsCompressorOptions } from '../interfaces';
 import {
     TAudioNodeRenderer,
     TChannelCountMode,
+    TContext,
     TDynamicsCompressorNodeConstructorFactory,
     TNativeAudioParam,
     TNativeDynamicsCompressorNode
@@ -28,9 +29,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
     isNativeOfflineAudioContext
 ) => {
 
-    return class DynamicsCompressorNode<T extends IMinimalBaseAudioContext>
-            extends audioNodeConstructor<T>
-            implements IDynamicsCompressorNode<T> {
+    return class DynamicsCompressorNode<T extends TContext> extends audioNodeConstructor<T> implements IDynamicsCompressorNode<T> {
 
         private _attack: IAudioParam;
 

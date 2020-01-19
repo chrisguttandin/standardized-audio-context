@@ -1,6 +1,6 @@
 import { AutomationEventList } from 'automation-events';
-import { IAudioNode, IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
-import { TAudioParamFactoryFactory, TNativeAudioParam } from '../types';
+import { IAudioNode, IAudioParam, IAudioParamRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { TAudioParamFactoryFactory, TContext, TNativeAudioParam } from '../types';
 
 export const createAudioParamFactory: TAudioParamFactoryFactory = (
     addAudioParamConnections,
@@ -16,7 +16,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
     createSetValueCurveAutomationEvent,
     nativeAudioContextConstructor
 ) => {
-    return <T extends IMinimalBaseAudioContext>(
+    return <T extends TContext>(
         audioNode: IAudioNode<T>,
         isAudioParamOfOfflineAudioContext: boolean,
         nativeAudioParam: TNativeAudioParam,
@@ -194,7 +194,10 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
         audioParamStore.set(audioParam, nativeAudioParam);
         audioParamAudioNodeStore.set(audioParam, audioNode);
 
-        addAudioParamConnections(audioParam, <T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer);
+        addAudioParamConnections(
+            audioParam,
+            <T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer
+        );
 
         return audioParam;
     };

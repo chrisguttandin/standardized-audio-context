@@ -1,9 +1,10 @@
-import { IAudioNode, IAudioWorkletProcessor, IAudioWorkletProcessorConstructor, IMinimalBaseAudioContext } from './interfaces';
+import { IAudioNode, IAudioWorkletProcessor, IAudioWorkletProcessorConstructor } from './interfaces';
 import {
     TAudioNodeConnectionsStore,
     TAudioNodeStore,
     TAudioParamConnectionsStore,
     TAudioParamStore,
+    TContext,
     TContextStore,
     TCycleCounters,
     TInternalStateEventListener,
@@ -11,7 +12,7 @@ import {
     TNativeContext
 } from './types';
 
-export const ACTIVE_AUDIO_NODE_STORE: WeakSet<IAudioNode<IMinimalBaseAudioContext>> = new WeakSet();
+export const ACTIVE_AUDIO_NODE_STORE: WeakSet<IAudioNode<TContext>> = new WeakSet();
 
 export const AUDIO_NODE_CONNECTIONS_STORE: TAudioNodeConnectionsStore = new WeakMap();
 
@@ -25,7 +26,7 @@ export const BACKUP_NATIVE_CONTEXT_STORE: WeakMap<TNativeContext, TNativeContext
 
 export const CONTEXT_STORE: TContextStore = new WeakMap();
 
-export const EVENT_LISTENERS: WeakMap<IAudioNode<IMinimalBaseAudioContext>, Set<TInternalStateEventListener>> = new WeakMap();
+export const EVENT_LISTENERS: WeakMap<IAudioNode<TContext>, Set<TInternalStateEventListener>> = new WeakMap();
 
 export const CYCLE_COUNTERS: TCycleCounters = new WeakMap();
 

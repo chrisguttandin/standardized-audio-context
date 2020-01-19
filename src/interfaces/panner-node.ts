@@ -1,9 +1,8 @@
-import { TDistanceModelType, TPanningModelType } from '../types';
+import { TContext, TDistanceModelType, TPanningModelType } from '../types';
 import { IAudioNode } from './audio-node';
 import { IAudioParam } from './audio-param';
-import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IPannerNode<T extends IMinimalBaseAudioContext> extends IAudioNode<T> {
+export interface IPannerNode<T extends TContext> extends IAudioNode<T> {
 
     coneInnerAngle: number;
 

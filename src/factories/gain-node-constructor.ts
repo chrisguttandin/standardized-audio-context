@@ -1,6 +1,6 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
-import { IAudioParam, IGainNode, IGainOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TAudioNodeRenderer, TGainNodeConstructorFactory } from '../types';
+import { IAudioParam, IGainNode, IGainOptions } from '../interfaces';
+import { TAudioNodeRenderer, TContext, TGainNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -18,7 +18,7 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
     isNativeOfflineAudioContext
 ) => {
 
-    return class GainNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IGainNode<T> {
+    return class GainNode<T extends TContext> extends audioNodeConstructor<T> implements IGainNode<T> {
 
         private _gain: IAudioParam;
 

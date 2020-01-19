@@ -1,3 +1,4 @@
+import { IAudioDestinationNode } from '../interfaces';
 import { TRenderInputsOfAudioNodeFactory } from '../types';
 
 export const createRenderInputsOfAudioNode: TRenderInputsOfAudioNodeFactory = (
@@ -17,8 +18,9 @@ export const createRenderInputsOfAudioNode: TRenderInputsOfAudioNodeFactory = (
                     .map(async ([ source, output ]) => {
                         const audioNodeRenderer = getAudioNodeRenderer(source);
                         const renderedNativeAudioNode = await audioNodeRenderer.render(source, nativeOfflineAudioContext, nextTrace);
+                        const destination = <IAudioDestinationNode<typeof audioNode.context>> audioNode.context.destination;
 
-                        if (!isPartOfACycle(source) && !(audioNode === audioNode.context.destination && isPartOfACycle(audioNode))) {
+                        if (!isPartOfACycle(source) && ((audioNode !== destination) || !isPartOfACycle(audioNode))) {
                             renderedNativeAudioNode.connect(nativeAudioNode, output, input);
                         }
                     }))

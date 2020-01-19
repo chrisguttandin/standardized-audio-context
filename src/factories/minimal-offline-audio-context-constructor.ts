@@ -14,7 +14,9 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
     startRendering
 ) => {
 
-    return class MinimalOfflineAudioContext extends minimalBaseAudioContextConstructor implements IMinimalOfflineAudioContext {
+    return class MinimalOfflineAudioContext
+            extends minimalBaseAudioContextConstructor<IMinimalOfflineAudioContext>
+            implements IMinimalOfflineAudioContext {
 
         private _length: number;
 

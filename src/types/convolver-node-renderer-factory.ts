@@ -1,3 +1,5 @@
-import { IAudioNodeRenderer, IConvolverNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNodeRenderer, IConvolverNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 
-export type TConvolverNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IAudioNodeRenderer<T, IConvolverNode<T>>;
+export type TConvolverNodeRendererFactory = <
+    T extends IMinimalOfflineAudioContext | IOfflineAudioContext
+>() => IAudioNodeRenderer<T, IConvolverNode<T>>;

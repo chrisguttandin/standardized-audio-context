@@ -1,4 +1,4 @@
-import { IAudioNodeRenderer, IDynamicsCompressorNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNodeRenderer, IDynamicsCompressorNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 
 export type TDynamicsCompressorNodeRendererFactory =
-    <T extends IMinimalOfflineAudioContext>() => IAudioNodeRenderer<T, IDynamicsCompressorNode<T>>;
+    <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => IAudioNodeRenderer<T, IDynamicsCompressorNode<T>>;

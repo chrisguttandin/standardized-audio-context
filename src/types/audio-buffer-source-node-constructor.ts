@@ -1,6 +1,7 @@
-import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioBufferSourceNode, IAudioBufferSourceOptions } from '../interfaces';
+import { TContext } from './context';
 
-export type TAudioBufferSourceNodeConstructor = new <T extends IMinimalBaseAudioContext>(
+export type TAudioBufferSourceNodeConstructor = new <T extends TContext>(
     context: T,
     options?: Partial<IAudioBufferSourceOptions>
 ) => IAudioBufferSourceNode<T>;

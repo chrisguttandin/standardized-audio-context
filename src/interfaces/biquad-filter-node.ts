@@ -1,9 +1,8 @@
-import { TBiquadFilterType } from '../types';
+import { TBiquadFilterType, TContext } from '../types';
 import { IAudioNode } from './audio-node';
 import { IAudioParam } from './audio-param';
-import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IBiquadFilterNode<T extends IMinimalBaseAudioContext> extends IAudioNode<T> {
+export interface IBiquadFilterNode<T extends TContext> extends IAudioNode<T> {
 
     readonly detune: IAudioParam;
 

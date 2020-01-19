@@ -1,6 +1,7 @@
-import { IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode } from '../interfaces';
+import { TContext } from '../types';
 
-export const visitEachAudioNodeOnce = <T extends IMinimalBaseAudioContext>(
+export const visitEachAudioNodeOnce = <T extends TContext>(
     cycles: IAudioNode<T>[][],
     visitor: (audioNode: IAudioNode<T>, count: number) => void
 ): void => {

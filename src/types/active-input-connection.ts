@@ -1,8 +1,9 @@
-import { IAudioNode, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
-import { TInternalStateEventListener } from '../types';
+import { IAudioNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { TContext } from './context';
+import { TInternalStateEventListener } from './internal-state-event-listener';
 
-export type TActiveInputConnection<T extends IMinimalBaseAudioContext> = [
+export type TActiveInputConnection<T extends TContext> = [
     IAudioNode<T>,
     number,
-    T extends IMinimalOfflineAudioContext ? null : TInternalStateEventListener
+    T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? null : TInternalStateEventListener
 ];

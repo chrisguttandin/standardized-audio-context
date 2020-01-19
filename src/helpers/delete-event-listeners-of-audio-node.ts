@@ -1,8 +1,8 @@
-import { IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
-import { TInternalStateEventListener } from '../types';
+import { IAudioNode } from '../interfaces';
+import { TContext, TInternalStateEventListener } from '../types';
 import { getEventListenersOfAudioNode } from './get-event-listeners-of-audio-node';
 
-export const deleteEventListenerOfAudioNode = <T extends IMinimalBaseAudioContext>(
+export const deleteEventListenerOfAudioNode = <T extends TContext>(
     audioNode: IAudioNode<T>,
     eventListener: TInternalStateEventListener
 ) => {

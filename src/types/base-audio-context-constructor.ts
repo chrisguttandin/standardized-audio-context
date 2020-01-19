@@ -1,4 +1,8 @@
 import { IBaseAudioContext } from '../interfaces';
+import { TContext } from './context';
 import { TNativeContext } from './native-context';
 
-export type TBaseAudioContextConstructor = new (nativeContext: TNativeContext, numberOfChannels: number) => IBaseAudioContext;
+export type TBaseAudioContextConstructor = new <T extends TContext>(
+    nativeContext: TNativeContext,
+    numberOfChannels: number
+) => IBaseAudioContext<T>;

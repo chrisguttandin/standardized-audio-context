@@ -1,3 +1,5 @@
-import { IAudioNodeRenderer, IMinimalOfflineAudioContext, IWaveShaperNode } from '../interfaces';
+import { IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext, IWaveShaperNode } from '../interfaces';
 
-export type TWaveShaperNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IAudioNodeRenderer<T, IWaveShaperNode<T>>;
+export type TWaveShaperNodeRendererFactory = <
+    T extends IMinimalOfflineAudioContext | IOfflineAudioContext
+>() => IAudioNodeRenderer<T, IWaveShaperNode<T>>;

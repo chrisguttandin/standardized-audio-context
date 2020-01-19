@@ -1,10 +1,10 @@
 import { IBaseAudioContext } from './base-audio-context';
+import { ICommonAudioContext } from './common-audio-context';
 import { IMediaElementAudioSourceNode } from './media-element-audio-source-node';
 import { IMediaStreamAudioSourceNode } from './media-stream-audio-source-node';
 import { IMediaStreamTrackAudioSourceNode } from './media-stream-track-audio-source-node';
-import { IMinimalAudioContext } from './minimal-audio-context';
 
-export interface IAudioContext extends IBaseAudioContext, IMinimalAudioContext {
+export interface IAudioContext extends IBaseAudioContext<IAudioContext>, ICommonAudioContext {
 
     createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this>;
 

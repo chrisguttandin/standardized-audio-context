@@ -1,4 +1,4 @@
-import { IAudioNode, IAudioParam, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IAudioParam, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TNativeAudioParam, TNativeOfflineAudioContext, TRenderInputsOfAudioParamFactory } from '../types';
 
 export const createRenderInputsOfAudioParam: TRenderInputsOfAudioParamFactory = (
@@ -6,7 +6,7 @@ export const createRenderInputsOfAudioParam: TRenderInputsOfAudioParamFactory = 
     getAudioParamConnections,
     isPartOfACycle
 ) => {
-    return async <T extends IMinimalOfflineAudioContext> (
+    return async <T extends IMinimalOfflineAudioContext | IOfflineAudioContext> (
         audioParam: IAudioParam,
         nativeOfflineAudioContext: TNativeOfflineAudioContext,
         nativeAudioParam: TNativeAudioParam,

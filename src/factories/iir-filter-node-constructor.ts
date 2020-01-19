@@ -1,6 +1,6 @@
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../helpers/wrap-iir-filter-node-get-frequency-response-method';
-import { IIIRFilterNode, IIIRFilterOptions, IMinimalAudioContext, IMinimalBaseAudioContext } from '../interfaces';
-import { TAudioNodeRenderer, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
+import { IIIRFilterNode, IIIRFilterOptions, IMinimalAudioContext } from '../interfaces';
+import { TAudioNodeRenderer, TContext, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -16,7 +16,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
     isNativeOfflineAudioContext
 ) => {
 
-    return class IIRFilterNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IIIRFilterNode<T> {
+    return class IIRFilterNode<T extends TContext> extends audioNodeConstructor<T> implements IIIRFilterNode<T> {
 
         private _nativeIIRFilterNode: TNativeIIRFilterNode;
 

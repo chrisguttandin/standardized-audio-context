@@ -1,5 +1,5 @@
-import { IConvolverNode, IConvolverOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TAnyAudioBuffer, TAudioNodeRenderer, TConvolverNodeConstructorFactory, TNativeConvolverNode } from '../types';
+import { IConvolverNode, IConvolverOptions } from '../interfaces';
+import { TAnyAudioBuffer, TAudioNodeRenderer, TContext, TConvolverNodeConstructorFactory, TNativeConvolverNode } from '../types';
 
 const DEFAULT_OPTIONS = {
     buffer: null,
@@ -17,7 +17,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
     isNativeOfflineAudioContext
 ) => {
 
-    return class ConvolverNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IConvolverNode<T> {
+    return class ConvolverNode<T extends TContext> extends audioNodeConstructor<T> implements IConvolverNode<T> {
 
         private _isBufferNullified: boolean;
 

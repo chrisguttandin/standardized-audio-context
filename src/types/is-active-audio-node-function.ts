@@ -1,3 +1,4 @@
-import { IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode } from '../interfaces';
+import { TContext } from './context';
 
-export type TIsActiveAudioNodeFunction = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>) => boolean;
+export type TIsActiveAudioNodeFunction = <T extends TContext>(audioNode: IAudioNode<T>) => boolean;

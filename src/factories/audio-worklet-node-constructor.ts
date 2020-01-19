@@ -1,20 +1,14 @@
 import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
-import {
-    IAudioParam,
-    IAudioWorkletNode,
-    IAudioWorkletNodeOptions,
-    IMinimalAudioContext,
-    IMinimalBaseAudioContext,
-    IProcessorErrorEventHandler,
-    IReadOnlyMap
-} from '../interfaces';
+import { IAudioParam, IAudioWorkletNode, IAudioWorkletNodeOptions, IMinimalAudioContext, IReadOnlyMap } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
     TAudioNodeRenderer,
     TAudioParamMap,
     TAudioWorkletNodeConstructorFactory,
+    TContext,
     TNativeAudioParam,
-    TNativeAudioWorkletNode
+    TNativeAudioWorkletNode,
+    TProcessorErrorEventHandler
 } from '../types';
 
 const DEFAULT_OPTIONS = {
@@ -67,13 +61,13 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     wrapEventListener
 ) => {
 
-    return class AudioWorkletNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IAudioWorkletNode<T> {
+    return class AudioWorkletNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioWorkletNode<T> {
 
         private _nativeAudioWorkletNode: TNativeAudioWorkletNode;
 
         private _numberOfOutputs: number;
 
-        private _onprocessorerror: null | IProcessorErrorEventHandler<T, this>;
+        private _onprocessorerror: null | TProcessorErrorEventHandler<IAudioWorkletNode<T>>;
 
         private _parameters: null | TAudioParamMap;
 
@@ -142,7 +136,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             return this._numberOfOutputs;
         }
 
-        get onprocessorerror (): null | IProcessorErrorEventHandler<T, this> {
+        get onprocessorerror (): null | TProcessorErrorEventHandler<IAudioWorkletNode<T>> {
             return this._onprocessorerror;
         }
 
@@ -153,11 +147,11 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
             this._nativeAudioWorkletNode.onprocessorerror = wrappedListener;
 
-            const nativeOnProcessorError = <null | IProcessorErrorEventHandler<T, this>> this._nativeAudioWorkletNode.onprocessorerror;
+            const nativeOnProcessorError = this._nativeAudioWorkletNode.onprocessorerror;
 
             this._onprocessorerror = (nativeOnProcessorError !== null && nativeOnProcessorError === wrappedListener)
                 ? value
-                : nativeOnProcessorError;
+                : <null | TProcessorErrorEventHandler<IAudioWorkletNode<T>>> nativeOnProcessorError;
         }
 
         get parameters (): TAudioParamMap {

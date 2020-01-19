@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IDelayNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IDelayNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TDelayNodeRendererFactoryFactory, TNativeDelayNode, TNativeOfflineAudioContext } from '../types';
 
 export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = (
@@ -9,7 +9,7 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
     renderAutomation,
     renderInputsOfAudioNode
 ) => {
-    return <T extends IMinimalOfflineAudioContext>(maxDelayTime: number) => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(maxDelayTime: number) => {
         const renderedNativeDelayNodes = new WeakMap<TNativeOfflineAudioContext, TNativeDelayNode>();
 
         const createDelayNode = async (

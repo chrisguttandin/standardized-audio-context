@@ -1,13 +1,10 @@
 import { isAudioNode } from '../guards/audio-node';
 import { isDelayNode } from '../guards/delay-node';
-import { IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
-import { TDetectCyclesFactory } from '../types';
+import { IAudioNode, IAudioParam } from '../interfaces';
+import { TContext, TDetectCyclesFactory } from '../types';
 
 export const createDetectCycles: TDetectCyclesFactory = (audioParamAudioNodeStore, getAudioNodeConnections, getValueForKey) => {
-    return function detectCycles <T extends IMinimalBaseAudioContext> (
-        chain: IAudioNode<T>[],
-        nextLink: IAudioNode<T> | IAudioParam
-    ): IAudioNode<T>[][] {
+    return function detectCycles <T extends TContext> (chain: IAudioNode<T>[], nextLink: IAudioNode<T> | IAudioParam): IAudioNode<T>[][] {
         const audioNode = (isAudioNode(nextLink))
             ? nextLink
             : <IAudioNode<T>> getValueForKey(audioParamAudioNodeStore, nextLink);

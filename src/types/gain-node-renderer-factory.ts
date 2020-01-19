@@ -1,3 +1,5 @@
-import { IAudioNodeRenderer, IGainNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNodeRenderer, IGainNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 
-export type TGainNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IAudioNodeRenderer<T, IGainNode<T>>;
+export type TGainNodeRendererFactory = <
+    T extends IMinimalOfflineAudioContext | IOfflineAudioContext
+>() => IAudioNodeRenderer<T, IGainNode<T>>;

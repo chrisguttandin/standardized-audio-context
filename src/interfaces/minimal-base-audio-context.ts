@@ -1,18 +1,17 @@
-import { TAudioContextState, TNativeEventTarget } from '../types';
+import { TAudioContextState, TContext, TNativeEventTarget, TStateChangeEventHandler } from '../types';
 import { IAudioDestinationNode } from './audio-destination-node';
 import { IAudioListener } from './audio-listener';
 import { IMinimalBaseAudioContextEventMap } from './minimal-base-audio-context-event-map';
-import { IStateChangeEventHandler } from './state-change-event-handler';
 
-export interface IMinimalBaseAudioContext extends TNativeEventTarget {
+export interface IMinimalBaseAudioContext<T extends TContext> extends TNativeEventTarget {
 
     readonly currentTime: number;
 
-    readonly destination: IAudioDestinationNode<this>;
+    readonly destination: IAudioDestinationNode<T>;
 
     readonly listener: IAudioListener;
 
-    onstatechange: null | IStateChangeEventHandler<this>;
+    onstatechange: null | TStateChangeEventHandler<T>;
 
     readonly sampleRate: number;
 
@@ -20,7 +19,7 @@ export interface IMinimalBaseAudioContext extends TNativeEventTarget {
 
     addEventListener<K extends keyof IMinimalBaseAudioContextEventMap> (
         type: K,
-        listener: (this: IMinimalBaseAudioContext, event: IMinimalBaseAudioContextEventMap[K]) => any,
+        listener: (this: this, event: IMinimalBaseAudioContextEventMap[K]) => void,
         options?: boolean | AddEventListenerOptions
     ): void;
 
@@ -28,7 +27,7 @@ export interface IMinimalBaseAudioContext extends TNativeEventTarget {
 
     removeEventListener<K extends keyof IMinimalBaseAudioContextEventMap> (
         type: K,
-        listener: (this: IMinimalBaseAudioContext, event: IMinimalBaseAudioContextEventMap[K]) => any,
+        listener: (this: this, event: IMinimalBaseAudioContextEventMap[K]) => void,
         options?: boolean | EventListenerOptions
     ): void;
 

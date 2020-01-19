@@ -10,7 +10,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
     nativeAudioContextConstructor
 ) => {
 
-    return class MinimalAudioContext extends minimalBaseAudioContextConstructor implements IMinimalAudioContext {
+    return class MinimalAudioContext extends minimalBaseAudioContextConstructor<IMinimalAudioContext> implements IMinimalAudioContext {
 
         private _baseLatency: number;
 

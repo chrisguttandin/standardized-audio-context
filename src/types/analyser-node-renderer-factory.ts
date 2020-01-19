@@ -1,3 +1,5 @@
-import { IAnalyserNode, IAudioNodeRenderer, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAnalyserNode, IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 
-export type TAnalyserNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IAudioNodeRenderer<T, IAnalyserNode<T>>;
+export type TAnalyserNodeRendererFactory = <
+    T extends IMinimalOfflineAudioContext | IOfflineAudioContext
+>() => IAudioNodeRenderer<T, IAnalyserNode<T>>;

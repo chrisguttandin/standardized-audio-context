@@ -9,6 +9,7 @@ import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIncrementCycleCounterFactory } from './increment-cycle-counter-factory';
 import { TIndexSizeErrorFactory } from './index-size-error-factory';
 import { TInvalidAccessErrorFactory } from './invalid-access-error-factory';
+import { TIsNativeAudioContextFunction } from './is-native-audio-context-function';
 import { TIsNativeAudioNodeFunction } from './is-native-audio-node-function';
 import { TIsNativeAudioParamFunction } from './is-native-audio-param-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
@@ -26,6 +27,7 @@ export type TAudioNodeConstructorFactory = (
     detectCycles: TDetectCyclesFunction,
     eventTargetConstructor: TEventTargetConstructor,
     getNativeContext: TGetNativeContextFunction,
+    isNativeAudioContext: TIsNativeAudioContextFunction,
     isNativeAudioNode: TIsNativeAudioNodeFunction,
     isNativeAudioParam: TIsNativeAudioParamFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction

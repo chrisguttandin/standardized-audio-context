@@ -1,4 +1,5 @@
-import { IAudioNode, IMinimalBaseAudioContext, INativeAudioNodeFaker } from '../interfaces';
+import { IAudioNode, INativeAudioNodeFaker } from '../interfaces';
+import { TContext } from './context';
 import { TNativeAudioNode } from './native-audio-node';
 
-export type TAudioNodeStore = WeakMap<IAudioNode<IMinimalBaseAudioContext>, TNativeAudioNode | INativeAudioNodeFaker>;
+export type TAudioNodeStore = WeakMap<IAudioNode<TContext>, TNativeAudioNode | INativeAudioNodeFaker>;

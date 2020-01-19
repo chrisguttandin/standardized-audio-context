@@ -1,15 +1,14 @@
+import { TContext, TEndedEventHandler } from '../types';
 import { IAudioNode } from './audio-node';
 import { IAudioScheduledSourceNodeEventMap } from './audio-scheduled-source-node-event-map';
-import { IEndedEventHandler } from './ended-event-handler';
-import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IAudioScheduledSourceNode<T extends IMinimalBaseAudioContext> extends IAudioNode<T> {
+export interface IAudioScheduledSourceNode<T extends TContext> extends IAudioNode<T> {
 
-    onended: null | IEndedEventHandler<T, this>;
+    onended: null | TEndedEventHandler<this>;
 
     addEventListener<K extends keyof IAudioScheduledSourceNodeEventMap> (
         type: K,
-        listener: (this: IAudioScheduledSourceNode<T>, event: IAudioScheduledSourceNodeEventMap[K]) => any,
+        listener: (this: this, event: IAudioScheduledSourceNodeEventMap[K]) => void,
         options?: boolean | AddEventListenerOptions
     ): void;
 
@@ -17,7 +16,7 @@ export interface IAudioScheduledSourceNode<T extends IMinimalBaseAudioContext> e
 
     removeEventListener<K extends keyof IAudioScheduledSourceNodeEventMap> (
         type: K,
-        listener: (this: IAudioScheduledSourceNode<T>, event: IAudioScheduledSourceNodeEventMap[K]) => any,
+        listener: (this: this, event: IAudioScheduledSourceNodeEventMap[K]) => void,
         options?: boolean | EventListenerOptions
     ): void;
 

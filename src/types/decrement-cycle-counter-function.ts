@@ -1,3 +1,4 @@
-import { IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode } from '../interfaces';
+import { TContext } from './context';
 
-export type TDecrementCycleCounterFunction = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>, count: number) => void;
+export type TDecrementCycleCounterFunction = <T extends TContext>(audioNode: IAudioNode<T>, count: number) => void;

@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TChannelSplitterNodeRendererFactoryFactory, TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
 
 export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRendererFactoryFactory = (
@@ -7,7 +7,7 @@ export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRende
     getNativeAudioNode,
     renderInputsOfAudioNode
 ) => {
-    return <T extends IMinimalOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioNode>();
 
         const createAudioNode = async (

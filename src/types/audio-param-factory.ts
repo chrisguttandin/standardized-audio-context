@@ -1,7 +1,8 @@
-import { IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IAudioParam } from '../interfaces';
+import { TContext } from './context';
 import { TNativeAudioParam } from './native-audio-param';
 
-export type TAudioParamFactory = <T extends IMinimalBaseAudioContext>(
+export type TAudioParamFactory = <T extends TContext>(
     audioNode: IAudioNode<T>,
     isAudioParamOfOfflineAudioContext: boolean,
     nativeAudioParam: TNativeAudioParam,

@@ -1,7 +1,4 @@
-import { IMinimalBaseAudioContext, IWorkletOptions } from '../interfaces';
+import { IWorkletOptions } from '../interfaces';
+import { TContext } from './context';
 
-export type TAddAudioWorkletModuleFunction = (
-    context: IMinimalBaseAudioContext,
-    moduleURL: string,
-    options?: IWorkletOptions
-) => Promise<void>; // tslint:disable-line:invalid-void
+export type TAddAudioWorkletModuleFunction = (context: TContext, moduleURL: string, options?: IWorkletOptions) => Promise<void>;

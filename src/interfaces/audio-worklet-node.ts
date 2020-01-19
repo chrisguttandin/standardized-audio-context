@@ -1,12 +1,10 @@
-import { TAudioParamMap } from '../types';
+import { TAudioParamMap, TContext, TProcessorErrorEventHandler } from '../types';
 import { IAudioNode } from './audio-node';
 import { IAudioWorkletNodeEventMap } from './audio-worklet-node-event-map';
-import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
-import { IProcessorErrorEventHandler } from './processor-error-event-handler';
 
-export interface IAudioWorkletNode<T extends IMinimalBaseAudioContext> extends IAudioNode<T> {
+export interface IAudioWorkletNode<T extends TContext> extends IAudioNode<T> {
 
-    onprocessorerror: null | IProcessorErrorEventHandler<T, this>;
+    onprocessorerror: null | TProcessorErrorEventHandler<this>;
 
     readonly parameters: TAudioParamMap;
 
@@ -14,7 +12,7 @@ export interface IAudioWorkletNode<T extends IMinimalBaseAudioContext> extends I
 
     addEventListener<K extends keyof IAudioWorkletNodeEventMap> (
         type: K,
-        listener: (this: IAudioWorkletNode<T>, event: IAudioWorkletNodeEventMap[K]) => any,
+        listener: (this: this, event: IAudioWorkletNodeEventMap[K]) => void,
         options?: boolean | AddEventListenerOptions
     ): void;
 
@@ -22,7 +20,7 @@ export interface IAudioWorkletNode<T extends IMinimalBaseAudioContext> extends I
 
     removeEventListener<K extends keyof IAudioWorkletNodeEventMap> (
         type: K,
-        listener: (this: IAudioWorkletNode<T>, event: IAudioWorkletNodeEventMap[K]) => any,
+        listener: (this: this, event: IAudioWorkletNodeEventMap[K]) => void,
         options?: boolean | EventListenerOptions
     ): void;
 

@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IBiquadFilterNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IBiquadFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TBiquadFilterNodeRendererFactoryFactory, TNativeBiquadFilterNode, TNativeOfflineAudioContext } from '../types';
 
 export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFactoryFactory = (
@@ -9,7 +9,7 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
     renderAutomation,
     renderInputsOfAudioNode
 ) => {
-    return <T extends IMinimalOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeBiquadFilterNodes = new WeakMap<TNativeOfflineAudioContext, TNativeBiquadFilterNode>();
 
         const createBiquadFilterNode = async (

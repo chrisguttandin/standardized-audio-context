@@ -1,10 +1,10 @@
-import { IAudioParam, IAudioParamRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
-import { TAddAudioParamConnectionsFactory } from '../types';
+import { IAudioParam, IAudioParamRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { TAddAudioParamConnectionsFactory, TContext } from '../types';
 
 export const createAddAudioParamConnections: TAddAudioParamConnectionsFactory = (audioParamConnectionsStore) => {
-    return <T extends IMinimalBaseAudioContext>(
+    return <T extends TContext>(
         audioParam: IAudioParam,
-        audioParamRenderer: T extends IMinimalOfflineAudioContext ? IAudioParamRenderer : null
+        audioParamRenderer: T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioParamRenderer : null
     ) => {
         audioParamConnectionsStore.set(
             audioParam,

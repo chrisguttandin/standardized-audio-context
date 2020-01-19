@@ -1,5 +1,5 @@
-import { IMinimalBaseAudioContext, IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
-import { TAudioNodeRenderer, TNativeWaveShaperNode, TOverSampleType, TWaveShaperNodeConstructorFactory } from '../types';
+import { IWaveShaperNode, IWaveShaperOptions } from '../interfaces';
+import { TAudioNodeRenderer, TContext, TNativeWaveShaperNode, TOverSampleType, TWaveShaperNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -18,7 +18,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
     isNativeOfflineAudioContext
 ) => {
 
-    return class WaveShaperNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IWaveShaperNode<T> {
+    return class WaveShaperNode<T extends TContext> extends audioNodeConstructor<T> implements IWaveShaperNode<T> {
 
         private _isCurveNullified: boolean;
 

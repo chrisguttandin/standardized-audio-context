@@ -1,4 +1,4 @@
-import { IMinimalBaseAudioContext } from '../interfaces';
+import { TContext } from './context';
 import { TNativeContext } from './native-context';
 
-export type TAnyContext = IMinimalBaseAudioContext | TNativeContext;
+export type TAnyContext = TContext | TNativeContext;

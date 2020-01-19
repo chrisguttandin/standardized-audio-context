@@ -1,8 +1,7 @@
-import { TAnyAudioBuffer } from '../types';
+import { TAnyAudioBuffer, TContext } from '../types';
 import { IAudioNode } from './audio-node';
-import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IConvolverNode<T extends IMinimalBaseAudioContext> extends IAudioNode<T> {
+export interface IConvolverNode<T extends TContext> extends IAudioNode<T> {
 
     buffer: null | TAnyAudioBuffer;
 

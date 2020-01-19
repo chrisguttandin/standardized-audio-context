@@ -1,4 +1,5 @@
-import { IAudioListener, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioListener } from '../interfaces';
+import { TContext } from './context';
 import { TNativeContext } from './native-context';
 
-export type TAudioListenerFactory = <T extends IMinimalBaseAudioContext>(context: T, nativeContext: TNativeContext) => IAudioListener;
+export type TAudioListenerFactory = <T extends TContext>(context: T, nativeContext: TNativeContext) => IAudioListener;

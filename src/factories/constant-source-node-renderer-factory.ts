@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IConstantSourceNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IConstantSourceNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TConstantSourceNodeRendererFactoryFactory, TNativeConstantSourceNode, TNativeOfflineAudioContext } from '../types';
 
 export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendererFactoryFactory = (
@@ -9,7 +9,7 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
     renderAutomation,
     renderInputsOfAudioNode
 ) => {
-    return <T extends IMinimalOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeConstantSourceNodes = new WeakMap<TNativeOfflineAudioContext, TNativeConstantSourceNode>();
 
         let start: null | number = null;

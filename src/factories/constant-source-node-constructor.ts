@@ -1,16 +1,14 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
+import { IAudioParam, IConstantSourceNode, IConstantSourceOptions } from '../interfaces';
 import {
-    IAudioParam,
-    IConstantSourceNode,
-    IConstantSourceNodeRenderer,
-    IConstantSourceOptions,
-    IEndedEventHandler,
-    IMinimalBaseAudioContext,
-    IMinimalOfflineAudioContext
-} from '../interfaces';
-import { TConstantSourceNodeConstructorFactory, TConstantSourceNodeRenderer, TNativeConstantSourceNode } from '../types';
+    TConstantSourceNodeConstructorFactory,
+    TConstantSourceNodeRenderer,
+    TContext,
+    TEndedEventHandler,
+    TNativeConstantSourceNode
+} from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -29,15 +27,15 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
     wrapEventListener
 ) => {
 
-    return class ConstantSourceNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IConstantSourceNode<T> {
+    return class ConstantSourceNode<T extends TContext> extends audioNodeConstructor<T> implements IConstantSourceNode<T> {
 
-        private _constantSourceNodeRenderer: null | IConstantSourceNodeRenderer<IMinimalOfflineAudioContext>;
+        private _constantSourceNodeRenderer: TConstantSourceNodeRenderer<T>;
 
         private _nativeConstantSourceNode: TNativeConstantSourceNode;
 
         private _offset: IAudioParam;
 
-        private _onended: null | IEndedEventHandler<T, this>;
+        private _onended: null | TEndedEventHandler<IConstantSourceNode<T>>;
 
         constructor (context: T, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
@@ -70,7 +68,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             return this._offset;
         }
 
-        get onended (): null | IEndedEventHandler<T, this> {
+        get onended (): null | TEndedEventHandler<IConstantSourceNode<T>> {
             return this._onended;
         }
 
@@ -81,7 +79,9 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
             const nativeOnEnded = this._nativeConstantSourceNode.onended;
 
-            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
+            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
+                ? value
+                : <null | TEndedEventHandler<IConstantSourceNode<T>>> nativeOnEnded;
         }
 
         public start (when = 0): void {

@@ -1,5 +1,6 @@
-import { IAudioNode, IMinimalBaseAudioContext, IOscillatorNode } from '../interfaces';
+import { IAudioNode, IOscillatorNode } from '../interfaces';
+import { TContext } from '../types';
 
-export const isOscillatorNode = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>): audioNode is IOscillatorNode<T> => {
+export const isOscillatorNode = <T extends TContext>(audioNode: IAudioNode<T>): audioNode is IOscillatorNode<T> => {
     return ('detune' in audioNode && 'frequency' in audioNode);
 };

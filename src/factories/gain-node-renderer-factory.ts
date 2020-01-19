@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IGainNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IGainNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TGainNodeRendererFactoryFactory, TNativeGainNode, TNativeOfflineAudioContext } from '../types';
 
 export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (
@@ -9,7 +9,7 @@ export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (
     renderAutomation,
     renderInputsOfAudioNode
 ) => {
-    return <T extends IMinimalOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeGainNodes = new WeakMap<TNativeOfflineAudioContext, TNativeGainNode>();
 
         const createGainNode = async (

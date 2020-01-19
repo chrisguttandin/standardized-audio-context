@@ -1,5 +1,6 @@
-import { IAudioNode, IConstantSourceNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IConstantSourceNode } from '../interfaces';
+import { TContext } from '../types';
 
-export const isConstantSourceNode = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>): audioNode is IConstantSourceNode<T> => {
+export const isConstantSourceNode = <T extends TContext>(audioNode: IAudioNode<T>): audioNode is IConstantSourceNode<T> => {
     return 'offset' in audioNode;
 };

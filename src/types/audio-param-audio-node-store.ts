@@ -1,3 +1,4 @@
-import { IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IAudioParam } from '../interfaces';
+import { TContext } from './context';
 
-export type TAudioParamAudioNodeStore = WeakMap<IAudioParam, IAudioNode<IMinimalBaseAudioContext>>;
+export type TAudioParamAudioNodeStore = WeakMap<IAudioParam, IAudioNode<TContext>>;

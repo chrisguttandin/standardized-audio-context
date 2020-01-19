@@ -1,6 +1,6 @@
-import { IMediaStreamAudioSourceNode, IMediaStreamAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
+import { IAudioContext, IMediaStreamAudioSourceNode, IMediaStreamAudioSourceOptions, IMinimalAudioContext } from '../interfaces';
 
-export type TMediaStreamAudioSourceNodeConstructor = new <T extends IMinimalAudioContext>(
+export type TMediaStreamAudioSourceNodeConstructor = new <T extends IAudioContext | IMinimalAudioContext>(
     context: T,
     options: IMediaStreamAudioSourceOptions
 ) => IMediaStreamAudioSourceNode<T>;

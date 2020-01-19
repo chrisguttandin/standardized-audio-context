@@ -1,5 +1,5 @@
-import { IChannelMergerOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TAudioNodeRenderer, TChannelMergerNodeConstructorFactory } from '../types';
+import { IChannelMergerOptions } from '../interfaces';
+import { TAudioNodeRenderer, TChannelMergerNodeConstructorFactory, TContext } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 1,
@@ -16,7 +16,7 @@ export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFa
     isNativeOfflineAudioContext
 ) => {
 
-    return class ChannelMergerNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> {
+    return class ChannelMergerNode<T extends TContext> extends audioNodeConstructor<T> {
 
         constructor (context: T, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);

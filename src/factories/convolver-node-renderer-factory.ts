@@ -1,6 +1,6 @@
 import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IConvolverNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IConvolverNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TConvolverNodeRendererFactoryFactory, TNativeConvolverNode, TNativeOfflineAudioContext } from '../types';
 
 export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFactory = (
@@ -8,7 +8,7 @@ export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFa
     getNativeAudioNode,
     renderInputsOfAudioNode
 ) => {
-    return <T extends IMinimalOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeConvolverNodes = new WeakMap<TNativeOfflineAudioContext, TNativeConvolverNode>();
 
         const createConvolverNode = async (

@@ -1,6 +1,4 @@
-import { IMinimalBaseAudioContext, IOscillatorNode, IOscillatorOptions } from '../interfaces';
+import { IOscillatorNode, IOscillatorOptions } from '../interfaces';
+import { TContext } from './context';
 
-export type TOscillatorNodeConstructor = new <T extends IMinimalBaseAudioContext>(
-    context: T,
-    options?: Partial<IOscillatorOptions>
-) => IOscillatorNode<T>;
+export type TOscillatorNodeConstructor = new <T extends TContext>(context: T, options?: Partial<IOscillatorOptions>) => IOscillatorNode<T>;

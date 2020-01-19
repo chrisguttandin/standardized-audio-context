@@ -1,6 +1,7 @@
-import { IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IAudioParam } from '../interfaces';
+import { TContext } from './context';
 
-export type TDetectCyclesFunction = <T extends IMinimalBaseAudioContext>(
+export type TDetectCyclesFunction = <T extends TContext>(
     chain: IAudioNode<T>[],
     nextLink: IAudioNode<T> | IAudioParam
 ) => IAudioNode<T>[][];

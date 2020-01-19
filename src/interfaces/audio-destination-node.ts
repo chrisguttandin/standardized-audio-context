@@ -1,7 +1,7 @@
+import { TContext } from '../types';
 import { IAudioNode } from './audio-node';
-import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IAudioDestinationNode<T extends IMinimalBaseAudioContext> extends IAudioNode<T> {
+export interface IAudioDestinationNode<T extends TContext> extends IAudioNode<T> {
 
     readonly maxChannelCount: number;
 

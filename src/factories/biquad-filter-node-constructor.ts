@@ -1,6 +1,6 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
-import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TAudioNodeRenderer, TBiquadFilterNodeConstructorFactory, TBiquadFilterType, TNativeBiquadFilterNode } from '../types';
+import { IAudioParam, IBiquadFilterNode, IBiquadFilterOptions } from '../interfaces';
+import { TAudioNodeRenderer, TBiquadFilterNodeConstructorFactory, TBiquadFilterType, TContext, TNativeBiquadFilterNode } from '../types';
 
 const DEFAULT_OPTIONS = {
     Q: 1,
@@ -23,7 +23,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
     isNativeOfflineAudioContext
 ) => {
 
-    return class BiquadFilterNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IBiquadFilterNode<T> {
+    return class BiquadFilterNode<T extends TContext> extends audioNodeConstructor<T> implements IBiquadFilterNode<T> {
 
         private _detune: IAudioParam;
 

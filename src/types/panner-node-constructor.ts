@@ -1,6 +1,4 @@
-import { IMinimalBaseAudioContext, IPannerNode, IPannerOptions } from '../interfaces';
+import { IPannerNode, IPannerOptions } from '../interfaces';
+import { TContext } from './context';
 
-export type TPannerNodeConstructor = new <T extends IMinimalBaseAudioContext>(
-    context: T,
-    options?: Partial<IPannerOptions>
-) => IPannerNode<T>;
+export type TPannerNodeConstructor = new <T extends TContext>(context: T, options?: Partial<IPannerOptions>) => IPannerNode<T>;

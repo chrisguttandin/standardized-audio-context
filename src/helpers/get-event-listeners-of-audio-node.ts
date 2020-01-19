@@ -1,10 +1,8 @@
 import { EVENT_LISTENERS } from '../globals';
-import { IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
-import { TInternalStateEventListener } from '../types';
+import { IAudioNode } from '../interfaces';
+import { TContext, TInternalStateEventListener } from '../types';
 import { getValueForKey } from './get-value-for-key';
 
-export const getEventListenersOfAudioNode = <T extends IMinimalBaseAudioContext>(
-    audioNode: IAudioNode<T>
-): Set<TInternalStateEventListener> => {
+export const getEventListenersOfAudioNode = <T extends TContext>(audioNode: IAudioNode<T>): Set<TInternalStateEventListener> => {
     return getValueForKey(EVENT_LISTENERS, audioNode);
 };

@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IMinimalOfflineAudioContext, IOscillatorNode, IPeriodicWave } from '../interfaces';
+import { IAudioNode, IMinimalOfflineAudioContext, IOfflineAudioContext, IOscillatorNode, IPeriodicWave } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeOscillatorNode, TOscillatorNodeRendererFactoryFactory } from '../types';
 
 export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactoryFactory = (
@@ -9,7 +9,7 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
     renderAutomation,
     renderInputsOfAudioNode
 ) => {
-    return <T extends IMinimalOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeOscillatorNodes = new WeakMap<TNativeOfflineAudioContext, TNativeOscillatorNode>();
 
         let periodicWave: null | IPeriodicWave = null;

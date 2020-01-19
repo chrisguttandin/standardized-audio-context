@@ -1,6 +1,6 @@
 import { filterBuffer } from '../helpers/filter-buffer';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IIIRFilterNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import {
     TIIRFilterNodeRendererFactoryFactory,
     TNativeAudioBuffer,
@@ -65,7 +65,10 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
     renderInputsOfAudioNode,
     renderNativeOfflineAudioContext
 ) => {
-    return <T extends IMinimalOfflineAudioContext>(feedback: number[] | TTypedArray, feedforward: number[] | TTypedArray) => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
+        feedback: number[] | TTypedArray,
+        feedforward: number[] | TTypedArray
+    ) => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioBufferSourceNode | TNativeIIRFilterNode>();
 
         let filteredBufferPromise: null | Promise<null | TNativeAudioBuffer> = null;

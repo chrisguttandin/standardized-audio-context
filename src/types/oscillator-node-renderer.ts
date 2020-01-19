@@ -1,5 +1,6 @@
-import { IMinimalBaseAudioContext, IMinimalOfflineAudioContext, IOscillatorNodeRenderer } from '../interfaces';
+import { IMinimalOfflineAudioContext, IOfflineAudioContext, IOscillatorNodeRenderer } from '../interfaces';
+import { TContext } from './context';
 
-export type TOscillatorNodeRenderer<T extends IMinimalBaseAudioContext> = T extends IMinimalOfflineAudioContext
+export type TOscillatorNodeRenderer<T extends TContext> = T extends IMinimalOfflineAudioContext | IOfflineAudioContext
     ? IOscillatorNodeRenderer<T>
     : null;

@@ -1,5 +1,6 @@
-import { IAudioNode, IDelayNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IDelayNode } from '../interfaces';
+import { TContext } from '../types';
 
-export const isDelayNode = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>): audioNode is IDelayNode<T> => {
+export const isDelayNode = <T extends TContext>(audioNode: IAudioNode<T>): audioNode is IDelayNode<T> => {
     return 'delayTime' in audioNode;
 };

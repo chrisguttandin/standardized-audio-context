@@ -19,7 +19,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     nativeAudioContextConstructor
 ) => {
 
-    return class AudioContext extends baseAudioContextConstructor implements IAudioContext {
+    return class AudioContext extends baseAudioContextConstructor<IAudioContext> implements IAudioContext {
 
         private _baseLatency: number;
 

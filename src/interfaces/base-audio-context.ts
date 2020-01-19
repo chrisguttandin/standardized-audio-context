@@ -1,4 +1,4 @@
-import { TDecodeErrorCallback, TDecodeSuccessCallback } from '../types';
+import { TContext, TDecodeErrorCallback, TDecodeSuccessCallback } from '../types';
 import { IAnalyserNode } from './analyser-node';
 import { IAudioBuffer } from './audio-buffer';
 import { IAudioBufferSourceNode } from './audio-buffer-source-node';
@@ -19,44 +19,44 @@ import { IPeriodicWaveConstraints } from './periodic-wave-constraints';
 import { IStereoPannerNode } from './stereo-panner-node';
 import { IWaveShaperNode } from './wave-shaper-node';
 
-export interface IBaseAudioContext extends IMinimalBaseAudioContext {
+export interface IBaseAudioContext<T extends TContext> extends IMinimalBaseAudioContext<T> {
 
     // The audioWorklet property is only available in a SecureContext.
     readonly audioWorklet?: IAudioWorklet;
 
-    createAnalyser (): IAnalyserNode<this>;
+    createAnalyser (): IAnalyserNode<T>;
 
-    createBiquadFilter (): IBiquadFilterNode<this>;
+    createBiquadFilter (): IBiquadFilterNode<T>;
 
     createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
 
-    createBufferSource (): IAudioBufferSourceNode<this>;
+    createBufferSource (): IAudioBufferSourceNode<T>;
 
-    createChannelMerger (numberOfInputs?: number): IAudioNode<this>;
+    createChannelMerger (numberOfInputs?: number): IAudioNode<T>;
 
-    createChannelSplitter (numberOfOutputs?: number): IAudioNode<this>;
+    createChannelSplitter (numberOfOutputs?: number): IAudioNode<T>;
 
-    createConstantSource (): IConstantSourceNode<this>;
+    createConstantSource (): IConstantSourceNode<T>;
 
-    createConvolver (): IConvolverNode<this>;
+    createConvolver (): IConvolverNode<T>;
 
-    createDelay (maxDelayTime?: number): IDelayNode<this>;
+    createDelay (maxDelayTime?: number): IDelayNode<T>;
 
-    createDynamicsCompressor (): IDynamicsCompressorNode<this>;
+    createDynamicsCompressor (): IDynamicsCompressorNode<T>;
 
-    createGain (): IGainNode<this>;
+    createGain (): IGainNode<T>;
 
-    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode<this>;
+    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode<T>;
 
-    createOscillator (): IOscillatorNode<this>;
+    createOscillator (): IOscillatorNode<T>;
 
-    createPanner (): IPannerNode<this>;
+    createPanner (): IPannerNode<T>;
 
     createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
 
-    createStereoPanner (): IStereoPannerNode<this>;
+    createStereoPanner (): IStereoPannerNode<T>;
 
-    createWaveShaper (): IWaveShaperNode<this>;
+    createWaveShaper (): IWaveShaperNode<T>;
 
     decodeAudioData (
         audioData: ArrayBuffer,

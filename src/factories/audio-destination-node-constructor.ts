@@ -1,5 +1,11 @@
-import { IAudioDestinationNode, IMinimalBaseAudioContext } from '../interfaces';
-import { TAudioDestinationNodeConstructorFactory, TAudioNodeRenderer, TChannelCountMode, TNativeAudioDestinationNode } from '../types';
+import { IAudioDestinationNode } from '../interfaces';
+import {
+    TAudioDestinationNodeConstructorFactory,
+    TAudioNodeRenderer,
+    TChannelCountMode,
+    TContext,
+    TNativeAudioDestinationNode
+} from '../types';
 
 export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstructorFactory = (
     audioNodeConstructor,
@@ -12,9 +18,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
     renderInputsOfAudioNode
 ) => {
 
-    return class AudioDestinationNode<T extends IMinimalBaseAudioContext>
-            extends audioNodeConstructor<T>
-            implements IAudioDestinationNode<T> {
+    return class AudioDestinationNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioDestinationNode<T> {
 
         private _isNodeOfNativeOfflineAudioContext: boolean;
 

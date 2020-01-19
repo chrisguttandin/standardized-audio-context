@@ -1,15 +1,14 @@
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
+import { IAudioParam, IMinimalOfflineAudioContext, IOscillatorNode, IOscillatorNodeRenderer, IOscillatorOptions } from '../interfaces';
 import {
-    IAudioParam,
-    IEndedEventHandler,
-    IMinimalBaseAudioContext,
-    IMinimalOfflineAudioContext,
-    IOscillatorNode,
-    IOscillatorNodeRenderer,
-    IOscillatorOptions
-} from '../interfaces';
-import { TNativeOscillatorNode, TOscillatorNodeConstructorFactory, TOscillatorNodeRenderer, TOscillatorType } from '../types';
+    TContext,
+    TEndedEventHandler,
+    TNativeOscillatorNode,
+    TOscillatorNodeConstructorFactory,
+    TOscillatorNodeRenderer,
+    TOscillatorType
+} from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -31,7 +30,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
     wrapEventListener
 ) => {
 
-    return class OscillatorNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IOscillatorNode<T> {
+    return class OscillatorNode<T extends TContext> extends audioNodeConstructor<T> implements IOscillatorNode<T> {
 
         private _detune: IAudioParam;
 
@@ -39,9 +38,9 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _nativeOscillatorNode: TNativeOscillatorNode;
 
-        private _onended: null | IEndedEventHandler<T, this>;
+        private _onended: null | TEndedEventHandler<IOscillatorNode<T>>;
 
-        private _oscillatorNodeRenderer: null | IOscillatorNodeRenderer<IMinimalOfflineAudioContext>;
+        private _oscillatorNodeRenderer: TOscillatorNodeRenderer<T>;
 
         constructor (context: T, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
@@ -75,7 +74,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             return this._frequency;
         }
 
-        get onended (): null | IEndedEventHandler<T, this> {
+        get onended (): null | TEndedEventHandler<IOscillatorNode<T>> {
             return this._onended;
         }
 
@@ -86,7 +85,9 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
             const nativeOnEnded = this._nativeOscillatorNode.onended;
 
-            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener) ? value : nativeOnEnded;
+            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
+                ? value
+                : <null | TEndedEventHandler<IOscillatorNode<T>>> nativeOnEnded;
         }
 
         get type (): TOscillatorType {

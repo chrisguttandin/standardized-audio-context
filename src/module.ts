@@ -305,6 +305,7 @@ const auxiliaryGainNodeStore: TAuxiliaryGainNodeStore = new WeakMap();
 const getNativeContext = createGetNativeContext(CONTEXT_STORE);
 const audioParamAudioNodeStore: TAudioParamAudioNodeStore = new WeakMap();
 const eventTargetConstructor = createEventTargetConstructor(wrapEventListener);
+const isNativeAudioContext = createIsNativeAudioContext(nativeAudioContextConstructor);
 const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
@@ -335,6 +336,7 @@ const audioNodeConstructor = createAudioNodeConstructor(
     createDetectCycles(audioParamAudioNodeStore, getAudioNodeConnections, getValueForKey),
     eventTargetConstructor,
     getNativeContext,
+    isNativeAudioContext,
     isNativeAudioNode,
     isNativeAudioParam,
     isNativeOfflineAudioContext
@@ -767,7 +769,6 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
     ) :
     undefined;
 
-const isNativeAudioContext = createIsNativeAudioContext(nativeAudioContextConstructor);
 const isNativeContext = createIsNativeContext(isNativeAudioContext, isNativeOfflineAudioContext);
 
 export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(

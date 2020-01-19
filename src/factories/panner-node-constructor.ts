@@ -1,6 +1,6 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
-import { IAudioParam, IMinimalBaseAudioContext, IPannerNode, IPannerOptions } from '../interfaces';
-import { TAudioNodeRenderer, TDistanceModelType, TNativePannerNode, TPannerNodeConstructorFactory, TPanningModelType } from '../types';
+import { IAudioParam, IPannerNode, IPannerOptions } from '../interfaces';
+import { TAudioNodeRenderer, TContext, TDistanceModelType, TNativePannerNode, TPannerNodeConstructorFactory, TPanningModelType } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -31,7 +31,7 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
     isNativeOfflineAudioContext
 ) => {
 
-    return class PannerNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IPannerNode<T> {
+    return class PannerNode<T extends TContext> extends audioNodeConstructor<T> implements IPannerNode<T> {
 
         private _nativePannerNode: TNativePannerNode;
 

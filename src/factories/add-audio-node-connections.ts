@@ -1,10 +1,10 @@
-import { IAudioNode, IAudioNodeRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
-import { TActiveInputConnection, TAddAudioNodeConnectionsFactory, TNativeAudioNode } from '../types';
+import { IAudioNode, IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { TActiveInputConnection, TAddAudioNodeConnectionsFactory, TContext, TNativeAudioNode } from '../types';
 
 export const createAddAudioNodeConnections: TAddAudioNodeConnectionsFactory = (audioNodeConnectionsStore) => {
-    return <T extends IMinimalBaseAudioContext>(
+    return <T extends TContext>(
         audioNode: IAudioNode<T>,
-        audioNoderRender: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null,
+        audioNodeRenderer: T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null,
         nativeAudioNode: TNativeAudioNode
     ) => {
         const activeInputs = [ ];
@@ -17,7 +17,7 @@ export const createAddAudioNodeConnections: TAddAudioNodeConnectionsFactory = (a
             activeInputs,
             outputs: new Set(),
             passiveInputs: new WeakMap(),
-            renderer: audioNoderRender
+            renderer: audioNodeRenderer
         });
     };
 };

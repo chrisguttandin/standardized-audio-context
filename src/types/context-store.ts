@@ -1,4 +1,4 @@
-import { IMinimalBaseAudioContext } from '../interfaces';
+import { TContext } from '../types';
 import { TNativeContext } from './native-context';
 
-export type TContextStore = WeakMap<IMinimalBaseAudioContext, TNativeContext>;
+export type TContextStore = WeakMap<TContext, TNativeContext>;

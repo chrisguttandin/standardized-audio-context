@@ -1,3 +1,5 @@
-import { IAudioNodeRenderer, IBiquadFilterNode, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNodeRenderer, IBiquadFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 
-export type TBiquadFilterNodeRendererFactory = <T extends IMinimalOfflineAudioContext>() => IAudioNodeRenderer<T, IBiquadFilterNode<T>>;
+export type TBiquadFilterNodeRendererFactory = <
+    T extends IMinimalOfflineAudioContext | IOfflineAudioContext
+>() => IAudioNodeRenderer<T, IBiquadFilterNode<T>>;

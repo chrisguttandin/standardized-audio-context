@@ -1,5 +1,5 @@
-import { IAudioParam, IMinimalBaseAudioContext, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
-import { TAudioNodeRenderer, TStereoPannerNodeConstructorFactory } from '../types';
+import { IAudioParam, IStereoPannerNode, IStereoPannerOptions } from '../interfaces';
+import { TAudioNodeRenderer, TContext, TStereoPannerNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -21,7 +21,7 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
     isNativeOfflineAudioContext
 ) => {
 
-    return class StereoPannerNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IStereoPannerNode<T> {
+    return class StereoPannerNode<T extends TContext> extends audioNodeConstructor<T> implements IStereoPannerNode<T> {
 
         private _pan: IAudioParam;
 

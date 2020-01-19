@@ -1,5 +1,6 @@
-import { IAudioNode, IBiquadFilterNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IBiquadFilterNode } from '../interfaces';
+import { TContext } from '../types';
 
-export const isBiquadFilterNode = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>): audioNode is IBiquadFilterNode<T> => {
+export const isBiquadFilterNode = <T extends TContext>(audioNode: IAudioNode<T>): audioNode is IBiquadFilterNode<T> => {
     return ('frequency' in audioNode && 'gain' in audioNode);
 };

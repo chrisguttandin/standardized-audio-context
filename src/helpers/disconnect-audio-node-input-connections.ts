@@ -5,11 +5,12 @@ import { isConstantSourceNode } from '../guards/constant-source-node';
 import { isGainNode } from '../guards/gain-node';
 import { isOscillatorNode } from '../guards/oscillator-node';
 import { isStereoPannerNode } from '../guards/stereo-panner-node';
-import { IAudioNode, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode } from '../interfaces';
+import { TContext } from '../types';
 import { disconnectAudioParamInputConnections } from './disconnect-audio-param-input-connections';
 import { getAudioNodeConnections } from './get-audio-node-connections';
 
-export const disconnectAudioNodeInputConnections = <T extends IMinimalBaseAudioContext>(audioNode: IAudioNode<T>) => {
+export const disconnectAudioNodeInputConnections = <T extends TContext>(audioNode: IAudioNode<T>) => {
     const audioNodeConnections = getAudioNodeConnections(audioNode);
 
     if (audioNodeConnections !== undefined) {

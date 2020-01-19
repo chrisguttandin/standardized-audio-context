@@ -1,7 +1,8 @@
-import { IAudioNode, IAudioParam, IMinimalBaseAudioContext } from '../interfaces';
+import { IAudioNode, IAudioParam } from '../interfaces';
+import { TContext } from '../types';
 import { getAudioParamConnections } from './get-audio-param-connections';
 
-export const disconnectAudioParamInputConnections = <T extends IMinimalBaseAudioContext>(
+export const disconnectAudioParamInputConnections = <T extends TContext>(
     audioParam: IAudioParam,
     disconnectAudioNodeInputConnections: (audioNode: IAudioNode<T>) => void
 ) => {

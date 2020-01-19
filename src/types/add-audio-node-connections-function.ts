@@ -1,8 +1,9 @@
-import { IAudioNode, IAudioNodeRenderer, IMinimalBaseAudioContext, IMinimalOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { TContext } from './context';
 import { TNativeAudioNode } from './native-audio-node';
 
-export type TAddAudioNodeConnectionsFunction = <T extends IMinimalBaseAudioContext>(
+export type TAddAudioNodeConnectionsFunction = <T extends TContext>(
     audioNode: IAudioNode<T>,
-    audioNoderRender: T extends IMinimalOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null,
+    audioNodeRenderer: T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null,
     nativeAudioNode: TNativeAudioNode
 ) => void;

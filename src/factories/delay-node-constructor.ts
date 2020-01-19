@@ -1,5 +1,5 @@
-import { IAudioParam, IDelayNode, IDelayOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TAudioNodeRenderer, TDelayNodeConstructorFactory } from '../types';
+import { IAudioParam, IDelayNode, IDelayOptions } from '../interfaces';
+import { TAudioNodeRenderer, TContext, TDelayNodeConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -18,7 +18,7 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
     isNativeOfflineAudioContext
 ) => {
 
-    return class DelayNode<T extends IMinimalBaseAudioContext> extends audioNodeConstructor<T> implements IDelayNode<T> {
+    return class DelayNode<T extends TContext> extends audioNodeConstructor<T> implements IDelayNode<T> {
 
         private _delayTime: IAudioParam;
 

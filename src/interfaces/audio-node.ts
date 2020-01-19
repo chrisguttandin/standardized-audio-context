@@ -1,8 +1,7 @@
-import { TChannelCountMode, TChannelInterpretation, TNativeEventTarget } from '../types';
+import { TChannelCountMode, TChannelInterpretation, TContext, TNativeEventTarget } from '../types';
 import { IAudioParam } from './audio-param';
-import { IMinimalBaseAudioContext } from './minimal-base-audio-context';
 
-export interface IAudioNode<T extends IMinimalBaseAudioContext> extends TNativeEventTarget {
+export interface IAudioNode<T extends TContext> extends TNativeEventTarget {
 
     channelCount: number;
 
@@ -16,11 +15,11 @@ export interface IAudioNode<T extends IMinimalBaseAudioContext> extends TNativeE
 
     readonly numberOfOutputs: number;
 
-    connect <U extends IAudioNode<T>> (destinationNode: U, output?: number, input?: number): U;
+    connect <U extends TContext, V extends IAudioNode<U>> (destinationNode: V, output?: number, input?: number): V;
     connect (destinationParam: T, output?: number): void;
 
     disconnect (output?: number): void;
-    disconnect (destinationNode: IAudioNode<T>, output?: number, input?: number): void;
+    disconnect <U extends TContext> (destinationNode: IAudioNode<U>, output?: number, input?: number): void;
     disconnect (destinationParam: IAudioParam, output?: number): void;
 
 }

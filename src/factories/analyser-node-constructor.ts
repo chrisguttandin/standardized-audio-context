@@ -1,5 +1,5 @@
-import { IAnalyserNode, IAnalyserOptions, IMinimalBaseAudioContext } from '../interfaces';
-import { TAnalyserNodeConstructorFactory, TAudioNodeRenderer, TNativeAnalyserNode } from '../types';
+import { IAnalyserNode, IAnalyserOptions } from '../interfaces';
+import { TAnalyserNodeConstructorFactory, TAudioNodeRenderer, TContext, TNativeAnalyserNode } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -20,7 +20,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
     isNativeOfflineAudioContext
 ) => {
 
-    return class AnalyserNode<T extends IMinimalBaseAudioContext> extends audionNodeConstructor<T> implements IAnalyserNode<T> {
+    return class AnalyserNode<T extends TContext> extends audionNodeConstructor<T> implements IAnalyserNode<T> {
 
         private _nativeAnalyserNode: TNativeAnalyserNode;
 
