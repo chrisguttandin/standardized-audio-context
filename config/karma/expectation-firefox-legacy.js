@@ -17,7 +17,7 @@ module.exports = (config) => {
             FirefoxBrowserStack: {
                 base: 'BrowserStack',
                 browser: 'firefox',
-                browser_version: '69', // eslint-disable-line camelcase
+                browser_version: '70', // eslint-disable-line camelcase
                 os: 'Windows',
                 os_version: '10' // eslint-disable-line camelcase
             }
@@ -25,7 +25,6 @@ module.exports = (config) => {
 
         files: [
             'test/expectation/firefox/any/**/*.js',
-            'test/expectation/firefox/legacy/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
@@ -34,8 +33,7 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            'test/expectation/firefox/any/**/*.js': 'webpack',
-            'test/expectation/firefox/legacy/**/*.js': 'webpack'
+            'test/expectation/firefox/any/**/*.js': 'webpack'
         }
 
     });

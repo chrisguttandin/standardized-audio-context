@@ -15,7 +15,7 @@ export const createNativeMediaStreamAudioSourceNodeFactory: TNativeMediaStreamAu
             return ntvDCntxt.createMediaStreamSource(new MediaStream(filteredAudioStreamTracks));
         });
 
-        // Bug #63: Edge & Firefox do not expose the mediaStream yet.
+        // Bug #63: Edge does not expose the mediaStream yet.
         Object.defineProperty(nativeMediaStreamAudioSourceNode, 'mediaStream', { value: mediaStream });
 
         return nativeMediaStreamAudioSourceNode;

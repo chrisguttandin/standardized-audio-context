@@ -28,7 +28,7 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
 
             super(context, true, nativeMediaElementAudioSourceNode, <TAudioNodeRenderer<T>> null);
 
-            // Bug #63: Edge & Firefox do not expose the mediaElement yet.
+            // Bug #63: Edge does not expose the mediaElement yet.
             this._mediaElement = options.mediaElement;
             this._nativeMediaElementAudioSourceNode = nativeMediaElementAudioSourceNode;
         }
