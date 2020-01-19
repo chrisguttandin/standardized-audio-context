@@ -17,5 +17,6 @@ export type TAddAudioWorkletModuleFactory = (
     getBackupNativeContext: TGetBackupNativeContextFunction,
     getNativeContext: TGetNativeContextFunction,
     ongoingRequests: WeakMap<TContext, Map<string, Promise<void>>>, // tslint:disable-line:invalid-void
-    resolvedRequests: WeakMap<TContext, Set<string>>
+    resolvedRequests: WeakMap<TContext, Set<string>>,
+    window: Window
 ) => TAddAudioWorkletModuleFunction;

@@ -28,7 +28,7 @@ export const createEvaluateSource: TEvaluateSourceFactory = (window) => {
 
             window.onerror = (message, src, lineno, colno, error) => {
                 // @todo Edge thinks the source is the one of the html document.
-                if (src === url || (src === location.href && lineno === 1 && colno === 1)) {
+                if (src === url || (src === window.location.href && lineno === 1 && colno === 1)) {
                     removeErrorEventListenerAndRevokeUrl();
                     reject(error);
 

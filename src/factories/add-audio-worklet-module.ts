@@ -29,11 +29,12 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     getBackupNativeContext,
     getNativeContext,
     ongoingRequests,
-    resolvedRequests
+    resolvedRequests,
+    window
 ) => {
     return (context, moduleURL, options = { credentials: 'omit' }) => {
         const nativeContext = getNativeContext(context);
-        const absoluteUrl = (new URL(moduleURL, location.href)).toString();
+        const absoluteUrl = (new URL(moduleURL, window.location.href)).toString();
 
         // Bug #59: Only Chrome & Opera do implement the audioWorklet property.
         if (nativeContext.audioWorklet !== undefined) {

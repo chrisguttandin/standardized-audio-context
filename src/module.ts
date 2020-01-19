@@ -766,7 +766,9 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
         getBackupNativeContext,
         getNativeContext,
         new WeakMap(),
-        new WeakMap()
+        new WeakMap(),
+        // @todo window is guaranteed to be defined because isSecureContext checks that as well.
+        <NonNullable<typeof window>> window
     ) :
     undefined;
 
