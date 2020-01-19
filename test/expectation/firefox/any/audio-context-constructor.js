@@ -203,18 +203,6 @@ describe('audioContextConstructor', () => {
 
         });
 
-        describe('createChannelMerger()', () => {
-
-            // bug #16
-
-            it('should allow to set the channelCount', () => {
-                const channelMergerNode = audioContext.createChannelMerger();
-
-                channelMergerNode.channelCountMode = '2';
-            });
-
-        });
-
         describe('createIIRFilter()', () => {
 
             let iIRFilterNode;
