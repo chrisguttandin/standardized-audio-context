@@ -10,26 +10,6 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    describe('outputLatency', () => {
-
-        // bug #40
-
-        it('should not be implemented', () => {
-            expect(audioContext.outputLatency).to.be.undefined;
-        });
-
-    });
-
-    describe('state', () => {
-
-        // bug #34
-
-        it('should be set to running right away', () => {
-            expect(audioContext.state).to.equal('running');
-        });
-
-    });
-
     describe('decodeAudioData()', () => {
 
         // bug #6
