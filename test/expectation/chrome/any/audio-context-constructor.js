@@ -119,30 +119,6 @@ describe('audioContextConstructor', () => {
 
     });
 
-    describe('createBiquadFilter()', () => {
-
-        let biquadFilterNode;
-
-        beforeEach(() => {
-            biquadFilterNode = audioContext.createBiquadFilter();
-        });
-
-        describe('gain', () => {
-
-            describe('minValue', () => {
-
-                // bug #79
-
-                it('should be the smallest possible negative float value', () => {
-                    expect(biquadFilterNode.gain.minValue).to.equal(-3.4028234663852886e+38);
-                });
-
-            });
-
-        });
-
-    });
-
     describe('createConvolver()', () => {
 
         let convolverNode;

@@ -478,7 +478,7 @@ describe('BiquadFilterNode', () => {
                     expect(biquadFilterNode.gain.exponentialRampToValueAtTime).to.be.a('function');
                     expect(biquadFilterNode.gain.linearRampToValueAtTime).to.be.a('function');
                     expect(biquadFilterNode.gain.maxValue).to.equal(1541.273576764145);
-                    expect(biquadFilterNode.gain.minValue).to.equal(-1541.273576764145);
+                    expect(biquadFilterNode.gain.minValue).to.equal(-3.4028234663852886e38);
                     expect(biquadFilterNode.gain.setTargetAtTime).to.be.a('function');
                     expect(biquadFilterNode.gain.setValueAtTime).to.be.a('function');
                     expect(biquadFilterNode.gain.setValueCurveAtTime).to.be.a('function');

@@ -71,7 +71,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
                 isOffline,
                 nativeBiquadFilterNode.gain,
                 40 * Math.log10(MOST_POSITIVE_SINGLE_FLOAT),
-                -40 * Math.log10(MOST_POSITIVE_SINGLE_FLOAT)
+                MOST_NEGATIVE_SINGLE_FLOAT
             );
             this._nativeBiquadFilterNode = nativeBiquadFilterNode;
         }

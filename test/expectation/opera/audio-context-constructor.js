@@ -190,16 +190,6 @@ describe('audioContextConstructor', () => {
 
             });
 
-            describe('minValue', () => {
-
-                // bug #79
-
-                it('should be the smallest possible negative float value', () => {
-                    expect(biquadFilterNode.gain.minValue).to.equal(-3.4028234663852886e+38);
-                });
-
-            });
-
         });
 
     });
