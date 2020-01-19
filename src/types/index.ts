@@ -342,6 +342,7 @@ export * from './test-audio-scheduled-source-node-start-method-consecutive-calls
 export * from './test-audio-scheduled-source-node-stop-method-consecutive-calls-support-factory';
 export * from './test-audio-scheduled-source-node-stop-method-negative-parameters-support-factory';
 export * from './test-audio-worklet-processor-no-outputs-support-factory';
+export * from './test-channel-merger-node-channel-count-support-factory';
 export * from './test-constant-source-node-accurate-scheduling-support-factory';
 export * from './test-convolver-node-buffer-reassignability-support-factory';
 export * from './test-is-secure-context-support-factory';

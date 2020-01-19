@@ -167,6 +167,7 @@ import {
 } from './factories/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
 
 import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/test-audio-worklet-processor-no-outputs-support';
+import { createTestChannelMergerNodeChannelCountSupport } from './factories/test-channel-merger-node-channel-count-support';
 import {
     createTestConstantSourceNodeAccurateSchedulingSupport
 } from './factories/test-constant-source-node-accurate-scheduling-support';
@@ -1047,6 +1048,7 @@ export const isSupported = () => createIsSupportedPromise(
     createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
     createTestAudioNodeConnectMethodSupport(nativeOfflineAudioContextConstructor),
     createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
+    createTestChannelMergerNodeChannelCountSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
     createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
     createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),
     createTestIsSecureContextSupport(window),

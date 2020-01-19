@@ -8,6 +8,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = async (
     testAudioContextOptionsSupport,
     testAudioNodeConnectMethodSupport,
     testAudioWorkletProcessorNoOutputsSupport,
+    testChannelMergerNodeChannelCountSupport,
     testConstantSourceNodeAccurateSchedulingSupport,
     testConvolverNodeBufferReassignabilitySupport,
     testIsSecureContextSupport,
@@ -19,6 +20,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = async (
             && cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport)
             && cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport)
             && cacheTestResult(testAudioNodeConnectMethodSupport, testAudioNodeConnectMethodSupport)
+            && cacheTestResult(testChannelMergerNodeChannelCountSupport, testChannelMergerNodeChannelCountSupport)
             && cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport)
             && cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport)
             && cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport)

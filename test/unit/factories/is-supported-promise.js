@@ -10,6 +10,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestAudioContextOptionsSupport;
     let fakeTestAudioNodeConnectMethodSupport;
     let fakeTestAudioWorkletProcessorNoOutputsSupport;
+    let fakeTestChannelMergerNodeChannelCountSupport;
     let fakeTestConstantSourceNodeAccurateSchedulingSupport;
     let fakeTestConvolverNodeBufferReassignabilitySupport;
     let fakeTestIsSecureContextSupport;
@@ -25,6 +26,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestAudioContextOptionsSupport = () => true;
         fakeTestAudioNodeConnectMethodSupport = () => true;
         fakeTestAudioWorkletProcessorNoOutputsSupport = () => Promise.resolve(true);
+        fakeTestChannelMergerNodeChannelCountSupport = () => true;
         fakeTestConstantSourceNodeAccurateSchedulingSupport = () => true;
         fakeTestConvolverNodeBufferReassignabilitySupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
@@ -42,6 +44,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -64,6 +67,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -86,6 +90,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -108,6 +113,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -130,6 +136,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -152,6 +159,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -174,6 +182,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -196,6 +205,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -218,6 +228,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -240,6 +251,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -262,6 +274,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -284,6 +297,30 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for the channelCount property of a ChannelMergerNode fails', async () => {
+        fakeTestChannelMergerNodeChannelCountSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -306,6 +343,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -328,6 +366,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -350,6 +389,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -372,6 +412,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -394,6 +435,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -416,6 +458,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -438,6 +481,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -460,6 +504,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -482,6 +527,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -504,6 +550,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -526,6 +573,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -548,6 +596,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
@@ -570,6 +619,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestIsSecureContextSupport,
