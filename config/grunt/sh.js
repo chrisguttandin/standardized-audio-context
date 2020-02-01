@@ -3,19 +3,19 @@ module.exports = (grunt) => {
 
     return {
         'build-es2018': {
-            cmd: 'tsc -p src/tsconfig.json'
+            cmd: 'tsc --project src/tsconfig.json'
         },
         'build-es5': {
-            cmd: 'rollup -c config/rollup/bundle.js'
+            cmd: 'rollup --config config/rollup/bundle.js'
         },
         'lint-config': {
-            cmd: `eslint --config config/eslint/config.json ${ (fix) ? '--fix ' : '' }--report-unused-disable-directives *.js config/**/*.js`
+            cmd: `eslint --config config/eslint/config.json --ext .js ${ (fix) ? '--fix ' : '' }--report-unused-disable-directives *.js config/`
         },
         'lint-src': {
             cmd: 'tslint --config config/tslint/src.json --project src/tsconfig.json src/*.ts src/**/*.ts'
         },
         'lint-test': {
-            cmd: `eslint --config config/eslint/test.json ${ (fix) ? '--fix ' : '' }--report-unused-disable-directives test/**/*.js`
+            cmd: `eslint --config config/eslint/test.json --ext .js ${ (fix) ? '--fix ' : '' }--report-unused-disable-directives test/`
         },
         'test-integration': {
             cmd: 'mocha --bail --recursive --require config/mocha/config-integration.js test/integration'
