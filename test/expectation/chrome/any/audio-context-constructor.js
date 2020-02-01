@@ -139,40 +139,6 @@ describe('audioContextConstructor', () => {
 
     });
 
-    describe('createConvolver()', () => {
-
-        let convolverNode;
-
-        beforeEach(() => {
-            convolverNode = audioContext.createConvolver();
-        });
-
-        describe('channelCount', () => {
-
-            // bug #166
-
-            it('should throw an error', () => {
-                expect(() => {
-                    convolverNode.channelCount = 1;
-                }).to.throw(DOMException);
-            });
-
-        });
-
-        describe('channelCountMode', () => {
-
-            // bug #167
-
-            it('should throw an error', () => {
-                expect(() => {
-                    convolverNode.channelCountMode = 'explicit';
-                }).to.throw(DOMException);
-            });
-
-        });
-
-    });
-
     describe('createDelay()', () => {
 
         describe('with a delayTime of 128 samples', () => {
