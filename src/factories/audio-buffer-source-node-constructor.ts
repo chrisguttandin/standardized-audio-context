@@ -116,22 +116,6 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             }
         }
 
-        get onended (): null | TEndedEventHandler<IAudioBufferSourceNode<T>> {
-            return this._onended;
-        }
-
-        set onended (value) {
-            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
-
-            this._nativeAudioBufferSourceNode.onended = wrappedListener;
-
-            const nativeOnEnded = this._nativeAudioBufferSourceNode.onended;
-
-            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
-                ? value
-                : <null | TEndedEventHandler<IAudioBufferSourceNode<T>>> nativeOnEnded;
-        }
-
         get loop (): boolean {
             return this._nativeAudioBufferSourceNode.loop;
         }
@@ -154,6 +138,22 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         set loopStart (value) {
             this._nativeAudioBufferSourceNode.loopStart = value;
+        }
+
+        get onended (): null | TEndedEventHandler<IAudioBufferSourceNode<T>> {
+            return this._onended;
+        }
+
+        set onended (value) {
+            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
+
+            this._nativeAudioBufferSourceNode.onended = wrappedListener;
+
+            const nativeOnEnded = this._nativeAudioBufferSourceNode.onended;
+
+            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
+                ? value
+                : <null | TEndedEventHandler<IAudioBufferSourceNode<T>>> nativeOnEnded;
         }
 
         get playbackRate (): IAudioParam {

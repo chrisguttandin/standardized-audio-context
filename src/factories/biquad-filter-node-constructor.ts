@@ -76,10 +76,6 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             this._nativeBiquadFilterNode = nativeBiquadFilterNode;
         }
 
-        get Q (): IAudioParam {
-            return this._Q;
-        }
-
         get detune (): IAudioParam {
             return this._detune;
         }
@@ -90,6 +86,10 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
         get gain (): IAudioParam {
             return this._gain;
+        }
+
+        get Q (): IAudioParam {
+            return this._Q;
         }
 
         get type (): TBiquadFilterType {
