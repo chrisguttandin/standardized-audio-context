@@ -389,7 +389,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                                 const auxiliaryGainNodes = auxiliaryGainNodeStore.get(nativeAudioWorkletNodeFaker);
 
                                 if (auxiliaryGainNodes === undefined || auxiliaryGainNodes.get(index) === undefined) {
-                                    return [ new Float32Array(0) ];
+                                    return [ ];
                                 }
 
                                 return input;

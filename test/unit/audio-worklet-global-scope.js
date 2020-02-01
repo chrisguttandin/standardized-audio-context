@@ -413,8 +413,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                 audioWorkletNode.port.onmessage = null;
 
                                                 expect(data.inputs.length).to.equal(1);
-                                                expect(data.inputs[0].length).to.equal(1);
-                                                expect(data.inputs[0][0].length).to.equal(0);
+                                                expect(data.inputs[0].length).to.equal(0);
 
                                                 done();
                                             };
@@ -463,8 +462,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                     audioWorkletNode.port.onmessage = null;
 
                                                     expect(data.inputs.length).to.equal(1);
-                                                    expect(data.inputs[0].length).to.equal(1);
-                                                    expect(data.inputs[0][0].length).to.equal(0);
+                                                    expect(data.inputs[0].length).to.equal(0);
 
                                                     done();
                                                 };

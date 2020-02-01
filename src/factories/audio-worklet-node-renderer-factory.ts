@@ -85,7 +85,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
             const potentiallyEmptyInputs = inputs
                 .map((input, index) => {
                     if (audioNodeConnections.activeInputs[index].size === 0) {
-                        return [ new Float32Array(0) ];
+                        return [ ];
                     }
 
                     return input;

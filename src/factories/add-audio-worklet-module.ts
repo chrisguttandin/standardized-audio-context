@@ -44,6 +44,9 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                     /*
                      * Bug #86: Chrome and Opera do not invoke the process() function if the corresponding AudioWorkletNode has no output.
                      *
+                     * Bug #170: Chrome and Opera do call process() with an array with empty channelData for each input if no input is
+                     * connected.
+                     *
                      * This is the unminified version of the code used below:
                      *
                      * ```js
@@ -66,14 +69,18 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                      *     }
                      *
                      *     process (inputs, outputs, parameters) {
-                     *         return super.process(inputs, (this._hasNoOutput) ? [ ] : outputs, parameters);
+                     *         return super.process(
+                     *             (inputs.map((input) => input.some((channelData) => channelData.length === 0)) ? [ ] : input),
+                     *             (this._hasNoOutput) ? [ ] : outputs,
+                     *             parameters
+                     *         );
                      *     }
                      *
                      * }))`
                      * ```
                      */
                     const wrappedSource = `${ importStatements };(registerProcessor=>{${ sourceWithoutImportStatements }
-})((n,p)=>registerProcessor(n,class extends p{constructor(o){const{hasNoOutput,...q}=o.parameterData;if(hasNoOutput===1){super({...o,numberOfOutputs:0,outputChannelCount:[],parameterData:q});this._h=true}else{super(o);this._h=false}}process(i,o,p){return super.process(i,(this._h)?[]:o,p)}}))`; // tslint:disable-line:max-line-length
+})((n,p)=>registerProcessor(n,class extends p{constructor(o){const{hasNoOutput,...q}=o.parameterData;if(hasNoOutput===1){super({...o,numberOfOutputs:0,outputChannelCount:[],parameterData:q});this._h=true}else{super(o);this._h=false}}process(i,o,p){return super.process(i.map(j=>j.some(k=>k.length===0)?[]:j),this._h?[]:o,p)}}))`; // tslint:disable-line:max-line-length
                     const blob = new Blob([ wrappedSource ], { type: 'application/javascript; charset=utf-8' });
                     const url = URL.createObjectURL(blob);
 
