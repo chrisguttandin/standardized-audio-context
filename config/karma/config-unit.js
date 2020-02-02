@@ -49,8 +49,6 @@ module.exports = (config) => {
             'dots'
         ],
 
-        singleRun: true,
-
         webpack: {
             mode: 'development',
             module: {

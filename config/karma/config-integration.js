@@ -94,8 +94,6 @@ module.exports = (config) => {
             'test/integration/**/*.js': 'webpack'
         },
 
-        singleRun: true,
-
         webpack: {
             mode: 'development',
             module: {

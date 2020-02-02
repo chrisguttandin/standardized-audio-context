@@ -1,11 +1,12 @@
 const { env } = require('process');
-const common = require('./expectation.js');
 
 module.exports = (config) => {
 
-    common(config);
-
     config.set({
+
+        basePath: '../../',
+
+        browserNoActivityTimeout: 240000,
 
         browsers: [
             'SafariBrowserStack'
@@ -32,8 +33,32 @@ module.exports = (config) => {
             }
         ],
 
+        frameworks: [
+            'mocha',
+            'sinon-chai'
+        ],
+
         preprocessors: {
             'test/expectation/safari/any/**/*.js': 'webpack'
+        },
+
+        webpack: {
+            mode: 'development',
+            module: {
+                rules: [ {
+                    test: /\.ts?$/,
+                    use: {
+                        loader: 'ts-loader'
+                    }
+                } ]
+            },
+            resolve: {
+                extensions: [ '.js', '.ts' ]
+            }
+        },
+
+        webpackMiddleware: {
+            noInfo: true
         }
 
     });

@@ -1,12 +1,13 @@
 const { env } = require('process');
-const common = require('./expectation.js');
 const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => {
 
-    common(config);
-
     config.set({
+
+        basePath: '../../',
+
+        browserNoActivityTimeout: 240000,
 
         files: [
             'test/expectation/opera/**/*.js',
@@ -17,19 +18,39 @@ module.exports = (config) => {
             }
         ],
 
+        frameworks: [
+            'mocha',
+            'sinon-chai'
+        ],
+
         preprocessors: {
             'test/expectation/opera/**/*.js': 'webpack'
         },
 
         webpack: {
             mode: 'development',
+            module: {
+                rules: [ {
+                    test: /\.ts?$/,
+                    use: {
+                        loader: 'ts-loader'
+                    }
+                } ]
+            },
             plugins: [
                 new DefinePlugin({
                     'process.env': {
                         TRAVIS: JSON.stringify(env.TRAVIS)
                     }
                 })
-            ]
+            ],
+            resolve: {
+                extensions: [ '.js', '.ts' ]
+            }
+        },
+
+        webpackMiddleware: {
+            noInfo: true
         }
 
     });

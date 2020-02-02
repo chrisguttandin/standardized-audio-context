@@ -25,22 +25,22 @@ module.exports = {
         'build',
         ...filter(
             isType('expectation'),
-            ...filter(isTarget('chrome'), 'karma:expectation-chrome'),
-            ...filter(isTarget(undefined), 'karma:expectation-chrome-canary'),
-            ...filter(isTarget('edge'), 'karma:expectation-edge'),
-            ...filter(isTarget('firefox'), 'karma:expectation-firefox'),
-            ...filter(isTarget(undefined), 'karma:expectation-firefox-developer'),
-            ...filter(isTarget('firefox-legacy'), 'karma:expectation-firefox-legacy'),
-            ...filter(isTarget('opera'), 'karma:expectation-opera'),
-            ...filter(isTarget(undefined), 'karma:expectation-safari'),
-            ...filter(isTarget('safari-legacy'), 'karma:expectation-safari-legacy')
+            ...filter(isTarget('chrome'), 'sh:test-expectation-chrome'),
+            ...filter(isTarget(), 'sh:test-expectation-chrome-canary'),
+            ...filter(isTarget('edge'), 'sh:test-expectation-edge'),
+            ...filter(isTarget('firefox'), 'sh:test-expectation-firefox'),
+            ...filter(isTarget(), 'sh:test-expectation-firefox-developer'),
+            ...filter(isTarget('firefox-legacy'), 'sh:test-expectation-firefox-legacy'),
+            ...filter(isTarget('opera'), 'sh:test-expectation-opera'),
+            ...filter(isTarget(), 'sh:test-expectation-safari'),
+            ...filter(isTarget('safari-legacy'), 'sh:test-expectation-safari-legacy')
         ),
         ...filter(
             isType('integration'),
-            ...filter(isTarget('chrome', 'edge', 'firefox', 'opera', 'safari'), 'karma:integration'),
-            ...filter(isTarget('node'), 'sh:test-integration')
+            ...filter(isTarget('chrome', 'edge', 'firefox', 'opera', 'safari'), 'sh:test-integration-browser'),
+            ...filter(isTarget('node'), 'sh:test-integration-node')
         ),
         ...filter(isType('memory'), 'sh:test-memory'),
-        ...filter(isType('unit'), 'karma:unit')
+        ...filter(isType('unit'), 'sh:test-unit')
     ]
 };
