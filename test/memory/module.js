@@ -8,7 +8,7 @@ const compileBundle = () => {
         const memoryFileSystem = new MemoryFileSystem();
         const compiler = webpack({
             entry: {
-                bundle: './build/es2018/module.js'
+                bundle: './build/es2019/module.js'
             },
             mode: 'development',
             output: {

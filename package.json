@@ -67,7 +67,7 @@
     "webpack": "^4.41.5"
   },
   "files": [
-    "build/es2018/",
+    "build/es2019/",
     "build/es5/",
     "src/"
   ],
@@ -87,7 +87,7 @@
   ],
   "license": "MIT",
   "main": "build/es5/bundle.js",
-  "module": "build/es2018/module.js",
+  "module": "build/es2019/module.js",
   "name": "standardized-audio-context",
   "repository": {
     "type": "git",
@@ -97,6 +97,6 @@
     "prepublishOnly": "grunt build",
     "test": "grunt lint && grunt test"
   },
-  "types": "build/es2018/module.d.ts",
+  "types": "build/es2019/module.d.ts",
   "version": "23.1.2"
 }

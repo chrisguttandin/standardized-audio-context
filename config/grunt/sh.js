@@ -3,7 +3,7 @@ module.exports = (grunt) => {
     const fix = (grunt.option('fix') === true);
 
     return {
-        'build-es2018': {
+        'build-es2019': {
             cmd: 'tsc --project src/tsconfig.json'
         },
         'build-es5': {
