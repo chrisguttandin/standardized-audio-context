@@ -909,7 +909,7 @@ describe('offlineAudioContextConstructor', () => {
             scriptProcessorNode.onaudioprocess = stub();
 
             offlineAudioContext.oncomplete = () => {
-                expect(scriptProcessorNode.onaudioprocess.callCount).to.be.below(1000);
+                expect(scriptProcessorNode.onaudioprocess.callCount).to.be.below(100);
 
                 done();
             };
