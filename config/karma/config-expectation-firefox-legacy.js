@@ -26,6 +26,7 @@ module.exports = (config) => {
 
         files: [
             'test/expectation/firefox/any/**/*.js',
+            'test/expectation/firefox/legacy/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
@@ -39,7 +40,8 @@ module.exports = (config) => {
         ],
 
         preprocessors: {
-            'test/expectation/firefox/any/**/*.js': 'webpack'
+            'test/expectation/firefox/any/**/*.js': 'webpack',
+            'test/expectation/firefox/legacy/**/*.js': 'webpack'
         },
 
         webpack: {
