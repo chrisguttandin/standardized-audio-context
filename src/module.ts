@@ -692,10 +692,15 @@ const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
 const createNativePannerNode = createNativePannerNodeFactory(createNativeAudioNode, createNativePannerNodeFaker);
 const createPannerNodeRenderer = createPannerNodeRendererFactory(
     connectAudioParam,
+    createNativeChannelMergerNode,
+    createNativeConstantSourceNode,
+    createNativeGainNode,
     createNativePannerNode,
     getNativeAudioNode,
+    nativeOfflineAudioContextConstructor,
     renderAutomation,
-    renderInputsOfAudioNode
+    renderInputsOfAudioNode,
+    renderNativeOfflineAudioContext
 );
 const pannerNodeConstructor: TPannerNodeConstructor = createPannerNodeConstructor(
     audioNodeConstructor,

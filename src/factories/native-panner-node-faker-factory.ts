@@ -65,14 +65,14 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
         const positionXGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         const positionYGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         const positionZGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-        const scriptProcessorNode = createNativeScriptProcessorNode(nativeContext, 256, 6, 0);
+        const scriptProcessorNode = createNativeScriptProcessorNode(nativeContext, 256, 6, 1);
         const waveShaperNode = createNativeWaveShaperNode(
             nativeContext,
             { ...SINGLE_CHANNEL_OPTIONS, curve: new Float32Array([ 1, 1 ]), oversample: 'none' }
         );
 
-        let lastOrientation = [ 1, 0, 0 ];
-        let lastPosition = [ 0, 0, 0 ];
+        let lastOrientation: [ number, number, number ] = [ orientationX, orientationY, orientationZ ];
+        let lastPosition: [ number, number, number ] = [ positionX, positionY, positionZ ];
 
         scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => { // tslint:disable-line:deprecation
             const orientation: [ number, number, number ] = [
@@ -88,9 +88,9 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             }
 
             const positon: [ number, number, number ] = [
-                inputBuffer.getChannelData(6)[0],
-                inputBuffer.getChannelData(7)[0],
-                inputBuffer.getChannelData(8)[0]
+                inputBuffer.getChannelData(3)[0],
+                inputBuffer.getChannelData(4)[0],
+                inputBuffer.getChannelData(5)[0]
             ];
 
             if (positon.some((value, index) => (value !== lastPosition[index]))) {
@@ -311,6 +311,14 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             nativePannerNodeFaker.rolloffFactor = rolloffFactor;
         }
 
+        if (lastOrientation[0] !== 1 || lastOrientation[1] !== 0 || lastOrientation[2] !== 0) {
+            pannerNode.setOrientation(...lastOrientation); // tslint:disable-line:deprecation
+        }
+
+        if (lastPosition[0] !== 0 || lastPosition[1] !== 0 || lastPosition[2] !== 0) {
+            pannerNode.setPosition(...lastPosition); // tslint:disable-line:deprecation
+        }
+
         const whenConnected = () => {
             inputGainNode.connect(pannerNode);
 
@@ -319,24 +327,26 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
 
             waveShaperNode
                 .connect(orientationXGainNode)
-                .connect(channelMergerNode);
+                .connect(channelMergerNode, 0, 0);
             waveShaperNode
                 .connect(orientationYGainNode)
-                .connect(channelMergerNode);
+                .connect(channelMergerNode, 0, 1);
             waveShaperNode
                 .connect(orientationZGainNode)
-                .connect(channelMergerNode);
+                .connect(channelMergerNode, 0, 2);
             waveShaperNode
                 .connect(positionXGainNode)
-                .connect(channelMergerNode);
+                .connect(channelMergerNode, 0, 3);
             waveShaperNode
                 .connect(positionYGainNode)
-                .connect(channelMergerNode);
+                .connect(channelMergerNode, 0, 4);
             waveShaperNode
                 .connect(positionZGainNode)
-                .connect(channelMergerNode);
+                .connect(channelMergerNode, 0, 5);
 
-            channelMergerNode.connect(scriptProcessorNode);
+            channelMergerNode
+                .connect(scriptProcessorNode)
+                .connect(nativeContext.destination);
         };
         const whenDisconnected = () => {
             inputGainNode.disconnect(pannerNode);
@@ -358,6 +368,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             positionZGainNode.disconnect(channelMergerNode);
 
             channelMergerNode.disconnect(scriptProcessorNode);
+            scriptProcessorNode.disconnect(nativeContext.destination);
         };
 
         return monitorConnections(interceptConnections(nativePannerNodeFaker, pannerNode), whenConnected, whenDisconnected);

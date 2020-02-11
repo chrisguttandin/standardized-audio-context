@@ -1,4 +1,4 @@
-import { AudioBuffer, AudioBufferSourceNode, ConstantSourceNode, GainNode, PannerNode } from '../../../src/module';
+import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, PannerNode, addAudioWorkletModule } from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -980,13 +980,9 @@ describe('PannerNode', () => {
 
             describe('positionX', () => {
 
-                let pannerNode;
-
-                beforeEach(() => {
-                    pannerNode = createPannerNode(context);
-                });
-
                 it('should return an implementation of the AudioParam interface', () => {
+                    const pannerNode = createPannerNode(context);
+
                     expect(pannerNode.positionX.cancelAndHoldAtTime).to.be.a('function');
                     expect(pannerNode.positionX.cancelScheduledValues).to.be.a('function');
                     expect(pannerNode.positionX.defaultValue).to.equal(0);
@@ -1001,12 +997,20 @@ describe('PannerNode', () => {
                 });
 
                 it('should be readonly', () => {
+                    const pannerNode = createPannerNode(context);
+
                     expect(() => {
                         pannerNode.positionX = 'anything';
                     }).to.throw(TypeError);
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
+
+                    let pannerNode;
+
+                    beforeEach(() => {
+                        pannerNode = createPannerNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(pannerNode.positionX.cancelAndHoldAtTime(0)).to.equal(pannerNode.positionX);
@@ -1016,6 +1020,12 @@ describe('PannerNode', () => {
 
                 describe('cancelScheduledValues()', () => {
 
+                    let pannerNode;
+
+                    beforeEach(() => {
+                        pannerNode = createPannerNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(pannerNode.positionX.cancelScheduledValues(0)).to.equal(pannerNode.positionX);
                     });
@@ -1023,6 +1033,12 @@ describe('PannerNode', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
+
+                    let pannerNode;
+
+                    beforeEach(() => {
+                        pannerNode = createPannerNode(context);
+                    });
 
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -1035,6 +1051,12 @@ describe('PannerNode', () => {
 
                 describe('linearRampToValueAtTime()', () => {
 
+                    let pannerNode;
+
+                    beforeEach(() => {
+                        pannerNode = createPannerNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(pannerNode.positionX.linearRampToValueAtTime(1, 0)).to.equal(pannerNode.positionX);
                     });
@@ -1042,6 +1064,12 @@ describe('PannerNode', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
+
+                    let pannerNode;
+
+                    beforeEach(() => {
+                        pannerNode = createPannerNode(context);
+                    });
 
                     it('should be chainable', () => {
                         expect(pannerNode.positionX.setTargetAtTime(1, 0, 0.1)).to.equal(pannerNode.positionX);
@@ -1051,6 +1079,12 @@ describe('PannerNode', () => {
 
                 describe('setValueAtTime()', () => {
 
+                    let pannerNode;
+
+                    beforeEach(() => {
+                        pannerNode = createPannerNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(pannerNode.positionX.setValueAtTime(1, 0)).to.equal(pannerNode.positionX);
                     });
@@ -1059,13 +1093,143 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
 
+                    let pannerNode;
+
+                    beforeEach(() => {
+                        pannerNode = createPannerNode(context);
+                    });
+
                     it('should be chainable', () => {
                         expect(pannerNode.positionX.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(pannerNode.positionX);
                     });
 
                 });
 
-                // @todo automation
+                describe('automation', () => {
+
+                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
+
+                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
+
+                            let renderer;
+                            let values;
+
+                            beforeEach(async function () {
+                                this.timeout(10000);
+
+                                values = [ 1, 0.5, 0, -0.5, -1 ];
+
+                                if (withAnAppendedAudioWorklet) {
+                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                }
+
+                                renderer = createRenderer({
+                                    context,
+                                    length: (context.length === undefined) ? 5 : undefined,
+                                    prepare (destination) {
+                                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                        const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                        const pannerNode = createPannerNode(context);
+
+                                        audioBuffer.copyToChannel(new Float32Array(values), 0);
+
+                                        audioBufferSourceNode.buffer = audioBuffer;
+
+                                        audioBufferSourceNode.connect(pannerNode);
+
+                                        if (withADirectConnection) {
+                                            pannerNode.connect(masterGainNode);
+                                        }
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            pannerNode
+                                                .connect(audioWorkletNode)
+                                                .connect(masterGainNode);
+                                        }
+
+                                        masterGainNode.connect(destination);
+
+                                        return { audioBufferSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start (startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([ 0.7071067690849304, 0.3535533845424652, 0, -0.3535533845424652, -0.7071067690849304 ]);
+                                        });
+                                });
+
+                            });
+
+                            describe('with a modified value', () => {
+
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        prepare ({ pannerNode }) {
+                                            pannerNode.positionX.value = 10;
+                                        },
+                                        start (startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    })
+                                        .then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([ 0.05000000074505806, 0.02500000037252903, 0, -0.02500000037252903, -0.05000000074505806 ]);
+                                        });
+                                });
+
+                            });
+
+                            describe('with a call to cancelAndHoldAtTime()', () => {
+
+                                // @todo
+
+                            });
+
+                            describe('with a call to cancelScheduledValues()', () => {
+
+                                // @todo
+
+                            });
+
+                            describe('with a call to setValueAtTime()', () => {
+
+                                // @todo
+
+                            });
+
+                            describe('with a call to setValueCurveAtTime()', () => {
+
+                                // @todo
+
+                            });
+
+                            describe('with another AudioNode connected to the AudioParam', () => {
+
+                                // @todo
+
+                            });
+
+                            // @todo Test other automations as well.
+
+                        });
+
+                    }
+
+                });
 
             });
 
