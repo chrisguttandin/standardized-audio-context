@@ -359,7 +359,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 proxy: IAudioWorkletNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]
-            ): Promise<TNativeGainNode | TNativeAudioWorkletNode> {
+            ): Promise<TNativeAudioWorkletNode | TNativeGainNode> {
                 const renderedNativeAudioWorkletNodeOrGainNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeAudioWorkletNodeOrGainNode !== undefined) {

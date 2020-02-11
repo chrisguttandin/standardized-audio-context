@@ -78,8 +78,8 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
             nativeOfflineAudioContext: TNativeOfflineAudioContext,
             trace: readonly IAudioNode<T>[]
         ) => {
-            let nativeIIRFilterNode = getNativeAudioNode<T, TNativeIIRFilterNode>(proxy);
             let nativeAudioBufferSourceNode: null | TNativeAudioBufferSourceNode = null;
+            let nativeIIRFilterNode = getNativeAudioNode<T, TNativeIIRFilterNode>(proxy);
 
             // If the initially used nativeIIRFilterNode was not constructed on the same OfflineAudioContext it needs to be created again.
             const nativeIIRFilterNodeIsOwnedByContext = isOwnedByContext(nativeIIRFilterNode, nativeOfflineAudioContext);
