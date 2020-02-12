@@ -62,7 +62,7 @@
     "ts-loader": "^6.2.1",
     "tsconfig-holy-grail": "^11.0.1",
     "tslint": "^6.0.0",
-    "tslint-config-holy-grail": "^47.0.9",
+    "tslint-config-holy-grail": "^47.0.10",
     "typescript": "^3.7.5",
     "webpack": "^4.41.6"
   },
