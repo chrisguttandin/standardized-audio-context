@@ -1,6 +1,6 @@
-import { createInvalidStateError } from '../factories/invalid-state-error';
 import { IMinimalOfflineAudioContext,  IOfflineAudioContext } from '../interfaces';
 import { TContext, TGetNativeContextFactory, TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
+import { createInvalidStateError } from './invalid-state-error';
 
 export const createGetNativeContext: TGetNativeContextFactory = (contextStore) => {
     return <T extends TContext>(
