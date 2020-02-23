@@ -160,7 +160,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
                         errorCallback(err);
                     }
 
-                    throw err; // tslint:disable-line:rxjs-throw-error
+                    throw err;
                 });
         }
 

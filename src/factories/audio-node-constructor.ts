@@ -647,7 +647,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                         throw createInvalidAccessError();
                     }
 
-                    throw err; // tslint:disable-line:rxjs-throw-error
+                    throw err;
                 }
 
                 const isNewConnectionToAudioNode = isOffline
@@ -697,7 +697,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                     throw createInvalidAccessError();
                 }
 
-                throw err; // tslint:disable-line:rxjs-throw-error
+                throw err;
             }
 
             const isNewConnectionToAudioParam = isOffline

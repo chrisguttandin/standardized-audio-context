@@ -11,7 +11,7 @@ export const wrapAudioBufferGetChannelDataMethod = (audioBuffer: TNativeAudioBuf
                     throw createIndexSizeError();
                 }
 
-                throw err; // tslint:disable-line:rxjs-throw-error
+                throw err;
             }
         };
     })(audioBuffer.getChannelData);

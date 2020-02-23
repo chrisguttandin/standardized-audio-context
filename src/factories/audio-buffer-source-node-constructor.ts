@@ -88,7 +88,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
                 this._nativeAudioBufferSourceNode.buffer = value;
             } catch (err) {
                 if (value !== null || err.code !== 17) {
-                    throw err; // tslint:disable-line:rxjs-throw-error
+                    throw err;
                 }
 
                 // This will modify the buffer in place. Luckily that works in Edge and has the same effect as setting the buffer to null.

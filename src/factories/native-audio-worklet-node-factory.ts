@@ -111,7 +111,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                     throw createNotSupportedError();
                 }
 
-                throw err; // tslint:disable-line:rxjs-throw-error
+                throw err;
             }
         }
 

@@ -126,7 +126,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                         .connect(context.destination);
                 } catch (err) {
                     if (err.name !== 'IndexSizeError') {
-                        throw err; // tslint:disable-line:rxjs-throw-error
+                        throw err;
                     }
                 }
             }

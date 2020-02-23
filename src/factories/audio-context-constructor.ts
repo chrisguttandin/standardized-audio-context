@@ -163,7 +163,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                         throw createInvalidStateError();
                     }
 
-                    throw err; // tslint:disable-line:rxjs-throw-error
+                    throw err;
                 });
         }
 
@@ -176,7 +176,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                         throw createInvalidStateError();
                     }
 
-                    throw err; // tslint:disable-line:rxjs-throw-error
+                    throw err;
                 });
         }
 

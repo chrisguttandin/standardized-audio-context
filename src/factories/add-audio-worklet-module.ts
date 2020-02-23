@@ -94,7 +94,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                         .catch((err) => {
                             URL.revokeObjectURL(url);
 
-                            throw err; // tslint:disable-line:rxjs-throw-error
+                            throw err;
                         });
                 });
         }
@@ -187,7 +187,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                     throw createAbortError();
                 }
 
-                throw err; // tslint:disable-line:rxjs-throw-error
+                throw err;
             });
 
         if (ongoingRequestsOfContext === undefined) {
