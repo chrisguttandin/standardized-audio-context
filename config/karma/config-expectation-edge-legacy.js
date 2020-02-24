@@ -8,11 +8,25 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 240000,
 
+        browsers: [
+            'EdgeBrowserStack'
+        ],
+
         captureTimeout: 120000,
+
+        customLaunchers: {
+            EdgeBrowserStack: {
+                base: 'BrowserStack',
+                browser: 'edge',
+                browser_version: '18.0', // eslint-disable-line camelcase
+                os: 'Windows',
+                os_version: '10' // eslint-disable-line camelcase
+            }
+        },
 
         files: [
             'test/expectation/edge/any/**/*.js',
-            'test/expectation/edge/current/**/*.js',
+            'test/expectation/edge/legacy/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
@@ -27,7 +41,7 @@ module.exports = (config) => {
 
         preprocessors: {
             'test/expectation/edge/any/**/*.js': 'webpack',
-            'test/expectation/edge/current/**/*.js': 'webpack'
+            'test/expectation/edge/legacy/**/*.js': 'webpack'
         },
 
         webpack: {
@@ -57,43 +71,22 @@ module.exports = (config) => {
 
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/expectation-edge`,
+                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/expectation-edge-legacy`,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
-            },
-
-            browsers: [
-                'EdgeBrowserStack'
-            ],
-
-            customLaunchers: {
-                EdgeBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'edge',
-                    os: 'Windows',
-                    os_version: '10' // eslint-disable-line camelcase
-                }
             }
 
         });
 
     } else {
 
+        const environment = require('../environment/local.json');
+
         config.set({
 
-            browsers: [
-                'Edge'
-            ],
-
-            customLaunchers: {
-                Edge: {
-                    base: 'ChromiumHeadless'
-                }
-            }
+            browserStack: environment.browserStack
 
         });
-
-        env.CHROMIUM_BIN = '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge';
 
     }
 

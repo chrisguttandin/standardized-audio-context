@@ -28,6 +28,8 @@ matrix:
       node_js: 12
     - env: [TARGET=edge, TYPE=unit]
       node_js: 12
+    - env: [TARGET=edge-legacy, TYPE=expectation]
+      node_js: 12
     - env: [TARGET=firefox, TYPE=expectation]
       node_js: 12
     - env: [TARGET=firefox, TYPE=integration]

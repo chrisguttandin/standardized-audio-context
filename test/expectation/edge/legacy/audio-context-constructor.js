@@ -1,4 +1,4 @@
-import { loadFixtureAsArrayBuffer } from '../../helper/load-fixture';
+import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 
 describe('audioContextConstructor', () => {
 
@@ -28,9 +28,7 @@ describe('audioContextConstructor', () => {
 
     describe('with a constructed AudioContext', () => {
 
-        beforeEach(() => {
-            audioContext = new AudioContext();
-        });
+        beforeEach(() => audioContext = new AudioContext());
 
         describe('audioWorklet', () => {
 
@@ -52,20 +50,6 @@ describe('audioContextConstructor', () => {
 
         });
 
-        describe('destination', () => {
-
-            describe('numberOfOutputs', () => {
-
-                // bug #168
-
-                it('should be zero', () => {
-                    expect(audioContext.destination.numberOfOutputs).to.equal(0);
-                });
-
-            });
-
-        });
-
         describe('listener', () => {
 
             // bug #117
@@ -80,16 +64,6 @@ describe('audioContextConstructor', () => {
                 expect(audioContext.listener.upX).to.be.undefined;
                 expect(audioContext.listener.upY).to.be.undefined;
                 expect(audioContext.listener.upZ).to.be.undefined;
-            });
-
-        });
-
-        describe('outputLatency', () => {
-
-            // bug #40
-
-            it('should not be implemented', () => {
-                expect(audioContext.outputLatency).to.be.undefined;
             });
 
         });
@@ -141,25 +115,6 @@ describe('audioContextConstructor', () => {
 
                 try {
                     analyserNode.connect(anotherAudioContext.destination);
-                } catch (err) {
-                    expect(err.code).to.equal(12);
-                    expect(err.name).to.equal('SyntaxError');
-
-                    done();
-                } finally {
-                    anotherAudioContext.close();
-                }
-            });
-
-            // bug #58
-
-            it('should throw a SyntaxError when calling connect() with an AudioParam of another AudioContext', (done) => {
-                const analyserNode = audioContext.createAnalyser();
-                const anotherAudioContext = new AudioContext();
-                const gainNode = anotherAudioContext.createGain();
-
-                try {
-                    analyserNode.connect(gainNode.gain);
                 } catch (err) {
                     expect(err.code).to.equal(12);
                     expect(err.name).to.equal('SyntaxError');
@@ -498,73 +453,101 @@ describe('audioContextConstructor', () => {
 
         describe('createDelay()', () => {
 
-            describe('with a delayTime of 128 samples', () => {
+            describe('delayTime', () => {
 
-                let audioBufferSourceNode;
                 let delayNode;
-                let gainNode;
-                let scriptProcessorNode;
-
-                afterEach(() => {
-                    audioBufferSourceNode.disconnect(gainNode);
-                    delayNode.disconnect(gainNode);
-                    gainNode.disconnect(delayNode);
-                    gainNode.disconnect(scriptProcessorNode);
-                    scriptProcessorNode.disconnect(audioContext.destination);
-                });
 
                 beforeEach(() => {
-                    audioBufferSourceNode = audioContext.createBufferSource();
                     delayNode = audioContext.createDelay();
-                    gainNode = audioContext.createGain();
-                    scriptProcessorNode = audioContext.createScriptProcessor(512);
-
-                    const audioBuffer = audioContext.createBuffer(1, 1, audioContext.sampleRate);
-
-                    audioBuffer.getChannelData(0)[0] = 2;
-
-                    audioBufferSourceNode.buffer = audioBuffer;
-
-                    delayNode.delayTime.value = 128 / audioContext.sampleRate;
-
-                    gainNode.gain.value = 0.5;
-
-                    audioBufferSourceNode
-                        .connect(gainNode)
-                        .connect(delayNode)
-                        .connect(gainNode)
-                        .connect(scriptProcessorNode)
-                        .connect(audioContext.destination);
                 });
 
-                // bug #163
+                describe('maxValue', () => {
 
-                it('should have a minimum delayTime of 255 samples', (done) => {
-                    const channelData = new Float32Array(512);
+                    // bug #161
 
-                    let offsetOfFirstImpulse = null;
+                    it('should be undefined', () => {
+                        expect(delayNode.delayTime.maxValue).to.be.undefined;
+                    });
 
-                    scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
-                        inputBuffer.copyFromChannel(channelData, 0);
+                });
 
-                        if (offsetOfFirstImpulse !== null) {
-                            offsetOfFirstImpulse -= 512;
-                        }
+                describe('minValue', () => {
 
-                        for (let i = 0; i < 512; i += 1) {
-                            if (channelData[i] > 0.99 && channelData[i] < 1.01) {
-                                offsetOfFirstImpulse = i;
-                            } else if (channelData[i] > 0.49 && channelData[i] < 0.51) {
-                                expect(i - offsetOfFirstImpulse).to.equal(255);
+                    // bug #161
 
-                                done();
+                    it('should be undefined', () => {
+                        expect(delayNode.delayTime.minValue).to.be.undefined;
+                    });
 
-                                break;
+                });
+
+                describe('with a delayTime of 128 samples', () => {
+
+                    let audioBufferSourceNode;
+                    let gainNode;
+                    let scriptProcessorNode;
+
+                    afterEach(() => {
+                        audioBufferSourceNode.disconnect(gainNode);
+                        delayNode.disconnect(gainNode);
+                        gainNode.disconnect(delayNode);
+                        gainNode.disconnect(scriptProcessorNode);
+                        scriptProcessorNode.disconnect(audioContext.destination);
+                    });
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = audioContext.createBufferSource();
+                        gainNode = audioContext.createGain();
+                        scriptProcessorNode = audioContext.createScriptProcessor(512);
+
+                        const audioBuffer = audioContext.createBuffer(1, 1, audioContext.sampleRate);
+
+                        audioBuffer.getChannelData(0)[0] = 2;
+
+                        audioBufferSourceNode.buffer = audioBuffer;
+
+                        delayNode.delayTime.value = 128 / audioContext.sampleRate;
+
+                        gainNode.gain.value = 0.5;
+
+                        audioBufferSourceNode
+                            .connect(gainNode)
+                            .connect(delayNode)
+                            .connect(gainNode)
+                            .connect(scriptProcessorNode)
+                            .connect(audioContext.destination);
+                    });
+
+                    // bug #163
+
+                    it('should have a minimum delayTime of 255 samples', (done) => {
+                        const channelData = new Float32Array(512);
+
+                        let offsetOfFirstImpulse = null;
+
+                        scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                            inputBuffer.copyFromChannel(channelData, 0);
+
+                            if (offsetOfFirstImpulse !== null) {
+                                offsetOfFirstImpulse -= 512;
                             }
-                        }
-                    };
 
-                    audioBufferSourceNode.start();
+                            for (let i = 0; i < 512; i += 1) {
+                                if (channelData[i] > 0.99 && channelData[i] < 1.01) {
+                                    offsetOfFirstImpulse = i;
+                                } else if (channelData[i] > 0.49 && channelData[i] < 0.51) {
+                                    expect(i - offsetOfFirstImpulse).to.equal(255);
+
+                                    done();
+
+                                    break;
+                                }
+                            }
+                        };
+
+                        audioBufferSourceNode.start();
+                    });
+
                 });
 
             });
@@ -721,40 +704,6 @@ describe('audioContextConstructor', () => {
 
         });
 
-        describe('createDelay()', () => {
-
-            describe('delayTime', () => {
-
-                let delayNode;
-
-                beforeEach(() => {
-                    delayNode = audioContext.createDelay();
-                });
-
-                describe('maxValue', () => {
-
-                    // bug #161
-
-                    it('should be undefined', () => {
-                        expect(delayNode.delayTime.maxValue).to.be.undefined;
-                    });
-
-                });
-
-                describe('minValue', () => {
-
-                    // bug #161
-
-                    it('should be undefined', () => {
-                        expect(delayNode.delayTime.minValue).to.be.undefined;
-                    });
-
-                });
-
-            });
-
-        });
-
         describe('createGain()', () => {
 
             describe('gain', () => {
@@ -825,16 +774,6 @@ describe('audioContextConstructor', () => {
 
             it('should not be implemented', () => {
                 expect(audioContext.createMediaStreamDestination).to.be.undefined;
-            });
-
-        });
-
-        describe('createMediaStreamTrackSource()', () => {
-
-            // bug #121
-
-            it('should not be implemented', () => {
-                expect(audioContext.createMediaStreamTrackSource).to.be.undefined;
             });
 
         });
@@ -1056,30 +995,6 @@ describe('audioContextConstructor', () => {
 
             it('should not be implemented', () => {
                 expect(audioContext.getOutputTimestamp).to.be.undefined;
-            });
-
-        });
-
-        describe('resume()', () => {
-
-            afterEach(() => {
-                // Create a closeable AudioContext to align the behaviour with other tests.
-                audioContext = new AudioContext();
-            });
-
-            beforeEach(() => audioContext.close());
-
-            // bug #55
-
-            it('should throw an InvalidAccessError with a closed AudioContext', (done) => {
-                audioContext
-                    .resume()
-                    .catch((err) => {
-                        expect(err.code).to.equal(15);
-                        expect(err.name).to.equal('InvalidAccessError');
-
-                        done();
-                    });
             });
 
         });

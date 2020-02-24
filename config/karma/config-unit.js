@@ -138,16 +138,12 @@ module.exports = (config) => {
 
     } else {
 
-        const environment = require('../environment/local.json');
-
         config.set({
-
-            browserStack: environment.browserStack,
 
             browsers: [
                 'ChromeCanaryHeadlessWithNoRequiredUserGesture',
                 'ChromeHeadlessWithNoRequiredUserGesture',
-                'EdgeBrowserStack',
+                'Edge',
                 'FirefoxDeveloperHeadlessWithPrefs',
                 'FirefoxHeadlessWithPrefs',
                 'OperaWithNoRequiredUserGestureAndNoThrottling',
@@ -165,11 +161,8 @@ module.exports = (config) => {
                     base: 'ChromeHeadless',
                     flags: [ '--autoplay-policy=no-user-gesture-required' ]
                 },
-                EdgeBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'edge',
-                    os: 'Windows',
-                    os_version: '10' // eslint-disable-line camelcase
+                Edge: {
+                    base: 'ChromiumHeadless'
                 },
                 FirefoxDeveloperHeadlessWithPrefs: {
                     base : 'FirefoxDeveloperHeadless',
@@ -198,6 +191,8 @@ module.exports = (config) => {
             }
 
         });
+
+        env.CHROMIUM_BIN = '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge';
 
     }
 
