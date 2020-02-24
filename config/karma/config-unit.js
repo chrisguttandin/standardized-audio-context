@@ -32,14 +32,9 @@ module.exports = (config) => {
         ],
 
         frameworks: [
-            'parallel',
             'mocha',
             'sinon-chai'
         ],
-
-        parallelOptions: {
-            executors: 7
-        },
 
         preprocessors: {
             'test/unit/**/*.js': 'webpack'
