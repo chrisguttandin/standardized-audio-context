@@ -1,4 +1,3 @@
-import { TAbortErrorFactory } from './abort-error-factory';
 import { TAddAudioWorkletModuleFunction } from './add-audio-worklet-module-function';
 import { TContext } from './context';
 import { TEvaluateSourceFunction } from './evaluate-source-function';
@@ -9,7 +8,6 @@ import { TGetNativeContextFunction } from './get-native-context-function';
 import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 
 export type TAddAudioWorkletModuleFactory = (
-    createAbortError: TAbortErrorFactory,
     createNotSupportedError: TNotSupportedErrorFactory,
     evaluateSource: TEvaluateSourceFunction,
     exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction,

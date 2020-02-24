@@ -763,7 +763,6 @@ const exposeCurrentFrameAndCurrentTime = createExposeCurrentFrameAndCurrentTime(
 // The addAudioWorkletModule() function is only available in a SecureContext.
 export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction = (isSecureContext) ?
     createAddAudioWorkletModule(
-        createAbortError,
         createNotSupportedError,
         createEvaluateSource(window),
         exposeCurrentFrameAndCurrentTime,

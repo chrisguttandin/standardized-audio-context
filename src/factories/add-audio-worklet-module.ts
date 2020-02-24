@@ -21,7 +21,6 @@ const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (proce
 };
 
 export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
-    createAbortError,
     createNotSupportedError,
     evaluateSource,
     exposeCurrentFrameAndCurrentTime,
@@ -93,6 +92,10 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                         // @todo This could be written more elegantly when Promise.finally() becomes avalaible.
                         .catch((err) => {
                             URL.revokeObjectURL(url);
+
+                            if (err.code === undefined || err.name === 'SyntaxError') {
+                                err.code = 12;
+                            }
 
                             throw err;
                         });
@@ -183,8 +186,8 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 );
             })
             .catch((err) => {
-                if (err.name === 'SyntaxError') {
-                    throw createAbortError();
+                if (err.code === undefined || err.name === 'SyntaxError') {
+                    err.code = 12;
                 }
 
                 throw err;
