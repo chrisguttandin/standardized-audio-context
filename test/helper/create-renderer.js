@@ -77,8 +77,7 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
     const channelMergerNode = new ChannelMergerNode(context, { numberOfInputs: 2 });
     const firstImpulseNode = createImpulseNode({ context, length });
     const newAudioNodes = (typeof prepareBeforeStart !== 'function') ? undefined : prepareBeforeStart(audioNodes);
-    // @todo Edge does not yet support the spread operator in objects.
-    const allAudioNodes = (newAudioNodes === undefined) ? audioNodes : Object.assign({ }, audioNodes, newAudioNodes); // eslint-disable-line prefer-object-spread
+    const allAudioNodes = (newAudioNodes === undefined) ? audioNodes : { ...audioNodes, ...newAudioNodes };
     const recorderBufferSize = 8192;
     const recorderScriptProcessorNode = createScriptProcessor(context, recorderBufferSize, 2, 1);
     const sampleRate = context.sampleRate;
@@ -283,8 +282,7 @@ export const createRenderer = ({ context, create, length, prepare }) => {
         const newAudioNodes = (typeof prepareBeforeStart !== 'function') ? undefined : prepareBeforeStart(audioNodes);
 
         if (typeof start === 'function') {
-            // @todo Edge does not yet support the spread operator in objects.
-            start(context.currentTime, (newAudioNodes === undefined) ? audioNodes : Object.assign({ }, audioNodes, newAudioNodes)); // eslint-disable-line prefer-object-spread
+            start(context.currentTime, (newAudioNodes === undefined) ? audioNodes : { ...audioNodes, ...newAudioNodes });
         }
 
         const channelData = new Float32Array(context.length);

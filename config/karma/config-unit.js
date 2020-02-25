@@ -50,13 +50,7 @@ module.exports = (config) => {
                 rules: [ {
                     test: /\.ts?$/,
                     use: {
-                        loader: 'ts-loader',
-                        options: {
-                            compilerOptions: {
-                                // @todo This is necessary to run the tests in Edge v18.
-                                target: 'es2017'
-                            }
-                        }
+                        loader: 'ts-loader'
                     }
                 } ]
             },
