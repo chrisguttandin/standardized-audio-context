@@ -113,19 +113,22 @@ module.exports = (config) => {
                     base: 'BrowserStack',
                     browser: 'chrome',
                     os: 'Windows',
-                    os_version: '10' // eslint-disable-line camelcase
+                    os_version: '10', // eslint-disable-line camelcase
+                    timeout: 1200
                 },
                 EdgeBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'edge',
                     os: 'Windows',
-                    os_version: '10' // eslint-disable-line camelcase
+                    os_version: '10', // eslint-disable-line camelcase
+                    timeout: 1200
                 },
                 FirefoxBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'firefox',
                     os: 'Windows',
-                    os_version: '10' // eslint-disable-line camelcase
+                    os_version: '10', // eslint-disable-line camelcase
+                    timeout: 1200
                 }
             }
 
