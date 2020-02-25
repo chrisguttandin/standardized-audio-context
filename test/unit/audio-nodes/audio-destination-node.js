@@ -14,7 +14,7 @@ const testCases = {
     'constructor of an OfflineAudioContext': createOfflineAudioContext
 };
 
-describe('GainNode', () => {
+describe('AudioDestinationNode', () => {
 
     for (const [ description, createContext ] of Object.entries(testCases)) {
 
