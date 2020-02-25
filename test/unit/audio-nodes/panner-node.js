@@ -287,17 +287,12 @@ describe('PannerNode', () => {
                                 expect(pannerNode.orientationZ.value).to.equal(orientationZ);
                             });
 
-                            // Bug #123: Edge does not support HRTF as panningModel.
-                            if (!/Edge/.test(navigator.userAgent)) {
+                            it('should return an instance with the given panningModel', () => {
+                                const panningModel = 'HRTF';
+                                const pannerNode = createPannerNode(context, { panningModel });
 
-                                it('should return an instance with the given panningModel', () => {
-                                    const panningModel = 'HRTF';
-                                    const pannerNode = createPannerNode(context, { panningModel });
-
-                                    expect(pannerNode.panningModel).to.equal(panningModel);
-                                });
-
-                            }
+                                expect(pannerNode.panningModel).to.equal(panningModel);
+                            });
 
                             it('should return an instance with the given initial value for positionX', () => {
                                 const positionX = 0.5;
@@ -392,26 +387,6 @@ describe('PannerNode', () => {
                                 });
 
                             });
-
-                            // Bug #123: Edge does not support HRTF as panningModel.
-                            if (/Edge/.test(navigator.userAgent)) {
-
-                                describe("with a panningModel of 'HRTF'", () => {
-
-                                    it('should throw a NotSupportedError', (done) => {
-                                        try {
-                                            createPannerNode(context, { panningModel: 'HRTF' });
-                                        } catch (err) {
-                                            expect(err.code).to.equal(9);
-                                            expect(err.name).to.equal('NotSupportedError');
-
-                                            done();
-                                        }
-                                    });
-
-                                });
-
-                            }
 
                             describe('with a refDistance with a negative value', () => {
 
@@ -943,30 +918,12 @@ describe('PannerNode', () => {
                     pannerNode = createPannerNode(context);
                 });
 
-                // Bug #123: Edge does not support HRTF as panningModel.
-                if (/Edge/.test(navigator.userAgent)) {
+                it('should be assignable to another panningModel', () => {
+                    const panningModel = pannerNode.panningModel = 'HRTF'; // eslint-disable-line no-multi-assign
 
-                    it('should not be assignable to another panningModel', (done) => {
-                        try {
-                            pannerNode.panningModel = 'HRTF';
-                        } catch (err) {
-                            expect(err.code).to.equal(9);
-                            expect(err.name).to.equal('NotSupportedError');
-
-                            done();
-                        }
-                    });
-
-                } else {
-
-                    it('should be assignable to another panningModel', () => {
-                        const panningModel = pannerNode.panningModel = 'HRTF'; // eslint-disable-line no-multi-assign
-
-                        expect(panningModel).to.equal('HRTF');
-                        expect(pannerNode.panningModel).to.equal('HRTF');
-                    });
-
-                }
+                    expect(panningModel).to.equal('HRTF');
+                    expect(pannerNode.panningModel).to.equal('HRTF');
+                });
 
                 it('should not be assignable to something else', () => {
                     const string = 'none of the accepted panningModels';

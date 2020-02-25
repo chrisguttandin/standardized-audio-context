@@ -455,10 +455,7 @@ describe('MediaElementAudioSourceNode', () => {
                          */
                         mediaElement.muted = isSafari(navigator);
                         mediaElement.loop = true;
-                        // Edge delivers far more consistent results when playing an MP3 file.
-                        mediaElement.src = (/Edge/.test(navigator.userAgent)) ?
-                            'base/test/fixtures/1000-hertz-for-ten-seconds.mp3' :
-                            'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
+                        mediaElement.src = 'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
 
                         mediaElement.play();
 
