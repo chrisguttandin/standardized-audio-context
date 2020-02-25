@@ -2,11 +2,11 @@ export interface ICommonAudioContext {
 
     readonly baseLatency: number;
 
-    close (): Promise<void>; // tslint:disable-line:invalid-void
+    close (): Promise<void>;
 
     // @todo This should be part of the IMinimalBaseAudioContext.
-    resume (): Promise<void>; // tslint:disable-line:invalid-void
+    resume (): Promise<void>;
 
-    suspend (): Promise<void>; // tslint:disable-line:invalid-void
+    suspend (): Promise<void>;
 
 }

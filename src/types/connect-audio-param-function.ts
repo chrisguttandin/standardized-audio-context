@@ -7,4 +7,4 @@ export type TConnectAudioParamFunction = <T extends IMinimalOfflineAudioContext 
     audioParam: IAudioParam,
     nativeAudioParam: TNativeAudioParam,
     trace: readonly IAudioNode<T>[]
-) => Promise<void>; // tslint:disable-line:invalid-void
+) => Promise<void>;

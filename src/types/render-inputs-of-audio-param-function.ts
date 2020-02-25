@@ -7,4 +7,4 @@ export type TRenderInputsOfAudioParamFunction = <T extends IMinimalOfflineAudioC
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     nativeAudioParam: TNativeAudioParam,
     trace: readonly IAudioNode<T>[]
-) => Promise<void>; // tslint:disable-line:invalid-void
+) => Promise<void>;

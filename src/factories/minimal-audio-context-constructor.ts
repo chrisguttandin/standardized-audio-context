@@ -91,7 +91,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
             return (this._state !== null) ? this._state : this._nativeAudioContext.state;
         }
 
-        public close (): Promise<void> { // tslint:disable-line:invalid-void
+        public close (): Promise<void> {
             // Bug #35: Firefox does not throw an error if the AudioContext was closed before.
             if (this.state === 'closed') {
                 return this._nativeAudioContext
@@ -114,7 +114,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
              */
         }
 
-        public resume (): Promise<void> { // tslint:disable-line:invalid-void
+        public resume (): Promise<void> {
             if (this._state === 'suspended') {
                 return new Promise((resolve, reject) => {
                     const resolvePromise = () => {
@@ -146,7 +146,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 });
         }
 
-        public suspend (): Promise<void> { // tslint:disable-line:invalid-void
+        public suspend (): Promise<void> {
             return this._nativeAudioContext
                 .suspend()
                 .catch((err) => {

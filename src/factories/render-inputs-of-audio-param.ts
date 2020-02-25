@@ -11,7 +11,7 @@ export const createRenderInputsOfAudioParam: TRenderInputsOfAudioParamFactory = 
         nativeOfflineAudioContext: TNativeOfflineAudioContext,
         nativeAudioParam: TNativeAudioParam,
         trace: readonly IAudioNode<T>[]
-    ): Promise<void> => { // tslint:disable-line:invalid-void
+    ): Promise<void> => {
         const audioParamConnections = getAudioParamConnections<T>(audioParam);
 
         await Promise
