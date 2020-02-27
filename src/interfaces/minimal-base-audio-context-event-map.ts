@@ -1,5 +1,5 @@
 export interface IMinimalBaseAudioContextEventMap {
 
-    onstatechange: Event;
+    statechange: Event;
 
 }

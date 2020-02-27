@@ -1,5 +1,5 @@
 export interface IAudioWorkletNodeEventMap {
 
-    onprocessorerror: ErrorEvent;
+    processorerror: ErrorEvent;
 
 }
