@@ -67,7 +67,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         private _numberOfOutputs: number;
 
-        private _onprocessorerror: null | TErrorEventHandler<IAudioWorkletNode<T>>;
+        private _onprocessorerror: null | TErrorEventHandler<this>;
 
         private _parameters: null | TAudioParamMap;
 
@@ -136,7 +136,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             return this._numberOfOutputs;
         }
 
-        get onprocessorerror (): null | TErrorEventHandler<IAudioWorkletNode<T>> {
+        get onprocessorerror (): null | TErrorEventHandler<this> {
             return this._onprocessorerror;
         }
 
@@ -151,7 +151,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
             this._onprocessorerror = (nativeOnProcessorError !== null && nativeOnProcessorError === wrappedListener)
                 ? value
-                : <null | TErrorEventHandler<IAudioWorkletNode<T>>> nativeOnProcessorError;
+                : <null | TErrorEventHandler<this>> nativeOnProcessorError;
         }
 
         get parameters (): TAudioParamMap {

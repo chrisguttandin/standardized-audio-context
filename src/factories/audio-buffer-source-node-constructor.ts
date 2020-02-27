@@ -44,7 +44,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         private _nativeAudioBufferSourceNode: TNativeAudioBufferSourceNode;
 
-        private _onended: null | TEventHandler<IAudioBufferSourceNode<T>>;
+        private _onended: null | TEventHandler<this>;
 
         private _playbackRate: IAudioParam;
 
@@ -140,7 +140,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             this._nativeAudioBufferSourceNode.loopStart = value;
         }
 
-        get onended (): null | TEventHandler<IAudioBufferSourceNode<T>> {
+        get onended (): null | TEventHandler<this> {
             return this._onended;
         }
 
@@ -153,7 +153,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
             this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
                 ? value
-                : <null | TEventHandler<IAudioBufferSourceNode<T>>> nativeOnEnded;
+                : <null | TEventHandler<this>> nativeOnEnded;
         }
 
         get playbackRate (): IAudioParam {

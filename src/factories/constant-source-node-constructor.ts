@@ -35,7 +35,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         private _offset: IAudioParam;
 
-        private _onended: null | TEventHandler<IConstantSourceNode<T>>;
+        private _onended: null | TEventHandler<this>;
 
         constructor (context: T, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
@@ -68,7 +68,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             return this._offset;
         }
 
-        get onended (): null | TEventHandler<IConstantSourceNode<T>> {
+        get onended (): null | TEventHandler<this> {
             return this._onended;
         }
 
@@ -81,7 +81,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
             this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
                 ? value
-                : <null | TEventHandler<IConstantSourceNode<T>>> nativeOnEnded;
+                : <null | TEventHandler<this>> nativeOnEnded;
         }
 
         public start (when = 0): void {

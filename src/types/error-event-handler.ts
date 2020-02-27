@@ -1,1 +1,3 @@
-export type TErrorEventHandler<T> = (this: T, event: ErrorEvent) => void;
+import { TEventHandler } from './event-handler';
+
+export type TErrorEventHandler<T> = TEventHandler<T, ErrorEvent>;

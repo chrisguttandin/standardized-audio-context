@@ -38,7 +38,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _nativeOscillatorNode: TNativeOscillatorNode;
 
-        private _onended: null | TEventHandler<IOscillatorNode<T>>;
+        private _onended: null | TEventHandler<this>;
 
         private _oscillatorNodeRenderer: TOscillatorNodeRenderer<T>;
 
@@ -74,7 +74,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             return this._frequency;
         }
 
-        get onended (): null | TEventHandler<IOscillatorNode<T>> {
+        get onended (): null | TEventHandler<this> {
             return this._onended;
         }
 
@@ -87,7 +87,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
             this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
                 ? value
-                : <null | TEventHandler<IOscillatorNode<T>>> nativeOnEnded;
+                : <null | TEventHandler<this>> nativeOnEnded;
         }
 
         get type (): TOscillatorType {
