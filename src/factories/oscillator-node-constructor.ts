@@ -3,7 +3,7 @@ import { setInternalStateToPassive } from '../helpers/set-internal-state-to-pass
 import { IAudioParam, IMinimalOfflineAudioContext, IOscillatorNode, IOscillatorNodeRenderer, IOscillatorOptions } from '../interfaces';
 import {
     TContext,
-    TEndedEventHandler,
+    TEventHandler,
     TNativeOscillatorNode,
     TOscillatorNodeConstructorFactory,
     TOscillatorNodeRenderer,
@@ -38,7 +38,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _nativeOscillatorNode: TNativeOscillatorNode;
 
-        private _onended: null | TEndedEventHandler<IOscillatorNode<T>>;
+        private _onended: null | TEventHandler<IOscillatorNode<T>>;
 
         private _oscillatorNodeRenderer: TOscillatorNodeRenderer<T>;
 
@@ -74,7 +74,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             return this._frequency;
         }
 
-        get onended (): null | TEndedEventHandler<IOscillatorNode<T>> {
+        get onended (): null | TEventHandler<IOscillatorNode<T>> {
             return this._onended;
         }
 
@@ -87,7 +87,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
             this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
                 ? value
-                : <null | TEndedEventHandler<IOscillatorNode<T>>> nativeOnEnded;
+                : <null | TEventHandler<IOscillatorNode<T>>> nativeOnEnded;
         }
 
         get type (): TOscillatorType {

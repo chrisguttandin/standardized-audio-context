@@ -5,7 +5,7 @@ export const wrapAudioNodeDisconnectMethod = (nativeAudioNode: TNativeAudioNode)
     const connections = new Map<TNativeAudioNode | TNativeAudioParam, { input: number; output: number }[]>();
 
     nativeAudioNode.connect = <TNativeAudioNode['connect']> ((connect) => {
-        return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0): void | TNativeAudioNode => {  // tslint:disable-line:invalid-void max-line-length
+        return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0): void | TNativeAudioNode => { // tslint:disable-line:invalid-void max-line-length
             const returnValue = (isNativeAudioNode(destination))
                 ? connect(destination, output, input)
                 : connect(destination, output);

@@ -1,4 +1,4 @@
-import { TAudioContextState, TContext, TNativeEventTarget, TStateChangeEventHandler } from '../types';
+import { TAudioContextState, TContext, TEventHandler, TNativeEventTarget } from '../types';
 import { IAudioDestinationNode } from './audio-destination-node';
 import { IAudioListener } from './audio-listener';
 import { IMinimalBaseAudioContextEventMap } from './minimal-base-audio-context-event-map';
@@ -11,7 +11,7 @@ export interface IMinimalBaseAudioContext<T extends TContext> extends TNativeEve
 
     readonly listener: IAudioListener;
 
-    onstatechange: null | TStateChangeEventHandler<T>;
+    onstatechange: null | TEventHandler<T>;
 
     readonly sampleRate: number;
 

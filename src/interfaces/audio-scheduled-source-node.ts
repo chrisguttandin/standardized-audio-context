@@ -1,10 +1,10 @@
-import { TContext, TEndedEventHandler } from '../types';
+import { TContext, TEventHandler } from '../types';
 import { IAudioNode } from './audio-node';
 import { IAudioScheduledSourceNodeEventMap } from './audio-scheduled-source-node-event-map';
 
 export interface IAudioScheduledSourceNode<T extends TContext> extends IAudioNode<T> {
 
-    onended: null | TEndedEventHandler<this>;
+    onended: null | TEventHandler<this>;
 
     addEventListener<K extends keyof IAudioScheduledSourceNodeEventMap> (
         type: K,

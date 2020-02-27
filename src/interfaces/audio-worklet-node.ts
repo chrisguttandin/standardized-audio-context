@@ -1,10 +1,10 @@
-import { TAudioParamMap, TContext, TProcessorErrorEventHandler } from '../types';
+import { TAudioParamMap, TContext, TErrorEventHandler } from '../types';
 import { IAudioNode } from './audio-node';
 import { IAudioWorkletNodeEventMap } from './audio-worklet-node-event-map';
 
 export interface IAudioWorkletNode<T extends TContext> extends IAudioNode<T> {
 
-    onprocessorerror: null | TProcessorErrorEventHandler<this>;
+    onprocessorerror: null | TErrorEventHandler<this>;
 
     readonly parameters: TAudioParamMap;
 

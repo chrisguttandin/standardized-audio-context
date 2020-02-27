@@ -1,12 +1,6 @@
 import { CONTEXT_STORE } from '../globals';
 import { IAudioDestinationNode, IAudioListener, IMinimalBaseAudioContext } from '../interfaces';
-import {
-    TAudioContextState,
-    TContext,
-    TMinimalBaseAudioContextConstructorFactory,
-    TNativeContext,
-    TStateChangeEventHandler
-} from '../types';
+import { TAudioContextState, TContext, TEventHandler, TMinimalBaseAudioContextConstructorFactory, TNativeContext } from '../types';
 
 export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextConstructorFactory = (
     audioDestinationNodeConstructor,
@@ -21,7 +15,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
         private _listener: IAudioListener;
 
-        private _onstatechange: null | TStateChangeEventHandler<T>;
+        private _onstatechange: null | TEventHandler<T>;
 
         constructor (private _nativeContext: TNativeContext, numberOfChannels: number) {
             super(_nativeContext);
@@ -52,7 +46,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             return this._listener;
         }
 
-        get onstatechange (): null | TStateChangeEventHandler<T> {
+        get onstatechange (): null | TEventHandler<T> {
             return this._onstatechange;
         }
 
@@ -65,7 +59,7 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
             this._onstatechange = (nativeOnStateChange !== null && nativeOnStateChange === wrappedListener)
                 ? value
-                : <null | TStateChangeEventHandler<T>> nativeOnStateChange;
+                : <null | TEventHandler<T>> nativeOnStateChange;
         }
 
         get sampleRate (): number {
