@@ -97,5 +97,5 @@
     "test": "grunt lint && grunt test"
   },
   "types": "build/es2019/module.d.ts",
-  "version": "24.0.4"
+  "version": "24.0.5"
 }
