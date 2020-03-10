@@ -65,18 +65,6 @@ describe('audioContextConstructor', () => {
 
         });
 
-        describe('close()', () => {
-
-            // bug #35
-
-            it('should not throw an error if it was closed before', () => {
-                return audioContext
-                    .close()
-                    .then(() => audioContext.close());
-            });
-
-        });
-
         describe('createAnalyser()', () => {
 
             // bug #37
@@ -159,27 +147,6 @@ describe('audioContextConstructor', () => {
                         expect(biquadFilterNode.gain.maxValue).to.equal(3.4028234663852886e+38);
                     });
 
-                });
-
-            });
-
-        });
-
-        describe('createBuffer()', () => {
-
-            // bug #99
-
-            describe('with zero as the numberOfChannels', () => {
-
-                it('should throw an IndexSizeError', (done) => {
-                    try {
-                        audioContext.createBuffer(0, 10, 44100);
-                    } catch (err) {
-                        expect(err.code).to.equal(1);
-                        expect(err.name).to.equal('IndexSizeError');
-
-                        done();
-                    }
                 });
 
             });
@@ -278,26 +245,6 @@ describe('audioContextConstructor', () => {
                         expect(oscillatorNode.detune.minValue).to.equal(-3.4028234663852886e+38);
                     });
 
-                });
-
-            });
-
-            describe('start()', () => {
-
-                // bug #44
-
-                it('should throw a DOMException', () => {
-                    expect(() => oscillatorNode.start(-1)).to.throw(DOMException).with.property('name', 'NotSupportedError');
-                });
-
-            });
-
-            describe('stop()', () => {
-
-                // bug #44
-
-                it('should throw a DOMException', () => {
-                    expect(() => oscillatorNode.stop(-1)).to.throw(DOMException).with.property('name', 'NotSupportedError');
                 });
 
             });
