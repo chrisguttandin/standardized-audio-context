@@ -47,7 +47,7 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
             wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(nativeOscillatorNode, nativeContext);
         }
 
-        // Bug #44: No browser does throw a RangeError yet.
+        // Bug #44: Only Firefox does not throw a RangeError yet.
         if (!cacheTestResult(
             testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
             () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)

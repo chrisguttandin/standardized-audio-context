@@ -37,7 +37,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeConstantSourceNode);
         }
 
-        // Bug #44: Only Firefox does throw a RangeError yet.
+        // Bug #44: Only Firefox does not throw a RangeError yet.
         if (!cacheTestResult(
             testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
             () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
