@@ -13,15 +13,15 @@ const createMediaElementAudioSourceNodeWithConstructor = (context, options) => {
 const createMediaElementAudioSourceNodeWithFactoryFunction = (context, options) => {
     const mediaElementAudioSourceNode = context.createMediaElementSource(options.mediaElement);
 
-    if (options !== null && options.channelCount !== undefined) {
+    if (options.channelCount !== undefined) {
         mediaElementAudioSourceNode.channelCount = options.channelCount;
     }
 
-    if (options !== null && options.channelCountMode !== undefined) {
+    if (options.channelCountMode !== undefined) {
         mediaElementAudioSourceNode.channelCountMode = options.channelCountMode;
     }
 
-    if (options !== null && options.channelInterpretation !== undefined) {
+    if (options.channelInterpretation !== undefined) {
         mediaElementAudioSourceNode.channelInterpretation = options.channelInterpretation;
     }
 

@@ -14,15 +14,15 @@ const createIIRFilterNodeWithConstructor = (context, options) => {
 const createIIRFilterNodeWithFactoryFunction = (context, options) => {
     const iIRFilterNode = context.createIIRFilter(options.feedforward, options.feedback);
 
-    if (options !== null && options.channelCount !== undefined) {
+    if (options.channelCount !== undefined) {
         iIRFilterNode.channelCount = options.channelCount;
     }
 
-    if (options !== null && options.channelCountMode !== undefined) {
+    if (options.channelCountMode !== undefined) {
         iIRFilterNode.channelCountMode = options.channelCountMode;
     }
 
-    if (options !== null && options.channelInterpretation !== undefined) {
+    if (options.channelInterpretation !== undefined) {
         iIRFilterNode.channelInterpretation = options.channelInterpretation;
     }
 

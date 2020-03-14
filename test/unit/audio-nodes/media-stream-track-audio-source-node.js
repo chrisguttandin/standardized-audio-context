@@ -13,15 +13,15 @@ const createMediaStreamTrackAudioSourceNodeWithConstructor = (context, options) 
 const createMediaStreamTrackAudioSourceNodeWithFactoryFunction = (context, options) => {
     const mediaStreamTrackAudioSourceNode = context.createMediaStreamTrackSource(options.mediaStreamTrack);
 
-    if (options !== null && options.channelCount !== undefined) {
+    if (options.channelCount !== undefined) {
         mediaStreamTrackAudioSourceNode.channelCount = options.channelCount;
     }
 
-    if (options !== null && options.channelCountMode !== undefined) {
+    if (options.channelCountMode !== undefined) {
         mediaStreamTrackAudioSourceNode.channelCountMode = options.channelCountMode;
     }
 
-    if (options !== null && options.channelInterpretation !== undefined) {
+    if (options.channelInterpretation !== undefined) {
         mediaStreamTrackAudioSourceNode.channelInterpretation = options.channelInterpretation;
     }
 
