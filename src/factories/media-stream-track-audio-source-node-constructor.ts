@@ -4,9 +4,7 @@ import { TAudioNodeRenderer, TMediaStreamTrackAudioSourceNodeConstructorFactory 
 export const createMediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructorFactory = (
     audioNodeConstructor,
     createNativeMediaStreamTrackAudioSourceNode,
-    createNotSupportedError,
-    getNativeContext,
-    isNativeOfflineAudioContext
+    getNativeContext
 ) => {
 
     return class MediaStreamTrackAudioSourceNode<T extends IAudioContext | IMinimalAudioContext>
@@ -15,10 +13,6 @@ export const createMediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrack
 
         constructor (context: T, options: IMediaStreamTrackAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
-
-            if (isNativeOfflineAudioContext(nativeContext)) {
-                throw createNotSupportedError();
-            }
 
             const nativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrackAudioSourceNode(nativeContext, options);
 

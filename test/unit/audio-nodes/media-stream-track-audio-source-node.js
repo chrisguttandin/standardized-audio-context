@@ -205,15 +205,10 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                             offlineAudioContext = createOfflineAudioContext();
                                         });
 
-                                        it('should throw a NotSupportedError', (done) => {
-                                            try {
+                                        it('should throw a TypeError', () => {
+                                            expect(() => {
                                                 createMediaStreamTrackAudioSourceNode(offlineAudioContext, { mediaStreamTrack });
-                                            } catch (err) {
-                                                expect(err.code).to.equal(9);
-                                                expect(err.name).to.equal('NotSupportedError');
-
-                                                done();
-                                            }
+                                            }).to.throw(TypeError);
                                         });
 
                                     });

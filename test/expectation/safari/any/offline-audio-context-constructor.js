@@ -898,6 +898,34 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createMediaElementSource()', () => {
+
+        // bug #171
+
+        it('should not throw an error', () => {
+            offlineAudioContext.createMediaElementSource(new Audio());
+        });
+
+    });
+
+    describe('createMediaStreamSource()', () => {
+
+        let audioContext;
+
+        afterEach(() => audioContext.close());
+
+        beforeEach(() => audioContext = new webkitAudioContext()); // eslint-disable-line new-cap, no-undef
+
+        // bug #172
+
+        it('should not throw an error', () => {
+            const mediaStreamDestinationNode = audioContext.createMediaStreamDestination();
+
+            offlineAudioContext.createMediaStreamSource(mediaStreamDestinationNode.stream);
+        });
+
+    });
+
     describe('createScriptProcessor()', () => {
 
         // bug #8
