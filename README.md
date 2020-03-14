@@ -8,9 +8,9 @@
 [![dependencies](https://img.shields.io/david/chrisguttandin/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
 [![version](https://img.shields.io/npm/v/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
 
-This package provides a subset of the [Web Audio API](https://webaudio.github.io/web-audio-api) which works in a reliable and consistent way in every supported browser. In contrast to other popular polyfills `standardized-audio-context` does not patch or modify anything on the global scope. In other words, it does not cause any side effects. It can therefore be used safely inside of libraries.
+This package provides a subset (although it's almost complete) of the [Web Audio API](https://webaudio.github.io/web-audio-api) which works in a reliable and consistent way in every supported browser. In contrast to other popular polyfills `standardized-audio-context` does not patch or modify anything on the global scope. In other words, it does not cause any side effects. It can therefore be used safely inside of libraries. It's what's known as a [ponyfill](https://github.com/sindresorhus/ponyfill).
 
-One of the goals of `standardized-audio-context` is to only polyfill missing functionality and to
+One of the goals of `standardized-audio-context` is to only implement missing functionality and to
 avoid rewriting built-in features whenever possible. Please take a look at the paragraph about the
 [browser support](#browser-support) below for more information.
 
