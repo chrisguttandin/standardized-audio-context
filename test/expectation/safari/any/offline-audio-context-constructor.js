@@ -908,6 +908,16 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createMediaStreamDestination()', () => {
+
+        // bug #173
+
+        it('should not throw an error', () => {
+            offlineAudioContext.createMediaStreamDestination();
+        });
+
+    });
+
     describe('createMediaStreamSource()', () => {
 
         let audioContext;

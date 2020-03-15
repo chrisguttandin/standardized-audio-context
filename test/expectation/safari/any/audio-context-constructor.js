@@ -843,6 +843,26 @@ describe('audioContextConstructor', () => {
 
         });
 
+        describe('createMediaStreamDestination()', () => {
+
+            let mediaStreamAudioDestinationNode;
+
+            beforeEach(() => {
+                mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
+            });
+
+            describe('numberOfOutpus', () => {
+
+                // bug #174
+
+                it('should be 1', () => {
+                    expect(mediaStreamAudioDestinationNode.numberOfOutpus).to.equal(1);
+                });
+
+            });
+
+        });
+
         describe('createMediaStreamSource()', () => {
 
             describe('with an audio track that gets removed from the mediaStream after construction', () => {

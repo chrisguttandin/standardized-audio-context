@@ -14,6 +14,7 @@ import {
     GainNode,
     IIRFilterNode,
     MediaElementAudioSourceNode,
+    MediaStreamAudioDestinationNode,
     MediaStreamAudioSourceNode,
     MinimalAudioContext,
     MinimalOfflineAudioContext,
@@ -90,6 +91,10 @@ describe('module', () => {
 
     it('should export the MediaElementAudioSourceNode constructor', () => {
         expect(MediaElementAudioSourceNode).to.be.a('function');
+    });
+
+    it('should export the MediaStreamAudioDestinationNode constructor', () => {
+        expect(MediaStreamAudioDestinationNode).to.be.a('function');
     });
 
     it('should export the MediaStreamAudioSourceNode constructor', () => {

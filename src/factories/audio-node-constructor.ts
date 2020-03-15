@@ -595,6 +595,11 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
         public connect <U extends TContext, V extends IAudioNode<U>> (destinationNode: V, output?: number, input?: number): V;
         public connect (destinationParam: IAudioParam, output?: number): void;
         public connect <U extends TContext, V extends IAudioNode<U>> (destination: V | IAudioParam, output = 0, input = 0): void | V { // tslint:disable-line:invalid-void max-line-length
+            // Bug #174: Safari does expose a wrong numberOfOutputs for MediaStreamAudioDestinationNodes.
+            if (output < 0 || output >= this._nativeAudioNode.numberOfOutputs) {
+                throw createIndexSizeError();
+            }
+
             const nativeContext = getNativeContext(this._context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
 

@@ -3,6 +3,7 @@ import {
     IAudioContext,
     IAudioContextOptions,
     IMediaElementAudioSourceNode,
+    IMediaStreamAudioDestinationNode,
     IMediaStreamAudioSourceNode,
     IMediaStreamTrackAudioSourceNode
 } from '../interfaces';
@@ -14,6 +15,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     createNotSupportedError,
     createUnknownError,
     mediaElementAudioSourceNodeConstructor,
+    mediaStreamAudioDestinationNodeConstructor,
     mediaStreamAudioSourceNodeConstructor,
     mediaStreamTrackAudioSourceNodeConstructor,
     nativeAudioContextConstructor
@@ -125,6 +127,10 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
 
         public createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this> {
             return new mediaElementAudioSourceNodeConstructor(this, { mediaElement });
+        }
+
+        public createMediaStreamDestination (): IMediaStreamAudioDestinationNode<this> {
+            return new mediaStreamAudioDestinationNodeConstructor(this);
         }
 
         public createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode<this> {

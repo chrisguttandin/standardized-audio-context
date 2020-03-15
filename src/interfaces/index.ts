@@ -46,6 +46,7 @@ export * from './iir-filter-node';
 export * from './iir-filter-options';
 export * from './media-element-audio-source-node';
 export * from './media-element-audio-source-options';
+export * from './media-stream-audio-destination-node';
 export * from './media-stream-audio-source-node';
 export * from './media-stream-audio-source-options';
 export * from './media-stream-track-audio-source-node';

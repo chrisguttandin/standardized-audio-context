@@ -63,7 +63,7 @@ oscillatorNode.start();
 
 ### AudioContext
 
-This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It misses only the following factory methods: `createMediaStreamDestination()` and `createScriptProcessor()`. `createMediaStreamDestination()` is not implemented in Edge and unfortunately it is very complicated (if not impossible) to polyfill and `createScriptProcessor()` is already deprecated.
+This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It only misses the `createScriptProcessor()` method which is deprecated anyway.
 
 ⚠️ <!-- Bug #150 --> Setting the sampleRate is only supported on Chrome, Firefox and Opera at the moment.
 
@@ -95,6 +95,7 @@ interface IAudioContext extends EventTarget {
     createGain (): IGainNode<IAudioContext>;
     createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode<IAudioContext>;
     createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<IAudioContext>;
+    createMediaStreamDestination (): IMediaElementAudioDestinationNode<IAudioContext>;
     createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode<IAudioContext>;
     createMediaStreamTrackSource (mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<IAudioContext>;
     createOscillator (): IOscillatorNode<IAudioContext>;
@@ -223,6 +224,14 @@ This is an implementation of the [`createIIRFilter()`](https://webaudio.github.i
 This is an implementation of the [`createMediaElementSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediaelementsource) factory method. The [`MediaElementAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediaelementaudiosourcenode) constructor may be used as an alternative.
 
 It does only work with an AudioContext but not with an OfflineAudioContext.
+
+#### createMediaStreamDestination() / MediaStreamAudioDestinationNode
+
+This is an implementation of the [`createMediaStreamDestination()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediastreamdestination) factory method. The [`MediaStreamAudioDestinationNode`](https://webaudio.github.io/web-audio-api/#mediastreamaudiodestinationnode) constructor may be used as an alternative.
+
+It does only work with an AudioContext but not with an OfflineAudioContext.
+
+⚠️ <!-- Bug #64 --> Edge up to version 18 did unfortunately not support the `MediaStreamAudioDestinationNode` and it is very complicated (if not impossible) to polyfill. Therefore this method will throw a `NotSupportedError` in Edge v18 and below.
 
 #### createMediaStreamSource() / MediaStreamAudioSourceNode
 

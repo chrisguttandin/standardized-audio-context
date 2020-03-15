@@ -521,6 +521,14 @@ describe('AudioContext', () => {
 
         });
 
+        describe('createMediaStreamDestination()', () => {
+
+            it('should be a function', () => {
+                expect(audioContext.createMediaStreamDestination).to.be.a('function');
+            });
+
+        });
+
         describe('createMediaStreamSource()', () => {
 
             it('should be a function', () => {

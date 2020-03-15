@@ -80,6 +80,7 @@ import { createIsNativeOfflineAudioContext } from './factories/is-native-offline
 import { createIsSecureContext } from './factories/is-secure-context';
 import { createIsSupportedPromise } from './factories/is-supported-promise';
 import { createMediaElementAudioSourceNodeConstructor } from './factories/media-element-audio-source-node-constructor';
+import { createMediaStreamAudioDestinationNodeConstructor } from './factories/media-stream-audio-destination-node-constructor';
 import { createMediaStreamAudioSourceNodeConstructor } from './factories/media-stream-audio-source-node-constructor';
 import { createMediaStreamTrackAudioSourceNodeConstructor } from './factories/media-stream-track-audio-source-node-constructor';
 import { createMinimalAudioContextConstructor } from './factories/minimal-audio-context-constructor';
@@ -108,6 +109,7 @@ import { createNativeGainNodeFactory } from './factories/native-gain-node-factor
 import { createNativeIIRFilterNodeFactory } from './factories/native-iir-filter-node-factory';
 import { createNativeIIRFilterNodeFakerFactory } from './factories/native-iir-filter-node-faker-factory';
 import { createNativeMediaElementAudioSourceNodeFactory } from './factories/native-media-element-audio-source-node-factory';
+import { createNativeMediaStreamAudioDestinationNodeFactory } from './factories/native-media-stream-audio-destination-node-factory';
 import { createNativeMediaStreamAudioSourceNodeFactory } from './factories/native-media-stream-audio-source-node-factory';
 import { createNativeMediaStreamTrackAudioSourceNodeFactory } from './factories/native-media-stream-track-audio-source-node-factory';
 import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
@@ -231,6 +233,7 @@ import {
     IGainNode,
     IIIRFilterNode,
     IMediaElementAudioSourceNode,
+    IMediaStreamAudioDestinationNode,
     IMediaStreamAudioSourceNode,
     IMediaStreamTrackAudioSourceNode,
     IMinimalAudioContext,
@@ -265,6 +268,7 @@ import {
     TGainNodeConstructor,
     TIIRFilterNodeConstructor,
     TMediaElementAudioSourceNodeConstructor,
+    TMediaStreamAudioDestinationNodeConstructor,
     TMediaStreamAudioSourceNodeConstructor,
     TMediaStreamTrackAudioSourceNodeConstructor,
     TMinimalAudioContextConstructor,
@@ -823,6 +827,17 @@ const mediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstr
     getNativeContext,
     isNativeOfflineAudioContext
 );
+const createNativeMediaStreamAudioDestinationNode = createNativeMediaStreamAudioDestinationNodeFactory(
+    createNativeAudioNode,
+    createNotSupportedError
+);
+const mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNodeConstructor
+    = createMediaStreamAudioDestinationNodeConstructor(
+        audioNodeConstructor,
+        createNativeMediaStreamAudioDestinationNode,
+        getNativeContext,
+        isNativeOfflineAudioContext
+    );
 const createNativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNodeFactory(createNativeAudioNode);
 const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
     audioNodeConstructor,
@@ -847,6 +862,7 @@ const audioContextConstructor: TAudioContextConstructor = createAudioContextCons
     createNotSupportedError,
     createUnknownError,
     mediaElementAudioSourceNodeConstructor,
+    mediaStreamAudioDestinationNodeConstructor,
     mediaStreamAudioSourceNodeConstructor,
     mediaStreamTrackAudioSourceNodeConstructor,
     nativeAudioContextConstructor
@@ -957,6 +973,10 @@ export { iIRFilterNodeConstructor as IIRFilterNode };
 type mediaElementAudioSourceNodeConstructor<T extends IAudioContext | IMinimalAudioContext> = IMediaElementAudioSourceNode<T>;
 
 export { mediaElementAudioSourceNodeConstructor as MediaElementAudioSourceNode };
+
+type mediaStreamAudioDestinationNodeConstructor<T extends IAudioContext | IMinimalAudioContext> = IMediaStreamAudioDestinationNode<T>;
+
+export { mediaStreamAudioDestinationNodeConstructor as MediaStreamAudioDestinationNode };
 
 type mediaStreamAudioSourceNodeConstructor<T extends IAudioContext | IMinimalAudioContext> = IMediaStreamAudioSourceNode<T>;
 
