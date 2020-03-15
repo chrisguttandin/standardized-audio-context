@@ -856,7 +856,7 @@ describe('audioContextConstructor', () => {
                 // bug #174
 
                 it('should be 1', () => {
-                    expect(mediaStreamAudioDestinationNode.numberOfOutpus).to.equal(1);
+                    expect(mediaStreamAudioDestinationNode.numberOfOutputs).to.equal(1);
                 });
 
             });
