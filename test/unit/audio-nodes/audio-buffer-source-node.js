@@ -1322,48 +1322,44 @@ describe('AudioBufferSourceNode', () => {
 
                     });
 
-                    if (description.includes('factory')) {
+                    describe(`with an ${ type } of a native context`, () => {
 
-                        describe(`with an ${ type } of a native context`, () => {
+                        let audioBufferSourceNode;
+                        let nativeAudioNodeOrAudioParam;
+                        let nativeContext;
 
-                            let audioBufferSourceNode;
-                            let nativeAudioNodeOrAudioParam;
-                            let nativeContext;
-
-                            afterEach(() => {
-                                /*
-                                 * Bug #94: Edge & Safari also expose a close() method on an OfflineAudioContext which is why the extra
-                                 * check for the startRendering() method is necessary.
-                                 * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
-                                 */
-                                if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
-                                    return nativeContext.close();
-                                }
-                            });
-
-                            beforeEach(() => {
-                                audioBufferSourceNode = createAudioBufferSourceNode(context);
-                                nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
-
-                                const nativeGainNode = nativeContext.createGain();
-
-                                nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
-                            });
-
-                            it('should throw an InvalidAccessError', (done) => {
-                                try {
-                                    audioBufferSourceNode.connect(nativeAudioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(15);
-                                    expect(err.name).to.equal('InvalidAccessError');
-
-                                    done();
-                                }
-                            });
-
+                        afterEach(() => {
+                            /*
+                             * Bug #94: Edge & Safari also expose a close() method on an OfflineAudioContext which is why the extra check
+                             * for the startRendering() method is necessary.
+                             * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
+                             */
+                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                                return nativeContext.close();
+                            }
                         });
 
-                    }
+                        beforeEach(() => {
+                            audioBufferSourceNode = createAudioBufferSourceNode(context);
+                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+
+                            const nativeGainNode = nativeContext.createGain();
+
+                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                        });
+
+                        it('should throw an InvalidAccessError', (done) => {
+                            try {
+                                audioBufferSourceNode.connect(nativeAudioNodeOrAudioParam);
+                            } catch (err) {
+                                expect(err.code).to.equal(15);
+                                expect(err.name).to.equal('InvalidAccessError');
+
+                                done();
+                            }
+                        });
+
+                    });
 
                 }
 
