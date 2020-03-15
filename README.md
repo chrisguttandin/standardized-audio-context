@@ -224,7 +224,7 @@ This is an implementation of the [`createMediaElementSource()`](https://webaudio
 
 It does only work with an AudioContext but not with an OfflineAudioContext.
 
-#### createMediaStreamSource() / MediaStreamSourceNode
+#### createMediaStreamSource() / MediaStreamAudioSourceNode
 
 This is an implementation of the [`createMediaStreamSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediastreamsource) factory method. The [`MediaStreamAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediastreamaudiosourcenode) constructor may be used as an alternative.
 
