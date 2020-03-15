@@ -860,14 +860,14 @@ describe('audioContextConstructor', () => {
                 });
 
                 beforeEach(() => {
-                    const mediaStreamDestinationNode = audioContext.createMediaStreamDestination();
+                    const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
 
                     oscillatorNode = audioContext.createOscillator();
 
-                    oscillatorNode.connect(mediaStreamDestinationNode);
+                    oscillatorNode.connect(mediaStreamAudioDestinationNode);
                     oscillatorNode.start();
 
-                    mediaStream = mediaStreamDestinationNode.stream;
+                    mediaStream = mediaStreamAudioDestinationNode.stream;
                     mediaStreamTracks = mediaStream.getTracks();
                 });
 

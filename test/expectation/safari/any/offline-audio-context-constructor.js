@@ -919,9 +919,9 @@ describe('offlineAudioContextConstructor', () => {
         // bug #172
 
         it('should not throw an error', () => {
-            const mediaStreamDestinationNode = audioContext.createMediaStreamDestination();
+            const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
 
-            offlineAudioContext.createMediaStreamSource(mediaStreamDestinationNode.stream);
+            offlineAudioContext.createMediaStreamSource(mediaStreamAudioDestinationNode.stream);
         });
 
     });
