@@ -18,7 +18,6 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
 
         constructor (context: T, options: IMediaElementAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
-
             const nativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNode(nativeContext, options);
 
             // Bug #171: Safari allows to create a MediaElementAudioSourceNode with an OfflineAudioContext.

@@ -16,7 +16,6 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
 
         constructor (context: T, options: IMediaStreamAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
-
             const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, options);
 
             // Bug #172: Safari allows to create a MediaStreamAudioSourceNode with an OfflineAudioContext.

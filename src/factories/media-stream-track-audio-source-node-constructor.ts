@@ -13,7 +13,6 @@ export const createMediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrack
 
         constructor (context: T, options: IMediaStreamTrackAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
-
             const nativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrackAudioSourceNode(nativeContext, options);
 
             super(context, true, nativeMediaStreamTrackAudioSourceNode, <TAudioNodeRenderer<T>> null);
