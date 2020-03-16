@@ -6,6 +6,8 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
     audioDestinationNodeConstructor,
     createAudioListener,
     eventTargetConstructor,
+    isNativeOfflineAudioContext,
+    unrenderedAudioWorkletNodeStore,
     wrapEventListener
 ) => {
 
@@ -28,6 +30,10 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
             Object.defineProperty(_nativeContext, 'sampleRate', {
                 get: () => sampleRate
             });
+
+            if (isNativeOfflineAudioContext(_nativeContext)) {
+                unrenderedAudioWorkletNodeStore.set(_nativeContext, new Set());
+            }
 
             this._destination = new audioDestinationNodeConstructor(<T> (<unknown> this), numberOfChannels);
             this._listener = createAudioListener(<T> (<unknown> this), _nativeContext);

@@ -127,6 +127,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
     createNativeChannelSplitterNode,
     createNativeConstantSourceNode,
     createNativeGainNode,
+    deleteUnrenderedAudioWorkletNode,
     disconnectMultipleOutputs,
     exposeCurrentFrameAndCurrentTime,
     getNativeAudioNode,
@@ -178,10 +179,6 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     ));
                 }
 
-                // Bug #87: Expose at least one output to make this node connectable.
-                const outputAudioNodes = (options.numberOfOutputs === 0) ?
-                    [ outputChannelSplitterNode ] :
-                    outputChannelMergerNodes;
                 const outputGainNode = createNativeGainNode(nativeOfflineAudioContext, {
                     channelCount: options.channelCount,
                     channelCountMode: options.channelCountMode,
@@ -189,8 +186,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     gain: 1
                 });
 
-                outputGainNode.connect = <TNativeAudioNode['connect']> connectMultipleOutputs.bind(null, outputAudioNodes);
-                outputGainNode.disconnect = <TNativeAudioNode['disconnect']> disconnectMultipleOutputs.bind(null, outputAudioNodes);
+                outputGainNode.connect = <TNativeAudioNode['connect']> connectMultipleOutputs.bind(null, outputChannelMergerNodes);
+                outputGainNode.disconnect = <TNativeAudioNode['disconnect']> disconnectMultipleOutputs.bind(null, outputChannelMergerNodes);
 
                 nativeOutputNodes = [ outputChannelSplitterNode, outputChannelMergerNodes, outputGainNode ];
             } else if (!nativeAudioWorkletNodeIsOwnedByContext) {
@@ -360,6 +357,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]
             ): Promise<TNativeAudioWorkletNode | TNativeGainNode> {
+                deleteUnrenderedAudioWorkletNode(nativeOfflineAudioContext, proxy);
+
                 const renderedNativeAudioWorkletNodeOrGainNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeAudioWorkletNodeOrGainNode !== undefined) {

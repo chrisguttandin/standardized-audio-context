@@ -5,22 +5,15 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
     createInvalidStateError,
     createNativeAudioNode,
     createNativeAudioWorkletNodeFaker,
+    createNativeGainNode,
     createNotSupportedError,
-    isNativeOfflineAudioContext
+    monitorConnections
 ) => {
     return (nativeContext, baseLatency, nativeAudioWorkletNodeConstructor, name, processorConstructor, options) => {
         if (nativeAudioWorkletNodeConstructor !== null) {
             try {
-                // Bug #86: Chrome & Opera do not invoke the process() function if the corresponding AudioWorkletNode has no output.
                 const nativeAudioWorkletNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
-                    return (isNativeOfflineAudioContext(ntvCntxt) && options.numberOfInputs !== 0 && options.numberOfOutputs === 0) ?
-                        new nativeAudioWorkletNodeConstructor(ntvCntxt, name, {
-                            ...options,
-                            numberOfOutputs: 1,
-                            outputChannelCount: [ 1 ],
-                            parameterData: { ...options.parameterData, hasNoOutput: 1 }
-                        }) :
-                        new nativeAudioWorkletNodeConstructor(ntvCntxt, name, options);
+                    return new nativeAudioWorkletNodeConstructor(ntvCntxt, name, options);
                 });
                 const patchedEventListeners: Map<EventListenerOrEventListenerObject, NonNullable<TNativeAudioWorkletNode['onprocessorerror']>> = new Map(); // tslint:disable-line:max-line-length
 
@@ -103,6 +96,35 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                         return removeEventListener.call(nativeAudioWorkletNode, args[0], args[1], args[2]);
                     };
                 })(nativeAudioWorkletNode.removeEventListener);
+
+                /*
+                 * Bug #86: Chrome & Opera do not invoke the process() function if the corresponding AudioWorkletNode is unconnected but has
+                 * an output.
+                 */
+                if (options.numberOfOutputs !== 0) {
+                    const nativeGainNode = createNativeGainNode(
+                        nativeContext,
+                        { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'discrete', gain: 0 }
+                    );
+
+                    nativeAudioWorkletNode
+                        .connect(nativeGainNode)
+                        /*
+                         * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is
+                         * used here to make sure to connect the right destination.
+                         */
+                        .connect(nativeGainNode.context.destination);
+
+                    const whenConnected = () => nativeGainNode.disconnect();
+                    /*
+                     * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is
+                     * used here to make sure to connect the right destination.
+                     */
+                    const whenDisconnected = () => nativeGainNode.connect(nativeGainNode.context.destination);
+
+                    // @todo Disconnect the connection when the process() function of the AudioWorkletNode returns false.
+                    return monitorConnections(nativeAudioWorkletNode, whenConnected, whenDisconnected);
+                }
 
                 return nativeAudioWorkletNode;
             } catch (err) {

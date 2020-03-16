@@ -442,6 +442,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
                         if (isConnected) {
                             disconnectOutputsGraph();
+                        } else {
+                            disconnectFakeGraph();
                         }
 
                         break;
@@ -452,8 +454,27 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         let isConnected = false;
 
+        // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.
+        const nativeGainNode = createNativeGainNode(
+            nativeContext,
+            { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'discrete', gain: 0 }
+        );
+
+        const connectFakeGraph = () => scriptProcessorNode
+            .connect(nativeGainNode)
+            /*
+             * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is used here
+             * to make sure to connect the right destination.
+             */
+            .connect(nativeGainNode.context.destination);
+        const disconnectFakeGraph = () => {
+            scriptProcessorNode.disconnect(nativeGainNode);
+            nativeGainNode.disconnect();
+        };
         const whenConnected = () => {
             if (isActive) {
+                disconnectFakeGraph();
+
                 if (options.numberOfOutputs > 0) {
                     scriptProcessorNode.connect(outputChannelSplitterNode);
                 }
@@ -473,11 +494,14 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         };
         const whenDisconnected = () => {
             if (isActive) {
+                connectFakeGraph();
                 disconnectOutputsGraph();
             }
 
             isConnected = false;
         };
+
+        connectFakeGraph();
 
         return monitorConnections(nativeAudioWorkletNodeFaker, whenConnected, whenDisconnected);
     };

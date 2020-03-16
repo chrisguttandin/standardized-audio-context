@@ -11,6 +11,7 @@ import { createAbortError } from './factories/abort-error';
 import { createAddAudioNodeConnections } from './factories/add-audio-node-connections';
 import { createAddAudioParamConnections } from './factories/add-audio-param-connections';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
+import { createAddUnrenderedAudioWorkletNode } from './factories/add-unrendered-audio-worklet-node';
 import { createAnalyserNodeConstructor } from './factories/analyser-node-constructor';
 import { createAnalyserNodeRendererFactory } from './factories/analyser-node-renderer-factory';
 import { createAudioBufferConstructor } from './factories/audio-buffer-constructor';
@@ -47,6 +48,7 @@ import { createDecodeAudioData } from './factories/decode-audio-data';
 import { createDecrementCycleCounter } from './factories/decrement-cycle-counter';
 import { createDelayNodeConstructor } from './factories/delay-node-constructor';
 import { createDelayNodeRendererFactory } from './factories/delay-node-renderer-factory';
+import { createDeleteUnrenderedAudioWorkletNode } from './factories/delete-unrendered-audio-worklet-node';
 import { createDetectCycles } from './factories/detect-cycles';
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
 import { createDynamicsCompressorNodeConstructor } from './factories/dynamics-compressor-node-constructor';
@@ -62,6 +64,7 @@ import { createGetAudioNodeRenderer } from './factories/get-audio-node-renderer'
 import { createGetAudioParamRenderer } from './factories/get-audio-param-renderer';
 import { createGetBackupNativeContext } from './factories/get-backup-native-context';
 import { createGetNativeContext } from './factories/get-native-context';
+import { createGetUnrenderedAudioWorkletNodes } from './factories/get-unrendered-audio-worklet-nodes';
 import { createIIRFilterNodeConstructor } from './factories/iir-filter-node-constructor';
 import { createIIRFilterNodeRendererFactory } from './factories/iir-filter-node-renderer-factory';
 import { createIncrementCycleCounterFactory } from './factories/increment-cycle-counter-factory';
@@ -277,6 +280,7 @@ import {
     TPannerNodeConstructor,
     TPeriodicWaveConstructor,
     TStereoPannerNodeConstructor,
+    TUnrenderedAudioWorkletNodeStore,
     TWaveShaperNodeConstructor
 } from './types';
 
@@ -632,10 +636,13 @@ const createAudioListener = createAudioListenerFactory(
     createNativeScriptProcessorNode,
     isNativeOfflineAudioContext
 );
+const unrenderedAudioWorkletNodeStore: TUnrenderedAudioWorkletNodeStore = new WeakMap();
 const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(
     audioDestinationNodeConstructor,
     createAudioListener,
     eventTargetConstructor,
+    isNativeOfflineAudioContext,
+    unrenderedAudioWorkletNodeStore,
     wrapEventListener
 );
 const createNativeOscillatorNode = createNativeOscillatorNodeFactory(
@@ -872,7 +879,10 @@ type audioContextConstructor = IAudioContext;
 
 export { audioContextConstructor as AudioContext };
 
+const getUnrenderedAudioWorkletNodes = createGetUnrenderedAudioWorkletNodes(unrenderedAudioWorkletNodeStore);
+const addUnrenderedAudioWorkletNode = createAddUnrenderedAudioWorkletNode(getUnrenderedAudioWorkletNodes);
 const connectMultipleOutputs = createConnectMultipleOutputs(createIndexSizeError);
+const deleteUnrenderedAudioWorkletNode = createDeleteUnrenderedAudioWorkletNode(getUnrenderedAudioWorkletNodes);
 const disconnectMultipleOutputs = createDisconnectMultipleOutputs(createIndexSizeError);
 const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFactory(
     auxiliaryGainNodeStore,
@@ -893,8 +903,9 @@ const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
     createInvalidStateError,
     createNativeAudioNode,
     createNativeAudioWorkletNodeFaker,
+    createNativeGainNode,
     createNotSupportedError,
-    isNativeOfflineAudioContext
+    monitorConnections
 );
 const nativeAudioWorkletNodeConstructor = createNativeAudioWorkletNodeConstructor(window);
 const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
@@ -905,6 +916,7 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     createNativeChannelSplitterNode,
     createNativeConstantSourceNode,
     createNativeGainNode,
+    deleteUnrenderedAudioWorkletNode,
     disconnectMultipleOutputs,
     exposeCurrentFrameAndCurrentTime,
     getNativeAudioNode,
@@ -918,11 +930,11 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
 // The AudioWorkletNode constructor is only available in a SecureContext.
 const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = (isSecureContext) ?
     createAudioWorkletNodeConstructor(
+        addUnrenderedAudioWorkletNode,
         audioNodeConstructor,
         createAudioParam,
         createAudioWorkletNodeRenderer,
         createNativeAudioWorkletNode,
-        gainNodeConstructor,
         getNativeContext,
         isNativeOfflineAudioContext,
         nativeAudioWorkletNodeConstructor,
@@ -1006,6 +1018,7 @@ const startRendering = createStartRendering(
     audioBufferStore,
     cacheTestResult,
     getAudioNodeRenderer,
+    getUnrenderedAudioWorkletNodes,
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     wrapAudioBufferCopyChannelMethods,

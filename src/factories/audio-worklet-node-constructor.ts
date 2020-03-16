@@ -1,5 +1,13 @@
 import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
-import { IAudioParam, IAudioWorkletNode, IAudioWorkletNodeOptions, IMinimalAudioContext, IReadOnlyMap } from '../interfaces';
+import {
+    IAudioParam,
+    IAudioWorkletNode,
+    IAudioWorkletNodeOptions,
+    IMinimalAudioContext,
+    IMinimalOfflineAudioContext,
+    IOfflineAudioContext,
+    IReadOnlyMap
+} from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
     TAudioNodeRenderer,
@@ -50,11 +58,11 @@ const sanitizedOptions = (options: IAudioWorkletNodeOptions): { outputChannelCou
 };
 
 export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFactory = (
+    addUnrenderedAudioWorkletNode,
     audioNodeConstructor,
     createAudioParam,
     createAudioWorkletNodeRenderer,
     createNativeAudioWorkletNode,
-    gainNodeConstructor,
     getNativeContext,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
@@ -64,8 +72,6 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     return class AudioWorkletNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioWorkletNode<T> {
 
         private _nativeAudioWorkletNode: TNativeAudioWorkletNode;
-
-        private _numberOfOutputs: number;
 
         private _onprocessorerror: null | TErrorEventHandler<this>;
 
@@ -106,34 +112,16 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             });
 
             this._nativeAudioWorkletNode = nativeAudioWorkletNode;
-            // Bug #86 & #87: Every browser but Firefox needs to get an unused output which should not be exposed.
-            this._numberOfOutputs = (options.numberOfOutputs === 0) ? 0 : this._nativeAudioWorkletNode.numberOfOutputs;
             this._onprocessorerror = null;
             this._parameters = new ReadOnlyMap(parameters);
 
             /*
-             * Bug #86 & #87: Every browser but Firefox needs an output to be connected.
-             *
-             * Bug #50: Only Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore this is currently faked by
-             * using another AudioContext. And that is the reason why this will fail in case of a closed AudioContext.
+             * Bug #86 & #87: Invoking the renderer of an AudioWorkletNode might be necessary if it has no direct or indirect connection to
+             * the destination.
              */
-            if (context.state !== 'closed') {
-                const gainNode = new gainNodeConstructor(context, { gain: 0 });
-
-                try {
-                    this
-                        .connect(gainNode)
-                        .connect(context.destination);
-                } catch (err) {
-                    if (err.name !== 'IndexSizeError') {
-                        throw err;
-                    }
-                }
+            if (isOffline) {
+                addUnrenderedAudioWorkletNode(nativeContext, <IAudioWorkletNode<IMinimalOfflineAudioContext | IOfflineAudioContext>> this);
             }
-        }
-
-        get numberOfOutputs (): number {
-            return this._numberOfOutputs;
         }
 
         get onprocessorerror (): null | TErrorEventHandler<this> {
