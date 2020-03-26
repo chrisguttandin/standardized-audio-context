@@ -63,7 +63,7 @@
     "tslint": "^6.1.0",
     "tslint-config-holy-grail": "^48.0.7",
     "typescript": "^3.8.3",
-    "webpack": "^4.42.0"
+    "webpack": "^4.42.1"
   },
   "files": [
     "build/es2019/",
