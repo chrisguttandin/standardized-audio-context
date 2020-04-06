@@ -23,7 +23,7 @@ const compileBundle = () => {
             if (stats.hasErrors() || stats.hasWarnings()) {
                 reject(new Error(stats.toString({ errorDetails: true, warnings: true })));
             } else {
-                resolve(memoryFileSystem.readFileSync('/bundle.js', 'utf-8')); // eslint-disable-line no-sync
+                resolve(memoryFileSystem.readFileSync('/bundle.js', 'utf-8')); // eslint-disable-line node/no-sync
             }
         });
     });
