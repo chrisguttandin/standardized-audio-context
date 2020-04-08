@@ -53,7 +53,7 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
             wrapAudioBufferSourceNodeStartMethodConsecutiveCalls(nativeAudioBufferSourceNode);
         }
 
-        // Bug #92: Edge does not respect the duration parameter yet.
+        // Bug #92: Chrome & Edge do not respect the duration parameter yet.
         if (!cacheTestResult(
             testAudioBufferSourceNodeStartMethodDurationParameterSupport,
             testAudioBufferSourceNodeStartMethodDurationParameterSupport

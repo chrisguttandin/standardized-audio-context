@@ -20,9 +20,9 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
         const convolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
 
         assignNativeAudioNodeOptions(convolverNode, {
-            // Bug #166: Chrome & Opera do not allow yet to set the channelCount to 1.
+            // Bug #166: Opera does not allow yet to set the channelCount to 1.
             channelCount: Math.max(channelCount, 2),
-            // Bug #167: Chrome & Opera do not allow yet to set the channelCountMode to 'explicit'.
+            // Bug #167: Opera does not allow yet to set the channelCountMode to 'explicit'.
             channelCountMode: (channelCountMode === 'max') ? channelCountMode : 'clamped-max',
             channelInterpretation
         });
@@ -43,7 +43,7 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
                 return gainNode.channelCount;
             },
             set channelCount (value) {
-                // Bug #166: Chrome & Opera do not allow yet to set the channelCount to 1.
+                // Bug #166: Opera does not allow yet to set the channelCount to 1.
                 if (value > 2) {
                     convolverNode.channelCount = value;
                 }
@@ -54,7 +54,7 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
                 return gainNode.channelCountMode;
             },
             set channelCountMode (value) {
-                // Bug #167: Chrome & Opera do not allow yet to set the channelCountMode to 'explicit'.
+                // Bug #167: Opera does not allow yet to set the channelCountMode to 'explicit'.
                 if (value === 'max') {
                     convolverNode.channelCountMode = value;
                 }

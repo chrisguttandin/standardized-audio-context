@@ -12,7 +12,7 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
         const nativeConvolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
 
         try {
-            // Bug #166: Chrome & Opera do not allow yet to set the channelCount to 1.
+            // Bug #166: Opera does not allow yet to set the channelCount to 1.
             nativeConvolverNode.channelCount = 1;
         } catch (err) {
             return createNativeConvolverNodeFaker(nativeContext, options);
