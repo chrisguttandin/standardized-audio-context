@@ -290,6 +290,13 @@ export const createRenderer = ({ context, create, length, prepare }) => {
 
         renderedBuffer.copyFromChannel(channelData, 0, 0);
 
+        // @todo Chrome sometimes produces samples with a value of a negative zero.
+        for (let i = 0; i < channelData.length; i += 1) {
+            if (channelData[i] === 0) {
+                channelData[i] = 0;
+            }
+        }
+
         return channelData;
     };
 };
