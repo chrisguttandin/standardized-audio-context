@@ -2,6 +2,7 @@ import { interceptConnections } from '../helpers/intercept-connections';
 import { TNativeAudioBufferSourceNode, TNativeAudioNode, TNativeConstantSourceNode, TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
 
 export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNodeFakerFactoryFactory = (
+    addSilentConnection,
     createNativeAudioBufferSourceNode,
     createNativeGainNode,
     monitorConnections
@@ -83,6 +84,9 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
 
         const whenConnected = () => audioBufferSourceNode.connect(gainNode);
         const whenDisconnected = () => audioBufferSourceNode.disconnect(gainNode);
+
+        // Bug #175: Safari will not fire an ended event if the AudioBufferSourceNode is unconnected.
+        addSilentConnection(nativeContext, audioBufferSourceNode);
 
         return monitorConnections(interceptConnections(nativeConstantSourceNodeFaker, gainNode), whenConnected, whenDisconnected);
     };

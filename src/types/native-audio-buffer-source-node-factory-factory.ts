@@ -1,3 +1,4 @@
+import { TAddSilentConnectionFunction } from './add-silent-connection-function';
 import { TCacheTestResultFunction } from './cache-test-result-function';
 import { TNativeAudioBufferSourceNodeFactory } from './native-audio-buffer-source-node-factory';
 import { TNativeAudioNodeFactory } from './native-audio-node-factory';
@@ -13,6 +14,7 @@ import {
 } from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-function';
 
 export type TNativeAudioBufferSourceNodeFactoryFactory = (
+    addSilentConnection: TAddSilentConnectionFunction,
     cacheTestResult: TCacheTestResultFunction,
     createNativeAudioNode: TNativeAudioNodeFactory,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport: (nativeContext: TNativeContext) => boolean,

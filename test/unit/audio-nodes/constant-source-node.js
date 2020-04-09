@@ -655,27 +655,37 @@ describe('ConstantSourceNode', () => {
                     expect(onended).to.have.been.calledTwice;
                 });
 
-                it('should fire an assigned ended event listener', (done) => {
-                    constantSourceNode.onended = function (event) {
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(constantSourceNode);
-                        expect(event.target).to.equal(constantSourceNode);
-                        expect(event.type).to.equal('ended');
+                for (const withAConnection of [ true, false ]) {
 
-                        expect(this).to.equal(constantSourceNode);
+                    describe(`${ withAConnection ? 'with' : 'without' } a connection`, () => {
 
-                        done();
-                    };
+                        it('should fire an assigned ended event listener', (done) => {
+                            constantSourceNode.onended = function (event) {
+                                expect(event).to.be.an.instanceOf(Event);
+                                expect(event.currentTarget).to.equal(constantSourceNode);
+                                expect(event.target).to.equal(constantSourceNode);
+                                expect(event.type).to.equal('ended');
 
-                    constantSourceNode.connect(context.destination);
+                                expect(this).to.equal(constantSourceNode);
 
-                    constantSourceNode.start();
-                    constantSourceNode.stop();
+                                done();
+                            };
 
-                    if (context.startRendering !== undefined) {
-                        context.startRendering();
-                    }
-                });
+                            if (withAConnection) {
+                                constantSourceNode.connect(context.destination);
+                            }
+
+                            constantSourceNode.start();
+                            constantSourceNode.stop();
+
+                            if (context.startRendering !== undefined) {
+                                context.startRendering();
+                            }
+                        });
+
+                    });
+
+                }
 
             });
 

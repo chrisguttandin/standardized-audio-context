@@ -16,6 +16,7 @@ import {
 import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
 
 export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceNodeFactoryFactory = (
+    addSilentConnection,
     cacheTestResult,
     createNativeAudioNode,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
@@ -100,6 +101,9 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
         )) {
             wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeAudioBufferSourceNode);
         }
+
+        // Bug #175: Safari will not fire an ended event if the AudioBufferSourceNode is unconnected.
+        addSilentConnection(nativeContext, nativeAudioBufferSourceNode);
 
         return nativeAudioBufferSourceNode;
     };

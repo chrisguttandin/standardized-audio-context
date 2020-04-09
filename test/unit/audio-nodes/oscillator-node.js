@@ -545,27 +545,37 @@ describe('OscillatorNode', () => {
                     expect(onended).to.have.been.calledTwice;
                 });
 
-                it('should fire an assigned ended event listener', (done) => {
-                    oscillatorNode.onended = function (event) {
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(oscillatorNode);
-                        expect(event.target).to.equal(oscillatorNode);
-                        expect(event.type).to.equal('ended');
+                for (const withAConnection of [ true, false ]) {
 
-                        expect(this).to.equal(oscillatorNode);
+                    describe(`${ withAConnection ? 'with' : 'without' } a connection`, () => {
 
-                        done();
-                    };
+                        it('should fire an assigned ended event listener', (done) => {
+                            oscillatorNode.onended = function (event) {
+                                expect(event).to.be.an.instanceOf(Event);
+                                expect(event.currentTarget).to.equal(oscillatorNode);
+                                expect(event.target).to.equal(oscillatorNode);
+                                expect(event.type).to.equal('ended');
 
-                    oscillatorNode.connect(context.destination);
+                                expect(this).to.equal(oscillatorNode);
 
-                    oscillatorNode.start();
-                    oscillatorNode.stop();
+                                done();
+                            };
 
-                    if (context.startRendering !== undefined) {
-                        context.startRendering();
-                    }
-                });
+                            if (withAConnection) {
+                                oscillatorNode.connect(context.destination);
+                            }
+
+                            oscillatorNode.start();
+                            oscillatorNode.stop();
+
+                            if (context.startRendering !== undefined) {
+                                context.startRendering();
+                            }
+                        });
+
+                    });
+
+                }
 
             });
 

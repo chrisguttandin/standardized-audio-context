@@ -9,6 +9,7 @@ import {
 import { TNativeConstantSourceNodeFactoryFactory } from '../types';
 
 export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFactoryFactory = (
+    addSilentConnection,
     cacheTestResult,
     createNativeAudioNode,
     createNativeConstantSourceNodeFaker,
@@ -44,6 +45,9 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
         )) {
             wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeConstantSourceNode);
         }
+
+        // Bug #175: Safari will not fire an ended event if the ConstantSourceNode is unconnected.
+        addSilentConnection(nativeContext, nativeConstantSourceNode);
 
         return nativeConstantSourceNode;
     };

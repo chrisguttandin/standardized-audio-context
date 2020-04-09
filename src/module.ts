@@ -11,6 +11,7 @@ import { createAbortError } from './factories/abort-error';
 import { createAddAudioNodeConnections } from './factories/add-audio-node-connections';
 import { createAddAudioParamConnections } from './factories/add-audio-param-connections';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
+import { createAddSilentConnection } from './factories/add-silent-connection';
 import { createAddUnrenderedAudioWorkletNode } from './factories/add-unrendered-audio-worklet-node';
 import { createAnalyserNodeConstructor } from './factories/analyser-node-constructor';
 import { createAnalyserNodeRendererFactory } from './factories/analyser-node-renderer-factory';
@@ -383,6 +384,8 @@ type audioBufferConstructor = IAudioBuffer;
 
 export { audioBufferConstructor as AudioBuffer };
 
+const createNativeGainNode = createNativeGainNodeFactory(createNativeAudioNode);
+const addSilentConnection = createAddSilentConnection(createNativeGainNode);
 const testAudioScheduledSourceNodeStartMethodNegativeParametersSupport =
     createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport(createNativeAudioNode);
 const testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport =
@@ -395,6 +398,7 @@ const wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls = createWrapAudioSc
 const renderInputsOfAudioParam = createRenderInputsOfAudioParam(getAudioNodeRenderer, getAudioParamConnections, isPartOfACycle);
 const connectAudioParam = createConnectAudioParam(renderInputsOfAudioParam);
 const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFactory(
+    addSilentConnection,
     cacheTestResult,
     createNativeAudioNode,
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(createNativeAudioNode),
@@ -445,7 +449,6 @@ type audioBufferSourceNodeConstructor<T extends TContext> = IAudioBufferSourceNo
 
 export { audioBufferSourceNodeConstructor as AudioBufferSourceNode };
 
-const createNativeGainNode = createNativeGainNodeFactory(createNativeAudioNode);
 const audioDestinationNodeConstructor = createAudioDestinationNodeConstructor(
     audioNodeConstructor,
     createAudioDestinationNodeRenderer,
@@ -502,11 +505,13 @@ const channelSplitterNodeConstructor: TChannelSplitterNodeConstructor = createCh
     isNativeOfflineAudioContext
 );
 const createNativeConstantSourceNodeFaker = createNativeConstantSourceNodeFakerFactory(
+    addSilentConnection,
     createNativeAudioBufferSourceNode,
     createNativeGainNode,
     monitorConnections
 );
 const createNativeConstantSourceNode = createNativeConstantSourceNodeFactory(
+    addSilentConnection,
     cacheTestResult,
     createNativeAudioNode,
     createNativeConstantSourceNodeFaker,
@@ -646,6 +651,7 @@ const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstruc
     wrapEventListener
 );
 const createNativeOscillatorNode = createNativeOscillatorNodeFactory(
+    addSilentConnection,
     cacheTestResult,
     createNativeAudioNode,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,

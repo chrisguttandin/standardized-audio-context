@@ -779,26 +779,36 @@ describe('AudioBufferSourceNode', () => {
                     expect(onended).to.have.been.calledTwice;
                 });
 
-                it('should fire an assigned ended event listener', (done) => {
-                    audioBufferSourceNode.onended = function (event) {
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(audioBufferSourceNode);
-                        expect(event.target).to.equal(audioBufferSourceNode);
-                        expect(event.type).to.equal('ended');
+                for (const withAConnection of [ true, false ]) {
 
-                        expect(this).to.equal(audioBufferSourceNode);
+                    describe(`${ withAConnection ? 'with' : 'without' } a connection`, () => {
 
-                        done();
-                    };
+                        it('should fire an assigned ended event listener', (done) => {
+                            audioBufferSourceNode.onended = function (event) {
+                                expect(event).to.be.an.instanceOf(Event);
+                                expect(event.currentTarget).to.equal(audioBufferSourceNode);
+                                expect(event.target).to.equal(audioBufferSourceNode);
+                                expect(event.type).to.equal('ended');
 
-                    audioBufferSourceNode.connect(context.destination);
+                                expect(this).to.equal(audioBufferSourceNode);
 
-                    audioBufferSourceNode.start();
+                                done();
+                            };
 
-                    if (context.startRendering !== undefined) {
-                        context.startRendering();
-                    }
-                });
+                            if (withAConnection) {
+                                audioBufferSourceNode.connect(context.destination);
+                            }
+
+                            audioBufferSourceNode.start();
+
+                            if (context.startRendering !== undefined) {
+                                context.startRendering();
+                            }
+                        });
+
+                    });
+
+                }
 
             });
 

@@ -10,6 +10,7 @@ import {
 import { TNativeOscillatorNodeFactoryFactory } from '../types';
 
 export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFactory = (
+    addSilentConnection,
     cacheTestResult,
     createNativeAudioNode,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
@@ -54,6 +55,9 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
         )) {
             wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeOscillatorNode);
         }
+
+        // Bug #175: Safari will not fire an ended event if the OscillatorNode is unconnected.
+        addSilentConnection(nativeContext, nativeOscillatorNode);
 
         return nativeOscillatorNode;
     };

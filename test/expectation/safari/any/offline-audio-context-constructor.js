@@ -420,6 +420,32 @@ describe('offlineAudioContextConstructor', () => {
 
         });
 
+        describe('onended', () => {
+
+            // bug #175
+
+            it('should not fire an ended event listener', (done) => {
+                const audioBuffer = offlineAudioContext.createBuffer(1, 2, 44100);
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+
+                audioBufferSourceNode.buffer = audioBuffer;
+
+                const listener = spy();
+
+                audioBufferSourceNode.addEventListener('ended', listener);
+                audioBufferSourceNode.start();
+
+                setTimeout(() => {
+                    expect(listener).to.have.not.been.called;
+
+                    done();
+                }, 500);
+
+                offlineAudioContext.startRendering();
+            });
+
+        });
+
         describe('playbackRate', () => {
 
             // bug #147
