@@ -40,7 +40,7 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-sh": "^0.2.0",
-    "husky": "^4.2.3",
+    "husky": "^4.2.5",
     "karma": "^4.4.1",
     "karma-browserstack-launcher": "^1.5.1",
     "karma-chrome-launcher": "^3.1.0",
