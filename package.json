@@ -54,7 +54,7 @@
     "load-grunt-config": "^3.0.1",
     "mocha": "^7.1.1",
     "puppeteer": "^2.1.1",
-    "rollup": "^2.4.0",
+    "rollup": "^2.6.1",
     "rollup-plugin-babel": "^4.4.0",
     "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0",
