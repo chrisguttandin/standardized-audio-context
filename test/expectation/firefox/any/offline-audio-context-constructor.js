@@ -263,4 +263,12 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('suspend()', () => {
+
+        it('should not be implemented', () => {
+            expect(offlineAudioContext.suspend).to.be.undefined;
+        });
+
+    });
+
 });
