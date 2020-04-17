@@ -125,6 +125,7 @@ interface IOfflineAudioContext extends EventTarget {
     readonly baseLatency: number;
     readonly currentTime: number;
     readonly destination: IAudioDestinationNode<IOfflineAudioContext>;
+    readonly length: number;
     readonly listener: IAudioListener;
     onstatechange: null | TEventHandler<IOfflineAudioContext>;
     readonly sampleRate: number;
