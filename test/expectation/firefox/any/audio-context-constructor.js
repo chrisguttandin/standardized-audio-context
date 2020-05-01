@@ -23,16 +23,6 @@ describe('audioContextConstructor', () => {
             audioContext = new AudioContext();
         });
 
-        describe('audioWorklet', () => {
-
-            // bug #59
-
-            it('should not be implemented', () => {
-                expect(audioContext.audioWorklet).to.be.undefined;
-            });
-
-        });
-
         describe('destination', () => {
 
             describe('numberOfOutputs', () => {
