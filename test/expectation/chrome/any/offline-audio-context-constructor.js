@@ -73,6 +73,65 @@ describe('offlineAudioContextConstructor', () => {
 
     });
 
+    describe('createDelay()', () => {
+
+        describe('with a delayTime of 128 samples', () => {
+
+            let audioBufferSourceNode;
+            let delayNode;
+            let gainNode;
+
+            afterEach(() => {
+                audioBufferSourceNode.disconnect(gainNode);
+                delayNode.disconnect(gainNode);
+                gainNode.disconnect(delayNode);
+                gainNode.disconnect(offlineAudioContext.destination);
+            });
+
+            beforeEach(() => {
+                audioBufferSourceNode = offlineAudioContext.createBufferSource();
+                delayNode = offlineAudioContext.createDelay();
+                gainNode = offlineAudioContext.createGain();
+
+                const audioBuffer = offlineAudioContext.createBuffer(1, 1, offlineAudioContext.sampleRate);
+
+                audioBuffer.getChannelData(0)[0] = 2;
+
+                audioBufferSourceNode.buffer = audioBuffer;
+
+                delayNode.delayTime.value = 128 / offlineAudioContext.sampleRate;
+
+                gainNode.gain.value = 0.5;
+
+                audioBufferSourceNode
+                    .connect(gainNode)
+                    .connect(delayNode)
+                    .connect(gainNode)
+                    .connect(offlineAudioContext.destination);
+            });
+
+            // bug #163
+
+            it('should have a minimum delayTime of 256 samples', () => {
+                audioBufferSourceNode.start(0);
+
+                return offlineAudioContext
+                    .startRendering()
+                    .then((renderedBuffer) => {
+                        const channelData = new Float32Array(512);
+
+                        renderedBuffer.copyFromChannel(channelData, 0);
+
+                        expect(channelData[0]).to.equal(1);
+                        expect(channelData[256]).to.be.above(0.49);
+                        expect(channelData[256]).to.be.below(0.51);
+                    });
+            });
+
+        });
+
+    });
+
     describe('createScriptProcessor()', () => {
 
         describe('without any output channels', () => {

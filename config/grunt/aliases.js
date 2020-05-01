@@ -27,6 +27,7 @@ module.exports = {
             isType('expectation'),
             ...filter(isTarget('chrome'), 'sh:test-expectation-chrome'),
             ...filter(isTarget(), 'sh:test-expectation-chrome-canary'),
+            ...filter(isTarget('chrome-legacy'), 'sh:test-expectation-chrome-legacy'),
             ...filter(isTarget('edge'), 'sh:test-expectation-edge'),
             ...filter(isTarget('edge-legacy'), 'sh:test-expectation-edge-legacy'),
             ...filter(isTarget('firefox'), 'sh:test-expectation-firefox'),

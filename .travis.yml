@@ -20,6 +20,8 @@ matrix:
       node_js: 12
     - env: [TARGET=chrome, TYPE=integration]
       node_js: 12
+    - env: [TARGET=chrome-legacy, TYPE=expectation]
+      node_js: 12
     - env: [TARGET=chromium, TYPE=memory]
       node_js: 12
     - env: [TARGET=edge, TYPE=expectation]
