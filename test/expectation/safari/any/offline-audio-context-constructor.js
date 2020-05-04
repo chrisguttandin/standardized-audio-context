@@ -574,6 +574,14 @@ describe('offlineAudioContextConstructor', () => {
             expect(channelMergerNode.channelCountMode).to.not.equal('explicit');
         });
 
+        // bug #16
+
+        it('should allow to set the channelCountMode', () => {
+            const channelMergerNode = offlineAudioContext.createChannelMerger();
+
+            channelMergerNode.channelCountMode = 'clamped-max';
+        });
+
         // bug #20
 
         it('should not handle unconnected channels as silence', (done) => {

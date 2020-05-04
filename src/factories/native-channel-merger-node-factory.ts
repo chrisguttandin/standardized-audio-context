@@ -11,6 +11,7 @@ export const createNativeChannelMergerNodeFactory: TNativeChannelMergerNodeFacto
         });
 
         // Bug #15: Safari does not return the default properties.
+        // Bug #16: Safari does not throw an error when setting a different channelCount or channelCountMode.
         if (nativeChannelMergerNode.channelCount !== 1 &&
                 nativeChannelMergerNode.channelCountMode !== 'explicit') {
             wrapChannelMergerNode(nativeContext, nativeChannelMergerNode);
