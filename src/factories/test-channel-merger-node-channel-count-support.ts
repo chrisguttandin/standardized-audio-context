@@ -19,7 +19,7 @@ export const createTestChannelMergerNodeChannelCountSupport: TTestChannelMergerN
          * Bug #15: Safari does not return the default properties. It still needs to be patched. This test is supposed to test the support
          * in other browsers.
          */
-        if (nativeChannelMergerNode.channelCountMode === 'explicit') {
+        if (nativeChannelMergerNode.channelCountMode === 'max') {
             return true;
         }
 
