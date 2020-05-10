@@ -108,21 +108,21 @@ module.exports = (config) => {
                     browser: 'chrome',
                     os: 'Windows',
                     os_version: '10', // eslint-disable-line camelcase
-                    timeout: 1200
+                    timeout: 1800
                 },
                 EdgeBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'edge',
                     os: 'Windows',
                     os_version: '10', // eslint-disable-line camelcase
-                    timeout: 1200
+                    timeout: 1800
                 },
                 FirefoxBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'firefox',
                     os: 'Windows',
                     os_version: '10', // eslint-disable-line camelcase
-                    timeout: 1200
+                    timeout: 1800
                 }
             }
 
