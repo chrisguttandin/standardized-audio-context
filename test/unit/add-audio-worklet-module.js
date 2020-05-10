@@ -72,7 +72,12 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
                     addAudioWorkletModule('base/test/fixtures/unparsable-processor.xs')
                         .catch((err) => {
-                            expect(err).to.be.an.instanceOf(SyntaxError);
+                            // Bug #177 Firefox does not throw a SyntaxError.
+                            if (/Firefox/.test(navigator.userAgent)) {
+                                expect(err).to.be.an.instanceOf(Error);
+                            } else {
+                                expect(err).to.be.an.instanceOf(SyntaxError);
+                            }
 
                             done();
                         });
@@ -133,11 +138,16 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
 
             describe('with a module which contains an import statement', () => {
 
-                it('should return a resolving promise', function () {
-                    this.timeout(10000);
+                if (!/Firefox/.test(navigator.userAgent)) {
 
-                    return addAudioWorkletModule('base/test/fixtures/gibberish-processor.js');
-                });
+                    // Bug #176 Firefox does not support import statements yet.
+                    it('should return a resolving promise', function () {
+                        this.timeout(10000);
+
+                        return addAudioWorkletModule('base/test/fixtures/gibberish-processor.js');
+                    });
+
+                }
 
             });
 
