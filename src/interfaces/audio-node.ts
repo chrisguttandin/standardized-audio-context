@@ -16,7 +16,7 @@ export interface IAudioNode<T extends TContext> extends TNativeEventTarget {
     readonly numberOfOutputs: number;
 
     connect <U extends TContext, V extends IAudioNode<U>> (destinationNode: V, output?: number, input?: number): V;
-    connect (destinationParam: T, output?: number): void;
+    connect (destinationParam: IAudioParam, output?: number): void;
 
     disconnect (output?: number): void;
     disconnect <U extends TContext> (destinationNode: IAudioNode<U>, output?: number, input?: number): void;
