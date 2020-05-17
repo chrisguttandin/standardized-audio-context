@@ -4,7 +4,19 @@ export const createConnectedNativeAudioBufferSourceNodeFactory: TConnectedNative
     createNativeAudioBufferSourceNode
 ) => {
     return (nativeContext, nativeAudioNode) => {
-        const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext);
+        const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(
+            nativeContext,
+            {
+                buffer: null,
+                channelCount: 2,
+                channelCountMode: 'max',
+                channelInterpretation: 'speakers',
+                loop: false,
+                loopEnd: 0,
+                loopStart: 0,
+                playbackRate: 1
+            }
+        );
         const nativeAudioBuffer = nativeContext.createBuffer(1, 2, nativeContext.sampleRate);
 
         nativeAudioBufferSourceNode.buffer = nativeAudioBuffer;

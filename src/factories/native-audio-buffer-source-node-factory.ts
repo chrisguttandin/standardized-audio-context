@@ -30,7 +30,7 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
     wrapAudioBufferSourceNodeStopMethodNullifiedBuffer,
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 ) => {
-    return (nativeContext, options = { }) => {
+    return (nativeContext, options) => {
         const nativeAudioBufferSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createBufferSource());
 
         assignNativeAudioNodeOptions(nativeAudioBufferSourceNode, options);

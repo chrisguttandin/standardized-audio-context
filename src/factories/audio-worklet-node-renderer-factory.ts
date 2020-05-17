@@ -301,7 +301,19 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 }
 
                 const processedBuffer = await processedBufferPromise;
-                const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext);
+                const audioBufferSourceNode = createNativeAudioBufferSourceNode(
+                    nativeOfflineAudioContext,
+                    {
+                        buffer: null,
+                        channelCount: 2,
+                        channelCountMode: 'max',
+                        channelInterpretation: 'speakers',
+                        loop: false,
+                        loopEnd: 0,
+                        loopStart: 0,
+                        playbackRate: 1
+                    }
+                );
                 const [ outputChannelSplitterNode, outputChannelMergerNodes, outputGainNode ] = nativeOutputNodes;
 
                 if (processedBuffer !== null) {

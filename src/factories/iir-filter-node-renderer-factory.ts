@@ -86,7 +86,19 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
 
             // Bug #9: Safari does not support IIRFilterNodes.
             if (nativeOfflineAudioContext.createIIRFilter === undefined) {
-                nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext);
+                nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(
+                    nativeOfflineAudioContext,
+                    {
+                        buffer: null,
+                        channelCount: 2,
+                        channelCountMode: 'max',
+                        channelInterpretation: 'speakers',
+                        loop: false,
+                        loopEnd: 0,
+                        loopStart: 0,
+                        playbackRate: 1
+                    }
+                );
             } else if (!nativeIIRFilterNodeIsOwnedByContext) {
                 nativeIIRFilterNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => {
                     return ntvCntxt.createIIRFilter(<number[]> feedforward, <number[]> feedback);

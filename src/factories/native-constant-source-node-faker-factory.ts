@@ -9,7 +9,19 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
 ) => {
     return (nativeContext, { offset, ...audioNodeOptions }) => {
         const audioBuffer = nativeContext.createBuffer(1, 2, nativeContext.sampleRate);
-        const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext);
+        const audioBufferSourceNode = createNativeAudioBufferSourceNode(
+            nativeContext,
+            {
+                buffer: null,
+                channelCount: 2,
+                channelCountMode: 'max',
+                channelInterpretation: 'speakers',
+                loop: false,
+                loopEnd: 0,
+                loopStart: 0,
+                playbackRate: 1
+            }
+        );
         const gainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: offset });
 
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
