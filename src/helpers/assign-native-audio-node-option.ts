@@ -1,7 +1,7 @@
-export const assignNativeAudioNodeOption = <T extends any, U extends T, V extends Partial<T>> (
-    nativeAudioNode: U,
-    options: V,
-    option: keyof T
+export const assignNativeAudioNodeOption = <T extends keyof any, U extends any> (
+    nativeAudioNode: Record<T, U>,
+    options: Record<T, U>,
+    option: T
 ) => {
     const value = options[option];
 
