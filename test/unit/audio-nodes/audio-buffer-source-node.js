@@ -743,7 +743,7 @@ describe('AudioBufferSourceNode', () => {
                 });
 
                 it('should be assignable to a function', () => {
-                    const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
+                    const fn = () => {};
                     const onended = audioBufferSourceNode.onended = fn; // eslint-disable-line no-multi-assign
 
                     expect(onended).to.equal(fn);
