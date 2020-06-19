@@ -15,20 +15,16 @@ export const createChannelMergerNodeConstructor: TChannelMergerNodeConstructorFa
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
     return class ChannelMergerNode<T extends TContext> extends audioNodeConstructor<T> {
-
-        constructor (context: T, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IChannelMergerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeChannelMergerNode = createNativeChannelMergerNode(nativeContext, mergedOptions);
-            const channelMergerNodeRenderer = <TAudioNodeRenderer<T, this>> ((isNativeOfflineAudioContext(nativeContext))
-                ? createChannelMergerNodeRenderer()
-                : null);
+            const channelMergerNodeRenderer = <TAudioNodeRenderer<T, this>>(
+                (isNativeOfflineAudioContext(nativeContext) ? createChannelMergerNodeRenderer() : null)
+            );
 
             super(context, false, nativeChannelMergerNode, channelMergerNodeRenderer);
         }
-
     };
-
 };

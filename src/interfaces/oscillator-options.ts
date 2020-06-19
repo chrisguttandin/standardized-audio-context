@@ -3,7 +3,6 @@ import { IAudioNodeOptions } from './audio-node-options';
 import { IPeriodicWave } from './periodic-wave';
 
 export interface IOscillatorOptions extends IAudioNodeOptions {
-
     detune: number;
 
     frequency: number;
@@ -11,5 +10,4 @@ export interface IOscillatorOptions extends IAudioNodeOptions {
     periodicWave?: IPeriodicWave;
 
     type: TOscillatorType;
-
 }

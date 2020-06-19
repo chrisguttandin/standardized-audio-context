@@ -1,5 +1,4 @@
 describe('audioBufferConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -15,5 +14,4 @@ describe('audioBufferConstructor', () => {
             new AudioBuffer(audioContext, { length: 1 });
         }).to.throw(TypeError, 'Function expected');
     });
-
 });

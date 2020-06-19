@@ -141,47 +141,25 @@ import { createStartRendering } from './factories/start-rendering';
 import { createStereoPannerNodeConstructor } from './factories/stereo-panner-node-constructor';
 import { createStereoPannerNodeRendererFactory } from './factories/stereo-panner-node-renderer-factory';
 import { createTestAudioBufferConstructorSupport } from './factories/test-audio-buffer-constructor-support';
-import {
-    createTestAudioBufferCopyChannelMethodsSubarraySupport
-} from './factories/test-audio-buffer-copy-channel-methods-subarray-support';
-import {
-    createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport
-} from './factories/test-audio-buffer-source-node-start-method-consecutive-calls-support';
-import {
-    createTestAudioBufferSourceNodeStartMethodDurationParameterSupport
-} from './factories/test-audio-buffer-source-node-start-method-duration-parameter-support';
-import {
-    createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport
-} from './factories/test-audio-buffer-source-node-start-method-offset-clamping-support';
-import {
-    createTestAudioBufferSourceNodeStopMethodNullifiedBufferSupport
-} from './factories/test-audio-buffer-source-node-stop-method-nullified-buffer-support';
+import { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './factories/test-audio-buffer-copy-channel-methods-subarray-support';
+import { createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport } from './factories/test-audio-buffer-source-node-start-method-consecutive-calls-support';
+import { createTestAudioBufferSourceNodeStartMethodDurationParameterSupport } from './factories/test-audio-buffer-source-node-start-method-duration-parameter-support';
+import { createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport } from './factories/test-audio-buffer-source-node-start-method-offset-clamping-support';
+import { createTestAudioBufferSourceNodeStopMethodNullifiedBufferSupport } from './factories/test-audio-buffer-source-node-stop-method-nullified-buffer-support';
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method-support';
-import {
-    createTestAudioContextDecodeAudioDataMethodTypeErrorSupport
-} from './factories/test-audio-context-decode-audio-data-method-type-error-support';
+import { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './factories/test-audio-context-decode-audio-data-method-type-error-support';
 import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options-support';
 import { createTestAudioNodeConnectMethodSupport } from './factories/test-audio-node-connect-method-support';
-import {
-    createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport
-} from './factories/test-audio-scheduled-source-node-start-method-negative-parameters-support';
-import {
-    createTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport
-} from './factories/test-audio-scheduled-source-node-stop-method-consecutive-calls-support';
-import {
-    createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport
-} from './factories/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
+import { createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport } from './factories/test-audio-scheduled-source-node-start-method-negative-parameters-support';
+import { createTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport } from './factories/test-audio-scheduled-source-node-stop-method-consecutive-calls-support';
+import { createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './factories/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
 
 import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/test-audio-worklet-processor-no-outputs-support';
 import { createTestChannelMergerNodeChannelCountSupport } from './factories/test-channel-merger-node-channel-count-support';
-import {
-    createTestConstantSourceNodeAccurateSchedulingSupport
-} from './factories/test-constant-source-node-accurate-scheduling-support';
+import { createTestConstantSourceNodeAccurateSchedulingSupport } from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createTestConvolverNodeBufferReassignabilitySupport } from './factories/test-convolver-node-buffer-reassignability-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
-import {
-    createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport
-} from './factories/test-media-stream-audio-source-node-media-stream-without-audio-track-support';
+import { createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport } from './factories/test-media-stream-audio-source-node-media-stream-without-audio-track-support';
 import { createTestOfflineAudioContextCurrentTimeSupport } from './factories/test-offline-audio-context-current-time-support';
 import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
 import { createUnknownError } from './factories/unknown-error';
@@ -191,9 +169,7 @@ import { createWindow } from './factories/window';
 import { createWrapAudioBufferCopyChannelMethods } from './factories/wrap-audio-buffer-copy-channel-methods';
 import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
 import { createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer } from './factories/wrap-audio-buffer-source-node-stop-method-nullified-buffer';
-import {
-    createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
-} from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
+import { createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls } from './factories/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
 import {
     AUDIO_NODE_CONNECTIONS_STORE,
@@ -215,9 +191,7 @@ import { isActiveAudioNode } from './helpers/is-active-audio-node';
 import { isDCCurve } from './helpers/is-dc-curve';
 import { isPartOfACycle } from './helpers/is-part-of-a-cycle';
 import { overwriteAccessors } from './helpers/overwrite-accessors';
-import {
-    testAudioBufferCopyChannelMethodsOutOfBoundsSupport
-} from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
+import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
@@ -306,11 +280,7 @@ const createNativeAudioNode = createNativeAudioNodeFactory(getBackupNativeContex
 const createNativeAnalyserNode = createNativeAnalyserNodeFactory(cacheTestResult, createIndexSizeError, createNativeAudioNode);
 const getAudioNodeRenderer = createGetAudioNodeRenderer(getAudioNodeConnections);
 const renderInputsOfAudioNode = createRenderInputsOfAudioNode(getAudioNodeConnections, getAudioNodeRenderer, isPartOfACycle);
-const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(
-    createNativeAnalyserNode,
-    getNativeAudioNode,
-    renderInputsOfAudioNode
-);
+const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(createNativeAnalyserNode, getNativeAudioNode, renderInputsOfAudioNode);
 const auxiliaryGainNodeStore: TAuxiliaryGainNodeStore = new WeakMap();
 const getNativeContext = createGetNativeContext(CONTEXT_STORE);
 const audioParamAudioNodeStore: TAudioParamAudioNodeStore = new WeakMap();
@@ -386,12 +356,15 @@ export { audioBufferConstructor as AudioBuffer };
 
 const createNativeGainNode = createNativeGainNodeFactory(createNativeAudioNode);
 const addSilentConnection = createAddSilentConnection(createNativeGainNode);
-const testAudioScheduledSourceNodeStartMethodNegativeParametersSupport =
-    createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport(createNativeAudioNode);
-const testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport =
-    createTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(createNativeAudioNode);
-const testAudioScheduledSourceNodeStopMethodNegativeParametersSupport =
-    createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport(createNativeAudioNode);
+const testAudioScheduledSourceNodeStartMethodNegativeParametersSupport = createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport(
+    createNativeAudioNode
+);
+const testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport = createTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(
+    createNativeAudioNode
+);
+const testAudioScheduledSourceNodeStopMethodNegativeParametersSupport = createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport(
+    createNativeAudioNode
+);
 const wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls = createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(
     createNativeAudioNode
 );
@@ -778,20 +751,20 @@ const isSecureContext = createIsSecureContext(window);
 const exposeCurrentFrameAndCurrentTime = createExposeCurrentFrameAndCurrentTime(window);
 
 // The addAudioWorkletModule() function is only available in a SecureContext.
-export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction = (isSecureContext) ?
-    createAddAudioWorkletModule(
-        createNotSupportedError,
-        createEvaluateSource(window),
-        exposeCurrentFrameAndCurrentTime,
-        createFetchSource(createAbortError),
-        getBackupNativeContext,
-        getNativeContext,
-        new WeakMap(),
-        new WeakMap(),
-        // @todo window is guaranteed to be defined because isSecureContext checks that as well.
-        <NonNullable<typeof window>> window
-    ) :
-    undefined;
+export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction = isSecureContext
+    ? createAddAudioWorkletModule(
+          createNotSupportedError,
+          createEvaluateSource(window),
+          exposeCurrentFrameAndCurrentTime,
+          createFetchSource(createAbortError),
+          getBackupNativeContext,
+          getNativeContext,
+          new WeakMap(),
+          new WeakMap(),
+          // @todo window is guaranteed to be defined because isSecureContext checks that as well.
+          <NonNullable<typeof window>>window
+      )
+    : undefined;
 
 const isNativeContext = createIsNativeContext(isNativeAudioContext, isNativeOfflineAudioContext);
 
@@ -844,13 +817,12 @@ const createNativeMediaStreamAudioDestinationNode = createNativeMediaStreamAudio
     createNativeAudioNode,
     createNotSupportedError
 );
-const mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNodeConstructor
-    = createMediaStreamAudioDestinationNodeConstructor(
-        audioNodeConstructor,
-        createNativeMediaStreamAudioDestinationNode,
-        getNativeContext,
-        isNativeOfflineAudioContext
-    );
+const mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNodeConstructor = createMediaStreamAudioDestinationNodeConstructor(
+    audioNodeConstructor,
+    createNativeMediaStreamAudioDestinationNode,
+    getNativeContext,
+    isNativeOfflineAudioContext
+);
 const createNativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNodeFactory(createNativeAudioNode);
 const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
     audioNodeConstructor,
@@ -863,12 +835,11 @@ const createNativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrack
     createNativeAudioNode,
     isNativeOfflineAudioContext
 );
-const mediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructor
-    = createMediaStreamTrackAudioSourceNodeConstructor(
-        audioNodeConstructor,
-        createNativeMediaStreamTrackAudioSourceNode,
-        getNativeContext
-    );
+const mediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructor = createMediaStreamTrackAudioSourceNodeConstructor(
+    audioNodeConstructor,
+    createNativeMediaStreamTrackAudioSourceNode,
+    getNativeContext
+);
 const audioContextConstructor: TAudioContextConstructor = createAudioContextConstructor(
     baseAudioContextConstructor,
     createInvalidStateError,
@@ -934,19 +905,19 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
 );
 
 // The AudioWorkletNode constructor is only available in a SecureContext.
-const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = (isSecureContext) ?
-    createAudioWorkletNodeConstructor(
-        addUnrenderedAudioWorkletNode,
-        audioNodeConstructor,
-        createAudioParam,
-        createAudioWorkletNodeRenderer,
-        createNativeAudioWorkletNode,
-        getNativeContext,
-        isNativeOfflineAudioContext,
-        nativeAudioWorkletNodeConstructor,
-        wrapEventListener
-    ) :
-    undefined;
+const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = isSecureContext
+    ? createAudioWorkletNodeConstructor(
+          addUnrenderedAudioWorkletNode,
+          audioNodeConstructor,
+          createAudioParam,
+          createAudioWorkletNodeRenderer,
+          createNativeAudioWorkletNode,
+          getNativeContext,
+          isNativeOfflineAudioContext,
+          nativeAudioWorkletNodeConstructor,
+          wrapEventListener
+      )
+    : undefined;
 
 type audioWorkletNodeConstructor<T extends TContext> = undefined | IAudioWorkletNode<T>;
 
@@ -1082,19 +1053,20 @@ export const isAnyAudioParam = createIsAnyAudioParam(AUDIO_PARAM_STORE, isNative
 
 export const isAnyOfflineAudioContext = createIsAnyOfflineAudioContext(CONTEXT_STORE, isNativeOfflineAudioContext);
 
-export const isSupported = () => createIsSupportedPromise(
-    cacheTestResult,
-    createTestAudioBufferCopyChannelMethodsSubarraySupport(nativeOfflineAudioContextConstructor),
-    createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
-    createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
-    createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
-    createTestAudioNodeConnectMethodSupport(nativeOfflineAudioContextConstructor),
-    createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
-    createTestChannelMergerNodeChannelCountSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
-    createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
-    createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),
-    createTestIsSecureContextSupport(window),
-    createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport(nativeAudioContextConstructor),
-    createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),
-    testTransferablesSupport
-);
+export const isSupported = () =>
+    createIsSupportedPromise(
+        cacheTestResult,
+        createTestAudioBufferCopyChannelMethodsSubarraySupport(nativeOfflineAudioContextConstructor),
+        createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
+        createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
+        createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
+        createTestAudioNodeConnectMethodSupport(nativeOfflineAudioContextConstructor),
+        createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
+        createTestChannelMergerNodeChannelCountSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
+        createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
+        createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),
+        createTestIsSecureContextSupport(window),
+        createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport(nativeAudioContextConstructor),
+        createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),
+        testTransferablesSupport
+    );

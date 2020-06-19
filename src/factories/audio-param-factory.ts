@@ -24,27 +24,27 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
         minValue: null | number = null
     ): IAudioParam => {
         const automationEventList = new AutomationEventList(nativeAudioParam.defaultValue);
-        const audioParamRenderer = (isAudioParamOfOfflineAudioContext) ? createAudioParamRenderer(automationEventList) : null;
+        const audioParamRenderer = isAudioParamOfOfflineAudioContext ? createAudioParamRenderer(automationEventList) : null;
         const audioParam = {
-            get defaultValue (): number {
+            get defaultValue(): number {
                 return nativeAudioParam.defaultValue;
             },
-            get maxValue (): number {
-                return (maxValue === null) ? nativeAudioParam.maxValue : maxValue;
+            get maxValue(): number {
+                return maxValue === null ? nativeAudioParam.maxValue : maxValue;
             },
-            get minValue (): number {
-                return (minValue === null) ? nativeAudioParam.minValue : minValue;
+            get minValue(): number {
+                return minValue === null ? nativeAudioParam.minValue : minValue;
             },
-            get value (): number {
+            get value(): number {
                 return nativeAudioParam.value;
             },
-            set value (value) {
+            set value(value) {
                 nativeAudioParam.value = value;
 
                 // Bug #98: Edge, Firefox & Safari do not yet treat the value setter like a call to setValueAtTime().
                 audioParam.setValueAtTime(value, audioNode.context.currentTime);
             },
-            cancelAndHoldAtTime (cancelTime: number): IAudioParam {
+            cancelAndHoldAtTime(cancelTime: number): IAudioParam {
                 // Bug #28: Edge, Firefox & Safari do not yet implement cancelAndHoldAtTime().
                 if (typeof nativeAudioParam.cancelAndHoldAtTime === 'function') {
                     if (audioParamRenderer === null) {
@@ -54,9 +54,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                     automationEventList.add(createCancelAndHoldAutomationEvent(cancelTime));
                     nativeAudioParam.cancelAndHoldAtTime(cancelTime);
                 } else {
-                    const previousLastEvent = Array
-                        .from(automationEventList)
-                        .pop();
+                    const previousLastEvent = Array.from(automationEventList).pop();
 
                     if (audioParamRenderer === null) {
                         automationEventList.flush(audioNode.context.currentTime);
@@ -64,9 +62,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                     automationEventList.add(createCancelAndHoldAutomationEvent(cancelTime));
 
-                    const currentLastEvent = Array
-                        .from(automationEventList)
-                        .pop();
+                    const currentLastEvent = Array.from(automationEventList).pop();
 
                     nativeAudioParam.cancelScheduledValues(cancelTime);
 
@@ -89,7 +85,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 return audioParam;
             },
-            cancelScheduledValues (cancelTime: number): IAudioParam {
+            cancelScheduledValues(cancelTime: number): IAudioParam {
                 if (audioParamRenderer === null) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
@@ -99,7 +95,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 return audioParam;
             },
-            exponentialRampToValueAtTime (value: number, endTime: number): IAudioParam {
+            exponentialRampToValueAtTime(value: number, endTime: number): IAudioParam {
                 if (audioParamRenderer === null) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
@@ -109,7 +105,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 return audioParam;
             },
-            linearRampToValueAtTime (value: number, endTime: number): IAudioParam {
+            linearRampToValueAtTime(value: number, endTime: number): IAudioParam {
                 if (audioParamRenderer === null) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
@@ -119,7 +115,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 return audioParam;
             },
-            setTargetAtTime (target: number, startTime: number, timeConstant: number): IAudioParam {
+            setTargetAtTime(target: number, startTime: number, timeConstant: number): IAudioParam {
                 if (audioParamRenderer === null) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
@@ -129,7 +125,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 return audioParam;
             },
-            setValueAtTime (value: number, startTime: number): IAudioParam {
+            setValueAtTime(value: number, startTime: number): IAudioParam {
                 if (audioParamRenderer === null) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
@@ -139,7 +135,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 return audioParam;
             },
-            setValueCurveAtTime (values: Float32Array, startTime: number, duration: number): IAudioParam {
+            setValueCurveAtTime(values: Float32Array, startTime: number, duration: number): IAudioParam {
                 /*
                  * Bug #152: Safari does not correctly interpolate the values of the curve.
                  * @todo Unfortunately there is no way to test for this behavior in synchronous fashion which is why testing for the
@@ -149,19 +145,20 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                     const endTime = startTime + duration;
                     const sampleRate = audioNode.context.sampleRate;
                     const firstSample = Math.ceil(startTime * sampleRate);
-                    const lastSample = Math.floor((endTime) * sampleRate);
+                    const lastSample = Math.floor(endTime * sampleRate);
                     const numberOfInterpolatedValues = lastSample - firstSample;
                     const interpolatedValues = new Float32Array(numberOfInterpolatedValues);
 
                     for (let i = 0; i < numberOfInterpolatedValues; i += 1) {
-                        const theoreticIndex = ((values.length - 1) / duration) * (((firstSample + i) / sampleRate) - startTime);
+                        const theoreticIndex = ((values.length - 1) / duration) * ((firstSample + i) / sampleRate - startTime);
                         const lowerIndex = Math.floor(theoreticIndex);
                         const upperIndex = Math.ceil(theoreticIndex);
 
-                        interpolatedValues[i] = (lowerIndex === upperIndex)
-                            ? values[lowerIndex]
-                            : ((1 - (theoreticIndex - lowerIndex)) * values[lowerIndex])
-                                + ((1 - (upperIndex - theoreticIndex)) * values[upperIndex]);
+                        interpolatedValues[i] =
+                            lowerIndex === upperIndex
+                                ? values[lowerIndex]
+                                : (1 - (theoreticIndex - lowerIndex)) * values[lowerIndex] +
+                                  (1 - (upperIndex - theoreticIndex)) * values[upperIndex];
                     }
 
                     if (audioParamRenderer === null) {
@@ -196,7 +193,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
         addAudioParamConnections(
             audioParam,
-            <T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioParamRenderer : null> audioParamRenderer
+            <T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioParamRenderer : null>audioParamRenderer
         );
 
         return audioParam;

@@ -20,48 +20,46 @@ import { IStereoPannerNode } from './stereo-panner-node';
 import { IWaveShaperNode } from './wave-shaper-node';
 
 export interface IBaseAudioContext<T extends TContext> extends IMinimalBaseAudioContext<T> {
-
     // The audioWorklet property is only available in a SecureContext.
     readonly audioWorklet?: IAudioWorklet;
 
-    createAnalyser (): IAnalyserNode<T>;
+    createAnalyser(): IAnalyserNode<T>;
 
-    createBiquadFilter (): IBiquadFilterNode<T>;
+    createBiquadFilter(): IBiquadFilterNode<T>;
 
-    createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
+    createBuffer(numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
 
-    createBufferSource (): IAudioBufferSourceNode<T>;
+    createBufferSource(): IAudioBufferSourceNode<T>;
 
-    createChannelMerger (numberOfInputs?: number): IAudioNode<T>;
+    createChannelMerger(numberOfInputs?: number): IAudioNode<T>;
 
-    createChannelSplitter (numberOfOutputs?: number): IAudioNode<T>;
+    createChannelSplitter(numberOfOutputs?: number): IAudioNode<T>;
 
-    createConstantSource (): IConstantSourceNode<T>;
+    createConstantSource(): IConstantSourceNode<T>;
 
-    createConvolver (): IConvolverNode<T>;
+    createConvolver(): IConvolverNode<T>;
 
-    createDelay (maxDelayTime?: number): IDelayNode<T>;
+    createDelay(maxDelayTime?: number): IDelayNode<T>;
 
-    createDynamicsCompressor (): IDynamicsCompressorNode<T>;
+    createDynamicsCompressor(): IDynamicsCompressorNode<T>;
 
-    createGain (): IGainNode<T>;
+    createGain(): IGainNode<T>;
 
-    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode<T>;
+    createIIRFilter(feedforward: number[], feedback: number[]): IIIRFilterNode<T>;
 
-    createOscillator (): IOscillatorNode<T>;
+    createOscillator(): IOscillatorNode<T>;
 
-    createPanner (): IPannerNode<T>;
+    createPanner(): IPannerNode<T>;
 
-    createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
+    createPeriodicWave(real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
 
-    createStereoPanner (): IStereoPannerNode<T>;
+    createStereoPanner(): IStereoPannerNode<T>;
 
-    createWaveShaper (): IWaveShaperNode<T>;
+    createWaveShaper(): IWaveShaperNode<T>;
 
-    decodeAudioData (
+    decodeAudioData(
         audioData: ArrayBuffer,
         successCallback?: TDecodeSuccessCallback,
         errorCallback?: TDecodeErrorCallback
     ): Promise<AudioBuffer>;
-
 }

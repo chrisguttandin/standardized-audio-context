@@ -3,7 +3,6 @@ import { IAudioNode } from './audio-node';
 import { IAudioParam } from './audio-param';
 
 export interface IDynamicsCompressorNode<T extends TContext> extends IAudioNode<T> {
-
     readonly attack: IAudioParam;
 
     readonly knee: IAudioParam;
@@ -15,5 +14,4 @@ export interface IDynamicsCompressorNode<T extends TContext> extends IAudioNode<
     readonly release: IAudioParam;
 
     readonly threshold: IAudioParam;
-
 }

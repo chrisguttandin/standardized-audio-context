@@ -1,16 +1,12 @@
 const { env } = require('process');
 
 module.exports = (config) => {
-
     config.set({
-
         basePath: '../../',
 
         browserNoActivityTimeout: 240000,
 
-        browsers: [
-            'EdgeBrowserStack'
-        ],
+        browsers: ['EdgeBrowserStack'],
 
         captureTimeout: 120000,
 
@@ -34,10 +30,7 @@ module.exports = (config) => {
             }
         ],
 
-        frameworks: [
-            'mocha',
-            'sinon-chai'
-        ],
+        frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
             'test/expectation/edge/any/**/*.js': 'webpack',
@@ -47,47 +40,39 @@ module.exports = (config) => {
         webpack: {
             mode: 'development',
             module: {
-                rules: [ {
-                    test: /\.ts?$/,
-                    use: {
-                        loader: 'ts-loader'
+                rules: [
+                    {
+                        test: /\.ts?$/,
+                        use: {
+                            loader: 'ts-loader'
+                        }
                     }
-                } ]
+                ]
             },
             resolve: {
-                extensions: [ '.js', '.ts' ]
+                extensions: ['.js', '.ts']
             }
         },
 
         webpackMiddleware: {
             noInfo: true
         }
-
     });
 
     if (env.TRAVIS) {
-
         config.set({
-
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/expectation-edge-legacy`,
+                build: `${env.TRAVIS_REPO_SLUG}/${env.TRAVIS_JOB_NUMBER}/expectation-edge-legacy`,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
             }
-
         });
-
     } else {
-
         const environment = require('../environment/local.json');
 
         config.set({
-
             browserStack: environment.browserStack
-
         });
-
     }
-
 };

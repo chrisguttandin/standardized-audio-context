@@ -1,5 +1,4 @@
 describe('audioContextConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -9,11 +8,9 @@ describe('audioContextConstructor', () => {
     });
 
     describe('createBuffer()', () => {
-
         // bug #157
 
         describe('copyFromChannel()/copyToChannel()', () => {
-
             let audioBuffer;
 
             beforeEach(() => {
@@ -25,9 +22,6 @@ describe('audioContextConstructor', () => {
 
                 expect(() => audioBuffer.copyToChannel(source, 0, 101)).to.throw(Error);
             });
-
         });
-
     });
-
 });

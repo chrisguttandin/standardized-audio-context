@@ -2,7 +2,6 @@ import { createIsAnyAudioContext } from '../../../src/factories/is-any-audio-con
 import { stub } from 'sinon';
 
 describe('isAnyAudioContext()', () => {
-
     let contextStore;
     let isAnyAudioContext;
     let isNativeAudioContext;
@@ -15,9 +14,7 @@ describe('isAnyAudioContext()', () => {
     });
 
     describe('without any AudioContext in the store', () => {
-
         describe('with an object which gets not identified as native AudioContext', () => {
-
             let anything;
 
             beforeEach(() => {
@@ -29,11 +26,9 @@ describe('isAnyAudioContext()', () => {
             it('should return false', () => {
                 expect(isAnyAudioContext(anything)).to.be.false;
             });
-
         });
 
         describe('with an AudioContext which gets identified as native', () => {
-
             let nativeAudioContext;
 
             beforeEach(() => {
@@ -45,13 +40,10 @@ describe('isAnyAudioContext()', () => {
             it('should return true', () => {
                 expect(isAnyAudioContext(nativeAudioContext)).to.be.true;
             });
-
         });
-
     });
 
     describe('with an AudioContext in the store', () => {
-
         let audioContext;
 
         beforeEach(() => {
@@ -59,7 +51,6 @@ describe('isAnyAudioContext()', () => {
         });
 
         describe('with a mapped object which gets not identified as native AudioContext', () => {
-
             beforeEach(() => {
                 const anything = { any: 'object' };
 
@@ -72,11 +63,9 @@ describe('isAnyAudioContext()', () => {
             it('should return false', () => {
                 expect(isAnyAudioContext(audioContext)).to.be.false;
             });
-
         });
 
         describe('with a mapped AudioContext which gets identified as native', () => {
-
             beforeEach(() => {
                 const nativeAudioContext = { a: 'fake native AudioContext' };
 
@@ -88,9 +77,6 @@ describe('isAnyAudioContext()', () => {
             it('should return true', () => {
                 expect(isAnyAudioContext(audioContext)).to.be.true;
             });
-
         });
-
     });
-
 });

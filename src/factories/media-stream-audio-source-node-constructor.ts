@@ -7,14 +7,11 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
-    return class MediaStreamAudioSourceNode<T extends IAudioContext | IMinimalAudioContext>
-            extends audioNodeConstructor<T>
-            implements IMediaStreamAudioSourceNode<T> {
-
+    return class MediaStreamAudioSourceNode<T extends IAudioContext | IMinimalAudioContext> extends audioNodeConstructor<T>
+        implements IMediaStreamAudioSourceNode<T> {
         private _nativeMediaStreamAudioSourceNode: TNativeMediaStreamAudioSourceNode;
 
-        constructor (context: T, options: IMediaStreamAudioSourceOptions) {
+        constructor(context: T, options: IMediaStreamAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
             const nativeMediaStreamAudioSourceNode = createNativeMediaStreamAudioSourceNode(nativeContext, options);
 
@@ -23,15 +20,13 @@ export const createMediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourc
                 throw new TypeError();
             }
 
-            super(context, true, nativeMediaStreamAudioSourceNode, <TAudioNodeRenderer<T>> null);
+            super(context, true, nativeMediaStreamAudioSourceNode, <TAudioNodeRenderer<T>>null);
 
             this._nativeMediaStreamAudioSourceNode = nativeMediaStreamAudioSourceNode;
         }
 
-        get mediaStream (): MediaStream {
+        get mediaStream(): MediaStream {
             return this._nativeMediaStreamAudioSourceNode.mediaStream;
         }
-
     };
-
 };

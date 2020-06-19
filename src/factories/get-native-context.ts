@@ -1,4 +1,4 @@
-import { IMinimalOfflineAudioContext,  IOfflineAudioContext } from '../interfaces';
+import { IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TContext, TGetNativeContextFactory, TNativeAudioContext, TNativeOfflineAudioContext } from '../types';
 import { createInvalidStateError } from './invalid-state-error';
 
@@ -12,8 +12,8 @@ export const createGetNativeContext: TGetNativeContextFactory = (contextStore) =
             throw createInvalidStateError();
         }
 
-        return <
-            T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? TNativeOfflineAudioContext : TNativeAudioContext
-        > nativeContext;
+        return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? TNativeOfflineAudioContext : TNativeAudioContext>(
+            nativeContext
+        );
     };
 };

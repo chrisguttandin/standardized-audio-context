@@ -10,6 +10,5 @@ export const setInternalStateToPassive = <T extends TContext>(audioNode: IAudioN
 
     ACTIVE_AUDIO_NODE_STORE.delete(audioNode);
 
-    getEventListenersOfAudioNode(audioNode)
-        .forEach((eventListener) => eventListener(false));
+    getEventListenersOfAudioNode(audioNode).forEach((eventListener) => eventListener(false));
 };

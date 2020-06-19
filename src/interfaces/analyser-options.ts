@@ -1,7 +1,6 @@
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IAnalyserOptions extends IAudioNodeOptions {
-
     fftSize: number;
 
     maxDecibels: number;
@@ -9,5 +8,4 @@ export interface IAnalyserOptions extends IAudioNodeOptions {
     minDecibels: number;
 
     smoothingTimeConstant: number;
-
 }

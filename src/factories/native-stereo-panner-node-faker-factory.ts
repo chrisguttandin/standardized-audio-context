@@ -19,7 +19,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 ) => {
     // The curve has a size of 14bit plus 1 value to have an exact representation for zero. This value has been determined experimentally.
     const CURVE_SIZE = 16385;
-    const DC_CURVE = new Float32Array([ 1, 1 ]);
+    const DC_CURVE = new Float32Array([1, 1]);
     const HALF_PI = Math.PI / 2;
     const SINGLE_CHANNEL_OPTIONS = { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'discrete' } as const;
     const SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS = { ...SINGLE_CHANNEL_OPTIONS, oversample: 'none' } as const;
@@ -42,24 +42,21 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
         const leftGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        const leftWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: leftWaveShaperCurve }
+        const leftWaveShaperNode = <INativeWaveShaperNodeFaker>(
+            createNativeWaveShaperNode(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: leftWaveShaperCurve })
         );
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        const panWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE }
+        const panWaveShaperNode = <INativeWaveShaperNodeFaker>(
+            createNativeWaveShaperNode(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE })
         );
         const rightGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        const rightWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightWaveShaperCurve }
+        const rightWaveShaperNode = <INativeWaveShaperNodeFaker>(
+            createNativeWaveShaperNode(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightWaveShaperCurve })
         );
 
         return {
-            connectGraph (): void {
+            connectGraph(): void {
                 inputGainNode.connect(leftGainNode);
                 inputGainNode.connect(panWaveShaperNode.inputs[0]);
                 inputGainNode.connect(rightGainNode);
@@ -75,7 +72,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
                 leftGainNode.connect(channelMergerNode, 0, 0);
                 rightGainNode.connect(channelMergerNode, 0, 1);
             },
-            disconnectGraph (): void {
+            disconnectGraph(): void {
                 inputGainNode.disconnect(leftGainNode);
                 inputGainNode.disconnect(panWaveShaperNode.inputs[0]);
                 inputGainNode.disconnect(rightGainNode);
@@ -133,35 +130,35 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
         });
         const leftInputForLeftOutputGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        const leftInputForLeftOutputWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: leftInputForLeftOutputWaveShaperCurve }
-        );
+        const leftInputForLeftOutputWaveShaperNode = <INativeWaveShaperNodeFaker>createNativeWaveShaperNode(nativeContext, {
+            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
+            curve: leftInputForLeftOutputWaveShaperCurve
+        });
         const leftInputForRightOutputGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        const leftInputForRightOutputWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: leftInputForRightOutputWaveShaperCurve }
-        );
+        const leftInputForRightOutputWaveShaperNode = <INativeWaveShaperNodeFaker>createNativeWaveShaperNode(nativeContext, {
+            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
+            curve: leftInputForRightOutputWaveShaperCurve
+        });
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        const panWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE }
+        const panWaveShaperNode = <INativeWaveShaperNodeFaker>(
+            createNativeWaveShaperNode(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE })
         );
         const rightInputForLeftOutputGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        const rightInputForLeftOutputWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightInputForLeftOutputWaveShaperCurve });
+        const rightInputForLeftOutputWaveShaperNode = <INativeWaveShaperNodeFaker>createNativeWaveShaperNode(nativeContext, {
+            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
+            curve: rightInputForLeftOutputWaveShaperCurve
+        });
         const rightInputForRightOutputGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         // Bug #119: Safari does not fully support the WaveShaperNode.
-        const rightInputForRightOutputWaveShaperNode = <INativeWaveShaperNodeFaker> createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightInputForRightOutputWaveShaperCurve }
-        );
+        const rightInputForRightOutputWaveShaperNode = <INativeWaveShaperNodeFaker>createNativeWaveShaperNode(nativeContext, {
+            ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
+            curve: rightInputForRightOutputWaveShaperCurve
+        });
 
         return {
-            connectGraph (): void {
+            connectGraph(): void {
                 inputGainNode.connect(channelSplitterNode);
                 inputGainNode.connect(panWaveShaperNode.inputs[0]);
 
@@ -188,7 +185,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
                 leftInputForRightOutputGainNode.connect(channelMergerNode, 0, 1);
                 rightInputForRightOutputGainNode.connect(channelMergerNode, 0, 1);
             },
-            disconnectGraph (): void {
+            disconnectGraph(): void {
                 inputGainNode.disconnect(channelSplitterNode);
                 inputGainNode.disconnect(panWaveShaperNode.inputs[0]);
 
@@ -266,13 +263,13 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
         Object.defineProperty(panGainNode.gain, 'defaultValue', { get: () => 0 });
 
         const nativeStereoPannerNodeFakerFactory = {
-            get bufferSize (): undefined {
+            get bufferSize(): undefined {
                 return undefined;
             },
-            get channelCount (): number {
+            get channelCount(): number {
                 return inputGainNode.channelCount;
             },
-            set channelCount (value) {
+            set channelCount(value) {
                 if (inputGainNode.channelCount !== value) {
                     if (isConnected) {
                         disconnectGraph();
@@ -293,44 +290,44 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
                 inputGainNode.channelCount = value;
             },
-            get channelCountMode (): TNativeStereoPannerNode['channelCountMode'] {
+            get channelCountMode(): TNativeStereoPannerNode['channelCountMode'] {
                 return inputGainNode.channelCountMode;
             },
-            set channelCountMode (value) {
+            set channelCountMode(value) {
                 if (value === 'clamped-max' || value === 'max') {
                     throw createNotSupportedError();
                 }
 
                 inputGainNode.channelCountMode = value;
             },
-            get channelInterpretation (): TNativeStereoPannerNode['channelInterpretation'] {
+            get channelInterpretation(): TNativeStereoPannerNode['channelInterpretation'] {
                 return inputGainNode.channelInterpretation;
             },
-            set channelInterpretation (value) {
+            set channelInterpretation(value) {
                 inputGainNode.channelInterpretation = value;
             },
-            get context (): TNativeStereoPannerNode['context'] {
+            get context(): TNativeStereoPannerNode['context'] {
                 return inputGainNode.context;
             },
-            get inputs (): TNativeAudioNode[] {
-                return [ inputGainNode ];
+            get inputs(): TNativeAudioNode[] {
+                return [inputGainNode];
             },
-            get numberOfInputs (): number {
+            get numberOfInputs(): number {
                 return inputGainNode.numberOfInputs;
             },
-            get numberOfOutputs (): number {
+            get numberOfOutputs(): number {
                 return inputGainNode.numberOfOutputs;
             },
-            get pan (): TNativeStereoPannerNode['pan'] {
+            get pan(): TNativeStereoPannerNode['pan'] {
                 return panGainNode.gain;
             },
-            addEventListener (...args: any[]): void {
+            addEventListener(...args: any[]): void {
                 return inputGainNode.addEventListener(args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]): boolean {
+            dispatchEvent(...args: any[]): boolean {
                 return inputGainNode.dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]): void {
+            removeEventListener(...args: any[]): void {
                 return inputGainNode.removeEventListener(args[0], args[1], args[2]);
             }
         };

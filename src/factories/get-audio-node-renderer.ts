@@ -11,6 +11,6 @@ export const createGetAudioNodeRenderer: TGetAudioNodeRendererFactory = (getAudi
             throw new Error('Missing the renderer of the given AudioNode in the audio graph.');
         }
 
-        return <IAudioNodeRenderer<T, IAudioNode<T>>> audioNodeConnections.renderer;
+        return <IAudioNodeRenderer<T, IAudioNode<T>>>audioNodeConnections.renderer;
     };
 };

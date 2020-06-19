@@ -1,5 +1,4 @@
 describe('DOMException', () => {
-
     // bug #122
 
     it('should not allow to construct a DOMException', () => {
@@ -7,5 +6,4 @@ describe('DOMException', () => {
             new DOMException('', 'IndexSizeError');
         }).to.throw(TypeError, 'Function expected');
     });
-
 });

@@ -1,5 +1,10 @@
 import { interceptConnections } from '../helpers/intercept-connections';
-import { TNativeAudioBufferSourceNode, TNativeAudioNode, TNativeConstantSourceNode, TNativeConstantSourceNodeFakerFactoryFactory } from '../types';
+import {
+    TNativeAudioBufferSourceNode,
+    TNativeAudioNode,
+    TNativeConstantSourceNode,
+    TNativeConstantSourceNodeFakerFactoryFactory
+} from '../types';
 
 export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNodeFakerFactoryFactory = (
     addSilentConnection,
@@ -9,19 +14,16 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
 ) => {
     return (nativeContext, { offset, ...audioNodeOptions }) => {
         const audioBuffer = nativeContext.createBuffer(1, 2, nativeContext.sampleRate);
-        const audioBufferSourceNode = createNativeAudioBufferSourceNode(
-            nativeContext,
-            {
-                buffer: null,
-                channelCount: 2,
-                channelCountMode: 'max',
-                channelInterpretation: 'speakers',
-                loop: false,
-                loopEnd: 0,
-                loopStart: 0,
-                playbackRate: 1
-            }
-        );
+        const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext, {
+            buffer: null,
+            channelCount: 2,
+            channelCountMode: 'max',
+            channelInterpretation: 'speakers',
+            loop: false,
+            loopEnd: 0,
+            loopStart: 0,
+            playbackRate: 1
+        });
         const gainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: offset });
 
         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
@@ -35,61 +37,61 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
         audioBufferSourceNode.loop = true;
 
         const nativeConstantSourceNodeFaker = {
-            get bufferSize (): undefined {
+            get bufferSize(): undefined {
                 return undefined;
             },
-            get channelCount (): number {
+            get channelCount(): number {
                 return gainNode.channelCount;
             },
-            set channelCount (value) {
+            set channelCount(value) {
                 gainNode.channelCount = value;
             },
-            get channelCountMode (): TNativeConstantSourceNode['channelCountMode'] {
+            get channelCountMode(): TNativeConstantSourceNode['channelCountMode'] {
                 return gainNode.channelCountMode;
             },
-            set channelCountMode (value) {
+            set channelCountMode(value) {
                 gainNode.channelCountMode = value;
             },
-            get channelInterpretation (): TNativeConstantSourceNode['channelInterpretation'] {
+            get channelInterpretation(): TNativeConstantSourceNode['channelInterpretation'] {
                 return gainNode.channelInterpretation;
             },
-            set channelInterpretation (value) {
+            set channelInterpretation(value) {
                 gainNode.channelInterpretation = value;
             },
-            get context (): TNativeConstantSourceNode['context'] {
+            get context(): TNativeConstantSourceNode['context'] {
                 return gainNode.context;
             },
-            get inputs (): TNativeAudioNode[] {
-                return [ ];
+            get inputs(): TNativeAudioNode[] {
+                return [];
             },
-            get numberOfInputs (): number {
+            get numberOfInputs(): number {
                 return audioBufferSourceNode.numberOfInputs;
             },
-            get numberOfOutputs (): number {
+            get numberOfOutputs(): number {
                 return gainNode.numberOfOutputs;
             },
-            get offset (): TNativeConstantSourceNode['offset'] {
+            get offset(): TNativeConstantSourceNode['offset'] {
                 return gainNode.gain;
             },
-            get onended (): TNativeConstantSourceNode['onended'] {
+            get onended(): TNativeConstantSourceNode['onended'] {
                 return audioBufferSourceNode.onended;
             },
-            set onended (value) {
-                audioBufferSourceNode.onended = <TNativeAudioBufferSourceNode['onended']> value;
+            set onended(value) {
+                audioBufferSourceNode.onended = <TNativeAudioBufferSourceNode['onended']>value;
             },
-            addEventListener (...args: any[]): void {
+            addEventListener(...args: any[]): void {
                 return audioBufferSourceNode.addEventListener(args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]): boolean {
+            dispatchEvent(...args: any[]): boolean {
                 return audioBufferSourceNode.dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]): void {
+            removeEventListener(...args: any[]): void {
                 return audioBufferSourceNode.removeEventListener(args[0], args[1], args[2]);
             },
-            start (when = 0): void {
+            start(when = 0): void {
                 audioBufferSourceNode.start.call(audioBufferSourceNode, when);
             },
-            stop (when = 0): void {
+            stop(when = 0): void {
                 audioBufferSourceNode.stop.call(audioBufferSourceNode, when);
             }
         };

@@ -78,11 +78,8 @@ const testCases = {
 };
 
 describe('OscillatorNode', () => {
-
-    for (const [ description, { createOscillatorNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createOscillatorNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -91,14 +88,11 @@ describe('OscillatorNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -123,7 +117,6 @@ describe('OscillatorNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let oscillatorNode;
 
                             beforeEach(() => {
@@ -163,11 +156,9 @@ describe('OscillatorNode', () => {
                                 expect(oscillatorNode.setPeriodicWave).to.be.a('function');
                                 expect(oscillatorNode.type).to.equal('sine');
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given channelCount', () => {
                                 const channelCount = 4;
                                 const oscillatorNode = createOscillatorNode(context, { channelCount });
@@ -204,7 +195,7 @@ describe('OscillatorNode', () => {
                             });
 
                             it('should return an instance with the given periodicWave', () => {
-                                const periodicWave = new PeriodicWave(context, { imag: [ 1 ], real: [ 1 ] });
+                                const periodicWave = new PeriodicWave(context, { imag: [1], real: [1] });
                                 const oscillatorNode = createOscillatorNode(context, { periodicWave });
 
                                 expect(oscillatorNode.type).to.equal('custom');
@@ -216,23 +207,16 @@ describe('OscillatorNode', () => {
 
                                 expect(oscillatorNode.type).to.equal(type);
                             });
-
                         });
 
                         describe('with invalid options', () => {
-
                             // @todo
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -246,11 +230,9 @@ describe('OscillatorNode', () => {
 
                     expect(oscillatorNode.channelCount).to.equal(channelCount);
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -264,11 +246,9 @@ describe('OscillatorNode', () => {
 
                     expect(oscillatorNode.channelCountMode).to.equal(channelCountMode);
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -282,11 +262,9 @@ describe('OscillatorNode', () => {
 
                     expect(oscillatorNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('detune', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -314,70 +292,54 @@ describe('OscillatorNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.detune.cancelAndHoldAtTime(0)).to.equal(oscillatorNode.detune);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.detune.cancelScheduledValues(0)).to.equal(oscillatorNode.detune);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         oscillatorNode.detune.value = 1;
 
                         expect(oscillatorNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(oscillatorNode.detune);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.detune.linearRampToValueAtTime(1, 0)).to.equal(oscillatorNode.detune);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.detune.setTargetAtTime(1, 0, 0.1)).to.equal(oscillatorNode.detune);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.detune.setValueAtTime(1, 0)).to.equal(oscillatorNode.detune);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(oscillatorNode.detune.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(oscillatorNode.detune);
+                        expect(oscillatorNode.detune.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(oscillatorNode.detune);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('frequency', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -405,67 +367,51 @@ describe('OscillatorNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.frequency.cancelAndHoldAtTime(0)).to.equal(oscillatorNode.frequency);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.frequency.cancelScheduledValues(0)).to.equal(oscillatorNode.frequency);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.frequency.exponentialRampToValueAtTime(1, 0)).to.equal(oscillatorNode.frequency);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.frequency.linearRampToValueAtTime(1, 0)).to.equal(oscillatorNode.frequency);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.frequency.setTargetAtTime(1, 0, 0.1)).to.equal(oscillatorNode.frequency);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(oscillatorNode.frequency.setValueAtTime(1, 0)).to.equal(oscillatorNode.frequency);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(oscillatorNode.frequency.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(oscillatorNode.frequency);
+                        expect(oscillatorNode.frequency.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(oscillatorNode.frequency);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('numberOfInputs', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -477,11 +423,9 @@ describe('OscillatorNode', () => {
                         oscillatorNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -493,11 +437,9 @@ describe('OscillatorNode', () => {
                         oscillatorNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('onended', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -510,14 +452,14 @@ describe('OscillatorNode', () => {
 
                 it('should be assignable to a function', () => {
                     const fn = () => {};
-                    const onended = oscillatorNode.onended = fn; // eslint-disable-line no-multi-assign
+                    const onended = (oscillatorNode.onended = fn); // eslint-disable-line no-multi-assign
 
                     expect(onended).to.equal(fn);
                     expect(oscillatorNode.onended).to.equal(fn);
                 });
 
                 it('should be assignable to null', () => {
-                    const onended = oscillatorNode.onended = null; // eslint-disable-line no-multi-assign
+                    const onended = (oscillatorNode.onended = null); // eslint-disable-line no-multi-assign
 
                     expect(onended).to.be.null;
                     expect(oscillatorNode.onended).to.be.null;
@@ -528,7 +470,7 @@ describe('OscillatorNode', () => {
 
                     oscillatorNode.onended = () => {};
 
-                    const onended = oscillatorNode.onended = string; // eslint-disable-line no-multi-assign
+                    const onended = (oscillatorNode.onended = string); // eslint-disable-line no-multi-assign
 
                     expect(onended).to.equal(string);
                     expect(oscillatorNode.onended).to.be.null;
@@ -545,10 +487,8 @@ describe('OscillatorNode', () => {
                     expect(onended).to.have.been.calledTwice;
                 });
 
-                for (const withAConnection of [ true, false ]) {
-
-                    describe(`${ withAConnection ? 'with' : 'without' } a connection`, () => {
-
+                for (const withAConnection of [true, false]) {
+                    describe(`${withAConnection ? 'with' : 'without'} a connection`, () => {
                         it('should fire an assigned ended event listener', (done) => {
                             oscillatorNode.onended = function (event) {
                                 expect(event).to.be.an.instanceOf(Event);
@@ -572,15 +512,11 @@ describe('OscillatorNode', () => {
                                 context.startRendering();
                             }
                         });
-
                     });
-
                 }
-
             });
 
             describe('type', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -588,7 +524,7 @@ describe('OscillatorNode', () => {
                 });
 
                 it("should be assignable to another type but 'custom'", () => {
-                    const type = oscillatorNode.type = 'square'; // eslint-disable-line no-multi-assign
+                    const type = (oscillatorNode.type = 'square'); // eslint-disable-line no-multi-assign
 
                     expect(type).to.equal('square');
                     expect(oscillatorNode.type).to.equal('square');
@@ -607,16 +543,14 @@ describe('OscillatorNode', () => {
 
                 it('should not be assignable to something else', () => {
                     const string = 'none of the accepted types';
-                    const type = oscillatorNode.type = string; // eslint-disable-line no-multi-assign
+                    const type = (oscillatorNode.type = string); // eslint-disable-line no-multi-assign
 
                     expect(type).to.equal(string);
                     expect(oscillatorNode.type).to.equal('sine');
                 });
-
             });
 
             describe('addEventListener()', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -644,37 +578,29 @@ describe('OscillatorNode', () => {
                         context.startRendering();
                     }
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let oscillatorNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             oscillatorNode = createOscillatorNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(oscillatorNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(oscillatorNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -694,7 +620,6 @@ describe('OscillatorNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     oscillatorNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -707,17 +632,12 @@ describe('OscillatorNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                oscillatorNode
-                                    .connect(audioNodeOrAudioParam)
-                                    .connect(oscillatorNode.frequency);
+                                oscillatorNode.connect(audioNodeOrAudioParam).connect(oscillatorNode.frequency);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let oscillatorNode;
@@ -733,7 +653,7 @@ describe('OscillatorNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             oscillatorNode = createOscillatorNode(context);
                         });
 
@@ -747,11 +667,9 @@ describe('OscillatorNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
                         let oscillatorNode;
@@ -762,17 +680,22 @@ describe('OscillatorNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                             oscillatorNode = createOscillatorNode(context);
                         });
 
@@ -786,31 +709,24 @@ describe('OscillatorNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const anotherGainNode = new GainNode(context);
                                 const gainNode = new GainNode(context);
                                 const oscillatorNode = createOscillatorNode(context);
 
-                                oscillatorNode
-                                    .connect(gainNode)
-                                    .connect(destination);
+                                oscillatorNode.connect(gainNode).connect(destination);
 
-                                gainNode
-                                    .connect(anotherGainNode)
-                                    .connect(gainNode);
+                                gainNode.connect(anotherGainNode).connect(gainNode);
 
                                 return { anotherGainNode, gainNode, oscillatorNode };
                             }
@@ -821,45 +737,39 @@ describe('OscillatorNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { oscillatorNode }) {
+                            start(startTime, { oscillatorNode }) {
                                 oscillatorNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = () => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const firstDummyGainNode = new GainNode(context);
-                            const oscillatorNode = createOscillatorNode(context, { frequency: 11025 });
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = () =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const firstDummyGainNode = new GainNode(context);
+                                const oscillatorNode = createOscillatorNode(context, { frequency: 11025 });
+                                const secondDummyGainNode = new GainNode(context);
 
-                            oscillatorNode
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                oscillatorNode.connect(firstDummyGainNode).connect(destination);
 
-                            oscillatorNode.connect(secondDummyGainNode);
+                                oscillatorNode.connect(secondDummyGainNode);
 
-                            return { firstDummyGainNode, oscillatorNode, secondDummyGainNode };
-                        }
-                    });
+                                return { firstDummyGainNode, oscillatorNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
 
                     beforeEach(function () {
@@ -872,24 +782,20 @@ describe('OscillatorNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ oscillatorNode }) {
+                            prepare({ oscillatorNode }) {
                                 oscillatorNode.disconnect();
                             },
-                            start (startTime, { oscillatorNode }) {
+                            start(startTime, { oscillatorNode }) {
                                 oscillatorNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let oscillatorNode;
 
                         beforeEach(() => {
@@ -906,11 +812,9 @@ describe('OscillatorNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
 
                         beforeEach(function () {
@@ -923,26 +827,21 @@ describe('OscillatorNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ oscillatorNode }) {
+                                prepare({ oscillatorNode }) {
                                     oscillatorNode.disconnect(0);
                                 },
-                                start (startTime, { oscillatorNode }) {
+                                start(startTime, { oscillatorNode }) {
                                     oscillatorNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let oscillatorNode;
 
                         beforeEach(() => {
@@ -959,11 +858,9 @@ describe('OscillatorNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
 
                         beforeEach(function () {
@@ -976,44 +873,39 @@ describe('OscillatorNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ firstDummyGainNode, oscillatorNode }) {
+                                prepare({ firstDummyGainNode, oscillatorNode }) {
                                     oscillatorNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { oscillatorNode }) {
+                                start(startTime, { oscillatorNode }) {
                                     oscillatorNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ oscillatorNode, secondDummyGainNode }) {
+                                prepare({ oscillatorNode, secondDummyGainNode }) {
                                     oscillatorNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { oscillatorNode }) {
+                                start(startTime, { oscillatorNode }) {
                                     oscillatorNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(channelData[0]).to.equal(0);
-                                    expect(channelData[1]).to.equal(1);
-                                    expect(channelData[2]).to.be.closeTo(0, 0.000001);
-                                    expect(channelData[3]).to.equal(-1);
-                                    expect(channelData[4]).to.be.closeTo(0, 0.000001);
-                                });
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.equal(0);
+                                expect(channelData[1]).to.equal(1);
+                                expect(channelData[2]).to.be.closeTo(0, 0.000001);
+                                expect(channelData[3]).to.equal(-1);
+                                expect(channelData[4]).to.be.closeTo(0, 0.000001);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let oscillatorNode;
 
                     beforeEach(() => {
@@ -1041,11 +933,9 @@ describe('OscillatorNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let oscillatorNode;
 
                     beforeEach(() => {
@@ -1084,13 +974,10 @@ describe('OscillatorNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
 
             describe('removeEventListener()', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -1118,17 +1005,13 @@ describe('OscillatorNode', () => {
                         context.startRendering();
                     }
                 });
-
             });
 
             describe('setPeriodicWave()', () => {
-
                 // @todo
-
             });
 
             describe('start()', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -1136,7 +1019,6 @@ describe('OscillatorNode', () => {
                 });
 
                 describe('with a previous call to start()', () => {
-
                     beforeEach(() => {
                         oscillatorNode.start();
                     });
@@ -1151,11 +1033,9 @@ describe('OscillatorNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a previous call to stop()', () => {
-
                     beforeEach(() => {
                         oscillatorNode.start();
                         oscillatorNode.stop();
@@ -1171,25 +1051,19 @@ describe('OscillatorNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a negative value as first parameter', () => {
-
                     it('should throw a RangeError', () => {
                         expect(() => {
                             oscillatorNode.start(-1);
                         }).to.throw(RangeError);
                     });
-
                 });
-
             });
 
             describe('stop()', () => {
-
                 describe('without a previous call to start()', () => {
-
                     let oscillatorNode;
 
                     beforeEach(() => {
@@ -1206,15 +1080,19 @@ describe('OscillatorNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a previous call to stop()', () => {
-
-                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
+                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                        ? [
+                              [true, true],
+                              [true, false],
+                              [false, true]
+                          ]
+                        : [[true, false]]) {
+                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                        } an appended AudioWorklet`, () => {
                             let renderer;
 
                             beforeEach(async function () {
@@ -1226,10 +1104,14 @@ describe('OscillatorNode', () => {
 
                                 renderer = createRenderer({
                                     context,
-                                    length: (context.length === undefined) ? 5 : undefined,
-                                    prepare (destination) {
-                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
-                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                    length: context.length === undefined ? 5 : undefined,
+                                    prepare(destination) {
+                                        const audioWorkletNode = withAnAppendedAudioWorklet
+                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            : null;
+                                        const masterGainNode = new GainNode(context, {
+                                            gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                        });
                                         const oscillatorNode = createOscillatorNode(context, { frequency: 11025 });
 
                                         if (withADirectConnection) {
@@ -1237,9 +1119,7 @@ describe('OscillatorNode', () => {
                                         }
 
                                         if (withAnAppendedAudioWorklet) {
-                                            oscillatorNode
-                                                .connect(audioWorkletNode)
-                                                .connect(masterGainNode);
+                                            oscillatorNode.connect(audioWorkletNode).connect(masterGainNode);
                                         }
 
                                         masterGainNode.connect(destination);
@@ -1253,33 +1133,34 @@ describe('OscillatorNode', () => {
                                 this.timeout(10000);
 
                                 return renderer({
-                                    start (startTime, { oscillatorNode }) {
+                                    start(startTime, { oscillatorNode }) {
                                         oscillatorNode.start(startTime);
                                         oscillatorNode.stop(roundToSamples(startTime, context.sampleRate, 5));
                                         oscillatorNode.stop(roundToSamples(startTime, context.sampleRate, 3));
                                     }
-                                })
-                                    .then((channelData) => {
-                                        expect(channelData[0]).to.equal(0);
-                                        expect(channelData[1]).to.equal(1);
-                                        expect(channelData[2]).to.be.closeTo(0, 0.000001);
-                                        expect(channelData[3]).to.equal(0);
-                                        expect(channelData[4]).to.equal(0);
-                                    });
+                                }).then((channelData) => {
+                                    expect(channelData[0]).to.equal(0);
+                                    expect(channelData[1]).to.equal(1);
+                                    expect(channelData[2]).to.be.closeTo(0, 0.000001);
+                                    expect(channelData[3]).to.equal(0);
+                                    expect(channelData[4]).to.equal(0);
+                                });
                             });
-
                         });
-
                     }
-
                 });
 
                 describe('with a stop time reached prior to the start time', () => {
-
-                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
+                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                        ? [
+                              [true, true],
+                              [true, false],
+                              [false, true]
+                          ]
+                        : [[true, false]]) {
+                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                        } an appended AudioWorklet`, () => {
                             let renderer;
 
                             beforeEach(async function () {
@@ -1291,10 +1172,14 @@ describe('OscillatorNode', () => {
 
                                 renderer = createRenderer({
                                     context,
-                                    length: (context.length === undefined) ? 5 : undefined,
-                                    prepare (destination) {
-                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
-                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                    length: context.length === undefined ? 5 : undefined,
+                                    prepare(destination) {
+                                        const audioWorkletNode = withAnAppendedAudioWorklet
+                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            : null;
+                                        const masterGainNode = new GainNode(context, {
+                                            gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                        });
                                         const oscillatorNode = createOscillatorNode(context);
 
                                         if (withADirectConnection) {
@@ -1302,9 +1187,7 @@ describe('OscillatorNode', () => {
                                         }
 
                                         if (withAnAppendedAudioWorklet) {
-                                            oscillatorNode
-                                                .connect(audioWorkletNode)
-                                                .connect(masterGainNode);
+                                            oscillatorNode.connect(audioWorkletNode).connect(masterGainNode);
                                         }
 
                                         masterGainNode.connect(destination);
@@ -1318,24 +1201,19 @@ describe('OscillatorNode', () => {
                                 this.timeout(10000);
 
                                 return renderer({
-                                    start (startTime, { oscillatorNode }) {
+                                    start(startTime, { oscillatorNode }) {
                                         oscillatorNode.start(roundToSamples(startTime, context.sampleRate, 3));
                                         oscillatorNode.stop(roundToSamples(startTime, context.sampleRate, 1));
                                     }
-                                })
-                                    .then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                    });
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
-
                         });
-
                     }
-
                 });
 
                 describe('with an emitted ended event', () => {
-
                     let oscillatorNode;
 
                     beforeEach((done) => {
@@ -1356,11 +1234,9 @@ describe('OscillatorNode', () => {
                     it('should ignore calls to stop()', () => {
                         oscillatorNode.stop();
                     });
-
                 });
 
                 describe('with a negative value as first parameter', () => {
-
                     let oscillatorNode;
 
                     beforeEach(() => {
@@ -1374,13 +1250,8 @@ describe('OscillatorNode', () => {
                             oscillatorNode.stop(-1);
                         }).to.throw(RangeError);
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

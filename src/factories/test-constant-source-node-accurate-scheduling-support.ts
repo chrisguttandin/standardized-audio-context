@@ -1,8 +1,6 @@
 import { TTestConstantSourceNodeAccurateSchedulingSupportFactory } from '../types';
 
-export const createTestConstantSourceNodeAccurateSchedulingSupport:
-    TTestConstantSourceNodeAccurateSchedulingSupportFactory =
-(
+export const createTestConstantSourceNodeAccurateSchedulingSupport: TTestConstantSourceNodeAccurateSchedulingSupportFactory = (
     createNativeAudioNode,
     nativeOfflineAudioContextConstructor
 ) => {
@@ -24,6 +22,6 @@ export const createTestConstantSourceNodeAccurateSchedulingSupport:
          * @todo This is using bug #75 to detect bug #70. That works because both bugs were unique to
          * the implementation of Firefox right now, but it could probably be done in a better way.
          */
-        return (nativeConstantSourceNode.offset.maxValue !== Number.POSITIVE_INFINITY);
+        return nativeConstantSourceNode.offset.maxValue !== Number.POSITIVE_INFINITY;
     };
 };

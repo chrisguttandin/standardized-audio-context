@@ -16,19 +16,17 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
     return class ConvolverNode<T extends TContext> extends audioNodeConstructor<T> implements IConvolverNode<T> {
-
         private _isBufferNullified: boolean;
 
         private _nativeConvolverNode: TNativeConvolverNode;
 
-        constructor (context: T, options: Partial<IConvolverOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IConvolverOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeConvolverNode = createNativeConvolverNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const convolverNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createConvolverNodeRenderer() : null);
+            const convolverNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createConvolverNodeRenderer() : null);
 
             super(context, false, nativeConvolverNode, convolverNodeRenderer);
 
@@ -36,7 +34,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             this._nativeConvolverNode = nativeConvolverNode;
         }
 
-        get buffer (): null | TAnyAudioBuffer {
+        get buffer(): null | TAnyAudioBuffer {
             if (this._isBufferNullified) {
                 return null;
             }
@@ -44,7 +42,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             return this._nativeConvolverNode.buffer;
         }
 
-        set buffer (value) {
+        set buffer(value) {
             this._nativeConvolverNode.buffer = value;
 
             // Bug #115: Safari does not allow to set the buffer to null.
@@ -58,14 +56,12 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             }
         }
 
-        get normalize (): boolean {
+        get normalize(): boolean {
             return this._nativeConvolverNode.normalize;
         }
 
-        set normalize (value) {
+        set normalize(value) {
             this._nativeConvolverNode.normalize = value;
         }
-
     };
-
 };

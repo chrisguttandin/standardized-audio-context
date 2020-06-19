@@ -1,7 +1,6 @@
 import { createNativeOfflineAudioContextConstructor } from '../../../src/factories/native-offline-audio-context-constructor';
 
 describe('createNativeOfflineAudioContextConstructor()', () => {
-
     let OfflineAudioContext;
     let webkitOfflineAudioContext;
 
@@ -11,7 +10,7 @@ describe('createNativeOfflineAudioContextConstructor()', () => {
     });
 
     it('should return null if there is no OfflineAudioContext', () => {
-        const fakeWindow = { };
+        const fakeWindow = {};
 
         expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(null);
     });
@@ -33,5 +32,4 @@ describe('createNativeOfflineAudioContextConstructor()', () => {
 
         expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(OfflineAudioContext);
     });
-
 });

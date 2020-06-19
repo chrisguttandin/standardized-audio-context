@@ -3,7 +3,6 @@ import { IAudioNode } from './audio-node';
 import { IAudioParam } from './audio-param';
 
 export interface IPannerNode<T extends TContext> extends IAudioNode<T> {
-
     coneInnerAngle: number;
 
     coneOuterAngle: number;
@@ -31,5 +30,4 @@ export interface IPannerNode<T extends TContext> extends IAudioNode<T> {
     refDistance: number;
 
     rolloffFactor: number;
-
 }

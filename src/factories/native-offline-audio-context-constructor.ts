@@ -9,5 +9,5 @@ export const createNativeOfflineAudioContextConstructor: TNativeOfflineAudioCont
         return window.OfflineAudioContext;
     }
 
-    return (window.hasOwnProperty('webkitOfflineAudioContext')) ? (<any> window).webkitOfflineAudioContext : null;
+    return window.hasOwnProperty('webkitOfflineAudioContext') ? (<any>window).webkitOfflineAudioContext : null;
 };

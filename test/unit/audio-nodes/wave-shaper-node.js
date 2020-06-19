@@ -68,11 +68,8 @@ const testCases = {
 };
 
 describe('WaveShaperNode', () => {
-
-    for (const [ description, { createWaveShaperNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createWaveShaperNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -81,14 +78,11 @@ describe('WaveShaperNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -113,7 +107,6 @@ describe('WaveShaperNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let waveShaperNode;
 
                             beforeEach(() => {
@@ -145,11 +138,9 @@ describe('WaveShaperNode', () => {
                                 expect(waveShaperNode.curve).to.be.null;
                                 expect(waveShaperNode.oversample).to.equal('none');
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given channelCount', () => {
                                 const channelCount = 4;
                                 const waveShaperNode = createWaveShaperNode(context, { channelCount });
@@ -172,7 +163,7 @@ describe('WaveShaperNode', () => {
                             });
 
                             it('should return an instance with the given curve', () => {
-                                const curve = new Float32Array([ 0.3, 0.5 ]);
+                                const curve = new Float32Array([0.3, 0.5]);
                                 const waveShaperNode = createWaveShaperNode(context, { curve });
 
                                 expect(waveShaperNode.curve).to.be.an.instanceOf(Float32Array);
@@ -185,16 +176,13 @@ describe('WaveShaperNode', () => {
 
                                 expect(waveShaperNode.oversample).to.equal(oversample);
                             });
-
                         });
 
                         describe('with invalid options', () => {
-
                             describe('with a curve of less than two samples', () => {
-
                                 it('should throw an InvalidStateError', (done) => {
                                     try {
-                                        createWaveShaperNode(context, { curve: new Float32Array([ 1 ]) });
+                                        createWaveShaperNode(context, { curve: new Float32Array([1]) });
                                     } catch (err) {
                                         expect(err.code).to.equal(11);
                                         expect(err.name).to.equal('InvalidStateError');
@@ -202,19 +190,13 @@ describe('WaveShaperNode', () => {
                                         done();
                                     }
                                 });
-
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let waveShaperNode;
 
                 beforeEach(() => {
@@ -228,11 +210,9 @@ describe('WaveShaperNode', () => {
 
                     expect(waveShaperNode.channelCount).to.equal(channelCount);
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let waveShaperNode;
 
                 beforeEach(() => {
@@ -246,11 +226,9 @@ describe('WaveShaperNode', () => {
 
                     expect(waveShaperNode.channelCountMode).to.equal(channelCountMode);
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let waveShaperNode;
 
                 beforeEach(() => {
@@ -264,13 +242,10 @@ describe('WaveShaperNode', () => {
 
                     expect(waveShaperNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('curve', () => {
-
                 describe('with a valid curve', () => {
-
                     let waveShaperNode;
 
                     beforeEach(() => {
@@ -278,18 +253,16 @@ describe('WaveShaperNode', () => {
                     });
 
                     it('should be assignable to a Float32Array', () => {
-                        const curve = new Float32Array([ -1, 0, 1 ]);
+                        const curve = new Float32Array([-1, 0, 1]);
 
                         waveShaperNode.curve = curve;
 
                         expect(waveShaperNode.curve).to.be.an.instanceOf(Float32Array);
                         expect(waveShaperNode.curve).to.deep.equal(curve);
                     });
-
                 });
 
                 describe('with a previously assigned curve', () => {
-
                     let waveShaperNode;
 
                     beforeEach(() => {
@@ -297,16 +270,14 @@ describe('WaveShaperNode', () => {
                     });
 
                     it('should be assignable to null', () => {
-                        waveShaperNode.curve = new Float32Array([ 0.4, 0, 0.4 ]);
+                        waveShaperNode.curve = new Float32Array([0.4, 0, 0.4]);
                         waveShaperNode.curve = null;
 
                         expect(waveShaperNode.curve).to.be.null;
                     });
-
                 });
 
                 describe('with a curve of less than two samples', () => {
-
                     let waveShaperNode;
 
                     beforeEach(() => {
@@ -315,7 +286,7 @@ describe('WaveShaperNode', () => {
 
                     it('should throw an InvalidStateError', (done) => {
                         try {
-                            waveShaperNode.curve = new Float32Array([ 1 ]);
+                            waveShaperNode.curve = new Float32Array([1]);
                         } catch (err) {
                             expect(err.code).to.equal(11);
                             expect(err.name).to.equal('InvalidStateError');
@@ -323,11 +294,9 @@ describe('WaveShaperNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a curve that produces a DC signal', () => {
-
                     let renderer;
 
                     beforeEach(function () {
@@ -335,9 +304,9 @@ describe('WaveShaperNode', () => {
 
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
-                                const waveShaperNode = createWaveShaperNode(context, { curve: new Float32Array([ 1, 1 ]) });
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const waveShaperNode = createWaveShaperNode(context, { curve: new Float32Array([1, 1]) });
 
                                 waveShaperNode.connect(destination);
 
@@ -349,18 +318,14 @@ describe('WaveShaperNode', () => {
                     it('should render a constant signal', function () {
                         this.timeout(10000);
 
-                        return renderer({ })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
-                            });
+                        return renderer({}).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([1, 1, 1, 1, 1]);
+                        });
                     });
-
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let waveShaperNode;
 
                 beforeEach(() => {
@@ -372,11 +337,9 @@ describe('WaveShaperNode', () => {
                         waveShaperNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let waveShaperNode;
 
                 beforeEach(() => {
@@ -388,11 +351,9 @@ describe('WaveShaperNode', () => {
                         waveShaperNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('oversample', () => {
-
                 let waveShaperNode;
 
                 beforeEach(() => {
@@ -400,7 +361,7 @@ describe('WaveShaperNode', () => {
                 });
 
                 it('should be assignable to another oversample type', () => {
-                    const oversample = waveShaperNode.oversample = '4x'; // eslint-disable-line no-multi-assign
+                    const oversample = (waveShaperNode.oversample = '4x'); // eslint-disable-line no-multi-assign
 
                     expect(oversample).to.equal('4x');
                     expect(waveShaperNode.oversample).to.equal('4x');
@@ -408,42 +369,34 @@ describe('WaveShaperNode', () => {
 
                 it('should not be assignable to something else', () => {
                     const string = 'none of the accepted oversample types';
-                    const oversample = waveShaperNode.oversample = string; // eslint-disable-line no-multi-assign
+                    const oversample = (waveShaperNode.oversample = string); // eslint-disable-line no-multi-assign
 
                     expect(oversample).to.equal(string);
                     expect(waveShaperNode.oversample).to.equal('none');
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let waveShaperNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             waveShaperNode = createWaveShaperNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(waveShaperNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(waveShaperNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -463,7 +416,6 @@ describe('WaveShaperNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     waveShaperNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -476,23 +428,16 @@ describe('WaveShaperNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(waveShaperNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(waveShaperNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(waveShaperNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(waveShaperNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let waveShaperNode;
@@ -508,7 +453,7 @@ describe('WaveShaperNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             waveShaperNode = createWaveShaperNode(context);
                         });
 
@@ -522,11 +467,9 @@ describe('WaveShaperNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
                         let waveShaperNode;
@@ -537,17 +480,22 @@ describe('WaveShaperNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                             waveShaperNode = createWaveShaperNode(context);
                         });
 
@@ -561,31 +509,24 @@ describe('WaveShaperNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
                                 const waveShaperNode = createWaveShaperNode(context);
 
-                                constantSourceNode
-                                    .connect(waveShaperNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(waveShaperNode).connect(destination);
 
-                                waveShaperNode
-                                    .connect(gainNode)
-                                    .connect(waveShaperNode);
+                                waveShaperNode.connect(gainNode).connect(waveShaperNode);
 
                                 return { constantSourceNode, gainNode, waveShaperNode };
                             }
@@ -596,59 +537,52 @@ describe('WaveShaperNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
-                            const waveShaperNode = createWaveShaperNode(context, { curve: new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]) });
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
+                                const waveShaperNode = createWaveShaperNode(context, { curve: new Float32Array([0, 0.25, 0.5, 0.75, 1]) });
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            audioBufferSourceNode
-                                .connect(waveShaperNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(waveShaperNode).connect(firstDummyGainNode).connect(destination);
 
-                            waveShaperNode.connect(secondDummyGainNode);
+                                waveShaperNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, firstDummyGainNode, secondDummyGainNode, waveShaperNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, firstDummyGainNode, secondDummyGainNode, waveShaperNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(function () {
                         this.timeout(10000);
 
-                        values = [ 1, 0.5, 0, -0.5, -1 ];
+                        values = [1, 0.5, 0, -0.5, -1];
 
                         renderer = createPredefinedRenderer(values);
                     });
@@ -657,24 +591,20 @@ describe('WaveShaperNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ waveShaperNode }) {
+                            prepare({ waveShaperNode }) {
                                 waveShaperNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 audioBufferSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let waveShaperNode;
 
                         beforeEach(() => {
@@ -691,18 +621,16 @@ describe('WaveShaperNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 0.5, 0, -0.5, -1 ];
+                            values = [1, 0.5, 0, -0.5, -1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -711,26 +639,21 @@ describe('WaveShaperNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ waveShaperNode }) {
+                                prepare({ waveShaperNode }) {
                                     waveShaperNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let waveShaperNode;
 
                         beforeEach(() => {
@@ -747,18 +670,16 @@ describe('WaveShaperNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 0.5, 0, -0.5, -1 ];
+                            values = [1, 0.5, 0, -0.5, -1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -767,40 +688,35 @@ describe('WaveShaperNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ firstDummyGainNode, waveShaperNode }) {
+                                prepare({ firstDummyGainNode, waveShaperNode }) {
                                     waveShaperNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ secondDummyGainNode, waveShaperNode }) {
+                                prepare({ secondDummyGainNode, waveShaperNode }) {
                                     waveShaperNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 1, 0.75, 0.5, 0.25, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([1, 0.75, 0.5, 0.25, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let waveShaperNode;
 
                     beforeEach(() => {
@@ -828,11 +744,9 @@ describe('WaveShaperNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let waveShaperNode;
 
                     beforeEach(() => {
@@ -871,13 +785,8 @@ describe('WaveShaperNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

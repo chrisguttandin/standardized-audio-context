@@ -1,13 +1,12 @@
 class EmptyStringProcessor extends AudioWorkletProcessor {
-
-    constructor () {
+    constructor() {
         super();
     }
 
-    process () { // eslint-disable-line class-methods-use-this
+    // eslint-disable-next-line class-methods-use-this
+    process() {
         return true;
     }
-
 }
 
 registerProcessor('', EmptyStringProcessor);

@@ -2,7 +2,6 @@ import { createIsAnyAudioNode } from '../../../src/factories/is-any-audio-node';
 import { stub } from 'sinon';
 
 describe('isAnyAudioNode()', () => {
-
     let audioNodeStore;
     let isAnyAudioNode;
     let isNativeAudioNode;
@@ -15,7 +14,6 @@ describe('isAnyAudioNode()', () => {
     });
 
     describe('without any AudioNode in the store', () => {
-
         beforeEach(() => {
             isNativeAudioNode.returns(false);
         });
@@ -23,11 +21,9 @@ describe('isAnyAudioNode()', () => {
         it('should not identify any AudioNode', () => {
             expect(isAnyAudioNode({ a: 'fake AudioNode' })).to.be.false;
         });
-
     });
 
     describe('with an AudioNode in the store', () => {
-
         let audioNode;
 
         beforeEach(() => {
@@ -44,11 +40,9 @@ describe('isAnyAudioNode()', () => {
         it('should not identify any other AudioNode', () => {
             expect(isAnyAudioNode({ another: 'fake AudioNode' })).to.be.false;
         });
-
     });
 
     describe('with an AudioNode which gets identified as native', () => {
-
         beforeEach(() => {
             isNativeAudioNode.returns(true);
         });
@@ -56,7 +50,5 @@ describe('isAnyAudioNode()', () => {
         it('should identify a native AudioNode', () => {
             expect(isAnyAudioNode({ a: 'fake AudioNode' })).to.be.true;
         });
-
     });
-
 });

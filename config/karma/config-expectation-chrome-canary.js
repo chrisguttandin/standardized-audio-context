@@ -2,23 +2,19 @@ const { env } = require('process');
 const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => {
-
     config.set({
-
         basePath: '../../',
 
         browserDisconnectTimeout: 20000,
 
         browserNoActivityTimeout: 240000,
 
-        browsers: [
-            'ChromeCanaryHeadlessWithNoRequiredUserGesture'
-        ],
+        browsers: ['ChromeCanaryHeadlessWithNoRequiredUserGesture'],
 
         customLaunchers: {
             ChromeCanaryHeadlessWithNoRequiredUserGesture: {
                 base: 'ChromeCanaryHeadless',
-                flags: [ '--autoplay-policy=no-user-gesture-required' ]
+                flags: ['--autoplay-policy=no-user-gesture-required']
             }
         },
 
@@ -32,10 +28,7 @@ module.exports = (config) => {
             }
         ],
 
-        frameworks: [
-            'mocha',
-            'sinon-chai'
-        ],
+        frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
             'test/expectation/chrome/any/**/*.js': 'webpack',
@@ -45,12 +38,14 @@ module.exports = (config) => {
         webpack: {
             mode: 'development',
             module: {
-                rules: [ {
-                    test: /\.ts?$/,
-                    use: {
-                        loader: 'ts-loader'
+                rules: [
+                    {
+                        test: /\.ts?$/,
+                        use: {
+                            loader: 'ts-loader'
+                        }
                     }
-                } ]
+                ]
             },
             plugins: [
                 new DefinePlugin({
@@ -60,14 +55,12 @@ module.exports = (config) => {
                 })
             ],
             resolve: {
-                extensions: [ '.js', '.ts' ]
+                extensions: ['.js', '.ts']
             }
         },
 
         webpackMiddleware: {
             noInfo: true
         }
-
     });
-
 };

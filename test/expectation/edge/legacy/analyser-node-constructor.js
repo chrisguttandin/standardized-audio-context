@@ -1,5 +1,4 @@
 describe('analyserNodeConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -15,5 +14,4 @@ describe('analyserNodeConstructor', () => {
             new AnalyserNode(audioContext, {});
         }).to.throw(TypeError, 'Function expected');
     });
-
 });

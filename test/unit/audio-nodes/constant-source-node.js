@@ -1,4 +1,11 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule } from '../../../src/module';
+import {
+    AudioBuffer,
+    AudioBufferSourceNode,
+    AudioWorkletNode,
+    ConstantSourceNode,
+    GainNode,
+    addAudioWorkletModule
+} from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -67,11 +74,8 @@ const testCases = {
 };
 
 describe('ConstantSourceNode', () => {
-
-    for (const [ description, { createConstantSourceNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createConstantSourceNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -80,14 +84,11 @@ describe('ConstantSourceNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -112,7 +113,6 @@ describe('ConstantSourceNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let constantSourceNode;
 
                             beforeEach(() => {
@@ -149,11 +149,9 @@ describe('ConstantSourceNode', () => {
                             it('should return an implementation of the ConstantSourceNode interface', () => {
                                 expect(constantSourceNode.offset).not.to.be.undefined;
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given channelCount', () => {
                                 const channelCount = 4;
                                 const constantSourceNode = createConstantSourceNode(context, { channelCount });
@@ -181,17 +179,12 @@ describe('ConstantSourceNode', () => {
 
                                 expect(constantSourceNode.offset.value).to.equal(offset);
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -205,11 +198,9 @@ describe('ConstantSourceNode', () => {
 
                     expect(constantSourceNode.channelCount).to.equal(channelCount);
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -223,11 +214,9 @@ describe('ConstantSourceNode', () => {
 
                     expect(constantSourceNode.channelCountMode).to.equal(channelCountMode);
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -241,11 +230,9 @@ describe('ConstantSourceNode', () => {
 
                     expect(constantSourceNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -257,11 +244,9 @@ describe('ConstantSourceNode', () => {
                         constantSourceNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -273,11 +258,9 @@ describe('ConstantSourceNode', () => {
                         constantSourceNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('offset', () => {
-
                 it('should return an implementation of the AudioParam interface', () => {
                     const constantSourceNode = createConstantSourceNode(context);
 
@@ -303,7 +286,6 @@ describe('ConstantSourceNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -313,11 +295,9 @@ describe('ConstantSourceNode', () => {
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.cancelAndHoldAtTime(0)).to.equal(constantSourceNode.offset);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -327,11 +307,9 @@ describe('ConstantSourceNode', () => {
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.cancelScheduledValues(0)).to.equal(constantSourceNode.offset);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -341,11 +319,9 @@ describe('ConstantSourceNode', () => {
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.exponentialRampToValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -355,11 +331,9 @@ describe('ConstantSourceNode', () => {
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.linearRampToValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -369,11 +343,9 @@ describe('ConstantSourceNode', () => {
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.setTargetAtTime(1, 0, 0.1)).to.equal(constantSourceNode.offset);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -383,11 +355,9 @@ describe('ConstantSourceNode', () => {
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.setValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -395,17 +365,21 @@ describe('ConstantSourceNode', () => {
                     });
 
                     it('should be chainable', () => {
-                        expect(constantSourceNode.offset.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(constantSourceNode.offset);
+                        expect(constantSourceNode.offset.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(constantSourceNode.offset);
                     });
-
                 });
 
                 describe('automation', () => {
-
-                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
+                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                        ? [
+                              [true, true],
+                              [true, false],
+                              [false, true]
+                          ]
+                        : [[true, false]]) {
+                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                        } an appended AudioWorklet`, () => {
                             let renderer;
 
                             beforeEach(async function () {
@@ -417,20 +391,22 @@ describe('ConstantSourceNode', () => {
 
                                 renderer = createRenderer({
                                     context,
-                                    length: (context.length === undefined) ? 5 : undefined,
-                                    prepare (destination) {
-                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                    length: context.length === undefined ? 5 : undefined,
+                                    prepare(destination) {
+                                        const audioWorkletNode = withAnAppendedAudioWorklet
+                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            : null;
                                         const constantSourceNode = createConstantSourceNode(context);
-                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                        const masterGainNode = new GainNode(context, {
+                                            gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                        });
 
                                         if (withADirectConnection) {
                                             constantSourceNode.connect(masterGainNode);
                                         }
 
                                         if (withAnAppendedAudioWorklet) {
-                                            constantSourceNode
-                                                .connect(audioWorkletNode)
-                                                .connect(masterGainNode);
+                                            constantSourceNode.connect(audioWorkletNode).connect(masterGainNode);
                                         }
 
                                         masterGainNode.connect(destination);
@@ -441,140 +417,139 @@ describe('ConstantSourceNode', () => {
                             });
 
                             describe('without any automation', () => {
-
                                 it('should not modify the signal', function () {
                                     this.timeout(10000);
 
                                     return renderer({
-                                        start (startTime, { constantSourceNode }) {
+                                        start(startTime, { constantSourceNode }) {
                                             constantSourceNode.start(startTime);
                                         }
-                                    })
-                                        .then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
-                                        });
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([1, 1, 1, 1, 1]);
+                                    });
                                 });
-
                             });
 
                             describe('with a modified value', () => {
-
                                 it('should modify the signal', function () {
                                     this.timeout(10000);
 
                                     return renderer({
-                                        prepare ({ constantSourceNode }) {
+                                        prepare({ constantSourceNode }) {
                                             constantSourceNode.offset.value = 0.5;
                                         },
-                                        start (startTime, { constantSourceNode }) {
+                                        start(startTime, { constantSourceNode }) {
                                             constantSourceNode.start(startTime);
                                         }
-                                    })
-                                        .then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 0.5, 0.5, 0.5 ]);
-                                        });
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0.5, 0.5, 0.5, 0.5, 0.5]);
+                                    });
                                 });
-
                             });
 
                             describe('with a call to cancelAndHoldAtTime()', () => {
-
                                 it('should modify the signal', function () {
                                     this.timeout(10000);
 
                                     return renderer({
                                         // @todo For some reason tests run more reliably in Safari when each iteration starts at the same fraction of a second.
                                         blockSize: isSafari(navigator) ? context.sampleRate : 128,
-                                        start (startTime, { constantSourceNode }) {
+                                        start(startTime, { constantSourceNode }) {
                                             constantSourceNode.offset.setValueAtTime(1, startTime);
-                                            constantSourceNode.offset.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 5));
+                                            constantSourceNode.offset.linearRampToValueAtTime(
+                                                0,
+                                                roundToSamples(startTime, context.sampleRate, 5)
+                                            );
                                             constantSourceNode.offset.cancelAndHoldAtTime(roundToSamples(startTime, context.sampleRate, 3));
 
                                             constantSourceNode.start(startTime);
                                         }
-                                    })
-                                        .then((channelData) => {
-                                            expect(channelData[0]).to.equal(1);
-                                            expect(channelData[1]).to.be.closeTo(0.8, 0.01);
-                                            expect(channelData[2]).to.be.closeTo(0.6, 0.01);
-                                            expect(channelData[3]).to.be.closeTo(0.4, 0.01);
-                                            expect(channelData[4]).to.be.closeTo(0.4, 0.01);
-                                        });
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.equal(1);
+                                        expect(channelData[1]).to.be.closeTo(0.8, 0.01);
+                                        expect(channelData[2]).to.be.closeTo(0.6, 0.01);
+                                        expect(channelData[3]).to.be.closeTo(0.4, 0.01);
+                                        expect(channelData[4]).to.be.closeTo(0.4, 0.01);
+                                    });
                                 });
-
                             });
 
                             describe('with a call to cancelScheduledValues()', () => {
-
                                 it('should modify the signal', function () {
                                     this.timeout(10000);
 
                                     return renderer({
-                                        start (startTime, { constantSourceNode }) {
+                                        start(startTime, { constantSourceNode }) {
                                             constantSourceNode.offset.setValueAtTime(0.5, startTime);
                                             constantSourceNode.offset.setValueAtTime(1, roundToSamples(startTime, context.sampleRate, 2));
-                                            constantSourceNode.offset.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 5));
-                                            constantSourceNode.offset.cancelScheduledValues(roundToSamples(startTime, context.sampleRate, 3));
+                                            constantSourceNode.offset.linearRampToValueAtTime(
+                                                0,
+                                                roundToSamples(startTime, context.sampleRate, 5)
+                                            );
+                                            constantSourceNode.offset.cancelScheduledValues(
+                                                roundToSamples(startTime, context.sampleRate, 3)
+                                            );
 
                                             constantSourceNode.start(startTime);
                                         }
-                                    })
-                                        .then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 1, 1, 1 ]);
-                                        });
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0.5, 0.5, 1, 1, 1]);
+                                    });
                                 });
-
                             });
 
                             describe('with a call to setValueAtTime()', () => {
-
                                 it('should modify the signal', function () {
                                     this.timeout(10000);
 
                                     return renderer({
-                                        start (startTime, { constantSourceNode }) {
+                                        start(startTime, { constantSourceNode }) {
                                             constantSourceNode.offset.setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
 
                                             constantSourceNode.start(startTime);
                                         }
-                                    })
-                                        .then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([ 1, 1, 0.5, 0.5, 0.5 ]);
-                                        });
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([1, 1, 0.5, 0.5, 0.5]);
+                                    });
                                 });
-
                             });
 
                             describe('with a call to setValueCurveAtTime()', () => {
-
                                 it('should modify the signal', function () {
                                     this.timeout(10000);
 
                                     return renderer({
-                                        start (startTime, { constantSourceNode }) {
-                                            constantSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), roundToSamples(startTime, context.sampleRate), 6 / context.sampleRate);
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.offset.setValueCurveAtTime(
+                                                new Float32Array([0, 0.25, 0.5, 0.75, 1]),
+                                                roundToSamples(startTime, context.sampleRate),
+                                                6 / context.sampleRate
+                                            );
 
                                             constantSourceNode.start(startTime);
                                         }
-                                    })
-                                        .then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([ 0, 0.1666666716337204, 0.3333333432674408, 0.5, 0.6666666865348816 ]);
-                                        });
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([
+                                            0,
+                                            0.1666666716337204,
+                                            0.3333333432674408,
+                                            0.5,
+                                            0.6666666865348816
+                                        ]);
+                                    });
                                 });
-
                             });
 
                             describe('with another AudioNode connected to the AudioParam', () => {
-
                                 it('should modify the signal', function () {
                                     this.timeout(10000);
 
                                     return renderer({
-                                        prepare ({ constantSourceNode }) {
+                                        prepare({ constantSourceNode }) {
                                             const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                             const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
 
-                                            audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.25, 0, -0.25, -0.5 ]), 0);
+                                            audioBuffer.copyToChannel(new Float32Array([0.5, 0.25, 0, -0.25, -0.5]), 0);
 
                                             audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
 
@@ -584,30 +559,23 @@ describe('ConstantSourceNode', () => {
 
                                             return { audioBufferSourceNodeForAudioParam };
                                         },
-                                        start (startTime, { audioBufferSourceNodeForAudioParam, constantSourceNode }) {
+                                        start(startTime, { audioBufferSourceNodeForAudioParam, constantSourceNode }) {
                                             audioBufferSourceNodeForAudioParam.start(startTime);
                                             constantSourceNode.start(startTime);
                                         }
-                                    })
-                                        .then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
-                                        });
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0.5, 0.25, 0, -0.25, -0.5]);
+                                    });
                                 });
-
                             });
 
                             // @todo Test other automations as well.
-
                         });
-
                     }
-
                 });
-
             });
 
             describe('onended', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -620,14 +588,14 @@ describe('ConstantSourceNode', () => {
 
                 it('should be assignable to a function', () => {
                     const fn = () => {};
-                    const onended = constantSourceNode.onended = fn; // eslint-disable-line no-multi-assign
+                    const onended = (constantSourceNode.onended = fn); // eslint-disable-line no-multi-assign
 
                     expect(onended).to.equal(fn);
                     expect(constantSourceNode.onended).to.equal(fn);
                 });
 
                 it('should be assignable to null', () => {
-                    const onended = constantSourceNode.onended = null; // eslint-disable-line no-multi-assign
+                    const onended = (constantSourceNode.onended = null); // eslint-disable-line no-multi-assign
 
                     expect(onended).to.be.null;
                     expect(constantSourceNode.onended).to.be.null;
@@ -638,7 +606,7 @@ describe('ConstantSourceNode', () => {
 
                     constantSourceNode.onended = () => {};
 
-                    const onended = constantSourceNode.onended = string; // eslint-disable-line no-multi-assign
+                    const onended = (constantSourceNode.onended = string); // eslint-disable-line no-multi-assign
 
                     expect(onended).to.equal(string);
                     expect(constantSourceNode.onended).to.be.null;
@@ -655,10 +623,8 @@ describe('ConstantSourceNode', () => {
                     expect(onended).to.have.been.calledTwice;
                 });
 
-                for (const withAConnection of [ true, false ]) {
-
-                    describe(`${ withAConnection ? 'with' : 'without' } a connection`, () => {
-
+                for (const withAConnection of [true, false]) {
+                    describe(`${withAConnection ? 'with' : 'without'} a connection`, () => {
                         it('should fire an assigned ended event listener', (done) => {
                             constantSourceNode.onended = function (event) {
                                 expect(event).to.be.an.instanceOf(Event);
@@ -682,15 +648,11 @@ describe('ConstantSourceNode', () => {
                                 context.startRendering();
                             }
                         });
-
                     });
-
                 }
-
             });
 
             describe('addEventListener()', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -718,37 +680,29 @@ describe('ConstantSourceNode', () => {
                         context.startRendering();
                     }
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let constantSourceNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             constantSourceNode = createConstantSourceNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(constantSourceNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(constantSourceNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -768,7 +722,6 @@ describe('ConstantSourceNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     constantSourceNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -781,17 +734,12 @@ describe('ConstantSourceNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                constantSourceNode
-                                    .connect(audioNodeOrAudioParam)
-                                    .connect(constantSourceNode.offset);
+                                constantSourceNode.connect(audioNodeOrAudioParam).connect(constantSourceNode.offset);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let constantSourceNode;
@@ -807,7 +755,7 @@ describe('ConstantSourceNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             constantSourceNode = createConstantSourceNode(context);
                         });
 
@@ -821,11 +769,9 @@ describe('ConstantSourceNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let constantSourceNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -836,18 +782,23 @@ describe('ConstantSourceNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             constantSourceNode = createConstantSourceNode(context);
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -860,31 +811,24 @@ describe('ConstantSourceNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const anotherGainNode = new GainNode(context);
                                 const constantSourceNode = createConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
 
-                                constantSourceNode
-                                    .connect(gainNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(gainNode).connect(destination);
 
-                                gainNode
-                                    .connect(anotherGainNode)
-                                    .connect(gainNode);
+                                gainNode.connect(anotherGainNode).connect(gainNode);
 
                                 return { anotherGainNode, constantSourceNode, gainNode };
                             }
@@ -895,45 +839,39 @@ describe('ConstantSourceNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = () => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const constantSourceNode = createConstantSourceNode(context);
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = () =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = createConstantSourceNode(context);
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
 
-                            constantSourceNode
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                constantSourceNode.connect(firstDummyGainNode).connect(destination);
 
-                            constantSourceNode.connect(secondDummyGainNode);
+                                constantSourceNode.connect(secondDummyGainNode);
 
-                            return { constantSourceNode, firstDummyGainNode, secondDummyGainNode };
-                        }
-                    });
+                                return { constantSourceNode, firstDummyGainNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
 
                     beforeEach(function () {
@@ -946,24 +884,20 @@ describe('ConstantSourceNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ constantSourceNode }) {
+                            prepare({ constantSourceNode }) {
                                 constantSourceNode.disconnect();
                             },
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let constantSourceNode;
 
                         beforeEach(() => {
@@ -980,11 +914,9 @@ describe('ConstantSourceNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
 
                         beforeEach(function () {
@@ -997,26 +929,21 @@ describe('ConstantSourceNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ constantSourceNode }) {
+                                prepare({ constantSourceNode }) {
                                     constantSourceNode.disconnect(0);
                                 },
-                                start (startTime, { constantSourceNode }) {
+                                start(startTime, { constantSourceNode }) {
                                     constantSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let constantSourceNode;
 
                         beforeEach(() => {
@@ -1033,11 +960,9 @@ describe('ConstantSourceNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
 
                         beforeEach(function () {
@@ -1050,40 +975,35 @@ describe('ConstantSourceNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ constantSourceNode, firstDummyGainNode }) {
+                                prepare({ constantSourceNode, firstDummyGainNode }) {
                                     constantSourceNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { constantSourceNode }) {
+                                start(startTime, { constantSourceNode }) {
                                     constantSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ constantSourceNode, secondDummyGainNode }) {
+                                prepare({ constantSourceNode, secondDummyGainNode }) {
                                     constantSourceNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { constantSourceNode }) {
+                                start(startTime, { constantSourceNode }) {
                                     constantSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([1, 1, 1, 1, 1]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -1111,11 +1031,9 @@ describe('ConstantSourceNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -1154,13 +1072,10 @@ describe('ConstantSourceNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
 
             describe('removeEventListener()', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -1188,11 +1103,9 @@ describe('ConstantSourceNode', () => {
                         context.startRendering();
                     }
                 });
-
             });
 
             describe('start()', () => {
-
                 let constantSourceNode;
 
                 beforeEach(() => {
@@ -1200,7 +1113,6 @@ describe('ConstantSourceNode', () => {
                 });
 
                 describe('with a previous call to start()', () => {
-
                     beforeEach(() => {
                         constantSourceNode.start();
                     });
@@ -1215,11 +1127,9 @@ describe('ConstantSourceNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a previous call to stop()', () => {
-
                     beforeEach(() => {
                         constantSourceNode.start();
                         constantSourceNode.stop();
@@ -1235,25 +1145,19 @@ describe('ConstantSourceNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a negative value as first parameter', () => {
-
                     it('should throw a RangeError', () => {
                         expect(() => {
                             constantSourceNode.start(-1);
                         }).to.throw(RangeError);
                     });
-
                 });
-
             });
 
             describe('stop()', () => {
-
                 describe('without a previous call to start()', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -1270,15 +1174,19 @@ describe('ConstantSourceNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a previous call to stop()', () => {
-
-                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
+                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                        ? [
+                              [true, true],
+                              [true, false],
+                              [false, true]
+                          ]
+                        : [[true, false]]) {
+                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                        } an appended AudioWorklet`, () => {
                             let renderer;
 
                             beforeEach(async function () {
@@ -1290,20 +1198,22 @@ describe('ConstantSourceNode', () => {
 
                                 renderer = createRenderer({
                                     context,
-                                    length: (context.length === undefined) ? 5 : undefined,
-                                    prepare (destination) {
-                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                    length: context.length === undefined ? 5 : undefined,
+                                    prepare(destination) {
+                                        const audioWorkletNode = withAnAppendedAudioWorklet
+                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            : null;
                                         const constantSourceNode = createConstantSourceNode(context);
-                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                        const masterGainNode = new GainNode(context, {
+                                            gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                        });
 
                                         if (withADirectConnection) {
                                             constantSourceNode.connect(masterGainNode);
                                         }
 
                                         if (withAnAppendedAudioWorklet) {
-                                            constantSourceNode
-                                                .connect(audioWorkletNode)
-                                                .connect(masterGainNode);
+                                            constantSourceNode.connect(audioWorkletNode).connect(masterGainNode);
                                         }
 
                                         masterGainNode.connect(destination);
@@ -1317,29 +1227,30 @@ describe('ConstantSourceNode', () => {
                                 this.timeout(10000);
 
                                 return renderer({
-                                    start (startTime, { constantSourceNode }) {
+                                    start(startTime, { constantSourceNode }) {
                                         constantSourceNode.start(startTime);
                                         constantSourceNode.stop(roundToSamples(startTime, context.sampleRate, 5));
                                         constantSourceNode.stop(roundToSamples(startTime, context.sampleRate, 3));
                                     }
-                                })
-                                    .then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 0, 0 ]);
-                                    });
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([1, 1, 1, 0, 0]);
+                                });
                             });
-
                         });
-
                     }
-
                 });
 
                 describe('with a stop time reached prior to the start time', () => {
-
-                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
+                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                        ? [
+                              [true, true],
+                              [true, false],
+                              [false, true]
+                          ]
+                        : [[true, false]]) {
+                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                        } an appended AudioWorklet`, () => {
                             let renderer;
 
                             beforeEach(async function () {
@@ -1351,20 +1262,22 @@ describe('ConstantSourceNode', () => {
 
                                 renderer = createRenderer({
                                     context,
-                                    length: (context.length === undefined) ? 5 : undefined,
-                                    prepare (destination) {
-                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                    length: context.length === undefined ? 5 : undefined,
+                                    prepare(destination) {
+                                        const audioWorkletNode = withAnAppendedAudioWorklet
+                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            : null;
                                         const constantSourceNode = createConstantSourceNode(context);
-                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                        const masterGainNode = new GainNode(context, {
+                                            gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                        });
 
                                         if (withADirectConnection) {
                                             constantSourceNode.connect(masterGainNode);
                                         }
 
                                         if (withAnAppendedAudioWorklet) {
-                                            constantSourceNode
-                                                .connect(audioWorkletNode)
-                                                .connect(masterGainNode);
+                                            constantSourceNode.connect(audioWorkletNode).connect(masterGainNode);
                                         }
 
                                         masterGainNode.connect(destination);
@@ -1378,24 +1291,19 @@ describe('ConstantSourceNode', () => {
                                 this.timeout(10000);
 
                                 return renderer({
-                                    start (startTime, { constantSourceNode }) {
+                                    start(startTime, { constantSourceNode }) {
                                         constantSourceNode.start(roundToSamples(startTime, context.sampleRate, 3));
                                         constantSourceNode.stop(roundToSamples(startTime, context.sampleRate, 1));
                                     }
-                                })
-                                    .then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                    });
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
-
                         });
-
                     }
-
                 });
 
                 describe('with an emitted ended event', () => {
-
                     let constantSourceNode;
 
                     beforeEach((done) => {
@@ -1416,11 +1324,9 @@ describe('ConstantSourceNode', () => {
                     it('should ignore calls to stop()', () => {
                         constantSourceNode.stop();
                     });
-
                 });
 
                 describe('with a negative value as first parameter', () => {
-
                     let constantSourceNode;
 
                     beforeEach(() => {
@@ -1434,13 +1340,8 @@ describe('ConstantSourceNode', () => {
                             constantSourceNode.stop(-1);
                         }).to.throw(RangeError);
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

@@ -1,7 +1,13 @@
 import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNode, IMinimalOfflineAudioContext, INativePannerNodeFaker, IOfflineAudioContext, IPannerNode } from '../interfaces';
-import { TNativeAudioBuffer, TNativeGainNode, TNativeOfflineAudioContext, TNativePannerNode, TPannerNodeRendererFactoryFactory } from '../types';
+import {
+    TNativeAudioBuffer,
+    TNativeGainNode,
+    TNativeOfflineAudioContext,
+    TNativePannerNode,
+    TPannerNodeRendererFactoryFactory
+} from '../types';
 
 export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory = (
     connectAudioParam,
@@ -65,7 +71,7 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
                 nativePannerNode = createNativePannerNode(nativeOfflineAudioContext, options);
             }
 
-            renderedNativeAudioNodes.set(nativeOfflineAudioContext, (nativeGainNode === null) ? nativePannerNode : nativeGainNode);
+            renderedNativeAudioNodes.set(nativeOfflineAudioContext, nativeGainNode === null ? nativePannerNode : nativeGainNode);
 
             if (nativeGainNode !== null) {
                 if (renderedBufferPromise === null) {
@@ -79,39 +85,36 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
                         proxy.context.length,
                         nativeOfflineAudioContext.sampleRate
                     );
-                    const nativeChannelMergerNode = createNativeChannelMergerNode(
-                        partialOfflineAudioContext,
-                        {
-                            channelCount: 1,
-                            channelCountMode: 'explicit',
-                            channelInterpretation: 'speakers',
-                            numberOfInputs: 6
-                        }
-                    );
+                    const nativeChannelMergerNode = createNativeChannelMergerNode(partialOfflineAudioContext, {
+                        channelCount: 1,
+                        channelCountMode: 'explicit',
+                        channelInterpretation: 'speakers',
+                        numberOfInputs: 6
+                    });
                     nativeChannelMergerNode.connect(partialOfflineAudioContext.destination);
 
                     renderedBufferPromise = (async () => {
-                        const nativeConstantSourceNodes = await Promise
-                            .all([
+                        const nativeConstantSourceNodes = await Promise.all(
+                            [
                                 proxy.orientationX,
                                 proxy.orientationY,
                                 proxy.orientationZ,
                                 proxy.positionX,
                                 proxy.positionY,
                                 proxy.positionZ
-                            ]
-                                .map(async (audioParam, index) => {
-                                    const nativeConstantSourceNode = createNativeConstantSourceNode(partialOfflineAudioContext, {
-                                        channelCount: 1,
-                                        channelCountMode: 'explicit',
-                                        channelInterpretation: 'discrete',
-                                        offset: (index === 0) ? 1 : 0
-                                    });
+                            ].map(async (audioParam, index) => {
+                                const nativeConstantSourceNode = createNativeConstantSourceNode(partialOfflineAudioContext, {
+                                    channelCount: 1,
+                                    channelCountMode: 'explicit',
+                                    channelInterpretation: 'discrete',
+                                    offset: index === 0 ? 1 : 0
+                                });
 
-                                    await renderAutomation(partialOfflineAudioContext, audioParam, nativeConstantSourceNode.offset, trace);
+                                await renderAutomation(partialOfflineAudioContext, audioParam, nativeConstantSourceNode.offset, trace);
 
-                                    return nativeConstantSourceNode;
-                                }));
+                                return nativeConstantSourceNode;
+                            })
+                        );
 
                         for (let i = 0; i < 6; i += 1) {
                             nativeConstantSourceNodes[i].connect(nativeChannelMergerNode, 0, i);
@@ -127,14 +130,14 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
 
                 await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, inputGainNode, trace);
 
-                const channelDatas: Float32Array[] = [ ];
+                const channelDatas: Float32Array[] = [];
 
                 for (let i = 0; i < renderedBuffer.numberOfChannels; i += 1) {
                     channelDatas.push(renderedBuffer.getChannelData(i));
                 }
 
-                let lastOrientation = [ channelDatas[0][0], channelDatas[1][0], channelDatas[2][0] ];
-                let lastPosition = [ channelDatas[3][0], channelDatas[4][0], channelDatas[5][0] ];
+                let lastOrientation = [channelDatas[0][0], channelDatas[1][0], channelDatas[2][0]];
+                let lastPosition = [channelDatas[3][0], channelDatas[4][0], channelDatas[5][0]];
                 let gateGainNode = createNativeGainNode(nativeOfflineAudioContext, { ...commonAudioNodeOptions, gain: 1 });
                 let partialPannerNode = createNativePannerNode(nativeOfflineAudioContext, {
                     ...commonNativePannerNodeOptions,
@@ -146,17 +149,17 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
                     positionZ: lastPosition[2]
                 });
 
-                inputGainNode
-                    .connect(gateGainNode)
-                    .connect((<INativePannerNodeFaker> partialPannerNode).inputs[0]);
+                inputGainNode.connect(gateGainNode).connect((<INativePannerNodeFaker>partialPannerNode).inputs[0]);
                 partialPannerNode.connect(nativeGainNode);
 
                 for (let i = 128; i < renderedBuffer.length; i += 128) {
-                    const orientation: [ number, number, number ] = [ channelDatas[0][i], channelDatas[1][i], channelDatas[2][i] ];
-                    const positon: [ number, number, number ] = [ channelDatas[3][i], channelDatas[4][i], channelDatas[5][i] ];
+                    const orientation: [number, number, number] = [channelDatas[0][i], channelDatas[1][i], channelDatas[2][i]];
+                    const positon: [number, number, number] = [channelDatas[3][i], channelDatas[4][i], channelDatas[5][i]];
 
-                    if (orientation.some((value, index) => (value !== lastOrientation[index]))
-                            || positon.some((value, index) => (value !== lastPosition[index]))) {
+                    if (
+                        orientation.some((value, index) => value !== lastOrientation[index]) ||
+                        positon.some((value, index) => value !== lastPosition[index])
+                    ) {
                         lastOrientation = orientation;
                         lastPosition = positon;
 
@@ -177,9 +180,7 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
 
                         gateGainNode.gain.setValueAtTime(1, currentTime);
 
-                        inputGainNode
-                            .connect(gateGainNode)
-                            .connect((<INativePannerNodeFaker> partialPannerNode).inputs[0]);
+                        inputGainNode.connect(gateGainNode).connect((<INativePannerNodeFaker>partialPannerNode).inputs[0]);
                         partialPannerNode.connect(nativeGainNode);
                     }
                 }
@@ -213,7 +214,7 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
         };
 
         return {
-            render (
+            render(
                 proxy: IPannerNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

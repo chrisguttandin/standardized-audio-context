@@ -33,16 +33,12 @@ const countObjects = async (page) => {
     const objectsHandle = await page.queryObjects(prototypeHandle);
     const numberOfObjects = await page.evaluate((instances) => instances.length, objectsHandle);
 
-    await Promise.all([
-        prototypeHandle.dispose(),
-        objectsHandle.dispose()
-    ]);
+    await Promise.all([prototypeHandle.dispose(), objectsHandle.dispose()]);
 
     return numberOfObjects;
 };
 
 describe('module', () => {
-
     let browser;
     let context;
     let page;
@@ -72,9 +68,7 @@ describe('module', () => {
     });
 
     describe('with a GainNode', () => {
-
         describe('with unconnected GainNodes', () => {
-
             let run;
 
             beforeEach(() => {
@@ -94,11 +88,9 @@ describe('module', () => {
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
-
         });
 
         describe('with connected GainNodes', () => {
-
             let run;
 
             beforeEach(() => {
@@ -120,11 +112,9 @@ describe('module', () => {
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
-
         });
 
         describe('with disconnected GainNodes', () => {
-
             let run;
 
             beforeEach(() => {
@@ -147,15 +137,11 @@ describe('module', () => {
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
-
         });
-
     });
 
     describe('with an AudioBufferSourceNode', () => {
-
         describe('with unconnected AudioBufferSourceNodes', () => {
-
             let run;
 
             beforeEach(() => {
@@ -181,11 +167,9 @@ describe('module', () => {
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
-
         });
 
         describe('with connected AudioBufferSourceNodes', () => {
-
             let run;
 
             beforeEach(() => {
@@ -213,13 +197,11 @@ describe('module', () => {
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
-
         });
 
         // @todo Run a test with started AudioBufferSourceNodes.
 
         describe('with disconnected AudioBufferSourceNodes', () => {
-
             let run;
 
             beforeEach(() => {
@@ -248,9 +230,6 @@ describe('module', () => {
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
-
         });
-
     });
-
 });

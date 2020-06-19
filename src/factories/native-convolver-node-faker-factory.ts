@@ -7,42 +7,33 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
     createNativeGainNode,
     monitorConnections
 ) => {
-    return (
-        nativeContext,
-        {
-            buffer,
-            channelCount,
-            channelCountMode,
-            channelInterpretation,
-            disableNormalization
-        }
-    ) => {
+    return (nativeContext, { buffer, channelCount, channelCountMode, channelInterpretation, disableNormalization }) => {
         const convolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
 
         assignNativeAudioNodeOptions(convolverNode, {
             // Bug #166: Opera does not allow yet to set the channelCount to 1.
             channelCount: Math.max(channelCount, 2),
             // Bug #167: Opera does not allow yet to set the channelCountMode to 'explicit'.
-            channelCountMode: (channelCountMode === 'max') ? channelCountMode : 'clamped-max',
+            channelCountMode: channelCountMode === 'max' ? channelCountMode : 'clamped-max',
             channelInterpretation
         });
 
         const gainNode = createNativeGainNode(nativeContext, { channelCount, channelCountMode, channelInterpretation, gain: 1 });
 
         const nativeConvolverNodeFaker = {
-            get buffer (): TNativeConvolverNode['buffer'] {
+            get buffer(): TNativeConvolverNode['buffer'] {
                 return convolverNode.buffer;
             },
-            set buffer (value) {
+            set buffer(value) {
                 convolverNode.buffer = value;
             },
-            get bufferSize (): undefined {
+            get bufferSize(): undefined {
                 return undefined;
             },
-            get channelCount (): number {
+            get channelCount(): number {
                 return gainNode.channelCount;
             },
-            set channelCount (value) {
+            set channelCount(value) {
                 // Bug #166: Opera does not allow yet to set the channelCount to 1.
                 if (value > 2) {
                     convolverNode.channelCount = value;
@@ -50,10 +41,10 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
 
                 gainNode.channelCount = value;
             },
-            get channelCountMode (): TNativeConvolverNode['channelCountMode'] {
+            get channelCountMode(): TNativeConvolverNode['channelCountMode'] {
                 return gainNode.channelCountMode;
             },
-            set channelCountMode (value) {
+            set channelCountMode(value) {
                 // Bug #167: Opera does not allow yet to set the channelCountMode to 'explicit'.
                 if (value === 'max') {
                     convolverNode.channelCountMode = value;
@@ -61,38 +52,38 @@ export const createNativeConvolverNodeFakerFactory: TNativeConvolverNodeFakerFac
 
                 gainNode.channelCountMode = value;
             },
-            get channelInterpretation (): TNativeConvolverNode['channelInterpretation'] {
+            get channelInterpretation(): TNativeConvolverNode['channelInterpretation'] {
                 return convolverNode.channelInterpretation;
             },
-            set channelInterpretation (value) {
+            set channelInterpretation(value) {
                 convolverNode.channelInterpretation = value;
                 gainNode.channelInterpretation = value;
             },
-            get context (): TNativeConvolverNode['context'] {
+            get context(): TNativeConvolverNode['context'] {
                 return convolverNode.context;
             },
-            get inputs (): TNativeAudioNode[] {
-                return [ convolverNode ];
+            get inputs(): TNativeAudioNode[] {
+                return [convolverNode];
             },
-            get numberOfInputs (): number {
+            get numberOfInputs(): number {
                 return convolverNode.numberOfInputs;
             },
-            get numberOfOutputs (): number {
+            get numberOfOutputs(): number {
                 return convolverNode.numberOfOutputs;
             },
-            get normalize (): TNativeConvolverNode['normalize'] {
+            get normalize(): TNativeConvolverNode['normalize'] {
                 return convolverNode.normalize;
             },
-            set normalize (value) {
+            set normalize(value) {
                 convolverNode.normalize = value;
             },
-            addEventListener (...args: any[]): void {
+            addEventListener(...args: any[]): void {
                 return convolverNode.addEventListener(args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]): boolean {
+            dispatchEvent(...args: any[]): boolean {
                 return convolverNode.dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]): void {
+            removeEventListener(...args: any[]): void {
                 return convolverNode.removeEventListener(args[0], args[1], args[2]);
             }
         };

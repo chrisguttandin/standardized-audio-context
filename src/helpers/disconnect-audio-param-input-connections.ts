@@ -9,12 +9,10 @@ export const disconnectAudioParamInputConnections = <T extends TContext>(
     const audioParamConnections = getAudioParamConnections<T>(audioParam);
 
     if (audioParamConnections !== undefined) {
-        audioParamConnections
-            .activeInputs
-            .forEach(([ source, output ]) => {
-                source.disconnect(audioParam, output);
+        audioParamConnections.activeInputs.forEach(([source, output]) => {
+            source.disconnect(audioParam, output);
 
-                disconnectAudioNodeInputConnections(source);
-            });
+            disconnectAudioNodeInputConnections(source);
+        });
     }
 };

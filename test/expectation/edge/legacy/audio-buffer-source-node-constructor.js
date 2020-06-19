@@ -1,5 +1,4 @@
 describe('audioBufferSourceNodeConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -15,5 +14,4 @@ describe('audioBufferSourceNodeConstructor', () => {
             new AudioBufferSourceNode(audioContext, {});
         }).to.throw(TypeError, 'Function expected');
     });
-
 });

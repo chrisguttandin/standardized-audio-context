@@ -39,7 +39,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         if (options.outputChannelCount !== undefined) {
             // @todo Check if any of the channelCount values is greater than the implementation's maximum number of channels.
-            if (options.outputChannelCount.some((channelCount) => (channelCount < 1))) {
+            if (options.outputChannelCount.some((channelCount) => channelCount < 1)) {
                 throw createNotSupportedError();
             }
 
@@ -55,9 +55,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
 
         const numberOfInputChannels = options.channelCount * options.numberOfInputs;
         const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
-        const numberOfParameters = (processorConstructor.parameterDescriptors === undefined)
-            ? 0
-            : processorConstructor.parameterDescriptors.length;
+        const numberOfParameters =
+            processorConstructor.parameterDescriptors === undefined ? 0 : processorConstructor.parameterDescriptors.length;
 
         // Bug #61: This is not part of the standard but required for the faker to work.
         if (numberOfInputChannels + numberOfParameters > 6 || numberOfOutputChannels > 6) {
@@ -65,25 +64,29 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         }
 
         const messageChannel = new MessageChannel();
-        const gainNodes: TNativeGainNode[] = [ ];
-        const inputChannelSplitterNodes: TNativeChannelSplitterNode[] = [ ];
+        const gainNodes: TNativeGainNode[] = [];
+        const inputChannelSplitterNodes: TNativeChannelSplitterNode[] = [];
 
         for (let i = 0; i < options.numberOfInputs; i += 1) {
-            gainNodes.push(createNativeGainNode(nativeContext, {
-                channelCount: options.channelCount,
-                channelCountMode: options.channelCountMode,
-                channelInterpretation: options.channelInterpretation,
-                gain: 1
-            }));
-            inputChannelSplitterNodes.push(createNativeChannelSplitterNode(nativeContext, {
-                channelCount: options.channelCount,
-                channelCountMode: 'explicit',
-                channelInterpretation: 'discrete',
-                numberOfOutputs: options.channelCount
-            }));
+            gainNodes.push(
+                createNativeGainNode(nativeContext, {
+                    channelCount: options.channelCount,
+                    channelCountMode: options.channelCountMode,
+                    channelInterpretation: options.channelInterpretation,
+                    gain: 1
+                })
+            );
+            inputChannelSplitterNodes.push(
+                createNativeChannelSplitterNode(nativeContext, {
+                    channelCount: options.channelCount,
+                    channelCountMode: 'explicit',
+                    channelInterpretation: 'discrete',
+                    numberOfOutputs: options.channelCount
+                })
+            );
         }
 
-        const constantSourceNodes: TNativeConstantSourceNode[] = [ ];
+        const constantSourceNodes: TNativeConstantSourceNode[] = [];
 
         if (processorConstructor.parameterDescriptors !== undefined) {
             for (const { defaultValue, maxValue, minValue, name } of processorConstructor.parameterDescriptors) {
@@ -91,22 +94,23 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     channelCount: 1,
                     channelCountMode: 'explicit',
                     channelInterpretation: 'discrete',
-                    offset: (options.parameterData[name] !== undefined)
-                        ? options.parameterData[name]
-                        : (defaultValue === undefined)
+                    offset:
+                        options.parameterData[name] !== undefined
+                            ? options.parameterData[name]
+                            : defaultValue === undefined
                             ? 0
                             : defaultValue
                 });
 
                 Object.defineProperties(constantSourceNode.offset, {
                     defaultValue: {
-                        get: () => (defaultValue === undefined) ? 0 : defaultValue
+                        get: () => (defaultValue === undefined ? 0 : defaultValue)
                     },
                     maxValue: {
-                        get: () => (maxValue === undefined) ? MOST_POSITIVE_SINGLE_FLOAT : maxValue
+                        get: () => (maxValue === undefined ? MOST_POSITIVE_SINGLE_FLOAT : maxValue)
                     },
                     minValue: {
-                        get: () => (minValue === undefined) ? MOST_NEGATIVE_SINGLE_FLOAT : minValue
+                        get: () => (minValue === undefined ? MOST_NEGATIVE_SINGLE_FLOAT : minValue)
                     }
                 });
 
@@ -114,15 +118,12 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         }
 
-        const inputChannelMergerNode = createNativeChannelMergerNode(
-            nativeContext,
-            {
-                channelCount: 1,
-                channelCountMode: 'explicit',
-                channelInterpretation: 'speakers',
-                numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
-            }
-        );
+        const inputChannelMergerNode = createNativeChannelMergerNode(nativeContext, {
+            channelCount: 1,
+            channelCountMode: 'explicit',
+            channelInterpretation: 'speakers',
+            numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
+        });
         const bufferSize = computeBufferSize(baseLatency, nativeContext.sampleRate);
         const scriptProcessorNode = createNativeScriptProcessorNode(
             nativeContext,
@@ -137,40 +138,39 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             channelInterpretation: 'discrete',
             numberOfOutputs: Math.max(1, numberOfOutputChannels)
         });
-        const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
+        const outputChannelMergerNodes: TNativeChannelMergerNode[] = [];
 
         for (let i = 0; i < options.numberOfOutputs; i += 1) {
-            outputChannelMergerNodes.push(createNativeChannelMergerNode(
-                nativeContext,
-                {
+            outputChannelMergerNodes.push(
+                createNativeChannelMergerNode(nativeContext, {
                     channelCount: 1,
                     channelCountMode: 'explicit',
                     channelInterpretation: 'speakers',
                     numberOfInputs: options.outputChannelCount[i]
-                }
-            ));
+                })
+            );
         }
 
         for (let i = 0; i < options.numberOfInputs; i += 1) {
             gainNodes[i].connect(inputChannelSplitterNodes[i]);
 
             for (let j = 0; j < options.channelCount; j += 1) {
-                inputChannelSplitterNodes[i].connect(inputChannelMergerNode, j, (i * options.channelCount) + j);
+                inputChannelSplitterNodes[i].connect(inputChannelMergerNode, j, i * options.channelCount + j);
             }
         }
 
         const parameterMap = new ReadOnlyMap(
-            (processorConstructor.parameterDescriptors === undefined)
-                ? [ ]
-                : processorConstructor.parameterDescriptors
-                    .map(({ name }, index) => {
-                        const constantSourceNode = constantSourceNodes[index];
+            processorConstructor.parameterDescriptors === undefined
+                ? []
+                : processorConstructor.parameterDescriptors.map(({ name }, index) => {
+                      const constantSourceNode = constantSourceNodes[index];
 
-                        constantSourceNode.connect(inputChannelMergerNode, 0, numberOfInputChannels + index);
-                        constantSourceNode.start(0);
+                      constantSourceNode.connect(inputChannelMergerNode, 0, numberOfInputChannels + index);
+                      constantSourceNode.start(0);
 
-                        return <[ string, TNativeAudioParam ]> [ name, constantSourceNode.offset ];
-                    }));
+                      return <[string, TNativeAudioParam]>[name, constantSourceNode.offset];
+                  })
+        );
 
         inputChannelMergerNode.connect(scriptProcessorNode);
 
@@ -178,88 +178,89 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         let onprocessorerror: TNativeAudioWorkletNode['onprocessorerror'] = null;
 
         // Bug #87: Expose at least one output to make this node connectable.
-        const outputAudioNodes = (options.numberOfOutputs === 0) ? [ scriptProcessorNode ] : outputChannelMergerNodes;
+        const outputAudioNodes = options.numberOfOutputs === 0 ? [scriptProcessorNode] : outputChannelMergerNodes;
         const nativeAudioWorkletNodeFaker = {
-            get bufferSize (): number {
+            get bufferSize(): number {
                 return bufferSize;
             },
-            get channelCount (): number {
+            get channelCount(): number {
                 return options.channelCount;
             },
-            set channelCount (_) {
+            set channelCount(_) {
                 // Bug #61: This is not part of the standard but required for the faker to work.
                 throw createInvalidStateError();
             },
-            get channelCountMode (): TNativeAudioWorkletNode['channelCountMode'] {
+            get channelCountMode(): TNativeAudioWorkletNode['channelCountMode'] {
                 return options.channelCountMode;
             },
-            set channelCountMode (_) {
+            set channelCountMode(_) {
                 // Bug #61: This is not part of the standard but required for the faker to work.
                 throw createInvalidStateError();
             },
-            get channelInterpretation (): TNativeAudioWorkletNode['channelInterpretation'] {
+            get channelInterpretation(): TNativeAudioWorkletNode['channelInterpretation'] {
                 return channelInterpretation;
             },
-            set channelInterpretation (value) {
+            set channelInterpretation(value) {
                 for (const gainNode of gainNodes) {
                     gainNode.channelInterpretation = value;
                 }
 
                 channelInterpretation = value;
             },
-            get context (): TNativeAudioWorkletNode['context'] {
+            get context(): TNativeAudioWorkletNode['context'] {
                 return scriptProcessorNode.context;
             },
-            get inputs (): TNativeAudioNode[] {
+            get inputs(): TNativeAudioNode[] {
                 return gainNodes;
             },
-            get numberOfInputs (): number {
+            get numberOfInputs(): number {
                 return options.numberOfInputs;
             },
-            get numberOfOutputs (): number {
+            get numberOfOutputs(): number {
                 return options.numberOfOutputs;
             },
-            get onprocessorerror (): TNativeAudioWorkletNode['onprocessorerror'] {
+            get onprocessorerror(): TNativeAudioWorkletNode['onprocessorerror'] {
                 return onprocessorerror;
             },
-            set onprocessorerror (value) {
+            set onprocessorerror(value) {
                 if (typeof onprocessorerror === 'function') {
                     nativeAudioWorkletNodeFaker.removeEventListener('processorerror', onprocessorerror);
                 }
 
-                onprocessorerror = (typeof value === 'function') ? value : null;
+                onprocessorerror = typeof value === 'function' ? value : null;
 
                 if (typeof onprocessorerror === 'function') {
                     nativeAudioWorkletNodeFaker.addEventListener('processorerror', onprocessorerror);
                 }
             },
-            get parameters (): TNativeAudioWorkletNode['parameters'] {
+            get parameters(): TNativeAudioWorkletNode['parameters'] {
                 return parameterMap;
             },
-            get port (): TNativeAudioWorkletNode['port'] {
+            get port(): TNativeAudioWorkletNode['port'] {
                 return messageChannel.port2;
             },
-            addEventListener (...args: any[]): void {
+            addEventListener(...args: any[]): void {
                 return scriptProcessorNode.addEventListener(args[0], args[1], args[2]);
             },
-            connect: <TNativeAudioNode['connect']> connectMultipleOutputs.bind(null, outputAudioNodes),
-            disconnect: <TNativeAudioNode['disconnect']> disconnectMultipleOutputs.bind(null, outputAudioNodes),
-            dispatchEvent (...args: any[]): boolean {
+            connect: <TNativeAudioNode['connect']>connectMultipleOutputs.bind(null, outputAudioNodes),
+            disconnect: <TNativeAudioNode['disconnect']>disconnectMultipleOutputs.bind(null, outputAudioNodes),
+            dispatchEvent(...args: any[]): boolean {
                 return scriptProcessorNode.dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]): void {
+            removeEventListener(...args: any[]): void {
                 return scriptProcessorNode.removeEventListener(args[0], args[1], args[2]);
             }
         };
 
-        const patchedEventListeners: Map<EventListenerOrEventListenerObject, NonNullable<MessagePort['onmessage']>> = new Map(); // tslint:disable-line:max-line-length
+        const patchedEventListeners: Map<EventListenerOrEventListenerObject, NonNullable<MessagePort['onmessage']>> = new Map();
 
         messageChannel.port1.addEventListener = ((addEventListener) => {
-            return (...args: [ string, EventListenerOrEventListenerObject, (boolean | AddEventListenerOptions)? ]): void => {
+            return (...args: [string, EventListenerOrEventListenerObject, (boolean | AddEventListenerOptions)?]): void => {
                 if (args[0] === 'message') {
-                    const unpatchedEventListener = (typeof args[1] === 'function')
-                        ? args[1]
-                        : (typeof args[1] === 'object' && args[1] !== null && typeof args[1].handleEvent === 'function')
+                    const unpatchedEventListener =
+                        typeof args[1] === 'function'
+                            ? args[1]
+                            : typeof args[1] === 'object' && args[1] !== null && typeof args[1].handleEvent === 'function'
                             ? args[1].handleEvent
                             : null;
 
@@ -267,13 +268,11 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                         const patchedEventListener = patchedEventListeners.get(args[1]);
 
                         if (patchedEventListener !== undefined) {
-                            args[1] = <EventListenerOrEventListenerObject> patchedEventListener;
+                            args[1] = <EventListenerOrEventListenerObject>patchedEventListener;
                         } else {
                             args[1] = (event: Event) => {
-                                exposeCurrentFrameAndCurrentTime(
-                                    nativeContext.currentTime,
-                                    nativeContext.sampleRate,
-                                    () => unpatchedEventListener(event)
+                                exposeCurrentFrameAndCurrentTime(nativeContext.currentTime, nativeContext.sampleRate, () =>
+                                    unpatchedEventListener(event)
                                 );
                             };
 
@@ -311,7 +310,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     messageChannel.port1.removeEventListener('message', onmessage);
                 }
 
-                onmessage = (typeof value === 'function') ? value : null;
+                onmessage = typeof value === 'function' ? value : null;
 
                 if (typeof onmessage === 'function') {
                     messageChannel.port1.addEventListener('message', onmessage);
@@ -331,15 +330,17 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             options
         );
 
-        audioWorkletProcessorPromise
-            .then((dWrkltPrcssr) => audioWorkletProcessor = dWrkltPrcssr);
+        audioWorkletProcessorPromise.then((dWrkltPrcssr) => (audioWorkletProcessor = dWrkltPrcssr));
 
         const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
         const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
-        const parameters: { [ name: string ]: Float32Array } = (processorConstructor.parameterDescriptors === undefined) ?
-            [ ] :
-            processorConstructor.parameterDescriptors
-                .reduce((prmtrs, { name }) => ({ ...prmtrs, [ name ]: new Float32Array(128) }), { });
+        const parameters: { [name: string]: Float32Array } =
+            processorConstructor.parameterDescriptors === undefined
+                ? []
+                : processorConstructor.parameterDescriptors.reduce(
+                      (prmtrs, { name }) => ({ ...prmtrs, [name]: new Float32Array(128) }),
+                      {}
+                  );
 
         let isActive = true;
 
@@ -359,7 +360,8 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         };
 
-        scriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }: AudioProcessingEvent) => { // tslint:disable-line:deprecation
+        // tslint:disable-next-line:deprecation
+        scriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }: AudioProcessingEvent) => {
             if (audioWorkletProcessor !== null) {
                 for (let i = 0; i < bufferSize; i += 128) {
                     for (let j = 0; j < options.numberOfInputs; j += 1) {
@@ -384,21 +386,20 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }
 
                     try {
-                        const potentiallyEmptyInputs = inputs
-                            .map((input, index) => {
-                                const auxiliaryGainNodes = auxiliaryGainNodeStore.get(nativeAudioWorkletNodeFaker);
+                        const potentiallyEmptyInputs = inputs.map((input, index) => {
+                            const auxiliaryGainNodes = auxiliaryGainNodeStore.get(nativeAudioWorkletNodeFaker);
 
-                                if (auxiliaryGainNodes === undefined || auxiliaryGainNodes.get(index) === undefined) {
-                                    return [ ];
-                                }
+                            if (auxiliaryGainNodes === undefined || auxiliaryGainNodes.get(index) === undefined) {
+                                return [];
+                            }
 
-                                return input;
-                            });
+                            return input;
+                        });
 
                         const activeSourceFlag = exposeCurrentFrameAndCurrentTime(
-                            nativeContext.currentTime + (i / nativeContext.sampleRate),
+                            nativeContext.currentTime + i / nativeContext.sampleRate,
                             nativeContext.sampleRate,
-                            () => (<IAudioWorkletProcessor> audioWorkletProcessor).process(potentiallyEmptyInputs, outputs, parameters)
+                            () => (<IAudioWorkletProcessor>audioWorkletProcessor).process(potentiallyEmptyInputs, outputs, parameters)
                         );
 
                         isActive = activeSourceFlag;
@@ -421,7 +422,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                             gainNodes[j].disconnect(inputChannelSplitterNodes[j]);
 
                             for (let k = 0; k < options.channelCount; k += 1) {
-                                inputChannelSplitterNodes[i].disconnect(inputChannelMergerNode, k, (j * options.channelCount) + k);
+                                inputChannelSplitterNodes[i].disconnect(inputChannelMergerNode, k, j * options.channelCount + k);
                             }
                         }
 
@@ -455,18 +456,21 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         let isConnected = false;
 
         // Bug #87: Only Firefox will fire an AudioProcessingEvent if there is no connected output.
-        const nativeGainNode = createNativeGainNode(
-            nativeContext,
-            { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'discrete', gain: 0 }
-        );
+        const nativeGainNode = createNativeGainNode(nativeContext, {
+            channelCount: 1,
+            channelCountMode: 'explicit',
+            channelInterpretation: 'discrete',
+            gain: 0
+        });
 
-        const connectFakeGraph = () => scriptProcessorNode
-            .connect(nativeGainNode)
-            /*
-             * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is used here
-             * to make sure to connect the right destination.
-             */
-            .connect(nativeGainNode.context.destination);
+        const connectFakeGraph = () =>
+            scriptProcessorNode
+                .connect(nativeGainNode)
+                /*
+                 * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is used here
+                 * to make sure to connect the right destination.
+                 */
+                .connect(nativeGainNode.context.destination);
         const disconnectFakeGraph = () => {
             scriptProcessorNode.disconnect(nativeGainNode);
             nativeGainNode.disconnect();

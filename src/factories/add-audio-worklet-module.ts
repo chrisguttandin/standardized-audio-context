@@ -10,7 +10,7 @@ const verifyParameterDescriptors = (parameterDescriptors: IAudioWorkletProcessor
     }
 };
 
-const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor> (processorCtor: T) => {
+const verifyProcessorCtor = <T extends IAudioWorkletProcessorConstructor>(processorCtor: T) => {
     if (!isConstructible(processorCtor)) {
         throw new TypeError('The given value for processorCtor should be a constructor.');
     }
@@ -33,44 +33,44 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
 ) => {
     return (context, moduleURL, options = { credentials: 'omit' }) => {
         const nativeContext = getNativeContext(context);
-        const absoluteUrl = (new URL(moduleURL, window.location.href)).toString();
+        const absoluteUrl = new URL(moduleURL, window.location.href).toString();
 
         // Bug #59: Only Chrome & Opera do implement the audioWorklet property.
         if (nativeContext.audioWorklet !== undefined) {
-            return fetchSource(moduleURL)
-                .then((source) => {
-                    const [ importStatements, sourceWithoutImportStatements ] = splitImportStatements(source, absoluteUrl);
-                    /*
-                     * Bug #170: Chrome and Opera do call process() with an array with empty channelData for each input if no input is
-                     * connected.
-                     *
-                     * This is the unminified version of the code used below:
-                     *
-                     * ```js
-                     * `${ importStatements };
-                     * ((registerProcessor) => {${ sourceWithoutImportStatements }
-                     * })((name, processorCtor) => registerProcessor(name, class extends processorCtor {
-                     *
-                     *     process (inputs, outputs, parameters) {
-                     *         return super.process(
-                     *             (inputs.map((input) => input.some((channelData) => channelData.length === 0)) ? [ ] : input),
-                     *             outputs,
-                     *             parameters
-                     *         );
-                     *     }
-                     *
-                     * }))`
-                     * ```
-                     */
-                    const wrappedSource = `${ importStatements };(registerProcessor=>{${ sourceWithoutImportStatements }
-})((n,p)=>registerProcessor(n,class extends p{process(i,o,p){return super.process(i.map(j=>j.some(k=>k.length===0)?[]:j),o,p)}}))`; // tslint:disable-line:max-line-length
-                    const blob = new Blob([ wrappedSource ], { type: 'application/javascript; charset=utf-8' });
-                    const url = URL.createObjectURL(blob);
+            return fetchSource(moduleURL).then((source) => {
+                const [importStatements, sourceWithoutImportStatements] = splitImportStatements(source, absoluteUrl);
+                /*
+                 * Bug #170: Chrome and Opera do call process() with an array with empty channelData for each input if no input is
+                 * connected.
+                 *
+                 * This is the unminified version of the code used below:
+                 *
+                 * ```js
+                 * `${ importStatements };
+                 * ((registerProcessor) => {${ sourceWithoutImportStatements }
+                 * })((name, processorCtor) => registerProcessor(name, class extends processorCtor {
+                 *
+                 *     process (inputs, outputs, parameters) {
+                 *         return super.process(
+                 *             (inputs.map((input) => input.some((channelData) => channelData.length === 0)) ? [ ] : input),
+                 *             outputs,
+                 *             parameters
+                 *         );
+                 *     }
+                 *
+                 * }))`
+                 * ```
+                 */
+                const wrappedSource = `${importStatements};(registerProcessor=>{${sourceWithoutImportStatements}
+})((n,p)=>registerProcessor(n,class extends p{process(i,o,p){return super.process(i.map(j=>j.some(k=>k.length===0)?[]:j),o,p)}}))`;
+                const blob = new Blob([wrappedSource], { type: 'application/javascript; charset=utf-8' });
+                const url = URL.createObjectURL(blob);
 
-                    const backupNativeContext = getBackupNativeContext(nativeContext);
-                    const nativeContextOrBackupNativeContext = (backupNativeContext !== null) ? backupNativeContext : nativeContext;
+                const backupNativeContext = getBackupNativeContext(nativeContext);
+                const nativeContextOrBackupNativeContext = backupNativeContext !== null ? backupNativeContext : nativeContext;
 
-                    return nativeContextOrBackupNativeContext.audioWorklet
+                return (
+                    nativeContextOrBackupNativeContext.audioWorklet
                         .addModule(url, options)
                         .then(() => URL.revokeObjectURL(url))
                         // @todo This could be written more elegantly when Promise.finally() becomes avalaible.
@@ -82,8 +82,9 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                             }
 
                             throw err;
-                        });
-                });
+                        })
+                );
+            });
         }
 
         const resolvedRequestsOfContext = resolvedRequests.get(context);
@@ -104,7 +105,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
 
         const promise = fetchSource(moduleURL)
             .then((source) => {
-                const [ importStatements, sourceWithoutImportStatements ] = splitImportStatements(source, absoluteUrl);
+                const [importStatements, sourceWithoutImportStatements] = splitImportStatements(source, absoluteUrl);
 
                 /*
                  * This is the unminified version of the code used below:
@@ -121,24 +122,22 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                  * ```
                  */
                 // tslint:disable-next-line:max-line-length
-                const wrappedSource = `${ importStatements };((a,b)=>{(a[b]=a[b]||[]).push((AudioWorkletProcessor,global,registerProcessor,sampleRate,self,window)=>{${ sourceWithoutImportStatements }
+                const wrappedSource = `${importStatements};((a,b)=>{(a[b]=a[b]||[]).push((AudioWorkletProcessor,global,registerProcessor,sampleRate,self,window)=>{${sourceWithoutImportStatements}
 })})(window,'_AWGS')`;
 
                 // @todo Evaluating the given source code is a possible security problem.
                 return evaluateSource(wrappedSource);
             })
             .then(() => {
-                const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]> (<any> window)._AWGS).pop();
+                const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]>(<any>window)._AWGS).pop();
 
                 if (evaluateAudioWorkletGlobalScope === undefined) {
                     throw new SyntaxError();
                 }
 
-                exposeCurrentFrameAndCurrentTime(
-                    nativeContext.currentTime,
-                    nativeContext.sampleRate,
-                    () => evaluateAudioWorkletGlobalScope(
-                        class AudioWorkletProcessor { },
+                exposeCurrentFrameAndCurrentTime(nativeContext.currentTime, nativeContext.sampleRate, () =>
+                    evaluateAudioWorkletGlobalScope(
+                        class AudioWorkletProcessor {},
                         undefined,
                         (name, processorCtor) => {
                             if (name.trim() === '') {
@@ -160,7 +159,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                                 verifyProcessorCtor(processorCtor);
                                 verifyParameterDescriptors(processorCtor.parameterDescriptors);
 
-                                NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.set(nativeContext, new Map([ [ name, processorCtor ] ]));
+                                NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.set(nativeContext, new Map([[name, processorCtor]]));
                             }
                         },
                         nativeContext.sampleRate,
@@ -178,7 +177,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
             });
 
         if (ongoingRequestsOfContext === undefined) {
-             ongoingRequests.set(context, new Map([ [ moduleURL, promise ] ]));
+            ongoingRequests.set(context, new Map([[moduleURL, promise]]));
         } else {
             ongoingRequestsOfContext.set(moduleURL, promise);
         }
@@ -188,12 +187,12 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 const rslvdRqstsFCntxt = resolvedRequests.get(context);
 
                 if (rslvdRqstsFCntxt === undefined) {
-                    resolvedRequests.set(context, new Set([ moduleURL ]));
+                    resolvedRequests.set(context, new Set([moduleURL]));
                 } else {
                     rslvdRqstsFCntxt.add(moduleURL);
                 }
             })
-            .catch(() => { }) // tslint:disable-line:no-empty
+            .catch(() => {}) // tslint:disable-line:no-empty
             // @todo Use finally when it becomes available in all supported browsers.
             .then(() => {
                 const ngngRqstsFCntxt = ongoingRequests.get(context);

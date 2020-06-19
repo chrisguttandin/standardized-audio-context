@@ -2,7 +2,6 @@ import { TAnyAudioBuffer } from '../types';
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IAudioBufferSourceOptions extends IAudioNodeOptions {
-
     buffer: null | TAnyAudioBuffer;
 
     /*
@@ -18,5 +17,4 @@ export interface IAudioBufferSourceOptions extends IAudioNodeOptions {
     loopStart: number;
 
     playbackRate: number;
-
 }

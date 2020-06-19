@@ -1,5 +1,4 @@
 export interface IAudioParamDescriptor {
-
     defaultValue?: number;
 
     maxValue?: number;
@@ -7,5 +6,4 @@ export interface IAudioParamDescriptor {
     minValue?: number;
 
     name: string;
-
 }

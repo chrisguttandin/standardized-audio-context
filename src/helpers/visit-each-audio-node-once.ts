@@ -11,7 +11,7 @@ export const visitEachAudioNodeOnce = <T extends TContext>(
         for (const audioNode of cycle) {
             const count = counts.get(audioNode);
 
-            counts.set(audioNode, (count === undefined) ? 1 : count + 1);
+            counts.set(audioNode, count === undefined ? 1 : count + 1);
         }
     }
 

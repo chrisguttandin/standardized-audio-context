@@ -14,18 +14,22 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
 
         // Bug #117: Only Chrome & Opera support the new interface already.
         const createFakeAudioParams = () => {
-            const channelMergerNode = createNativeChannelMergerNode(
-                nativeContext,
-                { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'speakers', numberOfInputs: 9 }
-            );
+            const channelMergerNode = createNativeChannelMergerNode(nativeContext, {
+                channelCount: 1,
+                channelCountMode: 'explicit',
+                channelInterpretation: 'speakers',
+                numberOfInputs: 9
+            });
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const scriptProcessorNode = createNativeScriptProcessorNode(nativeContext, 256, 9, 0);
 
             const createFakeAudioParam = (input: number, value: number) => {
-                const constantSourceNode = createNativeConstantSourceNode(
-                    nativeContext,
-                    { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'discrete', offset: value }
-                );
+                const constantSourceNode = createNativeConstantSourceNode(nativeContext, {
+                    channelCount: 1,
+                    channelCountMode: 'explicit',
+                    channelInterpretation: 'discrete',
+                    offset: value
+                });
 
                 constantSourceNode.connect(channelMergerNode, 0, input);
 
@@ -33,7 +37,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                 constantSourceNode.start();
 
                 Object.defineProperty(constantSourceNode.offset, 'defaultValue', {
-                    get (): number {
+                    get(): number {
                         return value;
                     }
                 });
@@ -43,7 +47,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                  * minValue for GainNodes.
                  */
                 return createAudioParam(
-                    <any> { context },
+                    <any>{ context },
                     isOffline,
                     constantSourceNode.offset,
                     MOST_POSITIVE_SINGLE_FLOAT,
@@ -51,11 +55,12 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                 );
             };
 
-            let lastOrientation = [ 0, 0, -1, 0, 1, 0 ];
-            let lastPosition = [ 0, 0, 0 ];
+            let lastOrientation = [0, 0, -1, 0, 1, 0];
+            let lastPosition = [0, 0, 0];
 
-            scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => { // tslint:disable-line:deprecation
-                const orientation: [ number, number, number, number, number, number ] = [
+            // tslint:disable-next-line:deprecation
+            scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                const orientation: [number, number, number, number, number, number] = [
                     inputBuffer.getChannelData(0)[0],
                     inputBuffer.getChannelData(1)[0],
                     inputBuffer.getChannelData(2)[0],
@@ -64,19 +69,19 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                     inputBuffer.getChannelData(5)[0]
                 ];
 
-                if (orientation.some((value, index) => (value !== lastOrientation[index]))) {
+                if (orientation.some((value, index) => value !== lastOrientation[index])) {
                     nativeListener.setOrientation(...orientation); // tslint:disable-line:deprecation
 
                     lastOrientation = orientation;
                 }
 
-                const positon: [ number, number, number ] = [
+                const positon: [number, number, number] = [
                     inputBuffer.getChannelData(6)[0],
                     inputBuffer.getChannelData(7)[0],
                     inputBuffer.getChannelData(8)[0]
                 ];
 
-                if (positon.some((value, index) => (value !== lastPosition[index]))) {
+                if (positon.some((value, index) => value !== lastPosition[index])) {
                     nativeListener.setPosition(...positon); // tslint:disable-line:deprecation
 
                     lastPosition = positon;
@@ -97,36 +102,35 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
             };
         };
 
-        const { forwardX, forwardY, forwardZ, positionX, positionY, positionZ, upX, upY, upZ } = (nativeListener.forwardX === undefined)
-            ? createFakeAudioParams()
-            : nativeListener;
+        const { forwardX, forwardY, forwardZ, positionX, positionY, positionZ, upX, upY, upZ } =
+            nativeListener.forwardX === undefined ? createFakeAudioParams() : nativeListener;
 
         return {
-            get forwardX (): IAudioParam {
+            get forwardX(): IAudioParam {
                 return forwardX;
             },
-            get forwardY (): IAudioParam {
+            get forwardY(): IAudioParam {
                 return forwardY;
             },
-            get forwardZ (): IAudioParam {
+            get forwardZ(): IAudioParam {
                 return forwardZ;
             },
-            get positionX (): IAudioParam {
+            get positionX(): IAudioParam {
                 return positionX;
             },
-            get positionY (): IAudioParam {
+            get positionY(): IAudioParam {
                 return positionY;
             },
-            get positionZ (): IAudioParam {
+            get positionZ(): IAudioParam {
                 return positionZ;
             },
-            get upX (): IAudioParam {
+            get upX(): IAudioParam {
                 return upX;
             },
-            get upY (): IAudioParam {
+            get upY(): IAudioParam {
                 return upY;
             },
-            get upZ (): IAudioParam {
+            get upZ(): IAudioParam {
                 return upZ;
             }
         };

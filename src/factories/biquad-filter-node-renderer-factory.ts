@@ -60,7 +60,7 @@ export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFac
         };
 
         return {
-            render (
+            render(
                 proxy: IBiquadFilterNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

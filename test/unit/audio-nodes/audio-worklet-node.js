@@ -1,4 +1,11 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../../src/module';
+import {
+    AudioBuffer,
+    AudioBufferSourceNode,
+    AudioWorkletNode,
+    ConstantSourceNode,
+    GainNode,
+    addAudioWorkletModule as ddDWrkltMdl
+} from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -44,11 +51,8 @@ const testCases = {
 };
 
 describe('AudioWorkletNode', () => {
-
-    for (const [ description, { createAddAudioWorkletModule, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createAddAudioWorkletModule, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let addAudioWorkletModule;
             let context;
 
@@ -64,11 +68,8 @@ describe('AudioWorkletNode', () => {
             });
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -93,7 +94,6 @@ describe('AudioWorkletNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             beforeEach(function () {
                                 this.timeout(10000);
 
@@ -113,9 +113,9 @@ describe('AudioWorkletNode', () => {
                                             channelInterpretation: 'speakers',
                                             numberOfInputs: 1,
                                             numberOfOutputs: 1,
-                                            outputChannelCount: [ 2 ],
-                                            parameterData: { },
-                                            processorOptions: { }
+                                            outputChannelCount: [2],
+                                            parameterData: {},
+                                            processorOptions: {}
                                         });
                                     }
                                 };
@@ -158,11 +158,9 @@ describe('AudioWorkletNode', () => {
                                 expect(audioWorkletNode.parameters).not.to.be.undefined;
                                 expect(audioWorkletNode.port).to.be.an.instanceOf(MessagePort);
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given channelCount', async function () {
                                 this.timeout(10000);
 
@@ -212,23 +210,22 @@ describe('AudioWorkletNode', () => {
                             it('should pass on the parameterData to the AudioWorkletProcessor', function (done) {
                                 this.timeout(10000);
 
-                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
-                                    .then(() => {
-                                        const parameterData = { gain: 12 };
-                                        const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { parameterData });
+                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js').then(() => {
+                                    const parameterData = { gain: 12 };
+                                    const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { parameterData });
 
-                                        audioWorkletNode.port.onmessage = ({ data }) => {
-                                            if ('options' in data) {
-                                                audioWorkletNode.port.onmessage = null;
+                                    audioWorkletNode.port.onmessage = ({ data }) => {
+                                        if ('options' in data) {
+                                            audioWorkletNode.port.onmessage = null;
 
-                                                expect(data.options.parameterData).to.deep.equal(parameterData);
+                                            expect(data.options.parameterData).to.deep.equal(parameterData);
 
-                                                done();
-                                            }
-                                        };
+                                            done();
+                                        }
+                                    };
 
-                                        audioWorkletNode.port.postMessage(null);
-                                    });
+                                    audioWorkletNode.port.postMessage(null);
+                                });
                             });
 
                             it('should return an instance with a parameter initialized to the given value', async function () {
@@ -245,50 +242,46 @@ describe('AudioWorkletNode', () => {
                             it('should pass on the processorOptions to the AudioWorkletProcessor', function (done) {
                                 this.timeout(10000);
 
-                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
-                                    .then(() => {
-                                        const processorOptions = { an: 'arbitrary', object: [ 'with', 'some', 'values' ] };
-                                        const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { processorOptions });
+                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js').then(() => {
+                                    const processorOptions = { an: 'arbitrary', object: ['with', 'some', 'values'] };
+                                    const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor', { processorOptions });
 
-                                        audioWorkletNode.port.onmessage = ({ data }) => {
-                                            if ('options' in data) {
-                                                audioWorkletNode.port.onmessage = null;
+                                    audioWorkletNode.port.onmessage = ({ data }) => {
+                                        if ('options' in data) {
+                                            audioWorkletNode.port.onmessage = null;
 
-                                                expect(data.options.processorOptions).to.deep.equal(processorOptions);
+                                            expect(data.options.processorOptions).to.deep.equal(processorOptions);
 
-                                                done();
-                                            }
-                                        };
+                                            done();
+                                        }
+                                    };
 
-                                        audioWorkletNode.port.postMessage(null);
-                                    });
+                                    audioWorkletNode.port.postMessage(null);
+                                });
                             });
 
                             it('should pass on the default processorOptions to the AudioWorkletProcessor', function (done) {
                                 this.timeout(10000);
 
-                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
-                                    .then(() => {
-                                        const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
+                                addAudioWorkletModule('base/test/fixtures/inspector-processor.js').then(() => {
+                                    const audioWorkletNode = createAudioWorkletNode(context, 'inspector-processor');
 
-                                        audioWorkletNode.port.onmessage = ({ data }) => {
-                                            if ('options' in data) {
-                                                audioWorkletNode.port.onmessage = null;
+                                    audioWorkletNode.port.onmessage = ({ data }) => {
+                                        if ('options' in data) {
+                                            audioWorkletNode.port.onmessage = null;
 
-                                                expect(data.options.processorOptions).to.deep.equal({ });
+                                            expect(data.options.processorOptions).to.deep.equal({});
 
-                                                done();
-                                            }
-                                        };
+                                            done();
+                                        }
+                                    };
 
-                                        audioWorkletNode.port.postMessage(null);
-                                    });
+                                    audioWorkletNode.port.postMessage(null);
+                                });
                             });
-
                         });
 
                         describe('with invalid options', () => {
-
                             beforeEach(function () {
                                 this.timeout(10000);
 
@@ -296,7 +289,6 @@ describe('AudioWorkletNode', () => {
                             });
 
                             describe('with numberOfInputs and numberOfOutputs both set to zero', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createAudioWorkletNode(context, 'inspector-processor', { numberOfInputs: 0, numberOfOutputs: 0 });
@@ -307,14 +299,12 @@ describe('AudioWorkletNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('without enough outputs specified in outputChannelCount', () => {
-
                                 it('should throw an IndexSizeError', (done) => {
                                     try {
-                                        createAudioWorkletNode(context, 'inspector-processor', { outputChannelCount: [ ] });
+                                        createAudioWorkletNode(context, 'inspector-processor', { outputChannelCount: [] });
                                     } catch (err) {
                                         expect(err.code).to.equal(1);
                                         expect(err.name).to.equal('IndexSizeError');
@@ -322,14 +312,12 @@ describe('AudioWorkletNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with too many outputs specified in outputChannelCount', () => {
-
                                 it('should throw an IndexSizeError', (done) => {
                                     try {
-                                        createAudioWorkletNode(context, 'inspector-processor', { outputChannelCount: [ 4, 2 ] });
+                                        createAudioWorkletNode(context, 'inspector-processor', { outputChannelCount: [4, 2] });
                                     } catch (err) {
                                         expect(err.code).to.equal(1);
                                         expect(err.name).to.equal('IndexSizeError');
@@ -337,14 +325,12 @@ describe('AudioWorkletNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with an invalid value for one of the outputs specified in outputChannelCount', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
-                                        createAudioWorkletNode(context, 'inspector-processor', { outputChannelCount: [ 0 ] });
+                                        createAudioWorkletNode(context, 'inspector-processor', { outputChannelCount: [0] });
                                     } catch (err) {
                                         expect(err.code).to.equal(9);
                                         expect(err.name).to.equal('NotSupportedError');
@@ -352,11 +338,9 @@ describe('AudioWorkletNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with an entry for an unknown AudioParam', () => {
-
                                 let audioWorkletNode;
                                 let parameterData;
 
@@ -378,11 +362,9 @@ describe('AudioWorkletNode', () => {
 
                                     audioWorkletNode.port.postMessage(null);
                                 });
-
                             });
 
                             describe('with the name of an unknown processor', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createAudioWorkletNode(context, 'unknown-processor');
@@ -393,16 +375,16 @@ describe('AudioWorkletNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with processorOptions with an unclonable value', () => {
-
                                 it('should throw a DataCloneError', function (done) {
                                     this.timeout(10000);
 
                                     addAudioWorkletModule('base/test/fixtures/inspector-processor.js')
-                                        .then(() => createAudioWorkletNode(context, 'inspector-processor', { processorOptions: { fn: () => { } } }))
+                                        .then(() =>
+                                            createAudioWorkletNode(context, 'inspector-processor', { processorOptions: { fn: () => {} } })
+                                        )
                                         .catch((err) => {
                                             expect(err.code).to.equal(25);
                                             expect(err.name).to.equal('DataCloneError');
@@ -410,19 +392,13 @@ describe('AudioWorkletNode', () => {
                                             done();
                                         });
                                 });
-
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -445,11 +421,9 @@ describe('AudioWorkletNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -472,11 +446,9 @@ describe('AudioWorkletNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -494,11 +466,9 @@ describe('AudioWorkletNode', () => {
 
                     expect(audioWorkletNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -514,11 +484,9 @@ describe('AudioWorkletNode', () => {
                         audioWorkletNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -534,11 +502,9 @@ describe('AudioWorkletNode', () => {
                         audioWorkletNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('onprocessorerror', () => {
-
                 it('should be null', async function () {
                     this.timeout(10000);
 
@@ -556,7 +522,7 @@ describe('AudioWorkletNode', () => {
 
                     const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                     const fn = () => {};
-                    const onprocessorerror = audioWorkletNode.onprocessorerror = fn; // eslint-disable-line no-multi-assign
+                    const onprocessorerror = (audioWorkletNode.onprocessorerror = fn); // eslint-disable-line no-multi-assign
 
                     expect(onprocessorerror).to.equal(fn);
                     expect(audioWorkletNode.onprocessorerror).to.equal(fn);
@@ -568,7 +534,7 @@ describe('AudioWorkletNode', () => {
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                     const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
-                    const onprocessorerror = audioWorkletNode.onprocessorerror = null; // eslint-disable-line no-multi-assign
+                    const onprocessorerror = (audioWorkletNode.onprocessorerror = null); // eslint-disable-line no-multi-assign
 
                     expect(onprocessorerror).to.be.null;
                     expect(audioWorkletNode.onprocessorerror).to.be.null;
@@ -584,7 +550,7 @@ describe('AudioWorkletNode', () => {
 
                     audioWorkletNode.onprocessorerror = () => {};
 
-                    const onprocessorerror = audioWorkletNode.onprocessorerror = string; // eslint-disable-line no-multi-assign
+                    const onprocessorerror = (audioWorkletNode.onprocessorerror = string); // eslint-disable-line no-multi-assign
 
                     expect(onprocessorerror).to.equal(string);
                     expect(audioWorkletNode.onprocessorerror).to.be.null;
@@ -607,7 +573,6 @@ describe('AudioWorkletNode', () => {
                 });
 
                 describe('with a processor without a process function', () => {
-
                     let audioWorkletNode;
 
                     beforeEach(async function () {
@@ -646,11 +611,9 @@ describe('AudioWorkletNode', () => {
                             context.startRendering();
                         }
                     });
-
                 });
 
                 describe('with a failing processor', () => {
-
                     let audioWorkletNode;
 
                     beforeEach(async function () {
@@ -682,13 +645,10 @@ describe('AudioWorkletNode', () => {
                             context.startRendering();
                         }
                     });
-
                 });
-
             });
 
             describe('parameters', () => {
-
                 it('should return an implementation of the AudioParamMap interface', async function () {
                     this.timeout(10000);
 
@@ -706,13 +666,10 @@ describe('AudioWorkletNode', () => {
                 });
 
                 describe('size', () => {
-
                     // @todo
-
                 });
 
                 describe('entries()', () => {
-
                     let entries;
                     let parameters;
 
@@ -732,13 +689,11 @@ describe('AudioWorkletNode', () => {
                     });
 
                     it('should iterate over all entries', () => {
-                        expect(Array.from(entries)).to.deep.equal([ [ 'gain', parameters.get('gain') ] ]);
+                        expect(Array.from(entries)).to.deep.equal([['gain', parameters.get('gain')]]);
                     });
-
                 });
 
                 describe('forEach()', () => {
-
                     let parameters;
 
                     beforeEach(async function () {
@@ -752,23 +707,23 @@ describe('AudioWorkletNode', () => {
                     });
 
                     it('should iterate over all parameters', () => {
-                        const args = [ ];
+                        const args = [];
 
                         parameters.forEach((value, key, map) => {
                             args.push({ key, map, value });
                         });
 
-                        expect(args).to.deep.equal([ {
-                            key: 'gain',
-                            map: parameters,
-                            value: parameters.get('gain')
-                        } ]);
+                        expect(args).to.deep.equal([
+                            {
+                                key: 'gain',
+                                map: parameters,
+                                value: parameters.get('gain')
+                            }
+                        ]);
                     });
-
                 });
 
                 describe('get()', () => {
-
                     let parameters;
 
                     beforeEach(async function () {
@@ -782,15 +737,12 @@ describe('AudioWorkletNode', () => {
                     });
 
                     describe('with an unexisting parameter', () => {
-
                         it('should return undefined', () => {
                             expect(parameters.get('unknown')).to.be.undefined;
                         });
-
                     });
 
                     describe('with an existing parameter', () => {
-
                         let gain;
 
                         beforeEach(() => {
@@ -804,10 +756,10 @@ describe('AudioWorkletNode', () => {
                             expect(gain.exponentialRampToValueAtTime).to.be.a('function');
                             expect(gain.linearRampToValueAtTime).to.be.a('function');
                             // Bug #82: Chrome & Opera's native implementation is a little different from other AudioParams.
-                            expect(gain.maxValue).to.be.at.most(3.4028234663852886e+38);
-                            expect(gain.maxValue).to.be.at.least(3.402820018375656e+38);
-                            expect(gain.minValue).to.be.at.most(-3.402820018375656e+38);
-                            expect(gain.minValue).to.be.at.least(-3.4028234663852886e+38);
+                            expect(gain.maxValue).to.be.at.most(3.4028234663852886e38);
+                            expect(gain.maxValue).to.be.at.least(3.402820018375656e38);
+                            expect(gain.minValue).to.be.at.most(-3.402820018375656e38);
+                            expect(gain.minValue).to.be.at.least(-3.4028234663852886e38);
                             expect(gain.setTargetAtTime).to.be.a('function');
                             expect(gain.setValueAtTime).to.be.a('function');
                             expect(gain.setValueCurveAtTime).to.be.a('function');
@@ -815,67 +767,50 @@ describe('AudioWorkletNode', () => {
                         });
 
                         describe('cancelAndHoldAtTime()', () => {
-
                             it('should be chainable', () => {
                                 expect(gain.cancelAndHoldAtTime(0)).to.equal(gain);
                             });
-
                         });
 
                         describe('cancelScheduledValues()', () => {
-
                             it('should be chainable', () => {
                                 expect(gain.cancelScheduledValues(0)).to.equal(gain);
                             });
-
                         });
 
                         describe('exponentialRampToValueAtTime()', () => {
-
                             it('should be chainable', () => {
                                 expect(gain.exponentialRampToValueAtTime(1, 0)).to.equal(gain);
                             });
-
                         });
 
                         describe('linearRampToValueAtTime()', () => {
-
                             it('should be chainable', () => {
                                 expect(gain.linearRampToValueAtTime(1, 0)).to.equal(gain);
                             });
-
                         });
 
                         describe('setTargetAtTime()', () => {
-
                             it('should be chainable', () => {
                                 expect(gain.setTargetAtTime(1, 0, 0.1)).to.equal(gain);
                             });
-
                         });
 
                         describe('setValueAtTime()', () => {
-
                             it('should be chainable', () => {
                                 expect(gain.setValueAtTime(1, 0)).to.equal(gain);
                             });
-
                         });
 
                         describe('setValueCurveAtTime()', () => {
-
                             it('should be chainable', () => {
-                                expect(gain.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(gain);
+                                expect(gain.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(gain);
                             });
-
                         });
-
                     });
-
                 });
 
                 describe('has()', () => {
-
                     let parameters;
 
                     beforeEach(async function () {
@@ -889,25 +824,19 @@ describe('AudioWorkletNode', () => {
                     });
 
                     describe('with an unexisting parameter', () => {
-
                         it('should return false', () => {
                             expect(parameters.has('unknown')).to.be.false;
                         });
-
                     });
 
                     describe('with an existing parameter', () => {
-
                         it('should return true', () => {
                             expect(parameters.has('gain')).to.be.true;
                         });
-
                     });
-
                 });
 
                 describe('keys()', () => {
-
                     let keys;
 
                     beforeEach(async function () {
@@ -925,13 +854,11 @@ describe('AudioWorkletNode', () => {
                     });
 
                     it('should iterate over all keys', () => {
-                        expect(Array.from(keys)).to.deep.equal([ 'gain' ]);
+                        expect(Array.from(keys)).to.deep.equal(['gain']);
                     });
-
                 });
 
                 describe('values()', () => {
-
                     let values;
                     let parameters;
 
@@ -951,29 +878,27 @@ describe('AudioWorkletNode', () => {
                     });
 
                     it('should iterate over all values', () => {
-                        expect(Array.from(values)).to.deep.equal([ parameters.get('gain') ]);
+                        expect(Array.from(values)).to.deep.equal([parameters.get('gain')]);
                     });
-
                 });
 
                 // @todo Symbol.iterator
 
                 describe('automation', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(async function () {
                         this.timeout(10000);
 
-                        values = [ 1, 0.5, 0, -0.5, -1 ];
+                        values = [1, 0.5, 0, -0.5, -1];
 
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
@@ -982,9 +907,7 @@ describe('AudioWorkletNode', () => {
 
                                 audioBufferSourceNode.buffer = audioBuffer;
 
-                                audioBufferSourceNode
-                                    .connect(audioWorkletNode)
-                                    .connect(destination);
+                                audioBufferSourceNode.connect(audioWorkletNode).connect(destination);
 
                                 return { audioBufferSourceNode, audioWorkletNode };
                             }
@@ -992,51 +915,44 @@ describe('AudioWorkletNode', () => {
                     });
 
                     describe('without any automation', () => {
-
                         it('should not modify the signal', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal(values);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal(values);
+                            });
                         });
-
                     });
 
                     describe('with a modified value', () => {
-
                         it('should modify the signal', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ audioWorkletNode }) {
+                                prepare({ audioWorkletNode }) {
                                     audioWorkletNode.parameters.get('gain').value = 0.5;
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0.5, 0.25, 0, -0.25, -0.5]);
+                            });
                         });
-
                     });
 
                     describe('with a call to cancelAndHoldAtTime()', () => {
-
                         it('should modify the signal', function () {
                             this.timeout(10000);
 
                             return renderer({
                                 // @todo For some reason tests run more reliably in Safari when each iteration starts at the same fraction of a second.
                                 blockSize: isSafari(navigator) ? context.sampleRate : 128,
-                                start (startTime, { audioBufferSourceNode, audioWorkletNode }) {
+                                start(startTime, { audioBufferSourceNode, audioWorkletNode }) {
                                     const gain = audioWorkletNode.parameters.get('gain');
 
                                     gain.setValueAtTime(1, roundToSamples(startTime, context.sampleRate));
@@ -1045,25 +961,22 @@ describe('AudioWorkletNode', () => {
 
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(channelData[0]).to.equal(1);
-                                    expect(channelData[1]).to.be.closeTo(0.375, 0.0005);
-                                    expect(channelData[2]).to.equal(0);
-                                    expect(channelData[3]).to.equal(-0.125);
-                                    expect(channelData[4]).to.equal(-0.25);
-                                });
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.equal(1);
+                                expect(channelData[1]).to.be.closeTo(0.375, 0.0005);
+                                expect(channelData[2]).to.equal(0);
+                                expect(channelData[3]).to.equal(-0.125);
+                                expect(channelData[4]).to.equal(-0.25);
+                            });
                         });
-
                     });
 
                     describe('with a call to cancelScheduledValues()', () => {
-
                         it('should modify the signal', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                start (startTime, { audioBufferSourceNode, audioWorkletNode }) {
+                                start(startTime, { audioBufferSourceNode, audioWorkletNode }) {
                                     const gain = audioWorkletNode.parameters.get('gain');
 
                                     gain.setValueAtTime(0.5, startTime);
@@ -1073,63 +986,62 @@ describe('AudioWorkletNode', () => {
 
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.5, -1 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0.5, 0.25, 0, -0.5, -1]);
+                            });
                         });
-
                     });
 
                     describe('with a call to setValueAtTime()', () => {
-
                         it('should modify the signal', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                start (startTime, { audioBufferSourceNode, audioWorkletNode }) {
-                                    audioWorkletNode.parameters.get('gain').setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
+                                start(startTime, { audioBufferSourceNode, audioWorkletNode }) {
+                                    audioWorkletNode.parameters
+                                        .get('gain')
+                                        .setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
 
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 1, 0.5, 0, -0.25, -0.5 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([1, 0.5, 0, -0.25, -0.5]);
+                            });
                         });
-
                     });
 
                     describe('with a call to setValueCurveAtTime()', () => {
-
                         it('should modify the signal', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                start (startTime, { audioBufferSourceNode, audioWorkletNode }) {
-                                    audioWorkletNode.parameters.get('gain').setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), roundToSamples(startTime, context.sampleRate), 6 / context.sampleRate);
+                                start(startTime, { audioBufferSourceNode, audioWorkletNode }) {
+                                    audioWorkletNode.parameters
+                                        .get('gain')
+                                        .setValueCurveAtTime(
+                                            new Float32Array([0, 0.25, 0.5, 0.75, 1]),
+                                            roundToSamples(startTime, context.sampleRate),
+                                            6 / context.sampleRate
+                                        );
 
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0.0833333358168602, 0, -0.25, -0.6666666865348816 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0.0833333358168602, 0, -0.25, -0.6666666865348816]);
+                            });
                         });
-
                     });
 
                     describe('with another AudioNode connected to the AudioParam', () => {
-
                         it('should modify the signal', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ audioWorkletNode }) {
+                                prepare({ audioWorkletNode }) {
                                     const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                     const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
 
-                                    audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.5, 0.5, 0.5, 0.5 ]), 0);
+                                    audioBuffer.copyToChannel(new Float32Array([0.5, 0.5, 0.5, 0.5, 0.5]), 0);
 
                                     audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
 
@@ -1139,26 +1051,21 @@ describe('AudioWorkletNode', () => {
 
                                     return { audioBufferSourceNodeForAudioParam };
                                 },
-                                start (startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
                                     audioBufferSourceNode.start(startTime);
                                     audioBufferSourceNodeForAudioParam.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0.5, 0.25, 0, -0.25, -0.5]);
+                            });
                         });
-
                     });
 
                     // @todo Test other automations as well.
-
                 });
-
             });
 
             describe('port', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -1197,74 +1104,63 @@ describe('AudioWorkletNode', () => {
 
                     audioWorkletNode.port.postMessage(message);
                 });
-
             });
 
             describe('addEventListener()', () => {
-
                 it('should fire a registered processorerror event listener', function (done) {
                     this.timeout(10000);
 
-                    addAudioWorkletModule('base/test/fixtures/failing-processor.js')
-                        .then(() => {
-                            const audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
+                    addAudioWorkletModule('base/test/fixtures/failing-processor.js').then(() => {
+                        const audioWorkletNode = createAudioWorkletNode(context, 'failing-processor');
 
-                            audioWorkletNode.addEventListener('processorerror', function (event) {
-                                expect(event).to.be.an.instanceOf(ErrorEvent);
-                                expect(event.currentTarget).to.equal(audioWorkletNode);
-                                expect(event.error).to.be.an.instanceOf(Error);
-                                expect(event.target).to.equal(audioWorkletNode);
-                                expect(event.type).to.equal('processorerror');
+                        audioWorkletNode.addEventListener('processorerror', function (event) {
+                            expect(event).to.be.an.instanceOf(ErrorEvent);
+                            expect(event.currentTarget).to.equal(audioWorkletNode);
+                            expect(event.error).to.be.an.instanceOf(Error);
+                            expect(event.target).to.equal(audioWorkletNode);
+                            expect(event.type).to.equal('processorerror');
 
-                                expect(this).to.equal(audioWorkletNode);
+                            expect(this).to.equal(audioWorkletNode);
 
-                                done();
-                            });
-
-                            audioWorkletNode.connect(context.destination);
-
-                            if (context.startRendering !== undefined) {
-                                context.startRendering();
-                            }
+                            done();
                         });
-                });
 
+                        audioWorkletNode.connect(context.destination);
+
+                        if (context.startRendering !== undefined) {
+                            context.startRendering();
+                        }
+                    });
+                });
             });
 
             describe('connect()', () => {
-
                 beforeEach(async function () {
                     this.timeout(10000);
 
                     await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
                 });
 
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let audioWorkletNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(audioWorkletNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(audioWorkletNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -1284,7 +1180,6 @@ describe('AudioWorkletNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     audioWorkletNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -1297,23 +1192,16 @@ describe('AudioWorkletNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(audioWorkletNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(audioWorkletNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(audioWorkletNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(audioWorkletNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let audioWorkletNode;
@@ -1329,7 +1217,7 @@ describe('AudioWorkletNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                         });
 
@@ -1343,11 +1231,9 @@ describe('AudioWorkletNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let audioWorkletNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -1358,18 +1244,23 @@ describe('AudioWorkletNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -1382,31 +1273,24 @@ describe('AudioWorkletNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
 
-                                constantSourceNode
-                                    .connect(audioWorkletNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(audioWorkletNode).connect(destination);
 
-                                audioWorkletNode
-                                    .connect(gainNode)
-                                    .connect(audioWorkletNode);
+                                audioWorkletNode.connect(gainNode).connect(audioWorkletNode);
 
                                 return { audioWorkletNode, constantSourceNode, gainNode };
                             }
@@ -1417,59 +1301,52 @@ describe('AudioWorkletNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            audioBufferSourceNode
-                                .connect(audioWorkletNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(audioWorkletNode).connect(firstDummyGainNode).connect(destination);
 
-                            audioWorkletNode.connect(secondDummyGainNode);
+                                audioWorkletNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, audioWorkletNode, firstDummyGainNode, secondDummyGainNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, audioWorkletNode, firstDummyGainNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(async function () {
                         this.timeout(10000);
 
-                        values = [ 1, 1, 1, 1, 1 ];
+                        values = [1, 1, 1, 1, 1];
 
                         await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
@@ -1480,24 +1357,20 @@ describe('AudioWorkletNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ audioWorkletNode }) {
+                            prepare({ audioWorkletNode }) {
                                 audioWorkletNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 audioBufferSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let audioWorkletNode;
 
                         beforeEach(async function () {
@@ -1518,18 +1391,16 @@ describe('AudioWorkletNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(async function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
@@ -1540,26 +1411,21 @@ describe('AudioWorkletNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ audioWorkletNode }) {
+                                prepare({ audioWorkletNode }) {
                                     audioWorkletNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let audioWorkletNode;
 
                         beforeEach(async function () {
@@ -1580,18 +1446,16 @@ describe('AudioWorkletNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(async function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
 
@@ -1602,40 +1466,35 @@ describe('AudioWorkletNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ audioWorkletNode, firstDummyGainNode }) {
+                                prepare({ audioWorkletNode, firstDummyGainNode }) {
                                     audioWorkletNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ audioWorkletNode, secondDummyGainNode }) {
+                                prepare({ audioWorkletNode, secondDummyGainNode }) {
                                     audioWorkletNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal(values);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal(values);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let audioWorkletNode;
 
                     beforeEach(async function () {
@@ -1667,11 +1526,9 @@ describe('AudioWorkletNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let audioWorkletNode;
 
                     beforeEach(async function () {
@@ -1714,13 +1571,8 @@ describe('AudioWorkletNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

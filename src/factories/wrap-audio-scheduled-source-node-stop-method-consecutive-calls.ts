@@ -1,9 +1,7 @@
 import { interceptConnections } from '../helpers/intercept-connections';
 import { TNativeAudioNode, TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFactory } from '../types';
 
-export const createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls:
-    TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFactory =
-(
+export const createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls: TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFactory = (
     createNativeAudioNode
 ) => {
     return (nativeAudioScheduledSourceNode, nativeContext) => {
@@ -14,7 +12,7 @@ export const createWrapAudioScheduledSourceNodeStopMethodConsecutiveCalls:
         const disconnectGainNode = ((disconnect) => {
             return () => {
                 // @todo TypeScript cannot infer the overloaded signature with 1 argument yet.
-                (<(destinaton: TNativeAudioNode) => void> disconnect).call(nativeAudioScheduledSourceNode, nativeGainNode);
+                (<(destinaton: TNativeAudioNode) => void>disconnect).call(nativeAudioScheduledSourceNode, nativeGainNode);
                 nativeAudioScheduledSourceNode.removeEventListener('ended', disconnectGainNode);
             };
         })(nativeAudioScheduledSourceNode.disconnect);

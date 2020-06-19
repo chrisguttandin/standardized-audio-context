@@ -8,7 +8,7 @@ export const setInternalStateToPassiveWhenNecessary = <T extends TContext>(
     audioNode: IAudioNode<T>,
     activeInputs: Set<TActiveInputConnection<T>>[]
 ) => {
-    if (!isAudioWorkletNode(audioNode) && activeInputs.every((connections) => (connections.size === 0))) {
+    if (!isAudioWorkletNode(audioNode) && activeInputs.every((connections) => connections.size === 0)) {
         setInternalStateToPassive(audioNode);
     }
 };

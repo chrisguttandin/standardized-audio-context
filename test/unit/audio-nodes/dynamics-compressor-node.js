@@ -80,11 +80,8 @@ const testCases = {
 };
 
 describe('DynamicsCompressorNode', () => {
-
-    for (const [ description, { createDynamicsCompressorNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createDynamicsCompressorNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -93,14 +90,11 @@ describe('DynamicsCompressorNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -125,7 +119,6 @@ describe('DynamicsCompressorNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let dynamicsCompressorNode;
 
                             beforeEach(() => {
@@ -161,11 +154,9 @@ describe('DynamicsCompressorNode', () => {
                                 expect(dynamicsCompressorNode.release).not.to.be.undefined;
                                 expect(dynamicsCompressorNode.threshold).not.to.be.undefined;
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given initial value for attack', () => {
                                 const attack = 0.5;
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context, { attack });
@@ -221,13 +212,10 @@ describe('DynamicsCompressorNode', () => {
 
                                 expect(dynamicsCompressorNode.threshold.value).to.equal(threshold);
                             });
-
                         });
 
                         describe('with invalid options', () => {
-
                             describe('with a channelCount greater than 2', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createDynamicsCompressorNode(context, { channelCount: 4 });
@@ -238,11 +226,9 @@ describe('DynamicsCompressorNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe("with a channelCountMode of 'max'", () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createDynamicsCompressorNode(context, { channelCountMode: 'max' });
@@ -253,19 +239,13 @@ describe('DynamicsCompressorNode', () => {
                                         done();
                                     }
                                 });
-
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('attack', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -293,67 +273,53 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.attack.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.attack);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.attack.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.attack);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.attack.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.attack.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.attack.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.attack);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.attack.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.attack.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.attack);
+                        expect(dynamicsCompressorNode.attack.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                            dynamicsCompressorNode.attack
+                        );
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('channelCount', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -380,11 +346,9 @@ describe('DynamicsCompressorNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -409,11 +373,9 @@ describe('DynamicsCompressorNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -427,11 +389,9 @@ describe('DynamicsCompressorNode', () => {
 
                     expect(dynamicsCompressorNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('knee', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -459,67 +419,53 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.knee.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.knee);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.knee.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.knee);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.knee.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.knee.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.knee);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.knee.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.knee);
+                        expect(dynamicsCompressorNode.knee.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                            dynamicsCompressorNode.knee
+                        );
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('numberOfInputs', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -531,11 +477,9 @@ describe('DynamicsCompressorNode', () => {
                         dynamicsCompressorNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -547,11 +491,9 @@ describe('DynamicsCompressorNode', () => {
                         dynamicsCompressorNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('ratio', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -579,69 +521,55 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.ratio);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.ratio.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.ratio);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.ratio.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.ratio);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.ratio.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.ratio);
+                        expect(dynamicsCompressorNode.ratio.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                            dynamicsCompressorNode.ratio
+                        );
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             // @todo reduction
 
             describe('release', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -669,67 +597,53 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.release.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.release);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.release.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.release);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.release.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.release.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.release);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.release.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(dynamicsCompressorNode.release);
+                        expect(dynamicsCompressorNode.release.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                            dynamicsCompressorNode.release
+                        );
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('threshold', () => {
-
                 let dynamicsCompressorNode;
 
                 beforeEach(() => {
@@ -757,93 +671,73 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.threshold.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.threshold);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.threshold.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.threshold);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.threshold.setTargetAtTime(-1, 0, 0.1)).to.equal(dynamicsCompressorNode.threshold);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.threshold.setValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.threshold.setValueAtTime(new Float32Array([ -1 ]), 0, 0)).to.equal(dynamicsCompressorNode.threshold);
+                        expect(dynamicsCompressorNode.threshold.setValueAtTime(new Float32Array([-1]), 0, 0)).to.equal(
+                            dynamicsCompressorNode.threshold
+                        );
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let dynamicsCompressorNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             dynamicsCompressorNode = createDynamicsCompressorNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(dynamicsCompressorNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(dynamicsCompressorNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -863,7 +757,6 @@ describe('DynamicsCompressorNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     dynamicsCompressorNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -876,23 +769,16 @@ describe('DynamicsCompressorNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(dynamicsCompressorNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(dynamicsCompressorNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(dynamicsCompressorNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(dynamicsCompressorNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let dynamicsCompressorNode;
@@ -908,7 +794,7 @@ describe('DynamicsCompressorNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             dynamicsCompressorNode = createDynamicsCompressorNode(context);
                         });
 
@@ -922,11 +808,9 @@ describe('DynamicsCompressorNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let dynamicsCompressorNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -937,18 +821,23 @@ describe('DynamicsCompressorNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -961,31 +850,24 @@ describe('DynamicsCompressorNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context);
                                 const gainNode = new GainNode(context);
 
-                                constantSourceNode
-                                    .connect(dynamicsCompressorNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(dynamicsCompressorNode).connect(destination);
 
-                                dynamicsCompressorNode
-                                    .connect(gainNode)
-                                    .connect(dynamicsCompressorNode);
+                                dynamicsCompressorNode.connect(gainNode).connect(dynamicsCompressorNode);
 
                                 return { constantSourceNode, dynamicsCompressorNode, gainNode };
                             }
@@ -996,59 +878,52 @@ describe('DynamicsCompressorNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            audioBufferSourceNode
-                                .connect(dynamicsCompressorNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(dynamicsCompressorNode).connect(firstDummyGainNode).connect(destination);
 
-                            dynamicsCompressorNode.connect(secondDummyGainNode);
+                                dynamicsCompressorNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, dynamicsCompressorNode, firstDummyGainNode, secondDummyGainNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, dynamicsCompressorNode, firstDummyGainNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(function () {
                         this.timeout(10000);
 
-                        values = [ 1, 1, 1, 1, 1 ];
+                        values = [1, 1, 1, 1, 1];
 
                         renderer = createPredefinedRenderer(values);
                     });
@@ -1057,25 +932,21 @@ describe('DynamicsCompressorNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ dynamicsCompressorNode }) {
+                            prepare({ dynamicsCompressorNode }) {
                                 dynamicsCompressorNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 // @todo Add the ability to render a buffer at on offset with an OfflineAudioContext as well.
-                                audioBufferSourceNode.start((startTime === 0) ? startTime : startTime - (264 / 44100));
+                                audioBufferSourceNode.start(startTime === 0 ? startTime : startTime - 264 / 44100);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let dynamicsCompressorNode;
 
                         beforeEach(() => {
@@ -1092,18 +963,16 @@ describe('DynamicsCompressorNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -1112,27 +981,22 @@ describe('DynamicsCompressorNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ dynamicsCompressorNode }) {
+                                prepare({ dynamicsCompressorNode }) {
                                     dynamicsCompressorNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     // @todo Add the ability to render a buffer at on offset with an OfflineAudioContext as well.
-                                    audioBufferSourceNode.start((startTime === 0) ? startTime : startTime - (264 / 44100));
+                                    audioBufferSourceNode.start(startTime === 0 ? startTime : startTime - 264 / 44100);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let dynamicsCompressorNode;
 
                         beforeEach(() => {
@@ -1149,18 +1013,16 @@ describe('DynamicsCompressorNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -1169,17 +1031,16 @@ describe('DynamicsCompressorNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ dynamicsCompressorNode, firstDummyGainNode }) {
+                                prepare({ dynamicsCompressorNode, firstDummyGainNode }) {
                                     dynamicsCompressorNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     // @todo Add the ability to render a buffer at on offset with an OfflineAudioContext as well.
-                                    audioBufferSourceNode.start((startTime === 0) ? startTime : startTime - (264 / 44100));
+                                    audioBufferSourceNode.start(startTime === 0 ? startTime : startTime - 264 / 44100);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         /*
@@ -1201,13 +1062,10 @@ describe('DynamicsCompressorNode', () => {
                          *         });
                          * });
                          */
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let dynamicsCompressorNode;
 
                     beforeEach(() => {
@@ -1235,11 +1093,9 @@ describe('DynamicsCompressorNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let dynamicsCompressorNode;
 
                     beforeEach(() => {
@@ -1278,13 +1134,8 @@ describe('DynamicsCompressorNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

@@ -2,7 +2,7 @@ import { TAudioParamRendererFactory, TNativeAudioParam } from '../types';
 
 export const createAudioParamRenderer: TAudioParamRendererFactory = (automationEventList) => {
     return {
-        replay (audioParam: TNativeAudioParam): void {
+        replay(audioParam: TNativeAudioParam): void {
             for (const automationEvent of automationEventList) {
                 if (automationEvent.type === 'exponentialRampToValue') {
                     const { endTime, value } = automationEvent;

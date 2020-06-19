@@ -17,17 +17,15 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
     return class GainNode<T extends TContext> extends audioNodeConstructor<T> implements IGainNode<T> {
-
         private _gain: IAudioParam;
 
-        constructor (context: T, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeGainNode = createNativeGainNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const gainNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createGainNodeRenderer() : null);
+            const gainNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createGainNodeRenderer() : null);
 
             super(context, false, nativeGainNode, gainNodeRenderer);
 
@@ -35,10 +33,8 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
             this._gain = createAudioParam(this, isOffline, nativeGainNode.gain, MOST_POSITIVE_SINGLE_FLOAT, MOST_NEGATIVE_SINGLE_FLOAT);
         }
 
-        get gain (): IAudioParam {
+        get gain(): IAudioParam {
             return this._gain;
         }
-
     };
-
 };

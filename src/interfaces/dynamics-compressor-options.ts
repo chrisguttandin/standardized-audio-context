@@ -1,7 +1,6 @@
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IDynamicsCompressorOptions extends IAudioNodeOptions {
-
     attack: number;
 
     knee: number;
@@ -11,5 +10,4 @@ export interface IDynamicsCompressorOptions extends IAudioNodeOptions {
     release: number;
 
     threshold: number;
-
 }

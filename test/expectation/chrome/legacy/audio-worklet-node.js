@@ -1,7 +1,6 @@
 import { spy } from 'sinon';
 
 describe('AudioWorklet', () => {
-
     let offlineAudioContext;
 
     beforeEach(() => {
@@ -9,68 +8,59 @@ describe('AudioWorklet', () => {
     });
 
     describe('without any connected inputs', () => {
-
         // bug #170
 
         it('should call process() with an array with empty channelData for each input', function (done) {
             this.timeout(10000);
 
-            offlineAudioContext.audioWorklet
-                .addModule('base/test/fixtures/inspector-processor.js')
-                .then(() => {
-                    const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'inspector-processor');
+            offlineAudioContext.audioWorklet.addModule('base/test/fixtures/inspector-processor.js').then(() => {
+                const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'inspector-processor');
 
-                    audioWorkletNode.connect(offlineAudioContext.destination);
+                audioWorkletNode.connect(offlineAudioContext.destination);
 
-                    audioWorkletNode.port.onmessage = ({ data }) => {
-                        audioWorkletNode.port.onmessage = null;
+                audioWorkletNode.port.onmessage = ({ data }) => {
+                    audioWorkletNode.port.onmessage = null;
 
-                        expect(data.inputs.length).to.equal(1);
-                        expect(data.inputs[0].length).to.equal(1);
-                        expect(data.inputs[0][0].length).to.equal(0);
+                    expect(data.inputs.length).to.equal(1);
+                    expect(data.inputs[0].length).to.equal(1);
+                    expect(data.inputs[0][0].length).to.equal(0);
 
-                        done();
-                    };
+                    done();
+                };
 
-                    offlineAudioContext.startRendering();
-                });
+                offlineAudioContext.startRendering();
+            });
         });
-
     });
 
     describe('without any connected outputs', () => {
-
         // bug #86
 
         it('should not call process()', function (done) {
             this.timeout(10000);
 
-            offlineAudioContext.audioWorklet
-                .addModule('base/test/fixtures/inspector-processor.js')
-                .then(() => {
-                    const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'inspector-processor');
-                    const constantSourceNode = new ConstantSourceNode(offlineAudioContext);
-                    const listener = spy();
+            offlineAudioContext.audioWorklet.addModule('base/test/fixtures/inspector-processor.js').then(() => {
+                const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'inspector-processor');
+                const constantSourceNode = new ConstantSourceNode(offlineAudioContext);
+                const listener = spy();
 
-                    audioWorkletNode.port.onmessage = listener;
+                audioWorkletNode.port.onmessage = listener;
 
-                    constantSourceNode.connect(audioWorkletNode);
-                    constantSourceNode.start();
+                constantSourceNode.connect(audioWorkletNode);
+                constantSourceNode.start();
 
-                    setTimeout(() => {
-                        expect(listener).to.have.not.been.called;
+                setTimeout(() => {
+                    expect(listener).to.have.not.been.called;
 
-                        done();
-                    }, 500);
+                    done();
+                }, 500);
 
-                    offlineAudioContext.startRendering();
-                });
+                offlineAudioContext.startRendering();
+            });
         });
-
     });
 
     describe('with a failing processor', () => {
-
         beforeEach(async function () {
             this.timeout(10000);
 
@@ -94,7 +84,5 @@ describe('AudioWorklet', () => {
 
             offlineAudioContext.startRendering();
         });
-
     });
-
 });

@@ -3,7 +3,6 @@ import { IAudioParam } from './audio-param';
 import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
 
 export interface IAudioBufferSourceNode<T extends TContext> extends IAudioScheduledSourceNode<T> {
-
     buffer: null | TAnyAudioBuffer;
 
     /*
@@ -20,6 +19,5 @@ export interface IAudioBufferSourceNode<T extends TContext> extends IAudioSchedu
 
     readonly playbackRate: IAudioParam;
 
-    start (when?: number, offset?: number, duration?: number): void;
-
+    start(when?: number, offset?: number, duration?: number): void;
 }

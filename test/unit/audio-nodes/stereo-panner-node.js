@@ -1,4 +1,12 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, StereoPannerNode, addAudioWorkletModule } from '../../../src/module';
+import {
+    AudioBuffer,
+    AudioBufferSourceNode,
+    AudioWorkletNode,
+    ConstantSourceNode,
+    GainNode,
+    StereoPannerNode,
+    addAudioWorkletModule
+} from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -65,11 +73,8 @@ const testCases = {
 };
 
 describe('StereoPannerNode', () => {
-
-    for (const [ description, { createStereoPannerNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createStereoPannerNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -78,14 +83,11 @@ describe('StereoPannerNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -110,7 +112,6 @@ describe('StereoPannerNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let stereoPannerNode;
 
                             beforeEach(() => {
@@ -142,11 +143,9 @@ describe('StereoPannerNode', () => {
                             it('should return an implementation of the StereoPannerNode interface', () => {
                                 expect(stereoPannerNode.pan).not.to.be.undefined;
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given channelCount', () => {
                                 const channelCount = 1;
                                 const stereoPannerNode = createStereoPannerNode(context, { channelCount });
@@ -167,13 +166,10 @@ describe('StereoPannerNode', () => {
 
                                 expect(stereoPannerNode.pan.value).to.equal(pan);
                             });
-
                         });
 
                         describe('with invalid options', () => {
-
                             describe('with a channelCount greater than 2', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createStereoPannerNode(context, { channelCount: 4 });
@@ -184,7 +180,6 @@ describe('StereoPannerNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             /*
@@ -192,7 +187,6 @@ describe('StereoPannerNode', () => {
                              * to achieve a consistent behaviour of the polyfill and the native implementation.
                              */
                             describe("with a channelCountMode of 'clamped-max'", () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createStereoPannerNode(context, { channelCountMode: 'clamped-max' });
@@ -203,11 +197,9 @@ describe('StereoPannerNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe("with a channelCountMode of 'max'", () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createStereoPannerNode(context, { channelCountMode: 'max' });
@@ -218,19 +210,13 @@ describe('StereoPannerNode', () => {
                                         done();
                                     }
                                 });
-
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let stereoPannerNode;
 
                 beforeEach(() => {
@@ -257,11 +243,9 @@ describe('StereoPannerNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let stereoPannerNode;
 
                 beforeEach(() => {
@@ -287,11 +271,9 @@ describe('StereoPannerNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let stereoPannerNode;
 
                 beforeEach(() => {
@@ -305,11 +287,9 @@ describe('StereoPannerNode', () => {
 
                     expect(stereoPannerNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let stereoPannerNode;
 
                 beforeEach(() => {
@@ -321,11 +301,9 @@ describe('StereoPannerNode', () => {
                         stereoPannerNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let stereoPannerNode;
 
                 beforeEach(() => {
@@ -337,11 +315,9 @@ describe('StereoPannerNode', () => {
                         stereoPannerNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('pan', () => {
-
                 it('should return an implementation of the AudioParam interface', () => {
                     const stereoPannerNode = createStereoPannerNode(context);
 
@@ -367,7 +343,6 @@ describe('StereoPannerNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -377,11 +352,9 @@ describe('StereoPannerNode', () => {
                     it('should be chainable', () => {
                         expect(stereoPannerNode.pan.cancelAndHoldAtTime(0)).to.equal(stereoPannerNode.pan);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -391,11 +364,9 @@ describe('StereoPannerNode', () => {
                     it('should be chainable', () => {
                         expect(stereoPannerNode.pan.cancelScheduledValues(0)).to.equal(stereoPannerNode.pan);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -408,11 +379,9 @@ describe('StereoPannerNode', () => {
 
                         expect(stereoPannerNode.pan.exponentialRampToValueAtTime(1, 0)).to.equal(stereoPannerNode.pan);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -422,11 +391,9 @@ describe('StereoPannerNode', () => {
                     it('should be chainable', () => {
                         expect(stereoPannerNode.pan.linearRampToValueAtTime(1, 0)).to.equal(stereoPannerNode.pan);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -436,11 +403,9 @@ describe('StereoPannerNode', () => {
                     it('should be chainable', () => {
                         expect(stereoPannerNode.pan.setTargetAtTime(1, 0, 0.1)).to.equal(stereoPannerNode.pan);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -450,11 +415,9 @@ describe('StereoPannerNode', () => {
                     it('should be chainable', () => {
                         expect(stereoPannerNode.pan.setValueAtTime(1, 0)).to.equal(stereoPannerNode.pan);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -462,28 +425,30 @@ describe('StereoPannerNode', () => {
                     });
 
                     it('should be chainable', () => {
-                        expect(stereoPannerNode.pan.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(stereoPannerNode.pan);
+                        expect(stereoPannerNode.pan.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(stereoPannerNode.pan);
                     });
-
                 });
 
                 describe('automation', () => {
-
-                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
-                            for (const channelLayout of [ 'mono', 'stereo' ]) {
-
-                                describe(`with a channel layout of '${ channelLayout }'`, () => {
-
+                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                        ? [
+                              [true, true],
+                              [true, false],
+                              [false, true]
+                          ]
+                        : [[true, false]]) {
+                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                        } an appended AudioWorklet`, () => {
+                            for (const channelLayout of ['mono', 'stereo']) {
+                                describe(`with a channel layout of '${channelLayout}'`, () => {
                                     let renderer;
                                     let values;
 
                                     beforeEach(async function () {
                                         this.timeout(10000);
 
-                                        values = [ 1, 0.5, 0, -0.5, -1 ];
+                                        values = [1, 0.5, 0, -0.5, -1];
 
                                         if (withAnAppendedAudioWorklet) {
                                             await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
@@ -491,17 +456,23 @@ describe('StereoPannerNode', () => {
 
                                         renderer = createRenderer({
                                             context,
-                                            length: (context.length === undefined) ? 5 : undefined,
-                                            prepare (destination) {
+                                            length: context.length === undefined ? 5 : undefined,
+                                            prepare(destination) {
                                                 const audioBuffer = new AudioBuffer({
                                                     length: 5,
-                                                    numberOfChannels: (channelLayout === 'mono') ? 1 : 2,
+                                                    numberOfChannels: channelLayout === 'mono' ? 1 : 2,
                                                     sampleRate: context.sampleRate
                                                 });
                                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                                const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
-                                                const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
-                                                const stereoPannerNode = createStereoPannerNode(context, { channelCount: (channelLayout === 'mono') ? 1 : 2 });
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor')
+                                                    : null;
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
+                                                const stereoPannerNode = createStereoPannerNode(context, {
+                                                    channelCount: channelLayout === 'mono' ? 1 : 2
+                                                });
 
                                                 audioBuffer.copyToChannel(new Float32Array(values), 0);
 
@@ -518,9 +489,7 @@ describe('StereoPannerNode', () => {
                                                 }
 
                                                 if (withAnAppendedAudioWorklet) {
-                                                    stereoPannerNode
-                                                        .connect(audioWorkletNode)
-                                                        .connect(masterGainNode);
+                                                    stereoPannerNode.connect(audioWorkletNode).connect(masterGainNode);
                                                 }
 
                                                 masterGainNode.connect(destination);
@@ -531,176 +500,178 @@ describe('StereoPannerNode', () => {
                                     });
 
                                     describe('without any automation', () => {
-
-                                        it(`should ${ (channelLayout === 'mono') ? 'modify' : 'not modify' } the signal`, function () {
+                                        it(`should ${channelLayout === 'mono' ? 'modify' : 'not modify'} the signal`, function () {
                                             this.timeout(10000);
 
                                             return renderer({
-                                                start (startTime, { audioBufferSourceNode }) {
+                                                start(startTime, { audioBufferSourceNode }) {
                                                     audioBufferSourceNode.start(startTime);
                                                 }
-                                            })
-                                                .then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.be.closeTo(0.7071067, 0.000001);
-                                                        expect(channelData[1]).to.be.closeTo(0.3535533, 0.000001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.3535533, 0.000001);
-                                                        expect(channelData[4]).to.be.closeTo(-0.7071067, 0.000001);
-                                                    } else {
-                                                        expect(channelData[0]).to.be.closeTo(1, 0.0001);
-                                                        expect(channelData[1]).to.be.closeTo(0.5, 0.0001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.5, 0.0001);
-                                                        expect(channelData[4]).to.be.closeTo(-1, 0.0001);
-                                                    }
-                                                });
+                                            }).then((channelData) => {
+                                                if (channelLayout === 'mono') {
+                                                    expect(channelData[0]).to.be.closeTo(0.7071067, 0.000001);
+                                                    expect(channelData[1]).to.be.closeTo(0.3535533, 0.000001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.3535533, 0.000001);
+                                                    expect(channelData[4]).to.be.closeTo(-0.7071067, 0.000001);
+                                                } else {
+                                                    expect(channelData[0]).to.be.closeTo(1, 0.0001);
+                                                    expect(channelData[1]).to.be.closeTo(0.5, 0.0001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.5, 0.0001);
+                                                    expect(channelData[4]).to.be.closeTo(-1, 0.0001);
+                                                }
+                                            });
                                         });
-
                                     });
 
                                     describe('with a modified value', () => {
-
                                         it('should modify the signal', function () {
                                             this.timeout(10000);
 
                                             return renderer({
-                                                prepare ({ stereoPannerNode }) {
+                                                prepare({ stereoPannerNode }) {
                                                     stereoPannerNode.pan.value = 0.5;
                                                 },
-                                                start (startTime, { audioBufferSourceNode }) {
+                                                start(startTime, { audioBufferSourceNode }) {
                                                     audioBufferSourceNode.start(startTime);
                                                 }
-                                            })
-                                                .then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
-                                                        expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
-                                                        expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
-                                                    } else {
-                                                        expect(channelData[0]).to.be.closeTo(1.207106, 0.000001);
-                                                        expect(channelData[1]).to.be.closeTo(0.603553, 0.000001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.603553, 0.000001);
-                                                        expect(channelData[4]).to.be.closeTo(-1.207106, 0.000001);
-                                                    }
-                                                });
+                                            }).then((channelData) => {
+                                                if (channelLayout === 'mono') {
+                                                    expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
+                                                    expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
+                                                    expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
+                                                } else {
+                                                    expect(channelData[0]).to.be.closeTo(1.207106, 0.000001);
+                                                    expect(channelData[1]).to.be.closeTo(0.603553, 0.000001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.603553, 0.000001);
+                                                    expect(channelData[4]).to.be.closeTo(-1.207106, 0.000001);
+                                                }
+                                            });
                                         });
-
                                     });
 
                                     describe('with a call to cancelAndHoldAtTime()', () => {
-
                                         // @todo
-
                                     });
 
                                     describe('with a call to cancelScheduledValues()', () => {
-
                                         it('should modify the signal', function () {
                                             this.timeout(10000);
 
                                             return renderer({
-                                                start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
+                                                start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
                                                     stereoPannerNode.pan.setValueAtTime(0.5, startTime);
-                                                    stereoPannerNode.pan.setValueAtTime(0, roundToSamples(startTime, context.sampleRate, 2));
-                                                    stereoPannerNode.pan.linearRampToValueAtTime(1, roundToSamples(startTime, context.sampleRate, 5));
-                                                    stereoPannerNode.pan.cancelScheduledValues(roundToSamples(startTime, context.sampleRate, 3));
+                                                    stereoPannerNode.pan.setValueAtTime(
+                                                        0,
+                                                        roundToSamples(startTime, context.sampleRate, 2)
+                                                    );
+                                                    stereoPannerNode.pan.linearRampToValueAtTime(
+                                                        1,
+                                                        roundToSamples(startTime, context.sampleRate, 5)
+                                                    );
+                                                    stereoPannerNode.pan.cancelScheduledValues(
+                                                        roundToSamples(startTime, context.sampleRate, 3)
+                                                    );
 
                                                     audioBufferSourceNode.start(startTime);
                                                 }
-                                            })
-                                                .then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
-                                                        expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.3535533, 0.000001);
-                                                        expect(channelData[4]).to.be.closeTo(-0.7071067, 0.000001);
-
-                                                    } else {
-                                                        expect(channelData[0]).to.be.closeTo(1.207106, 0.000001);
-                                                        expect(channelData[1]).to.be.closeTo(0.603553, 0.000001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.5, 0.0001);
-                                                        expect(channelData[4]).to.be.closeTo(-1, 0.0001);
-                                                    }
-                                                });
+                                            }).then((channelData) => {
+                                                if (channelLayout === 'mono') {
+                                                    expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
+                                                    expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.3535533, 0.000001);
+                                                    expect(channelData[4]).to.be.closeTo(-0.7071067, 0.000001);
+                                                } else {
+                                                    expect(channelData[0]).to.be.closeTo(1.207106, 0.000001);
+                                                    expect(channelData[1]).to.be.closeTo(0.603553, 0.000001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.5, 0.0001);
+                                                    expect(channelData[4]).to.be.closeTo(-1, 0.0001);
+                                                }
+                                            });
                                         });
-
                                     });
 
                                     describe('with a call to setValueAtTime()', () => {
-
                                         it('should modify the signal', function () {
                                             this.timeout(10000);
 
                                             return renderer({
-                                                start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                    stereoPannerNode.pan.setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
+                                                start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
+                                                    stereoPannerNode.pan.setValueAtTime(
+                                                        0.5,
+                                                        roundToSamples(startTime, context.sampleRate, 2)
+                                                    );
 
                                                     audioBufferSourceNode.start(startTime);
                                                 }
-                                            })
-                                                .then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.be.closeTo(0.7071067, 0.000001);
-                                                        expect(channelData[1]).to.be.closeTo(0.3535533, 0.000001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
-                                                        expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
-                                                    } else {
-                                                        expect(channelData[0]).to.be.closeTo(1, 0.0001);
-                                                        expect(channelData[1]).to.be.closeTo(0.5, 0.0001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.603553, 0.000001);
-                                                        expect(channelData[4]).to.be.closeTo(-1.207106, 0.000001);
-                                                    }
-                                                });
+                                            }).then((channelData) => {
+                                                if (channelLayout === 'mono') {
+                                                    expect(channelData[0]).to.be.closeTo(0.7071067, 0.000001);
+                                                    expect(channelData[1]).to.be.closeTo(0.3535533, 0.000001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
+                                                    expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
+                                                } else {
+                                                    expect(channelData[0]).to.be.closeTo(1, 0.0001);
+                                                    expect(channelData[1]).to.be.closeTo(0.5, 0.0001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.603553, 0.000001);
+                                                    expect(channelData[4]).to.be.closeTo(-1.207106, 0.000001);
+                                                }
+                                            });
                                         });
-
                                     });
 
                                     describe('with a call to setValueCurveAtTime()', () => {
-
                                         it('should modify the signal', function () {
                                             this.timeout(10000);
 
                                             return renderer({
-                                                start (startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                    stereoPannerNode.pan.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), roundToSamples(startTime, context.sampleRate), 6 / context.sampleRate);
+                                                start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
+                                                    stereoPannerNode.pan.setValueCurveAtTime(
+                                                        new Float32Array([0, 0.25, 0.5, 0.75, 1]),
+                                                        roundToSamples(startTime, context.sampleRate),
+                                                        6 / context.sampleRate
+                                                    );
 
                                                     audioBufferSourceNode.start(startTime);
                                                 }
-                                            })
-                                                .then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.equal(0.7071067690849304);
-                                                        expect(channelData[1]).to.be.closeTo(0.3505287, 0.0000001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.equal(-0.3266407251358032);
-                                                        expect(channelData[4]).to.equal(-0.6123723983764648);
-                                                    } else {
-                                                        expect(Array.from(channelData)).to.deep.equal([ 1, 0.5561861991882324, 0, -0.6035534143447876, -1.1830127239227295 ]);
-                                                    }
-                                                });
+                                            }).then((channelData) => {
+                                                if (channelLayout === 'mono') {
+                                                    expect(channelData[0]).to.equal(0.7071067690849304);
+                                                    expect(channelData[1]).to.be.closeTo(0.3505287, 0.0000001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                    expect(channelData[4]).to.equal(-0.6123723983764648);
+                                                } else {
+                                                    expect(Array.from(channelData)).to.deep.equal([
+                                                        1,
+                                                        0.5561861991882324,
+                                                        0,
+                                                        -0.6035534143447876,
+                                                        -1.1830127239227295
+                                                    ]);
+                                                }
+                                            });
                                         });
-
                                     });
 
                                     describe('with another AudioNode connected to the AudioParam', () => {
-
                                         it('should modify the signal', function () {
                                             this.timeout(10000);
 
                                             return renderer({
-                                                prepare ({ stereoPannerNode }) {
+                                                prepare({ stereoPannerNode }) {
                                                     const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                                     const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
 
-                                                    audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.5, 0.5, 0.5, 0.5 ]), 0);
+                                                    audioBuffer.copyToChannel(new Float32Array([0.5, 0.5, 0.5, 0.5, 0.5]), 0);
 
                                                     audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
 
@@ -710,72 +681,57 @@ describe('StereoPannerNode', () => {
 
                                                     return { audioBufferSourceNodeForAudioParam };
                                                 },
-                                                start (startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                                start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
                                                     audioBufferSourceNode.start(startTime);
                                                     audioBufferSourceNodeForAudioParam.start(startTime);
                                                 }
-                                            })
-                                                .then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
-                                                        expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
-                                                        expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
-                                                    } else {
-                                                        expect(channelData[0]).to.be.closeTo(1.207106, 0.000001);
-                                                        expect(channelData[1]).to.be.closeTo(0.603553, 0.000001);
-                                                        expect(channelData[2]).to.equal(0);
-                                                        expect(channelData[3]).to.be.closeTo(-0.603553, 0.000001);
-                                                        expect(channelData[4]).to.be.closeTo(-1.207106, 0.000001);
-                                                    }
-                                                });
+                                            }).then((channelData) => {
+                                                if (channelLayout === 'mono') {
+                                                    expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
+                                                    expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
+                                                    expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
+                                                } else {
+                                                    expect(channelData[0]).to.be.closeTo(1.207106, 0.000001);
+                                                    expect(channelData[1]).to.be.closeTo(0.603553, 0.000001);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(-0.603553, 0.000001);
+                                                    expect(channelData[4]).to.be.closeTo(-1.207106, 0.000001);
+                                                }
+                                            });
                                         });
-
                                     });
 
                                     // @todo Test other automations as well.
-
                                 });
-
                             }
-
                         });
-
                     }
-
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let stereoPannerNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             stereoPannerNode = createStereoPannerNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(stereoPannerNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(stereoPannerNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -795,7 +751,6 @@ describe('StereoPannerNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     stereoPannerNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -808,23 +763,16 @@ describe('StereoPannerNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(stereoPannerNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(stereoPannerNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(stereoPannerNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(stereoPannerNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let stereoPannerNode;
@@ -840,7 +788,7 @@ describe('StereoPannerNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             stereoPannerNode = createStereoPannerNode(context);
                         });
 
@@ -854,11 +802,9 @@ describe('StereoPannerNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
                         let stereoPannerNode;
@@ -869,17 +815,22 @@ describe('StereoPannerNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                             stereoPannerNode = createStereoPannerNode(context);
                         });
 
@@ -893,31 +844,24 @@ describe('StereoPannerNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
                                 const stereoPannerNode = createStereoPannerNode(context);
 
-                                constantSourceNode
-                                    .connect(stereoPannerNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(stereoPannerNode).connect(destination);
 
-                                stereoPannerNode
-                                    .connect(gainNode)
-                                    .connect(stereoPannerNode);
+                                stereoPannerNode.connect(gainNode).connect(stereoPannerNode);
 
                                 return { constantSourceNode, gainNode, stereoPannerNode };
                             }
@@ -928,59 +872,52 @@ describe('StereoPannerNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
-                            const stereoPannerNode = createStereoPannerNode(context);
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
+                                const stereoPannerNode = createStereoPannerNode(context);
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            audioBufferSourceNode
-                                .connect(stereoPannerNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(stereoPannerNode).connect(firstDummyGainNode).connect(destination);
 
-                            stereoPannerNode.connect(secondDummyGainNode);
+                                stereoPannerNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, firstDummyGainNode, secondDummyGainNode, stereoPannerNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, firstDummyGainNode, secondDummyGainNode, stereoPannerNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(function () {
                         this.timeout(10000);
 
-                        values = [ 1, 1, 1, 1, 1 ];
+                        values = [1, 1, 1, 1, 1];
 
                         renderer = createPredefinedRenderer(values);
                     });
@@ -989,24 +926,20 @@ describe('StereoPannerNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ stereoPannerNode }) {
+                            prepare({ stereoPannerNode }) {
                                 stereoPannerNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 audioBufferSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let stereoPannerNode;
 
                         beforeEach(() => {
@@ -1023,18 +956,16 @@ describe('StereoPannerNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -1043,26 +974,21 @@ describe('StereoPannerNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ stereoPannerNode }) {
+                                prepare({ stereoPannerNode }) {
                                     stereoPannerNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let stereoPannerNode;
 
                         beforeEach(() => {
@@ -1079,18 +1005,16 @@ describe('StereoPannerNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -1099,44 +1023,39 @@ describe('StereoPannerNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ firstDummyGainNode, stereoPannerNode }) {
+                                prepare({ firstDummyGainNode, stereoPannerNode }) {
                                     stereoPannerNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ secondDummyGainNode, stereoPannerNode }) {
+                                prepare({ secondDummyGainNode, stereoPannerNode }) {
                                     stereoPannerNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(1, 0.0001);
-                                    expect(channelData[1]).to.be.closeTo(1, 0.0001);
-                                    expect(channelData[2]).to.be.closeTo(1, 0.0001);
-                                    expect(channelData[3]).to.be.closeTo(1, 0.0001);
-                                    expect(channelData[4]).to.be.closeTo(1, 0.0001);
-                                });
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(1, 0.0001);
+                                expect(channelData[1]).to.be.closeTo(1, 0.0001);
+                                expect(channelData[2]).to.be.closeTo(1, 0.0001);
+                                expect(channelData[3]).to.be.closeTo(1, 0.0001);
+                                expect(channelData[4]).to.be.closeTo(1, 0.0001);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -1164,11 +1083,9 @@ describe('StereoPannerNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let stereoPannerNode;
 
                     beforeEach(() => {
@@ -1207,13 +1124,8 @@ describe('StereoPannerNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

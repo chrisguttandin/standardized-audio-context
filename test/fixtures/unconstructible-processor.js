@@ -1,1 +1,1 @@
-registerProcessor('unconstructible-processor', { });
+registerProcessor('unconstructible-processor', {});

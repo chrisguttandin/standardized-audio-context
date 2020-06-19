@@ -2,7 +2,6 @@ import { createIsAnyAudioParam } from '../../../src/factories/is-any-audio-param
 import { stub } from 'sinon';
 
 describe('isAnyAudioParam()', () => {
-
     let audioParamStore;
     let isAnyAudioParam;
     let isNativeAudioParam;
@@ -15,7 +14,6 @@ describe('isAnyAudioParam()', () => {
     });
 
     describe('without any AudioParam in the store', () => {
-
         beforeEach(() => {
             isNativeAudioParam.returns(false);
         });
@@ -23,11 +21,9 @@ describe('isAnyAudioParam()', () => {
         it('should not identify any AudioParam', () => {
             expect(isAnyAudioParam({ a: 'fake AudioParam' })).to.be.false;
         });
-
     });
 
     describe('with an AudioParam in the store', () => {
-
         let audioParam;
 
         beforeEach(() => {
@@ -44,11 +40,9 @@ describe('isAnyAudioParam()', () => {
         it('should not identify any other AudioParam', () => {
             expect(isAnyAudioParam({ another: 'fake AudioParam' })).to.be.false;
         });
-
     });
 
     describe('with an AudioParam which gets identified as native', () => {
-
         beforeEach(() => {
             isNativeAudioParam.returns(true);
         });
@@ -56,7 +50,5 @@ describe('isAnyAudioParam()', () => {
         it('should identify a native AudioParam', () => {
             expect(isAnyAudioParam({ a: 'fake AudioParam' })).to.be.true;
         });
-
     });
-
 });

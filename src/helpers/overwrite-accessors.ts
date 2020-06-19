@@ -7,7 +7,7 @@ export const overwriteAccessors: TOverwriteAccessorsFunction = (object, property
         prototype = Object.getPrototypeOf(prototype);
     }
 
-    const { get, set } = <Required<PropertyDescriptor>> Object.getOwnPropertyDescriptor(prototype, property);
+    const { get, set } = <Required<PropertyDescriptor>>Object.getOwnPropertyDescriptor(prototype, property);
 
     Object.defineProperty(object, property, { get: createGetter(get), set: createSetter(set) });
 };

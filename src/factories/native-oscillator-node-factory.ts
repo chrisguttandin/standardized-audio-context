@@ -1,12 +1,8 @@
 import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import {
-    wrapAudioScheduledSourceNodeStartMethodNegativeParameters
-} from '../helpers/wrap-audio-scheduled-source-node-start-method-negative-parameters';
-import {
-    wrapAudioScheduledSourceNodeStopMethodNegativeParameters
-} from '../helpers/wrap-audio-scheduled-source-node-stop-method-negative-parameters';
+import { wrapAudioScheduledSourceNodeStartMethodNegativeParameters } from '../helpers/wrap-audio-scheduled-source-node-start-method-negative-parameters';
+import { wrapAudioScheduledSourceNodeStopMethodNegativeParameters } from '../helpers/wrap-audio-scheduled-source-node-stop-method-negative-parameters';
 import { TNativeOscillatorNodeFactoryFactory } from '../types';
 
 export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFactory = (
@@ -33,26 +29,29 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
         }
 
         // Bug #44: Only Chrome & Opera throw a RangeError yet.
-        if (!cacheTestResult(
-            testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
-            () => testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
-        )) {
+        if (
+            !cacheTestResult(testAudioScheduledSourceNodeStartMethodNegativeParametersSupport, () =>
+                testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
+            )
+        ) {
             wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeOscillatorNode);
         }
 
         // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
-        if (!cacheTestResult(
-            testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
-            () => testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(nativeContext)
-        )) {
+        if (
+            !cacheTestResult(testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport, () =>
+                testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(nativeContext)
+            )
+        ) {
             wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(nativeOscillatorNode, nativeContext);
         }
 
         // Bug #44: Only Firefox does not throw a RangeError yet.
-        if (!cacheTestResult(
-            testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
-            () => testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
-        )) {
+        if (
+            !cacheTestResult(testAudioScheduledSourceNodeStopMethodNegativeParametersSupport, () =>
+                testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)
+            )
+        ) {
             wrapAudioScheduledSourceNodeStopMethodNegativeParameters(nativeOscillatorNode);
         }
 

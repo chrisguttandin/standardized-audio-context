@@ -15,12 +15,10 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
     return class IIRFilterNode<T extends TContext> extends audioNodeConstructor<T> implements IIIRFilterNode<T> {
-
         private _nativeIIRFilterNode: TNativeIIRFilterNode;
 
-        constructor (
+        constructor(
             context: T,
             options: { feedback: IIIRFilterOptions['feedback']; feedforward: IIIRFilterOptions['feedforward'] } & Partial<IIIRFilterOptions>
         ) {
@@ -29,12 +27,12 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeIIRFilterNode = createNativeIIRFilterNode(
                 nativeContext,
-                isOffline ? null : (<IMinimalAudioContext> (<any> context)).baseLatency,
+                isOffline ? null : (<IMinimalAudioContext>(<any>context)).baseLatency,
                 mergedOptions
             );
-            const iirFilterNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
-                ? createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward)
-                : null);
+            const iirFilterNodeRenderer = <TAudioNodeRenderer<T, this>>(
+                (isOffline ? createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward) : null)
+            );
 
             super(context, false, nativeIIRFilterNode, iirFilterNodeRenderer);
 
@@ -45,10 +43,8 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             this._nativeIIRFilterNode = nativeIIRFilterNode;
         }
 
-        public getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void  {
+        public getFrequencyResponse(frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void {
             return this._nativeIIRFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
-
     };
-
 };

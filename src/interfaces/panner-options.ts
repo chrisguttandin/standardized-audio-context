@@ -2,7 +2,6 @@ import { TDistanceModelType, TPanningModelType } from '../types';
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IPannerOptions extends IAudioNodeOptions {
-
     coneInnerAngle: number;
 
     coneOuterAngle: number;
@@ -30,5 +29,4 @@ export interface IPannerOptions extends IAudioNodeOptions {
     refDistance: number;
 
     rolloffFactor: number;
-
 }

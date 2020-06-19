@@ -7,16 +7,16 @@ export const connectNativeAudioNodeToNativeAudioNode: TConnectNativeAudioNodeToN
     nativeDestinationAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
     output: number,
     input: number
-): [ TNativeAudioNode, number, number ] => {
+): [TNativeAudioNode, number, number] => {
     if (isNativeAudioNodeFaker(nativeDestinationAudioNode)) {
         const fakeNativeDestinationAudioNode = nativeDestinationAudioNode.inputs[input];
 
         nativeSourceAudioNode.connect(fakeNativeDestinationAudioNode, output, 0);
 
-        return [ fakeNativeDestinationAudioNode, output, 0 ];
+        return [fakeNativeDestinationAudioNode, output, 0];
     }
 
     nativeSourceAudioNode.connect(nativeDestinationAudioNode, output, input);
 
-    return [ nativeDestinationAudioNode, output, input ];
+    return [nativeDestinationAudioNode, output, input];
 };

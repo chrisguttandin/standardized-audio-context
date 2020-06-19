@@ -28,9 +28,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
     return class DynamicsCompressorNode<T extends TContext> extends audioNodeConstructor<T> implements IDynamicsCompressorNode<T> {
-
         private _attack: IAudioParam;
 
         private _knee: IAudioParam;
@@ -43,14 +41,12 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
 
         private _threshold: IAudioParam;
 
-        constructor (context: T, options: Partial<IDynamicsCompressorOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IDynamicsCompressorOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeDynamicsCompressorNode = createNativeDynamicsCompressorNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const dynamicsCompressorNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
-                ? createDynamicsCompressorNodeRenderer()
-                : null);
+            const dynamicsCompressorNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createDynamicsCompressorNodeRenderer() : null);
 
             super(context, false, nativeDynamicsCompressorNode, dynamicsCompressorNodeRenderer);
 
@@ -63,7 +59,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
             this._threshold = createAudioParam(this, isOffline, nativeDynamicsCompressorNode.threshold, 0, -100);
         }
 
-        get attack (): IAudioParam {
+        get attack(): IAudioParam {
             return this._attack;
         }
 
@@ -71,11 +67,11 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
          * Bug #108: Only Chrome, Firefox and Opera disallow a channelCount of three and above yet which is why the getter and setter needs
          * to be overwritten here.
          */
-        get channelCount (): number {
+        get channelCount(): number {
             return this._nativeDynamicsCompressorNode.channelCount;
         }
 
-        set channelCount (value) {
+        set channelCount(value) {
             const previousChannelCount = this._nativeDynamicsCompressorNode.channelCount;
 
             this._nativeDynamicsCompressorNode.channelCount = value;
@@ -91,11 +87,11 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
          * Bug #109: Only Chrome, Firefox and Opera disallow a channelCountMode of 'max' yet which is why the getter and setter needs to be
          * overwritten here.
          */
-        get channelCountMode (): TChannelCountMode {
+        get channelCountMode(): TChannelCountMode {
             return this._nativeDynamicsCompressorNode.channelCountMode;
         }
 
-        set channelCountMode (value) {
+        set channelCountMode(value) {
             const previousChannelCount = this._nativeDynamicsCompressorNode.channelCountMode;
 
             this._nativeDynamicsCompressorNode.channelCountMode = value;
@@ -107,31 +103,29 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
             }
         }
 
-        get knee (): IAudioParam {
+        get knee(): IAudioParam {
             return this._knee;
         }
 
-        get ratio (): IAudioParam {
+        get ratio(): IAudioParam {
             return this._ratio;
         }
 
-        get reduction (): number {
+        get reduction(): number {
             // Bug #111: Safari returns an AudioParam instead of a number.
-            if (typeof (<TNativeAudioParam> (<any> this._nativeDynamicsCompressorNode.reduction)).value === 'number') {
-                return (<TNativeAudioParam> (<any> this._nativeDynamicsCompressorNode.reduction)).value;
+            if (typeof (<TNativeAudioParam>(<any>this._nativeDynamicsCompressorNode.reduction)).value === 'number') {
+                return (<TNativeAudioParam>(<any>this._nativeDynamicsCompressorNode.reduction)).value;
             }
 
             return this._nativeDynamicsCompressorNode.reduction;
         }
 
-        get release (): IAudioParam {
+        get release(): IAudioParam {
             return this._release;
         }
 
-        get threshold (): IAudioParam {
+        get threshold(): IAudioParam {
             return this._threshold;
         }
-
     };
-
 };

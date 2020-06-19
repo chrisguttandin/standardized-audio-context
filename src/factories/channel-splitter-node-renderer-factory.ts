@@ -39,7 +39,7 @@ export const createChannelSplitterNodeRendererFactory: TChannelSplitterNodeRende
         };
 
         return {
-            render (
+            render(
                 proxy: IAudioNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

@@ -1,4 +1,12 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, GainNode, IIRFilterNode, addAudioWorkletModule } from '../../../src/module';
+import {
+    AudioBuffer,
+    AudioBufferSourceNode,
+    AudioWorkletNode,
+    ConstantSourceNode,
+    GainNode,
+    IIRFilterNode,
+    addAudioWorkletModule
+} from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -56,11 +64,8 @@ const testCases = {
 };
 
 describe('IIRFilterNode', () => {
-
-    for (const [ description, { createIIRFilterNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createIIRFilterNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
             let feedback;
             let feedforward;
@@ -73,16 +78,13 @@ describe('IIRFilterNode', () => {
 
             beforeEach(() => {
                 context = createContext();
-                feedback = [ 1 ];
-                feedforward = [ 1 ];
+                feedback = [1];
+                feedforward = [1];
             });
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -107,7 +109,6 @@ describe('IIRFilterNode', () => {
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance of the IIRFilterNode constructor', () => {
                                 const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
 
@@ -164,17 +165,20 @@ describe('IIRFilterNode', () => {
 
                             // @todo Test that at least the plumbing works with a closed AudioContext.
                             if (audioContextState !== 'closed') {
-
                                 describe('rendering', () => {
-
-                                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
+                                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                        ? [
+                                              [true, true],
+                                              [true, false],
+                                              [false, true]
+                                          ]
+                                        : [[true, false]]) {
+                                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                                        } an appended AudioWorklet`, () => {
                                             let renderer;
 
                                             describe('with some filter coefficients', () => {
-
                                                 beforeEach(async function () {
                                                     this.timeout(10000);
 
@@ -184,15 +188,26 @@ describe('IIRFilterNode', () => {
 
                                                     renderer = createRenderer({
                                                         context,
-                                                        length: (context.length === undefined) ? 5 : undefined,
-                                                        prepare (destination) {
-                                                            const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
+                                                        length: context.length === undefined ? 5 : undefined,
+                                                        prepare(destination) {
+                                                            const audioBuffer = new AudioBuffer({
+                                                                length: 5,
+                                                                numberOfChannels: 1,
+                                                                sampleRate: context.sampleRate
+                                                            });
                                                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                                            const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
-                                                            const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1, -0.5 ], feedforward: [ 1, -1 ] });
-                                                            const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                                            const audioWorkletNode = withAnAppendedAudioWorklet
+                                                                ? new AudioWorkletNode(context, 'gain-processor')
+                                                                : null;
+                                                            const iIRFilterNode = createIIRFilterNode(context, {
+                                                                feedback: [1, -0.5],
+                                                                feedforward: [1, -1]
+                                                            });
+                                                            const masterGainNode = new GainNode(context, {
+                                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                            });
 
-                                                            audioBuffer.copyToChannel(new Float32Array([ 1, 0, 0, 0, 0 ]), 0);
+                                                            audioBuffer.copyToChannel(new Float32Array([1, 0, 0, 0, 0]), 0);
                                                             // @todo Render a second channel with the following values: 0, 1, 1 ...
 
                                                             audioBufferSourceNode.buffer = audioBuffer;
@@ -204,9 +219,7 @@ describe('IIRFilterNode', () => {
                                                             }
 
                                                             if (withAnAppendedAudioWorklet) {
-                                                                iIRFilterNode
-                                                                    .connect(audioWorkletNode)
-                                                                    .connect(masterGainNode);
+                                                                iIRFilterNode.connect(audioWorkletNode).connect(masterGainNode);
                                                             }
 
                                                             masterGainNode.connect(destination);
@@ -220,20 +233,17 @@ describe('IIRFilterNode', () => {
                                                     this.timeout(10000);
 
                                                     return renderer({
-                                                        start (startTime, { audioBufferSourceNode }) {
+                                                        start(startTime, { audioBufferSourceNode }) {
                                                             audioBufferSourceNode.start(startTime);
                                                         }
-                                                    })
-                                                        .then((channelData) => {
-                                                            expect(Array.from(channelData)).to.deep.equal([ 1, -0.5, -0.25, -0.125, -0.0625 ]);
-                                                            // @todo The second channel should be 0, 1, 0.5 ...
-                                                        });
+                                                    }).then((channelData) => {
+                                                        expect(Array.from(channelData)).to.deep.equal([1, -0.5, -0.25, -0.125, -0.0625]);
+                                                        // @todo The second channel should be 0, 1, 0.5 ...
+                                                    });
                                                 });
-
                                             });
 
                                             describe('with some other filter coefficients', () => {
-
                                                 beforeEach(async function () {
                                                     this.timeout(10000);
 
@@ -243,14 +253,23 @@ describe('IIRFilterNode', () => {
 
                                                     renderer = createRenderer({
                                                         context,
-                                                        length: (context.length === undefined) ? 5 : undefined,
-                                                        prepare (destination) {
-                                                            const audioBuffer = new AudioBuffer({ length: 5, numberOfChannels: 1, sampleRate: context.sampleRate });
+                                                        length: context.length === undefined ? 5 : undefined,
+                                                        prepare(destination) {
+                                                            const audioBuffer = new AudioBuffer({
+                                                                length: 5,
+                                                                numberOfChannels: 1,
+                                                                sampleRate: context.sampleRate
+                                                            });
                                                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                                            const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
-                                                            const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1, 0.5 ], feedforward: [ 0.5, -1 ] });
+                                                            const audioWorkletNode = withAnAppendedAudioWorklet
+                                                                ? new AudioWorkletNode(context, 'gain-processor')
+                                                                : null;
+                                                            const iIRFilterNode = createIIRFilterNode(context, {
+                                                                feedback: [1, 0.5],
+                                                                feedforward: [0.5, -1]
+                                                            });
 
-                                                            audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+                                                            audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
                                                             /*
                                                              * @todo Render a second channel with the following values: 1, 0, 0 ...
                                                              * @todo Render a third channel with the following values: 0, 1, 1 ...
@@ -264,9 +283,7 @@ describe('IIRFilterNode', () => {
                                                                     .connect(audioWorkletNode)
                                                                     .connect(destination);
                                                             } else {
-                                                                audioBufferSourceNode
-                                                                    .connect(iIRFilterNode)
-                                                                    .connect(destination);
+                                                                audioBufferSourceNode.connect(iIRFilterNode).connect(destination);
                                                             }
 
                                                             return { audioBufferSourceNode, iIRFilterNode };
@@ -278,38 +295,35 @@ describe('IIRFilterNode', () => {
                                                     this.timeout(10000);
 
                                                     return renderer({
-                                                        start (startTime, { audioBufferSourceNode }) {
+                                                        start(startTime, { audioBufferSourceNode }) {
                                                             audioBufferSourceNode.start(startTime);
                                                         }
-                                                    })
-                                                        .then((channelData) => {
-                                                            expect(Array.from(channelData)).to.deep.equal([ 0.5, -0.75, -0.125, -0.4375, -0.28125 ]);
-                                                            /*
-                                                             * @todo The second channel should be 0.5, -1.25, 0.625 ...
-                                                             * @todo The third channel should be 0, 0.5, -0.75 ...
-                                                             */
-                                                        });
+                                                    }).then((channelData) => {
+                                                        expect(Array.from(channelData)).to.deep.equal([
+                                                            0.5,
+                                                            -0.75,
+                                                            -0.125,
+                                                            -0.4375,
+                                                            -0.28125
+                                                        ]);
+                                                        /*
+                                                         * @todo The second channel should be 0.5, -1.25, 0.625 ...
+                                                         * @todo The third channel should be 0, 0.5, -0.75 ...
+                                                         */
+                                                    });
                                                 });
-
                                             });
-
                                         });
-
                                     }
-
                                 });
-
                             }
-
                         });
 
                         describe('with invalid options', () => {
-
                             describe('without any feedback coefficients', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
-                                        createIIRFilterNode(context, { feedback: [ ], feedforward });
+                                        createIIRFilterNode(context, { feedback: [], feedforward });
                                     } catch (err) {
                                         expect(err.code).to.equal(9);
                                         expect(err.name).to.equal('NotSupportedError');
@@ -317,14 +331,12 @@ describe('IIRFilterNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with feedback coefficients beginning with zero', () => {
-
                                 it('should throw an InvalidStateError', (done) => {
                                     try {
-                                        createIIRFilterNode(context, { feedback: [ 0, 1 ], feedforward });
+                                        createIIRFilterNode(context, { feedback: [0, 1], feedforward });
                                     } catch (err) {
                                         expect(err.code).to.equal(11);
                                         expect(err.name).to.equal('InvalidStateError');
@@ -332,14 +344,15 @@ describe('IIRFilterNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with too many feedback coefficients', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
-                                        createIIRFilterNode(context, { feedback: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ], feedforward });
+                                        createIIRFilterNode(context, {
+                                            feedback: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                                            feedforward
+                                        });
                                     } catch (err) {
                                         expect(err.code).to.equal(9);
                                         expect(err.name).to.equal('NotSupportedError');
@@ -347,14 +360,12 @@ describe('IIRFilterNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('without any feedforward coefficients', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
-                                        createIIRFilterNode(context, { feedback, feedforward: [ ] });
+                                        createIIRFilterNode(context, { feedback, feedforward: [] });
                                     } catch (err) {
                                         expect(err.code).to.equal(9);
                                         expect(err.name).to.equal('NotSupportedError');
@@ -362,14 +373,12 @@ describe('IIRFilterNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with feedforward coefficients of only zero', () => {
-
                                 it('should throw an InvalidStateError', (done) => {
                                     try {
-                                        createIIRFilterNode(context, { feedback, feedforward: [ 0 ] });
+                                        createIIRFilterNode(context, { feedback, feedforward: [0] });
                                     } catch (err) {
                                         expect(err.code).to.equal(11);
                                         expect(err.name).to.equal('InvalidStateError');
@@ -377,14 +386,15 @@ describe('IIRFilterNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with too many feedforward coefficients', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
-                                        createIIRFilterNode(context, { feedback, feedforward: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ] });
+                                        createIIRFilterNode(context, {
+                                            feedback,
+                                            feedforward: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+                                        });
                                     } catch (err) {
                                         expect(err.code).to.equal(9);
                                         expect(err.name).to.equal('NotSupportedError');
@@ -392,19 +402,13 @@ describe('IIRFilterNode', () => {
                                         done();
                                     }
                                 });
-
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let iIRFilterNode;
 
                 beforeEach(() => {
@@ -418,11 +422,9 @@ describe('IIRFilterNode', () => {
 
                     expect(iIRFilterNode.channelCount).to.equal(channelCount);
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let iIRFilterNode;
 
                 beforeEach(() => {
@@ -436,11 +438,9 @@ describe('IIRFilterNode', () => {
 
                     expect(iIRFilterNode.channelCountMode).to.equal(channelCountMode);
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let iIRFilterNode;
 
                 beforeEach(() => {
@@ -454,11 +454,9 @@ describe('IIRFilterNode', () => {
 
                     expect(iIRFilterNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let iIRFilterNode;
 
                 beforeEach(() => {
@@ -470,11 +468,9 @@ describe('IIRFilterNode', () => {
                         iIRFilterNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let iIRFilterNode;
 
                 beforeEach(() => {
@@ -486,37 +482,29 @@ describe('IIRFilterNode', () => {
                         iIRFilterNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let iIRFilterNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(iIRFilterNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(iIRFilterNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -536,7 +524,6 @@ describe('IIRFilterNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     iIRFilterNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -549,23 +536,16 @@ describe('IIRFilterNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(iIRFilterNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(iIRFilterNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(iIRFilterNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(iIRFilterNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let iIRFilterNode;
@@ -581,7 +561,7 @@ describe('IIRFilterNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
                         });
 
@@ -595,11 +575,9 @@ describe('IIRFilterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let iIRFilterNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -610,18 +588,23 @@ describe('IIRFilterNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -634,31 +617,24 @@ describe('IIRFilterNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
                                 const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
 
-                                constantSourceNode
-                                    .connect(iIRFilterNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(iIRFilterNode).connect(destination);
 
-                                iIRFilterNode
-                                    .connect(gainNode)
-                                    .connect(iIRFilterNode);
+                                iIRFilterNode.connect(gainNode).connect(iIRFilterNode);
 
                                 return { constantSourceNode, gainNode, iIRFilterNode };
                             }
@@ -669,59 +645,52 @@ describe('IIRFilterNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const firstDummyGainNode = new GainNode(context);
-                            const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const firstDummyGainNode = new GainNode(context);
+                                const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
+                                const secondDummyGainNode = new GainNode(context);
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            audioBufferSourceNode
-                                .connect(iIRFilterNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(iIRFilterNode).connect(firstDummyGainNode).connect(destination);
 
-                            iIRFilterNode.connect(secondDummyGainNode);
+                                iIRFilterNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, firstDummyGainNode, iIRFilterNode, secondDummyGainNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, firstDummyGainNode, iIRFilterNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(function () {
                         this.timeout(10000);
 
-                        values = [ 1, 1, 1, 1, 1 ];
+                        values = [1, 1, 1, 1, 1];
 
                         renderer = createPredefinedRenderer(values);
                     });
@@ -730,28 +699,24 @@ describe('IIRFilterNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ iIRFilterNode }) {
+                            prepare({ iIRFilterNode }) {
                                 iIRFilterNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 audioBufferSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let iIRFilterNode;
 
                         beforeEach(() => {
-                            iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });;
+                            iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
                         });
 
                         it('should throw an IndexSizeError', (done) => {
@@ -764,18 +729,16 @@ describe('IIRFilterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -784,30 +747,25 @@ describe('IIRFilterNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ iIRFilterNode }) {
+                                prepare({ iIRFilterNode }) {
                                     iIRFilterNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let iIRFilterNode;
 
                         beforeEach(() => {
-                            iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });;
+                            iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -820,18 +778,16 @@ describe('IIRFilterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -840,44 +796,39 @@ describe('IIRFilterNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ firstDummyGainNode, iIRFilterNode }) {
+                                prepare({ firstDummyGainNode, iIRFilterNode }) {
                                     iIRFilterNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ iIRFilterNode, secondDummyGainNode }) {
+                                prepare({ iIRFilterNode, secondDummyGainNode }) {
                                     iIRFilterNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal(values);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal(values);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let iIRFilterNode;
 
                     beforeEach(() => {
-                        iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });;
+                        iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
                     });
 
                     it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
@@ -901,15 +852,13 @@ describe('IIRFilterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let iIRFilterNode;
 
                     beforeEach(() => {
-                        iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });;
+                        iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
                     });
 
                     it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
@@ -944,15 +893,11 @@ describe('IIRFilterNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
 
             describe('getFrequencyResponse()', () => {
-
                 describe('with a frequencyHz parameter smaller as the others', () => {
-
                     it('should throw an InvalidAccessError', (done) => {
                         const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
 
@@ -965,16 +910,14 @@ describe('IIRFilterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a magResponse parameter smaller as the others', () => {
-
                     it('should throw an InvalidAccessError', (done) => {
                         const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
 
                         try {
-                            iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
+                            iIRFilterNode.getFrequencyResponse(new Float32Array([1]), new Float32Array(0), new Float32Array(1));
                         } catch (err) {
                             expect(err.code).to.equal(15);
                             expect(err.name).to.equal('InvalidAccessError');
@@ -982,16 +925,14 @@ describe('IIRFilterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a phaseResponse parameter smaller as the others', () => {
-
                     it('should throw an InvalidAccessError', (done) => {
                         const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
 
                         try {
-                            iIRFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
+                            iIRFilterNode.getFrequencyResponse(new Float32Array([1]), new Float32Array(1), new Float32Array(0));
                         } catch (err) {
                             expect(err.code).to.equal(15);
                             expect(err.name).to.equal('InvalidAccessError');
@@ -999,47 +940,48 @@ describe('IIRFilterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with valid parameters', () => {
-
                     describe('with some filter coefficients', () => {
-
                         it('should fill the magResponse and phaseResponse arrays', () => {
-                            const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1 ], feedforward: [ 1 ] });
+                            const iIRFilterNode = createIIRFilterNode(context, { feedback: [1], feedforward: [1] });
                             const magResponse = new Float32Array(5);
                             const phaseResponse = new Float32Array(5);
 
-                            iIRFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+                            iIRFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
 
-                            expect(Array.from(magResponse)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
-                            expect(Array.from(phaseResponse)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
+                            expect(Array.from(magResponse)).to.deep.equal([1, 1, 1, 1, 1]);
+                            expect(Array.from(phaseResponse)).to.deep.equal([0, 0, 0, 0, 0]);
                         });
-
                     });
 
                     describe('with some other filter coefficients', () => {
-
                         it('should fill the magResponse and phaseResponse arrays', () => {
-                            const iIRFilterNode = createIIRFilterNode(context, { feedback: [ 1, -0.5 ], feedforward: [ 1, -1 ] });
+                            const iIRFilterNode = createIIRFilterNode(context, { feedback: [1, -0.5], feedforward: [1, -1] });
                             const magResponse = new Float32Array(5);
                             const phaseResponse = new Float32Array(5);
 
-                            iIRFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+                            iIRFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
 
-                            expect(Array.from(magResponse)).to.deep.equal([ 0.056942202150821686, 0.11359700560569763, 0.2249375581741333, 0.43307945132255554, 0.7616625428199768 ]);
-                            expect(Array.from(phaseResponse)).to.deep.equal([ 1.5280766487121582, 1.4854952096939087, 1.401282548904419, 1.2399859428405762, 0.9627721309661865 ]);
+                            expect(Array.from(magResponse)).to.deep.equal([
+                                0.056942202150821686,
+                                0.11359700560569763,
+                                0.2249375581741333,
+                                0.43307945132255554,
+                                0.7616625428199768
+                            ]);
+                            expect(Array.from(phaseResponse)).to.deep.equal([
+                                1.5280766487121582,
+                                1.4854952096939087,
+                                1.401282548904419,
+                                1.2399859428405762,
+                                0.9627721309661865
+                            ]);
                         });
-
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

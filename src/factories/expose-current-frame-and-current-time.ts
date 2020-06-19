@@ -5,13 +5,13 @@ export const createExposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurre
         Object.defineProperties(window, {
             currentFrame: {
                 configurable: true,
-                get (): number {
+                get(): number {
                     return Math.round(currentTime * sampleRate);
                 }
             },
             currentTime: {
                 configurable: true,
-                get (): number {
+                get(): number {
                     return currentTime;
                 }
             }
@@ -21,8 +21,8 @@ export const createExposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurre
             return fn();
         } finally {
             if (window !== null) {
-                delete (<any> window).currentFrame;
-                delete (<any> window).currentTime;
+                delete (<any>window).currentFrame;
+                delete (<any>window).currentTime;
             }
         }
     };

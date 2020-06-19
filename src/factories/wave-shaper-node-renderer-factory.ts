@@ -45,7 +45,7 @@ export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactory
         };
 
         return {
-            render (
+            render(
                 proxy: IWaveShaperNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

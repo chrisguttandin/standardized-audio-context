@@ -1,7 +1,6 @@
 import { createNativeAudioContextConstructor } from '../../../src/factories/native-audio-context-constructor';
 
 describe('createNativeAudioContextConstructor()', () => {
-
     let AudioContext;
     let webkitAudioContext;
 
@@ -11,7 +10,7 @@ describe('createNativeAudioContextConstructor()', () => {
     });
 
     it('should return null if there is no AudioContext', () => {
-        const fakeWindow = { };
+        const fakeWindow = {};
 
         expect(createNativeAudioContextConstructor(fakeWindow)).to.equal(null);
     });
@@ -33,5 +32,4 @@ describe('createNativeAudioContextConstructor()', () => {
 
         expect(createNativeAudioContextConstructor(fakeWindow)).to.equal(AudioContext);
     });
-
 });

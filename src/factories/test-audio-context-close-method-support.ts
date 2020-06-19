@@ -7,14 +7,13 @@ export const createTestAudioContextCloseMethodSupport: TTestAudioContextCloseMet
         }
 
         // Try to check the prototype before constructing the AudioContext.
-        if (nativeAudioContextConstructor.prototype !== undefined &&
-                nativeAudioContextConstructor.prototype.close !== undefined) {
+        if (nativeAudioContextConstructor.prototype !== undefined && nativeAudioContextConstructor.prototype.close !== undefined) {
             return true;
         }
 
         const audioContext = new nativeAudioContextConstructor();
 
-        const isAudioContextClosable = (audioContext.close !== undefined);
+        const isAudioContextClosable = audioContext.close !== undefined;
 
         try {
             audioContext.close();

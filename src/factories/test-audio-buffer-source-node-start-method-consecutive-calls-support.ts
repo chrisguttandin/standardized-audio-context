@@ -1,8 +1,6 @@
 import { TTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupportFactory } from '../types';
 
-export const createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport:
-    TTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupportFactory =
-(
+export const createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport: TTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupportFactory = (
     createNativeAudioNode
 ) => {
     return (nativeContext) => {

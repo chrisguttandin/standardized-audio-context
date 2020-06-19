@@ -41,11 +41,8 @@ const testCases = {
 };
 
 describe('MediaStreamAudioDestinationNode', () => {
-
-    for (const [ description, { createContext, createMediaStreamAudioDestinationNode } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createContext, createMediaStreamAudioDestinationNode }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -54,14 +51,11 @@ describe('MediaStreamAudioDestinationNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -86,7 +80,6 @@ describe('MediaStreamAudioDestinationNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             it('should return an instance of the MediaStreamAudioDestinationNode constructor', () => {
                                 const mediaStreamAudioDestinationNode = createMediaStreamAudioDestinationNode(context);
 
@@ -119,11 +112,9 @@ describe('MediaStreamAudioDestinationNode', () => {
 
                                 expect(mediaStreamAudioDestinationNode.stream).to.be.an.instanceOf(MediaStream);
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given channelCount', () => {
                                 const channelCount = 4;
                                 const mediaStreamAudioDestinationNode = createMediaStreamAudioDestinationNode(context, { channelCount });
@@ -133,26 +124,26 @@ describe('MediaStreamAudioDestinationNode', () => {
 
                             it('should return an instance with the given channelCountMode', () => {
                                 const channelCountMode = 'max';
-                                const mediaStreamAudioDestinationNode = createMediaStreamAudioDestinationNode(context, { channelCountMode });
+                                const mediaStreamAudioDestinationNode = createMediaStreamAudioDestinationNode(context, {
+                                    channelCountMode
+                                });
 
                                 expect(mediaStreamAudioDestinationNode.channelCountMode).to.equal(channelCountMode);
                             });
 
                             it('should return an instance with the given channelInterpretation', () => {
                                 const channelInterpretation = 'discrete';
-                                const mediaStreamAudioDestinationNode = createMediaStreamAudioDestinationNode(context, { channelInterpretation });
+                                const mediaStreamAudioDestinationNode = createMediaStreamAudioDestinationNode(context, {
+                                    channelInterpretation
+                                });
 
                                 expect(mediaStreamAudioDestinationNode.channelInterpretation).to.equal(channelInterpretation);
                             });
-
                         });
 
                         describe('with invalid options', () => {
-
                             if (description.includes('constructor')) {
-
                                 describe('with an OfflineAudioContext', () => {
-
                                     let offlineAudioContext;
 
                                     beforeEach(() => {
@@ -164,21 +155,14 @@ describe('MediaStreamAudioDestinationNode', () => {
                                             createMediaStreamAudioDestinationNode(offlineAudioContext);
                                         }).to.throw(TypeError);
                                     });
-
                                 });
-
                             }
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let mediaStreamAudioDestinationNode;
 
                 beforeEach(() => {
@@ -192,11 +176,9 @@ describe('MediaStreamAudioDestinationNode', () => {
 
                     expect(mediaStreamAudioDestinationNode.channelCount).to.equal(channelCount);
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let mediaStreamAudioDestinationNode;
 
                 beforeEach(() => {
@@ -210,11 +192,9 @@ describe('MediaStreamAudioDestinationNode', () => {
 
                     expect(mediaStreamAudioDestinationNode.channelCountMode).to.equal(channelCountMode);
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let mediaStreamAudioDestinationNode;
 
                 beforeEach(() => {
@@ -228,11 +208,9 @@ describe('MediaStreamAudioDestinationNode', () => {
 
                     expect(mediaStreamAudioDestinationNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let mediaStreamAudioDestinationNode;
 
                 beforeEach(() => {
@@ -244,11 +222,9 @@ describe('MediaStreamAudioDestinationNode', () => {
                         mediaStreamAudioDestinationNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let mediaStreamAudioDestinationNode;
 
                 beforeEach(() => {
@@ -260,11 +236,9 @@ describe('MediaStreamAudioDestinationNode', () => {
                         mediaStreamAudioDestinationNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('stream', () => {
-
                 let mediaStreamAudioDestinationNode;
 
                 beforeEach(() => {
@@ -276,27 +250,23 @@ describe('MediaStreamAudioDestinationNode', () => {
                         mediaStreamAudioDestinationNode.stream = new MediaStream();
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('connect()', () => {
-
                 let mediaStreamAudioDestinationNode;
 
                 beforeEach(() => {
                     mediaStreamAudioDestinationNode = createMediaStreamAudioDestinationNode(context);
                 });
 
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                         });
 
                         it('should throw an IndexSizeError', (done) => {
@@ -309,11 +279,9 @@ describe('MediaStreamAudioDestinationNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
 
@@ -328,7 +296,7 @@ describe('MediaStreamAudioDestinationNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                         });
 
                         it('should throw an IndexSizeError', (done) => {
@@ -341,11 +309,9 @@ describe('MediaStreamAudioDestinationNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
 
@@ -355,7 +321,10 @@ describe('MediaStreamAudioDestinationNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
@@ -365,7 +334,7 @@ describe('MediaStreamAudioDestinationNode', () => {
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an IndexSizeError', (done) => {
@@ -378,15 +347,11 @@ describe('MediaStreamAudioDestinationNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
-
             });
 
             describe('disconnect()', () => {
-
                 let mediaStreamAudioDestinationNode;
 
                 beforeEach(() => {
@@ -394,15 +359,12 @@ describe('MediaStreamAudioDestinationNode', () => {
                 });
 
                 describe('without any parameters', () => {
-
                     it('should disconnect all destinations', () => {
                         mediaStreamAudioDestinationNode.disconnect();
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     it('should throw an IndexSizeError', (done) => {
                         try {
                             mediaStreamAudioDestinationNode.disconnect(0);
@@ -413,11 +375,9 @@ describe('MediaStreamAudioDestinationNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     it('should throw an InvalidAccessError', (done) => {
                         try {
                             mediaStreamAudioDestinationNode.disconnect(new GainNode(context));
@@ -428,11 +388,9 @@ describe('MediaStreamAudioDestinationNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     it('should throw an IndexSizeError', (done) => {
                         try {
                             mediaStreamAudioDestinationNode.disconnect(new GainNode(context), 0);
@@ -443,11 +401,9 @@ describe('MediaStreamAudioDestinationNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     it('should throw an IndexSizeError', (done) => {
                         try {
                             mediaStreamAudioDestinationNode.disconnect(new GainNode(context), 0, 0);
@@ -458,13 +414,8 @@ describe('MediaStreamAudioDestinationNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

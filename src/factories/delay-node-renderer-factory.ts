@@ -48,7 +48,7 @@ export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = 
         };
 
         return {
-            render (
+            render(
                 proxy: IDelayNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

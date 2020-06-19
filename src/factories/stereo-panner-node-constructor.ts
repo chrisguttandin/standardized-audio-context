@@ -20,17 +20,15 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
     return class StereoPannerNode<T extends TContext> extends audioNodeConstructor<T> implements IStereoPannerNode<T> {
-
         private _pan: IAudioParam;
 
-        constructor (context: T, options: Partial<IStereoPannerOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IStereoPannerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeStereoPannerNode = createNativeStereoPannerNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const stereoPannerNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createStereoPannerNodeRenderer() : null);
+            const stereoPannerNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createStereoPannerNodeRenderer() : null);
 
             super(context, false, nativeStereoPannerNode, stereoPannerNodeRenderer);
 
@@ -38,10 +36,8 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
             this._pan = createAudioParam(this, isOffline, nativeStereoPannerNode.pan, 1, -1);
         }
 
-        get pan (): IAudioParam {
+        get pan(): IAudioParam {
             return this._pan;
         }
-
     };
-
 };

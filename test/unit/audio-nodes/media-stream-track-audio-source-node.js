@@ -43,18 +43,15 @@ const testCases = {
 };
 
 describe('MediaStreamTrackAudioSourceNode', () => {
-
     /*
      * Bug #65: Only Chrome, Edge & Opera implement captureStream() so far. But Firefox can be configured to allow user media access without
      * any user interaction. Safari already supports createMediaStreamDestination().
      * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
      */
-    if (!process.env.TRAVIS) { // eslint-disable-line no-undef
-
-        for (const [ description, { createContext, createMediaStreamTrackAudioSourceNode } ] of Object.entries(testCases)) {
-
-            describe(`with the ${ description }`, () => {
-
+    // eslint-disable-next-line no-undef
+    if (!process.env.TRAVIS) {
+        for (const [description, { createContext, createMediaStreamTrackAudioSourceNode }] of Object.entries(testCases)) {
+            describe(`with the ${description}`, () => {
                 let context;
                 let mediaStream;
                 let teardownMediaStream;
@@ -90,11 +87,12 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                         });
 
                         mediaStream = audioElement.captureStream();
-                        teardownMediaStream = () => new Promise((resolve, reject) => {
-                            audioElement.onerror = () => reject(audioElement.error);
-                            audioElement.onpause = resolve;
-                            audioElement.pause();
-                        });
+                        teardownMediaStream = () =>
+                            new Promise((resolve, reject) => {
+                                audioElement.onerror = () => reject(audioElement.error);
+                                audioElement.onpause = resolve;
+                                audioElement.pause();
+                            });
                     } else if (isSafari(navigator)) {
                         const audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
                         const oscillatorNode = audioContext.createOscillator();
@@ -126,11 +124,8 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                 });
 
                 describe('constructor()', () => {
-
-                    for (const audioContextState of [ 'closed', 'running' ]) {
-
-                        describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                    for (const audioContextState of ['closed', 'running']) {
+                        describe(`with an audioContextState of "${audioContextState}"`, () => {
                             afterEach(() => {
                                 if (audioContextState === 'closed') {
                                     const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -155,7 +150,6 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                             });
 
                             describe('with valid options', () => {
-
                                 let mediaStreamTrack;
 
                                 beforeEach(() => {
@@ -163,13 +157,17 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                 });
 
                                 it('should return an instance of the MediaStreamTrackAudioSourceNode constructor', () => {
-                                    const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
+                                    const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, {
+                                        mediaStreamTrack
+                                    });
 
                                     expect(mediaStreamTrackAudioSourceNode).to.be.an.instanceOf(MediaStreamTrackAudioSourceNode);
                                 });
 
                                 it('should return an implementation of the EventTarget interface', () => {
-                                    const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
+                                    const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, {
+                                        mediaStreamTrack
+                                    });
 
                                     expect(mediaStreamTrackAudioSourceNode.addEventListener).to.be.a('function');
                                     expect(mediaStreamTrackAudioSourceNode.dispatchEvent).to.be.a('function');
@@ -177,7 +175,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                 });
 
                                 it('should return an implementation of the AudioNode interface', () => {
-                                    const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
+                                    const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, {
+                                        mediaStreamTrack
+                                    });
 
                                     expect(mediaStreamTrackAudioSourceNode.channelCount).to.equal(2);
                                     expect(mediaStreamTrackAudioSourceNode.channelCountMode).to.equal('max');
@@ -188,15 +188,11 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     expect(mediaStreamTrackAudioSourceNode.numberOfInputs).to.equal(0);
                                     expect(mediaStreamTrackAudioSourceNode.numberOfOutputs).to.equal(1);
                                 });
-
                             });
 
                             describe('with invalid options', () => {
-
                                 if (description.includes('constructor')) {
-
                                     describe('with an OfflineAudioContext', () => {
-
                                         let mediaStreamTrack;
                                         let offlineAudioContext;
 
@@ -210,13 +206,10 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                                 createMediaStreamTrackAudioSourceNode(offlineAudioContext, { mediaStreamTrack });
                                             }).to.throw(TypeError);
                                         });
-
                                     });
-
                                 }
 
                                 describe('with a mediaStreamTrack that is not of kind audio', () => {
-
                                     let mediaStreamTrack;
                                     let videoStream;
 
@@ -246,19 +239,13 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                             done();
                                         }
                                     });
-
                                 });
-
                             });
-
                         });
-
                     }
-
                 });
 
                 describe('channelCount', () => {
-
                     let mediaStreamTrackAudioSourceNode;
 
                     beforeEach(() => {
@@ -274,11 +261,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                         expect(mediaStreamTrackAudioSourceNode.channelCount).to.equal(channelCount);
                     });
-
                 });
 
                 describe('channelCountMode', () => {
-
                     let mediaStreamTrackAudioSourceNode;
 
                     beforeEach(() => {
@@ -294,11 +279,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                         expect(mediaStreamTrackAudioSourceNode.channelCountMode).to.equal(channelCountMode);
                     });
-
                 });
 
                 describe('channelInterpretation', () => {
-
                     let mediaStreamTrackAudioSourceNode;
 
                     beforeEach(() => {
@@ -314,11 +297,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                         expect(mediaStreamTrackAudioSourceNode.channelInterpretation).to.equal(channelInterpretation);
                     });
-
                 });
 
                 describe('numberOfInputs', () => {
-
                     let mediaStreamTrackAudioSourceNode;
 
                     beforeEach(() => {
@@ -332,11 +313,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                             mediaStreamTrackAudioSourceNode.numberOfInputs = 2;
                         }).to.throw(TypeError);
                     });
-
                 });
 
                 describe('numberOfOutputs', () => {
-
                     let mediaStreamTrackAudioSourceNode;
 
                     beforeEach(() => {
@@ -350,11 +329,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                             mediaStreamTrackAudioSourceNode.numberOfOutputs = 2;
                         }).to.throw(TypeError);
                     });
-
                 });
 
                 describe('connect()', () => {
-
                     let mediaStreamTrackAudioSourceNode;
 
                     beforeEach(() => {
@@ -363,30 +340,24 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                         mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
                     });
 
-                    for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                        describe(`with an ${ type }`, () => {
-
+                    for (const type of ['AudioNode', 'AudioParam']) {
+                        describe(`with an ${type}`, () => {
                             let audioNodeOrAudioParam;
 
                             beforeEach(() => {
                                 const gainNode = new GainNode(context);
 
-                                audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                                audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             });
 
                             if (type === 'AudioNode') {
-
                                 it('should be chainable', () => {
                                     expect(mediaStreamTrackAudioSourceNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                                 });
-
                             } else {
-
                                 it('should not be chainable', () => {
                                     expect(mediaStreamTrackAudioSourceNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                                 });
-
                             }
 
                             it('should accept duplicate connections', () => {
@@ -406,7 +377,6 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                             });
 
                             if (type === 'AudioNode') {
-
                                 it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                     try {
                                         mediaStreamTrackAudioSourceNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -417,13 +387,10 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                         done();
                                     }
                                 });
-
                             }
-
                         });
 
-                        describe(`with an ${ type } of another context`, () => {
-
+                        describe(`with an ${type} of another context`, () => {
                             let anotherContext;
                             let audioNodeOrAudioParam;
 
@@ -438,7 +405,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                                 const gainNode = new GainNode(anotherContext);
 
-                                audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                                audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             });
 
                             it('should throw an InvalidAccessError', (done) => {
@@ -451,11 +418,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     done();
                                 }
                             });
-
                         });
 
-                        describe(`with an ${ type } of a native context`, () => {
-
+                        describe(`with an ${type} of a native context`, () => {
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
 
@@ -465,7 +430,10 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                  * check for the startRendering() method is necessary.
                                  * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                                  */
-                                if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                                if (
+                                    nativeContext.close !== undefined &&
+                                    (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                                ) {
                                     return nativeContext.close();
                                 }
                             });
@@ -475,7 +443,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                                 const nativeGainNode = nativeContext.createGain();
 
-                                nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                                nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                             });
 
                             it('should throw an InvalidAccessError', (done) => {
@@ -488,50 +456,44 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     done();
                                 }
                             });
-
                         });
-
                     }
-
                 });
 
                 describe('disconnect()', () => {
-
                     let createPredefinedRenderer;
 
                     beforeEach(() => {
-                        createPredefinedRenderer = (isAudioStreamTrackRemoved) => createRenderer({
-                            context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
-                                const firstDummyGainNode = new GainNode(context);
-                                const mediaStreamTrack = mediaStream.getAudioTracks()[0];
-                                const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, { mediaStreamTrack });
-                                const secondDummyGainNode = new GainNode(context);
+                        createPredefinedRenderer = (isAudioStreamTrackRemoved) =>
+                            createRenderer({
+                                context,
+                                length: context.length === undefined ? 5 : undefined,
+                                prepare(destination) {
+                                    const firstDummyGainNode = new GainNode(context);
+                                    const mediaStreamTrack = mediaStream.getAudioTracks()[0];
+                                    const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, {
+                                        mediaStreamTrack
+                                    });
+                                    const secondDummyGainNode = new GainNode(context);
 
-                                if (isAudioStreamTrackRemoved === 'removed') {
-                                    for (const audioStreamTrack of mediaStream.getAudioTracks()) {
-                                        mediaStream.removeTrack(audioStreamTrack);
+                                    if (isAudioStreamTrackRemoved === 'removed') {
+                                        for (const audioStreamTrack of mediaStream.getAudioTracks()) {
+                                            mediaStream.removeTrack(audioStreamTrack);
+                                        }
                                     }
+
+                                    mediaStreamTrackAudioSourceNode.connect(firstDummyGainNode).connect(destination);
+
+                                    mediaStreamTrackAudioSourceNode.connect(secondDummyGainNode);
+
+                                    return { firstDummyGainNode, mediaStreamTrackAudioSourceNode, secondDummyGainNode };
                                 }
-
-                                mediaStreamTrackAudioSourceNode
-                                    .connect(firstDummyGainNode)
-                                    .connect(destination);
-
-                                mediaStreamTrackAudioSourceNode.connect(secondDummyGainNode);
-
-                                return { firstDummyGainNode, mediaStreamTrackAudioSourceNode, secondDummyGainNode };
-                            }
-                        });
+                            });
                     });
 
                     describe('without any parameters', () => {
-
-                        for (const isAudioStreamTrackRemoved of [ true, false ]) {
-
-                            describe(`with an audio track that gets ${ (isAudioStreamTrackRemoved) ? 'not' : '' } removed`, () => {
-
+                        for (const isAudioStreamTrackRemoved of [true, false]) {
+                            describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not' : ''} removed`, () => {
                                 let renderer;
 
                                 beforeEach(function () {
@@ -544,26 +506,20 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     this.timeout(10000);
 
                                     return renderer({
-                                        prepare ({ mediaStreamTrackAudioSourceNode }) {
+                                        prepare({ mediaStreamTrackAudioSourceNode }) {
                                             mediaStreamTrackAudioSourceNode.disconnect();
                                         },
                                         verifyChannelData: false
-                                    })
-                                        .then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                        });
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    });
                                 });
-
                             });
-
                         }
-
                     });
 
                     describe('with an output', () => {
-
                         describe('with a value which is out-of-bound', () => {
-
                             let mediaStreamTrackAudioSourceNode;
 
                             beforeEach(() => {
@@ -582,15 +538,11 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     done();
                                 }
                             });
-
                         });
 
                         describe('with a connection from the given output', () => {
-
-                            for (const isAudioStreamTrackRemoved of [ true, false ]) {
-
-                                describe(`with an audio track that gets ${ (isAudioStreamTrackRemoved) ? 'not' : '' } removed`, () => {
-
+                            for (const isAudioStreamTrackRemoved of [true, false]) {
+                                describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not' : ''} removed`, () => {
                                     let renderer;
 
                                     beforeEach(function () {
@@ -603,28 +555,21 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                         this.timeout(10000);
 
                                         return renderer({
-                                            prepare ({ mediaStreamTrackAudioSourceNode }) {
+                                            prepare({ mediaStreamTrackAudioSourceNode }) {
                                                 mediaStreamTrackAudioSourceNode.disconnect(0);
                                             },
                                             verifyChannelData: false
-                                        })
-                                            .then((channelData) => {
-                                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                            });
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                        });
                                     });
-
                                 });
-
                             }
-
                         });
-
                     });
 
                     describe('with a destination', () => {
-
                         describe('without a connection to the given destination', () => {
-
                             let mediaStreamTrackAudioSourceNode;
 
                             beforeEach(() => {
@@ -643,15 +588,11 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     done();
                                 }
                             });
-
                         });
 
                         describe('with a connection to the given destination', () => {
-
-                            for (const isAudioStreamTrackRemoved of [ true, false ]) {
-
-                                describe(`with an audio track that gets ${ (isAudioStreamTrackRemoved) ? 'not' : '' } removed`, () => {
-
+                            for (const isAudioStreamTrackRemoved of [true, false]) {
+                                describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not' : ''} removed`, () => {
                                     let renderer;
 
                                     beforeEach(function () {
@@ -664,44 +605,37 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                         this.timeout(10000);
 
                                         return renderer({
-                                            prepare ({ firstDummyGainNode, mediaStreamTrackAudioSourceNode }) {
+                                            prepare({ firstDummyGainNode, mediaStreamTrackAudioSourceNode }) {
                                                 mediaStreamTrackAudioSourceNode.disconnect(firstDummyGainNode);
                                             },
                                             verifyChannelData: false
-                                        })
-                                            .then((channelData) => {
-                                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                            });
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                        });
                                     });
 
                                     it('should disconnect another destination in isolation', function () {
                                         this.timeout(10000);
 
                                         return renderer({
-                                            prepare ({ mediaStreamTrackAudioSourceNode, secondDummyGainNode }) {
+                                            prepare({ mediaStreamTrackAudioSourceNode, secondDummyGainNode }) {
                                                 mediaStreamTrackAudioSourceNode.disconnect(secondDummyGainNode);
                                             },
                                             verifyChannelData: false
-                                        })
-                                            .then((channelData) => {
-                                                /*
-                                                 * @todo The audioElement will just play a sine wave and Firefox will just capture the signal from
-                                                 * the microphone. Therefore it is okay to only test for non zero values.
-                                                 */
-                                                expect(Array.from(channelData)).to.not.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                            });
+                                        }).then((channelData) => {
+                                            /*
+                                             * @todo The audioElement will just play a sine wave and Firefox will just capture the signal from
+                                             * the microphone. Therefore it is okay to only test for non zero values.
+                                             */
+                                            expect(Array.from(channelData)).to.not.deep.equal([0, 0, 0, 0, 0]);
+                                        });
                                     });
-
                                 });
-
                             }
-
                         });
-
                     });
 
                     describe('with a destination and an output', () => {
-
                         let mediaStreamTrackAudioSourceNode;
 
                         beforeEach(() => {
@@ -731,11 +665,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a destination, an output and an input', () => {
-
                         let mediaStreamTrackAudioSourceNode;
 
                         beforeEach(() => {
@@ -776,15 +708,9 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 });
-
             });
-
         }
-
     }
-
 });

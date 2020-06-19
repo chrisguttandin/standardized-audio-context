@@ -15,7 +15,10 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                 const nativeAudioWorkletNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
                     return new nativeAudioWorkletNodeConstructor(ntvCntxt, name, options);
                 });
-                const patchedEventListeners: Map<EventListenerOrEventListenerObject, NonNullable<TNativeAudioWorkletNode['onprocessorerror']>> = new Map(); // tslint:disable-line:max-line-length
+                const patchedEventListeners: Map<
+                    EventListenerOrEventListenerObject,
+                    NonNullable<TNativeAudioWorkletNode['onprocessorerror']>
+                > = new Map();
 
                 let onprocessorerror: TNativeAudioWorkletNode['onprocessorerror'] = null;
 
@@ -44,7 +47,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                                 nativeAudioWorkletNode.removeEventListener('processorerror', onprocessorerror);
                             }
 
-                            onprocessorerror = (typeof value === 'function') ? value : null;
+                            onprocessorerror = typeof value === 'function' ? value : null;
 
                             if (typeof onprocessorerror === 'function') {
                                 nativeAudioWorkletNode.addEventListener('processorerror', onprocessorerror);
@@ -54,11 +57,12 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                 });
 
                 nativeAudioWorkletNode.addEventListener = ((addEventListener) => {
-                    return (...args: [ string, EventListenerOrEventListenerObject, (boolean | AddEventListenerOptions)? ]): void => {
+                    return (...args: [string, EventListenerOrEventListenerObject, (boolean | AddEventListenerOptions)?]): void => {
                         if (args[0] === 'processorerror') {
-                            const unpatchedEventListener = (typeof args[1] === 'function')
-                                ? args[1]
-                                : (typeof args[1] === 'object' && args[1] !== null && typeof args[1].handleEvent === 'function')
+                            const unpatchedEventListener =
+                                typeof args[1] === 'function'
+                                    ? args[1]
+                                    : typeof args[1] === 'object' && args[1] !== null && typeof args[1].handleEvent === 'function'
                                     ? args[1].handleEvent
                                     : null;
 
@@ -102,10 +106,12 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                  * an output.
                  */
                 if (options.numberOfOutputs !== 0) {
-                    const nativeGainNode = createNativeGainNode(
-                        nativeContext,
-                        { channelCount: 1, channelCountMode: 'explicit', channelInterpretation: 'discrete', gain: 0 }
-                    );
+                    const nativeGainNode = createNativeGainNode(nativeContext, {
+                        channelCount: 1,
+                        channelCountMode: 'explicit',
+                        channelInterpretation: 'discrete',
+                        gain: 0
+                    });
 
                     nativeAudioWorkletNode
                         .connect(nativeGainNode)

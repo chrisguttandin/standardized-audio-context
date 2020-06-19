@@ -7,7 +7,7 @@ export const createAddAudioNodeConnections: TAddAudioNodeConnectionsFactory = (a
         audioNodeRenderer: T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null,
         nativeAudioNode: TNativeAudioNode
     ) => {
-        const activeInputs = [ ];
+        const activeInputs = [];
 
         for (let i = 0; i < nativeAudioNode.numberOfInputs; i += 1) {
             activeInputs.push(new Set<TActiveInputConnection<T>>());

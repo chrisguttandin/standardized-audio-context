@@ -1,7 +1,6 @@
 import { computeBufferSize } from '../../../src/helpers/compute-buffer-size';
 
 describe('computeBufferSize()', () => {
-
     it('should default to 512', () => {
         expect(computeBufferSize(null, 44100)).to.equal(512);
     });
@@ -19,5 +18,4 @@ describe('computeBufferSize()', () => {
     it('should be at most 16384', () => {
         expect(computeBufferSize(1, 44100)).to.equal(16384);
     });
-
 });

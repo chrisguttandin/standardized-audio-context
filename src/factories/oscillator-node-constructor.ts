@@ -29,9 +29,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
     isNativeOfflineAudioContext,
     wrapEventListener
 ) => {
-
     return class OscillatorNode<T extends TContext> extends audioNodeConstructor<T> implements IOscillatorNode<T> {
-
         private _detune: IAudioParam;
 
         private _frequency: IAudioParam;
@@ -42,12 +40,12 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _oscillatorNodeRenderer: TOscillatorNodeRenderer<T>;
 
-        constructor (context: T, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeOscillatorNode = createNativeOscillatorNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const oscillatorNodeRenderer = <TOscillatorNodeRenderer<T>> ((isOffline) ? createOscillatorNodeRenderer() : null);
+            const oscillatorNodeRenderer = <TOscillatorNodeRenderer<T>>(isOffline ? createOscillatorNodeRenderer() : null);
             const nyquist = context.sampleRate / 2;
 
             super(context, false, nativeOscillatorNode, oscillatorNodeRenderer);
@@ -61,40 +59,38 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             this._oscillatorNodeRenderer = oscillatorNodeRenderer;
 
             if (this._oscillatorNodeRenderer !== null && mergedOptions.periodicWave !== undefined) {
-                (<IOscillatorNodeRenderer<IMinimalOfflineAudioContext>> this._oscillatorNodeRenderer).periodicWave =
+                (<IOscillatorNodeRenderer<IMinimalOfflineAudioContext>>this._oscillatorNodeRenderer).periodicWave =
                     mergedOptions.periodicWave;
             }
         }
 
-        get detune (): IAudioParam {
+        get detune(): IAudioParam {
             return this._detune;
         }
 
-        get frequency (): IAudioParam {
+        get frequency(): IAudioParam {
             return this._frequency;
         }
 
-        get onended (): null | TEventHandler<this> {
+        get onended(): null | TEventHandler<this> {
             return this._onended;
         }
 
-        set onended (value) {
-            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
+        set onended(value) {
+            const wrappedListener = typeof value === 'function' ? wrapEventListener(this, value) : null;
 
             this._nativeOscillatorNode.onended = wrappedListener;
 
             const nativeOnEnded = this._nativeOscillatorNode.onended;
 
-            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
-                ? value
-                : <null | TEventHandler<this>> nativeOnEnded;
+            this._onended = nativeOnEnded !== null && nativeOnEnded === wrappedListener ? value : <null | TEventHandler<this>>nativeOnEnded;
         }
 
-        get type (): TOscillatorType {
+        get type(): TOscillatorType {
             return this._nativeOscillatorNode.type;
         }
 
-        set type (value) {
+        set type(value) {
             this._nativeOscillatorNode.type = value;
 
             // Bug #57: Edge will not throw an error when assigning the type to 'custom'. But it still will change the value.
@@ -107,7 +103,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             }
         }
 
-        public setPeriodicWave (periodicWave: PeriodicWave): void {
+        public setPeriodicWave(periodicWave: PeriodicWave): void {
             this._nativeOscillatorNode.setPeriodicWave(periodicWave);
 
             if (this._oscillatorNodeRenderer !== null) {
@@ -115,7 +111,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             }
         }
 
-        public start (when = 0): void {
+        public start(when = 0): void {
             this._nativeOscillatorNode.start(when);
 
             if (this._oscillatorNodeRenderer !== null) {
@@ -134,14 +130,12 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             }
         }
 
-        public stop (when = 0): void {
+        public stop(when = 0): void {
             this._nativeOscillatorNode.stop(when);
 
             if (this._oscillatorNodeRenderer !== null) {
                 this._oscillatorNodeRenderer.stop = when;
             }
         }
-
     };
-
 };

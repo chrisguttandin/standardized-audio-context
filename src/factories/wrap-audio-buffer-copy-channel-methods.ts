@@ -17,7 +17,7 @@ export const createWrapAudioBufferCopyChannelMethods: TWrapAudioBufferCopyChanne
             const channelData = audioBuffer.getChannelData(channelNumber);
             const destinationLength = destination.length;
 
-            for (let i = (bufferOffset < 0) ? -bufferOffset : 0; i + bufferOffset < audioBufferLength && i < destinationLength; i += 1) {
+            for (let i = bufferOffset < 0 ? -bufferOffset : 0; i + bufferOffset < audioBufferLength && i < destinationLength; i += 1) {
                 destination[i] = channelData[i + bufferOffset];
             }
         };
@@ -34,7 +34,7 @@ export const createWrapAudioBufferCopyChannelMethods: TWrapAudioBufferCopyChanne
             const channelData = audioBuffer.getChannelData(channelNumber);
             const sourceLength = source.length;
 
-            for (let i = (bufferOffset < 0) ? -bufferOffset : 0; i + bufferOffset < audioBufferLength && i < sourceLength; i += 1) {
+            for (let i = bufferOffset < 0 ? -bufferOffset : 0; i + bufferOffset < audioBufferLength && i < sourceLength; i += 1) {
                 channelData[i + bufferOffset] = source[i];
             }
         };

@@ -13,7 +13,7 @@ const createPeriodicWaveWithConstructor = (context, options = null) => {
     return new PeriodicWave(context, options);
 };
 const createPeriodicWaveWithFactoryFunction = (context, options = null) => {
-    return (options === null)
+    return options === null
         ? context.createPeriodicWave()
         : context.createPeriodicWave(options.real, options.imag, { disableNormalization: options.disableNormalization });
 };
@@ -45,11 +45,8 @@ const testCases = {
 };
 
 describe('PeriodicWave', () => {
-
-    for (const [ description, { createPeriodicWave, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createPeriodicWave, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -58,14 +55,11 @@ describe('PeriodicWave', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -90,45 +84,33 @@ describe('PeriodicWave', () => {
                         });
 
                         describe('without any options', () => {
-
                             it('should return an instance of the PeriodicWave constructor', () => {
-                                const periodicWave = createPeriodicWave(context, { imag: [ 1 ], real: [ 1 ] });
+                                const periodicWave = createPeriodicWave(context, { imag: [1], real: [1] });
 
                                 expect(periodicWave).to.be.an.instanceOf(PeriodicWave);
                             });
 
                             it('should return an implementation of the PeriodicWave interface', () => {
-                                createPeriodicWave(context, { imag: [ 1 ], real: [ 1 ] });
+                                createPeriodicWave(context, { imag: [1], real: [1] });
 
                                 // The PeriodicWave interface has no methods or properties.
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an implementation of the PeriodicWave interface', () => {
-                                createPeriodicWave(context, { disableNormalization: true, imag: [ 1 ], real: [ 1 ] });
+                                createPeriodicWave(context, { disableNormalization: true, imag: [1], real: [1] });
 
                                 // The PeriodicWave interface has no methods or properties.
                             });
-
                         });
 
                         describe('with invalid options', () => {
-
                             // @todo
-
                         });
-
                     });
-
                 }
-
             });
-
         });
-
     }
-
 });

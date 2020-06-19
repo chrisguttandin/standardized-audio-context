@@ -1,8 +1,6 @@
 import { TTestAudioBufferSourceNodeStartMethodOffsetClampingSupportFactory } from '../types';
 
-export const createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport:
-    TTestAudioBufferSourceNodeStartMethodOffsetClampingSupportFactory =
-(
+export const createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport: TTestAudioBufferSourceNodeStartMethodOffsetClampingSupportFactory = (
     createNativeAudioNode
 ) => {
     return (nativeContext) => {

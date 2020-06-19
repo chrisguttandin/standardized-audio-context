@@ -8,7 +8,9 @@ export const createFetchSource: TFetchSourceFactory = (createAbortError) => {
             if (response.ok) {
                 return response.text();
             }
-        } catch { /* Ignore errors. */ } // tslint:disable-line:no-empty
+        } catch {
+            // Ignore errors.
+        } // tslint:disable-line:no-empty
 
         throw createAbortError();
     };

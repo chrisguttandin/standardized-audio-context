@@ -1,6 +1,13 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { IAudioParam, IPannerNode, IPannerOptions } from '../interfaces';
-import { TAudioNodeRenderer, TContext, TDistanceModelType, TNativePannerNode, TPannerNodeConstructorFactory, TPanningModelType } from '../types';
+import {
+    TAudioNodeRenderer,
+    TContext,
+    TDistanceModelType,
+    TNativePannerNode,
+    TPannerNodeConstructorFactory,
+    TPanningModelType
+} from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -30,9 +37,7 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
     return class PannerNode<T extends TContext> extends audioNodeConstructor<T> implements IPannerNode<T> {
-
         private _nativePannerNode: TNativePannerNode;
 
         private _orientationX: IAudioParam;
@@ -47,12 +52,12 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
 
         private _positionZ: IAudioParam;
 
-        constructor (context: T, options: Partial<IPannerOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IPannerOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativePannerNode = createNativePannerNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const pannerNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline) ? createPannerNodeRenderer() : null);
+            const pannerNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createPannerNodeRenderer() : null);
 
             super(context, false, nativePannerNode, pannerNodeRenderer);
 
@@ -102,94 +107,92 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
             );
         }
 
-        get coneInnerAngle (): number {
+        get coneInnerAngle(): number {
             return this._nativePannerNode.coneInnerAngle;
         }
 
-        set coneInnerAngle (value) {
+        set coneInnerAngle(value) {
             this._nativePannerNode.coneInnerAngle = value;
         }
 
-        get coneOuterAngle (): number {
+        get coneOuterAngle(): number {
             return this._nativePannerNode.coneOuterAngle;
         }
 
-        set coneOuterAngle (value) {
+        set coneOuterAngle(value) {
             this._nativePannerNode.coneOuterAngle = value;
         }
 
-        get coneOuterGain (): number {
+        get coneOuterGain(): number {
             return this._nativePannerNode.coneOuterGain;
         }
 
-        set coneOuterGain (value) {
+        set coneOuterGain(value) {
             this._nativePannerNode.coneOuterGain = value;
         }
 
-        get distanceModel (): TDistanceModelType {
+        get distanceModel(): TDistanceModelType {
             return this._nativePannerNode.distanceModel;
         }
 
-        set distanceModel (value) {
+        set distanceModel(value) {
             this._nativePannerNode.distanceModel = value;
         }
 
-        get maxDistance (): number {
+        get maxDistance(): number {
             return this._nativePannerNode.maxDistance;
         }
 
-        set maxDistance (value) {
+        set maxDistance(value) {
             this._nativePannerNode.maxDistance = value;
         }
 
-        get orientationX (): IAudioParam {
+        get orientationX(): IAudioParam {
             return this._orientationX;
         }
 
-        get orientationY (): IAudioParam {
+        get orientationY(): IAudioParam {
             return this._orientationY;
         }
 
-        get orientationZ (): IAudioParam {
+        get orientationZ(): IAudioParam {
             return this._orientationZ;
         }
 
-        get panningModel (): TPanningModelType {
+        get panningModel(): TPanningModelType {
             return this._nativePannerNode.panningModel;
         }
 
-        set panningModel (value) {
+        set panningModel(value) {
             this._nativePannerNode.panningModel = value;
         }
 
-        get positionX (): IAudioParam {
+        get positionX(): IAudioParam {
             return this._positionX;
         }
 
-        get positionY (): IAudioParam {
+        get positionY(): IAudioParam {
             return this._positionY;
         }
 
-        get positionZ (): IAudioParam {
+        get positionZ(): IAudioParam {
             return this._positionZ;
         }
 
-        get refDistance (): number {
+        get refDistance(): number {
             return this._nativePannerNode.refDistance;
         }
 
-        set refDistance (value) {
+        set refDistance(value) {
             this._nativePannerNode.refDistance = value;
         }
 
-        get rolloffFactor (): number {
+        get rolloffFactor(): number {
             return this._nativePannerNode.rolloffFactor;
         }
 
-        set rolloffFactor (value) {
+        set rolloffFactor(value) {
             this._nativePannerNode.rolloffFactor = value;
         }
-
     };
-
 };

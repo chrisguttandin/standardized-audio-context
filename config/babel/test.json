@@ -1,7 +1,5 @@
 {
-    "only": [
-        "./test"
-    ],
+    "only": ["./test"],
     "presets": [
         [
             "@babel/preset-env",

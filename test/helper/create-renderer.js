@@ -4,18 +4,17 @@ import { isSafari } from './is-safari';
 import { roundToSamples } from './round-to-samples';
 
 const createBufferNode = ({ audioNodes, context }) => {
-    const bufferSize = Object
-        .values(audioNodes)
-        .reduce((accumulator, audioNode) => {
-            // @todo This is using a private property.
-            const bufferSizeOfAudioNode = (audioNode._nativeAudioNode === undefined) ?
-                0 :
-                (audioNode._nativeAudioNode.bufferSize === undefined) ?
-                    0 :
-                    audioNode._nativeAudioNode.bufferSize;
+    const bufferSize = Object.values(audioNodes).reduce((accumulator, audioNode) => {
+        // @todo This is using a private property.
+        const bufferSizeOfAudioNode =
+            audioNode._nativeAudioNode === undefined
+                ? 0
+                : audioNode._nativeAudioNode.bufferSize === undefined
+                ? 0
+                : audioNode._nativeAudioNode.bufferSize;
 
-            return accumulator + bufferSizeOfAudioNode;
-        }, 0);
+        return accumulator + bufferSizeOfAudioNode;
+    }, 0);
 
     if (bufferSize === 0) {
         return new GainNode(context);
@@ -36,7 +35,7 @@ const createImpulseNode = ({ context, length }) => {
     const audioBuffer = new AudioBuffer({ length, sampleRate: context.sampleRate });
     const audioBufferSourceNode = new AudioBufferSourceNode(context);
 
-    audioBuffer.copyToChannel(new Float32Array([ 1 ]), 0);
+    audioBuffer.copyToChannel(new Float32Array([1]), 0);
     audioBufferSourceNode.buffer = audioBuffer;
 
     return audioBufferSourceNode;
@@ -60,13 +59,11 @@ const waitForRunningState = (audioContext) => {
                 }
             };
 
-            audioContext
-                .resume()
-                .catch((err) => {
-                    audioContext.onstatechange = null;
+            audioContext.resume().catch((err) => {
+                audioContext.onstatechange = null;
 
-                    reject(err);
-                });
+                reject(err);
+            });
         }
     });
 };
@@ -76,8 +73,8 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
     const bufferNode = createBufferNode({ audioNodes, context });
     const channelMergerNode = new ChannelMergerNode(context, { numberOfInputs: 2 });
     const firstImpulseNode = createImpulseNode({ context, length });
-    const newAudioNodes = (typeof prepareBeforeStart !== 'function') ? undefined : prepareBeforeStart(audioNodes);
-    const allAudioNodes = (newAudioNodes === undefined) ? audioNodes : { ...audioNodes, ...newAudioNodes };
+    const newAudioNodes = typeof prepareBeforeStart !== 'function' ? undefined : prepareBeforeStart(audioNodes);
+    const allAudioNodes = newAudioNodes === undefined ? audioNodes : { ...audioNodes, ...newAudioNodes };
     const recorderBufferSize = 8192;
     const recorderScriptProcessorNode = createScriptProcessor(context, recorderBufferSize, 2, 1);
     const sampleRate = context.sampleRate;
@@ -93,9 +90,7 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
     bufferNode.connect(channelMergerNode);
 
     // @todo Maybe add an additional GainNode to avoid any hearable output.
-    channelMergerNode
-        .connect(recorderScriptProcessorNode)
-        .connect(context.destination);
+    channelMergerNode.connect(recorderScriptProcessorNode).connect(context.destination);
 
     const disconnect = () => {
         gainNode.disconnect(channelMergerNode);
@@ -120,14 +115,14 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
 
     return new Promise((resolve, reject) => {
         // Start the impulse at least in 8192 samples from now to make sure there is enough time to set everything up.
-        const impulseStartSample = Math.ceil(((context.currentTime * sampleRate) + 8192) / blockSize) * blockSize;
+        const impulseStartSample = Math.ceil((context.currentTime * sampleRate + 8192) / blockSize) * blockSize;
         // Add an additional delay of 8192 samples to the startTime. That's especially useful for testing the MediaElementAudioSourceNode.
         const startTimeOffset = 8192;
         // This renderer is impatient. If it is not done within a reasonable time it will abort the process and try again.
         const seconds = Math.ceil(blockSize / sampleRate) + 1;
         const timeoutId = setTimeout(() => {
             disconnect();
-            reject(new Error(`Recording the sample was not possible within ${ seconds } second(s).`));
+            reject(new Error(`Recording the sample was not possible within ${seconds} second(s).`));
         }, seconds * 1000);
 
         let channelData = null;
@@ -160,11 +155,13 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
 
             if (impulseOffset !== null) {
                 const expectedPlaybackOffset = impulseOffset + startTimeOffset;
-                const expectedThirdImpulseOffset = impulseOffset + (startTimeOffset * 2);
+                const expectedThirdImpulseOffset = impulseOffset + startTimeOffset * 2;
                 const playbackChannelData = inputBuffer.getChannelData(1);
 
-                if (lastPlaybackOffset <= expectedPlaybackOffset &&
-                        lastPlaybackOffset + recorderBufferSize >= expectedPlaybackOffset + length) {
+                if (
+                    lastPlaybackOffset <= expectedPlaybackOffset &&
+                    lastPlaybackOffset + recorderBufferSize >= expectedPlaybackOffset + length
+                ) {
                     const impulseChannelData = inputBuffer.getChannelData(0);
                     const index = expectedPlaybackOffset - lastPlaybackOffset;
 
@@ -175,8 +172,10 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
                         disconnect();
                         reject(new Error('Recording the second impulse was not possible.'));
                     }
-                } else if (lastPlaybackOffset <= expectedThirdImpulseOffset &&
-                        lastPlaybackOffset + recorderBufferSize >= expectedThirdImpulseOffset + length) {
+                } else if (
+                    lastPlaybackOffset <= expectedThirdImpulseOffset &&
+                    lastPlaybackOffset + recorderBufferSize >= expectedThirdImpulseOffset + length
+                ) {
                     const impulseChannelData = inputBuffer.getChannelData(0);
                     const index = expectedThirdImpulseOffset - lastPlaybackOffset;
 
@@ -200,7 +199,7 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
 
         firstImpulseNode.start(roundToSamples(0, sampleRate, impulseStartSample));
         secondImpulseNode.start(startTime);
-        thirdImpulseNode.start(roundToSamples(0, sampleRate, impulseStartSample + (startTimeOffset * 2)));
+        thirdImpulseNode.start(roundToSamples(0, sampleRate, impulseStartSample + startTimeOffset * 2));
 
         if (typeof start === 'function') {
             start(startTime, allAudioNodes);
@@ -228,7 +227,15 @@ export const createRenderer = ({ context, create, length, prepare }) => {
                 await waitForRunningState(context);
 
                 try {
-                    const newChannelData = await renderOnRealTimeContext({ blockSize, context, create, length, prepare, prepareBeforeStart, start });
+                    const newChannelData = await renderOnRealTimeContext({
+                        blockSize,
+                        context,
+                        create,
+                        length,
+                        prepare,
+                        prepareBeforeStart,
+                        start
+                    });
 
                     if (channelData === null) {
                         channelData = newChannelData;
@@ -252,14 +259,15 @@ export const createRenderer = ({ context, create, length, prepare }) => {
                 } catch (err) {
                     indexOfCurrentTry += 1;
 
-                    const currentTry = (indexOfCurrentTry === 1) ?
-                        '1st' :
-                        (indexOfCurrentTry === 2) ?
-                            '2nd' :
-                            (indexOfCurrentTry === 3) ?
-                                '3rd' :
-                                `${ indexOfCurrentTry }th`;
-                    const message = `${ err.message.slice(0, -1) } when tried for the ${ currentTry } time.`;
+                    const currentTry =
+                        indexOfCurrentTry === 1
+                            ? '1st'
+                            : indexOfCurrentTry === 2
+                            ? '2nd'
+                            : indexOfCurrentTry === 3
+                            ? '3rd'
+                            : `${indexOfCurrentTry}th`;
+                    const message = `${err.message.slice(0, -1)} when tried for the ${currentTry} time.`;
 
                     if (indexOfCurrentTry < MAX_RETRIES) {
                         console.warn(message); // eslint-disable-line no-console
@@ -279,10 +287,10 @@ export const createRenderer = ({ context, create, length, prepare }) => {
 
     return async ({ prepare: prepareBeforeStart, start }) => {
         const audioNodes = await prepare(context.destination);
-        const newAudioNodes = (typeof prepareBeforeStart !== 'function') ? undefined : prepareBeforeStart(audioNodes);
+        const newAudioNodes = typeof prepareBeforeStart !== 'function' ? undefined : prepareBeforeStart(audioNodes);
 
         if (typeof start === 'function') {
-            start(context.currentTime, (newAudioNodes === undefined) ? audioNodes : { ...audioNodes, ...newAudioNodes });
+            start(context.currentTime, newAudioNodes === undefined ? audioNodes : { ...audioNodes, ...newAudioNodes });
         }
 
         const channelData = new Float32Array(context.length);

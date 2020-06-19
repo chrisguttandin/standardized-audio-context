@@ -1,16 +1,14 @@
 import { TEventTargetConstructorFactory, TNativeEventTarget } from '../types';
 
 export const createEventTargetConstructor: TEventTargetConstructorFactory = (wrapEventListener) => {
-
     return class EventTarget implements TNativeEventTarget {
-
         private _listeners: WeakMap<EventListenerOrEventListenerObject, EventListenerOrEventListenerObject>;
 
-        constructor (private _nativeEventTarget: TNativeEventTarget) {
+        constructor(private _nativeEventTarget: TNativeEventTarget) {
             this._listeners = new WeakMap();
         }
 
-        public addEventListener (
+        public addEventListener(
             type: string,
             listener: null | EventListenerOrEventListenerObject,
             options?: boolean | AddEventListenerOptions
@@ -30,24 +28,18 @@ export const createEventTargetConstructor: TEventTargetConstructorFactory = (wra
             }
         }
 
-        public dispatchEvent (event: Event): boolean {
+        public dispatchEvent(event: Event): boolean {
             return this._nativeEventTarget.dispatchEvent(event);
         }
 
-        public removeEventListener (
+        public removeEventListener(
             type: string,
             listener: null | EventListenerOrEventListenerObject,
             options?: boolean | EventListenerOptions
         ): void {
-            const wrappedEventListener = (listener === null) ? undefined : this._listeners.get(listener);
+            const wrappedEventListener = listener === null ? undefined : this._listeners.get(listener);
 
-            this._nativeEventTarget.removeEventListener(
-                type,
-                (wrappedEventListener === undefined) ? null : wrappedEventListener,
-                options
-            );
+            this._nativeEventTarget.removeEventListener(type, wrappedEventListener === undefined ? null : wrappedEventListener, options);
         }
-
     };
-
 };

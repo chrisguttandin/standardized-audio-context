@@ -1,20 +1,20 @@
 import { TNativeAudioBuffer } from '../types';
 
-export function copyFromChannel (
+export function copyFromChannel(
     audioBuffer: TNativeAudioBuffer,
-    parent: { [ key: number ]: Float32Array },
+    parent: { [key: number]: Float32Array },
     key: number,
     channelNumber: number,
     bufferOffset: number
 ): void;
-export function copyFromChannel (
+export function copyFromChannel(
     audioBuffer: TNativeAudioBuffer,
-    parent: { [ key: string ]: Float32Array },
+    parent: { [key: string]: Float32Array },
     key: string,
     channelNumber: number,
     bufferOffset: number
 ): void;
-export function copyFromChannel (
+export function copyFromChannel(
     audioBuffer: TNativeAudioBuffer,
     // @todo There is currently no way to define something like { [ key: number | string ]: Float32Array }
     parent: any,
@@ -30,7 +30,7 @@ export function copyFromChannel (
 
         audioBuffer.copyFromChannel(parent[key], channelNumber, bufferOffset);
 
-    // Bug #5: Safari does not support copyFromChannel().
+        // Bug #5: Safari does not support copyFromChannel().
     } else {
         const channelData = audioBuffer.getChannelData(channelNumber);
 

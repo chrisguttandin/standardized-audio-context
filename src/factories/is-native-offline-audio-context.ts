@@ -2,6 +2,6 @@ import { TIsNativeOfflineAudioContextFactory, TNativeOfflineAudioContext } from 
 
 export const createIsNativeOfflineAudioContext: TIsNativeOfflineAudioContextFactory = (nativeOfflineAudioContextConstructor) => {
     return (anything): anything is TNativeOfflineAudioContext => {
-        return (nativeOfflineAudioContextConstructor !== null && anything instanceof nativeOfflineAudioContextConstructor);
+        return nativeOfflineAudioContextConstructor !== null && anything instanceof nativeOfflineAudioContextConstructor;
     };
 };

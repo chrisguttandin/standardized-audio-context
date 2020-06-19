@@ -4,10 +4,8 @@ import { IMinimalOfflineAudioContext } from './minimal-offline-audio-context';
 import { IOfflineAudioContext } from './offline-audio-context';
 
 export interface IConstantSourceNodeRenderer<T extends IMinimalOfflineAudioContext | IOfflineAudioContext>
-        extends IAudioNodeRenderer<T, IConstantSourceNode<T>> {
-
+    extends IAudioNodeRenderer<T, IConstantSourceNode<T>> {
     start: number;
 
     stop: number;
-
 }

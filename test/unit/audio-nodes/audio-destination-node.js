@@ -15,11 +15,8 @@ const testCases = {
 };
 
 describe('AudioDestinationNode', () => {
-
-    for (const [ description, createContext ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, createContext] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -28,10 +25,9 @@ describe('AudioDestinationNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('channelCount', () => {
-
                 let audioDestinationNode;
 
                 beforeEach(() => {
@@ -39,7 +35,6 @@ describe('AudioDestinationNode', () => {
                 });
 
                 if (description.includes('Offline')) {
-
                     it('should not be assignable to another value', (done) => {
                         try {
                             audioDestinationNode.channelCount = 2;
@@ -50,9 +45,7 @@ describe('AudioDestinationNode', () => {
                             done();
                         }
                     });
-
                 } else {
-
                     it('should be assignable to a value smaller than or equal to the maxChannelCount', () => {
                         const channelCount = 1;
 
@@ -73,13 +66,10 @@ describe('AudioDestinationNode', () => {
                             done();
                         }
                     });
-
                 }
-
             });
 
             describe('channelCountMode', () => {
-
                 let audioDestinationNode;
 
                 beforeEach(() => {
@@ -87,7 +77,6 @@ describe('AudioDestinationNode', () => {
                 });
 
                 if (description.includes('Offline')) {
-
                     it('should not be assignable to another value', (done) => {
                         try {
                             audioDestinationNode.channelCountMode = 'max';
@@ -98,9 +87,7 @@ describe('AudioDestinationNode', () => {
                             done();
                         }
                     });
-
                 } else {
-
                     it('should be assignable to another value', () => {
                         const channelCountMode = 'max';
 
@@ -108,13 +95,10 @@ describe('AudioDestinationNode', () => {
 
                         expect(audioDestinationNode.channelCountMode).to.equal(channelCountMode);
                     });
-
                 }
-
             });
 
             describe('channelInterpretation', () => {
-
                 let audioDestinationNode;
 
                 beforeEach(() => {
@@ -128,11 +112,9 @@ describe('AudioDestinationNode', () => {
 
                     expect(audioDestinationNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('maxChannelCount', () => {
-
                 let audioDestinationNode;
 
                 beforeEach(() => {
@@ -148,11 +130,9 @@ describe('AudioDestinationNode', () => {
                         audioDestinationNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let audioDestinationNode;
 
                 beforeEach(() => {
@@ -164,11 +144,9 @@ describe('AudioDestinationNode', () => {
                         audioDestinationNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let audioDestinationNode;
 
                 beforeEach(() => {
@@ -180,37 +158,29 @@ describe('AudioDestinationNode', () => {
                         audioDestinationNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let audioDestinationNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             audioDestinationNode = context.destination;
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(audioDestinationNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(audioDestinationNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -230,7 +200,6 @@ describe('AudioDestinationNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     audioDestinationNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -243,23 +212,16 @@ describe('AudioDestinationNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(audioDestinationNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(audioDestinationNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(audioDestinationNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(audioDestinationNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let audioDestinationNode;
@@ -276,7 +238,7 @@ describe('AudioDestinationNode', () => {
                             const gainNode = new GainNode(anotherContext);
 
                             audioDestinationNode = context.destination;
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -289,11 +251,9 @@ describe('AudioDestinationNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let audioDestinationNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -304,18 +264,23 @@ describe('AudioDestinationNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             audioDestinationNode = context.destination;
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -328,29 +293,23 @@ describe('AudioDestinationNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
 
-                                constantSourceNode
-                                    .connect(destination);
+                                constantSourceNode.connect(destination);
 
-                                destination
-                                    .connect(gainNode)
-                                    .connect(destination);
+                                destination.connect(gainNode).connect(destination);
 
                                 return { constantSourceNode, gainNode };
                             }
@@ -361,21 +320,15 @@ describe('AudioDestinationNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

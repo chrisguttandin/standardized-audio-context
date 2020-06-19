@@ -1,3 +1,3 @@
-function ProcesslessProcessor () { }
+function ProcesslessProcessor() {}
 
 registerProcessor('processless-processor', ProcesslessProcessor);

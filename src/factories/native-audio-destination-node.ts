@@ -81,6 +81,6 @@ export const createNativeAudioDestinationNodeFactory: TNativeAudioDestinationNod
         // @todo This should be disconnected when the context is closed.
         gainNode.connect(nativeAudioDestinationNode);
 
-        return <{ maxChannelCount: TNativeAudioDestinationNode['maxChannelCount'] } & TNativeGainNode> gainNode;
+        return <{ maxChannelCount: TNativeAudioDestinationNode['maxChannelCount'] } & TNativeGainNode>gainNode;
     };
 };

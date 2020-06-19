@@ -1,7 +1,6 @@
 import { spy } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
-
     let offlineAudioContext;
 
     beforeEach(() => {
@@ -9,17 +8,16 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('createBufferSource()', () => {
-
         describe('stop()', () => {
-
             // bug #44
 
             it('should throw a DOMException', () => {
                 const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                expect(() => audioBufferSourceNode.stop(-1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
             });
-
         });
 
         // bug #14
@@ -30,7 +28,7 @@ describe('offlineAudioContextConstructor', () => {
             const eightRandomValues = [];
 
             for (let i = 0; i < 8; i += 1) {
-                eightRandomValues[i] = (Math.random() * 2) - 1;
+                eightRandomValues[i] = Math.random() * 2 - 1;
             }
 
             audioBuffer.copyToChannel(new Float32Array(eightRandomValues), 0);
@@ -39,26 +37,22 @@ describe('offlineAudioContextConstructor', () => {
             audioBufferSourceNode.start(0);
             audioBufferSourceNode.connect(offlineAudioContext.destination);
 
-            offlineAudioContext
-                .startRendering()
-                .then((buffer) => {
-                    const channelData = new Float32Array(4);
+            offlineAudioContext.startRendering().then((buffer) => {
+                const channelData = new Float32Array(4);
 
-                    buffer.copyFromChannel(channelData, 0);
+                buffer.copyFromChannel(channelData, 0);
 
-                    expect(channelData[0]).to.be.closeTo(eightRandomValues[0], 0.0000001);
-                    expect(channelData[1]).to.be.closeTo(eightRandomValues[2], 0.0000001);
-                    expect(channelData[2]).to.be.closeTo(eightRandomValues[4], 0.0000001);
-                    expect(channelData[3]).to.be.closeTo(eightRandomValues[6], 0.0000001);
+                expect(channelData[0]).to.be.closeTo(eightRandomValues[0], 0.0000001);
+                expect(channelData[1]).to.be.closeTo(eightRandomValues[2], 0.0000001);
+                expect(channelData[2]).to.be.closeTo(eightRandomValues[4], 0.0000001);
+                expect(channelData[3]).to.be.closeTo(eightRandomValues[6], 0.0000001);
 
-                    done();
-                });
+                done();
+            });
         });
-
     });
 
     describe('decodeAudioData()', () => {
-
         // bug #6
 
         it('should not call the errorCallback at all', (done) => {
@@ -72,7 +66,5 @@ describe('offlineAudioContextConstructor', () => {
                 done();
             }, 1000);
         });
-
     });
-
 });

@@ -3,9 +3,7 @@ import { TTestStereoPannerNodeDefaultValueSupportFactory } from '../types';
 /**
  * Firefox up to version 62 did not kick off the processing of the StereoPannerNode if the value of pan was zero.
  */
-export const createTestStereoPannerNodeDefaultValueSupport:
-    TTestStereoPannerNodeDefaultValueSupportFactory =
-(
+export const createTestStereoPannerNodeDefaultValueSupport: TTestStereoPannerNodeDefaultValueSupportFactory = (
     nativeOfflineAudioContextConstructor
 ) => {
     return () => {
@@ -38,12 +36,8 @@ export const createTestStereoPannerNodeDefaultValueSupport:
 
         constantSourceNode.start();
 
-        constantSourceNode
-            .connect(stereoPanner)
-            .connect(nativeOfflineAudioContext.destination);
+        constantSourceNode.connect(stereoPanner).connect(nativeOfflineAudioContext.destination);
 
-        return nativeOfflineAudioContext
-            .startRendering()
-            .then((buffer) => buffer.getChannelData(0)[0] !== 1);
+        return nativeOfflineAudioContext.startRendering().then((buffer) => buffer.getChannelData(0)[0] !== 1);
     };
 };

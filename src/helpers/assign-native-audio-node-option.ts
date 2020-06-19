@@ -1,4 +1,4 @@
-export const assignNativeAudioNodeOption = <T extends keyof any, U extends any> (
+export const assignNativeAudioNodeOption = <T extends keyof any, U extends any>(
     nativeAudioNode: Record<T, U>,
     options: Record<T, U>,
     option: T

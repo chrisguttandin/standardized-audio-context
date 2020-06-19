@@ -2,7 +2,6 @@ import { spy, stub } from 'sinon';
 import { createCacheTestResult } from '../../../src/factories/cache-test-result';
 
 describe('createCacheTestResult()', () => {
-
     let cacheTestResult;
     let ongoingTests;
     let testResults;
@@ -14,7 +13,6 @@ describe('createCacheTestResult()', () => {
     });
 
     describe('with a cached test result', () => {
-
         let fakeTest;
         let fakeTestResult;
 
@@ -30,13 +28,10 @@ describe('createCacheTestResult()', () => {
 
             expect(fakeTest).to.have.not.been.called;
         });
-
     });
 
     describe('without a cached test result', () => {
-
         describe('with an ongoing test', () => {
-
             let fakeOngoingTest;
             let fakeTest;
 
@@ -52,13 +47,10 @@ describe('createCacheTestResult()', () => {
 
                 expect(fakeTest).to.have.not.been.called;
             });
-
         });
 
         describe('without any ongoing test', () => {
-
             describe('with a synchronous test result', () => {
-
                 let fakeSynchronousTestResult;
                 let fakeTest;
 
@@ -74,11 +66,9 @@ describe('createCacheTestResult()', () => {
 
                     expect(fakeTest).to.have.been.calledOnce;
                 });
-
             });
 
             describe('with a failing synchronous test', () => {
-
                 let fakeTest;
 
                 beforeEach(() => {
@@ -92,11 +82,9 @@ describe('createCacheTestResult()', () => {
 
                     expect(fakeTest).to.have.been.calledOnce;
                 });
-
             });
 
             describe('with an asynchronous test result', () => {
-
                 let fakeAsynchronousTestResult;
                 let fakeTest;
 
@@ -115,11 +103,9 @@ describe('createCacheTestResult()', () => {
 
                     expect(fakeTest).to.have.been.calledOnce;
                 });
-
             });
 
             describe('with a failing asynchronous test', () => {
-
                 let fakeTest;
 
                 beforeEach(() => {
@@ -136,11 +122,7 @@ describe('createCacheTestResult()', () => {
 
                     expect(fakeTest).to.have.been.calledOnce;
                 });
-
             });
-
         });
-
     });
-
 });

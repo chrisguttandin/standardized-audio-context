@@ -1,6 +1,4 @@
-import {
-    testAudioBufferCopyChannelMethodsOutOfBoundsSupport
-} from '../helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
+import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from '../helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffer-get-channel-data-method';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
 import { TAudioBufferConstructorFactory, TNativeOfflineAudioContext } from '../types';
@@ -19,11 +17,9 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
-
     let nativeOfflineAudioContext: null | TNativeOfflineAudioContext = null;
 
     return class AudioBuffer implements IAudioBuffer {
-
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public copyFromChannel!: (destination: Float32Array, channelNumber: number, bufferOffset?: number) => void;
 
@@ -45,7 +41,7 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public sampleRate!: number;
 
-        constructor (options: IAudioBufferOptions) {
+        constructor(options: IAudioBufferOptions) {
             if (nativeOfflineAudioContextConstructor === null) {
                 throw new Error('Missing the native OfflineAudioContext constructor.');
             }
@@ -60,10 +56,11 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
              * Bug #99: Firefox does not throw a NotSupportedError when the numberOfChannels is zero. But it only does it when using the
              * factory function. But since Firefox also supports the constructor everything should be fine.
              */
-            const audioBuffer = (nativeAudioBufferConstructor !== null &&
-                    cacheTestResult(testNativeAudioBufferConstructorSupport, testNativeAudioBufferConstructorSupport)) ?
-                new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate }) :
-                nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+            const audioBuffer =
+                nativeAudioBufferConstructor !== null &&
+                cacheTestResult(testNativeAudioBufferConstructorSupport, testNativeAudioBufferConstructorSupport)
+                    ? new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate })
+                    : nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
 
             // Bug #99: Safari does not throw an error when the numberOfChannels is zero.
             if (audioBuffer.numberOfChannels === 0) {
@@ -75,11 +72,12 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
             if (typeof audioBuffer.copyFromChannel !== 'function') {
                 wrapAudioBufferCopyChannelMethods(audioBuffer);
                 wrapAudioBufferGetChannelDataMethod(audioBuffer);
-            // Bug #157: Only Chrome & Opera do allow the bufferOffset to be out-of-bounds.
-            } else if (!cacheTestResult(
-                testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-                () => testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
-            )) {
+                // Bug #157: Only Chrome & Opera do allow the bufferOffset to be out-of-bounds.
+            } else if (
+                !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
+                    testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
+                )
+            ) {
                 wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
             }
 
@@ -92,11 +90,11 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
             return audioBuffer;
         }
 
-        public static [ Symbol.hasInstance ] (instance: unknown): boolean {
-            return (instance !== null && typeof instance === 'object' && Object.getPrototypeOf(instance) === AudioBuffer.prototype)
-                || (audioBufferStore.has(<any> instance));
+        public static [Symbol.hasInstance](instance: unknown): boolean {
+            return (
+                (instance !== null && typeof instance === 'object' && Object.getPrototypeOf(instance) === AudioBuffer.prototype) ||
+                audioBufferStore.has(<any>instance)
+            );
         }
-
     };
-
 };

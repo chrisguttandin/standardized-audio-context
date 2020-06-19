@@ -5,5 +5,5 @@ export const createNativeAudioWorkletNodeConstructor: TNativeAudioWorkletNodeCon
         return null;
     }
 
-    return (window.hasOwnProperty('AudioWorkletNode')) ? window.AudioWorkletNode : null;
+    return window.hasOwnProperty('AudioWorkletNode') ? window.AudioWorkletNode : null;
 };

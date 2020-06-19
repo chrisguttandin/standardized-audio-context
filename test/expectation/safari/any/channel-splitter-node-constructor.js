@@ -1,5 +1,4 @@
 describe('channelSplitterNodeConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -15,5 +14,4 @@ describe('channelSplitterNodeConstructor', () => {
             new ChannelSplitterNode(audioContext, {});
         }).to.throw(TypeError, "function is not a constructor (evaluating 'new ChannelSplitterNode(audioContext, {})')");
     });
-
 });

@@ -50,11 +50,8 @@ const testCases = {
 };
 
 describe('decodeAudioData()', () => {
-
-    for (const [ description, { createContext, decodeAudioData } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createContext, decodeAudioData }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -63,45 +60,53 @@ describe('decodeAudioData()', () => {
                  * startRendering() method is necessary.
                  * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                  */
-                if (context.close !== undefined && (context.startRendering === undefined || !context.constructor.name.includes('Offline'))) {
+                if (
+                    context.close !== undefined &&
+                    (context.startRendering === undefined || !context.constructor.name.includes('Offline'))
+                ) {
                     return context.close();
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             it('should return a promise', () => {
                 const promise = decodeAudioData(context);
 
-                promise.catch(() => { /* Ignore the error. */ });
+                promise.catch(() => {
+                    // Ignore the error.
+                });
 
                 expect(promise).to.be.an.instanceOf(Promise);
             });
 
             describe('without a valid arrayBuffer', () => {
-
                 it('should throw an error', function (done) {
                     this.timeout(10000);
 
-                    decodeAudioData(context, null)
-                        .catch((err) => {
-                            expect(err).to.be.an.instanceOf(TypeError);
+                    decodeAudioData(context, null).catch((err) => {
+                        expect(err).to.be.an.instanceOf(TypeError);
 
-                            done();
-                        });
+                        done();
+                    });
                 });
 
                 if (!description.includes('standalone')) {
-
                     it('should call the errorCallback with a TypeError', function (done) {
                         this.timeout(10000);
 
-                        decodeAudioData(context, null, () => {}, (err) => {
-                            expect(err).to.be.an.instanceOf(TypeError);
+                        decodeAudioData(
+                            context,
+                            null,
+                            () => {},
+                            (err) => {
+                                expect(err).to.be.an.instanceOf(TypeError);
 
-                            done();
-                        })
-                            .catch(() => { /* Ignore the error. */ });
+                                done();
+                            }
+                        ).catch(() => {
+                            // Ignore the error.
+                        });
                     });
 
                     // The promise is rejected before but the errorCallback gets called synchronously.
@@ -110,20 +115,16 @@ describe('decodeAudioData()', () => {
 
                         const errorCallback = spy();
 
-                        decodeAudioData(context, null, () => {}, errorCallback)
-                            .catch(() => {
-                                expect(errorCallback).to.have.been.calledOnce;
+                        decodeAudioData(context, null, () => {}, errorCallback).catch(() => {
+                            expect(errorCallback).to.have.been.calledOnce;
 
-                                done();
-                            });
+                            done();
+                        });
                     });
-
                 }
-
             });
 
             describe('with an arrayBuffer of an unsupported file', () => {
-
                 let arrayBuffer;
 
                 beforeEach(async function () {
@@ -136,27 +137,31 @@ describe('decodeAudioData()', () => {
                 it('should throw an error', function (done) {
                     this.timeout(10000);
 
-                    decodeAudioData(context, arrayBuffer)
-                        .catch((err) => {
-                            expect(err.code).to.equal(0);
-                            expect(err.name).to.equal('EncodingError');
+                    decodeAudioData(context, arrayBuffer).catch((err) => {
+                        expect(err.code).to.equal(0);
+                        expect(err.name).to.equal('EncodingError');
 
-                            done();
-                        });
+                        done();
+                    });
                 });
 
                 if (!description.includes('standalone')) {
-
                     it('should call the errorCallback with an error', function (done) {
                         this.timeout(10000);
 
-                        decodeAudioData(context, arrayBuffer, () => {}, (err) => {
-                            expect(err.code).to.equal(0);
-                            expect(err.name).to.equal('EncodingError');
+                        decodeAudioData(
+                            context,
+                            arrayBuffer,
+                            () => {},
+                            (err) => {
+                                expect(err.code).to.equal(0);
+                                expect(err.name).to.equal('EncodingError');
 
-                            done();
-                        })
-                            .catch(() => { /* Ignore the error. */ });
+                                done();
+                            }
+                        ).catch(() => {
+                            // Ignore the error.
+                        });
                     });
 
                     // The promise is rejected before but the errorCallback gets called synchronously.
@@ -165,20 +170,16 @@ describe('decodeAudioData()', () => {
 
                         const errorCallback = spy();
 
-                        decodeAudioData(context, arrayBuffer, () => {}, errorCallback)
-                            .catch(() => {
-                                expect(errorCallback).to.have.been.calledOnce;
+                        decodeAudioData(context, arrayBuffer, () => {}, errorCallback).catch(() => {
+                            expect(errorCallback).to.have.been.calledOnce;
 
-                                done();
-                            });
+                            done();
+                        });
                     });
-
                 }
-
             });
 
             describe('with an arrayBuffer of a supported file', () => {
-
                 let arrayBuffer;
 
                 beforeEach(async function () {
@@ -195,7 +196,6 @@ describe('decodeAudioData()', () => {
                 });
 
                 if (!description.includes('standalone')) {
-
                     it('should call the successCallback', function (done) {
                         this.timeout(10000);
 
@@ -210,12 +210,10 @@ describe('decodeAudioData()', () => {
 
                         const successCallback = spy();
 
-                        return decodeAudioData(context, arrayBuffer, successCallback)
-                            .then(() => {
-                                expect(successCallback).to.have.been.calledOnce;
-                            });
+                        return decodeAudioData(context, arrayBuffer, successCallback).then(() => {
+                            expect(successCallback).to.have.been.calledOnce;
+                        });
                     });
-
                 }
 
                 it('should throw a DataCloneError', function (done) {
@@ -258,14 +256,9 @@ describe('decodeAudioData()', () => {
                         arrayBufferCopies.push(arrayBuffer.slice(0));
                     }
 
-                    return Promise
-                        .all(arrayBufferCopies.map((rrBffr) => decodeAudioData(context, rrBffr)));
+                    return Promise.all(arrayBufferCopies.map((rrBffr) => decodeAudioData(context, rrBffr)));
                 });
-
             });
-
         });
-
     }
-
 });

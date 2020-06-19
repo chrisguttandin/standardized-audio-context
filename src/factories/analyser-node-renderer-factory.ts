@@ -42,7 +42,7 @@ export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFact
         };
 
         return {
-            render (
+            render(
                 proxy: IAnalyserNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

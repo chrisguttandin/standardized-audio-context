@@ -1,14 +1,10 @@
 module.exports = (config) => {
-
     config.set({
-
         basePath: '../../',
 
         browserNoActivityTimeout: 240000,
 
-        browsers: [
-            'Safari'
-        ],
+        browsers: ['Safari'],
 
         files: [
             'test/expectation/safari/any/**/*.js',
@@ -19,10 +15,7 @@ module.exports = (config) => {
             }
         ],
 
-        frameworks: [
-            'mocha',
-            'sinon-chai'
-        ],
+        frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
             'test/expectation/safari/any/**/*.js': 'webpack'
@@ -31,22 +24,22 @@ module.exports = (config) => {
         webpack: {
             mode: 'development',
             module: {
-                rules: [ {
-                    test: /\.ts?$/,
-                    use: {
-                        loader: 'ts-loader'
+                rules: [
+                    {
+                        test: /\.ts?$/,
+                        use: {
+                            loader: 'ts-loader'
+                        }
                     }
-                } ]
+                ]
             },
             resolve: {
-                extensions: [ '.js', '.ts' ]
+                extensions: ['.js', '.ts']
             }
         },
 
         webpackMiddleware: {
             noInfo: true
         }
-
     });
-
 };

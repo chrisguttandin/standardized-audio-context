@@ -39,7 +39,7 @@ export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererF
         };
 
         return {
-            render (
+            render(
                 proxy: IAudioNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

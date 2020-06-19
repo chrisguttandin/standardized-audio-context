@@ -30,11 +30,8 @@ const testCases = {
 };
 
 describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
-
-    for (const [ description, { createAddAudioWorkletModule, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createAddAudioWorkletModule, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let addAudioWorkletModule;
             let context;
 
@@ -50,43 +47,36 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
             });
 
             describe('with a missing module', () => {
-
                 it('should return a promise which rejects an AbortError', function (done) {
                     this.timeout(10000);
 
-                    addAudioWorkletModule('base/test/fixtures/missing-processor.js')
-                        .catch((err) => {
-                            expect(err.code).to.equal(20);
-                            expect(err.name).to.equal('AbortError');
+                    addAudioWorkletModule('base/test/fixtures/missing-processor.js').catch((err) => {
+                        expect(err.code).to.equal(20);
+                        expect(err.name).to.equal('AbortError');
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with an unparsable module', () => {
-
                 it('should return a promise which rejects a SyntaxError', function (done) {
                     this.timeout(10000);
 
-                    addAudioWorkletModule('base/test/fixtures/unparsable-processor.xs')
-                        .catch((err) => {
-                            // Bug #177 Firefox does not throw a SyntaxError.
-                            if (/Firefox/.test(navigator.userAgent)) {
-                                expect(err).to.be.an.instanceOf(Error);
-                            } else {
-                                expect(err).to.be.an.instanceOf(SyntaxError);
-                            }
+                    addAudioWorkletModule('base/test/fixtures/unparsable-processor.xs').catch((err) => {
+                        // Bug #177 Firefox does not throw a SyntaxError.
+                        if (/Firefox/.test(navigator.userAgent)) {
+                            expect(err).to.be.an.instanceOf(Error);
+                        } else {
+                            expect(err).to.be.an.instanceOf(SyntaxError);
+                        }
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with a previously unknown module', () => {
-
                 it('should return a resolving promise', function () {
                     this.timeout(10000);
 
@@ -103,11 +93,9 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
                         done();
                     }
                 });
-
             });
 
             describe('with a previously added module', () => {
-
                 beforeEach(function () {
                     this.timeout(10000);
 
@@ -123,36 +111,26 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
                 it('should be possible to create an AudioWorkletNode', () => {
                     new AudioWorkletNode(context, 'gain-processor');
                 });
-
             });
 
             describe('with a module which ends with a comment', () => {
-
                 it('should return a resolving promise', function () {
                     this.timeout(10000);
 
-                    return addAudioWorkletModule('base/test/fixtures/gain-processor-with-comment.js');
+                    return addAudioWorkletModule('base/test/fixtures/gain-processor-with-comment.xs');
                 });
-
             });
 
             describe('with a module which contains an import statement', () => {
-
                 if (!/Firefox/.test(navigator.userAgent)) {
-
                     // Bug #176 Firefox does not support import statements yet.
                     it('should return a resolving promise', function () {
                         this.timeout(10000);
 
                         return addAudioWorkletModule('base/test/fixtures/gibberish-processor.js');
                     });
-
                 }
-
             });
-
         });
-
     }
-
 });

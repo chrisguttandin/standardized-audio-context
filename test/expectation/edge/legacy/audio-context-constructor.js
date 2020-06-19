@@ -1,13 +1,11 @@
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 
 describe('audioContextConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
 
     describe('without a constructed AudioContext', () => {
-
         // bug #51
 
         it('should allow to set the latencyHint to an unsupported value', () => {
@@ -23,35 +21,28 @@ describe('audioContextConstructor', () => {
 
             expect(audioContext.sampleRate).to.not.equal(sampleRate);
         });
-
     });
 
     describe('with a constructed AudioContext', () => {
-
-        beforeEach(() => audioContext = new AudioContext());
+        beforeEach(() => (audioContext = new AudioContext()));
 
         describe('audioWorklet', () => {
-
             // bug #59
 
             it('should not be implemented', () => {
                 expect(audioContext.audioWorklet).to.be.undefined;
             });
-
         });
 
         describe('baseLatency', () => {
-
             // bug #39
 
             it('should not be implemented', () => {
                 expect(audioContext.baseLatency).to.be.undefined;
             });
-
         });
 
         describe('listener', () => {
-
             // bug #117
 
             it('should not be implemented', () => {
@@ -65,11 +56,9 @@ describe('audioContextConstructor', () => {
                 expect(audioContext.listener.upY).to.be.undefined;
                 expect(audioContext.listener.upZ).to.be.undefined;
             });
-
         });
 
         describe('sampleRate', () => {
-
             // bug #93
 
             it('should set the sampleRate to zero when the AudioContext is closed', async () => {
@@ -82,11 +71,9 @@ describe('audioContextConstructor', () => {
                     audioContext = new AudioContext();
                 }
             });
-
         });
 
         describe('close()', () => {
-
             // bug #50
 
             it('should not allow to create AudioNodes on a closed context', (done) => {
@@ -102,11 +89,9 @@ describe('audioContextConstructor', () => {
                         done();
                     });
             });
-
         });
 
         describe('createAnalyser()', () => {
-
             // bug #41
 
             it('should throw a SyntaxError when calling connect() with a node of another AudioContext', (done) => {
@@ -124,11 +109,9 @@ describe('audioContextConstructor', () => {
                     anotherAudioContext.close();
                 }
             });
-
         });
 
         describe('createBiquadFilter()', () => {
-
             let biquadFilterNode;
 
             beforeEach(() => {
@@ -136,123 +119,108 @@ describe('audioContextConstructor', () => {
             });
 
             describe('detune', () => {
-
                 describe('automationRate', () => {
-
                     // bug #84
 
                     it('should not be implemented', () => {
                         expect(biquadFilterNode.detune.automationRate).to.be.undefined;
                     });
-
                 });
 
                 describe('maxValue', () => {
-
                     // bug #78
 
                     it('should be undefined', () => {
                         expect(biquadFilterNode.detune.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #78
 
                     it('should be undefined', () => {
                         expect(biquadFilterNode.detune.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('frequency', () => {
-
                 describe('maxValue', () => {
-
                     // bug #77
 
                     it('should be undefined', () => {
                         expect(biquadFilterNode.frequency.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #77
 
                     it('should be undefined', () => {
                         expect(biquadFilterNode.frequency.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('gain', () => {
-
                 describe('maxValue', () => {
-
                     // bug #79
 
                     it('should be undefined', () => {
                         expect(biquadFilterNode.gain.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #79
 
                     it('should be undefined', () => {
                         expect(biquadFilterNode.gain.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('Q', () => {
-
                 describe('maxValue', () => {
-
                     // bug #80
 
                     it('should be undefined', () => {
                         expect(biquadFilterNode.Q.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #80
 
                     it('should be undefined', () => {
                         expect(biquadFilterNode.Q.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('getFrequencyResponse()', () => {
-
                 // bug #22
 
                 it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
                     const magResponse = new Float32Array(5);
                     const phaseResponse = new Float32Array(5);
 
-                    biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+                    biquadFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
 
-                    expect(Array.from(magResponse)).to.deep.equal([ 1.1107852458953857, 0.8106917142868042, 0.20565471053123474, 0.04845593497157097, 0.011615658178925514 ]);
-                    expect(Array.from(phaseResponse)).to.deep.equal([ -0.7254799008369446, -1.8217267990112305, -2.6273605823516846, -2.906902313232422, -3.0283825397491455 ]);
+                    expect(Array.from(magResponse)).to.deep.equal([
+                        1.1107852458953857,
+                        0.8106917142868042,
+                        0.20565471053123474,
+                        0.04845593497157097,
+                        0.011615658178925514
+                    ]);
+                    expect(Array.from(phaseResponse)).to.deep.equal([
+                        -0.7254799008369446,
+                        -1.8217267990112305,
+                        -2.6273605823516846,
+                        -2.906902313232422,
+                        -3.0283825397491455
+                    ]);
                 });
 
                 // bug #68
@@ -260,17 +228,13 @@ describe('audioContextConstructor', () => {
                 it('should throw no error', () => {
                     biquadFilterNode.getFrequencyResponse(new Float32Array(), new Float32Array(1), new Float32Array(1));
                 });
-
             });
-
         });
 
         describe('createBuffer()', () => {
-
             // bug #157
 
             describe('copyFromChannel()/copyToChannel()', () => {
-
                 let audioBuffer;
 
                 beforeEach(() => {
@@ -282,15 +246,11 @@ describe('audioContextConstructor', () => {
 
                     expect(() => audioBuffer.copyToChannel(source, 0, 100)).to.throw('IndexSizeError');
                 });
-
             });
-
         });
 
         describe('createBufferSource()', () => {
-
             describe('buffer', () => {
-
                 // bug #71
 
                 it('should throw a DOMException', () => {
@@ -300,11 +260,9 @@ describe('audioContextConstructor', () => {
                         audioBufferSourceNode.buffer = null;
                     }).to.throw('TypeMismatchError');
                 });
-
             });
 
             describe('playbackRate', () => {
-
                 let audioBufferSourceNode;
 
                 beforeEach(() => {
@@ -312,27 +270,22 @@ describe('audioContextConstructor', () => {
                 });
 
                 describe('maxValue', () => {
-
                     // bug #73
 
                     it('should be undefined', () => {
                         expect(audioBufferSourceNode.playbackRate.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #73
 
                     it('should be undefined', () => {
                         expect(audioBufferSourceNode.playbackRate.minValue).to.be.undefined;
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     // bug #45
 
                     it('should throw a DOMException', () => {
@@ -340,13 +293,10 @@ describe('audioContextConstructor', () => {
                             audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
                         }).to.throw('InvalidAccessError');
                     });
-
                 });
-
             });
 
             describe('start()', () => {
-
                 // bug #44
 
                 it('should throw a DOMException', () => {
@@ -356,11 +306,9 @@ describe('audioContextConstructor', () => {
                     expect(() => audioBufferSourceNode.start(0, -1)).to.throw('InvalidStateError');
                     expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw('InvalidStateError');
                 });
-
             });
 
             describe('stop()', () => {
-
                 // bug #44
 
                 it('should throw a DOMException', () => {
@@ -368,13 +316,10 @@ describe('audioContextConstructor', () => {
 
                     expect(() => audioBufferSourceNode.stop(-1)).to.throw('InvalidStateError');
                 });
-
             });
-
         });
 
         describe('createChannelSplitter()', () => {
-
             // bug #29
 
             it('should have a channelCountMode of max', () => {
@@ -408,21 +353,17 @@ describe('audioContextConstructor', () => {
                 channelSplitterNode.channelInterpretation = 'discrete';
                 channelSplitterNode.channelInterpretation = 'speakers';
             });
-
         });
 
         describe('createConstantSource()', () => {
-
             // bug #62
 
             it('should not be implemented', () => {
                 expect(audioContext.createConstantSource).to.be.undefined;
             });
-
         });
 
         describe('createConvolver()', () => {
-
             let convolverNode;
 
             beforeEach(() => {
@@ -430,31 +371,24 @@ describe('audioContextConstructor', () => {
             });
 
             describe('channelCount', () => {
-
                 // bug #113
 
                 it('should not throw an error', () => {
                     convolverNode.channelCount = 3;
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 // bug #114
 
                 it('should not throw an error', () => {
                     convolverNode.channelCountMode = 'max';
                 });
-
             });
-
         });
 
         describe('createDelay()', () => {
-
             describe('delayTime', () => {
-
                 let delayNode;
 
                 beforeEach(() => {
@@ -462,27 +396,22 @@ describe('audioContextConstructor', () => {
                 });
 
                 describe('maxValue', () => {
-
                     // bug #161
 
                     it('should be undefined', () => {
                         expect(delayNode.delayTime.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #161
 
                     it('should be undefined', () => {
                         expect(delayNode.delayTime.minValue).to.be.undefined;
                     });
-
                 });
 
                 describe('with a delayTime of 128 samples', () => {
-
                     let audioBufferSourceNode;
                     let gainNode;
                     let scriptProcessorNode;
@@ -547,15 +476,11 @@ describe('audioContextConstructor', () => {
 
                         audioBufferSourceNode.start();
                     });
-
                 });
-
             });
-
         });
 
         describe('createDynamicsCompressor()', () => {
-
             let dynamicsCompressorNode;
 
             beforeEach(() => {
@@ -563,151 +488,114 @@ describe('audioContextConstructor', () => {
             });
 
             describe('attack', () => {
-
                 describe('maxValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.attack.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.attack.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('channelCount', () => {
-
                 // bug #108
 
                 it('should not throw an error', () => {
                     dynamicsCompressorNode.channelCount = 3;
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 // bug #109
 
                 it('should not throw an error', () => {
                     dynamicsCompressorNode.channelCountMode = 'max';
                 });
-
             });
 
             describe('knee', () => {
-
                 describe('maxValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.knee.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.knee.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('ratio', () => {
-
                 describe('maxValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.ratio.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.ratio.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('release', () => {
-
                 describe('maxValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.release.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.release.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('threshold', () => {
-
                 describe('maxValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.threshold.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #110
 
                     it('should be undefined', () => {
                         expect(dynamicsCompressorNode.threshold.minValue).to.be.undefined;
                     });
-
                 });
-
             });
-
         });
 
         describe('createGain()', () => {
-
             describe('gain', () => {
-
                 let gainNode;
 
                 beforeEach(() => {
@@ -715,43 +603,33 @@ describe('audioContextConstructor', () => {
                 });
 
                 describe('maxValue', () => {
-
                     // bug #74
 
                     it('should be undefined', () => {
                         expect(gainNode.gain.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #74
 
                     it('should be undefined', () => {
                         expect(gainNode.gain.minValue).to.be.undefined;
                     });
-
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     // bug #28
 
                     it('should not be implemented', () => {
                         expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
                     });
-
                 });
-
             });
-
         });
 
         describe('createMediaElementSource()', () => {
-
             describe('mediaElement', () => {
-
                 let mediaElementAudioSourceNode;
 
                 beforeEach(() => {
@@ -763,23 +641,18 @@ describe('audioContextConstructor', () => {
                 it('should not be implemented', () => {
                     expect(mediaElementAudioSourceNode.mediaElement).to.be.undefined;
                 });
-
             });
-
         });
 
         describe('createMediaStreamDestination()', () => {
-
             // bug #64
 
             it('should not be implemented', () => {
                 expect(audioContext.createMediaStreamDestination).to.be.undefined;
             });
-
         });
 
         describe('createOscillator()', () => {
-
             let oscillatorNode;
 
             beforeEach(() => {
@@ -787,55 +660,42 @@ describe('audioContextConstructor', () => {
             });
 
             describe('detune', () => {
-
                 describe('maxValue', () => {
-
                     // bug #81
 
                     it('should be undefined', () => {
                         expect(oscillatorNode.detune.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #81
 
                     it('should be undefined', () => {
                         expect(oscillatorNode.detune.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('frequency', () => {
-
                 describe('maxValue', () => {
-
                     // bug #76
 
                     it('should be undefined', () => {
                         expect(oscillatorNode.frequency.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #76
 
                     it('should be undefined', () => {
                         expect(oscillatorNode.frequency.minValue).to.be.undefined;
                     });
-
                 });
-
             });
 
             describe('type', () => {
-
                 // bug #57
 
                 it('should not throw an error', () => {
@@ -843,13 +703,10 @@ describe('audioContextConstructor', () => {
 
                     expect(oscillatorNode.type).to.equal('sine');
                 });
-
             });
-
         });
 
         describe('createPanner()', () => {
-
             let pannerNode;
 
             beforeEach(() => {
@@ -857,37 +714,30 @@ describe('audioContextConstructor', () => {
             });
 
             describe('coneOuterGain', () => {
-
                 // bug #127
 
                 it('should not throw an error', () => {
                     pannerNode.coneOuterGain = 3;
                 });
-
             });
 
             describe('maxDistance', () => {
-
                 // bug #128
 
                 it('should not throw an error', () => {
                     pannerNode.maxDistance = -10;
                 });
-
             });
 
             describe('orientationX', () => {
-
                 // bug #124
 
                 it('should not be implemented', () => {
                     expect(pannerNode.orientationX).to.be.undefined;
                 });
-
             });
 
             describe('panningModel', () => {
-
                 // bug #123
 
                 it('should not be assignable to HRTF', () => {
@@ -895,33 +745,26 @@ describe('audioContextConstructor', () => {
 
                     expect(pannerNode.panningModel).to.equal('equalpower');
                 });
-
             });
 
             describe('refDistance', () => {
-
                 // bug #129
 
                 it('should not throw an error', () => {
                     pannerNode.refDistance = -10;
                 });
-
             });
 
             describe('rolloffFactor', () => {
-
                 // bug #130
 
                 it('should not throw an error', () => {
                     pannerNode.rolloffFactor = -10;
                 });
-
             });
-
         });
 
         describe('createStereoPanner()', () => {
-
             let stereoPannerNode;
 
             beforeEach(() => {
@@ -929,43 +772,33 @@ describe('audioContextConstructor', () => {
             });
 
             describe('pan', () => {
-
                 describe('maxValue', () => {
-
                     // bug #106
 
                     it('should be undefined', () => {
                         expect(stereoPannerNode.pan.maxValue).to.be.undefined;
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #106
 
                     it('should be undefined', () => {
                         expect(stereoPannerNode.pan.minValue).to.be.undefined;
                     });
-
                 });
-
             });
-
         });
 
         describe('decodeAudioData()', () => {
-
             // bug #27
 
             it('should reject the promise with a DOMException', (done) => {
-                audioContext
-                    .decodeAudioData(null)
-                    .catch((err) => {
-                        expect(err).to.be.an.instanceOf(DOMException);
+                audioContext.decodeAudioData(null).catch((err) => {
+                    expect(err).to.be.an.instanceOf(DOMException);
 
-                        done();
-                    });
+                    done();
+                });
             });
 
             // bug #43
@@ -973,32 +806,26 @@ describe('audioContextConstructor', () => {
             it('should not throw a DataCloneError', function (done) {
                 this.timeout(10000);
 
-                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
-                    .then((arrayBuffer) => {
-                        audioContext
-                            .decodeAudioData(arrayBuffer)
-                            .then(() => audioContext.decodeAudioData(arrayBuffer))
-                            .catch((err) => {
-                                expect(err.code).to.not.equal(25);
-                                expect(err.name).to.not.equal('DataCloneError');
+                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+                    audioContext
+                        .decodeAudioData(arrayBuffer)
+                        .then(() => audioContext.decodeAudioData(arrayBuffer))
+                        .catch((err) => {
+                            expect(err.code).to.not.equal(25);
+                            expect(err.name).to.not.equal('DataCloneError');
 
-                                done();
-                            });
-                    });
+                            done();
+                        });
+                });
             });
-
         });
 
         describe('getOutputTimestamp()', () => {
-
             // bug #38
 
             it('should not be implemented', () => {
                 expect(audioContext.getOutputTimestamp).to.be.undefined;
             });
-
         });
-
     });
-
 });

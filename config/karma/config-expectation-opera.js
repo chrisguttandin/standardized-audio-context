@@ -2,9 +2,7 @@ const { env } = require('process');
 const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => {
-
     config.set({
-
         basePath: '../../',
 
         browserNoActivityTimeout: 240000,
@@ -18,10 +16,7 @@ module.exports = (config) => {
             }
         ],
 
-        frameworks: [
-            'mocha',
-            'sinon-chai'
-        ],
+        frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
             'test/expectation/opera/**/*.js': 'webpack'
@@ -30,12 +25,14 @@ module.exports = (config) => {
         webpack: {
             mode: 'development',
             module: {
-                rules: [ {
-                    test: /\.ts?$/,
-                    use: {
-                        loader: 'ts-loader'
+                rules: [
+                    {
+                        test: /\.ts?$/,
+                        use: {
+                            loader: 'ts-loader'
+                        }
                     }
-                } ]
+                ]
             },
             plugins: [
                 new DefinePlugin({
@@ -45,30 +42,25 @@ module.exports = (config) => {
                 })
             ],
             resolve: {
-                extensions: [ '.js', '.ts' ]
+                extensions: ['.js', '.ts']
             }
         },
 
         webpackMiddleware: {
             noInfo: true
         }
-
     });
 
     if (env.TRAVIS) {
-
         config.set({
-
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/expectation-opera`,
+                build: `${env.TRAVIS_REPO_SLUG}/${env.TRAVIS_JOB_NUMBER}/expectation-opera`,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
             },
 
-            browsers: [
-                'OperaBrowserStack'
-            ],
+            browsers: ['OperaBrowserStack'],
 
             captureTimeout: 120000,
 
@@ -80,16 +72,10 @@ module.exports = (config) => {
                     os_version: 'Mojave' // eslint-disable-line camelcase
                 }
             }
-
         });
-
     } else {
-
         config.set({
-
-            browsers: [
-                'OperaWithNoRequiredUserGestureAndNoThrottling'
-            ],
+            browsers: ['OperaWithNoRequiredUserGestureAndNoThrottling'],
 
             customLaunchers: {
                 OperaWithNoRequiredUserGestureAndNoThrottling: {
@@ -101,9 +87,6 @@ module.exports = (config) => {
                     ]
                 }
             }
-
         });
-
     }
-
 };

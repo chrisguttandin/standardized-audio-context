@@ -1,6 +1,5 @@
 class InspectorProcessor extends AudioWorkletProcessor {
-
-    constructor (options) {
+    constructor(options) {
         super();
 
         this.port.onmessage = () => {
@@ -12,17 +11,18 @@ class InspectorProcessor extends AudioWorkletProcessor {
         };
     }
 
-    process (inputs, outputs, parameters) {
+    process(inputs, outputs, parameters) {
         this.port.postMessage({ currentFrame, currentTime, inputs, outputs, parameters }); // eslint-disable-line no-undef
 
         return true;
     }
-
 }
 
-InspectorProcessor.parameterDescriptors = [ {
-    defaultValue: 1,
-    name: 'gain'
-} ];
+InspectorProcessor.parameterDescriptors = [
+    {
+        defaultValue: 1,
+        name: 'gain'
+    }
+];
 
 registerProcessor('inspector-processor', InspectorProcessor);

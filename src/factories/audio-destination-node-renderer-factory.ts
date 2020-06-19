@@ -26,7 +26,7 @@ export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFa
     };
 
     return {
-        render (
+        render(
             proxy: IAudioDestinationNode<T>,
             nativeOfflineAudioContext: TNativeOfflineAudioContext,
             trace: readonly IAudioNode<T>[]

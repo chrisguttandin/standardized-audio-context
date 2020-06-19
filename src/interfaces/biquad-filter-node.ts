@@ -3,7 +3,6 @@ import { IAudioNode } from './audio-node';
 import { IAudioParam } from './audio-param';
 
 export interface IBiquadFilterNode<T extends TContext> extends IAudioNode<T> {
-
     readonly detune: IAudioParam;
 
     readonly frequency: IAudioParam;
@@ -14,6 +13,5 @@ export interface IBiquadFilterNode<T extends TContext> extends IAudioNode<T> {
 
     type: TBiquadFilterType;
 
-    getFrequencyResponse (frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void;
-
+    getFrequencyResponse(frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void;
 }

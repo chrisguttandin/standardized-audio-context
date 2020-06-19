@@ -13,14 +13,11 @@ export const createMediaStreamAudioDestinationNodeConstructor: TMediaStreamAudio
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
-    return class MediaStreamAudioDestinationNode<T extends IAudioContext | IMinimalAudioContext>
-            extends audioNodeConstructor<T>
-            implements IMediaStreamAudioDestinationNode<T> {
-
+    return class MediaStreamAudioDestinationNode<T extends IAudioContext | IMinimalAudioContext> extends audioNodeConstructor<T>
+        implements IMediaStreamAudioDestinationNode<T> {
         private _nativeMediaStreamAudioDestinationNode: TNativeMediaStreamAudioDestinationNode;
 
-        constructor (context: T, options: Partial<IAudioNodeOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IAudioNodeOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
 
             // Bug #173: Safari allows to create a MediaStreamAudioDestinationNode with an OfflineAudioContext.
@@ -31,15 +28,13 @@ export const createMediaStreamAudioDestinationNodeConstructor: TMediaStreamAudio
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeMediaStreamAudioDestinationNode = createNativeMediaStreamAudioDestinationNode(nativeContext, mergedOptions);
 
-            super(context, false, nativeMediaStreamAudioDestinationNode, <TAudioNodeRenderer<T>> null);
+            super(context, false, nativeMediaStreamAudioDestinationNode, <TAudioNodeRenderer<T>>null);
 
             this._nativeMediaStreamAudioDestinationNode = nativeMediaStreamAudioDestinationNode;
         }
 
-        get stream (): MediaStream {
+        get stream(): MediaStream {
             return this._nativeMediaStreamAudioDestinationNode.stream;
         }
-
     };
-
 };

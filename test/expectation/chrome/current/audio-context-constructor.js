@@ -1,7 +1,6 @@
 import { spy } from 'sinon';
 
 describe('audioContextConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -11,25 +10,21 @@ describe('audioContextConstructor', () => {
     });
 
     describe('with a constructed AudioContext', () => {
-
         describe('createBufferSource()', () => {
-
             describe('stop()', () => {
-
                 // bug #44
 
                 it('should throw a DOMException', () => {
                     const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.stop(-1))
+                        .to.throw(DOMException)
+                        .with.property('name', 'InvalidStateError');
                 });
-
             });
-
         });
 
         describe('createMediaStreamSource()', () => {
-
             let constantSourceNode;
             let gainNodes;
             let mediaStream;
@@ -46,26 +41,18 @@ describe('audioContextConstructor', () => {
 
             beforeEach(() => {
                 constantSourceNode = audioContext.createConstantSource();
-                gainNodes = [
-                    audioContext.createGain(),
-                    audioContext.createGain()
-                ];
+                gainNodes = [audioContext.createGain(), audioContext.createGain()];
                 mediaStreamAudioDestinationNodes = [
                     audioContext.createMediaStreamDestination(),
                     audioContext.createMediaStreamDestination()
                 ];
 
-                constantSourceNode
-                    .connect(gainNodes[0])
-                    .connect(mediaStreamAudioDestinationNodes[0]);
-                constantSourceNode
-                    .connect(gainNodes[1])
-                    .connect(mediaStreamAudioDestinationNodes[1]);
+                constantSourceNode.connect(gainNodes[0]).connect(mediaStreamAudioDestinationNodes[0]);
+                constantSourceNode.connect(gainNodes[1]).connect(mediaStreamAudioDestinationNodes[1]);
 
                 constantSourceNode.start();
 
-                const audioStreamTracks = mediaStreamAudioDestinationNodes
-                    .map(({ stream }) => stream.getAudioTracks()[0]);
+                const audioStreamTracks = mediaStreamAudioDestinationNodes.map(({ stream }) => stream.getAudioTracks()[0]);
 
                 if (audioStreamTracks[0].id > audioStreamTracks[1].id) {
                     mediaStream = mediaStreamAudioDestinationNodes[0].stream;
@@ -79,11 +66,9 @@ describe('audioContextConstructor', () => {
                     mediaStream.addTrack(audioStreamTracks[0]);
                 }
             });
-
         });
 
         describe('decodeAudioData()', () => {
-
             // bug #6
 
             it('should not call the errorCallback at all', (done) => {
@@ -97,9 +82,6 @@ describe('audioContextConstructor', () => {
                     done();
                 }, 1000);
             });
-
         });
-
     });
-
 });

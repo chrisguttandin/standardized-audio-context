@@ -2,7 +2,7 @@ import { IAudioNode, IAudioParam, IMinimalOfflineAudioContext, IOfflineAudioCont
 import { TNativeAudioParam } from './native-audio-param';
 import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 
-export type TConnectAudioParamFunction = <T extends IMinimalOfflineAudioContext | IOfflineAudioContext> (
+export type TConnectAudioParamFunction = <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
     audioParam: IAudioParam,
     nativeAudioParam: TNativeAudioParam,

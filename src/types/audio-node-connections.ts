@@ -5,7 +5,6 @@ import { TOutputConnection } from './output-connection';
 import { TPassiveAudioNodeInputConnection } from './passive-audio-node-input-connection';
 
 export type TAudioNodeConnections<T extends TContext> = Readonly<{
-
     activeInputs: Set<TActiveInputConnection<T>>[];
 
     outputs: Set<TOutputConnection<T>>;
@@ -13,5 +12,4 @@ export type TAudioNodeConnections<T extends TContext> = Readonly<{
     passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioNodeInputConnection<T>>>;
 
     renderer: T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null;
-
 }>;

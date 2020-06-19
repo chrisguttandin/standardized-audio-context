@@ -1,7 +1,6 @@
 import { spy } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
-
     let offlineAudioContext;
 
     beforeEach(() => {
@@ -9,7 +8,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('destination', () => {
-
         // bug #52
 
         it('should allow to change the value of the channelCount property', () => {
@@ -21,27 +19,23 @@ describe('offlineAudioContextConstructor', () => {
         it('should allow to change the value of the channelCountMode property', () => {
             offlineAudioContext.destination.channelCountMode = 'max';
         });
-
     });
 
     describe('createBufferSource()', () => {
-
         describe('stop()', () => {
-
             // bug #44
 
             it('should throw a DOMException', () => {
                 const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                expect(() => audioBufferSourceNode.stop(-1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
             });
-
         });
-
     });
 
     describe('createConstantSourceNode()', () => {
-
         // bug #164
 
         it('should not mute cycles', function () {
@@ -50,33 +44,26 @@ describe('offlineAudioContextConstructor', () => {
             const constantSourceNode = offlineAudioContext.createConstantSource();
             const gainNode = offlineAudioContext.createGain();
 
-            constantSourceNode
-                .connect(gainNode)
-                .connect(offlineAudioContext.destination);
+            constantSourceNode.connect(gainNode).connect(offlineAudioContext.destination);
 
             gainNode.connect(gainNode);
 
             constantSourceNode.start(0);
 
-            return offlineAudioContext
-                .startRendering()
-                .then((renderedBuffer) => {
-                    const channelData = new Float32Array(renderedBuffer.length);
+            return offlineAudioContext.startRendering().then((renderedBuffer) => {
+                const channelData = new Float32Array(renderedBuffer.length);
 
-                    renderedBuffer.copyFromChannel(channelData, 0);
+                renderedBuffer.copyFromChannel(channelData, 0);
 
-                    for (const sample of channelData) {
-                        expect(sample).to.not.equal(0);
-                    }
-                });
+                for (const sample of channelData) {
+                    expect(sample).to.not.equal(0);
+                }
+            });
         });
-
     });
 
     describe('createDelay()', () => {
-
         describe('with a delayTime of 128 samples', () => {
-
             let audioBufferSourceNode;
             let delayNode;
             let gainNode;
@@ -103,11 +90,7 @@ describe('offlineAudioContextConstructor', () => {
 
                 gainNode.gain.value = 0.5;
 
-                audioBufferSourceNode
-                    .connect(gainNode)
-                    .connect(delayNode)
-                    .connect(gainNode)
-                    .connect(offlineAudioContext.destination);
+                audioBufferSourceNode.connect(gainNode).connect(delayNode).connect(gainNode).connect(offlineAudioContext.destination);
             });
 
             // bug #163
@@ -115,27 +98,21 @@ describe('offlineAudioContextConstructor', () => {
             it('should have a minimum delayTime of 256 samples', () => {
                 audioBufferSourceNode.start(0);
 
-                return offlineAudioContext
-                    .startRendering()
-                    .then((renderedBuffer) => {
-                        const channelData = new Float32Array(512);
+                return offlineAudioContext.startRendering().then((renderedBuffer) => {
+                    const channelData = new Float32Array(512);
 
-                        renderedBuffer.copyFromChannel(channelData, 0);
+                    renderedBuffer.copyFromChannel(channelData, 0);
 
-                        expect(channelData[0]).to.equal(1);
-                        expect(channelData[256]).to.be.above(0.49);
-                        expect(channelData[256]).to.be.below(0.51);
-                    });
+                    expect(channelData[0]).to.equal(1);
+                    expect(channelData[256]).to.be.above(0.49);
+                    expect(channelData[256]).to.be.below(0.51);
+                });
             });
-
         });
-
     });
 
     describe('createScriptProcessor()', () => {
-
         describe('without any output channels', () => {
-
             // bug #87
 
             it('should not fire any AudioProcessingEvent', () => {
@@ -148,15 +125,10 @@ describe('offlineAudioContextConstructor', () => {
                 oscillatorNode.connect(scriptProcessorNode);
                 oscillatorNode.start();
 
-                return offlineAudioContext
-                    .startRendering()
-                    .then(() => {
-                        expect(listener).to.have.not.been.called;
-                    });
+                return offlineAudioContext.startRendering().then(() => {
+                    expect(listener).to.have.not.been.called;
+                });
             });
-
         });
-
     });
-
 });

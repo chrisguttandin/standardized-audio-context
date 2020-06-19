@@ -10,12 +10,7 @@ export const wrapAudioScheduledSourceNodeStartMethodNegativeParameters = (
             }
 
             // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
-            (<(when: number, offset: number, duration?: number) => void> start).call(
-                nativeAudioScheduledSourceNode,
-                when,
-                offset,
-                duration
-            );
+            (<(when: number, offset: number, duration?: number) => void>start).call(nativeAudioScheduledSourceNode, when, offset, duration);
         };
     })(nativeAudioScheduledSourceNode.start);
 };

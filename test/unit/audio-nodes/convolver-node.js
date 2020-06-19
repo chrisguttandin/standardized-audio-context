@@ -1,4 +1,12 @@
-import { AudioBuffer, AudioBufferSourceNode, AudioWorkletNode, ConstantSourceNode, ConvolverNode, GainNode, addAudioWorkletModule } from '../../../src/module';
+import {
+    AudioBuffer,
+    AudioBufferSourceNode,
+    AudioWorkletNode,
+    ConstantSourceNode,
+    ConvolverNode,
+    GainNode,
+    addAudioWorkletModule
+} from '../../../src/module';
 import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
@@ -68,11 +76,8 @@ const testCases = {
 };
 
 describe('ConvolverNode', () => {
-
-    for (const [ description, { createConvolverNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createConvolverNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -81,14 +86,11 @@ describe('ConvolverNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -113,7 +115,6 @@ describe('ConvolverNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let convolverNode;
 
                             beforeEach(() => {
@@ -145,11 +146,9 @@ describe('ConvolverNode', () => {
                                 expect(convolverNode.buffer).to.be.null;
                                 expect(convolverNode.normalize).to.be.true;
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given buffer', () => {
                                 const audioBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
                                 const convolverNode = createConvolverNode(context, { buffer: audioBuffer });
@@ -191,13 +190,10 @@ describe('ConvolverNode', () => {
 
                                 expect(convolverNode.normalize).to.equal(!disableNormalization);
                             });
-
                         });
 
                         describe('with invalid options', () => {
-
                             describe('with a channelCount greater than 2', () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createConvolverNode(context, { channelCount: 4 });
@@ -208,11 +204,9 @@ describe('ConvolverNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe("with a channelCountMode of 'max'", () => {
-
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createConvolverNode(context, { channelCountMode: 'max' });
@@ -223,11 +217,9 @@ describe('ConvolverNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with a buffer with an unsupported numberOfChannels', () => {
-
                                 let audioBuffer;
 
                                 beforeEach(() => {
@@ -244,11 +236,9 @@ describe('ConvolverNode', () => {
                                         done();
                                     }
                                 });
-
                             });
 
                             describe('with a buffer with a different sampleRate', () => {
-
                                 let audioBuffer;
 
                                 beforeEach(() => {
@@ -265,23 +255,15 @@ describe('ConvolverNode', () => {
                                         done();
                                     }
                                 });
-
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('buffer', () => {
-
-                for (const assignment of [ 'with', 'without' ]) {
-
-                    describe(`${ assignment } a previously assigned AudioBuffer`, () => {
-
+                for (const assignment of ['with', 'without']) {
+                    describe(`${assignment} a previously assigned AudioBuffer`, () => {
                         let convolverNode;
 
                         beforeEach(() => {
@@ -299,7 +281,6 @@ describe('ConvolverNode', () => {
                         });
 
                         describe('with a supported buffer', () => {
-
                             let audioBuffer;
 
                             beforeEach(() => {
@@ -311,11 +292,9 @@ describe('ConvolverNode', () => {
 
                                 expect(convolverNode.buffer).to.equal(audioBuffer);
                             });
-
                         });
 
                         describe('with a buffer with an unsupported numberOfChannels', () => {
-
                             let audioBuffer;
 
                             beforeEach(() => {
@@ -332,11 +311,9 @@ describe('ConvolverNode', () => {
                                     done();
                                 }
                             });
-
                         });
 
                         describe('with a buffer with a different sampleRate', () => {
-
                             let audioBuffer;
 
                             beforeEach(() => {
@@ -353,19 +330,21 @@ describe('ConvolverNode', () => {
                                     done();
                                 }
                             });
-
                         });
-
                     });
-
                 }
 
                 describe('with a nullified AudioBuffer', () => {
-
-                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
+                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                        ? [
+                              [true, true],
+                              [true, false],
+                              [false, true]
+                          ]
+                        : [[true, false]]) {
+                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                        } an appended AudioWorklet`, () => {
                             let renderer;
 
                             beforeEach(async function () {
@@ -377,21 +356,25 @@ describe('ConvolverNode', () => {
 
                                 renderer = createRenderer({
                                     context,
-                                    length: (context.length === undefined) ? 5 : undefined,
-                                    prepare (destination) {
+                                    length: context.length === undefined ? 5 : undefined,
+                                    prepare(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const audioWorkletNode = withAnAppendedAudioWorklet
+                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            : null;
                                         const convolverNode = createConvolverNode(context, { disableNormalization: true });
-                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                        const masterGainNode = new GainNode(context, {
+                                            gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                        });
 
-                                        audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+                                        audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
 
                                         audioBufferSourceNode.buffer = audioBuffer;
 
                                         const convolverBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
 
-                                        convolverBuffer.copyToChannel(new Float32Array([ 0.8 ]), 0);
+                                        convolverBuffer.copyToChannel(new Float32Array([0.8]), 0);
 
                                         convolverNode.buffer = convolverBuffer;
                                         convolverNode.buffer = null;
@@ -403,9 +386,7 @@ describe('ConvolverNode', () => {
                                         }
 
                                         if (withAnAppendedAudioWorklet) {
-                                            convolverNode
-                                                .connect(audioWorkletNode)
-                                                .connect(masterGainNode);
+                                            convolverNode.connect(audioWorkletNode).connect(masterGainNode);
                                         }
 
                                         masterGainNode.connect(destination);
@@ -419,27 +400,28 @@ describe('ConvolverNode', () => {
                                 this.timeout(10000);
 
                                 return renderer({
-                                    start (startTime, { audioBufferSourceNode }) {
+                                    start(startTime, { audioBufferSourceNode }) {
                                         audioBufferSourceNode.start(startTime);
                                     }
-                                })
-                                    .then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                    });
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
-
                         });
-
                     }
-
                 });
 
                 describe('with a reassigned AudioBuffer', () => {
-
-                    for (const [ withADirectConnection, withAnAppendedAudioWorklet ] of (description.includes('Offline') ? [ [ true, true ], [ true, false ], [ false, true ] ] : [ [ true, false ] ])) {
-
-                        describe(`${ withADirectConnection ? 'with' : 'without' } a direct connection and ${ withAnAppendedAudioWorklet ? 'with' : 'without' } an appended AudioWorklet`, () => {
-
+                    for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                        ? [
+                              [true, true],
+                              [true, false],
+                              [false, true]
+                          ]
+                        : [[true, false]]) {
+                        describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                            withAnAppendedAudioWorklet ? 'with' : 'without'
+                        } an appended AudioWorklet`, () => {
                             let renderer;
 
                             beforeEach(async function () {
@@ -451,27 +433,35 @@ describe('ConvolverNode', () => {
 
                                 renderer = createRenderer({
                                     context,
-                                    length: (context.length === undefined) ? 5 : undefined,
-                                    prepare (destination) {
+                                    length: context.length === undefined ? 5 : undefined,
+                                    prepare(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                        const audioWorkletNode = (withAnAppendedAudioWorklet) ? new AudioWorkletNode(context, 'gain-processor') : null;
+                                        const audioWorkletNode = withAnAppendedAudioWorklet
+                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            : null;
                                         const convolverNode = createConvolverNode(context, { disableNormalization: true });
-                                        const masterGainNode = new GainNode(context, { gain: (withADirectConnection && withAnAppendedAudioWorklet) ? 0.5 : 1 });
+                                        const masterGainNode = new GainNode(context, {
+                                            gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                        });
 
-                                        audioBuffer.copyToChannel(new Float32Array([ 1, 1, 1, 1, 1 ]), 0);
+                                        audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
 
                                         audioBufferSourceNode.buffer = audioBuffer;
 
                                         const convolverBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
 
-                                        convolverBuffer.copyToChannel(new Float32Array([ 0.8 ]), 0);
+                                        convolverBuffer.copyToChannel(new Float32Array([0.8]), 0);
 
                                         convolverNode.buffer = convolverBuffer;
 
-                                        const reassignedConvolverBuffer = new AudioBuffer({ length: 1, numberOfChannels: 1, sampleRate: context.sampleRate });
+                                        const reassignedConvolverBuffer = new AudioBuffer({
+                                            length: 1,
+                                            numberOfChannels: 1,
+                                            sampleRate: context.sampleRate
+                                        });
 
-                                        reassignedConvolverBuffer.copyToChannel(new Float32Array([ 0.5 ]), 0);
+                                        reassignedConvolverBuffer.copyToChannel(new Float32Array([0.5]), 0);
 
                                         convolverNode.buffer = reassignedConvolverBuffer;
 
@@ -482,9 +472,7 @@ describe('ConvolverNode', () => {
                                         }
 
                                         if (withAnAppendedAudioWorklet) {
-                                            convolverNode
-                                                .connect(audioWorkletNode)
-                                                .connect(masterGainNode);
+                                            convolverNode.connect(audioWorkletNode).connect(masterGainNode);
                                         }
 
                                         masterGainNode.connect(destination);
@@ -498,25 +486,19 @@ describe('ConvolverNode', () => {
                                 this.timeout(10000);
 
                                 return renderer({
-                                    start (startTime, { audioBufferSourceNode }) {
+                                    start(startTime, { audioBufferSourceNode }) {
                                         audioBufferSourceNode.start(startTime);
                                     }
-                                })
-                                    .then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 0.5, 0.5, 0.5 ]);
-                                    });
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0.5, 0.5, 0.5, 0.5, 0.5]);
+                                });
                             });
-
                         });
-
                     }
-
                 });
-
             });
 
             describe('channelCount', () => {
-
                 let convolverNode;
 
                 beforeEach(() => {
@@ -543,11 +525,9 @@ describe('ConvolverNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let convolverNode;
 
                 beforeEach(() => {
@@ -572,11 +552,9 @@ describe('ConvolverNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let convolverNode;
 
                 beforeEach(() => {
@@ -590,11 +568,9 @@ describe('ConvolverNode', () => {
 
                     expect(convolverNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('normalize', () => {
-
                 let convolverNode;
 
                 beforeEach(() => {
@@ -611,16 +587,14 @@ describe('ConvolverNode', () => {
 
                 it('should not be assignable to something else', () => {
                     const string = 'not a boolean';
-                    const normalize = convolverNode.normalize = string; // eslint-disable-line no-multi-assign
+                    const normalize = (convolverNode.normalize = string); // eslint-disable-line no-multi-assign
 
                     expect(normalize).to.equal(string);
                     expect(convolverNode.normalize).to.be.true;
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let convolverNode;
 
                 beforeEach(() => {
@@ -632,11 +606,9 @@ describe('ConvolverNode', () => {
                         convolverNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let convolverNode;
 
                 beforeEach(() => {
@@ -648,37 +620,29 @@ describe('ConvolverNode', () => {
                         convolverNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let convolverNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             convolverNode = createConvolverNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(convolverNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(convolverNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -698,7 +662,6 @@ describe('ConvolverNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     convolverNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -711,23 +674,16 @@ describe('ConvolverNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(convolverNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(convolverNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(convolverNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(convolverNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let convolverNode;
@@ -743,7 +699,7 @@ describe('ConvolverNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             convolverNode = createConvolverNode(context);
                         });
 
@@ -757,11 +713,9 @@ describe('ConvolverNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let convolverNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -772,18 +726,23 @@ describe('ConvolverNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             convolverNode = createConvolverNode(context);
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -796,31 +755,24 @@ describe('ConvolverNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const convolverNode = createConvolverNode(context);
                                 const gainNode = new GainNode(context);
 
-                                constantSourceNode
-                                    .connect(convolverNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(convolverNode).connect(destination);
 
-                                convolverNode
-                                    .connect(gainNode)
-                                    .connect(convolverNode);
+                                convolverNode.connect(gainNode).connect(convolverNode);
 
                                 return { constantSourceNode, convolverNode, gainNode };
                             }
@@ -831,65 +783,58 @@ describe('ConvolverNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const convolverNode = createConvolverNode(context, { disableNormalization: true });
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const convolverNode = createConvolverNode(context, { disableNormalization: true });
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            const convolverBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
+                                const convolverBuffer = new AudioBuffer({ length: 1, sampleRate: context.sampleRate });
 
-                            convolverBuffer.copyToChannel(new Float32Array([ 0.8 ]), 0);
+                                convolverBuffer.copyToChannel(new Float32Array([0.8]), 0);
 
-                            convolverNode.buffer = convolverBuffer;
+                                convolverNode.buffer = convolverBuffer;
 
-                            audioBufferSourceNode
-                                .connect(convolverNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(convolverNode).connect(firstDummyGainNode).connect(destination);
 
-                            convolverNode.connect(secondDummyGainNode);
+                                convolverNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, convolverNode, firstDummyGainNode, secondDummyGainNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, convolverNode, firstDummyGainNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(function () {
                         this.timeout(10000);
 
-                        values = [ 1, 1, 1, 1, 1 ];
+                        values = [1, 1, 1, 1, 1];
 
                         renderer = createPredefinedRenderer(values);
                     });
@@ -898,24 +843,20 @@ describe('ConvolverNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ convolverNode }) {
+                            prepare({ convolverNode }) {
                                 convolverNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 audioBufferSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let convolverNode;
 
                         beforeEach(() => {
@@ -932,18 +873,16 @@ describe('ConvolverNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -952,26 +891,21 @@ describe('ConvolverNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ convolverNode }) {
+                                prepare({ convolverNode }) {
                                     convolverNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let convolverNode;
 
                         beforeEach(() => {
@@ -988,18 +922,16 @@ describe('ConvolverNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -1008,44 +940,39 @@ describe('ConvolverNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ convolverNode, firstDummyGainNode }) {
+                                prepare({ convolverNode, firstDummyGainNode }) {
                                     convolverNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ convolverNode, secondDummyGainNode }) {
+                                prepare({ convolverNode, secondDummyGainNode }) {
                                     convolverNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.8, 0.00001);
-                                    expect(channelData[1]).to.be.closeTo(0.8, 0.00001);
-                                    expect(channelData[2]).to.be.closeTo(0.8, 0.00001);
-                                    expect(channelData[3]).to.be.closeTo(0.8, 0.00001);
-                                    expect(channelData[4]).to.be.closeTo(0.8, 0.00001);
-                                });
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.8, 0.00001);
+                                expect(channelData[1]).to.be.closeTo(0.8, 0.00001);
+                                expect(channelData[2]).to.be.closeTo(0.8, 0.00001);
+                                expect(channelData[3]).to.be.closeTo(0.8, 0.00001);
+                                expect(channelData[4]).to.be.closeTo(0.8, 0.00001);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let convolverNode;
 
                     beforeEach(() => {
@@ -1073,11 +1000,9 @@ describe('ConvolverNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let convolverNode;
 
                     beforeEach(() => {
@@ -1116,13 +1041,8 @@ describe('ConvolverNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

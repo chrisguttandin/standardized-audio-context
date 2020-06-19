@@ -1,5 +1,4 @@
 describe('biquadFilterNodeConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -15,5 +14,4 @@ describe('biquadFilterNodeConstructor', () => {
             new BiquadFilterNode(audioContext, {});
         }).to.throw(TypeError, "function is not a constructor (evaluating 'new BiquadFilterNode(audioContext, {})')");
     });
-
 });

@@ -49,9 +49,7 @@ const filterFullBuffer = (
         xBuffer.fill(0);
         yBuffer.fill(0);
 
-        filterBuffer(
-            feedback, feedbackLength, feedforward, feedforwardLength, minLength, xBuffer, yBuffer, 0, bufferLength, input, output
-        );
+        filterBuffer(feedback, feedbackLength, feedforward, feedforwardLength, minLength, xBuffer, yBuffer, 0, bufferLength, input, output);
     }
 
     return filteredBuffer;
@@ -86,28 +84,25 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
 
             // Bug #9: Safari does not support IIRFilterNodes.
             if (nativeOfflineAudioContext.createIIRFilter === undefined) {
-                nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(
-                    nativeOfflineAudioContext,
-                    {
-                        buffer: null,
-                        channelCount: 2,
-                        channelCountMode: 'max',
-                        channelInterpretation: 'speakers',
-                        loop: false,
-                        loopEnd: 0,
-                        loopStart: 0,
-                        playbackRate: 1
-                    }
-                );
+                nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext, {
+                    buffer: null,
+                    channelCount: 2,
+                    channelCountMode: 'max',
+                    channelInterpretation: 'speakers',
+                    loop: false,
+                    loopEnd: 0,
+                    loopStart: 0,
+                    playbackRate: 1
+                });
             } else if (!nativeIIRFilterNodeIsOwnedByContext) {
                 nativeIIRFilterNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => {
-                    return ntvCntxt.createIIRFilter(<number[]> feedforward, <number[]> feedback);
+                    return ntvCntxt.createIIRFilter(<number[]>feedforward, <number[]>feedback);
                 });
             }
 
             renderedNativeAudioNodes.set(
                 nativeOfflineAudioContext,
-                (nativeAudioBufferSourceNode === null) ? nativeIIRFilterNode : nativeAudioBufferSourceNode
+                nativeAudioBufferSourceNode === null ? nativeIIRFilterNode : nativeAudioBufferSourceNode
             );
 
             if (nativeAudioBufferSourceNode !== null) {
@@ -129,12 +124,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
 
                         const renderedBuffer = await renderNativeOfflineAudioContext(partialOfflineAudioContext);
 
-                        return filterFullBuffer(
-                            renderedBuffer,
-                            nativeOfflineAudioContext,
-                            feedback,
-                            feedforward
-                        );
+                        return filterFullBuffer(renderedBuffer, nativeOfflineAudioContext, feedback, feedforward);
                     })();
                 }
 
@@ -152,7 +142,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
         };
 
         return {
-            render (
+            render(
                 proxy: IIIRFilterNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

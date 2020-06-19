@@ -16,9 +16,10 @@ const createChannelMergerNodeWithConstructor = (context, options = null) => {
     return new ChannelMergerNode(context, options);
 };
 const createChannelMergerNodeWithFactoryFunction = (context, options = null) => {
-    const channelMergerNode = (options !== null && options.numberOfInputs !== undefined) ?
-        context.createChannelMerger(options.numberOfInputs) :
-        context.createChannelMerger();
+    const channelMergerNode =
+        options !== null && options.numberOfInputs !== undefined
+            ? context.createChannelMerger(options.numberOfInputs)
+            : context.createChannelMerger();
 
     if (options !== null && options.channelCount !== undefined) {
         channelMergerNode.channelCount = options.channelCount;
@@ -62,11 +63,8 @@ const testCases = {
 };
 
 describe('ChannelMergerNode', () => {
-
-    for (const [ description, { createChannelMergerNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createChannelMergerNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -75,14 +73,11 @@ describe('ChannelMergerNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -107,7 +102,6 @@ describe('ChannelMergerNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let channelMergerNode;
 
                             beforeEach(() => {
@@ -134,28 +128,21 @@ describe('ChannelMergerNode', () => {
                                 expect(channelMergerNode.numberOfInputs).to.equal(6);
                                 expect(channelMergerNode.numberOfOutputs).to.equal(1);
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given numberOfInputs', () => {
                                 const numberOfInputs = 2;
                                 const channelMergerNode = createChannelMergerNode(context, { numberOfInputs });
 
                                 expect(channelMergerNode.numberOfInputs).to.equal(numberOfInputs);
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let channelMergerNode;
 
                 beforeEach(() => {
@@ -174,11 +161,9 @@ describe('ChannelMergerNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let channelMergerNode;
 
                 beforeEach(() => {
@@ -197,11 +182,9 @@ describe('ChannelMergerNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let channelMergerNode;
 
                 beforeEach(() => {
@@ -215,11 +198,9 @@ describe('ChannelMergerNode', () => {
 
                     expect(channelMergerNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let channelMergerNode;
 
                 beforeEach(() => {
@@ -231,11 +212,9 @@ describe('ChannelMergerNode', () => {
                         channelMergerNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let channelMergerNode;
 
                 beforeEach(() => {
@@ -247,37 +226,29 @@ describe('ChannelMergerNode', () => {
                         channelMergerNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let channelMergerNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             channelMergerNode = createChannelMergerNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(channelMergerNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(channelMergerNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -297,7 +268,6 @@ describe('ChannelMergerNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     channelMergerNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -310,23 +280,16 @@ describe('ChannelMergerNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(channelMergerNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(channelMergerNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(channelMergerNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(channelMergerNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let channelMergerNode;
@@ -342,7 +305,7 @@ describe('ChannelMergerNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             channelMergerNode = createChannelMergerNode(context);
                         });
 
@@ -356,11 +319,9 @@ describe('ChannelMergerNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let channelMergerNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -371,18 +332,23 @@ describe('ChannelMergerNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             channelMergerNode = createChannelMergerNode(context);
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -395,31 +361,24 @@ describe('ChannelMergerNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const channelMergerNode = createChannelMergerNode(context);
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
 
-                                constantSourceNode
-                                    .connect(channelMergerNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(channelMergerNode).connect(destination);
 
-                                channelMergerNode
-                                    .connect(gainNode)
-                                    .connect(channelMergerNode);
+                                channelMergerNode.connect(gainNode).connect(channelMergerNode);
 
                                 return { channelMergerNode, constantSourceNode, gainNode };
                             }
@@ -430,59 +389,52 @@ describe('ChannelMergerNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const channelMergerNode = createChannelMergerNode(context, { numberOfInputs: 2 });
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const channelMergerNode = createChannelMergerNode(context, { numberOfInputs: 2 });
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            audioBufferSourceNode
-                                .connect(channelMergerNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(channelMergerNode).connect(firstDummyGainNode).connect(destination);
 
-                            channelMergerNode.connect(secondDummyGainNode);
+                                channelMergerNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, channelMergerNode, firstDummyGainNode, secondDummyGainNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, channelMergerNode, firstDummyGainNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(function () {
                         this.timeout(10000);
 
-                        values = [ 1, 1, 1, 1, 1 ];
+                        values = [1, 1, 1, 1, 1];
 
                         renderer = createPredefinedRenderer(values);
                     });
@@ -491,24 +443,20 @@ describe('ChannelMergerNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ channelMergerNode }) {
+                            prepare({ channelMergerNode }) {
                                 channelMergerNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 audioBufferSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let channelMergerNode;
 
                         beforeEach(() => {
@@ -525,18 +473,16 @@ describe('ChannelMergerNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -545,26 +491,21 @@ describe('ChannelMergerNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ channelMergerNode }) {
+                                prepare({ channelMergerNode }) {
                                     channelMergerNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let channelMergerNode;
 
                         beforeEach(() => {
@@ -581,18 +522,16 @@ describe('ChannelMergerNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -601,40 +540,35 @@ describe('ChannelMergerNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ channelMergerNode, firstDummyGainNode }) {
+                                prepare({ channelMergerNode, firstDummyGainNode }) {
                                     channelMergerNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ channelMergerNode, secondDummyGainNode }) {
+                                prepare({ channelMergerNode, secondDummyGainNode }) {
                                     channelMergerNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 0.5, 0.5, 0.5 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0.5, 0.5, 0.5, 0.5, 0.5]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let channelMergerNode;
 
                     beforeEach(() => {
@@ -662,11 +596,9 @@ describe('ChannelMergerNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let channelMergerNode;
 
                     beforeEach(() => {
@@ -705,13 +637,8 @@ describe('ChannelMergerNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

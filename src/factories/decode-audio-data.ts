@@ -37,37 +37,36 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
         // Bug #21: Safari does not support promises yet.
         if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeContext))) {
             // Bug #101: Edge does not decode something on a closed OfflineAudioContext.
-            const nativeContextOrBackupNativeContext = (nativeContext.state === 'closed' &&
-                    nativeOfflineAudioContextConstructor !== null &&
-                    isNativeOfflineAudioContext(nativeContext)) ?
-                new nativeOfflineAudioContextConstructor(1, 1, nativeContext.sampleRate) :
-                nativeContext;
+            const nativeContextOrBackupNativeContext =
+                nativeContext.state === 'closed' &&
+                nativeOfflineAudioContextConstructor !== null &&
+                isNativeOfflineAudioContext(nativeContext)
+                    ? new nativeOfflineAudioContextConstructor(1, 1, nativeContext.sampleRate)
+                    : nativeContext;
 
-            const promise = nativeContextOrBackupNativeContext
-                .decodeAudioData(audioData)
-                .catch ((err: DOMException | Error) => {
-                    // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
-                    if (err instanceof DOMException && err.name === 'NotSupportedError') {
-                        throw new TypeError();
-                    }
+            const promise = nativeContextOrBackupNativeContext.decodeAudioData(audioData).catch((err: DOMException | Error) => {
+                // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
+                if (err instanceof DOMException && err.name === 'NotSupportedError') {
+                    throw new TypeError();
+                }
 
-                    throw err;
-                });
+                throw err;
+            });
 
-            return promise
-                .then((audioBuffer) => {
-                    // Bug #157: Only Chrome & Opera do allow the bufferOffset to be out-of-bounds.
-                    if (!cacheTestResult(
-                        testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-                        () => testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
-                    )) {
-                        wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
-                    }
+            return promise.then((audioBuffer) => {
+                // Bug #157: Only Chrome & Opera do allow the bufferOffset to be out-of-bounds.
+                if (
+                    !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
+                        testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
+                    )
+                ) {
+                    wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
+                }
 
-                    audioBufferStore.add(audioBuffer);
+                audioBufferStore.add(audioBuffer);
 
-                    return audioBuffer;
-                });
+                return audioBuffer;
+            });
         }
 
         // Bug #21: Safari does not return a Promise yet.
@@ -76,7 +75,9 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                 // Bug #133: Safari does neuter the ArrayBuffer.
                 try {
                     detachArrayBuffer(audioData);
-                } catch { /* Ignore errors. */ }
+                } catch {
+                    // Ignore errors.
+                }
             };
 
             const fail = (err: DOMException | Error) => {
@@ -87,26 +88,30 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             // Bug #26: Safari throws a synchronous error.
             try {
                 // Bug #1: Safari requires a successCallback.
-                nativeContext.decodeAudioData(audioData, (audioBuffer) => {
-                    // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-                    // Bug #100: Safari does throw a wrong error when calling getChannelData() with an out-of-bounds value.
-                    if (typeof audioBuffer.copyFromChannel !== 'function') {
-                        wrapAudioBufferCopyChannelMethods(audioBuffer);
-                        wrapAudioBufferGetChannelDataMethod(audioBuffer);
-                    }
+                nativeContext.decodeAudioData(
+                    audioData,
+                    (audioBuffer) => {
+                        // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
+                        // Bug #100: Safari does throw a wrong error when calling getChannelData() with an out-of-bounds value.
+                        if (typeof audioBuffer.copyFromChannel !== 'function') {
+                            wrapAudioBufferCopyChannelMethods(audioBuffer);
+                            wrapAudioBufferGetChannelDataMethod(audioBuffer);
+                        }
 
-                    audioBufferStore.add(audioBuffer);
+                        audioBufferStore.add(audioBuffer);
 
-                    complete();
-                    resolve(audioBuffer);
-                }, (err: DOMException | Error) => {
-                    // Bug #4: Safari returns null instead of an error.
-                    if (err === null) {
-                        fail(createEncodingError());
-                    } else {
-                        fail(err);
+                        complete();
+                        resolve(audioBuffer);
+                    },
+                    (err: DOMException | Error) => {
+                        // Bug #4: Safari returns null instead of an error.
+                        if (err === null) {
+                            fail(createEncodingError());
+                        } else {
+                            fail(err);
+                        }
                     }
-                });
+                );
             } catch (err) {
                 fail(err);
             }

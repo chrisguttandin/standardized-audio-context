@@ -1,7 +1,7 @@
 import { TConstructor } from '../types';
 
 const handler = {
-    construct (): any {
+    construct(): any {
         return handler;
     }
 };

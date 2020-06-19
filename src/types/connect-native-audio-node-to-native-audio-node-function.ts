@@ -6,4 +6,4 @@ export type TConnectNativeAudioNodeToNativeAudioNodeFunction = (
     nativeDestinationAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
     output: number,
     input: number
-) => [ TNativeAudioNode, number, number ];
+) => [TNativeAudioNode, number, number];

@@ -12,7 +12,7 @@ export const createNativeIIRFilterNodeFactory: TNativeIIRFilterNodeFactoryFactor
         }
 
         const nativeIIRFilterNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
-            return ntvCntxt.createIIRFilter(<number[]> options.feedforward, <number[]> options.feedback);
+            return ntvCntxt.createIIRFilter(<number[]>options.feedforward, <number[]>options.feedback);
         });
 
         assignNativeAudioNodeOptions(nativeIIRFilterNode, options);

@@ -36,14 +36,13 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
 ): Promise<null | TNativeAudioBuffer> => {
     // Ceil the length to the next full render quantum.
     // Bug #17: Safari does not yet expose the length.
-    const length = (renderedBuffer === null) ? (Math.ceil(proxy.context.length / 128) * 128) : renderedBuffer.length;
+    const length = renderedBuffer === null ? Math.ceil(proxy.context.length / 128) * 128 : renderedBuffer.length;
     const numberOfInputChannels = options.channelCount * options.numberOfInputs;
     const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
-    const processedBuffer = (numberOfOutputChannels === 0) ? null : nativeOfflineAudioContext.createBuffer(
-        numberOfOutputChannels,
-        length,
-        nativeOfflineAudioContext.sampleRate
-    );
+    const processedBuffer =
+        numberOfOutputChannels === 0
+            ? null
+            : nativeOfflineAudioContext.createBuffer(numberOfOutputChannels, length, nativeOfflineAudioContext.sampleRate);
 
     if (processorConstructor === undefined) {
         throw new Error('Missing the processor constructor.');
@@ -53,9 +52,10 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
     const audioWorkletProcessor = await getAudioWorkletProcessor(nativeOfflineAudioContext, proxy);
     const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
     const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
-    const parameters: { [ name: string ]: Float32Array } = Array
-        .from(proxy.parameters.keys())
-        .reduce((prmtrs, name) => ({ ...prmtrs, [ name ]: new Float32Array(128) }), { });
+    const parameters: { [name: string]: Float32Array } = Array.from(proxy.parameters.keys()).reduce(
+        (prmtrs, name) => ({ ...prmtrs, [name]: new Float32Array(128) }),
+        {}
+    );
 
     for (let i = 0; i < length; i += 128) {
         if (options.numberOfInputs > 0 && renderedBuffer !== null) {
@@ -82,14 +82,13 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
         }
 
         try {
-            const potentiallyEmptyInputs = inputs
-                .map((input, index) => {
-                    if (audioNodeConnections.activeInputs[index].size === 0) {
-                        return [ ];
-                    }
+            const potentiallyEmptyInputs = inputs.map((input, index) => {
+                if (audioNodeConnections.activeInputs[index].size === 0) {
+                    return [];
+                }
 
-                    return input;
-                });
+                return input;
+            });
             const activeSourceFlag = exposeCurrentFrameAndCurrentTime(
                 i / nativeOfflineAudioContext.sampleRate,
                 nativeOfflineAudioContext.sampleRate,
@@ -152,7 +151,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
             trace: readonly IAudioNode<T>[]
         ) => {
             let nativeAudioWorkletNode = getNativeAudioNode<T, TNativeAudioWorkletNode>(proxy);
-            let nativeOutputNodes: null | [ TNativeChannelSplitterNode, TNativeChannelMergerNode[], TNativeGainNode ] = null;
+            let nativeOutputNodes: null | [TNativeChannelSplitterNode, TNativeChannelMergerNode[], TNativeGainNode] = null;
 
             const nativeAudioWorkletNodeIsOwnedByContext = isOwnedByContext(nativeAudioWorkletNode, nativeOfflineAudioContext);
 
@@ -165,18 +164,17 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     channelInterpretation: 'discrete',
                     numberOfOutputs: Math.max(1, numberOfOutputChannels)
                 });
-                const outputChannelMergerNodes: TNativeChannelMergerNode[] = [ ];
+                const outputChannelMergerNodes: TNativeChannelMergerNode[] = [];
 
                 for (let i = 0; i < proxy.numberOfOutputs; i += 1) {
-                    outputChannelMergerNodes.push(createNativeChannelMergerNode(
-                        nativeOfflineAudioContext,
-                        {
+                    outputChannelMergerNodes.push(
+                        createNativeChannelMergerNode(nativeOfflineAudioContext, {
                             channelCount: 1,
                             channelCountMode: 'explicit',
                             channelInterpretation: 'speakers',
                             numberOfInputs: options.outputChannelCount[i]
-                        }
-                    ));
+                        })
+                    );
                 }
 
                 const outputGainNode = createNativeGainNode(nativeOfflineAudioContext, {
@@ -186,17 +184,17 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     gain: 1
                 });
 
-                outputGainNode.connect = <TNativeAudioNode['connect']> connectMultipleOutputs.bind(null, outputChannelMergerNodes);
-                outputGainNode.disconnect = <TNativeAudioNode['disconnect']> disconnectMultipleOutputs.bind(null, outputChannelMergerNodes);
+                outputGainNode.connect = <TNativeAudioNode['connect']>connectMultipleOutputs.bind(null, outputChannelMergerNodes);
+                outputGainNode.disconnect = <TNativeAudioNode['disconnect']>disconnectMultipleOutputs.bind(null, outputChannelMergerNodes);
 
-                nativeOutputNodes = [ outputChannelSplitterNode, outputChannelMergerNodes, outputGainNode ];
+                nativeOutputNodes = [outputChannelSplitterNode, outputChannelMergerNodes, outputGainNode];
             } else if (!nativeAudioWorkletNodeIsOwnedByContext) {
                 nativeAudioWorkletNode = new nativeAudioWorkletNodeConstructor(nativeOfflineAudioContext, name);
             }
 
             renderedNativeAudioNodes.set(
                 nativeOfflineAudioContext,
-                (nativeOutputNodes === null) ? nativeAudioWorkletNode : nativeOutputNodes[2]
+                nativeOutputNodes === null ? nativeAudioWorkletNode : nativeOutputNodes[2]
             );
 
             if (nativeOutputNodes !== null) {
@@ -211,9 +209,8 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
                     // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
                     const numberOfInputChannels = proxy.channelCount * proxy.numberOfInputs;
-                    const numberOfParameters = (processorConstructor.parameterDescriptors === undefined)
-                        ? 0
-                        : processorConstructor.parameterDescriptors.length;
+                    const numberOfParameters =
+                        processorConstructor.parameterDescriptors === undefined ? 0 : processorConstructor.parameterDescriptors.length;
                     const numberOfChannels = numberOfInputChannels + numberOfParameters;
 
                     const renderBuffer = async () => {
@@ -224,75 +221,75 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             Math.ceil(proxy.context.length / 128) * 128,
                             nativeOfflineAudioContext.sampleRate
                         );
-                        const gainNodes: TNativeGainNode[] = [ ];
-                        const inputChannelSplitterNodes = [ ];
+                        const gainNodes: TNativeGainNode[] = [];
+                        const inputChannelSplitterNodes = [];
 
                         for (let i = 0; i < options.numberOfInputs; i += 1) {
-                            gainNodes.push(createNativeGainNode(partialOfflineAudioContext, {
-                                channelCount: options.channelCount,
-                                channelCountMode: options.channelCountMode,
-                                channelInterpretation: options.channelInterpretation,
-                                gain: 1
-                            }));
-                            inputChannelSplitterNodes.push(createNativeChannelSplitterNode(partialOfflineAudioContext, {
-                                channelCount: options.channelCount,
-                                channelCountMode: 'explicit',
-                                channelInterpretation: 'discrete',
-                                numberOfOutputs: options.channelCount
-                            }));
+                            gainNodes.push(
+                                createNativeGainNode(partialOfflineAudioContext, {
+                                    channelCount: options.channelCount,
+                                    channelCountMode: options.channelCountMode,
+                                    channelInterpretation: options.channelInterpretation,
+                                    gain: 1
+                                })
+                            );
+                            inputChannelSplitterNodes.push(
+                                createNativeChannelSplitterNode(partialOfflineAudioContext, {
+                                    channelCount: options.channelCount,
+                                    channelCountMode: 'explicit',
+                                    channelInterpretation: 'discrete',
+                                    numberOfOutputs: options.channelCount
+                                })
+                            );
                         }
 
-                        const constantSourceNodes = await Promise
-                            .all(Array
-                                .from(proxy.parameters.values())
-                                .map(async (audioParam) => {
-                                    const constantSourceNode = createNativeConstantSourceNode(partialOfflineAudioContext, {
-                                        channelCount: 1,
-                                        channelCountMode: 'explicit',
-                                        channelInterpretation: 'discrete',
-                                        offset: audioParam.value
-                                    });
+                        const constantSourceNodes = await Promise.all(
+                            Array.from(proxy.parameters.values()).map(async (audioParam) => {
+                                const constantSourceNode = createNativeConstantSourceNode(partialOfflineAudioContext, {
+                                    channelCount: 1,
+                                    channelCountMode: 'explicit',
+                                    channelInterpretation: 'discrete',
+                                    offset: audioParam.value
+                                });
 
-                                    await renderAutomation(partialOfflineAudioContext, audioParam, constantSourceNode.offset, trace);
+                                await renderAutomation(partialOfflineAudioContext, audioParam, constantSourceNode.offset, trace);
 
-                                    return constantSourceNode;
-                                }));
-
-                        const inputChannelMergerNode = createNativeChannelMergerNode(
-                            partialOfflineAudioContext,
-                            {
-                                channelCount: 1,
-                                channelCountMode: 'explicit',
-                                channelInterpretation: 'speakers',
-                                numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
-                            }
+                                return constantSourceNode;
+                            })
                         );
+
+                        const inputChannelMergerNode = createNativeChannelMergerNode(partialOfflineAudioContext, {
+                            channelCount: 1,
+                            channelCountMode: 'explicit',
+                            channelInterpretation: 'speakers',
+                            numberOfInputs: Math.max(1, numberOfInputChannels + numberOfParameters)
+                        });
 
                         for (let i = 0; i < options.numberOfInputs; i += 1) {
                             gainNodes[i].connect(inputChannelSplitterNodes[i]);
 
                             for (let j = 0; j < options.channelCount; j += 1) {
-                                inputChannelSplitterNodes[i].connect(inputChannelMergerNode, j, (i * options.channelCount) + j);
+                                inputChannelSplitterNodes[i].connect(inputChannelMergerNode, j, i * options.channelCount + j);
                             }
                         }
 
-                        for (const [ index, constantSourceNode ] of constantSourceNodes.entries()) {
+                        for (const [index, constantSourceNode] of constantSourceNodes.entries()) {
                             constantSourceNode.connect(inputChannelMergerNode, 0, numberOfInputChannels + index);
                             constantSourceNode.start(0);
                         }
 
                         inputChannelMergerNode.connect(partialOfflineAudioContext.destination);
 
-                        await Promise
-                            .all(gainNodes
-                                .map((gainNode) => renderInputsOfAudioNode(proxy, partialOfflineAudioContext, gainNode, trace)));
+                        await Promise.all(
+                            gainNodes.map((gainNode) => renderInputsOfAudioNode(proxy, partialOfflineAudioContext, gainNode, trace))
+                        );
 
                         return renderNativeOfflineAudioContext(partialOfflineAudioContext);
                     };
 
                     processedBufferPromise = processBuffer(
                         proxy,
-                        (numberOfChannels === 0) ? null : await renderBuffer(),
+                        numberOfChannels === 0 ? null : await renderBuffer(),
                         nativeOfflineAudioContext,
                         options,
                         processorConstructor,
@@ -301,20 +298,17 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 }
 
                 const processedBuffer = await processedBufferPromise;
-                const audioBufferSourceNode = createNativeAudioBufferSourceNode(
-                    nativeOfflineAudioContext,
-                    {
-                        buffer: null,
-                        channelCount: 2,
-                        channelCountMode: 'max',
-                        channelInterpretation: 'speakers',
-                        loop: false,
-                        loopEnd: 0,
-                        loopStart: 0,
-                        playbackRate: 1
-                    }
-                );
-                const [ outputChannelSplitterNode, outputChannelMergerNodes, outputGainNode ] = nativeOutputNodes;
+                const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeOfflineAudioContext, {
+                    buffer: null,
+                    channelCount: 2,
+                    channelCountMode: 'max',
+                    channelInterpretation: 'speakers',
+                    loop: false,
+                    loopEnd: 0,
+                    loopStart: 0,
+                    playbackRate: 1
+                });
+                const [outputChannelSplitterNode, outputChannelMergerNodes, outputGainNode] = nativeOutputNodes;
 
                 if (processedBuffer !== null) {
                     audioBufferSourceNode.buffer = processedBuffer;
@@ -337,22 +331,22 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
             }
 
             if (!nativeAudioWorkletNodeIsOwnedByContext) {
-                for (const [ nm, audioParam ] of proxy.parameters.entries()) {
+                for (const [nm, audioParam] of proxy.parameters.entries()) {
                     await renderAutomation(
                         nativeOfflineAudioContext,
                         audioParam,
                         // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
-                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioWorkletNode.parameters).get(nm),
+                        <TNativeAudioParam>(<IReadOnlyMap<string, TNativeAudioParam>>nativeAudioWorkletNode.parameters).get(nm),
                         trace
                     );
                 }
             } else {
-                for (const [ nm, audioParam ] of proxy.parameters.entries()) {
+                for (const [nm, audioParam] of proxy.parameters.entries()) {
                     await connectAudioParam(
                         nativeOfflineAudioContext,
                         audioParam,
                         // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
-                        <TNativeAudioParam> (<IReadOnlyMap<string, TNativeAudioParam>> nativeAudioWorkletNode.parameters).get(nm),
+                        <TNativeAudioParam>(<IReadOnlyMap<string, TNativeAudioParam>>nativeAudioWorkletNode.parameters).get(nm),
                         trace
                     );
                 }
@@ -364,7 +358,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
         };
 
         return {
-            render (
+            render(
                 proxy: IAudioWorkletNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

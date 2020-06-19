@@ -27,13 +27,13 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
         let unmodifiedCurve: null | TNativeWaveShaperNode['curve'] = null;
 
         const nativeWaveShaperNodeFaker = {
-            get bufferSize (): undefined {
+            get bufferSize(): undefined {
                 return undefined;
             },
-            get channelCount (): number {
+            get channelCount(): number {
                 return negativeWaveShaperNode.channelCount;
             },
-            set channelCount (value) {
+            set channelCount(value) {
                 inputGainNode.channelCount = value;
                 invertGainNode.channelCount = value;
                 negativeWaveShaperNode.channelCount = value;
@@ -41,10 +41,10 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
                 positiveWaveShaperNode.channelCount = value;
                 revertGainNode.channelCount = value;
             },
-            get channelCountMode (): TNativeWaveShaperNode['channelCountMode'] {
+            get channelCountMode(): TNativeWaveShaperNode['channelCountMode'] {
                 return negativeWaveShaperNode.channelCountMode;
             },
-            set channelCountMode (value) {
+            set channelCountMode(value) {
                 inputGainNode.channelCountMode = value;
                 invertGainNode.channelCountMode = value;
                 negativeWaveShaperNode.channelCountMode = value;
@@ -52,10 +52,10 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
                 positiveWaveShaperNode.channelCountMode = value;
                 revertGainNode.channelCountMode = value;
             },
-            get channelInterpretation (): TNativeWaveShaperNode['channelInterpretation'] {
+            get channelInterpretation(): TNativeWaveShaperNode['channelInterpretation'] {
                 return negativeWaveShaperNode.channelInterpretation;
             },
-            set channelInterpretation (value) {
+            set channelInterpretation(value) {
                 inputGainNode.channelInterpretation = value;
                 invertGainNode.channelInterpretation = value;
                 negativeWaveShaperNode.channelInterpretation = value;
@@ -63,13 +63,13 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
                 positiveWaveShaperNode.channelInterpretation = value;
                 revertGainNode.channelInterpretation = value;
             },
-            get context (): TNativeWaveShaperNode['context'] {
+            get context(): TNativeWaveShaperNode['context'] {
                 return negativeWaveShaperNode.context;
             },
-            get curve (): TNativeWaveShaperNode['curve'] {
+            get curve(): TNativeWaveShaperNode['curve'] {
                 return unmodifiedCurve;
             },
-            set curve (value) {
+            set curve(value) {
                 // Bug #102: Safari does not throw an InvalidStateError when the curve has less than two samples.
                 if (curve !== null && curve.length < 2) {
                     throw createInvalidStateError();
@@ -88,7 +88,7 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
                     positiveCurve[0] = -value[curveLength - 1];
 
                     const length = Math.ceil((curveLength + 1) / 2);
-                    const centerIndex = ((curveLength + 1) / 2) - 1;
+                    const centerIndex = (curveLength + 1) / 2 - 1;
 
                     for (let i = 1; i < length; i += 1) {
                         const theoreticIndex = (i / length) * centerIndex;
@@ -96,17 +96,19 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
                         const lowerIndex = Math.floor(theoreticIndex);
                         const upperIndex = Math.ceil(theoreticIndex);
 
-                        negativeCurve[i] = (lowerIndex === upperIndex)
-                            ? value[lowerIndex]
-                            : ((1 - (theoreticIndex - lowerIndex)) * value[lowerIndex])
-                                + ((1 - (upperIndex - theoreticIndex)) * value[upperIndex]);
-                        positiveCurve[i] = (lowerIndex === upperIndex)
-                            ? -value[curveLength - 1 - lowerIndex]
-                            : -((1 - (theoreticIndex - lowerIndex)) * value[curveLength - 1 - lowerIndex])
-                                - ((1 - (upperIndex - theoreticIndex)) * value[curveLength - 1 - upperIndex]);
+                        negativeCurve[i] =
+                            lowerIndex === upperIndex
+                                ? value[lowerIndex]
+                                : (1 - (theoreticIndex - lowerIndex)) * value[lowerIndex] +
+                                  (1 - (upperIndex - theoreticIndex)) * value[upperIndex];
+                        positiveCurve[i] =
+                            lowerIndex === upperIndex
+                                ? -value[curveLength - 1 - lowerIndex]
+                                : -((1 - (theoreticIndex - lowerIndex)) * value[curveLength - 1 - lowerIndex]) -
+                                  (1 - (upperIndex - theoreticIndex)) * value[curveLength - 1 - upperIndex];
                     }
 
-                    negativeCurve[length] = (curveLength % 2 === 1) ? value[length - 1] : (value[length - 2] + value[length - 1]) / 2;
+                    negativeCurve[length] = curveLength % 2 === 1 ? value[length - 1] : (value[length - 2] + value[length - 1]) / 2;
 
                     negativeWaveShaperNode.curve = negativeCurve;
                     positiveWaveShaperNode.curve = positiveCurve;
@@ -123,29 +125,29 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
                     }
                 }
             },
-            get inputs (): TNativeAudioNode[] {
-                return [ inputGainNode ];
+            get inputs(): TNativeAudioNode[] {
+                return [inputGainNode];
             },
-            get numberOfInputs (): number {
+            get numberOfInputs(): number {
                 return negativeWaveShaperNode.numberOfInputs;
             },
-            get numberOfOutputs (): number {
+            get numberOfOutputs(): number {
                 return negativeWaveShaperNode.numberOfOutputs;
             },
-            get oversample (): TNativeWaveShaperNode['oversample'] {
+            get oversample(): TNativeWaveShaperNode['oversample'] {
                 return negativeWaveShaperNode.oversample;
             },
-            set oversample (value) {
+            set oversample(value) {
                 negativeWaveShaperNode.oversample = value;
                 positiveWaveShaperNode.oversample = value;
             },
-            addEventListener (...args: any[]): void {
+            addEventListener(...args: any[]): void {
                 return inputGainNode.addEventListener(args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]): boolean {
+            dispatchEvent(...args: any[]): boolean {
                 return inputGainNode.dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]): void {
+            removeEventListener(...args: any[]): void {
                 return inputGainNode.removeEventListener(args[0], args[1], args[2]);
             }
         };
@@ -159,15 +161,9 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
         }
 
         const whenConnected = () => {
-            inputGainNode
-                .connect(negativeWaveShaperNode)
-                .connect(outputGainNode);
+            inputGainNode.connect(negativeWaveShaperNode).connect(outputGainNode);
 
-            inputGainNode
-                .connect(invertGainNode)
-                .connect(positiveWaveShaperNode)
-                .connect(revertGainNode)
-                .connect(outputGainNode);
+            inputGainNode.connect(invertGainNode).connect(positiveWaveShaperNode).connect(revertGainNode).connect(outputGainNode);
 
             isConnected = true;
 

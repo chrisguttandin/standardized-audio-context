@@ -80,11 +80,8 @@ const testCases = {
 };
 
 describe('BiquadFilterNode', () => {
-
-    for (const [ description, { createBiquadFilterNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createBiquadFilterNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -93,14 +90,11 @@ describe('BiquadFilterNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -125,7 +119,6 @@ describe('BiquadFilterNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let biquadFilterNode;
 
                             beforeEach(() => {
@@ -161,11 +154,9 @@ describe('BiquadFilterNode', () => {
                                 expect(biquadFilterNode.Q).not.to.be.undefined;
                                 expect(biquadFilterNode.type).to.be.a('string');
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given channelCount', () => {
                                 const channelCount = 4;
                                 const biquadFilterNode = createBiquadFilterNode(context, { channelCount });
@@ -221,17 +212,12 @@ describe('BiquadFilterNode', () => {
 
                                 expect(biquadFilterNode.Q.value).to.equal(Q);
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -245,11 +231,9 @@ describe('BiquadFilterNode', () => {
 
                     expect(biquadFilterNode.channelCount).to.equal(channelCount);
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -263,11 +247,9 @@ describe('BiquadFilterNode', () => {
 
                     expect(biquadFilterNode.channelCountMode).to.equal(channelCountMode);
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -281,11 +263,9 @@ describe('BiquadFilterNode', () => {
 
                     expect(biquadFilterNode.channelInterpretation).to.equal(channelInterpretation);
                 });
-
             });
 
             describe('detune', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -313,70 +293,54 @@ describe('BiquadFilterNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.detune.cancelAndHoldAtTime(0)).to.equal(biquadFilterNode.detune);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.detune.cancelScheduledValues(0)).to.equal(biquadFilterNode.detune);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         biquadFilterNode.detune.value = 1;
 
                         expect(biquadFilterNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.detune);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.detune.linearRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.detune);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.detune.setTargetAtTime(1, 0, 0.1)).to.equal(biquadFilterNode.detune);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.detune.setValueAtTime(1, 0)).to.equal(biquadFilterNode.detune);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.detune.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(biquadFilterNode.detune);
+                        expect(biquadFilterNode.detune.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(biquadFilterNode.detune);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('frequency', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -404,67 +368,51 @@ describe('BiquadFilterNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.frequency.cancelAndHoldAtTime(0)).to.equal(biquadFilterNode.frequency);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.frequency.cancelScheduledValues(0)).to.equal(biquadFilterNode.frequency);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.frequency.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.frequency);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.frequency.linearRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.frequency);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.frequency.setTargetAtTime(1, 0, 0.1)).to.equal(biquadFilterNode.frequency);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.frequency.setValueAtTime(1, 0)).to.equal(biquadFilterNode.frequency);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.frequency.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(biquadFilterNode.frequency);
+                        expect(biquadFilterNode.frequency.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(biquadFilterNode.frequency);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('gain', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -492,70 +440,54 @@ describe('BiquadFilterNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.gain.cancelAndHoldAtTime(0)).to.equal(biquadFilterNode.gain);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.gain.cancelScheduledValues(0)).to.equal(biquadFilterNode.gain);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         biquadFilterNode.gain.value = 1;
 
                         expect(biquadFilterNode.gain.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.gain);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.gain.linearRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.gain);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.gain.setTargetAtTime(1, 0, 0.1)).to.equal(biquadFilterNode.gain);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.gain.setValueAtTime(1, 0)).to.equal(biquadFilterNode.gain);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.gain.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(biquadFilterNode.gain);
+                        expect(biquadFilterNode.gain.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(biquadFilterNode.gain);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('numberOfInputs', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -567,11 +499,9 @@ describe('BiquadFilterNode', () => {
                         biquadFilterNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -583,11 +513,9 @@ describe('BiquadFilterNode', () => {
                         biquadFilterNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('type', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -595,7 +523,7 @@ describe('BiquadFilterNode', () => {
                 });
 
                 it('should be assignable to another type', () => {
-                    const type = biquadFilterNode.type = 'allpass'; // eslint-disable-line no-multi-assign
+                    const type = (biquadFilterNode.type = 'allpass'); // eslint-disable-line no-multi-assign
 
                     expect(type).to.equal('allpass');
                     expect(biquadFilterNode.type).to.equal('allpass');
@@ -603,16 +531,14 @@ describe('BiquadFilterNode', () => {
 
                 it('should not be assignable to something else', () => {
                     const string = 'none of the accepted types';
-                    const type = biquadFilterNode.type = string; // eslint-disable-line no-multi-assign
+                    const type = (biquadFilterNode.type = string); // eslint-disable-line no-multi-assign
 
                     expect(type).to.equal(string);
                     expect(biquadFilterNode.type).to.equal('lowpass');
                 });
-
             });
 
             describe('Q', () => {
-
                 let biquadFilterNode;
 
                 beforeEach(() => {
@@ -640,93 +566,71 @@ describe('BiquadFilterNode', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.Q.cancelAndHoldAtTime(0)).to.equal(biquadFilterNode.Q);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.Q.cancelScheduledValues(0)).to.equal(biquadFilterNode.Q);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.Q.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.Q);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.Q.linearRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.Q);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.Q.setTargetAtTime(1, 0, 0.1)).to.equal(biquadFilterNode.Q);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(biquadFilterNode.Q.setValueAtTime(1, 0)).to.equal(biquadFilterNode.Q);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.frequency.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(biquadFilterNode.frequency);
+                        expect(biquadFilterNode.frequency.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(biquadFilterNode.frequency);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let biquadFilterNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             biquadFilterNode = createBiquadFilterNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(biquadFilterNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(biquadFilterNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -746,7 +650,6 @@ describe('BiquadFilterNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     biquadFilterNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -759,23 +662,16 @@ describe('BiquadFilterNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(biquadFilterNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(biquadFilterNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(biquadFilterNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(biquadFilterNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let biquadFilterNode;
@@ -791,7 +687,7 @@ describe('BiquadFilterNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             biquadFilterNode = createBiquadFilterNode(context);
                         });
 
@@ -805,11 +701,9 @@ describe('BiquadFilterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let biquadFilterNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -820,18 +714,23 @@ describe('BiquadFilterNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             biquadFilterNode = createBiquadFilterNode(context);
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -844,31 +743,24 @@ describe('BiquadFilterNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const biquadFilterNode = createBiquadFilterNode(context);
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
 
-                                constantSourceNode
-                                    .connect(biquadFilterNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(biquadFilterNode).connect(destination);
 
-                                biquadFilterNode
-                                    .connect(gainNode)
-                                    .connect(biquadFilterNode);
+                                biquadFilterNode.connect(gainNode).connect(biquadFilterNode);
 
                                 return { biquadFilterNode, constantSourceNode, gainNode };
                             }
@@ -879,59 +771,52 @@ describe('BiquadFilterNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const biquadFilterNode = createBiquadFilterNode(context, { frequency: context.sampleRate / 2 });
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const biquadFilterNode = createBiquadFilterNode(context, { frequency: context.sampleRate / 2 });
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            audioBufferSourceNode
-                                .connect(biquadFilterNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(biquadFilterNode).connect(firstDummyGainNode).connect(destination);
 
-                            biquadFilterNode.connect(secondDummyGainNode);
+                                biquadFilterNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, biquadFilterNode, firstDummyGainNode, secondDummyGainNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, biquadFilterNode, firstDummyGainNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(function () {
                         this.timeout(10000);
 
-                        values = [ 1, 1, 1, 1, 1 ];
+                        values = [1, 1, 1, 1, 1];
 
                         renderer = createPredefinedRenderer(values);
                     });
@@ -940,24 +825,20 @@ describe('BiquadFilterNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ biquadFilterNode }) {
+                            prepare({ biquadFilterNode }) {
                                 biquadFilterNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 audioBufferSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let biquadFilterNode;
 
                         beforeEach(() => {
@@ -974,18 +855,16 @@ describe('BiquadFilterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -994,26 +873,21 @@ describe('BiquadFilterNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ biquadFilterNode }) {
+                                prepare({ biquadFilterNode }) {
                                     biquadFilterNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let biquadFilterNode;
 
                         beforeEach(() => {
@@ -1030,18 +904,16 @@ describe('BiquadFilterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -1050,40 +922,35 @@ describe('BiquadFilterNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ biquadFilterNode, firstDummyGainNode }) {
+                                prepare({ biquadFilterNode, firstDummyGainNode }) {
                                     biquadFilterNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ biquadFilterNode, secondDummyGainNode }) {
+                                prepare({ biquadFilterNode, secondDummyGainNode }) {
                                     biquadFilterNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal(values);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal(values);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let biquadFilterNode;
 
                     beforeEach(() => {
@@ -1111,11 +978,9 @@ describe('BiquadFilterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let biquadFilterNode;
 
                     beforeEach(() => {
@@ -1154,15 +1019,11 @@ describe('BiquadFilterNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
 
             describe('getFrequencyResponse()', () => {
-
                 describe('with a frequencyHz parameter smaller as the others', () => {
-
                     it('should throw an InvalidAccessError', (done) => {
                         const biquadFilterNode = createBiquadFilterNode(context);
 
@@ -1175,16 +1036,14 @@ describe('BiquadFilterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a magResponse parameter smaller as the others', () => {
-
                     it('should throw an InvalidAccessError', (done) => {
                         const biquadFilterNode = createBiquadFilterNode(context);
 
                         try {
-                            biquadFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(0), new Float32Array(1));
+                            biquadFilterNode.getFrequencyResponse(new Float32Array([1]), new Float32Array(0), new Float32Array(1));
                         } catch (err) {
                             expect(err.code).to.equal(15);
                             expect(err.name).to.equal('InvalidAccessError');
@@ -1192,16 +1051,14 @@ describe('BiquadFilterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a phaseResponse parameter smaller as the others', () => {
-
                     it('should throw an InvalidAccessError', (done) => {
                         const biquadFilterNode = createBiquadFilterNode(context);
 
                         try {
-                            biquadFilterNode.getFrequencyResponse(new Float32Array([ 1 ]), new Float32Array(1), new Float32Array(0));
+                            biquadFilterNode.getFrequencyResponse(new Float32Array([1]), new Float32Array(1), new Float32Array(0));
                         } catch (err) {
                             expect(err.code).to.equal(15);
                             expect(err.name).to.equal('InvalidAccessError');
@@ -1209,13 +1066,10 @@ describe('BiquadFilterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with valid parameters', () => {
-
                     // bug #22 This is not yet implemented in Edge and Safari.
-
                     /*
                      * it('should fill the magResponse and phaseResponse arrays', () => {
                      *     const biquadFilterNode = audioContext.createBiquadFilter();
@@ -1228,13 +1082,8 @@ describe('BiquadFilterNode', () => {
                      *     expect(Array.from(phaseResponse)).to.deep.equal([ -0.6473332643508911, -1.862880825996399, -2.692772388458252, -2.9405176639556885, -3.044968605041504 ]);
                      * });
                      */
-
                 });
-
             });
-
         });
-
     }
-
 });

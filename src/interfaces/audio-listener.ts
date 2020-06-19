@@ -1,7 +1,6 @@
 import { IAudioParam } from './audio-param';
 
 export interface IAudioListener {
-
     readonly forwardX: IAudioParam;
 
     readonly forwardY: IAudioParam;
@@ -19,5 +18,4 @@ export interface IAudioListener {
     readonly upY: IAudioParam;
 
     readonly upZ: IAudioParam;
-
 }

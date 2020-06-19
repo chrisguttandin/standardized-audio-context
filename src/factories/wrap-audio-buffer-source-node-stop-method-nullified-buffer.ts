@@ -3,10 +3,7 @@ import { TWrapAudioBufferSourceNodeStopMethodNullifiedBufferFactory } from '../t
 export const createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer: TWrapAudioBufferSourceNodeStopMethodNullifiedBufferFactory = (
     overwriteAccessors
 ) => {
-    return (
-        nativeAudioBufferSourceNode,
-        nativeContext
-    ) => {
+    return (nativeAudioBufferSourceNode, nativeContext) => {
         const nullifiedBuffer = nativeContext.createBuffer(1, 1, nativeContext.sampleRate);
 
         if (nativeAudioBufferSourceNode.buffer === null) {
@@ -19,10 +16,10 @@ export const createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer: TWrapAudi
             (get) => () => {
                 const value = get.call(nativeAudioBufferSourceNode);
 
-                return (value === nullifiedBuffer) ? null : value;
+                return value === nullifiedBuffer ? null : value;
             },
             (set) => (value) => {
-                return set.call(nativeAudioBufferSourceNode, (value === null) ? nullifiedBuffer : value);
+                return set.call(nativeAudioBufferSourceNode, value === null ? nullifiedBuffer : value);
             }
         );
     };

@@ -17,36 +17,24 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
     return class DelayNode<T extends TContext> extends audioNodeConstructor<T> implements IDelayNode<T> {
-
         private _delayTime: IAudioParam;
 
-        constructor (context: T, options: Partial<IDelayOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IDelayOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeDelayNode = createNativeDelayNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const delayNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
-                ? createDelayNodeRenderer(mergedOptions.maxDelayTime)
-                : null);
+            const delayNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createDelayNodeRenderer(mergedOptions.maxDelayTime) : null);
 
             super(context, false, nativeDelayNode, delayNodeRenderer);
 
             // Bug #161: Edge does not export the correct values for maxValue and minValue.
-            this._delayTime = createAudioParam(
-                this,
-                isOffline,
-                nativeDelayNode.delayTime,
-                mergedOptions.maxDelayTime,
-                0
-            );
+            this._delayTime = createAudioParam(this, isOffline, nativeDelayNode.delayTime, mergedOptions.maxDelayTime, 0);
         }
 
-        get delayTime (): IAudioParam {
+        get delayTime(): IAudioParam {
             return this._delayTime;
         }
-
     };
-
 };

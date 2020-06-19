@@ -1,5 +1,4 @@
 describe('gainNodeConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -15,5 +14,4 @@ describe('gainNodeConstructor', () => {
             new GainNode(audioContext, {});
         }).to.throw(TypeError, "function is not a constructor (evaluating 'new GainNode(audioContext, {})')");
     });
-
 });

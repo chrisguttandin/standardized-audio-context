@@ -12,8 +12,8 @@
  */
 const IMPORT_STATEMENT_REGEX = /^import(?:(?:[\s]+[\w]+|(?:[\s]+[\w]+[\s]*,)?[\s]*\{[\s]*[\w]+(?:[\s]+as[\s]+[\w]+)?(?:[\s]*,[\s]*[\w]+(?:[\s]+as[\s]+[\w]+)?)*[\s]*}|(?:[\s]+[\w]+[\s]*,)?[\s]*\*[\s]+as[\s]+[\w]+)[\s]+from)?(?:[\s]*)("([^"\\]|\\.)+"|'([^'\\]|\\.)+')(?:[\s]*);?/; // tslint:disable-line:max-line-length
 
-export const splitImportStatements = (source: string, url: string): [ string, string ] => {
-    const importStatements = [ ];
+export const splitImportStatements = (source: string, url: string): [string, string] => {
+    const importStatements = [];
 
     let sourceWithoutImportStatements = source.replace(/^[\s]+/, '');
     let result = sourceWithoutImportStatements.match(IMPORT_STATEMENT_REGEX);
@@ -23,14 +23,12 @@ export const splitImportStatements = (source: string, url: string): [ string, st
 
         const importStatementWithResolvedUrl = result[0]
             .replace(/([\s]+)?;?$/, '')
-            .replace(unresolvedUrl, (new URL(unresolvedUrl, url)).toString());
-        importStatements.push(importStatementWithResolvedUrl );
+            .replace(unresolvedUrl, new URL(unresolvedUrl, url).toString());
+        importStatements.push(importStatementWithResolvedUrl);
 
-        sourceWithoutImportStatements = sourceWithoutImportStatements
-            .slice(result[0].length)
-            .replace(/^[\s]+/, '');
+        sourceWithoutImportStatements = sourceWithoutImportStatements.slice(result[0].length).replace(/^[\s]+/, '');
         result = sourceWithoutImportStatements.match(IMPORT_STATEMENT_REGEX);
     }
 
-    return [ importStatements.join(';'), sourceWithoutImportStatements ];
+    return [importStatements.join(';'), sourceWithoutImportStatements];
 };

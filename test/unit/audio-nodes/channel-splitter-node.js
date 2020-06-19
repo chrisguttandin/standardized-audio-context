@@ -16,9 +16,10 @@ const createChannelSplitterNodeWithConstructor = (context, options = null) => {
     return new ChannelSplitterNode(context, options);
 };
 const createChannelSplitterNodeWithFactoryFunction = (context, options = null) => {
-    const channelSplitterNode = (options !== null && options.numberOfOutputs !== undefined) ?
-        context.createChannelSplitter(options.numberOfOutputs) :
-        context.createChannelSplitter();
+    const channelSplitterNode =
+        options !== null && options.numberOfOutputs !== undefined
+            ? context.createChannelSplitter(options.numberOfOutputs)
+            : context.createChannelSplitter();
 
     if (options !== null && options.channelCount !== undefined) {
         channelSplitterNode.channelCount = options.channelCount;
@@ -62,11 +63,8 @@ const testCases = {
 };
 
 describe('ChannelSplitterNode', () => {
-
-    for (const [ description, { createChannelSplitterNode, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { createChannelSplitterNode, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -75,14 +73,11 @@ describe('ChannelSplitterNode', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('constructor()', () => {
-
-                for (const audioContextState of [ 'closed', 'running' ]) {
-
-                    describe(`with an audioContextState of "${ audioContextState }"`, () => {
-
+                for (const audioContextState of ['closed', 'running']) {
+                    describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
@@ -107,7 +102,6 @@ describe('ChannelSplitterNode', () => {
                         });
 
                         describe('without any options', () => {
-
                             let channelSplitterNode;
 
                             beforeEach(() => {
@@ -134,11 +128,9 @@ describe('ChannelSplitterNode', () => {
                                 expect(channelSplitterNode.numberOfInputs).to.equal(1);
                                 expect(channelSplitterNode.numberOfOutputs).to.equal(6);
                             });
-
                         });
 
                         describe('with valid options', () => {
-
                             it('should return an instance with the given numberOfOutputs', () => {
                                 const numberOfOutputs = 2;
                                 const channelSplitterNode = createChannelSplitterNode(context, { numberOfOutputs });
@@ -152,17 +144,12 @@ describe('ChannelSplitterNode', () => {
 
                                 expect(channelSplitterNode.channelCount).to.equal(numberOfOutputs);
                             });
-
                         });
-
                     });
-
                 }
-
             });
 
             describe('channelCount', () => {
-
                 let channelSplitterNode;
 
                 beforeEach(() => {
@@ -181,11 +168,9 @@ describe('ChannelSplitterNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 let channelSplitterNode;
 
                 beforeEach(() => {
@@ -204,11 +189,9 @@ describe('ChannelSplitterNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('channelInterpretation', () => {
-
                 let channelSplitterNode;
 
                 beforeEach(() => {
@@ -227,11 +210,9 @@ describe('ChannelSplitterNode', () => {
                         done();
                     }
                 });
-
             });
 
             describe('numberOfInputs', () => {
-
                 let channelSplitterNode;
 
                 beforeEach(() => {
@@ -243,11 +224,9 @@ describe('ChannelSplitterNode', () => {
                         channelSplitterNode.numberOfInputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 let channelSplitterNode;
 
                 beforeEach(() => {
@@ -259,37 +238,29 @@ describe('ChannelSplitterNode', () => {
                         channelSplitterNode.numberOfOutputs = 2;
                     }).to.throw(TypeError);
                 });
-
             });
 
             describe('connect()', () => {
-
-                for (const type of [ 'AudioNode', 'AudioParam' ]) {
-
-                    describe(`with an ${ type }`, () => {
-
+                for (const type of ['AudioNode', 'AudioParam']) {
+                    describe(`with an ${type}`, () => {
                         let audioNodeOrAudioParam;
                         let channelSplitterNode;
 
                         beforeEach(() => {
                             const gainNode = new GainNode(context);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             channelSplitterNode = createChannelSplitterNode(context);
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should be chainable', () => {
                                 expect(channelSplitterNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
                             });
-
                         } else {
-
                             it('should not be chainable', () => {
                                 expect(channelSplitterNode.connect(audioNodeOrAudioParam)).to.be.undefined;
                             });
-
                         }
 
                         it('should accept duplicate connections', () => {
@@ -309,7 +280,6 @@ describe('ChannelSplitterNode', () => {
                         });
 
                         if (type === 'AudioNode') {
-
                             it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
                                 try {
                                     channelSplitterNode.connect(audioNodeOrAudioParam, 0, -1);
@@ -322,23 +292,16 @@ describe('ChannelSplitterNode', () => {
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(channelSplitterNode)
-                                    .connect(audioNodeOrAudioParam);
+                                audioNodeOrAudioParam.connect(channelSplitterNode).connect(audioNodeOrAudioParam);
                             });
 
                             it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                audioNodeOrAudioParam
-                                    .connect(channelSplitterNode)
-                                    .connect(audioNodeOrAudioParam.gain);
+                                audioNodeOrAudioParam.connect(channelSplitterNode).connect(audioNodeOrAudioParam.gain);
                             });
-
                         }
-
                     });
 
-                    describe(`with an ${ type } of another context`, () => {
-
+                    describe(`with an ${type} of another context`, () => {
                         let anotherContext;
                         let audioNodeOrAudioParam;
                         let channelSplitterNode;
@@ -354,7 +317,7 @@ describe('ChannelSplitterNode', () => {
 
                             const gainNode = new GainNode(anotherContext);
 
-                            audioNodeOrAudioParam = (type === 'AudioNode') ? gainNode : gainNode.gain;
+                            audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
                             channelSplitterNode = createChannelSplitterNode(context);
                         });
 
@@ -368,11 +331,9 @@ describe('ChannelSplitterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
-                    describe(`with an ${ type } of a native context`, () => {
-
+                    describe(`with an ${type} of a native context`, () => {
                         let channelSplitterNode;
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
@@ -383,18 +344,23 @@ describe('ChannelSplitterNode', () => {
                              * for the startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
-                            if (nativeContext.close !== undefined && (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))) {
+                            if (
+                                nativeContext.close !== undefined &&
+                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
+                            ) {
                                 return nativeContext.close();
                             }
                         });
 
                         beforeEach(() => {
                             channelSplitterNode = createChannelSplitterNode(context);
-                            nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+                            nativeContext = description.includes('Offline')
+                                ? createNativeOfflineAudioContext()
+                                : createNativeAudioContext();
 
                             const nativeGainNode = nativeContext.createGain();
 
-                            nativeAudioNodeOrAudioParam = (type === 'AudioNode') ? nativeGainNode : nativeGainNode.gain;
+                            nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
                         it('should throw an InvalidAccessError', (done) => {
@@ -407,31 +373,24 @@ describe('ChannelSplitterNode', () => {
                                 done();
                             }
                         });
-
                     });
-
                 }
 
                 describe('with a cycle', () => {
-
                     let renderer;
 
                     beforeEach(() => {
                         renderer = createRenderer({
                             context,
-                            length: (context.length === undefined) ? 5 : undefined,
-                            prepare (destination) {
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
                                 const channelSplitterNode = createChannelSplitterNode(context);
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
 
-                                constantSourceNode
-                                    .connect(channelSplitterNode)
-                                    .connect(destination);
+                                constantSourceNode.connect(channelSplitterNode).connect(destination);
 
-                                channelSplitterNode
-                                    .connect(gainNode)
-                                    .connect(channelSplitterNode);
+                                channelSplitterNode.connect(gainNode).connect(channelSplitterNode);
 
                                 return { channelSplitterNode, constantSourceNode, gainNode };
                             }
@@ -442,59 +401,52 @@ describe('ChannelSplitterNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            start (startTime, { constantSourceNode }) {
+                            start(startTime, { constantSourceNode }) {
                                 constantSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
-
             });
 
             describe('disconnect()', () => {
-
                 let createPredefinedRenderer;
 
                 beforeEach(() => {
-                    createPredefinedRenderer = (values) => createRenderer({
-                        context,
-                        length: (context.length === undefined) ? 5 : undefined,
-                        prepare (destination) {
-                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                            const channelSplitterNode = createChannelSplitterNode(context);
-                            const firstDummyGainNode = new GainNode(context);
-                            const secondDummyGainNode = new GainNode(context);
+                    createPredefinedRenderer = (values) =>
+                        createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                const channelSplitterNode = createChannelSplitterNode(context);
+                                const firstDummyGainNode = new GainNode(context);
+                                const secondDummyGainNode = new GainNode(context);
 
-                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                            audioBufferSourceNode.buffer = audioBuffer;
+                                audioBufferSourceNode.buffer = audioBuffer;
 
-                            audioBufferSourceNode
-                                .connect(channelSplitterNode)
-                                .connect(firstDummyGainNode)
-                                .connect(destination);
+                                audioBufferSourceNode.connect(channelSplitterNode).connect(firstDummyGainNode).connect(destination);
 
-                            channelSplitterNode.connect(secondDummyGainNode);
+                                channelSplitterNode.connect(secondDummyGainNode);
 
-                            return { audioBufferSourceNode, channelSplitterNode, firstDummyGainNode, secondDummyGainNode };
-                        }
-                    });
+                                return { audioBufferSourceNode, channelSplitterNode, firstDummyGainNode, secondDummyGainNode };
+                            }
+                        });
                 });
 
                 describe('without any parameters', () => {
-
                     let renderer;
                     let values;
 
                     beforeEach(function () {
                         this.timeout(10000);
 
-                        values = [ 1, 1, 1, 1, 1 ];
+                        values = [1, 1, 1, 1, 1];
 
                         renderer = createPredefinedRenderer(values);
                     });
@@ -503,24 +455,20 @@ describe('ChannelSplitterNode', () => {
                         this.timeout(10000);
 
                         return renderer({
-                            prepare ({ channelSplitterNode }) {
+                            prepare({ channelSplitterNode }) {
                                 channelSplitterNode.disconnect();
                             },
-                            start (startTime, { audioBufferSourceNode }) {
+                            start(startTime, { audioBufferSourceNode }) {
                                 audioBufferSourceNode.start(startTime);
                             }
-                        })
-                            .then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                            });
+                        }).then((channelData) => {
+                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                        });
                     });
-
                 });
 
                 describe('with an output', () => {
-
                     describe('with a value which is out-of-bound', () => {
-
                         let channelSplitterNode;
 
                         beforeEach(() => {
@@ -537,18 +485,16 @@ describe('ChannelSplitterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection from the given output', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -557,26 +503,21 @@ describe('ChannelSplitterNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ channelSplitterNode }) {
+                                prepare({ channelSplitterNode }) {
                                     channelSplitterNode.disconnect(0);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination', () => {
-
                     describe('without a connection to the given destination', () => {
-
                         let channelSplitterNode;
 
                         beforeEach(() => {
@@ -593,18 +534,16 @@ describe('ChannelSplitterNode', () => {
                                 done();
                             }
                         });
-
                     });
 
                     describe('with a connection to the given destination', () => {
-
                         let renderer;
                         let values;
 
                         beforeEach(function () {
                             this.timeout(10000);
 
-                            values = [ 1, 1, 1, 1, 1 ];
+                            values = [1, 1, 1, 1, 1];
 
                             renderer = createPredefinedRenderer(values);
                         });
@@ -613,40 +552,35 @@ describe('ChannelSplitterNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ channelSplitterNode, firstDummyGainNode }) {
+                                prepare({ channelSplitterNode, firstDummyGainNode }) {
                                     channelSplitterNode.disconnect(firstDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([ 0, 0, 0, 0, 0 ]);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                            });
                         });
 
                         it('should disconnect another destination in isolation', function () {
                             this.timeout(10000);
 
                             return renderer({
-                                prepare ({ channelSplitterNode, secondDummyGainNode }) {
+                                prepare({ channelSplitterNode, secondDummyGainNode }) {
                                     channelSplitterNode.disconnect(secondDummyGainNode);
                                 },
-                                start (startTime, { audioBufferSourceNode }) {
+                                start(startTime, { audioBufferSourceNode }) {
                                     audioBufferSourceNode.start(startTime);
                                 }
-                            })
-                                .then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal(values);
-                                });
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal(values);
+                            });
                         });
-
                     });
-
                 });
 
                 describe('with a destination and an output', () => {
-
                     let channelSplitterNode;
 
                     beforeEach(() => {
@@ -674,11 +608,9 @@ describe('ChannelSplitterNode', () => {
                             done();
                         }
                     });
-
                 });
 
                 describe('with a destination, an output and an input', () => {
-
                     let channelSplitterNode;
 
                     beforeEach(() => {
@@ -717,13 +649,8 @@ describe('ChannelSplitterNode', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

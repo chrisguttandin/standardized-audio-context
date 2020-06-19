@@ -33,7 +33,7 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
                     channelInterpretation: nativeOscillatorNode.channelInterpretation,
                     detune: nativeOscillatorNode.detune.value,
                     frequency: nativeOscillatorNode.frequency.value,
-                    periodicWave: (periodicWave === null) ? undefined : periodicWave,
+                    periodicWave: periodicWave === null ? undefined : periodicWave,
                     type: nativeOscillatorNode.type
                 };
 
@@ -64,16 +64,16 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
         };
 
         return {
-            set periodicWave (value: null | IPeriodicWave) {
+            set periodicWave(value: null | IPeriodicWave) {
                 periodicWave = value;
             },
-            set start (value: number) {
+            set start(value: number) {
                 start = value;
             },
-            set stop (value: number) {
+            set stop(value: number) {
                 stop = value;
             },
-            render (
+            render(
                 proxy: IOscillatorNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

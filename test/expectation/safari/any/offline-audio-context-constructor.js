@@ -2,7 +2,6 @@ import { spy, stub } from 'sinon';
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 
 describe('offlineAudioContextConstructor', () => {
-
     let offlineAudioContext;
 
     beforeEach(() => {
@@ -14,9 +13,7 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('constructor()', () => {
-
         describe('with zero as the numberOfChannels', () => {
-
             // bug #146
 
             it('should throw a SyntaxError', (done) => {
@@ -29,11 +26,9 @@ describe('offlineAudioContextConstructor', () => {
                     done();
                 }
             });
-
         });
 
         describe('with 32 as the value for numberOfChannels', () => {
-
             // bug #142
 
             it('should throw an error', () => {
@@ -41,11 +36,9 @@ describe('offlineAudioContextConstructor', () => {
                     new webkitOfflineAudioContext(32, 1, 44100); // eslint-disable-line new-cap, no-undef
                 }).to.throw(DOMException);
             });
-
         });
 
         describe('with a length of zero', () => {
-
             // bug #143
 
             it('should throw a SyntaxError', (done) => {
@@ -58,11 +51,9 @@ describe('offlineAudioContextConstructor', () => {
                     done();
                 }
             });
-
         });
 
         describe('with a sampleRate of zero', () => {
-
             // bug #144
 
             it('should throw a SyntaxError', (done) => {
@@ -75,11 +66,9 @@ describe('offlineAudioContextConstructor', () => {
                     done();
                 }
             });
-
         });
 
         describe('with a sampleRate of 8000 Hz', () => {
-
             // bug #141
 
             it('should throw an error', () => {
@@ -87,11 +76,9 @@ describe('offlineAudioContextConstructor', () => {
                     new webkitOfflineAudioContext(1, 1, 8000); // eslint-disable-line new-cap, no-undef
                 }).to.throw(DOMException);
             });
-
         });
 
         describe('with OfflineAudioContextOptions', () => {
-
             // bug #46
 
             it('should throw a TypeError', () => {
@@ -99,23 +86,18 @@ describe('offlineAudioContextConstructor', () => {
                     new webkitOfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 }); // eslint-disable-line new-cap, no-undef
                 }).to.throw(TypeError);
             });
-
         });
-
     });
 
     describe('audioWorklet', () => {
-
         // bug #59
 
         it('should not be implemented', () => {
             expect(offlineAudioContext.audioWorklet).to.be.undefined;
         });
-
     });
 
     describe('destination', () => {
-
         // bug #132
 
         it('should have a wrong channelCount property', () => {
@@ -145,21 +127,17 @@ describe('offlineAudioContextConstructor', () => {
         it('should not have a maxChannelCount property', () => {
             expect(offlineAudioContext.destination.maxChannelCount).to.equal(0);
         });
-
     });
 
     describe('length', () => {
-
         // bug #17
 
         it('should not expose its length', () => {
             expect(offlineAudioContext.length).to.be.undefined;
         });
-
     });
 
     describe('oncomplete', () => {
-
         // bug #48
 
         it('should not fire without any connected node', (done) => {
@@ -174,11 +152,9 @@ describe('offlineAudioContextConstructor', () => {
                 done();
             }, 1000);
         });
-
     });
 
     describe('onstatechange', () => {
-
         // bug #49
 
         it('should transition directly from suspended to closed', (done) => {
@@ -200,9 +176,7 @@ describe('offlineAudioContextConstructor', () => {
                 };
 
                 // Bug #48: Connect a GainNode to make sure the rendering succeeds.
-                offlineAudioContext
-                    .createGain()
-                    .connect(offlineAudioContext.destination);
+                offlineAudioContext.createGain().connect(offlineAudioContext.destination);
 
                 offlineAudioContext.startRendering();
             };
@@ -216,21 +190,17 @@ describe('offlineAudioContextConstructor', () => {
 
             runTest(evaluateTest);
         });
-
     });
 
     describe('close()', () => {
-
         // bug #94
 
         it('should expose a close method', () => {
             expect(offlineAudioContext.close).to.be.a('function');
         });
-
     });
 
     describe('createBiquadFilter()', () => {
-
         let biquadFilterNode;
 
         beforeEach(() => {
@@ -238,31 +208,38 @@ describe('offlineAudioContextConstructor', () => {
         });
 
         describe('detune', () => {
-
             describe('automationRate', () => {
-
                 // bug #84
 
                 it('should not be implemented', () => {
                     expect(biquadFilterNode.detune.automationRate).to.be.undefined;
                 });
-
             });
-
         });
 
         describe('getFrequencyResponse()', () => {
-
             // bug #22
 
             it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
                 const magResponse = new Float32Array(5);
                 const phaseResponse = new Float32Array(5);
 
-                biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+                biquadFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
 
-                expect(Array.from(magResponse)).to.deep.equal([ 1.1107852458953857, 0.8106917142868042, 0.20565471053123474, 0.04845593497157097, 0.011615658178925514 ]);
-                expect(Array.from(phaseResponse)).to.deep.equal([ -0.7254799008369446, -1.8217267990112305, -2.6273605823516846, -2.906902313232422, -3.0283825397491455 ]);
+                expect(Array.from(magResponse)).to.deep.equal([
+                    1.1107852458953857,
+                    0.8106917142868042,
+                    0.20565471053123474,
+                    0.04845593497157097,
+                    0.011615658178925514
+                ]);
+                expect(Array.from(phaseResponse)).to.deep.equal([
+                    -0.7254799008369446,
+                    -1.8217267990112305,
+                    -2.6273605823516846,
+                    -2.906902313232422,
+                    -3.0283825397491455
+                ]);
             });
 
             // bug #68
@@ -270,13 +247,10 @@ describe('offlineAudioContextConstructor', () => {
             it('should throw no error', () => {
                 biquadFilterNode.getFrequencyResponse(new Float32Array(), new Float32Array(1), new Float32Array(1));
             });
-
         });
-
     });
 
     describe('createBufferSource()', () => {
-
         // bug #14
 
         it('should not resample an oversampled AudioBuffer', (done) => {
@@ -285,7 +259,7 @@ describe('offlineAudioContextConstructor', () => {
             const eightRandomValues = [];
 
             for (let i = 0; i < 8; i += 1) {
-                eightRandomValues[i] = (Math.random() * 2) - 1;
+                eightRandomValues[i] = Math.random() * 2 - 1;
 
                 // Bug #5: Safari does not support copyFromChannel().
                 audioBuffer.getChannelData(0)[i] = eightRandomValues[i];
@@ -361,9 +335,7 @@ describe('offlineAudioContextConstructor', () => {
 
             audioBufferSourceNode.buffer = audioBuffer;
 
-            audioBufferSourceNode
-                .connect(gainNode)
-                .connect(offlineAudioContext.destination);
+            audioBufferSourceNode.connect(gainNode).connect(offlineAudioContext.destination);
 
             gainNode.connect(gainNode);
 
@@ -383,7 +355,6 @@ describe('offlineAudioContextConstructor', () => {
         });
 
         describe('buffer', () => {
-
             // bug #72
 
             it('should allow to assign the buffer multiple times', () => {
@@ -417,11 +388,9 @@ describe('offlineAudioContextConstructor', () => {
                 };
                 offlineAudioContext.startRendering();
             });
-
         });
 
         describe('onended', () => {
-
             // bug #175
 
             it('should not fire an ended event listener', (done) => {
@@ -443,11 +412,9 @@ describe('offlineAudioContextConstructor', () => {
 
                 offlineAudioContext.startRendering();
             });
-
         });
 
         describe('playbackRate', () => {
-
             // bug #147
 
             it('should not respect a connected signal', (done) => {
@@ -485,19 +452,23 @@ describe('offlineAudioContextConstructor', () => {
                 };
                 offlineAudioContext.startRendering();
             });
-
         });
 
         describe('start()', () => {
-
             // bug #44
 
             it('should throw a DOMException', () => {
                 const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => audioBufferSourceNode.start(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
-                expect(() => audioBufferSourceNode.start(0, -1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
-                expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                expect(() => audioBufferSourceNode.start(-1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
+                expect(() => audioBufferSourceNode.start(0, -1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
+                expect(() => audioBufferSourceNode.start(0, 0, -1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
             });
 
             // bug #155
@@ -532,17 +503,17 @@ describe('offlineAudioContextConstructor', () => {
                 };
                 offlineAudioContext.startRendering();
             });
-
         });
 
         describe('stop()', () => {
-
             // bug #44
 
             it('should throw a DOMException', () => {
                 const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
-                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                expect(() => audioBufferSourceNode.stop(-1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
             });
 
             // bug #69
@@ -553,13 +524,10 @@ describe('offlineAudioContextConstructor', () => {
                 audioBufferSourceNode.start();
                 audioBufferSourceNode.start();
             });
-
         });
-
     });
 
     describe('createChannelMerger()', () => {
-
         // bug #15
 
         it('should have a wrong channelCount', () => {
@@ -599,9 +567,7 @@ describe('offlineAudioContextConstructor', () => {
 
             channelMergerNode.channelCountMode = 'explicit';
 
-            audioBufferSourceNode
-                .connect(channelMergerNode, 0, 0)
-                .connect(offlineAudioContext.destination);
+            audioBufferSourceNode.connect(channelMergerNode, 0, 0).connect(offlineAudioContext.destination);
 
             audioBufferSourceNode.start(0);
 
@@ -615,11 +581,9 @@ describe('offlineAudioContextConstructor', () => {
             };
             offlineAudioContext.startRendering();
         });
-
     });
 
     describe('createChannelSplitter()', () => {
-
         // bug #96
 
         it('should have a wrong channelCount', () => {
@@ -670,23 +634,18 @@ describe('offlineAudioContextConstructor', () => {
             channelSplitterNode.channelInterpretation = 'discrete';
             channelSplitterNode.channelInterpretation = 'speakers';
         });
-
     });
 
     describe('createConstantSource()', () => {
-
         // bug #62
 
         it('should not be implemented', () => {
             expect(offlineAudioContext.createConstantSource).to.be.undefined;
         });
-
     });
 
     describe('createDelay()', () => {
-
         describe('with a delayTime of 128 samples', () => {
-
             let audioBufferSourceNode;
             let delayNode;
             let gainNode;
@@ -714,11 +673,7 @@ describe('offlineAudioContextConstructor', () => {
 
                 gainNode.gain.value = 0.5;
 
-                audioBufferSourceNode
-                    .connect(gainNode)
-                    .connect(delayNode)
-                    .connect(gainNode)
-                    .connect(offlineAudioContext.destination);
+                audioBufferSourceNode.connect(gainNode).connect(delayNode).connect(gainNode).connect(offlineAudioContext.destination);
             });
 
             // bug #163
@@ -740,13 +695,10 @@ describe('offlineAudioContextConstructor', () => {
                 };
                 offlineAudioContext.startRendering();
             });
-
         });
-
     });
 
     describe('createDynamicsCompressor()', () => {
-
         // bug #112
 
         it('should not have a tail-time', (done) => {
@@ -760,9 +712,7 @@ describe('offlineAudioContextConstructor', () => {
 
             audioBufferSourceNode.buffer = audioBuffer;
 
-            audioBufferSourceNode
-                .connect(dynamicsCompressorNode)
-                .connect(offlineAudioContext.destination);
+            audioBufferSourceNode.connect(dynamicsCompressorNode).connect(offlineAudioContext.destination);
 
             audioBufferSourceNode.start(0);
 
@@ -778,11 +728,9 @@ describe('offlineAudioContextConstructor', () => {
             };
             offlineAudioContext.startRendering();
         });
-
     });
 
     describe('createGain()', () => {
-
         // bug #12
 
         it('should not allow to disconnect a specific destination', (done) => {
@@ -798,9 +746,7 @@ describe('offlineAudioContextConstructor', () => {
 
             source.buffer = ones;
 
-            source
-                .connect(candidate)
-                .connect(offlineAudioContext.destination);
+            source.connect(candidate).connect(offlineAudioContext.destination);
 
             candidate.connect(dummy);
             candidate.disconnect(dummy);
@@ -821,15 +767,17 @@ describe('offlineAudioContextConstructor', () => {
         });
 
         describe('gain', () => {
-
             describe('value', () => {
-
                 // bug #98
 
                 it('should ignore the value setter while an automation is running', function (done) {
                     this.timeout(10000);
 
-                    const audioBuffer = offlineAudioContext.createBuffer(1, 0.5 * offlineAudioContext.sampleRate, offlineAudioContext.sampleRate);
+                    const audioBuffer = offlineAudioContext.createBuffer(
+                        1,
+                        0.5 * offlineAudioContext.sampleRate,
+                        offlineAudioContext.sampleRate
+                    );
                     const audioBufferSourceNode = offlineAudioContext.createBufferSource();
                     const gainNode = offlineAudioContext.createGain();
 
@@ -845,9 +793,7 @@ describe('offlineAudioContextConstructor', () => {
 
                     gainNode.gain.value = 100;
 
-                    audioBufferSourceNode
-                        .connect(gainNode)
-                        .connect(offlineAudioContext.destination);
+                    audioBufferSourceNode.connect(gainNode).connect(offlineAudioContext.destination);
 
                     audioBufferSourceNode.start();
 
@@ -864,13 +810,10 @@ describe('offlineAudioContextConstructor', () => {
                     };
                     offlineAudioContext.startRendering();
                 });
-
             });
-
         });
 
         describe('cancelAndHoldAtTime()', () => {
-
             let gainNode;
 
             beforeEach(() => {
@@ -882,11 +825,9 @@ describe('offlineAudioContextConstructor', () => {
             it('should not be implemented', () => {
                 expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
             });
-
         });
 
         describe('setValueCurveAtTime()', () => {
-
             // bug #152
 
             it('should interpolate the values incorrectly', (done) => {
@@ -899,11 +840,9 @@ describe('offlineAudioContextConstructor', () => {
 
                 audioBufferSourceNode.buffer = audioBuffer;
 
-                gainNode.gain.setValueCurveAtTime(new Float32Array([ 1, 3 ]), 0, 2 / offlineAudioContext.sampleRate);
+                gainNode.gain.setValueCurveAtTime(new Float32Array([1, 3]), 0, 2 / offlineAudioContext.sampleRate);
 
-                audioBufferSourceNode
-                    .connect(gainNode)
-                    .connect(offlineAudioContext.destination);
+                audioBufferSourceNode.connect(gainNode).connect(offlineAudioContext.destination);
 
                 audioBufferSourceNode.start(0);
 
@@ -911,54 +850,45 @@ describe('offlineAudioContextConstructor', () => {
                     // Bug #5: Safari does not support copyFromChannel().
                     const channelData = event.renderedBuffer.getChannelData(0);
 
-                    expect(Array.from(channelData).slice(0, 3)).to.deep.equal([ 1, 3, 3 ]);
+                    expect(Array.from(channelData).slice(0, 3)).to.deep.equal([1, 3, 3]);
 
                     done();
                 };
                 offlineAudioContext.startRendering();
             });
-
         });
-
     });
 
     describe('createIIRFilter()', () => {
-
         // bug #9
 
         it('should not be implemented', () => {
             expect(offlineAudioContext.createIIRFilter).to.be.undefined;
         });
-
     });
 
     describe('createMediaElementSource()', () => {
-
         // bug #171
 
         it('should not throw an error', () => {
             offlineAudioContext.createMediaElementSource(new Audio());
         });
-
     });
 
     describe('createMediaStreamDestination()', () => {
-
         // bug #173
 
         it('should not throw an error', () => {
             offlineAudioContext.createMediaStreamDestination();
         });
-
     });
 
     describe('createMediaStreamSource()', () => {
-
         let audioContext;
 
         afterEach(() => audioContext.close());
 
-        beforeEach(() => audioContext = new webkitAudioContext()); // eslint-disable-line new-cap, no-undef
+        beforeEach(() => (audioContext = new webkitAudioContext())); // eslint-disable-line new-cap, no-undef
 
         // bug #172
 
@@ -967,11 +897,9 @@ describe('offlineAudioContextConstructor', () => {
 
             offlineAudioContext.createMediaStreamSource(mediaStreamAudioDestinationNode.stream);
         });
-
     });
 
     describe('createScriptProcessor()', () => {
-
         // bug #8
 
         it('should not fire onaudioprocess for every buffer', (done) => {
@@ -1013,7 +941,6 @@ describe('offlineAudioContextConstructor', () => {
         });
 
         describe('without any output channels', () => {
-
             // bug #87
 
             it('should not fire any AudioProcessingEvent', (done) => {
@@ -1033,13 +960,10 @@ describe('offlineAudioContextConstructor', () => {
                 };
                 offlineAudioContext.startRendering();
             });
-
         });
-
     });
 
     describe('createWaveShaper()', () => {
-
         // bug #119
 
         it('should map the values incorrectly', (done) => {
@@ -1049,11 +973,9 @@ describe('offlineAudioContextConstructor', () => {
 
             audioBufferSourceNode.buffer = audioBuffer;
 
-            waveShaperNode.curve = new Float32Array([ 1, 0.5, 0 ]);
+            waveShaperNode.curve = new Float32Array([1, 0.5, 0]);
 
-            audioBufferSourceNode
-                .connect(waveShaperNode)
-                .connect(offlineAudioContext.destination);
+            audioBufferSourceNode.connect(waveShaperNode).connect(offlineAudioContext.destination);
 
             audioBufferSourceNode.start(0);
 
@@ -1064,11 +986,9 @@ describe('offlineAudioContextConstructor', () => {
             };
             offlineAudioContext.startRendering();
         });
-
     });
 
     describe('decodeAudioData()', () => {
-
         // bug #1
 
         it('should require the success callback function as a parameter', async function () {
@@ -1087,14 +1007,17 @@ describe('offlineAudioContextConstructor', () => {
             this.timeout(10000);
 
             // PNG files are not supported by any browser :-)
-            loadFixtureAsArrayBuffer('one-pixel-of-transparency.png')
-                .then((arrayBuffer) => {
-                    offlineAudioContext.decodeAudioData(arrayBuffer, () => {}, (err) => {
+            loadFixtureAsArrayBuffer('one-pixel-of-transparency.png').then((arrayBuffer) => {
+                offlineAudioContext.decodeAudioData(
+                    arrayBuffer,
+                    () => {},
+                    (err) => {
                         expect(err).to.be.null;
 
                         done();
-                    });
-                });
+                    }
+                );
+            });
         });
 
         // bug #5
@@ -1102,15 +1025,14 @@ describe('offlineAudioContextConstructor', () => {
         it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
             this.timeout(10000);
 
-            loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
-                .then((arrayBuffer) => {
-                    offlineAudioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
-                        expect(audioBuffer.copyFromChannel).to.be.undefined;
-                        expect(audioBuffer.copyToChannel).to.be.undefined;
+            loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+                offlineAudioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
+                    expect(audioBuffer.copyFromChannel).to.be.undefined;
+                    expect(audioBuffer.copyToChannel).to.be.undefined;
 
-                        done();
-                    });
+                    done();
                 });
+            });
         });
 
         // bug #21
@@ -1138,41 +1060,30 @@ describe('offlineAudioContextConstructor', () => {
         it('should not throw a DataCloneError', function (done) {
             this.timeout(10000);
 
-            loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
-                .then((arrayBuffer) => {
-                    offlineAudioContext
-                        .decodeAudioData(arrayBuffer, () => {
-                            offlineAudioContext
-                                .decodeAudioData(arrayBuffer, () => done());
-                        });
+            loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+                offlineAudioContext.decodeAudioData(arrayBuffer, () => {
+                    offlineAudioContext.decodeAudioData(arrayBuffer, () => done());
                 });
+            });
         });
-
     });
 
     describe('startRendering()', () => {
-
         // bug #21
 
         it('should not return a promise', () => {
             expect(offlineAudioContext.startRendering()).to.be.undefined;
         });
-
     });
 
     describe('suspend()', () => {
-
         it('should throw an InvalidStateError', (done) => {
-            offlineAudioContext
-                .suspend(0.01)
-                .catch((err) => {
-                    expect(err.code).to.equal(11);
-                    expect(err.name).to.equal('InvalidStateError');
+            offlineAudioContext.suspend(0.01).catch((err) => {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
 
-                    done();
-                });
+                done();
+            });
         });
-
     });
-
 });

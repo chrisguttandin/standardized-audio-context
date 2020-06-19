@@ -2,7 +2,6 @@ import { TBiquadFilterType } from '../types';
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IBiquadFilterOptions extends IAudioNodeOptions {
-
     detune: number;
 
     frequency: number;
@@ -12,5 +11,4 @@ export interface IBiquadFilterOptions extends IAudioNodeOptions {
     Q: number;
 
     type: TBiquadFilterType;
-
 }

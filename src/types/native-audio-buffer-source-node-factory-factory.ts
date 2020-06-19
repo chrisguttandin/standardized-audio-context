@@ -3,15 +3,9 @@ import { TCacheTestResultFunction } from './cache-test-result-function';
 import { TNativeAudioBufferSourceNodeFactory } from './native-audio-buffer-source-node-factory';
 import { TNativeAudioNodeFactory } from './native-audio-node-factory';
 import { TNativeContext } from './native-context';
-import {
-    TWrapAudioBufferSourceNodeStartMethodOffsetClampingFunction
-} from './wrap-audio-buffer-source-node-start-method-offset-clamping-function';
-import {
-    TWrapAudioBufferSourceNodeStopMethodNullifiedBufferFunction
-} from './wrap-audio-buffer-source-node-stop-method-nullified-buffer-function';
-import {
-    TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFunction
-} from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-function';
+import { TWrapAudioBufferSourceNodeStartMethodOffsetClampingFunction } from './wrap-audio-buffer-source-node-start-method-offset-clamping-function';
+import { TWrapAudioBufferSourceNodeStopMethodNullifiedBufferFunction } from './wrap-audio-buffer-source-node-stop-method-nullified-buffer-function';
+import { TWrapAudioScheduledSourceNodeStopMethodConsecutiveCallsFunction } from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-function';
 
 export type TNativeAudioBufferSourceNodeFactoryFactory = (
     addSilentConnection: TAddSilentConnectionFunction,

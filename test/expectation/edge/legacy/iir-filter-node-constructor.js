@@ -1,5 +1,4 @@
 describe('iIRFilterNodeConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -12,8 +11,7 @@ describe('iIRFilterNodeConstructor', () => {
 
     it('should not allow to construct a IIRFilterNode', () => {
         expect(() => {
-            new IIRFilterNode(audioContext, { feedback: [ 1 ], feedforward: [ 1 ] });
+            new IIRFilterNode(audioContext, { feedback: [1], feedforward: [1] });
         }).to.throw(TypeError, 'Function expected');
     });
-
 });

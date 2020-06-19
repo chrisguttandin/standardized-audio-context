@@ -1,8 +1,6 @@
 import { TTestAudioScheduledSourceNodeStopMethodNegativeParametersSupportFactory } from '../types';
 
-export const createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport:
-    TTestAudioScheduledSourceNodeStopMethodNegativeParametersSupportFactory =
-(
+export const createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport: TTestAudioScheduledSourceNodeStopMethodNegativeParametersSupportFactory = (
     createNativeAudioNode
 ) => {
     return (nativeContext) => {
@@ -11,7 +9,7 @@ export const createTestAudioScheduledSourceNodeStopMethodNegativeParametersSuppo
         try {
             nativeAudioBufferSourceNode.stop(-1);
         } catch (err) {
-            return (err instanceof RangeError);
+            return err instanceof RangeError;
         }
 
         return false;

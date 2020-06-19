@@ -6,13 +6,11 @@ import { IMediaStreamAudioSourceNode } from './media-stream-audio-source-node';
 import { IMediaStreamTrackAudioSourceNode } from './media-stream-track-audio-source-node';
 
 export interface IAudioContext extends IBaseAudioContext<IAudioContext>, ICommonAudioContext {
+    createMediaElementSource(mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this>;
 
-    createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this>;
+    createMediaStreamDestination(): IMediaStreamAudioDestinationNode<this>;
 
-    createMediaStreamDestination (): IMediaStreamAudioDestinationNode<this>;
+    createMediaStreamSource(mediaStream: MediaStream): IMediaStreamAudioSourceNode<this>;
 
-    createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode<this>;
-
-    createMediaStreamTrackSource (mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<this>;
-
+    createMediaStreamTrackSource(mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<this>;
 }

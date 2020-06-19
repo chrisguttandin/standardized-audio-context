@@ -45,7 +45,7 @@ export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFa
         };
 
         return {
-            render (
+            render(
                 proxy: IConvolverNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

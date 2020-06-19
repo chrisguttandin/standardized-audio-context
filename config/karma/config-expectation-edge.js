@@ -1,9 +1,7 @@
 const { env } = require('process');
 
 module.exports = (config) => {
-
     config.set({
-
         basePath: '../../',
 
         browserNoActivityTimeout: 240000,
@@ -20,10 +18,7 @@ module.exports = (config) => {
             }
         ],
 
-        frameworks: [
-            'mocha',
-            'sinon-chai'
-        ],
+        frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
             'test/expectation/edge/any/**/*.js': 'webpack',
@@ -33,38 +28,35 @@ module.exports = (config) => {
         webpack: {
             mode: 'development',
             module: {
-                rules: [ {
-                    test: /\.ts?$/,
-                    use: {
-                        loader: 'ts-loader'
+                rules: [
+                    {
+                        test: /\.ts?$/,
+                        use: {
+                            loader: 'ts-loader'
+                        }
                     }
-                } ]
+                ]
             },
             resolve: {
-                extensions: [ '.js', '.ts' ]
+                extensions: ['.js', '.ts']
             }
         },
 
         webpackMiddleware: {
             noInfo: true
         }
-
     });
 
     if (env.TRAVIS) {
-
         config.set({
-
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/expectation-edge`,
+                build: `${env.TRAVIS_REPO_SLUG}/${env.TRAVIS_JOB_NUMBER}/expectation-edge`,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
             },
 
-            browsers: [
-                'EdgeBrowserStack'
-            ],
+            browsers: ['EdgeBrowserStack'],
 
             customLaunchers: {
                 EdgeBrowserStack: {
@@ -74,27 +66,18 @@ module.exports = (config) => {
                     os_version: '10' // eslint-disable-line camelcase
                 }
             }
-
         });
-
     } else {
-
         config.set({
-
-            browsers: [
-                'Edge'
-            ],
+            browsers: ['Edge'],
 
             customLaunchers: {
                 Edge: {
                     base: 'ChromiumHeadless'
                 }
             }
-
         });
 
         env.CHROMIUM_BIN = '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge';
-
     }
-
 };

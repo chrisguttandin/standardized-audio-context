@@ -19,11 +19,8 @@ const testCases = {
 };
 
 describe('AudioListener', () => {
-
-    for (const [ description, { createContext } ] of Object.entries(testCases)) {
-
-        describe(`with ${ description }`, () => {
-
+    for (const [description, { createContext }] of Object.entries(testCases)) {
+        describe(`with ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -32,10 +29,9 @@ describe('AudioListener', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('forwardX', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -63,70 +59,54 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardX.cancelAndHoldAtTime(0)).to.equal(listener.forwardX);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardX.cancelScheduledValues(0)).to.equal(listener.forwardX);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.forwardX.value = 1;
 
                         expect(listener.forwardX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardX);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardX.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardX);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardX);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardX.setValueAtTime(1, 0)).to.equal(listener.forwardX);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.forwardX.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.forwardX);
+                        expect(listener.forwardX.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.forwardX);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('forwardY', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -154,70 +134,54 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardY.cancelAndHoldAtTime(0)).to.equal(listener.forwardY);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardY.cancelScheduledValues(0)).to.equal(listener.forwardY);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.forwardY.value = 1;
 
                         expect(listener.forwardY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardY);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardY.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardY);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardY);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardY.setValueAtTime(1, 0)).to.equal(listener.forwardY);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.forwardY.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.forwardY);
+                        expect(listener.forwardY.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.forwardY);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('forwardZ', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -245,70 +209,54 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardZ.cancelAndHoldAtTime(0)).to.equal(listener.forwardZ);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardZ.cancelScheduledValues(0)).to.equal(listener.forwardZ);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.forwardZ.value = 1;
 
                         expect(listener.forwardZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardZ);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardZ.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardZ);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardZ);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.forwardZ.setValueAtTime(1, 0)).to.equal(listener.forwardZ);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.forwardZ.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.forwardZ);
+                        expect(listener.forwardZ.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.forwardZ);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('positionX', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -336,70 +284,54 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionX.cancelAndHoldAtTime(0)).to.equal(listener.positionX);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionX.cancelScheduledValues(0)).to.equal(listener.positionX);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.positionX.value = 1;
 
                         expect(listener.positionX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionX);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionX.linearRampToValueAtTime(1, 0)).to.equal(listener.positionX);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionX);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionX.setValueAtTime(1, 0)).to.equal(listener.positionX);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.positionX.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.positionX);
+                        expect(listener.positionX.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.positionX);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('positionY', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -427,70 +359,54 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionY.cancelAndHoldAtTime(0)).to.equal(listener.positionY);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionY.cancelScheduledValues(0)).to.equal(listener.positionY);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.positionY.value = 1;
 
                         expect(listener.positionY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionY);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionY.linearRampToValueAtTime(1, 0)).to.equal(listener.positionY);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionY);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionY.setValueAtTime(1, 0)).to.equal(listener.positionY);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.positionY.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.positionY);
+                        expect(listener.positionY.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.positionY);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('positionZ', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -518,70 +434,54 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionZ.cancelAndHoldAtTime(0)).to.equal(listener.positionZ);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionZ.cancelScheduledValues(0)).to.equal(listener.positionZ);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.positionZ.value = 1;
 
                         expect(listener.positionZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionZ);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionZ.linearRampToValueAtTime(1, 0)).to.equal(listener.positionZ);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionZ);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.positionZ.setValueAtTime(1, 0)).to.equal(listener.positionZ);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.positionZ.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.positionZ);
+                        expect(listener.positionZ.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.positionZ);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('upX', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -609,70 +509,54 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upX.cancelAndHoldAtTime(0)).to.equal(listener.upX);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upX.cancelScheduledValues(0)).to.equal(listener.upX);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.upX.value = 1;
 
                         expect(listener.upX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upX);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upX.linearRampToValueAtTime(1, 0)).to.equal(listener.upX);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upX);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upX.setValueAtTime(1, 0)).to.equal(listener.upX);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.upX.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.upX);
+                        expect(listener.upX.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.upX);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('upY', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -700,70 +584,54 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upY.cancelAndHoldAtTime(0)).to.equal(listener.upY);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upY.cancelScheduledValues(0)).to.equal(listener.upY);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.upY.value = 1;
 
                         expect(listener.upY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upY);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upY.linearRampToValueAtTime(1, 0)).to.equal(listener.upY);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upY);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upY.setValueAtTime(1, 0)).to.equal(listener.upY);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.upY.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.upY);
+                        expect(listener.upY.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.upY);
                     });
-
                 });
 
                 // @todo automation
-
             });
 
             describe('upZ', () => {
-
                 let listener;
 
                 beforeEach(() => {
@@ -791,70 +659,52 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upZ.cancelAndHoldAtTime(0)).to.equal(listener.upZ);
                     });
-
                 });
 
                 describe('cancelScheduledValues()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upZ.cancelScheduledValues(0)).to.equal(listener.upZ);
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         // @todo Firefox can't schedule an exponential ramp when the value is 0.
                         listener.upZ.value = 1;
 
                         expect(listener.upZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upZ);
                     });
-
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upZ.linearRampToValueAtTime(1, 0)).to.equal(listener.upZ);
                     });
-
                 });
 
                 describe('setTargetAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upZ);
                     });
-
                 });
 
                 describe('setValueAtTime()', () => {
-
                     it('should be chainable', () => {
                         expect(listener.upZ.setValueAtTime(1, 0)).to.equal(listener.upZ);
                     });
-
                 });
 
                 describe('setValueCurveAtTime()', () => {
-
                     it('should be chainable', () => {
-                        expect(listener.upZ.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(listener.upZ);
+                        expect(listener.upZ.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.upZ);
                     });
-
                 });
 
                 // @todo automation
-
             });
-
         });
-
     }
-
 });

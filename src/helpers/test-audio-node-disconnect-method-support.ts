@@ -19,14 +19,13 @@ export const testAudioNodeDisconnectMethodSupport = (nativeAudioContext: TNative
         source.buffer = ones;
         source.loop = true;
 
-        source
-            .connect(analyzer)
-            .connect(nativeAudioContext.destination);
+        source.connect(analyzer).connect(nativeAudioContext.destination);
 
         source.connect(dummy);
         source.disconnect(dummy);
 
-        analyzer.onaudioprocess = (event) => { // tslint:disable-line:deprecation
+        // tslint:disable-next-line:deprecation
+        analyzer.onaudioprocess = (event) => {
             const chnnlDt = event.inputBuffer.getChannelData(0);
 
             if (Array.prototype.some.call(chnnlDt, (sample: number) => sample === 1)) {

@@ -5,10 +5,10 @@ import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offli
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
 
 const addAudioWorkletModuleWithAudioWorkletOfContext = (context, filename) => {
-    return context.audioWorklet.addModule(`base/test/fixtures/${ filename }.js`);
+    return context.audioWorklet.addModule(`base/test/fixtures/${filename}.js`);
 };
 const addAudioWorkletModuleWithGlobalAudioWorklet = (context, filename) => {
-    return ddDWrkltMdl(context, `base/test/fixtures/${ filename }.js`);
+    return ddDWrkltMdl(context, `base/test/fixtures/${filename}.js`);
 };
 const testCases = {
     'addAudioWorkletModule() with a MinimalAudioContext': {
@@ -30,11 +30,8 @@ const testCases = {
 };
 
 describe('AudioWorkletGlobalScope', () => {
-
-    for (const [ description, { addAudioWorkletModule, createContext } ] of Object.entries(testCases)) {
-
-        describe(`with the ${ description }`, () => {
-
+    for (const [description, { addAudioWorkletModule, createContext }] of Object.entries(testCases)) {
+        describe(`with the ${description}`, () => {
             let context;
 
             afterEach(() => {
@@ -43,10 +40,9 @@ describe('AudioWorkletGlobalScope', () => {
                 }
             });
 
-            beforeEach(() => context = createContext());
+            beforeEach(() => (context = createContext()));
 
             describe('currentFrame', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -138,11 +134,9 @@ describe('AudioWorkletGlobalScope', () => {
                         context.startRendering();
                     }
                 });
-
             });
 
             describe('currentTime', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -234,11 +228,9 @@ describe('AudioWorkletGlobalScope', () => {
                         context.startRendering();
                     }
                 });
-
             });
 
             describe('global', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -262,11 +254,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                     audioWorkletNode.port.postMessage(null);
                 });
-
             });
 
             describe('sampleRate', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -290,11 +280,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                     audioWorkletNode.port.postMessage(null);
                 });
-
             });
 
             describe('self', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -318,11 +306,9 @@ describe('AudioWorkletGlobalScope', () => {
 
                     audioWorkletNode.port.postMessage(null);
                 });
-
             });
 
             describe('window', () => {
-
                 let audioWorkletNode;
 
                 beforeEach(async function () {
@@ -346,15 +332,11 @@ describe('AudioWorkletGlobalScope', () => {
 
                     audioWorkletNode.port.postMessage(null);
                 });
-
             });
 
             describe('AudioWorkletProcessor', () => {
-
                 describe('process()', () => {
-
                     describe('with a processor which transfers the arguments', () => {
-
                         let audioWorkletNode;
 
                         beforeEach(async function () {
@@ -382,15 +364,11 @@ describe('AudioWorkletGlobalScope', () => {
                                 context.startRendering();
                             }
                         });
-
                     });
 
                     describe('with a processor which does not transfer the arguments', () => {
-
-                        for (const numberOfOutputs of [ 0, 1 ]) {
-
-                            describe((numberOfOutputs === 0) ? 'with no outputs' : 'with one output', () => {
-
+                        for (const numberOfOutputs of [0, 1]) {
+                            describe(numberOfOutputs === 0 ? 'with no outputs' : 'with one output', () => {
                                 let audioWorkletNode;
 
                                 beforeEach(async function () {
@@ -405,9 +383,7 @@ describe('AudioWorkletGlobalScope', () => {
                                 });
 
                                 describe('inputs', () => {
-
                                     describe('without any connection', () => {
-
                                         it('should call process() with an empty array for each input', (done) => {
                                             audioWorkletNode.port.onmessage = ({ data }) => {
                                                 audioWorkletNode.port.onmessage = null;
@@ -422,11 +398,9 @@ describe('AudioWorkletGlobalScope', () => {
                                                 context.startRendering();
                                             }
                                         });
-
                                     });
 
                                     describe('with an input connection', () => {
-
                                         beforeEach(() => {
                                             new GainNode(context).connect(audioWorkletNode);
                                         });
@@ -446,13 +420,10 @@ describe('AudioWorkletGlobalScope', () => {
                                                 context.startRendering();
                                             }
                                         });
-
                                     });
 
                                     if (numberOfOutputs > 0) {
-
                                         describe('with an output connection', () => {
-
                                             beforeEach(() => {
                                                 audioWorkletNode.connect(context.destination);
                                             });
@@ -471,15 +442,11 @@ describe('AudioWorkletGlobalScope', () => {
                                                     context.startRendering();
                                                 }
                                             });
-
                                         });
-
                                     }
-
                                 });
 
                                 describe('outputs', () => {
-
                                     let zeros;
 
                                     beforeEach(() => {
@@ -489,7 +456,6 @@ describe('AudioWorkletGlobalScope', () => {
                                     });
 
                                     describe('without any connection', () => {
-
                                         it('should call process() with the current outputs', (done) => {
                                             audioWorkletNode.port.onmessage = ({ data }) => {
                                                 audioWorkletNode.port.onmessage = null;
@@ -508,11 +474,9 @@ describe('AudioWorkletGlobalScope', () => {
                                                 context.startRendering();
                                             }
                                         });
-
                                     });
 
                                     describe('with an input connection', () => {
-
                                         beforeEach(() => {
                                             new GainNode(context).connect(audioWorkletNode);
                                         });
@@ -535,13 +499,10 @@ describe('AudioWorkletGlobalScope', () => {
                                                 context.startRendering();
                                             }
                                         });
-
                                     });
 
                                     if (numberOfOutputs > 0) {
-
                                         describe('with an output connection', () => {
-
                                             beforeEach(() => {
                                                 audioWorkletNode.connect(context.destination);
                                             });
@@ -564,15 +525,11 @@ describe('AudioWorkletGlobalScope', () => {
                                                     context.startRendering();
                                                 }
                                             });
-
                                         });
-
                                     }
-
                                 });
 
                                 describe('parameters', () => {
-
                                     let values;
 
                                     beforeEach(() => {
@@ -582,13 +539,12 @@ describe('AudioWorkletGlobalScope', () => {
                                     });
 
                                     describe('without a parameter value change', () => {
-
                                         it('should call process() with the full array of values or a single value array for each parameter', (done) => {
                                             audioWorkletNode.port.onmessage = ({ data }) => {
                                                 audioWorkletNode.port.onmessage = null;
 
                                                 if (data.parameters.gain.length === 1) {
-                                                    expect(Array.from(data.parameters.gain)).to.deep.equal([ values[0] ]);
+                                                    expect(Array.from(data.parameters.gain)).to.deep.equal([values[0]]);
                                                 } else {
                                                     expect(Array.from(data.parameters.gain)).to.deep.equal(values);
                                                 }
@@ -600,11 +556,9 @@ describe('AudioWorkletGlobalScope', () => {
                                                 context.startRendering();
                                             }
                                         });
-
                                     });
 
                                     describe('with a parameter value change in the current render quantum', () => {
-
                                         it('should call process() with the full array of values for each parameter', (done) => {
                                             values[0] = 0;
 
@@ -624,54 +578,40 @@ describe('AudioWorkletGlobalScope', () => {
                                             const gain = audioWorkletNode.parameters.get('gain');
 
                                             for (let i = 0; i < 50; i += 1) {
-                                                gain.setValueAtTime(0, currentTime + (renderQuantum * i));
-                                                gain.setValueAtTime(1, currentTime + (renderQuantum * i) + sample);
+                                                gain.setValueAtTime(0, currentTime + renderQuantum * i);
+                                                gain.setValueAtTime(1, currentTime + renderQuantum * i + sample);
                                             }
 
                                             if (context.startRendering !== undefined) {
                                                 context.startRendering();
                                             }
                                         });
-
                                     });
-
                                 });
-
                             });
-
                         }
-
                     });
-
                 });
-
             });
 
             describe('registerProcessor()', () => {
-
                 describe('with an empty string as name', () => {
-
                     // Bug #134: Chrome & Opera have the only native implementation so far and don't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
-
                         it('should throw an error', function (done) {
                             this.timeout(10000);
 
-                            addAudioWorkletModule(context, 'empty-string-processor')
-                                .catch((err) => {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
+                            addAudioWorkletModule(context, 'empty-string-processor').catch((err) => {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                                    done();
-                                });
+                                done();
+                            });
                         });
-
                     }
-
                 });
 
                 describe('with a duplicate name', () => {
-
                     beforeEach(async function () {
                         this.timeout(10000);
 
@@ -680,111 +620,82 @@ describe('AudioWorkletGlobalScope', () => {
 
                     // Bug #135: Chrome & Opera have the only native implementation so far and don't throw the expected error.
                     if (window.AudioWorkletNode === undefined) {
-
                         it('should throw an error', function (done) {
                             this.timeout(10000);
 
-                            addAudioWorkletModule(context, 'duplicate-gain-processor')
-                                .catch((err) => {
-                                    expect(err.code).to.equal(9);
-                                    expect(err.name).to.equal('NotSupportedError');
+                            addAudioWorkletModule(context, 'duplicate-gain-processor').catch((err) => {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                                    done();
-                                });
+                                done();
+                            });
                         });
-
                     }
-
                 });
 
                 describe('with a unique name', () => {
-
                     describe('with a processor without a valid constructor', () => {
-
                         // Bug #136: Chrome & Opera have the only native implementation so far and don't throw the expected error.
                         if (window.AudioWorkletNode === undefined) {
-
                             it('should throw an error', function (done) {
                                 this.timeout(10000);
 
-                                addAudioWorkletModule(context, 'unconstructible-processor')
-                                    .catch((err) => {
-                                        expect(err).to.be.an.instanceOf(TypeError);
+                                addAudioWorkletModule(context, 'unconstructible-processor').catch((err) => {
+                                    expect(err).to.be.an.instanceOf(TypeError);
 
-                                        done();
-                                    });
+                                    done();
+                                });
                             });
-
                         }
-
                     });
 
                     describe('with a processor without a prototype', () => {
-
                         // Bug #137: Chrome & Opera have the only native implementation so far and don't throw the expected error.
                         if (window.AudioWorkletNode === undefined) {
-
                             it('should throw an error', function (done) {
                                 this.timeout(10000);
 
-                                addAudioWorkletModule(context, 'prototypeless-processor')
-                                    .catch((err) => {
-                                        expect(err).to.be.an.instanceOf(TypeError);
+                                addAudioWorkletModule(context, 'prototypeless-processor').catch((err) => {
+                                    expect(err).to.be.an.instanceOf(TypeError);
 
-                                        done();
-                                    });
+                                    done();
+                                });
                             });
-
                         }
-
                     });
 
                     describe('with a processor without a process function', () => {
-
                         it('should return a promise', function () {
                             this.timeout(10000);
 
                             return addAudioWorkletModule(context, 'processless-processor');
                         });
-
                     });
 
                     describe('with a processor with an invalid parameterDescriptors property', () => {
-
                         // Bug #139: Chrome & Opera have the only native implementation so far and don't throw the expected error.
                         if (window.AudioWorkletNode === undefined) {
-
                             it('should throw an error', function (done) {
                                 this.timeout(10000);
 
-                                addAudioWorkletModule(context, 'invalid-parameter-descriptors-property-processor')
-                                    .catch((err) => {
-                                        expect(err).to.be.an.instanceOf(TypeError);
+                                addAudioWorkletModule(context, 'invalid-parameter-descriptors-property-processor').catch((err) => {
+                                    expect(err).to.be.an.instanceOf(TypeError);
 
-                                        done();
-                                    });
+                                    done();
+                                });
                             });
-
                         }
-
                     });
 
                     describe('with a valid processor', () => {
-
                         it('should return a promise', function () {
                             this.timeout(10000);
 
                             return addAudioWorkletModule(context, 'gain-processor');
                         });
-
                     });
-
                 });
-
             });
-
         });
-
     }
-
 });

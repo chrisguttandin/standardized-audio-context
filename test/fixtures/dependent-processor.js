@@ -1,6 +1,5 @@
 class DependentProcessor extends AudioWorkletProcessor {
-
-    constructor () {
+    constructor() {
         super();
 
         this.port.onmessage = () => {
@@ -10,10 +9,10 @@ class DependentProcessor extends AudioWorkletProcessor {
         };
     }
 
-    process () { // eslint-disable-line class-methods-use-this
+    // eslint-disable-next-line class-methods-use-this
+    process() {
         return true;
     }
-
 }
 
 registerProcessor('dependent-processor', DependentProcessor);

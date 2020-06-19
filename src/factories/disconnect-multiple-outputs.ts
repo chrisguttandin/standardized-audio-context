@@ -18,36 +18,29 @@ const getOutputAudioNodeAtIndex = (
 export const createDisconnectMultipleOutputs: TDisconnectMultipleOutputsFactory = (createIndexSizeError) => {
     return (outputAudioNodes, destinationOrOutput = undefined, output = undefined, input = 0) => {
         if (destinationOrOutput === undefined) {
-            return outputAudioNodes
-                .forEach((outputAudioNode) => outputAudioNode.disconnect());
+            return outputAudioNodes.forEach((outputAudioNode) => outputAudioNode.disconnect());
         }
 
         if (typeof destinationOrOutput === 'number') {
-            return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, destinationOrOutput)
-                .disconnect();
+            return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, destinationOrOutput).disconnect();
         }
 
         if (isNativeAudioNode(destinationOrOutput)) {
             if (output === undefined) {
-                return outputAudioNodes
-                    .forEach((outputAudioNode) => outputAudioNode.disconnect(destinationOrOutput));
+                return outputAudioNodes.forEach((outputAudioNode) => outputAudioNode.disconnect(destinationOrOutput));
             }
 
             if (input === undefined) {
-                return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output)
-                    .disconnect(destinationOrOutput, 0);
+                return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output).disconnect(destinationOrOutput, 0);
             }
 
-            return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output)
-                .disconnect(destinationOrOutput, 0, input);
+            return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output).disconnect(destinationOrOutput, 0, input);
         }
 
         if (output === undefined) {
-            return outputAudioNodes
-                .forEach((outputAudioNode) => outputAudioNode.disconnect(destinationOrOutput));
+            return outputAudioNodes.forEach((outputAudioNode) => outputAudioNode.disconnect(destinationOrOutput));
         }
 
-        return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output)
-            .disconnect(destinationOrOutput, 0);
+        return getOutputAudioNodeAtIndex(createIndexSizeError, outputAudioNodes, output).disconnect(destinationOrOutput, 0);
     };
 };

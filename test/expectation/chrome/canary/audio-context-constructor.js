@@ -1,7 +1,6 @@
 import { spy } from 'sinon';
 
 describe('audioContextConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -11,7 +10,6 @@ describe('audioContextConstructor', () => {
     });
 
     describe('decodeAudioData()', () => {
-
         // bug #6
 
         it('should not call the errorCallback at all', (done) => {
@@ -25,7 +23,5 @@ describe('audioContextConstructor', () => {
                 done();
             }, 1000);
         });
-
     });
-
 });

@@ -33,9 +33,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
     isNativeOfflineAudioContext,
     wrapEventListener
 ) => {
-
     return class AudioBufferSourceNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioBufferSourceNode<T> {
-
         private _audioBufferSourceNodeRenderer: TAudioBufferSourceNodeRenderer<T>;
 
         private _isBufferNullified: boolean;
@@ -48,20 +46,20 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         private _playbackRate: IAudioParam;
 
-        constructor (context: T, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const audioBufferSourceNodeRenderer = <TAudioBufferSourceNodeRenderer<T>> ((isOffline)
-                ? createAudioBufferSourceNodeRenderer()
-                : null);
+            const audioBufferSourceNodeRenderer = <TAudioBufferSourceNodeRenderer<T>>(
+                (isOffline ? createAudioBufferSourceNodeRenderer() : null)
+            );
 
             super(context, false, nativeAudioBufferSourceNode, audioBufferSourceNodeRenderer);
 
             this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
             this._isBufferNullified = false;
-            this._isBufferSet = (options.buffer !== null && options.buffer !== undefined);
+            this._isBufferSet = options.buffer !== null && options.buffer !== undefined;
             this._nativeAudioBufferSourceNode = nativeAudioBufferSourceNode;
             this._onended = null;
             // Bug #73: Edge & Safari do not export the correct values for maxValue and minValue.
@@ -74,7 +72,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             );
         }
 
-        get buffer (): null | TAnyAudioBuffer {
+        get buffer(): null | TAnyAudioBuffer {
             if (this._isBufferNullified) {
                 return null;
             }
@@ -82,7 +80,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             return this._nativeAudioBufferSourceNode.buffer;
         }
 
-        set buffer (value) {
+        set buffer(value) {
             // Bug #71: Edge does not allow to set the buffer to null.
             try {
                 this._nativeAudioBufferSourceNode.buffer = value;
@@ -97,9 +95,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
                     const numberOfChannels = buffer.numberOfChannels;
 
                     for (let i = 0; i < numberOfChannels; i += 1) {
-                        buffer
-                            .getChannelData(i)
-                            .fill(0);
+                        buffer.getChannelData(i).fill(0);
                     }
 
                     this._isBufferNullified = true;
@@ -116,55 +112,53 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             }
         }
 
-        get loop (): boolean {
+        get loop(): boolean {
             return this._nativeAudioBufferSourceNode.loop;
         }
 
-        set loop (value) {
+        set loop(value) {
             this._nativeAudioBufferSourceNode.loop = value;
         }
 
-        get loopEnd (): number {
+        get loopEnd(): number {
             return this._nativeAudioBufferSourceNode.loopEnd;
         }
 
-        set loopEnd (value) {
+        set loopEnd(value) {
             this._nativeAudioBufferSourceNode.loopEnd = value;
         }
 
-        get loopStart (): number {
+        get loopStart(): number {
             return this._nativeAudioBufferSourceNode.loopStart;
         }
 
-        set loopStart (value) {
+        set loopStart(value) {
             this._nativeAudioBufferSourceNode.loopStart = value;
         }
 
-        get onended (): null | TEventHandler<this> {
+        get onended(): null | TEventHandler<this> {
             return this._onended;
         }
 
-        set onended (value) {
-            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
+        set onended(value) {
+            const wrappedListener = typeof value === 'function' ? wrapEventListener(this, value) : null;
 
             this._nativeAudioBufferSourceNode.onended = wrappedListener;
 
             const nativeOnEnded = this._nativeAudioBufferSourceNode.onended;
 
-            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
-                ? value
-                : <null | TEventHandler<this>> nativeOnEnded;
+            this._onended = nativeOnEnded !== null && nativeOnEnded === wrappedListener ? value : <null | TEventHandler<this>>nativeOnEnded;
         }
 
-        get playbackRate (): IAudioParam {
+        get playbackRate(): IAudioParam {
             return this._playbackRate;
         }
 
-        public start (when = 0, offset = 0, duration?: number): void {
+        public start(when = 0, offset = 0, duration?: number): void {
             this._nativeAudioBufferSourceNode.start(when, offset, duration);
 
             if (this._audioBufferSourceNodeRenderer !== null) {
-                this._audioBufferSourceNodeRenderer.start = (duration === undefined) ? [ when, offset ] : [ when, offset, duration ];
+                this._audioBufferSourceNodeRenderer.start = duration === undefined ? [when, offset] : [when, offset, duration];
             } else {
                 setInternalStateToActive(this);
 
@@ -179,14 +173,12 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             }
         }
 
-        public stop (when = 0): void {
+        public stop(when = 0): void {
             this._nativeAudioBufferSourceNode.stop(when);
 
             if (this._audioBufferSourceNodeRenderer !== null) {
                 this._audioBufferSourceNodeRenderer.stop = when;
             }
         }
-
     };
-
 };

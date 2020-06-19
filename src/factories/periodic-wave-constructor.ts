@@ -10,10 +10,8 @@ export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (
     getNativeContext,
     periodicWaveStore
 ) => {
-
     return class PeriodicWave<T extends TContext> implements IPeriodicWave {
-
-        constructor (
+        constructor(
             context: T,
             options: { imag: IPeriodicWaveOptions['imag']; real: IPeriodicWaveOptions['real'] } & Partial<IPeriodicWaveOptions>
         ) {
@@ -28,11 +26,11 @@ export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (
             return periodicWave;
         }
 
-        public static [ Symbol.hasInstance ] (instance: unknown): boolean {
-            return (instance !== null && typeof instance === 'object' && Object.getPrototypeOf(instance) === PeriodicWave.prototype)
-                || (periodicWaveStore.has(<any> instance));
+        public static [Symbol.hasInstance](instance: unknown): boolean {
+            return (
+                (instance !== null && typeof instance === 'object' && Object.getPrototypeOf(instance) === PeriodicWave.prototype) ||
+                periodicWaveStore.has(<any>instance)
+            );
         }
-
     };
-
 };

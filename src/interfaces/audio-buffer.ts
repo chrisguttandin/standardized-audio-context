@@ -1,5 +1,4 @@
 export interface IAudioBuffer {
-
     readonly duration: number;
 
     readonly length: number;
@@ -8,10 +7,9 @@ export interface IAudioBuffer {
 
     readonly sampleRate: number;
 
-    copyFromChannel (destination: Float32Array, channelNumber: number, bufferOffset?: number): void;
+    copyFromChannel(destination: Float32Array, channelNumber: number, bufferOffset?: number): void;
 
-    copyToChannel (source: Float32Array, channelNumber: number, bufferOffset?: number): void;
+    copyToChannel(source: Float32Array, channelNumber: number, bufferOffset?: number): void;
 
-    getChannelData (channel: number): Float32Array;
-
+    getChannelData(channel: number): Float32Array;
 }

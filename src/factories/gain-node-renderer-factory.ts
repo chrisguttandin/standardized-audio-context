@@ -47,7 +47,7 @@ export const createGainNodeRendererFactory: TGainNodeRendererFactoryFactory = (
         };
 
         return {
-            render (
+            render(
                 proxy: IGainNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

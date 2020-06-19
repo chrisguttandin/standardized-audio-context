@@ -1,5 +1,4 @@
 describe('channelMergerNodeConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -15,5 +14,4 @@ describe('channelMergerNodeConstructor', () => {
             new ChannelMergerNode(audioContext, {});
         }).to.throw(TypeError, 'Function expected');
     });
-
 });

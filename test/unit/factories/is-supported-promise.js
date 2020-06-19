@@ -2,7 +2,6 @@ import { createCacheTestResult } from '../../../src/factories/cache-test-result'
 import { createIsSupportedPromise } from '../../../src/factories/is-supported-promise';
 
 describe('createIsSupportedPromise()', () => {
-
     let cacheTestResult;
     let fakeTestAudioBufferCopyChannelMethodsSubarraySupport;
     let fakeTestAudioContextCloseMethodSupport;
@@ -80,7 +79,9 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for copyFromChannel and copyToChannel methods subarray support of an AudioBuffer throws', async () => {
-        fakeTestAudioBufferCopyChannelMethodsSubarraySupport = () => { throw new Error('A fake error thrown by the test.'); };
+        fakeTestAudioBufferCopyChannelMethodsSubarraySupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -126,7 +127,9 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for close support throws', async () => {
-        fakeTestAudioContextCloseMethodSupport = () => { throw new Error('A fake error thrown by the test.'); };
+        fakeTestAudioContextCloseMethodSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -218,7 +221,9 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for AudioContextOptions support throws', async () => {
-        fakeTestAudioContextOptionsSupport = () => { throw new Error('A fake error thrown by the test.'); };
+        fakeTestAudioContextOptionsSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -264,7 +269,9 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for connect support of an AudioNode throws', async () => {
-        fakeTestAudioNodeConnectMethodSupport = () => { throw new Error('A fake error thrown by the test.'); };
+        fakeTestAudioNodeConnectMethodSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -379,7 +386,9 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for accurate scheduling support of a ConstantSourceNode throws', async () => {
-        fakeTestConstantSourceNodeAccurateSchedulingSupport = () => { throw new Error('A fake error thrown by the test.'); };
+        fakeTestConstantSourceNodeAccurateSchedulingSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -425,7 +434,9 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for buffer reassignability support of a ConvolverNode throws', async () => {
-        fakeTestConvolverNodeBufferReassignabilitySupport = () => { throw new Error('A fake error thrown by the test.'); };
+        fakeTestConvolverNodeBufferReassignabilitySupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -471,7 +482,9 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for isSecureContext support throws', async () => {
-        fakeTestIsSecureContextSupport = () => { throw new Error('A fake error thrown by the test.'); };
+        fakeTestIsSecureContextSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -517,7 +530,9 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for support for creating a MediaStreamAudioSourceNode with MediaStream without an audio track throws', async () => {
-        fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport = () => { throw new Error('A fake error thrown by the test.'); };
+        fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -630,5 +645,4 @@ describe('createIsSupportedPromise()', () => {
 
         expect(isSupported).to.be.false;
     });
-
 });

@@ -3,11 +3,8 @@ import { isSafari } from '../../helper/is-safari';
 import { spy } from 'sinon';
 
 describe('OfflineAudioContext', () => {
-
     describe('constructor()', () => {
-
         describe('with mininal options', () => {
-
             let offlineAudioContext;
 
             beforeEach(() => {
@@ -23,13 +20,10 @@ describe('OfflineAudioContext', () => {
             // @todo it('should return an implementation of the IMinimalBaseAudioContext interface');
 
             // @todo it('should return an implementation of the IOfflineAudioContext interface');
-
         });
 
         describe('with valid options', () => {
-
             describe('with valid options', () => {
-
                 it('should return a OfflineAudioContext with the given length', () => {
                     const length = 250;
                     const offlineAudioContext = new OfflineAudioContext({ length, sampleRate: 44100 });
@@ -39,26 +33,22 @@ describe('OfflineAudioContext', () => {
 
                 // Bug #142: Safari does not support OfflineAudioContexts with 32 channels.
                 if (!isSafari(navigator)) {
-
                     it('should return a OfflineAudioContext with the given numberOfChannels as maxChannelCount of its destination', () => {
                         const numberOfChannels = 32;
                         const offlineAudioContext = new OfflineAudioContext({ length: 1000, numberOfChannels, sampleRate: 44100 });
 
                         expect(offlineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
                     });
-
                 }
 
                 // Bug #141: Safari does not support OfflineAudioContexts with 8000 Hz.
                 if (!isSafari(navigator)) {
-
                     it('should return a OfflineAudioContext with the given sampleRate of 8 kHz', () => {
                         const sampleRate = 8000;
                         const offlineAudioContext = new OfflineAudioContext({ length: 1000, sampleRate });
 
                         expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
                     });
-
                 }
 
                 it('should return a OfflineAudioContext with the given sampleRate of 96 kHz', () => {
@@ -67,15 +57,11 @@ describe('OfflineAudioContext', () => {
 
                     expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
                 });
-
             });
-
         });
 
         describe('with invalid options', () => {
-
             describe('with zero as the numberOfChannels', () => {
-
                 it('should throw a NotSupportedError', (done) => {
                     try {
                         new OfflineAudioContext({ length: 1000, numberOfChannels: 0, sampleRate: 44100 });
@@ -86,11 +72,9 @@ describe('OfflineAudioContext', () => {
                         done();
                     }
                 });
-
             });
 
             describe('with a length of zero', () => {
-
                 it('should throw a NotSupportedError', (done) => {
                     try {
                         new OfflineAudioContext({ length: 0, sampleRate: 44100 });
@@ -101,11 +85,9 @@ describe('OfflineAudioContext', () => {
                         done();
                     }
                 });
-
             });
 
             describe('with a sampleRate of zero', () => {
-
                 it('should throw a NotSupportedError', (done) => {
                     try {
                         new OfflineAudioContext({ length: 1000, sampleRate: 0 });
@@ -116,15 +98,11 @@ describe('OfflineAudioContext', () => {
                         done();
                     }
                 });
-
             });
-
         });
-
     });
 
     describe('audioWorklet', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -136,11 +114,9 @@ describe('OfflineAudioContext', () => {
 
             expect(audioWorklet.addModule).to.be.a('function');
         });
-
     });
 
     describe('currentTime', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -156,11 +132,9 @@ describe('OfflineAudioContext', () => {
                 offlineAudioContext.currentTime = 0;
             }).to.throw(TypeError);
         });
-
     });
 
     describe('destination', () => {
-
         let length;
         let sampleRate;
 
@@ -190,7 +164,6 @@ describe('OfflineAudioContext', () => {
         });
 
         describe('with options as arguments', () => {
-
             let numberOfChannels;
             let offlineAudioContext;
 
@@ -206,13 +179,10 @@ describe('OfflineAudioContext', () => {
             it('should have a maxChannelCount which equals the numberOfChannels', () => {
                 expect(offlineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
             });
-
         });
 
         describe('with a contextOptions', () => {
-
             describe('without a specified value for numberOfChannels', () => {
-
                 let offlineAudioContext;
 
                 beforeEach(() => {
@@ -226,11 +196,9 @@ describe('OfflineAudioContext', () => {
                 it('should have a maxChannelCount of one', () => {
                     expect(offlineAudioContext.destination.maxChannelCount).to.equal(1);
                 });
-
             });
 
             describe('with a specified value for numberOfChannels', () => {
-
                 let numberOfChannels;
                 let offlineAudioContext;
 
@@ -246,15 +214,11 @@ describe('OfflineAudioContext', () => {
                 it('should have a maxChannelCount which equals the numberOfChannels', () => {
                     expect(offlineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
                 });
-
             });
-
         });
-
     });
 
     describe('length', () => {
-
         let length;
 
         beforeEach(() => {
@@ -270,7 +234,6 @@ describe('OfflineAudioContext', () => {
         });
 
         describe('with options as arguments', () => {
-
             let offlineAudioContext;
 
             beforeEach(() => {
@@ -280,11 +243,9 @@ describe('OfflineAudioContext', () => {
             it('should expose its length', () => {
                 expect(offlineAudioContext.length).to.equal(length);
             });
-
         });
 
         describe('with a contextOptions', () => {
-
             let offlineAudioContext;
 
             beforeEach(() => {
@@ -294,13 +255,10 @@ describe('OfflineAudioContext', () => {
             it('should expose its length', () => {
                 expect(offlineAudioContext.length).to.equal(length);
             });
-
         });
-
     });
 
     describe('listener', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -320,17 +278,13 @@ describe('OfflineAudioContext', () => {
             expect(listener.upY).not.to.be.undefined;
             expect(listener.upZ).not.to.be.undefined;
         });
-
     });
 
     describe('oncomplete', () => {
-
         // @todo
-
     });
 
     describe('onstatechange', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -343,14 +297,14 @@ describe('OfflineAudioContext', () => {
 
         it('should be assignable to a function', () => {
             const fn = () => {};
-            const onstatechange = offlineAudioContext.onstatechange = fn; // eslint-disable-line no-multi-assign
+            const onstatechange = (offlineAudioContext.onstatechange = fn); // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.equal(fn);
             expect(offlineAudioContext.onstatechange).to.equal(fn);
         });
 
         it('should be assignable to null', () => {
-            const onstatechange = offlineAudioContext.onstatechange = null; // eslint-disable-line no-multi-assign
+            const onstatechange = (offlineAudioContext.onstatechange = null); // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.be.null;
             expect(offlineAudioContext.onstatechange).to.be.null;
@@ -361,7 +315,7 @@ describe('OfflineAudioContext', () => {
 
             offlineAudioContext.onstatechange = () => {};
 
-            const onstatechange = offlineAudioContext.onstatechange = string; // eslint-disable-line no-multi-assign
+            const onstatechange = (offlineAudioContext.onstatechange = string); // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.equal(string);
             expect(offlineAudioContext.onstatechange).to.be.null;
@@ -396,28 +350,24 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should fire an assigned statechange event listener when done with rendering', (done) => {
-            offlineAudioContext
-                .startRendering()
-                .then(() => {
-                    offlineAudioContext.onstatechange = function (event) {
-                        offlineAudioContext.onstatechange = null;
+            offlineAudioContext.startRendering().then(() => {
+                offlineAudioContext.onstatechange = function (event) {
+                    offlineAudioContext.onstatechange = null;
 
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(offlineAudioContext);
-                        expect(event.target).to.equal(offlineAudioContext);
-                        expect(event.type).to.equal('statechange');
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(offlineAudioContext);
+                    expect(event.target).to.equal(offlineAudioContext);
+                    expect(event.type).to.equal('statechange');
 
-                        expect(this).to.equal(offlineAudioContext);
+                    expect(this).to.equal(offlineAudioContext);
 
-                        done();
-                    };
-                });
+                    done();
+                };
+            });
         });
-
     });
 
     describe('sampleRate', () => {
-
         let sampleRate;
 
         beforeEach(() => {
@@ -433,7 +383,6 @@ describe('OfflineAudioContext', () => {
         });
 
         describe('with options as arguments', () => {
-
             let offlineAudioContext;
 
             beforeEach(() => {
@@ -446,7 +395,6 @@ describe('OfflineAudioContext', () => {
         });
 
         describe('with a contextOptions', () => {
-
             let offlineAudioContext;
 
             beforeEach(() => {
@@ -456,13 +404,10 @@ describe('OfflineAudioContext', () => {
             it('should expose its sampleRate', () => {
                 expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
             });
-
         });
-
     });
 
     describe('state', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -486,17 +431,13 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should be closed after the buffer was rendered', () => {
-            return offlineAudioContext
-                .startRendering()
-                .then(() => {
-                    expect(offlineAudioContext.state).to.equal('closed');
-                });
+            return offlineAudioContext.startRendering().then(() => {
+                expect(offlineAudioContext.state).to.equal('closed');
+            });
         });
-
     });
 
     describe('addEventListener()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -504,7 +445,7 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should fire a registered statechange event listener when starting to render', (done) => {
-            function stateChangeListener (event) {
+            function stateChangeListener(event) {
                 offlineAudioContext.removeEventListener('statechange', stateChangeListener);
 
                 expect(event).to.be.an.instanceOf(Event);
@@ -522,30 +463,26 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should fire a registered statechange event listener when done with rendering', (done) => {
-            offlineAudioContext
-                .startRendering()
-                .then(() => {
-                    function stateChangeListener (event) {
-                        offlineAudioContext.removeEventListener('statechange', stateChangeListener);
+            offlineAudioContext.startRendering().then(() => {
+                function stateChangeListener(event) {
+                    offlineAudioContext.removeEventListener('statechange', stateChangeListener);
 
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(offlineAudioContext);
-                        expect(event.target).to.equal(offlineAudioContext);
-                        expect(event.type).to.equal('statechange');
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(offlineAudioContext);
+                    expect(event.target).to.equal(offlineAudioContext);
+                    expect(event.type).to.equal('statechange');
 
-                        expect(this).to.equal(offlineAudioContext);
+                    expect(this).to.equal(offlineAudioContext);
 
-                        done();
-                    }
+                    done();
+                }
 
-                    offlineAudioContext.addEventListener('statechange', stateChangeListener);
-                });
+                offlineAudioContext.addEventListener('statechange', stateChangeListener);
+            });
         });
-
     });
 
     describe('createAnalyser()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -555,11 +492,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createAnalyser).to.be.a('function');
         });
-
     });
 
     describe('createBiquadFilter()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -569,11 +504,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createBiquadFilter).to.be.a('function');
         });
-
     });
 
     describe('createBuffer()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -583,11 +516,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createBuffer).to.be.a('function');
         });
-
     });
 
     describe('createBufferSource()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -597,11 +528,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createBufferSource).to.be.a('function');
         });
-
     });
 
     describe('createChannelMerger()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -611,11 +540,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createChannelMerger).to.be.a('function');
         });
-
     });
 
     describe('createChannelSplitter()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -625,11 +552,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createChannelSplitter).to.be.a('function');
         });
-
     });
 
     describe('createConstantSource()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -639,11 +564,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createConstantSource).to.be.a('function');
         });
-
     });
 
     describe('createConvolver()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -653,11 +576,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createConvolver).to.be.a('function');
         });
-
     });
 
     describe('createDelay()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -667,11 +588,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createDelay).to.be.a('function');
         });
-
     });
 
     describe('createDynamicsCompressor()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -681,11 +600,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createDynamicsCompressor).to.be.a('function');
         });
-
     });
 
     describe('createGain()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -695,11 +612,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createGain).to.be.a('function');
         });
-
     });
 
     describe('createIIRFilter()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -709,11 +624,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createIIRFilter).to.be.a('function');
         });
-
     });
 
     describe('createPanner()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -723,11 +636,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createPanner).to.be.a('function');
         });
-
     });
 
     describe('createPeriodicWave()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -737,11 +648,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createPeriodicWave).to.be.a('function');
         });
-
     });
 
     describe('createOscillator()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -751,11 +660,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createOscillator).to.be.a('function');
         });
-
     });
 
     describe('createStereoPanner()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -765,11 +672,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createStereoPanner).to.be.a('function');
         });
-
     });
 
     describe('createWaveShaper()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -779,11 +684,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.createWaveShaper).to.be.a('function');
         });
-
     });
 
     describe('decodeAudioData()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -793,11 +696,9 @@ describe('OfflineAudioContext', () => {
         it('should be a function', () => {
             expect(offlineAudioContext.decodeAudioData).to.be.a('function');
         });
-
     });
 
     describe('startRendering()', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -825,33 +726,28 @@ describe('OfflineAudioContext', () => {
 
             audioBufferSourceNode.start(0);
 
-            return offlineAudioContext
-                .startRendering()
-                .then((renderedBuffer) => {
-                    expect(renderedBuffer.length).to.equal(audioBuffer.length);
+            return offlineAudioContext.startRendering().then((renderedBuffer) => {
+                expect(renderedBuffer.length).to.equal(audioBuffer.length);
 
-                    // Bug #5: Safari does not support copyFromChannel().
-                    const channelData = renderedBuffer.getChannelData(0);
+                // Bug #5: Safari does not support copyFromChannel().
+                const channelData = renderedBuffer.getChannelData(0);
 
-                    for (let i = 0; i < audioBuffer.length; i += 1) {
-                        expect(channelData[i]).to.equal(i);
-                    }
-                });
+                for (let i = 0; i < audioBuffer.length; i += 1) {
+                    expect(channelData[i]).to.equal(i);
+                }
+            });
         });
 
         it('should throw an InvalidStateError if it was invoked before', (done) => {
             offlineAudioContext.startRendering();
 
-            offlineAudioContext
-                .startRendering()
-                .catch((err) => {
-                    expect(err.code).to.equal(11);
-                    expect(err.name).to.equal('InvalidStateError');
+            offlineAudioContext.startRendering().catch((err) => {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
 
-                    done();
-                });
+                done();
+            });
         });
-
     });
 
     /*
@@ -890,5 +786,4 @@ describe('OfflineAudioContext', () => {
      *
      * });
      */
-
 });

@@ -1,4 +1,4 @@
-function PrototypelessProcessor () { }
+function PrototypelessProcessor() {}
 
 PrototypelessProcessor.prototype = null;
 

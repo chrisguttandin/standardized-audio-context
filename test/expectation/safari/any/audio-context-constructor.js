@@ -1,13 +1,11 @@
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 
 describe('audioContextConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
 
     describe('without a constructed AudioContext', () => {
-
         // bug #51
 
         it('should allow to set the latencyHint to an unsupported value', () => {
@@ -25,29 +23,26 @@ describe('audioContextConstructor', () => {
         });
 
         describe('with four running AudioContexts', () => {
-
             let audioContexts;
             let gainNodes;
 
             afterEach(() => {
-                [ audioContext, ...audioContexts ]
-                    .forEach((dCntxt, index) => gainNodes[index].disconnect(dCntxt.destination));
+                [audioContext, ...audioContexts].forEach((dCntxt, index) => gainNodes[index].disconnect(dCntxt.destination));
 
                 return Promise.all(audioContexts.map((dCntxt) => dCntxt.close()));
             });
 
             beforeEach(() => {
                 audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
-                audioContexts = [ new webkitAudioContext(), new webkitAudioContext(), new webkitAudioContext() ]; // eslint-disable-line new-cap, no-undef
+                audioContexts = [new webkitAudioContext(), new webkitAudioContext(), new webkitAudioContext()]; // eslint-disable-line new-cap, no-undef
 
-                gainNodes = [ audioContext, ...audioContexts ]
-                    .map((dCntxt) => {
-                        const gainNode = dCntxt.createGain();
+                gainNodes = [audioContext, ...audioContexts].map((dCntxt) => {
+                    const gainNode = dCntxt.createGain();
 
-                        gainNode.connect(dCntxt.destination);
+                    gainNode.connect(dCntxt.destination);
 
-                        return gainNode;
-                    });
+                    return gainNode;
+                });
             });
 
             // bug #131
@@ -55,13 +50,10 @@ describe('audioContextConstructor', () => {
             it('should not allow to create another AudioContext', () => {
                 expect(new webkitAudioContext()).to.be.null; // eslint-disable-line new-cap, no-undef
             });
-
         });
-
     });
 
     describe('with a constructed AudioContext', () => {
-
         beforeEach(() => {
             audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
         });
@@ -71,29 +63,23 @@ describe('audioContextConstructor', () => {
         });
 
         describe('audioWorklet', () => {
-
             // bug #59
 
             it('should not be implemented', () => {
                 expect(audioContext.audioWorklet).to.be.undefined;
             });
-
         });
 
         describe('baseLatency', () => {
-
             // bug #39
 
             it('should not be implemented', () => {
                 expect(audioContext.baseLatency).to.be.undefined;
             });
-
         });
 
         describe('destination', () => {
-
             describe('channelCount', () => {
-
                 // bug #169
 
                 it('should throw an error', () => {
@@ -101,23 +87,18 @@ describe('audioContextConstructor', () => {
                         audioContext.destination.channelCount = 1;
                     }).to.throw(DOMException);
                 });
-
             });
 
             describe('numberOfOutputs', () => {
-
                 // bug #168
 
                 it('should be zero', () => {
                     expect(audioContext.destination.numberOfOutputs).to.equal(0);
                 });
-
             });
-
         });
 
         describe('listener', () => {
-
             // bug #117
 
             it('should not be implemented', () => {
@@ -131,21 +112,17 @@ describe('audioContextConstructor', () => {
                 expect(audioContext.listener.upY).to.be.undefined;
                 expect(audioContext.listener.upZ).to.be.undefined;
             });
-
         });
 
         describe('outputLatency', () => {
-
             // bug #40
 
             it('should not be implemented', () => {
                 expect(audioContext.outputLatency).to.be.undefined;
             });
-
         });
 
         describe('createAnalyser()', () => {
-
             // bug #41
 
             it('should throw a SyntaxError when calling connect() with a node of another AudioContext', (done) => {
@@ -184,7 +161,6 @@ describe('audioContextConstructor', () => {
             });
 
             describe('maxDecibels', () => {
-
                 // bug #118
 
                 it('should be assignable to a value equal to minDecibels', () => {
@@ -195,11 +171,9 @@ describe('audioContextConstructor', () => {
 
                     expect(analyserNode.maxDecibels).to.equal(maxDecibels);
                 });
-
             });
 
             describe('minDecibels', () => {
-
                 // bug #118
 
                 it('should be assignable to a value equal to maxDecibels', () => {
@@ -210,11 +184,9 @@ describe('audioContextConstructor', () => {
 
                     expect(analyserNode.minDecibels).to.equal(minDecibels);
                 });
-
             });
 
             describe('getFloatTimeDomainData()', () => {
-
                 // bug #36
 
                 it('should not have a getFloatTimeDomainData method', () => {
@@ -222,13 +194,10 @@ describe('audioContextConstructor', () => {
 
                     expect(analyserNode.getFloatTimeDomainData).to.be.undefined;
                 });
-
             });
-
         });
 
         describe('createBiquadFilter()', () => {
-
             let biquadFilterNode;
 
             beforeEach(() => {
@@ -236,113 +205,100 @@ describe('audioContextConstructor', () => {
             });
 
             describe('detune', () => {
-
                 describe('automationRate', () => {
-
                     // bug #84
 
                     it('should not be implemented', () => {
                         expect(biquadFilterNode.detune.automationRate).to.be.undefined;
                     });
-
                 });
 
                 describe('maxValue', () => {
-
                     // bug #78
 
                     it('should be 4800', () => {
                         expect(biquadFilterNode.detune.maxValue).to.equal(4800);
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #78
 
                     it('should be -4800', () => {
                         expect(biquadFilterNode.detune.minValue).to.equal(-4800);
                     });
-
                 });
-
             });
 
             describe('frequency', () => {
-
                 describe('minValue', () => {
-
                     // bug #77
 
                     it('should be 10', () => {
                         expect(biquadFilterNode.frequency.minValue).to.equal(10);
                     });
-
                 });
-
             });
 
             describe('gain', () => {
-
                 describe('maxValue', () => {
-
                     // bug #79
 
                     it('should be 40', () => {
                         expect(biquadFilterNode.gain.maxValue).to.equal(40);
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #79
 
                     it('should be -40', () => {
                         expect(biquadFilterNode.gain.minValue).to.equal(-40);
                     });
-
                 });
-
             });
 
             describe('Q', () => {
-
                 describe('maxValue', () => {
-
                     // bug #80
 
                     it('should be 1000', () => {
                         expect(biquadFilterNode.Q.maxValue).to.equal(1000);
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #80
 
                     it('should be 0.00009999999747378752', () => {
                         expect(biquadFilterNode.Q.minValue).to.equal(0.00009999999747378752);
                     });
-
                 });
-
             });
 
             describe('getFrequencyResponse()', () => {
-
                 // bug #22
 
                 it('should fill the magResponse and phaseResponse arrays with the deprecated algorithm', () => {
                     const magResponse = new Float32Array(5);
                     const phaseResponse = new Float32Array(5);
 
-                    biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
+                    biquadFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
 
-                    expect(Array.from(magResponse)).to.deep.equal([ 1.1107852458953857, 0.8106917142868042, 0.20565471053123474, 0.04845593497157097, 0.011615658178925514 ]);
-                    expect(Array.from(phaseResponse)).to.deep.equal([ -0.7254799008369446, -1.8217267990112305, -2.6273605823516846, -2.906902313232422, -3.0283825397491455 ]);
+                    expect(Array.from(magResponse)).to.deep.equal([
+                        1.1107852458953857,
+                        0.8106917142868042,
+                        0.20565471053123474,
+                        0.04845593497157097,
+                        0.011615658178925514
+                    ]);
+                    expect(Array.from(phaseResponse)).to.deep.equal([
+                        -0.7254799008369446,
+                        -1.8217267990112305,
+                        -2.6273605823516846,
+                        -2.906902313232422,
+                        -3.0283825397491455
+                    ]);
                 });
 
                 // bug #68
@@ -350,37 +306,29 @@ describe('audioContextConstructor', () => {
                 it('should throw no error', () => {
                     biquadFilterNode.getFrequencyResponse(new Float32Array(), new Float32Array(1), new Float32Array(1));
                 });
-
             });
-
         });
 
         describe('createBuffer()', () => {
-
             // bug #99
 
             describe('with zero as the numberOfChannels', () => {
-
                 it('should throw no error', () => {
                     audioContext.createBuffer(0, 10, 44100);
                 });
-
             });
 
             // bug #140
 
             describe('with a sampleRate of 8000 Hz', () => {
-
                 it('should throw an error', () => {
                     expect(() => {
                         audioContext.createBuffer(1, 10, 8000);
                     }).to.throw(DOMException);
                 });
-
             });
 
             describe('getChannelData()', () => {
-
                 let audioBuffer;
 
                 beforeEach(() => {
@@ -388,7 +336,6 @@ describe('audioContextConstructor', () => {
                 });
 
                 describe('with an index of an unexisting channel', () => {
-
                     // bug #100
 
                     it('should throw a SyntaxError', (done) => {
@@ -401,15 +348,11 @@ describe('audioContextConstructor', () => {
                             done();
                         }
                     });
-
                 });
-
             });
-
         });
 
         describe('createBufferSource()', () => {
-
             // bug #18
 
             it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', () => {
@@ -426,7 +369,6 @@ describe('audioContextConstructor', () => {
             });
 
             describe('buffer', () => {
-
                 // bug #72
 
                 it('should allow to assign the buffer multiple times', () => {
@@ -435,11 +377,9 @@ describe('audioContextConstructor', () => {
                     audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
                     audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
                 });
-
             });
 
             describe('detune', () => {
-
                 let audioBufferSourceNode;
 
                 beforeEach(() => {
@@ -451,11 +391,9 @@ describe('audioContextConstructor', () => {
                 it('should not be implemented', () => {
                     expect(audioBufferSourceNode.detune).to.be.undefined;
                 });
-
             });
 
             describe('playbackRate', () => {
-
                 let audioBufferSourceNode;
 
                 beforeEach(() => {
@@ -463,57 +401,53 @@ describe('audioContextConstructor', () => {
                 });
 
                 describe('maxValue', () => {
-
                     // bug #73
 
                     it('should be 1024', () => {
                         expect(audioBufferSourceNode.playbackRate.maxValue).to.equal(1024);
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #73
 
                     it('should be -1024', () => {
                         expect(audioBufferSourceNode.playbackRate.minValue).to.equal(-1024);
                     });
-
                 });
 
                 describe('name', () => {
-
                     // bug #153
 
                     it('should export the name as a property', () => {
                         expect(audioBufferSourceNode.playbackRate.name).to.equal('playbackRate');
                     });
-
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-
                     // bug #45
 
                     it('should not throw any exception', () => {
                         audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
                     });
-
                 });
-
             });
 
             describe('start()', () => {
-
                 // bug #44
 
                 it('should throw a DOMException', () => {
                     const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => audioBufferSourceNode.start(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
-                    expect(() => audioBufferSourceNode.start(0, -1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
-                    expect(() => audioBufferSourceNode.start(0, 0, -1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.start(-1))
+                        .to.throw(DOMException)
+                        .with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.start(0, -1))
+                        .to.throw(DOMException)
+                        .with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.start(0, 0, -1))
+                        .to.throw(DOMException)
+                        .with.property('name', 'InvalidStateError');
                 });
 
                 // bug #69
@@ -533,19 +467,21 @@ describe('audioContextConstructor', () => {
 
                     audioBufferSourceNode.buffer = audioBuffer;
 
-                    expect(() => audioBufferSourceNode.start(0, 2)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.start(0, 2))
+                        .to.throw(DOMException)
+                        .with.property('name', 'InvalidStateError');
                 });
-
             });
 
             describe('stop()', () => {
-
                 // bug #44
 
                 it('should throw a DOMException', () => {
                     const audioBufferSourceNode = audioContext.createBufferSource();
 
-                    expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.stop(-1))
+                        .to.throw(DOMException)
+                        .with.property('name', 'InvalidStateError');
                 });
 
                 // bug #162
@@ -555,15 +491,14 @@ describe('audioContextConstructor', () => {
 
                     audioBufferSourceNode.start();
 
-                    expect(() => audioBufferSourceNode.stop()).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                    expect(() => audioBufferSourceNode.stop())
+                        .to.throw(DOMException)
+                        .with.property('name', 'InvalidStateError');
                 });
-
             });
-
         });
 
         describe('createChannelMerger()', () => {
-
             // bug #15
 
             it('should have a wrong channelCount', () => {
@@ -585,11 +520,9 @@ describe('audioContextConstructor', () => {
 
                 channelMergerNode.channelCountMode = 'clamped-max';
             });
-
         });
 
         describe('createChannelSplitter()', () => {
-
             // bug #96
 
             it('should have a wrong channelCount', () => {
@@ -640,21 +573,17 @@ describe('audioContextConstructor', () => {
                 channelSplitterNode.channelInterpretation = 'discrete';
                 channelSplitterNode.channelInterpretation = 'speakers';
             });
-
         });
 
         describe('createConstantSource()', () => {
-
             // bug #62
 
             it('should not be implemented', () => {
                 expect(audioContext.createConstantSource).to.be.undefined;
             });
-
         });
 
         describe('createConvolver()', () => {
-
             let convolverNode;
 
             beforeEach(() => {
@@ -662,7 +591,6 @@ describe('audioContextConstructor', () => {
             });
 
             describe('buffer', () => {
-
                 // bug #115
 
                 it('should not allow to assign the buffer to null', () => {
@@ -673,33 +601,26 @@ describe('audioContextConstructor', () => {
 
                     expect(convolverNode.buffer).to.equal(audioBuffer);
                 });
-
             });
 
             describe('channelCount', () => {
-
                 // bug #113
 
                 it('should not throw an error', () => {
                     convolverNode.channelCount = 3;
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 // bug #114
 
                 it('should not throw an error', () => {
                     convolverNode.channelCountMode = 'max';
                 });
-
             });
-
         });
 
         describe('createDynamicsCompressor()', () => {
-
             let dynamicsCompressorNode;
 
             beforeEach(() => {
@@ -707,27 +628,22 @@ describe('audioContextConstructor', () => {
             });
 
             describe('channelCount', () => {
-
                 // bug #108
 
                 it('should not throw an error', () => {
                     dynamicsCompressorNode.channelCount = 3;
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 // bug #109
 
                 it('should not throw an error', () => {
                     dynamicsCompressorNode.channelCountMode = 'max';
                 });
-
             });
 
             describe('reduction', () => {
-
                 // bug #111
 
                 it('should return an implementation of the AudioParam interface', () => {
@@ -743,13 +659,10 @@ describe('audioContextConstructor', () => {
                     expect(dynamicsCompressorNode.reduction.setValueCurveAtTime).to.be.a('function');
                     expect(dynamicsCompressorNode.reduction.value).to.be.a('number');
                 });
-
             });
-
         });
 
         describe('createGain()', () => {
-
             // bug #12
 
             it('should not allow to disconnect a specific destination', (done) => {
@@ -768,10 +681,7 @@ describe('audioContextConstructor', () => {
                 source.buffer = ones;
                 source.loop = true;
 
-                source
-                    .connect(candidate)
-                    .connect(analyzer)
-                    .connect(audioContext.destination);
+                source.connect(candidate).connect(analyzer).connect(audioContext.destination);
 
                 candidate.connect(dummy);
                 candidate.disconnect(dummy);
@@ -800,7 +710,6 @@ describe('audioContextConstructor', () => {
             });
 
             describe('gain', () => {
-
                 let gainNode;
 
                 beforeEach(() => {
@@ -808,51 +717,40 @@ describe('audioContextConstructor', () => {
                 });
 
                 describe('maxValue', () => {
-
                     // bug #74
 
                     it('should be 1', () => {
                         expect(gainNode.gain.maxValue).to.equal(1);
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #74
 
                     it('should be 0', () => {
                         expect(gainNode.gain.minValue).to.equal(0);
                     });
-
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-
                     // bug #28
 
                     it('should not be implemented', () => {
                         expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
                     });
-
                 });
-
             });
-
         });
 
         describe('createIIRFilter()', () => {
-
             // bug #9
 
             it('should not be implemented', () => {
                 expect(audioContext.createIIRFilter).to.be.undefined;
             });
-
         });
 
         describe('createMediaStreamDestination()', () => {
-
             let mediaStreamAudioDestinationNode;
 
             beforeEach(() => {
@@ -860,21 +758,16 @@ describe('audioContextConstructor', () => {
             });
 
             describe('numberOfOutpus', () => {
-
                 // bug #174
 
                 it('should be 1', () => {
                     expect(mediaStreamAudioDestinationNode.numberOfOutputs).to.equal(1);
                 });
-
             });
-
         });
 
         describe('createMediaStreamSource()', () => {
-
             describe('with an audio track that gets removed from the mediaStream after construction', () => {
-
                 let mediaStream;
                 let mediaStreamTracks;
                 let oscillatorNode;
@@ -931,11 +824,9 @@ describe('audioContextConstructor', () => {
                         done();
                     }, 1000);
                 });
-
             });
 
             describe('with a mediaStream with two audio tracks', () => {
-
                 let audioBufferSourceNode;
                 let gainNodes;
                 let mediaStream;
@@ -952,10 +843,7 @@ describe('audioContextConstructor', () => {
 
                 beforeEach(() => {
                     audioBufferSourceNode = audioContext.createBufferSource();
-                    gainNodes = [
-                        audioContext.createGain(),
-                        audioContext.createGain()
-                    ];
+                    gainNodes = [audioContext.createGain(), audioContext.createGain()];
                     mediaStreamAudioDestinationNodes = [
                         audioContext.createMediaStreamDestination(),
                         audioContext.createMediaStreamDestination()
@@ -969,17 +857,12 @@ describe('audioContextConstructor', () => {
                     audioBufferSourceNode.buffer = audioBuffer;
                     audioBufferSourceNode.loop = true;
 
-                    audioBufferSourceNode
-                        .connect(gainNodes[0])
-                        .connect(mediaStreamAudioDestinationNodes[0]);
-                    audioBufferSourceNode
-                        .connect(gainNodes[1])
-                        .connect(mediaStreamAudioDestinationNodes[1]);
+                    audioBufferSourceNode.connect(gainNodes[0]).connect(mediaStreamAudioDestinationNodes[0]);
+                    audioBufferSourceNode.connect(gainNodes[1]).connect(mediaStreamAudioDestinationNodes[1]);
 
                     audioBufferSourceNode.start();
 
-                    const audioStreamTracks = mediaStreamAudioDestinationNodes
-                        .map(({ stream }) => stream.getAudioTracks()[0]);
+                    const audioStreamTracks = mediaStreamAudioDestinationNodes.map(({ stream }) => stream.getAudioTracks()[0]);
 
                     if (audioStreamTracks[0].id > audioStreamTracks[1].id) {
                         mediaStream = mediaStreamAudioDestinationNodes[0].stream;
@@ -1023,7 +906,6 @@ describe('audioContextConstructor', () => {
                         done();
                     }, 1000);
                 });
-
             });
 
             // bug #165
@@ -1037,9 +919,7 @@ describe('audioContextConstructor', () => {
                 const scriptProcessorNode = audioContext.createScriptProcessor(256, 1, 1);
 
                 oscillatorNode.connect(mediaStreamAudioDestinationNode);
-                mediaStreamAudioSourceNode
-                    .connect(scriptProcessorNode)
-                    .connect(audioContext.destination);
+                mediaStreamAudioSourceNode.connect(scriptProcessorNode).connect(audioContext.destination);
 
                 oscillatorNode.start();
 
@@ -1071,23 +951,18 @@ describe('audioContextConstructor', () => {
                     }, 2000);
                 }, 500);
             });
-
         });
 
         describe('createMediaStreamTrackSource()', () => {
-
             // bug #121
 
             it('should not be implemented', () => {
                 expect(audioContext.createMediaStreamTrackSource).to.be.undefined;
             });
-
         });
 
         describe('createOscillator()', () => {
-
             describe('detune', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -1095,29 +970,23 @@ describe('audioContextConstructor', () => {
                 });
 
                 describe('maxValue', () => {
-
                     // bug #81
 
                     it('should be 4800', () => {
                         expect(oscillatorNode.detune.maxValue).to.equal(4800);
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #81
 
                     it('should be -4800', () => {
                         expect(oscillatorNode.detune.minValue).to.equal(-4800);
                     });
-
                 });
-
             });
 
             describe('frequency', () => {
-
                 let oscillatorNode;
 
                 beforeEach(() => {
@@ -1125,31 +994,24 @@ describe('audioContextConstructor', () => {
                 });
 
                 describe('maxValue', () => {
-
                     // bug #76
 
                     it('should be 100000', () => {
                         expect(oscillatorNode.frequency.maxValue).to.equal(100000);
                     });
-
                 });
 
                 describe('minValue', () => {
-
                     // bug #76
 
                     it('should be 0', () => {
                         expect(oscillatorNode.frequency.minValue).to.equal(0);
                     });
-
                 });
-
             });
-
         });
 
         describe('createPanner()', () => {
-
             let pannerNode;
 
             beforeEach(() => {
@@ -1157,97 +1019,78 @@ describe('audioContextConstructor', () => {
             });
 
             describe('channelCount', () => {
-
                 // bug #125
 
                 it('should not throw an error', () => {
                     pannerNode.channelCount = 4;
                 });
-
             });
 
             describe('channelCountMode', () => {
-
                 // bug #126
 
                 it('should not throw an error', () => {
                     pannerNode.channelCountMode = 'max';
                 });
-
             });
 
             describe('coneOuterGain', () => {
-
                 // bug #127
 
                 it('should not throw an error', () => {
                     pannerNode.coneOuterGain = 3;
                 });
-
             });
 
             describe('maxDistance', () => {
-
                 // bug #128
 
                 it('should not throw an error', () => {
                     pannerNode.maxDistance = -10;
                 });
-
             });
 
             describe('orientationX', () => {
-
                 // bug #124
 
                 it('should not be implemented', () => {
                     expect(pannerNode.orientationX).to.be.undefined;
                 });
-
             });
 
             describe('refDistance', () => {
-
                 // bug #129
 
                 it('should not throw an error', () => {
                     pannerNode.refDistance = -10;
                 });
-
             });
 
             describe('rolloffFactor', () => {
-
                 // bug #130
 
                 it('should not throw an error', () => {
                     pannerNode.rolloffFactor = -10;
                 });
-
             });
-
         });
 
         describe('createStereoPanner()', () => {
-
             // bug #105
 
             it('should not be implemented', () => {
                 expect(audioContext.createStereoPanner).to.be.undefined;
             });
-
         });
 
         describe('createWaveShaper()', () => {
-
             describe('curve', () => {
-
                 // bug #102
 
                 it('should allow to assign a curve with less than two samples', () => {
                     const waveShaperNode = audioContext.createWaveShaper();
 
-                    waveShaperNode.curve = new Float32Array([ 1 ]);
+                    waveShaperNode.curve = new Float32Array([1]);
                 });
 
                 // bug #103
@@ -1259,13 +1102,10 @@ describe('audioContextConstructor', () => {
                         waveShaperNode.curve = null;
                     }).to.throw(TypeError, 'The WaveShaperNode.curve attribute must be an instance of Float32Array');
                 });
-
             });
-
         });
 
         describe('decodeAudioData()', () => {
-
             // bug #1
 
             it('should require the success callback function as a parameter', async function () {
@@ -1284,14 +1124,17 @@ describe('audioContextConstructor', () => {
                 this.timeout(10000);
 
                 // PNG files are not supported by any browser :-)
-                loadFixtureAsArrayBuffer('one-pixel-of-transparency.png')
-                    .then((arrayBuffer) => {
-                        audioContext.decodeAudioData(arrayBuffer, () => {}, (err) => {
+                loadFixtureAsArrayBuffer('one-pixel-of-transparency.png').then((arrayBuffer) => {
+                    audioContext.decodeAudioData(
+                        arrayBuffer,
+                        () => {},
+                        (err) => {
                             expect(err).to.be.null;
 
                             done();
-                        });
-                    });
+                        }
+                    );
+                });
             });
 
             // bug #5
@@ -1299,15 +1142,14 @@ describe('audioContextConstructor', () => {
             it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
                 this.timeout(10000);
 
-                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
-                    .then((arrayBuffer) => {
-                        audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
-                            expect(audioBuffer.copyFromChannel).to.be.undefined;
-                            expect(audioBuffer.copyToChannel).to.be.undefined;
+                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+                    audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
+                        expect(audioBuffer.copyFromChannel).to.be.undefined;
+                        expect(audioBuffer.copyToChannel).to.be.undefined;
 
-                            done();
-                        });
+                        done();
                     });
+                });
             });
 
             // bug #21
@@ -1335,14 +1177,11 @@ describe('audioContextConstructor', () => {
             it('should not throw a DataCloneError', function (done) {
                 this.timeout(10000);
 
-                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
-                    .then((arrayBuffer) => {
-                        audioContext
-                            .decodeAudioData(arrayBuffer, () => {
-                                audioContext
-                                    .decodeAudioData(arrayBuffer, () => done());
-                            });
+                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+                    audioContext.decodeAudioData(arrayBuffer, () => {
+                        audioContext.decodeAudioData(arrayBuffer, () => done());
                     });
+                });
             });
 
             // bug #133
@@ -1350,30 +1189,25 @@ describe('audioContextConstructor', () => {
             it('should not neuter the arrayBuffer', function (done) {
                 this.timeout(10000);
 
-                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav')
-                    .then((arrayBuffer) => {
-                        audioContext.decodeAudioData(arrayBuffer, () => {
-                            expect(arrayBuffer.byteLength).to.not.equal(0);
+                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+                    audioContext.decodeAudioData(arrayBuffer, () => {
+                        expect(arrayBuffer.byteLength).to.not.equal(0);
 
-                            done();
-                        });
+                        done();
                     });
+                });
             });
-
         });
 
         describe('getOutputTimestamp()', () => {
-
             // bug #38
 
             it('should not be implemented', () => {
                 expect(audioContext.getOutputTimestamp).to.be.undefined;
             });
-
         });
 
         describe('resume()', () => {
-
             afterEach(() => {
                 // Create a closeable AudioContext to align the behaviour with other tests.
                 audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
@@ -1384,29 +1218,23 @@ describe('audioContextConstructor', () => {
             // bug #56
 
             it('should throw undefined with a closed AudioContext', (done) => {
-                audioContext
-                    .resume()
-                    .catch((err) => {
-                        expect(err).to.be.undefined;
+                audioContext.resume().catch((err) => {
+                    expect(err).to.be.undefined;
 
-                        done();
-                    });
+                    done();
+                });
             });
-
         });
 
         describe('startRendering()', () => {
-
             // bug #160
 
             it('should expose a startRendering method', () => {
                 expect(audioContext.startRendering).to.be.a('function');
             });
-
         });
 
         describe('suspend()', () => {
-
             afterEach(() => {
                 // Create a closeable AudioContext to align the behaviour with other tests.
                 audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
@@ -1417,17 +1245,12 @@ describe('audioContextConstructor', () => {
             // bug #56
 
             it('should throw undefined with a closed AudioContext', (done) => {
-                audioContext
-                    .suspend()
-                    .catch((err) => {
-                        expect(err).to.be.undefined;
+                audioContext.suspend().catch((err) => {
+                    expect(err).to.be.undefined;
 
-                        done();
-                    });
+                    done();
+                });
             });
-
         });
-
     });
-
 });

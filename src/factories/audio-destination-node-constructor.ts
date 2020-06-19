@@ -17,20 +17,18 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
     isNativeOfflineAudioContext,
     renderInputsOfAudioNode
 ) => {
-
     return class AudioDestinationNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioDestinationNode<T> {
-
         private _isNodeOfNativeOfflineAudioContext: boolean;
 
         private _nativeAudioDestinationNode: TNativeAudioDestinationNode;
 
-        constructor (context: T, channelCount: number) {
+        constructor(context: T, channelCount: number) {
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const nativeAudioDestinationNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
-            const audioDestinationNodeRenderer = <TAudioNodeRenderer<T, this>> ((isOffline)
-                ? createAudioDestinationNodeRenderer(renderInputsOfAudioNode)
-                : null);
+            const audioDestinationNodeRenderer = <TAudioNodeRenderer<T, this>>(
+                (isOffline ? createAudioDestinationNodeRenderer(renderInputsOfAudioNode) : null)
+            );
 
             super(context, false, nativeAudioDestinationNode, audioDestinationNodeRenderer);
 
@@ -38,11 +36,11 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             this._nativeAudioDestinationNode = nativeAudioDestinationNode;
         }
 
-        get channelCount (): number {
+        get channelCount(): number {
             return this._nativeAudioDestinationNode.channelCount;
         }
 
-        set channelCount (value) {
+        set channelCount(value) {
             // Bug #52: Chrome, Edge, Opera & Safari do not throw an exception at all.
             // Bug #54: Firefox does throw an IndexSizeError.
             if (this._isNodeOfNativeOfflineAudioContext) {
@@ -57,11 +55,11 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             this._nativeAudioDestinationNode.channelCount = value;
         }
 
-        get channelCountMode (): TChannelCountMode {
+        get channelCountMode(): TChannelCountMode {
             return this._nativeAudioDestinationNode.channelCountMode;
         }
 
-        set channelCountMode (value) {
+        set channelCountMode(value) {
             // Bug #53: No browser does throw an exception yet.
             if (this._isNodeOfNativeOfflineAudioContext) {
                 throw createInvalidStateError();
@@ -70,10 +68,8 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             this._nativeAudioDestinationNode.channelCountMode = value;
         }
 
-        get maxChannelCount (): number {
+        get maxChannelCount(): number {
             return this._nativeAudioDestinationNode.maxChannelCount;
         }
-
     };
-
 };

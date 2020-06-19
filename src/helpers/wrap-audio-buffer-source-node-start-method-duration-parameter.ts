@@ -14,7 +14,7 @@ export const wrapAudioBufferSourceNodeStartMethodDurationParameter = (
             if (duration >= 0 && duration < Number.POSITIVE_INFINITY) {
                 const actualStartTime = Math.max(when, nativeContext.currentTime);
                 // @todo The playbackRate could of course also have been automated and is not always fixed.
-                const durationInBufferTime = (duration / nativeAudioScheduledSourceNode.playbackRate.value);
+                const durationInBufferTime = duration / nativeAudioScheduledSourceNode.playbackRate.value;
 
                 endTime = actualStartTime + durationInBufferTime;
 

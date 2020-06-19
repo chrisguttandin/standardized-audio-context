@@ -12,7 +12,7 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
     return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeAudioBufferSourceNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioBufferSourceNode>();
 
-        let start: null | [ number, number ] | [ number, number, number ] = null;
+        let start: null | [number, number] | [number, number, number] = null;
         let stop: null | number = null;
 
         const createAudioBufferSourceNode = async (
@@ -68,13 +68,13 @@ export const createAudioBufferSourceNodeRendererFactory: TAudioBufferSourceNodeR
         };
 
         return {
-            set start (value: [ number, number ] | [ number, number, number ]) {
+            set start(value: [number, number] | [number, number, number]) {
                 start = value;
             },
-            set stop (value: number) {
+            set stop(value: number) {
                 stop = value;
             },
-            render (
+            render(
                 proxy: IAudioBufferSourceNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

@@ -61,13 +61,13 @@ export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendere
         };
 
         return {
-            set start (value: number) {
+            set start(value: number) {
                 start = value;
             },
-            set stop (value: number) {
+            set stop(value: number) {
                 stop = value;
             },
-            render (
+            render(
                 proxy: IConstantSourceNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

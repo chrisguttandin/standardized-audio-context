@@ -7,16 +7,13 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
     getNativeContext,
     isNativeOfflineAudioContext
 ) => {
-
-    return class MediaElementAudioSourceNode<T extends IAudioContext | IMinimalAudioContext>
-            extends audioNodeConstructor<T>
-            implements IMediaElementAudioSourceNode<T> {
-
+    return class MediaElementAudioSourceNode<T extends IAudioContext | IMinimalAudioContext> extends audioNodeConstructor<T>
+        implements IMediaElementAudioSourceNode<T> {
         private _mediaElement: HTMLMediaElement;
 
         private _nativeMediaElementAudioSourceNode: TNativeMediaElementAudioSourceNode;
 
-        constructor (context: T, options: IMediaElementAudioSourceOptions) {
+        constructor(context: T, options: IMediaElementAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
             const nativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNode(nativeContext, options);
 
@@ -25,19 +22,17 @@ export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSou
                 throw TypeError();
             }
 
-            super(context, true, nativeMediaElementAudioSourceNode, <TAudioNodeRenderer<T>> null);
+            super(context, true, nativeMediaElementAudioSourceNode, <TAudioNodeRenderer<T>>null);
 
             // Bug #63: Edge does not expose the mediaElement yet.
             this._mediaElement = options.mediaElement;
             this._nativeMediaElementAudioSourceNode = nativeMediaElementAudioSourceNode;
         }
 
-        get mediaElement (): HTMLMediaElement {
-            return (this._nativeMediaElementAudioSourceNode.mediaElement === undefined) ?
-                this._mediaElement :
-                this._nativeMediaElementAudioSourceNode.mediaElement;
+        get mediaElement(): HTMLMediaElement {
+            return this._nativeMediaElementAudioSourceNode.mediaElement === undefined
+                ? this._mediaElement
+                : this._nativeMediaElementAudioSourceNode.mediaElement;
         }
-
     };
-
 };

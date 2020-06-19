@@ -1,5 +1,4 @@
 describe('oscillatorNodeConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -15,5 +14,4 @@ describe('oscillatorNodeConstructor', () => {
             new OscillatorNode(audioContext, {});
         }).to.throw(TypeError, "function is not a constructor (evaluating 'new OscillatorNode(audioContext, {})')");
     });
-
 });

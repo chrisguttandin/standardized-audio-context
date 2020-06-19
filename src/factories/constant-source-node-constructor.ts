@@ -26,9 +26,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
     isNativeOfflineAudioContext,
     wrapEventListener
 ) => {
-
     return class ConstantSourceNode<T extends TContext> extends audioNodeConstructor<T> implements IConstantSourceNode<T> {
-
         private _constantSourceNodeRenderer: TConstantSourceNodeRenderer<T>;
 
         private _nativeConstantSourceNode: TNativeConstantSourceNode;
@@ -37,14 +35,14 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         private _onended: null | TEventHandler<this>;
 
-        constructor (context: T, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeConstantSourceNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const constantSourceNodeRenderer = <TConstantSourceNodeRenderer<T>> ((isOffline)
-                ? createConstantSourceNodeRendererFactory()
-                : null);
+            const constantSourceNodeRenderer = <TConstantSourceNodeRenderer<T>>(
+                (isOffline ? createConstantSourceNodeRendererFactory() : null)
+            );
 
             super(context, false, nativeConstantSourceNode, constantSourceNodeRenderer);
 
@@ -64,27 +62,25 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             this._onended = null;
         }
 
-        get offset (): IAudioParam {
+        get offset(): IAudioParam {
             return this._offset;
         }
 
-        get onended (): null | TEventHandler<this> {
+        get onended(): null | TEventHandler<this> {
             return this._onended;
         }
 
-        set onended (value) {
-            const wrappedListener = (typeof value === 'function') ? wrapEventListener(this, value) : null;
+        set onended(value) {
+            const wrappedListener = typeof value === 'function' ? wrapEventListener(this, value) : null;
 
             this._nativeConstantSourceNode.onended = wrappedListener;
 
             const nativeOnEnded = this._nativeConstantSourceNode.onended;
 
-            this._onended = (nativeOnEnded !== null && nativeOnEnded === wrappedListener)
-                ? value
-                : <null | TEventHandler<this>> nativeOnEnded;
+            this._onended = nativeOnEnded !== null && nativeOnEnded === wrappedListener ? value : <null | TEventHandler<this>>nativeOnEnded;
         }
 
-        public start (when = 0): void {
+        public start(when = 0): void {
             this._nativeConstantSourceNode.start(when);
 
             if (this._constantSourceNodeRenderer !== null) {
@@ -103,14 +99,12 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             }
         }
 
-        public stop (when = 0): void {
+        public stop(when = 0): void {
             this._nativeConstantSourceNode.stop(when);
 
             if (this._constantSourceNodeRenderer !== null) {
                 this._constantSourceNodeRenderer.stop = when;
             }
         }
-
     };
-
 };

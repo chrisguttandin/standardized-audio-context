@@ -1,8 +1,8 @@
 import { TTestAudioBufferSourceNodeStopMethodNullifiedBufferSupportFactory } from '../types';
 
-export const createTestAudioBufferSourceNodeStopMethodNullifiedBufferSupport:
-    TTestAudioBufferSourceNodeStopMethodNullifiedBufferSupportFactory =
-(createNativeAudioNode) => {
+export const createTestAudioBufferSourceNodeStopMethodNullifiedBufferSupport: TTestAudioBufferSourceNodeStopMethodNullifiedBufferSupportFactory = (
+    createNativeAudioNode
+) => {
     return (nativeContext) => {
         const nativeAudioBufferSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createBufferSource());
 

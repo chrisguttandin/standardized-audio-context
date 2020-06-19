@@ -54,10 +54,11 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             channelInterpretation: 'discrete'
         } as const;
 
-        const channelMergerNode = createNativeChannelMergerNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_OPTIONS, channelInterpretation: 'speakers', numberOfInputs: 6 }
-        );
+        const channelMergerNode = createNativeChannelMergerNode(nativeContext, {
+            ...SINGLE_CHANNEL_OPTIONS,
+            channelInterpretation: 'speakers',
+            numberOfInputs: 6
+        });
         const inputGainNode = createNativeGainNode(nativeContext, { ...audioNodeOptions, gain: 1 });
         const orientationXGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 1 });
         const orientationYGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
@@ -66,34 +67,36 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
         const positionYGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         const positionZGainNode = createNativeGainNode(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
         const scriptProcessorNode = createNativeScriptProcessorNode(nativeContext, 256, 6, 1);
-        const waveShaperNode = createNativeWaveShaperNode(
-            nativeContext,
-            { ...SINGLE_CHANNEL_OPTIONS, curve: new Float32Array([ 1, 1 ]), oversample: 'none' }
-        );
+        const waveShaperNode = createNativeWaveShaperNode(nativeContext, {
+            ...SINGLE_CHANNEL_OPTIONS,
+            curve: new Float32Array([1, 1]),
+            oversample: 'none'
+        });
 
-        let lastOrientation: [ number, number, number ] = [ orientationX, orientationY, orientationZ ];
-        let lastPosition: [ number, number, number ] = [ positionX, positionY, positionZ ];
+        let lastOrientation: [number, number, number] = [orientationX, orientationY, orientationZ];
+        let lastPosition: [number, number, number] = [positionX, positionY, positionZ];
 
-        scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => { // tslint:disable-line:deprecation
-            const orientation: [ number, number, number ] = [
+        // tslint:disable-next-line:deprecation
+        scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+            const orientation: [number, number, number] = [
                 inputBuffer.getChannelData(0)[0],
                 inputBuffer.getChannelData(1)[0],
                 inputBuffer.getChannelData(2)[0]
             ];
 
-            if (orientation.some((value, index) => (value !== lastOrientation[index]))) {
+            if (orientation.some((value, index) => value !== lastOrientation[index])) {
                 pannerNode.setOrientation(...orientation); // tslint:disable-line:deprecation
 
                 lastOrientation = orientation;
             }
 
-            const positon: [ number, number, number ] = [
+            const positon: [number, number, number] = [
                 inputBuffer.getChannelData(3)[0],
                 inputBuffer.getChannelData(4)[0],
                 inputBuffer.getChannelData(5)[0]
             ];
 
-            if (positon.some((value, index) => (value !== lastPosition[index]))) {
+            if (positon.some((value, index) => value !== lastPosition[index])) {
                 pannerNode.setPosition(...positon); // tslint:disable-line:deprecation
 
                 lastPosition = positon;
@@ -107,13 +110,13 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
         Object.defineProperty(positionZGainNode.gain, 'defaultValue', { get: () => 0 });
 
         const nativePannerNodeFaker = {
-            get bufferSize (): undefined {
+            get bufferSize(): undefined {
                 return undefined;
             },
-            get channelCount (): number {
+            get channelCount(): number {
                 return pannerNode.channelCount;
             },
-            set channelCount (value) {
+            set channelCount(value) {
                 // Bug #125: Safari does not throw an error yet.
                 if (value > 2) {
                     throw createNotSupportedError();
@@ -122,10 +125,10 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 inputGainNode.channelCount = value;
                 pannerNode.channelCount = value;
             },
-            get channelCountMode (): TNativePannerNode['channelCountMode'] {
+            get channelCountMode(): TNativePannerNode['channelCountMode'] {
                 return pannerNode.channelCountMode;
             },
-            set channelCountMode (value) {
+            set channelCountMode(value) {
                 // Bug #126: Safari does not throw an error yet.
                 if (value === 'max') {
                     throw createNotSupportedError();
@@ -134,29 +137,29 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 inputGainNode.channelCountMode = value;
                 pannerNode.channelCountMode = value;
             },
-            get channelInterpretation (): TNativePannerNode['channelInterpretation'] {
+            get channelInterpretation(): TNativePannerNode['channelInterpretation'] {
                 return pannerNode.channelInterpretation;
             },
-            set channelInterpretation (value) {
+            set channelInterpretation(value) {
                 inputGainNode.channelInterpretation = value;
                 pannerNode.channelInterpretation = value;
             },
-            get coneInnerAngle (): TNativePannerNode['coneInnerAngle'] {
+            get coneInnerAngle(): TNativePannerNode['coneInnerAngle'] {
                 return pannerNode.coneInnerAngle;
             },
-            set coneInnerAngle (value) {
+            set coneInnerAngle(value) {
                 pannerNode.coneInnerAngle = value;
             },
-            get coneOuterAngle (): TNativePannerNode['coneOuterAngle'] {
+            get coneOuterAngle(): TNativePannerNode['coneOuterAngle'] {
                 return pannerNode.coneOuterAngle;
             },
-            set coneOuterAngle (value) {
+            set coneOuterAngle(value) {
                 pannerNode.coneOuterAngle = value;
             },
-            get coneOuterGain (): TNativePannerNode['coneOuterGain'] {
+            get coneOuterGain(): TNativePannerNode['coneOuterGain'] {
                 return pannerNode.coneOuterGain;
             },
-            set coneOuterGain (value) {
+            set coneOuterGain(value) {
                 // Bug #127: Edge & Safari do not throw an InvalidStateError yet.
                 if (value < 0 || value > 1) {
                     throw createInvalidStateError();
@@ -164,22 +167,22 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
 
                 pannerNode.coneOuterGain = value;
             },
-            get context (): TNativePannerNode['context'] {
+            get context(): TNativePannerNode['context'] {
                 return pannerNode.context;
             },
-            get distanceModel (): TNativePannerNode['distanceModel'] {
+            get distanceModel(): TNativePannerNode['distanceModel'] {
                 return pannerNode.distanceModel;
             },
-            set distanceModel (value) {
+            set distanceModel(value) {
                 pannerNode.distanceModel = value;
             },
-            get inputs (): TNativeAudioNode[] {
-                return [ inputGainNode ];
+            get inputs(): TNativeAudioNode[] {
+                return [inputGainNode];
             },
-            get maxDistance (): TNativePannerNode['maxDistance'] {
+            get maxDistance(): TNativePannerNode['maxDistance'] {
                 return pannerNode.maxDistance;
             },
-            set maxDistance (value) {
+            set maxDistance(value) {
                 // Bug #128: Edge & Safari do not throw an error yet.
                 if (value < 0) {
                     throw new RangeError();
@@ -187,25 +190,25 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
 
                 pannerNode.maxDistance = value;
             },
-            get numberOfInputs (): number {
+            get numberOfInputs(): number {
                 return pannerNode.numberOfInputs;
             },
-            get numberOfOutputs (): number {
+            get numberOfOutputs(): number {
                 return pannerNode.numberOfOutputs;
             },
-            get orientationX (): TNativePannerNode['orientationX'] {
+            get orientationX(): TNativePannerNode['orientationX'] {
                 return orientationXGainNode.gain;
             },
-            get orientationY (): TNativePannerNode['orientationY'] {
+            get orientationY(): TNativePannerNode['orientationY'] {
                 return orientationYGainNode.gain;
             },
-            get orientationZ (): TNativePannerNode['orientationZ'] {
+            get orientationZ(): TNativePannerNode['orientationZ'] {
                 return orientationZGainNode.gain;
             },
-            get panningModel (): TNativePannerNode['panningModel'] {
+            get panningModel(): TNativePannerNode['panningModel'] {
                 return pannerNode.panningModel;
             },
-            set panningModel (value) {
+            set panningModel(value) {
                 pannerNode.panningModel = value;
 
                 // Bug #123: Edge does not support HRTF as panningModel.
@@ -213,19 +216,19 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                     throw createNotSupportedError();
                 }
             },
-            get positionX (): TNativePannerNode['positionX'] {
+            get positionX(): TNativePannerNode['positionX'] {
                 return positionXGainNode.gain;
             },
-            get positionY (): TNativePannerNode['positionY'] {
+            get positionY(): TNativePannerNode['positionY'] {
                 return positionYGainNode.gain;
             },
-            get positionZ (): TNativePannerNode['positionZ'] {
+            get positionZ(): TNativePannerNode['positionZ'] {
                 return positionZGainNode.gain;
             },
-            get refDistance (): TNativePannerNode['refDistance'] {
+            get refDistance(): TNativePannerNode['refDistance'] {
                 return pannerNode.refDistance;
             },
-            set refDistance (value) {
+            set refDistance(value) {
                 // Bug #129: Edge & Safari do not throw an error yet.
                 if (value < 0) {
                     throw new RangeError();
@@ -233,10 +236,10 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
 
                 pannerNode.refDistance = value;
             },
-            get rolloffFactor (): TNativePannerNode['rolloffFactor'] {
+            get rolloffFactor(): TNativePannerNode['rolloffFactor'] {
                 return pannerNode.rolloffFactor;
             },
-            set rolloffFactor (value) {
+            set rolloffFactor(value) {
                 // Bug #130: Edge & Safari do not throw an error yet.
                 if (value < 0) {
                     throw new RangeError();
@@ -244,13 +247,13 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
 
                 pannerNode.rolloffFactor = value;
             },
-            addEventListener (...args: any[]): void {
+            addEventListener(...args: any[]): void {
                 return inputGainNode.addEventListener(args[0], args[1], args[2]);
             },
-            dispatchEvent (...args: any[]): boolean {
+            dispatchEvent(...args: any[]): boolean {
                 return inputGainNode.dispatchEvent(args[0]);
             },
-            removeEventListener (...args: any[]): void {
+            removeEventListener(...args: any[]): void {
                 return inputGainNode.removeEventListener(args[0], args[1], args[2]);
             }
         };
@@ -325,28 +328,14 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             // Bug #119: Safari does not fully support the WaveShaperNode.
             connectNativeAudioNodeToNativeAudioNode(inputGainNode, waveShaperNode, 0, 0);
 
-            waveShaperNode
-                .connect(orientationXGainNode)
-                .connect(channelMergerNode, 0, 0);
-            waveShaperNode
-                .connect(orientationYGainNode)
-                .connect(channelMergerNode, 0, 1);
-            waveShaperNode
-                .connect(orientationZGainNode)
-                .connect(channelMergerNode, 0, 2);
-            waveShaperNode
-                .connect(positionXGainNode)
-                .connect(channelMergerNode, 0, 3);
-            waveShaperNode
-                .connect(positionYGainNode)
-                .connect(channelMergerNode, 0, 4);
-            waveShaperNode
-                .connect(positionZGainNode)
-                .connect(channelMergerNode, 0, 5);
+            waveShaperNode.connect(orientationXGainNode).connect(channelMergerNode, 0, 0);
+            waveShaperNode.connect(orientationYGainNode).connect(channelMergerNode, 0, 1);
+            waveShaperNode.connect(orientationZGainNode).connect(channelMergerNode, 0, 2);
+            waveShaperNode.connect(positionXGainNode).connect(channelMergerNode, 0, 3);
+            waveShaperNode.connect(positionYGainNode).connect(channelMergerNode, 0, 4);
+            waveShaperNode.connect(positionZGainNode).connect(channelMergerNode, 0, 5);
 
-            channelMergerNode
-                .connect(scriptProcessorNode)
-                .connect(nativeContext.destination);
+            channelMergerNode.connect(scriptProcessorNode).connect(nativeContext.destination);
         };
         const whenDisconnected = () => {
             inputGainNode.disconnect(pannerNode);

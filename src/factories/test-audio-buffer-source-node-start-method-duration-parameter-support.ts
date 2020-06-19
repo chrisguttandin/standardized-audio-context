@@ -1,9 +1,7 @@
 import { TTestAudioBufferSourceNodeStartMethodDurationParameterSupportFactory } from '../types';
 
 // Bug #92: Edge does not respect the duration parameter yet.
-export const createTestAudioBufferSourceNodeStartMethodDurationParameterSupport:
-    TTestAudioBufferSourceNodeStartMethodDurationParameterSupportFactory =
-(
+export const createTestAudioBufferSourceNodeStartMethodDurationParameterSupport: TTestAudioBufferSourceNodeStartMethodDurationParameterSupportFactory = (
     nativeOfflineAudioContextConstructor
 ) => {
     return () => {

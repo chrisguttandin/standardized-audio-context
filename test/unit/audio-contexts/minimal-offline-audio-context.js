@@ -3,11 +3,8 @@ import { isSafari } from '../../helper/is-safari';
 import { spy } from 'sinon';
 
 describe('MinimalOfflineAudioContext', () => {
-
     describe('constructor()', () => {
-
         describe('with mininal options', () => {
-
             let minimalOfflineAudioContext;
 
             beforeEach(() => {
@@ -23,13 +20,10 @@ describe('MinimalOfflineAudioContext', () => {
             // @todo it('should return an implementation of the IMinimalBaseAudioContext interface');
 
             // @todo it('should return an implementation of the IMinimalOfflineAudioContext interface');
-
         });
 
         describe('with valid options', () => {
-
             describe('with valid options', () => {
-
                 it('should return a MinimalOfflineAudioContext with the given length', () => {
                     const length = 250;
                     const minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length, sampleRate: 44100 });
@@ -39,26 +33,26 @@ describe('MinimalOfflineAudioContext', () => {
 
                 // Bug #142: Safari does not support OfflineAudioContexts with 32 channels.
                 if (!isSafari(navigator)) {
-
                     it('should return a MinimalOfflineAudioContext with the given numberOfChannels as maxChannelCount of its destination', () => {
                         const numberOfChannels = 32;
-                        const minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length: 1000, numberOfChannels, sampleRate: 44100 });
+                        const minimalOfflineAudioContext = new MinimalOfflineAudioContext({
+                            length: 1000,
+                            numberOfChannels,
+                            sampleRate: 44100
+                        });
 
                         expect(minimalOfflineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
                     });
-
                 }
 
                 // Bug #141: Safari does not support OfflineAudioContexts with 8000 Hz.
                 if (!isSafari(navigator)) {
-
                     it('should return a MinimalOfflineAudioContext with the given sampleRate of 8 kHz', () => {
                         const sampleRate = 8000;
                         const minimalOfflineAudioContext = new MinimalOfflineAudioContext({ length: 1000, sampleRate });
 
                         expect(minimalOfflineAudioContext.sampleRate).to.equal(sampleRate);
                     });
-
                 }
 
                 it('should return a MinimalOfflineAudioContext with the given sampleRate of 96 kHz', () => {
@@ -67,15 +61,11 @@ describe('MinimalOfflineAudioContext', () => {
 
                     expect(minimalOfflineAudioContext.sampleRate).to.equal(sampleRate);
                 });
-
             });
-
         });
 
         describe('with invalid options', () => {
-
             describe('with zero as the numberOfChannels', () => {
-
                 it('should throw a NotSupportedError', (done) => {
                     try {
                         new MinimalOfflineAudioContext({ length: 1000, numberOfChannels: 0, sampleRate: 44100 });
@@ -86,11 +76,9 @@ describe('MinimalOfflineAudioContext', () => {
                         done();
                     }
                 });
-
             });
 
             describe('with a length of zero', () => {
-
                 it('should throw a NotSupportedError', (done) => {
                     try {
                         new MinimalOfflineAudioContext({ length: 0, sampleRate: 44100 });
@@ -101,11 +89,9 @@ describe('MinimalOfflineAudioContext', () => {
                         done();
                     }
                 });
-
             });
 
             describe('with a sampleRate of zero', () => {
-
                 it('should throw a NotSupportedError', (done) => {
                     try {
                         new MinimalOfflineAudioContext({ length: 1000, sampleRate: 0 });
@@ -116,15 +102,11 @@ describe('MinimalOfflineAudioContext', () => {
                         done();
                     }
                 });
-
             });
-
         });
-
     });
 
     describe('currentTime', () => {
-
         let minimalOfflineAudioContext;
 
         beforeEach(() => {
@@ -140,11 +122,9 @@ describe('MinimalOfflineAudioContext', () => {
                 minimalOfflineAudioContext.currentTime = 0;
             }).to.throw(TypeError);
         });
-
     });
 
     describe('destination', () => {
-
         let length;
         let sampleRate;
 
@@ -174,7 +154,6 @@ describe('MinimalOfflineAudioContext', () => {
         });
 
         describe('without a specified value for numberOfChannels', () => {
-
             let minimalOfflineAudioContext;
 
             beforeEach(() => {
@@ -188,11 +167,9 @@ describe('MinimalOfflineAudioContext', () => {
             it('should have a maxChannelCount of one', () => {
                 expect(minimalOfflineAudioContext.destination.maxChannelCount).to.equal(1);
             });
-
         });
 
         describe('with a specified value for numberOfChannels', () => {
-
             let minimalOfflineAudioContext;
             let numberOfChannels;
 
@@ -208,13 +185,10 @@ describe('MinimalOfflineAudioContext', () => {
             it('should have a maxChannelCount which equals the numberOfChannels', () => {
                 expect(minimalOfflineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
             });
-
         });
-
     });
 
     describe('length', () => {
-
         let length;
         let minimalOfflineAudioContext;
 
@@ -232,11 +206,9 @@ describe('MinimalOfflineAudioContext', () => {
                 minimalOfflineAudioContext.length = 128;
             }).to.throw(TypeError);
         });
-
     });
 
     describe('listener', () => {
-
         let minimalOfflineAudioContext;
 
         beforeEach(() => {
@@ -256,11 +228,9 @@ describe('MinimalOfflineAudioContext', () => {
             expect(listener.upY).not.to.be.undefined;
             expect(listener.upZ).not.to.be.undefined;
         });
-
     });
 
     describe('onstatechange', () => {
-
         let minimalOfflineAudioContext;
 
         beforeEach(() => {
@@ -273,14 +243,14 @@ describe('MinimalOfflineAudioContext', () => {
 
         it('should be assignable to a function', () => {
             const fn = () => {};
-            const onstatechange = minimalOfflineAudioContext.onstatechange = fn; // eslint-disable-line no-multi-assign
+            const onstatechange = (minimalOfflineAudioContext.onstatechange = fn); // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.equal(fn);
             expect(minimalOfflineAudioContext.onstatechange).to.equal(fn);
         });
 
         it('should be assignable to null', () => {
-            const onstatechange = minimalOfflineAudioContext.onstatechange = null; // eslint-disable-line no-multi-assign
+            const onstatechange = (minimalOfflineAudioContext.onstatechange = null); // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.be.null;
             expect(minimalOfflineAudioContext.onstatechange).to.be.null;
@@ -291,7 +261,7 @@ describe('MinimalOfflineAudioContext', () => {
 
             minimalOfflineAudioContext.onstatechange = () => {};
 
-            const onstatechange = minimalOfflineAudioContext.onstatechange = string; // eslint-disable-line no-multi-assign
+            const onstatechange = (minimalOfflineAudioContext.onstatechange = string); // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.equal(string);
             expect(minimalOfflineAudioContext.onstatechange).to.be.null;
@@ -326,28 +296,24 @@ describe('MinimalOfflineAudioContext', () => {
         });
 
         it('should fire an assigned statechange event listener when done with rendering', (done) => {
-            minimalOfflineAudioContext
-                .startRendering()
-                .then(() => {
-                    minimalOfflineAudioContext.onstatechange = function (event) {
-                        minimalOfflineAudioContext.onstatechange = null;
+            minimalOfflineAudioContext.startRendering().then(() => {
+                minimalOfflineAudioContext.onstatechange = function (event) {
+                    minimalOfflineAudioContext.onstatechange = null;
 
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(minimalOfflineAudioContext);
-                        expect(event.target).to.equal(minimalOfflineAudioContext);
-                        expect(event.type).to.equal('statechange');
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(minimalOfflineAudioContext);
+                    expect(event.target).to.equal(minimalOfflineAudioContext);
+                    expect(event.type).to.equal('statechange');
 
-                        expect(this).to.equal(minimalOfflineAudioContext);
+                    expect(this).to.equal(minimalOfflineAudioContext);
 
-                        done();
-                    };
-                });
+                    done();
+                };
+            });
         });
-
     });
 
     describe('sampleRate', () => {
-
         let minimalOfflineAudioContext;
         let sampleRate;
 
@@ -365,11 +331,9 @@ describe('MinimalOfflineAudioContext', () => {
                 minimalOfflineAudioContext.sampleRate = 22050;
             }).to.throw(TypeError);
         });
-
     });
 
     describe('state', () => {
-
         let minimalOfflineAudioContext;
 
         beforeEach(() => {
@@ -393,17 +357,13 @@ describe('MinimalOfflineAudioContext', () => {
         });
 
         it('should be closed after the buffer was rendered', () => {
-            return minimalOfflineAudioContext
-                .startRendering()
-                .then(() => {
-                    expect(minimalOfflineAudioContext.state).to.equal('closed');
-                });
+            return minimalOfflineAudioContext.startRendering().then(() => {
+                expect(minimalOfflineAudioContext.state).to.equal('closed');
+            });
         });
-
     });
 
     describe('addEventListener()', () => {
-
         let minimalOfflineAudioContext;
 
         beforeEach(() => {
@@ -411,7 +371,7 @@ describe('MinimalOfflineAudioContext', () => {
         });
 
         it('should fire a registered statechange event listener when starting to render', (done) => {
-            function stateChangeListener (event) {
+            function stateChangeListener(event) {
                 minimalOfflineAudioContext.removeEventListener('statechange', stateChangeListener);
 
                 expect(event).to.be.an.instanceOf(Event);
@@ -429,30 +389,26 @@ describe('MinimalOfflineAudioContext', () => {
         });
 
         it('should fire a registered statechange event listener when done with rendering', (done) => {
-            minimalOfflineAudioContext
-                .startRendering()
-                .then(() => {
-                    function stateChangeListener (event) {
-                        minimalOfflineAudioContext.removeEventListener('statechange', stateChangeListener);
+            minimalOfflineAudioContext.startRendering().then(() => {
+                function stateChangeListener(event) {
+                    minimalOfflineAudioContext.removeEventListener('statechange', stateChangeListener);
 
-                        expect(event).to.be.an.instanceOf(Event);
-                        expect(event.currentTarget).to.equal(minimalOfflineAudioContext);
-                        expect(event.target).to.equal(minimalOfflineAudioContext);
-                        expect(event.type).to.equal('statechange');
+                    expect(event).to.be.an.instanceOf(Event);
+                    expect(event.currentTarget).to.equal(minimalOfflineAudioContext);
+                    expect(event.target).to.equal(minimalOfflineAudioContext);
+                    expect(event.type).to.equal('statechange');
 
-                        expect(this).to.equal(minimalOfflineAudioContext);
+                    expect(this).to.equal(minimalOfflineAudioContext);
 
-                        done();
-                    }
+                    done();
+                }
 
-                    minimalOfflineAudioContext.addEventListener('statechange', stateChangeListener);
-                });
+                minimalOfflineAudioContext.addEventListener('statechange', stateChangeListener);
+            });
         });
-
     });
 
     describe('startRendering()', () => {
-
         let minimalOfflineAudioContext;
 
         beforeEach(() => {
@@ -480,33 +436,27 @@ describe('MinimalOfflineAudioContext', () => {
 
             audioBufferSourceNode.start(0);
 
-            return minimalOfflineAudioContext
-                .startRendering()
-                .then((renderedBuffer) => {
-                    expect(renderedBuffer.length).to.equal(audioBuffer.length);
+            return minimalOfflineAudioContext.startRendering().then((renderedBuffer) => {
+                expect(renderedBuffer.length).to.equal(audioBuffer.length);
 
-                    // Bug #5: Safari does not support copyFromChannel().
-                    const channelData = renderedBuffer.getChannelData(0);
+                // Bug #5: Safari does not support copyFromChannel().
+                const channelData = renderedBuffer.getChannelData(0);
 
-                    for (let i = 0; i < audioBuffer.length; i += 1) {
-                        expect(channelData[i]).to.equal(i);
-                    }
-                });
+                for (let i = 0; i < audioBuffer.length; i += 1) {
+                    expect(channelData[i]).to.equal(i);
+                }
+            });
         });
 
         it('should throw an InvalidStateError if it was invoked before', (done) => {
             minimalOfflineAudioContext.startRendering();
 
-            minimalOfflineAudioContext
-                .startRendering()
-                .catch((err) => {
-                    expect(err.code).to.equal(11);
-                    expect(err.name).to.equal('InvalidStateError');
+            minimalOfflineAudioContext.startRendering().catch((err) => {
+                expect(err.code).to.equal(11);
+                expect(err.name).to.equal('InvalidStateError');
 
-                    done();
-                });
+                done();
+            });
         });
-
     });
-
 });

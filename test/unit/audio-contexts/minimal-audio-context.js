@@ -3,7 +3,6 @@ import { isSafari } from '../../helper/is-safari';
 import { spy } from 'sinon';
 
 describe('MinimalAudioContext', () => {
-
     let minimalAudioContext;
 
     afterEach(() => {
@@ -11,7 +10,6 @@ describe('MinimalAudioContext', () => {
     });
 
     describe('without a constructed MinimalAudioContext', () => {
-
         it('should allow to set the latencyHint to balanced', () => {
             minimalAudioContext = new MinimalAudioContext({ latencyHint: 'balanced' });
         });
@@ -39,7 +37,6 @@ describe('MinimalAudioContext', () => {
 
         // Bug #150 Only Chrome, Firefox and Opera support setting the sampleRate.
         if ((/Chrome/.test(navigator.userAgent) && !/Edge\//.test(navigator.userAgent)) || /Firefox/.test(navigator.userAgent)) {
-
             it('should allow to set the sampleRate to 8 kHz', () => {
                 const sampleRate = 8000;
 
@@ -55,9 +52,7 @@ describe('MinimalAudioContext', () => {
 
                 expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
             });
-
         } else {
-
             it('should not allow to set the sampleRate to 8 kHz', (done) => {
                 try {
                     minimalAudioContext = new MinimalAudioContext({ sampleRate: 8000 });
@@ -85,7 +80,6 @@ describe('MinimalAudioContext', () => {
                     done();
                 }
             });
-
         }
 
         it('should not allow to set the sampleRate to zero', (done) => {
@@ -104,53 +98,48 @@ describe('MinimalAudioContext', () => {
 
         // Bug #131 Safari returns null when there are four other AudioContexts running already.
         if (isSafari(navigator)) {
-
             describe('with four running MinimalAudioContexts', () => {
-
                 let gainNodes;
                 let minimalAudioContexts;
 
                 afterEach(() => {
-                    [ minimalAudioContext, ...minimalAudioContexts ]
-                        .forEach((mnmlDCntxt, index) => gainNodes[index].disconnect(mnmlDCntxt.destination));
+                    [minimalAudioContext, ...minimalAudioContexts].forEach((mnmlDCntxt, index) =>
+                        gainNodes[index].disconnect(mnmlDCntxt.destination)
+                    );
 
                     return Promise.all(minimalAudioContexts.map((mnmlDCntxt) => mnmlDCntxt.close()));
                 });
 
                 beforeEach(() => {
                     minimalAudioContext = new MinimalAudioContext();
-                    minimalAudioContexts = [ new MinimalAudioContext(), new MinimalAudioContext(), new MinimalAudioContext() ];
+                    minimalAudioContexts = [new MinimalAudioContext(), new MinimalAudioContext(), new MinimalAudioContext()];
 
-                    gainNodes = [ minimalAudioContext, ...minimalAudioContexts ]
-                        .map((mnmlDCntxt) => {
-                            const gainNode = new GainNode(mnmlDCntxt);
+                    gainNodes = [minimalAudioContext, ...minimalAudioContexts].map((mnmlDCntxt) => {
+                        const gainNode = new GainNode(mnmlDCntxt);
 
-                            gainNode.connect(mnmlDCntxt.destination);
+                        gainNode.connect(mnmlDCntxt.destination);
 
-                            return gainNode;
-                        });
+                        return gainNode;
+                    });
                 });
 
                 it('should throw an error', () => {
                     expect(() => {
                         new MinimalAudioContext({ latencyHint: 'balanced' });
-                    }).to.throw(DOMException).with.property('name', 'UnknownError');
+                    })
+                        .to.throw(DOMException)
+                        .with.property('name', 'UnknownError');
                 });
-
             });
-
         }
-
     });
 
     describe('with a constructed MinimalAudioContext', () => {
-
         beforeEach(() => {
             minimalAudioContext = new MinimalAudioContext();
         });
 
         describe('baseLatency', () => {
-
             it('should be a number', () => {
                 expect(minimalAudioContext.baseLatency).to.be.a('number');
             });
@@ -160,11 +149,9 @@ describe('MinimalAudioContext', () => {
                     minimalAudioContext.baseLatency = 0;
                 }).to.throw(TypeError);
             });
-
         });
 
         describe('currentTime', () => {
-
             it('should be a number', () => {
                 expect(minimalAudioContext.currentTime).to.be.a('number');
             });
@@ -193,11 +180,9 @@ describe('MinimalAudioContext', () => {
                 // Kick off the minimalAudioContext.
                 new GainNode(minimalAudioContext);
             });
-
         });
 
         describe('destination', () => {
-
             it('should be an implementation of the AudioDestinationNode interface', () => {
                 const destination = minimalAudioContext.destination;
 
@@ -214,11 +199,9 @@ describe('MinimalAudioContext', () => {
                     minimalAudioContext.destination = 'a fake AudioDestinationNode';
                 }).to.throw(TypeError);
             });
-
         });
 
         describe('listener', () => {
-
             it('should be an implementation of the AudioListener interface', () => {
                 const listener = minimalAudioContext.listener;
 
@@ -232,25 +215,23 @@ describe('MinimalAudioContext', () => {
                 expect(listener.upY).not.to.be.undefined;
                 expect(listener.upZ).not.to.be.undefined;
             });
-
         });
 
         describe('onstatechange', () => {
-
             it('should be null', () => {
                 expect(minimalAudioContext.onstatechange).to.be.null;
             });
 
             it('should be assignable to a function', () => {
                 const fn = () => {};
-                const onstatechange = minimalAudioContext.onstatechange = fn; // eslint-disable-line no-multi-assign
+                const onstatechange = (minimalAudioContext.onstatechange = fn); // eslint-disable-line no-multi-assign
 
                 expect(onstatechange).to.equal(fn);
                 expect(minimalAudioContext.onstatechange).to.equal(fn);
             });
 
             it('should be assignable to null', () => {
-                const onstatechange = minimalAudioContext.onstatechange = null; // eslint-disable-line no-multi-assign
+                const onstatechange = (minimalAudioContext.onstatechange = null); // eslint-disable-line no-multi-assign
 
                 expect(onstatechange).to.be.null;
                 expect(minimalAudioContext.onstatechange).to.be.null;
@@ -261,7 +242,7 @@ describe('MinimalAudioContext', () => {
 
                 minimalAudioContext.onstatechange = () => {};
 
-                const onstatechange = minimalAudioContext.onstatechange = string; // eslint-disable-line no-multi-assign
+                const onstatechange = (minimalAudioContext.onstatechange = string); // eslint-disable-line no-multi-assign
 
                 expect(onstatechange).to.equal(string);
                 expect(minimalAudioContext.onstatechange).to.be.null;
@@ -295,11 +276,9 @@ describe('MinimalAudioContext', () => {
                 // Kick off the minimalAudioContext.
                 new GainNode(minimalAudioContext);
             });
-
         });
 
         describe('sampleRate', () => {
-
             it('should be a number', () => {
                 expect(minimalAudioContext.sampleRate).to.be.a('number');
             });
@@ -309,11 +288,9 @@ describe('MinimalAudioContext', () => {
                     minimalAudioContext.sampleRate = 22050;
                 }).to.throw(TypeError);
             });
-
         });
 
         describe('state', () => {
-
             it('should be suspended at the beginning', () => {
                 expect(minimalAudioContext.state).to.equal('suspended');
             });
@@ -336,13 +313,11 @@ describe('MinimalAudioContext', () => {
                 // Kick off the minimalAudioContext.
                 new GainNode(minimalAudioContext);
             });
-
         });
 
         describe('addEventListener()', () => {
-
             it('should fire a registered statechange event listener', (done) => {
-                function stateChangeListener (event) {
+                function stateChangeListener(event) {
                     minimalAudioContext.removeEventListener('statechange', stateChangeListener);
 
                     expect(event).to.be.an.instanceOf(Event);
@@ -360,11 +335,9 @@ describe('MinimalAudioContext', () => {
                 // Kick off the minimalAudioContext.
                 new GainNode(minimalAudioContext);
             });
-
         });
 
         describe('close()', () => {
-
             afterEach(() => {
                 // Create a closeable AudioContext to align the behaviour with other tests.
                 minimalAudioContext = new MinimalAudioContext();
@@ -375,58 +348,47 @@ describe('MinimalAudioContext', () => {
             });
 
             it('should set the state to closed', (done) => {
-                minimalAudioContext
-                    .close()
-                    .then(() => {
-                        // According to the spec the context state is changed to 'closed' after the promise gets resolved.
-                        setTimeout(() => {
-                            expect(minimalAudioContext.state).to.equal('closed');
+                minimalAudioContext.close().then(() => {
+                    // According to the spec the context state is changed to 'closed' after the promise gets resolved.
+                    setTimeout(() => {
+                        expect(minimalAudioContext.state).to.equal('closed');
 
-                            done();
-                        });
+                        done();
                     });
+                });
             });
 
             describe('with a closed MinimalAudioContext', () => {
-
                 beforeEach(() => minimalAudioContext.close());
 
                 it('should throw an error', (done) => {
-                    minimalAudioContext
-                        .close()
-                        .catch((err) => {
-                            expect(err.code).to.equal(11);
-                            expect(err.name).to.equal('InvalidStateError');
+                    minimalAudioContext.close().catch((err) => {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
-
         });
 
         describe('resume()', () => {
-
             it('should return a promise', () => {
                 expect(minimalAudioContext.resume()).to.be.an.instanceOf(Promise);
             });
 
             it('should set the state to running', (done) => {
-                minimalAudioContext
-                    .resume()
-                    .then(() => {
-                        // According to the spec the context state is changed to 'running' after the promise gets resolved.
-                        setTimeout(() => {
-                            expect(minimalAudioContext.state).to.equal('running');
+                minimalAudioContext.resume().then(() => {
+                    // According to the spec the context state is changed to 'running' after the promise gets resolved.
+                    setTimeout(() => {
+                        expect(minimalAudioContext.state).to.equal('running');
 
-                            done();
-                        });
+                        done();
                     });
+                });
             });
 
             describe('with a closed MinimalAudioContext', () => {
-
                 afterEach(() => {
                     // Create a closeable AudioContext to align the behaviour with other tests.
                     minimalAudioContext = new MinimalAudioContext();
@@ -435,51 +397,41 @@ describe('MinimalAudioContext', () => {
                 beforeEach(() => minimalAudioContext.close());
 
                 it('should throw an error', (done) => {
-                    minimalAudioContext
-                        .resume()
-                        .catch((err) => {
-                            expect(err.code).to.equal(11);
-                            expect(err.name).to.equal('InvalidStateError');
+                    minimalAudioContext.resume().catch((err) => {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with a running MinimalAudioContext', () => {
-
                 beforeEach(() => minimalAudioContext.resume());
 
                 it('should ignore consecutive calls', () => {
                     return minimalAudioContext.resume();
                 });
-
             });
-
         });
 
         describe('suspend()', () => {
-
             it('should return a promise', () => {
                 expect(minimalAudioContext.suspend()).to.be.an.instanceOf(Promise);
             });
 
             it('should set the state to suspended', (done) => {
-                minimalAudioContext
-                    .suspend()
-                    .then(() => {
-                        // According to the spec the context state is changed to 'suspended' after the promise gets resolved.
-                        setTimeout(() => {
-                            expect(minimalAudioContext.state).to.equal('suspended');
+                minimalAudioContext.suspend().then(() => {
+                    // According to the spec the context state is changed to 'suspended' after the promise gets resolved.
+                    setTimeout(() => {
+                        expect(minimalAudioContext.state).to.equal('suspended');
 
-                            done();
-                        });
+                        done();
                     });
+                });
             });
 
             describe('with a closed MinimalAudioContext', () => {
-
                 afterEach(() => {
                     // Create a closeable AudioContext to align the behaviour with other tests.
                     minimalAudioContext = new MinimalAudioContext();
@@ -488,30 +440,22 @@ describe('MinimalAudioContext', () => {
                 beforeEach(() => minimalAudioContext.close());
 
                 it('should throw an error', (done) => {
-                    minimalAudioContext
-                        .suspend()
-                        .catch((err) => {
-                            expect(err.code).to.equal(11);
-                            expect(err.name).to.equal('InvalidStateError');
+                    minimalAudioContext.suspend().catch((err) => {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with a suspended MinimalAudioContext', () => {
-
                 beforeEach(() => minimalAudioContext.suspend());
 
                 it('should ignore consecutive calls', () => {
                     return minimalAudioContext.suspend();
                 });
-
             });
-
         });
-
     });
-
 });

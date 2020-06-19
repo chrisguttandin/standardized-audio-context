@@ -2,9 +2,7 @@ const { env } = require('process');
 const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => {
-
     config.set({
-
         basePath: '../../',
 
         browserDisconnectTimeout: 20000,
@@ -31,28 +29,25 @@ module.exports = (config) => {
             'test/unit/**/*.js'
         ],
 
-        frameworks: [
-            'mocha',
-            'sinon-chai'
-        ],
+        frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
             'test/unit/**/*.js': 'webpack'
         },
 
-        reporters: [
-            'dots'
-        ],
+        reporters: ['dots'],
 
         webpack: {
             mode: 'development',
             module: {
-                rules: [ {
-                    test: /\.ts?$/,
-                    use: {
-                        loader: 'ts-loader'
+                rules: [
+                    {
+                        test: /\.ts?$/,
+                        use: {
+                            loader: 'ts-loader'
+                        }
                     }
-                } ]
+                ]
             },
             plugins: [
                 new DefinePlugin({
@@ -62,23 +57,20 @@ module.exports = (config) => {
                 })
             ],
             resolve: {
-                extensions: [ '.js', '.ts' ]
+                extensions: ['.js', '.ts']
             }
         },
 
         webpackMiddleware: {
             noInfo: true
         }
-
     });
 
     if (env.TRAVIS) {
-
         config.set({
-
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${ env.TRAVIS_REPO_SLUG }/${ env.TRAVIS_JOB_NUMBER }/unit-${ env.TARGET }`,
+                build: `${env.TRAVIS_REPO_SLUG}/${env.TRAVIS_JOB_NUMBER}/unit-${env.TARGET}`,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
             },
@@ -87,18 +79,12 @@ module.exports = (config) => {
              * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
              * 'ChromeBrowserStack',
              */
-            browsers: (env.TARGET === 'edge')
-                ? [
-                    'EdgeBrowserStack'
-                ]
-                : (env.TARGET === 'firefox')
-                    ? [
-                        'FirefoxBrowserStack'
-                    ]
-                    : [
-                        'EdgeBrowserStack',
-                        'FirefoxBrowserStack'
-                    ],
+            browsers:
+                env.TARGET === 'edge'
+                    ? ['EdgeBrowserStack']
+                    : env.TARGET === 'firefox'
+                    ? ['FirefoxBrowserStack']
+                    : ['EdgeBrowserStack', 'FirefoxBrowserStack'],
 
             captureTimeout: 120000,
 
@@ -125,13 +111,9 @@ module.exports = (config) => {
                     timeout: 1800
                 }
             }
-
         });
-
     } else {
-
         config.set({
-
             browsers: [
                 'ChromeCanaryHeadlessWithNoRequiredUserGesture',
                 'ChromeHeadlessWithNoRequiredUserGesture',
@@ -147,28 +129,28 @@ module.exports = (config) => {
             customLaunchers: {
                 ChromeCanaryHeadlessWithNoRequiredUserGesture: {
                     base: 'ChromeCanaryHeadless',
-                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
+                    flags: ['--autoplay-policy=no-user-gesture-required']
                 },
                 ChromeHeadlessWithNoRequiredUserGesture: {
                     base: 'ChromeHeadless',
-                    flags: [ '--autoplay-policy=no-user-gesture-required' ]
+                    flags: ['--autoplay-policy=no-user-gesture-required']
                 },
                 Edge: {
                     base: 'ChromiumHeadless'
                 },
                 FirefoxDeveloperHeadlessWithPrefs: {
-                    base : 'FirefoxDeveloperHeadless',
-                    prefs : {
+                    base: 'FirefoxDeveloperHeadless',
+                    prefs: {
                         'media.autoplay.default': 0,
-                        'media.navigator.permission.disabled' : true,
+                        'media.navigator.permission.disabled': true,
                         'media.navigator.streams.fake': true
                     }
                 },
                 FirefoxHeadlessWithPrefs: {
-                    base : 'FirefoxHeadless',
-                    prefs : {
+                    base: 'FirefoxHeadless',
+                    prefs: {
                         'media.autoplay.default': 0,
-                        'media.navigator.permission.disabled' : true,
+                        'media.navigator.permission.disabled': true,
                         'media.navigator.streams.fake': true
                     }
                 },
@@ -181,11 +163,8 @@ module.exports = (config) => {
                     ]
                 }
             }
-
         });
 
         env.CHROMIUM_BIN = '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge';
-
     }
-
 };

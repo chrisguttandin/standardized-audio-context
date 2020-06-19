@@ -12,9 +12,7 @@ const compiler = require.extensions['.ts'];
 
 require.extensions['.ts'] = function (mdl, filename) {
     if (!filename.includes('node_modules') && filename.includes('src/')) {
-        const buildFilename = filename
-            .replace('src/', 'build/node/')
-            .slice(0, -3) + '.js';
+        const buildFilename = filename.replace('src/', 'build/node/').slice(0, -3) + '.js';
 
         mdl._compile(readFileSync(buildFilename, 'utf8'), buildFilename);
     }

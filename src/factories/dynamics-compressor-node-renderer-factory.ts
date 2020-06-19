@@ -62,7 +62,7 @@ export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNod
         };
 
         return {
-            render (
+            render(
                 proxy: IDynamicsCompressorNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

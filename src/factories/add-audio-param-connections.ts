@@ -6,9 +6,6 @@ export const createAddAudioParamConnections: TAddAudioParamConnectionsFactory = 
         audioParam: IAudioParam,
         audioParamRenderer: T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioParamRenderer : null
     ) => {
-        audioParamConnectionsStore.set(
-            audioParam,
-            { activeInputs: new Set(), passiveInputs: new WeakMap(), renderer: audioParamRenderer }
-        );
+        audioParamConnectionsStore.set(audioParam, { activeInputs: new Set(), passiveInputs: new WeakMap(), renderer: audioParamRenderer });
     };
 };

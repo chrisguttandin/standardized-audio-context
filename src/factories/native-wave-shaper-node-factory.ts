@@ -17,10 +17,12 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
         try {
             // Bug #102: Safari does not throw an InvalidStateError when the curve has less than two samples.
             // Bug #119: Safari does not correctly map the values. Bug #102 is only used to detect Safari in this case.
-            nativeWaveShaperNode.curve = new Float32Array([ 1 ]);
+            nativeWaveShaperNode.curve = new Float32Array([1]);
 
             return createNativeWaveShaperNodeFaker(nativeContext, options);
-        } catch { /* Ignore errors. */ }
+        } catch {
+            // Ignore errors.
+        }
 
         assignNativeAudioNodeOptions(nativeWaveShaperNode, options);
 

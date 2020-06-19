@@ -1,7 +1,6 @@
 import { spy } from 'sinon';
 
 describe('audioContextConstructor', () => {
-
     let audioContext;
 
     afterEach(() => audioContext.close());
@@ -11,11 +10,8 @@ describe('audioContextConstructor', () => {
     });
 
     describe('audioWorklet', () => {
-
         describe('addModule()', () => {
-
             describe('with an empty string as name', () => {
-
                 // bug #134
 
                 it('should not throw an error', function () {
@@ -23,11 +19,9 @@ describe('audioContextConstructor', () => {
 
                     return audioContext.audioWorklet.addModule('base/test/fixtures/empty-string-processor.js');
                 });
-
             });
 
             describe('with a duplicate name', () => {
-
                 beforeEach(function () {
                     this.timeout(10000);
 
@@ -41,11 +35,9 @@ describe('audioContextConstructor', () => {
 
                     return audioContext.audioWorklet.addModule('base/test/fixtures/duplicate-gain-processor.js');
                 });
-
             });
 
             describe('with a processor without a valid constructor', () => {
-
                 // bug #136
 
                 it('should not throw an error', function () {
@@ -53,11 +45,9 @@ describe('audioContextConstructor', () => {
 
                     return audioContext.audioWorklet.addModule('base/test/fixtures/unconstructible-processor.js');
                 });
-
             });
 
             describe('with a processor without a prototype', () => {
-
                 // Bug #137
 
                 it('should not throw an error', function () {
@@ -65,11 +55,9 @@ describe('audioContextConstructor', () => {
 
                     return audioContext.audioWorklet.addModule('base/test/fixtures/prototypeless-processor.js');
                 });
-
             });
 
             describe('with a processor with an invalid parameterDescriptors property', () => {
-
                 // Bug #139
 
                 it('should not throw an error', function () {
@@ -77,43 +65,34 @@ describe('audioContextConstructor', () => {
 
                     return audioContext.audioWorklet.addModule('base/test/fixtures/invalid-parameter-descriptors-property-processor.js');
                 });
-
             });
-
         });
-
     });
 
     describe('state', () => {
-
         // bug #34
 
         it('should be set to running right away', () => {
             expect(audioContext.state).to.equal('running');
         });
-
     });
 
     describe('createBufferSource()', () => {
-
         describe('stop()', () => {
-
             // bug #44
 
             it('should throw a DOMException', () => {
                 const audioBufferSourceNode = audioContext.createBufferSource();
 
-                expect(() => audioBufferSourceNode.stop(-1)).to.throw(DOMException).with.property('name', 'InvalidStateError');
+                expect(() => audioBufferSourceNode.stop(-1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
             });
-
         });
-
     });
 
     describe('createDelay()', () => {
-
         describe('with a delayTime of 128 samples', () => {
-
             let audioBufferSourceNode;
             let delayNode;
             let gainNode;
@@ -180,13 +159,10 @@ describe('audioContextConstructor', () => {
 
                 audioBufferSourceNode.start();
             });
-
         });
-
     });
 
     describe('createMediaStreamSource()', () => {
-
         let constantSourceNode;
         let gainNodes;
         let mediaStream;
@@ -203,26 +179,15 @@ describe('audioContextConstructor', () => {
 
         beforeEach(() => {
             constantSourceNode = audioContext.createConstantSource();
-            gainNodes = [
-                audioContext.createGain(),
-                audioContext.createGain()
-            ];
-            mediaStreamAudioDestinationNodes = [
-                audioContext.createMediaStreamDestination(),
-                audioContext.createMediaStreamDestination()
-            ];
+            gainNodes = [audioContext.createGain(), audioContext.createGain()];
+            mediaStreamAudioDestinationNodes = [audioContext.createMediaStreamDestination(), audioContext.createMediaStreamDestination()];
 
-            constantSourceNode
-                .connect(gainNodes[0])
-                .connect(mediaStreamAudioDestinationNodes[0]);
-            constantSourceNode
-                .connect(gainNodes[1])
-                .connect(mediaStreamAudioDestinationNodes[1]);
+            constantSourceNode.connect(gainNodes[0]).connect(mediaStreamAudioDestinationNodes[0]);
+            constantSourceNode.connect(gainNodes[1]).connect(mediaStreamAudioDestinationNodes[1]);
 
             constantSourceNode.start();
 
-            const audioStreamTracks = mediaStreamAudioDestinationNodes
-                .map(({ stream }) => stream.getAudioTracks()[0]);
+            const audioStreamTracks = mediaStreamAudioDestinationNodes.map(({ stream }) => stream.getAudioTracks()[0]);
 
             if (audioStreamTracks[0].id > audioStreamTracks[1].id) {
                 mediaStream = mediaStreamAudioDestinationNodes[0].stream;
@@ -236,20 +201,17 @@ describe('audioContextConstructor', () => {
                 mediaStream.addTrack(audioStreamTracks[0]);
             }
         });
-
     });
 
     describe('createWaveShaper()', () => {
-
         describe('curve', () => {
-
             // bug #104
 
             it('should throw an InvalidAccessError when assigning a curve with less than two samples', (done) => {
                 const waveShaperNode = audioContext.createWaveShaper();
 
                 try {
-                    waveShaperNode.curve = new Float32Array([ 1 ]);
+                    waveShaperNode.curve = new Float32Array([1]);
                 } catch (err) {
                     expect(err.code).to.equal(15);
                     expect(err.name).to.equal('InvalidAccessError');
@@ -257,13 +219,10 @@ describe('audioContextConstructor', () => {
                     done();
                 }
             });
-
         });
-
     });
 
     describe('decodeAudioData()', () => {
-
         // bug #6
 
         it('should not call the errorCallback at all', (done) => {
@@ -277,7 +236,5 @@ describe('audioContextConstructor', () => {
                 done();
             }, 1000);
         });
-
     });
-
 });

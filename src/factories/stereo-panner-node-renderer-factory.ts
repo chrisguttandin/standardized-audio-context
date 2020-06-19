@@ -55,7 +55,7 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
         };
 
         return {
-            render (
+            render(
                 proxy: IStereoPannerNode<T>,
                 nativeOfflineAudioContext: TNativeOfflineAudioContext,
                 trace: readonly IAudioNode<T>[]

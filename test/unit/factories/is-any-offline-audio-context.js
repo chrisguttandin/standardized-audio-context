@@ -2,7 +2,6 @@ import { createIsAnyOfflineAudioContext } from '../../../src/factories/is-any-of
 import { stub } from 'sinon';
 
 describe('isAnyOfflineAudioContext()', () => {
-
     let contextStore;
     let isAnyOfflineAudioContext;
     let isNativeOfflineAudioContext;
@@ -15,9 +14,7 @@ describe('isAnyOfflineAudioContext()', () => {
     });
 
     describe('without any OfflineAudioContext in the store', () => {
-
         describe('with an object which gets not identified as native OfflineAudioContext', () => {
-
             let anything;
 
             beforeEach(() => {
@@ -29,11 +26,9 @@ describe('isAnyOfflineAudioContext()', () => {
             it('should return false', () => {
                 expect(isAnyOfflineAudioContext(anything)).to.be.false;
             });
-
         });
 
         describe('with an OfflineAudioContext which gets identified as native', () => {
-
             let nativeOfflineAudioContext;
 
             beforeEach(() => {
@@ -45,13 +40,10 @@ describe('isAnyOfflineAudioContext()', () => {
             it('should return true', () => {
                 expect(isAnyOfflineAudioContext(nativeOfflineAudioContext)).to.be.true;
             });
-
         });
-
     });
 
     describe('with an OfflineAudioContext in the store', () => {
-
         let offlineAudioContext;
 
         beforeEach(() => {
@@ -59,7 +51,6 @@ describe('isAnyOfflineAudioContext()', () => {
         });
 
         describe('with a mapped object which gets not identified as native OfflineAudioContext', () => {
-
             beforeEach(() => {
                 const anything = { any: 'object' };
 
@@ -72,11 +63,9 @@ describe('isAnyOfflineAudioContext()', () => {
             it('should return false', () => {
                 expect(isAnyOfflineAudioContext(offlineAudioContext)).to.be.false;
             });
-
         });
 
         describe('with a mapped OfflineAudioContext which gets identified as native', () => {
-
             beforeEach(() => {
                 const nativeOfflineAudioContext = { a: 'fake native OfflineAudioContext' };
 
@@ -88,9 +77,6 @@ describe('isAnyOfflineAudioContext()', () => {
             it('should return true', () => {
                 expect(isAnyOfflineAudioContext(offlineAudioContext)).to.be.true;
             });
-
         });
-
     });
-
 });

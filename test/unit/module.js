@@ -32,7 +32,6 @@ import {
 } from '../../src/module';
 
 describe('module', () => {
-
     it('should export the AnalyserNode constructor', () => {
         expect(AnalyserNode).to.be.a('function');
     });
@@ -152,5 +151,4 @@ describe('module', () => {
     it('should export the isSupported function', () => {
         expect(isSupported).to.be.a('function');
     });
-
 });

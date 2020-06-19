@@ -3,7 +3,6 @@ import { isSafari } from '../../helper/is-safari';
 import { spy } from 'sinon';
 
 describe('AudioContext', () => {
-
     let audioContext;
 
     afterEach(() => {
@@ -11,7 +10,6 @@ describe('AudioContext', () => {
     });
 
     describe('without a constructed AudioContext', () => {
-
         it('should allow to set the latencyHint to balanced', () => {
             audioContext = new AudioContext({ latencyHint: 'balanced' });
         });
@@ -39,7 +37,6 @@ describe('AudioContext', () => {
 
         // Bug #150 Only Chrome, Firefox and Opera support setting the sampleRate.
         if ((/Chrome/.test(navigator.userAgent) && !/Edge\//.test(navigator.userAgent)) || /Firefox/.test(navigator.userAgent)) {
-
             it('should allow to set the sampleRate to 8 kHz', () => {
                 const sampleRate = 8000;
 
@@ -55,9 +52,7 @@ describe('AudioContext', () => {
 
                 expect(audioContext.sampleRate).to.equal(sampleRate);
             });
-
         } else {
-
             it('should not allow to set the sampleRate to 8 kHz', (done) => {
                 try {
                     audioContext = new AudioContext({ sampleRate: 8000 });
@@ -85,7 +80,6 @@ describe('AudioContext', () => {
                     done();
                 }
             });
-
         }
 
         it('should not allow to set the sampleRate to zero', (done) => {
@@ -104,63 +98,54 @@ describe('AudioContext', () => {
 
         // Bug #131 Safari returns null when there are four other AudioContexts running already.
         if (isSafari(navigator)) {
-
             describe('with four running AudioContexts', () => {
-
                 let audioContexts;
                 let gainNodes;
 
                 afterEach(() => {
-                    [ audioContext, ...audioContexts ]
-                        .forEach((dCntxt, index) => gainNodes[index].disconnect(dCntxt.destination));
+                    [audioContext, ...audioContexts].forEach((dCntxt, index) => gainNodes[index].disconnect(dCntxt.destination));
 
                     return Promise.all(audioContexts.map((dCntxt) => dCntxt.close()));
                 });
 
                 beforeEach(() => {
                     audioContext = new AudioContext();
-                    audioContexts = [ new AudioContext(), new AudioContext(), new AudioContext() ];
+                    audioContexts = [new AudioContext(), new AudioContext(), new AudioContext()];
 
-                    gainNodes = [ audioContext, ...audioContexts ]
-                        .map((dCntxt) => {
-                            const gainNode = dCntxt.createGain();
+                    gainNodes = [audioContext, ...audioContexts].map((dCntxt) => {
+                        const gainNode = dCntxt.createGain();
 
-                            gainNode.connect(dCntxt.destination);
+                        gainNode.connect(dCntxt.destination);
 
-                            return gainNode;
-                        });
+                        return gainNode;
+                    });
                 });
 
                 it('should throw an error', () => {
                     expect(() => {
                         new AudioContext({ latencyHint: 'balanced' });
-                    }).to.throw(DOMException).with.property('name', 'UnknownError');
+                    })
+                        .to.throw(DOMException)
+                        .with.property('name', 'UnknownError');
                 });
-
             });
-
         }
-
     });
 
     describe('with a constructed AudioContext', () => {
-
         beforeEach(() => {
             audioContext = new AudioContext();
         });
 
         describe('audioWorklet', () => {
-
             it('should be an implementation of the AudioWorklet interface', () => {
                 const audioWorklet = audioContext.audioWorklet;
 
                 expect(audioWorklet.addModule).to.be.a('function');
             });
-
         });
 
         describe('baseLatency', () => {
-
             it('should be a number', () => {
                 expect(audioContext.baseLatency).to.be.a('number');
             });
@@ -170,11 +155,9 @@ describe('AudioContext', () => {
                     audioContext.baseLatency = 0;
                 }).to.throw(TypeError);
             });
-
         });
 
         describe('currentTime', () => {
-
             it('should be a number', () => {
                 expect(audioContext.currentTime).to.be.a('number');
             });
@@ -203,11 +186,9 @@ describe('AudioContext', () => {
                 // Kick off the audioContext.
                 audioContext.createGain();
             });
-
         });
 
         describe('destination', () => {
-
             it('should be an implementation of the AudioDestinationNode interface', () => {
                 const destination = audioContext.destination;
 
@@ -224,11 +205,9 @@ describe('AudioContext', () => {
                     audioContext.destination = 'a fake AudioDestinationNode';
                 }).to.throw(TypeError);
             });
-
         });
 
         describe('listener', () => {
-
             it('should be an implementation of the AudioListener interface', () => {
                 const listener = audioContext.listener;
 
@@ -242,25 +221,23 @@ describe('AudioContext', () => {
                 expect(listener.upY).not.to.be.undefined;
                 expect(listener.upZ).not.to.be.undefined;
             });
-
         });
 
         describe('onstatechange', () => {
-
             it('should be null', () => {
                 expect(audioContext.onstatechange).to.be.null;
             });
 
             it('should be assignable to a function', () => {
                 const fn = () => {};
-                const onstatechange = audioContext.onstatechange = fn; // eslint-disable-line no-multi-assign
+                const onstatechange = (audioContext.onstatechange = fn); // eslint-disable-line no-multi-assign
 
                 expect(onstatechange).to.equal(fn);
                 expect(audioContext.onstatechange).to.equal(fn);
             });
 
             it('should be assignable to null', () => {
-                const onstatechange = audioContext.onstatechange = null; // eslint-disable-line no-multi-assign
+                const onstatechange = (audioContext.onstatechange = null); // eslint-disable-line no-multi-assign
 
                 expect(onstatechange).to.be.null;
                 expect(audioContext.onstatechange).to.be.null;
@@ -271,7 +248,7 @@ describe('AudioContext', () => {
 
                 audioContext.onstatechange = () => {};
 
-                const onstatechange = audioContext.onstatechange = string; // eslint-disable-line no-multi-assign
+                const onstatechange = (audioContext.onstatechange = string); // eslint-disable-line no-multi-assign
 
                 expect(onstatechange).to.equal(string);
                 expect(audioContext.onstatechange).to.be.null;
@@ -305,11 +282,9 @@ describe('AudioContext', () => {
                 // Kick off the audioContext.
                 audioContext.createGain();
             });
-
         });
 
         describe('sampleRate', () => {
-
             it('should be a number', () => {
                 expect(audioContext.sampleRate).to.be.a('number');
             });
@@ -319,11 +294,9 @@ describe('AudioContext', () => {
                     audioContext.sampleRate = 22050;
                 }).to.throw(TypeError);
             });
-
         });
 
         describe('state', () => {
-
             it('should be suspended at the beginning', () => {
                 expect(audioContext.state).to.equal('suspended');
             });
@@ -346,13 +319,11 @@ describe('AudioContext', () => {
                 // Kick off the audioContext.
                 audioContext.createGain();
             });
-
         });
 
         describe('addEventListener()', () => {
-
             it('should fire a registered statechange event listener', (done) => {
-                function stateChangeListener (event) {
+                function stateChangeListener(event) {
                     audioContext.removeEventListener('statechange', stateChangeListener);
 
                     expect(event).to.be.an.instanceOf(Event);
@@ -370,11 +341,9 @@ describe('AudioContext', () => {
                 // Kick off the audioContext.
                 audioContext.createGain();
             });
-
         });
 
         describe('close()', () => {
-
             afterEach(() => {
                 // Create a closeable AudioContext to align the behaviour with other tests.
                 audioContext = new AudioContext();
@@ -399,194 +368,146 @@ describe('AudioContext', () => {
             });
 
             describe('with a closed AudioContext', () => {
-
                 beforeEach(() => audioContext.close());
 
                 it('should throw an error', (done) => {
-                    audioContext
-                        .close()
-                        .catch((err) => {
-                            expect(err.code).to.equal(11);
-                            expect(err.name).to.equal('InvalidStateError');
+                    audioContext.close().catch((err) => {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
-
         });
 
         describe('createAnalyser()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createAnalyser).to.be.a('function');
             });
-
         });
 
         describe('createBiquadFilter()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createBiquadFilter).to.be.a('function');
             });
-
         });
 
         describe('createBuffer()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createBuffer).to.be.a('function');
             });
-
         });
 
         describe('createBufferSource()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createBufferSource).to.be.a('function');
             });
-
         });
 
         describe('createChannelMerger()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createChannelMerger).to.be.a('function');
             });
-
         });
 
         describe('createChannelSplitter()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createChannelSplitter).to.be.a('function');
             });
-
         });
 
         describe('createConstantSource()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createConstantSource).to.be.a('function');
             });
-
         });
 
         describe('createConvolver()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createConvolver).to.be.a('function');
             });
-
         });
 
         describe('createDelay()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createDelay).to.be.a('function');
             });
-
         });
 
         describe('createDynamicsCompressor()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createDynamicsCompressor).to.be.a('function');
             });
-
         });
 
         describe('createGain()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createGain).to.be.a('function');
             });
-
         });
 
         describe('createIIRFilter()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createIIRFilter).to.be.a('function');
             });
-
         });
 
         describe('createMediaElementSource()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createMediaElementSource).to.be.a('function');
             });
-
         });
 
         describe('createMediaStreamDestination()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createMediaStreamDestination).to.be.a('function');
             });
-
         });
 
         describe('createMediaStreamSource()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createMediaStreamSource).to.be.a('function');
             });
-
         });
 
         describe('createOscillator()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createOscillator).to.be.a('function');
             });
-
         });
 
         describe('createPanner()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createPanner).to.be.a('function');
             });
-
         });
 
         describe('createPeriodicWave()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createPeriodicWave).to.be.a('function');
             });
-
         });
 
         describe('createStereoPanner()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createStereoPanner).to.be.a('function');
             });
-
         });
 
         describe('createWaveShaper()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.createWaveShaper).to.be.a('function');
             });
-
         });
 
         describe('decodeAudioData()', () => {
-
             it('should be a function', () => {
                 expect(audioContext.decodeAudioData).to.be.a('function');
             });
-
         });
 
         describe('resume()', () => {
-
             it('should return a promise', () => {
                 expect(audioContext.resume()).to.be.an.instanceOf(Promise);
             });
@@ -606,7 +527,6 @@ describe('AudioContext', () => {
             });
 
             describe('with a closed AudioContext', () => {
-
                 afterEach(() => {
                     // Create a closeable AudioContext to align the behaviour with other tests.
                     audioContext = new AudioContext();
@@ -615,32 +535,25 @@ describe('AudioContext', () => {
                 beforeEach(() => audioContext.close());
 
                 it('should throw an error', (done) => {
-                    audioContext
-                        .resume()
-                        .catch((err) => {
-                            expect(err.code).to.equal(11);
-                            expect(err.name).to.equal('InvalidStateError');
+                    audioContext.resume().catch((err) => {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with a running AudioContext', () => {
-
                 beforeEach(() => audioContext.resume());
 
                 it('should ignore consecutive calls', () => {
                     return audioContext.resume();
                 });
-
             });
-
         });
 
         describe('suspend()', () => {
-
             it('should return a promise', () => {
                 expect(audioContext.suspend()).to.be.an.instanceOf(Promise);
             });
@@ -660,7 +573,6 @@ describe('AudioContext', () => {
             });
 
             describe('with a closed AudioContext', () => {
-
                 afterEach(() => {
                     // Create a closeable AudioContext to align the behaviour with other tests.
                     audioContext = new AudioContext();
@@ -669,30 +581,22 @@ describe('AudioContext', () => {
                 beforeEach(() => audioContext.close());
 
                 it('should throw an error', (done) => {
-                    audioContext
-                        .suspend()
-                        .catch((err) => {
-                            expect(err.code).to.equal(11);
-                            expect(err.name).to.equal('InvalidStateError');
+                    audioContext.suspend().catch((err) => {
+                        expect(err.code).to.equal(11);
+                        expect(err.name).to.equal('InvalidStateError');
 
-                            done();
-                        });
+                        done();
+                    });
                 });
-
             });
 
             describe('with a suspended AudioContext', () => {
-
                 beforeEach(() => audioContext.suspend());
 
                 it('should ignore consecutive calls', () => {
                     return audioContext.suspend();
                 });
-
             });
-
         });
-
     });
-
 });

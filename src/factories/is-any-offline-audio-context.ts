@@ -3,7 +3,7 @@ import { TIsAnyOfflineAudioContextFactory, TNativeOfflineAudioContext } from '..
 
 export const createIsAnyOfflineAudioContext: TIsAnyOfflineAudioContextFactory = (contextStore, isNativeOfflineAudioContext) => {
     return (anything): anything is IMinimalOfflineAudioContext | IOfflineAudioContext | TNativeOfflineAudioContext => {
-        const nativeContext = contextStore.get(<any> anything);
+        const nativeContext = contextStore.get(<any>anything);
 
         return isNativeOfflineAudioContext(nativeContext) || isNativeOfflineAudioContext(anything);
     };

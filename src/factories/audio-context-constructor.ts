@@ -20,16 +20,14 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     mediaStreamTrackAudioSourceNodeConstructor,
     nativeAudioContextConstructor
 ) => {
-
     return class AudioContext extends baseAudioContextConstructor<IAudioContext> implements IAudioContext {
-
         private _baseLatency: number;
 
         private _nativeAudioContext: TNativeAudioContext;
 
         private _state: null | 'suspended';
 
-        constructor (options: IAudioContextOptions = { }) {
+        constructor(options: IAudioContextOptions = {}) {
             if (nativeAudioContextConstructor === null) {
                 throw new Error('Missing the native AudioContext constructor.');
             }
@@ -44,7 +42,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.
             if (!isValidLatencyHint(options.latencyHint)) {
                 throw new TypeError(
-                    `The provided value '${ options.latencyHint }' is not a valid enum value of type AudioContextLatencyCategory.`
+                    `The provided value '${options.latencyHint}' is not a valid enum value of type AudioContextLatencyCategory.`
                 );
             }
 
@@ -59,19 +57,20 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             const { sampleRate } = nativeAudioContext;
 
             // @todo The values for 'balanced', 'interactive' and 'playback' are just copied from Chrome's implementation.
-            this._baseLatency = (typeof nativeAudioContext.baseLatency === 'number')
-                ? nativeAudioContext.baseLatency
-                : (latencyHint === 'balanced')
-                    ? (512 / sampleRate)
-                    : (latencyHint === 'interactive' || latencyHint === undefined)
-                        ? (256 / sampleRate)
-                        : (latencyHint === 'playback')
-                            ? (1024 / sampleRate)
-                            /*
-                             * @todo The min (256) and max (16384) values are taken from the allowed bufferSize values of a
-                             * ScriptProcessorNode.
-                             */
-                            : ((Math.max(2, Math.min(128, Math.round((latencyHint * sampleRate) / 128))) * 128) / sampleRate);
+            this._baseLatency =
+                typeof nativeAudioContext.baseLatency === 'number'
+                    ? nativeAudioContext.baseLatency
+                    : latencyHint === 'balanced'
+                    ? 512 / sampleRate
+                    : latencyHint === 'interactive' || latencyHint === undefined
+                    ? 256 / sampleRate
+                    : latencyHint === 'playback'
+                    ? 1024 / sampleRate
+                    : /*
+                       * @todo The min (256) and max (16384) values are taken from the allowed bufferSize values of a
+                       * ScriptProcessorNode.
+                       */
+                      (Math.max(2, Math.min(128, Math.round((latencyHint * sampleRate) / 128))) * 128) / sampleRate;
             this._nativeAudioContext = nativeAudioContext;
             this._state = null;
 
@@ -94,22 +93,20 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             }
         }
 
-        get baseLatency (): number {
+        get baseLatency(): number {
             return this._baseLatency;
         }
 
-        get state (): TAudioContextState {
-            return (this._state !== null) ? this._state : this._nativeAudioContext.state;
+        get state(): TAudioContextState {
+            return this._state !== null ? this._state : this._nativeAudioContext.state;
         }
 
-        public close (): Promise<void> {
+        public close(): Promise<void> {
             // Bug #35: Firefox does not throw an error if the AudioContext was closed before.
             if (this.state === 'closed') {
-                return this._nativeAudioContext
-                    .close()
-                    .then(() => {
-                        throw createInvalidStateError();
-                    });
+                return this._nativeAudioContext.close().then(() => {
+                    throw createInvalidStateError();
+                });
             }
 
             // Bug #34: If the state was set to suspended before it should be revoked now.
@@ -125,23 +122,23 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
              */
         }
 
-        public createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this> {
+        public createMediaElementSource(mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this> {
             return new mediaElementAudioSourceNodeConstructor(this, { mediaElement });
         }
 
-        public createMediaStreamDestination (): IMediaStreamAudioDestinationNode<this> {
+        public createMediaStreamDestination(): IMediaStreamAudioDestinationNode<this> {
             return new mediaStreamAudioDestinationNodeConstructor(this);
         }
 
-        public createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode<this> {
+        public createMediaStreamSource(mediaStream: MediaStream): IMediaStreamAudioSourceNode<this> {
             return new mediaStreamAudioSourceNodeConstructor(this, { mediaStream });
         }
 
-        public createMediaStreamTrackSource (mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<this> {
+        public createMediaStreamTrackSource(mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<this> {
             return new mediaStreamTrackAudioSourceNodeConstructor(this, { mediaStreamTrack });
         }
 
-        public resume (): Promise<void> {
+        public resume(): Promise<void> {
             if (this._state === 'suspended') {
                 return new Promise((resolve, reject) => {
                     const resolvePromise = () => {
@@ -150,9 +147,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                         if (this._nativeAudioContext.state === 'running') {
                             resolve();
                         } else {
-                            this
-                                .resume()
-                                .then(resolve, reject);
+                            this.resume().then(resolve, reject);
                         }
                     };
 
@@ -160,32 +155,26 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 });
             }
 
-            return this._nativeAudioContext
-                .resume()
-                .catch((err) => {
-                    // Bug #55: Chrome, Edge and Opera do throw an InvalidAccessError instead of an InvalidStateError.
-                    // Bug #56: Safari invokes the catch handler but without an error.
-                    if (err === undefined || err.code === 15) {
-                        throw createInvalidStateError();
-                    }
+            return this._nativeAudioContext.resume().catch((err) => {
+                // Bug #55: Chrome, Edge and Opera do throw an InvalidAccessError instead of an InvalidStateError.
+                // Bug #56: Safari invokes the catch handler but without an error.
+                if (err === undefined || err.code === 15) {
+                    throw createInvalidStateError();
+                }
 
-                    throw err;
-                });
+                throw err;
+            });
         }
 
-        public suspend (): Promise<void> {
-            return this._nativeAudioContext
-                .suspend()
-                .catch((err) => {
-                    // Bug #56: Safari invokes the catch handler but without an error.
-                    if (err === undefined) {
-                        throw createInvalidStateError();
-                    }
+        public suspend(): Promise<void> {
+            return this._nativeAudioContext.suspend().catch((err) => {
+                // Bug #56: Safari invokes the catch handler but without an error.
+                if (err === undefined) {
+                    throw createInvalidStateError();
+                }
 
-                    throw err;
-                });
+                throw err;
+            });
         }
-
     };
-
 };
