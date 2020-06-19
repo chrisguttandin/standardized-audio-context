@@ -76,7 +76,7 @@
     "husky": {
         "hooks": {
             "commit-msg": "commitlint --edit --extends @commitlint/config-angular",
-            "pre-commit": "grunt lint"
+            "pre-commit": "pretty-quick --config config/prettier/config.json --staged && grunt lint"
         }
     },
     "keywords": [
