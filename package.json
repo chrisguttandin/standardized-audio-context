@@ -21,7 +21,7 @@
     },
     "description": "A cross-browser implementation of the AudioContext which aims to closely follow the standard.",
     "devDependencies": {
-        "@babel/core": "^7.10.4",
+        "@babel/core": "^7.10.5",
         "@babel/plugin-external-helpers": "^7.10.4",
         "@babel/plugin-transform-runtime": "^7.10.4",
         "@babel/preset-env": "^7.10.4",
