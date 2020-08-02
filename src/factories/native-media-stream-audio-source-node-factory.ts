@@ -8,7 +8,9 @@ export const createNativeMediaStreamAudioSourceNodeFactory: TNativeMediaStreamAu
              * Bug #151: Safari does not use the audio track as input anymore if it gets removed from the mediaStream after construction.
              * Bug #159: Safari picks the first audio track if the MediaStream has more than one audio track.
              */
-            const filteredAudioStreamTracks = audioStreamTracks.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0)).slice(0, 1);
+            audioStreamTracks.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+
+            const filteredAudioStreamTracks = audioStreamTracks.slice(0, 1);
 
             return ntvDCntxt.createMediaStreamSource(new MediaStream(filteredAudioStreamTracks));
         });
