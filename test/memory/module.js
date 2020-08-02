@@ -63,7 +63,9 @@ describe('module', () => {
         await page.evaluate(async () => {
             audioContext = new AudioContext(); // eslint-disable-line no-undef
 
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 1000);
+            });
         });
     });
 

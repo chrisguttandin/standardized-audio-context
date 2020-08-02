@@ -296,7 +296,7 @@ describe('OfflineAudioContext', () => {
         });
 
         it('should be assignable to a function', () => {
-            const fn = () => {};
+            const fn = () => {}; // eslint-disable-line unicorn/consistent-function-scoping
             const onstatechange = (offlineAudioContext.onstatechange = fn); // eslint-disable-line no-multi-assign
 
             expect(onstatechange).to.equal(fn);
