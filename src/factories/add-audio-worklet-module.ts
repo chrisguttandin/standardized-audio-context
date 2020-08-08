@@ -40,8 +40,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
             return fetchSource(moduleURL).then((source) => {
                 const [importStatements, sourceWithoutImportStatements] = splitImportStatements(source, absoluteUrl);
                 /*
-                 * Bug #170: Chrome and Opera do call process() with an array with empty channelData for each input if no input is
-                 * connected.
+                 * Bug #170: Chrome does call process() with an array with empty channelData for each input if no input is connected.
                  *
                  * This is the unminified version of the code used below:
                  *
