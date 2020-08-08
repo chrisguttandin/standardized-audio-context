@@ -35,7 +35,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         private _onended: null | TEventHandler<this>;
 
-        constructor(context: T, options: Partial<IConstantSourceOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IConstantSourceOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeConstantSourceNode = createNativeConstantSourceNode(nativeContext, mergedOptions);

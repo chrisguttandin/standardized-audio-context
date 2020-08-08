@@ -20,7 +20,7 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
     return class DelayNode<T extends TContext> extends audioNodeConstructor<T> implements IDelayNode<T> {
         private _delayTime: IAudioParam;
 
-        constructor(context: T, options: Partial<IDelayOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IDelayOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeDelayNode = createNativeDelayNode(nativeContext, mergedOptions);

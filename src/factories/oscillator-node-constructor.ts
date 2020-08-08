@@ -16,6 +16,7 @@ const DEFAULT_OPTIONS = {
     channelInterpretation: 'speakers', // This attribute has no effect for nodes with no inputs.
     detune: 0,
     frequency: 440,
+    periodicWave: undefined,
     type: 'sine'
 } as const;
 
@@ -40,7 +41,7 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _oscillatorNodeRenderer: TOscillatorNodeRenderer<T>;
 
-        constructor(context: T, options: Partial<IOscillatorOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IOscillatorOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeOscillatorNode = createNativeOscillatorNode(nativeContext, mergedOptions);

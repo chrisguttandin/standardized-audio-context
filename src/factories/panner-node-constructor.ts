@@ -52,7 +52,7 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
 
         private _positionZ: IAudioParam;
 
-        constructor(context: T, options: Partial<IPannerOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IPannerOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativePannerNode = createNativePannerNode(nativeContext, mergedOptions);

@@ -41,7 +41,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
 
         private _threshold: IAudioParam;
 
-        constructor(context: T, options: Partial<IDynamicsCompressorOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IDynamicsCompressorOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeDynamicsCompressorNode = createNativeDynamicsCompressorNode(nativeContext, mergedOptions);

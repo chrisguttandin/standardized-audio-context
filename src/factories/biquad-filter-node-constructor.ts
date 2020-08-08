@@ -33,7 +33,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
         private _Q: IAudioParam;
 
-        constructor(context: T, options: Partial<IBiquadFilterOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IBiquadFilterOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeBiquadFilterNode = createNativeBiquadFilterNode(nativeContext, mergedOptions);

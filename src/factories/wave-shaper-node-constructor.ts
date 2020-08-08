@@ -22,7 +22,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
 
         private _nativeWaveShaperNode: TNativeWaveShaperNode;
 
-        constructor(context: T, options: Partial<IWaveShaperOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IWaveShaperOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeWaveShaperNode = createNativeWaveShaperNode(nativeContext, mergedOptions);

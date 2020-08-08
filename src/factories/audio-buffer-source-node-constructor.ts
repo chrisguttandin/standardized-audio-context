@@ -46,7 +46,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         private _playbackRate: IAudioParam;
 
-        constructor(context: T, options: Partial<IAudioBufferSourceOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IAudioBufferSourceOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);
@@ -59,7 +59,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
             this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
             this._isBufferNullified = false;
-            this._isBufferSet = options.buffer !== null && options.buffer !== undefined;
+            this._isBufferSet = mergedOptions.buffer !== null;
             this._nativeAudioBufferSourceNode = nativeAudioBufferSourceNode;
             this._onended = null;
             // Bug #73: Edge & Safari do not export the correct values for maxValue and minValue.

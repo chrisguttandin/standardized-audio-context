@@ -76,7 +76,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         private _parameters: null | TAudioParamMap;
 
-        constructor(context: T, name: string, options: Partial<IAudioWorkletNodeOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, name: string, options?: Partial<IAudioWorkletNodeOptions>) {
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });

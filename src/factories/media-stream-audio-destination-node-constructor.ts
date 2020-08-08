@@ -17,7 +17,7 @@ export const createMediaStreamAudioDestinationNodeConstructor: TMediaStreamAudio
         implements IMediaStreamAudioDestinationNode<T> {
         private _nativeMediaStreamAudioDestinationNode: TNativeMediaStreamAudioDestinationNode;
 
-        constructor(context: T, options: Partial<IAudioNodeOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IAudioNodeOptions>) {
             const nativeContext = getNativeContext(context);
 
             // Bug #173: Safari allows to create a MediaStreamAudioDestinationNode with an OfflineAudioContext.

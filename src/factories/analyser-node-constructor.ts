@@ -22,7 +22,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
     return class AnalyserNode<T extends TContext> extends audionNodeConstructor<T> implements IAnalyserNode<T> {
         private _nativeAnalyserNode: TNativeAnalyserNode;
 
-        constructor(context: T, options: Partial<IAnalyserOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IAnalyserOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeAnalyserNode = createNativeAnalyserNode(nativeContext, mergedOptions);

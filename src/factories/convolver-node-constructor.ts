@@ -21,7 +21,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
 
         private _nativeConvolverNode: TNativeConvolverNode;
 
-        constructor(context: T, options: Partial<IConvolverOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IConvolverOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeConvolverNode = createNativeConvolverNode(nativeContext, mergedOptions);

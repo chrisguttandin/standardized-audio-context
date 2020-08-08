@@ -23,7 +23,7 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
     return class StereoPannerNode<T extends TContext> extends audioNodeConstructor<T> implements IStereoPannerNode<T> {
         private _pan: IAudioParam;
 
-        constructor(context: T, options: Partial<IStereoPannerOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IStereoPannerOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeStereoPannerNode = createNativeStereoPannerNode(nativeContext, mergedOptions);

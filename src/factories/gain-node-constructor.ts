@@ -20,7 +20,7 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
     return class GainNode<T extends TContext> extends audioNodeConstructor<T> implements IGainNode<T> {
         private _gain: IAudioParam;
 
-        constructor(context: T, options: Partial<IGainOptions> = DEFAULT_OPTIONS) {
+        constructor(context: T, options?: Partial<IGainOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeGainNode = createNativeGainNode(nativeContext, mergedOptions);
