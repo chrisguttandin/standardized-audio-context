@@ -375,7 +375,7 @@ isAnyOfflineAudioContext(nativeOfflineAudioContext); // true
 
 ### isSupported()
 
- `standardized-audio-context` is also exporting a promise which can be accessed by calling `isSupported()`. This promise resolves to a boolean which indicates if the functionality is supported within the currently used browser. This is not part of the specification.
+`standardized-audio-context` is also exporting a promise which can be accessed by calling `isSupported()`. This promise resolves to a boolean which indicates if the functionality is supported within the currently used browser. This is not part of the specification.
 
 ```js
 import { isSupported } from 'standardized-audio-context';
@@ -418,7 +418,7 @@ every supported browser without encountering any syntax errors.
 This package is written in [TypeScript](https://www.typescriptlang.org/) which means it can be used seamlessly in any TypeScript project. But that is entirely optional.
 
 In contrast to the Web Audio API types that TypeScript provides out of the box the types exported
-by  `standardized-audio-context` do actually match the concrete implementation. TypeScript
+by `standardized-audio-context` do actually match the concrete implementation. TypeScript
 generates its types from the [Web IDL](https://heycam.github.io/webidl) definition of the Web Audio
 API which does not always match the actually available implementations.
 
