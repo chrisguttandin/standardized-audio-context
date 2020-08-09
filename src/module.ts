@@ -106,7 +106,6 @@ import { createNativeChannelSplitterNodeFactory } from './factories/native-chann
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConstantSourceNodeFakerFactory } from './factories/native-constant-source-node-faker-factory';
 import { createNativeConvolverNodeFactory } from './factories/native-convolver-node-factory';
-import { createNativeConvolverNodeFakerFactory } from './factories/native-convolver-node-faker-factory';
 import { createNativeDelayNodeFactory } from './factories/native-delay-node-factory';
 import { createNativeDynamicsCompressorNodeFactory } from './factories/native-dynamics-compressor-node-factory';
 import { createNativeGainNodeFactory } from './factories/native-gain-node-factory';
@@ -158,6 +157,7 @@ import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/tes
 import { createTestChannelMergerNodeChannelCountSupport } from './factories/test-channel-merger-node-channel-count-support';
 import { createTestConstantSourceNodeAccurateSchedulingSupport } from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createTestConvolverNodeBufferReassignabilitySupport } from './factories/test-convolver-node-buffer-reassignability-support';
+import { createTestConvolverNodeChannelCountSupport } from './factories/test-convolver-node-channel-count-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
 import { createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport } from './factories/test-media-stream-audio-source-node-media-stream-without-audio-track-support';
 import { createTestOfflineAudioContextCurrentTimeSupport } from './factories/test-offline-audio-context-current-time-support';
@@ -507,17 +507,7 @@ const constantSourceNodeConstructor: TConstantSourceNodeConstructor = createCons
     isNativeOfflineAudioContext,
     wrapEventListener
 );
-const createNativeConvolverNodeFaker = createNativeConvolverNodeFakerFactory(
-    createNativeAudioNode,
-    createNativeGainNode,
-    monitorConnections
-);
-const createNativeConvolverNode = createNativeConvolverNodeFactory(
-    createNativeAudioNode,
-    createNativeConvolverNodeFaker,
-    createNotSupportedError,
-    overwriteAccessors
-);
+const createNativeConvolverNode = createNativeConvolverNodeFactory(createNativeAudioNode, createNotSupportedError, overwriteAccessors);
 const createConvolverNodeRenderer = createConvolverNodeRendererFactory(
     createNativeConvolverNode,
     getNativeAudioNode,
@@ -1065,6 +1055,7 @@ export const isSupported = () =>
         createTestChannelMergerNodeChannelCountSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
         createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
         createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),
+        createTestConvolverNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
         createTestIsSecureContextSupport(window),
         createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport(nativeAudioContextConstructor),
         createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),

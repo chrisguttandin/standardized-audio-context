@@ -4,19 +4,11 @@ import { TNativeConvolverNodeFactoryFactory } from '../types';
 
 export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactory = (
     createNativeAudioNode,
-    createNativeConvolverNodeFaker,
     createNotSupportedError,
     overwriteAccessors
 ) => {
     return (nativeContext, options) => {
         const nativeConvolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
-
-        try {
-            // Bug #166: Opera does not allow yet to set the channelCount to 1.
-            nativeConvolverNode.channelCount = 1;
-        } catch (err) {
-            return createNativeConvolverNodeFaker(nativeContext, options);
-        }
 
         assignNativeAudioNodeOptions(nativeConvolverNode, options);
 
