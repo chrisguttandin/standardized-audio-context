@@ -81,31 +81,35 @@ interface IAudioContext extends EventTarget {
     onstatechange: null | TEventHandler<IAudioContext>;
     readonly sampleRate: number;
     readonly state: TAudioContextState;
-    close (): Promise<void>;
-    createAnalyser (): IAnalyserNode<IAudioContext>;
-    createBiquadFilter (): IBiquadFilterNode<IAudioContext>;
-    createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
-    createBufferSource (): IAudioBufferSourceNode<IAudioContext>;
-    createChannelMerger (numberOfInputs?: number): IAudioNode<IAudioContext>;
-    createChannelSplitter (numberOfOutputs?: number): IAudioNode<IAudioContext>;
-    createConstantSource (): IConstantSourceNode<IAudioContext>;
-    createConvolver (): IConvolverNode<IAudioContext>;
-    createDelay (maxDelayTime?: number): IDelayNode<IAudioContext>;
-    createDynamicsCompressor (): IDynamicsCompressorNode<IAudioContext>;
-    createGain (): IGainNode<IAudioContext>;
-    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode<IAudioContext>;
-    createMediaElementSource (mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<IAudioContext>;
-    createMediaStreamDestination (): IMediaElementAudioDestinationNode<IAudioContext>;
-    createMediaStreamSource (mediaStream: MediaStream): IMediaStreamAudioSourceNode<IAudioContext>;
-    createMediaStreamTrackSource (mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<IAudioContext>;
-    createOscillator (): IOscillatorNode<IAudioContext>;
-    createPanner (): IPannerNode<IAudioContext>;
-    createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
-    createStereoPanner (): IStereoPannerNode<IAudioContext>;
-    createWaveShaper (): IWaveShaperNode<IAudioContext>;
-    decodeAudioData (audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback): Promise<IAudioBuffer>;
-    resume (): Promise<void>;
-    suspend (): Promise<void>;
+    close(): Promise<void>;
+    createAnalyser(): IAnalyserNode<IAudioContext>;
+    createBiquadFilter(): IBiquadFilterNode<IAudioContext>;
+    createBuffer(numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
+    createBufferSource(): IAudioBufferSourceNode<IAudioContext>;
+    createChannelMerger(numberOfInputs?: number): IAudioNode<IAudioContext>;
+    createChannelSplitter(numberOfOutputs?: number): IAudioNode<IAudioContext>;
+    createConstantSource(): IConstantSourceNode<IAudioContext>;
+    createConvolver(): IConvolverNode<IAudioContext>;
+    createDelay(maxDelayTime?: number): IDelayNode<IAudioContext>;
+    createDynamicsCompressor(): IDynamicsCompressorNode<IAudioContext>;
+    createGain(): IGainNode<IAudioContext>;
+    createIIRFilter(feedforward: number[], feedback: number[]): IIIRFilterNode<IAudioContext>;
+    createMediaElementSource(mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<IAudioContext>;
+    createMediaStreamDestination(): IMediaElementAudioDestinationNode<IAudioContext>;
+    createMediaStreamSource(mediaStream: MediaStream): IMediaStreamAudioSourceNode<IAudioContext>;
+    createMediaStreamTrackSource(mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<IAudioContext>;
+    createOscillator(): IOscillatorNode<IAudioContext>;
+    createPanner(): IPannerNode<IAudioContext>;
+    createPeriodicWave(real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
+    createStereoPanner(): IStereoPannerNode<IAudioContext>;
+    createWaveShaper(): IWaveShaperNode<IAudioContext>;
+    decodeAudioData(
+        audioData: ArrayBuffer,
+        successCallback?: TDecodeSuccessCallback,
+        errorCallback?: TDecodeErrorCallback
+    ): Promise<IAudioBuffer>;
+    resume(): Promise<void>;
+    suspend(): Promise<void>;
 }
 ```
 
@@ -130,25 +134,29 @@ interface IOfflineAudioContext extends EventTarget {
     onstatechange: null | TEventHandler<IOfflineAudioContext>;
     readonly sampleRate: number;
     readonly state: TAudioContextState;
-    createAnalyser (): IAnalyserNode<IOfflineAudioContext>;
-    createBiquadFilter (): IBiquadFilterNode<IOfflineAudioContext>;
-    createBuffer (numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
-    createBufferSource (): IAudioBufferSourceNode<IOfflineAudioContext>;
-    createChannelMerger (numberOfInputs?: number): IAudioNode<IOfflineAudioContext>;
-    createChannelSplitter (numberOfOutputs?: number): IAudioNode<IOfflineAudioContext>;
-    createConstantSource (): IConstantSourceNode<IOfflineAudioContext>;
-    createConvolver (): IConvolverNode<IOfflineAudioContext>;
-    createDelay (maxDelayTime?: number): IDelayNode<IOfflineAudioContext>;
-    createDynamicsCompressor (): IDynamicsCompressorNode<IOfflineAudioContext>;
-    createGain (): IGainNode<IOfflineAudioContext>;
-    createIIRFilter (feedforward: number[], feedback: number[]): IIIRFilterNode<IOfflineAudioContext>;
-    createOscillator (): IOscillatorNode<IOfflineAudioContext>;
-    createPanner (): IPannerNode<IOfflineAudioContext>;
-    createPeriodicWave (real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
-    createStereoPanner (): IStereoPannerNode<IOfflineAudioContext>;
-    createWaveShaper (): IWaveShaperNode<IOfflineAudioContext>;
-    decodeAudioData (audioData: ArrayBuffer, successCallback?: TDecodeSuccessCallback, errorCallback?: TDecodeErrorCallback): Promise<IAudioBuffer>;
-    startRendering (): Promise<IAudioBuffer>;
+    createAnalyser(): IAnalyserNode<IOfflineAudioContext>;
+    createBiquadFilter(): IBiquadFilterNode<IOfflineAudioContext>;
+    createBuffer(numberOfChannels: number, length: number, sampleRate: number): IAudioBuffer;
+    createBufferSource(): IAudioBufferSourceNode<IOfflineAudioContext>;
+    createChannelMerger(numberOfInputs?: number): IAudioNode<IOfflineAudioContext>;
+    createChannelSplitter(numberOfOutputs?: number): IAudioNode<IOfflineAudioContext>;
+    createConstantSource(): IConstantSourceNode<IOfflineAudioContext>;
+    createConvolver(): IConvolverNode<IOfflineAudioContext>;
+    createDelay(maxDelayTime?: number): IDelayNode<IOfflineAudioContext>;
+    createDynamicsCompressor(): IDynamicsCompressorNode<IOfflineAudioContext>;
+    createGain(): IGainNode<IOfflineAudioContext>;
+    createIIRFilter(feedforward: number[], feedback: number[]): IIIRFilterNode<IOfflineAudioContext>;
+    createOscillator(): IOscillatorNode<IOfflineAudioContext>;
+    createPanner(): IPannerNode<IOfflineAudioContext>;
+    createPeriodicWave(real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
+    createStereoPanner(): IStereoPannerNode<IOfflineAudioContext>;
+    createWaveShaper(): IWaveShaperNode<IOfflineAudioContext>;
+    decodeAudioData(
+        audioData: ArrayBuffer,
+        successCallback?: TDecodeSuccessCallback,
+        errorCallback?: TDecodeErrorCallback
+    ): Promise<IAudioBuffer>;
+    startRendering(): Promise<IAudioBuffer>;
 }
 ```
 
@@ -372,14 +380,13 @@ isAnyOfflineAudioContext(nativeOfflineAudioContext); // true
 ```js
 import { isSupported } from 'standardized-audio-context';
 
-isSupported()
-    .then((isSupported) => {
-        if (isSupported) {
-            // yeah everything should work
-        } else {
-            // oh no this browser seems to be outdated
-        }
-    });
+isSupported().then((isSupported) => {
+    if (isSupported) {
+        // yeah everything should work
+    } else {
+        // oh no this browser seems to be outdated
+    }
+});
 ```
 
 ## Browser Support
