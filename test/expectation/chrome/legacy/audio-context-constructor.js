@@ -7,66 +7,18 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
-    describe('createBiquadFilter()', () => {
-        let biquadFilterNode;
+    describe('with a constructed AudioContext', () => {
+        describe('createBufferSource()', () => {
+            describe('stop()', () => {
+                // bug #44
 
-        beforeEach(() => {
-            biquadFilterNode = audioContext.createBiquadFilter();
-        });
+                it('should throw a DOMException', () => {
+                    const audioBufferSourceNode = audioContext.createBufferSource();
 
-        describe('detune', () => {
-            describe('maxValue', () => {
-                // bug #78
-
-                it('should be the largest possible positive float value', () => {
-                    expect(biquadFilterNode.detune.maxValue).to.equal(3.4028234663852886e38);
+                    expect(() => audioBufferSourceNode.stop(-1))
+                        .to.throw(DOMException)
+                        .with.property('name', 'InvalidStateError');
                 });
-            });
-
-            describe('minValue', () => {
-                // bug #78
-
-                it('should be the smallest possible negative float value', () => {
-                    expect(biquadFilterNode.detune.minValue).to.equal(-3.4028234663852886e38);
-                });
-            });
-        });
-
-        describe('gain', () => {
-            describe('maxValue', () => {
-                // bug #79
-
-                it('should be the largest possible positive float value', () => {
-                    expect(biquadFilterNode.gain.maxValue).to.equal(3.4028234663852886e38);
-                });
-            });
-        });
-    });
-
-    describe('createConvolver()', () => {
-        let convolverNode;
-
-        beforeEach(() => {
-            convolverNode = audioContext.createConvolver();
-        });
-
-        describe('channelCount', () => {
-            // bug #166
-
-            it('should throw an error', () => {
-                expect(() => {
-                    convolverNode.channelCount = 1;
-                }).to.throw(DOMException);
-            });
-        });
-
-        describe('channelCountMode', () => {
-            // bug #167
-
-            it('should throw an error', () => {
-                expect(() => {
-                    convolverNode.channelCountMode = 'explicit';
-                }).to.throw(DOMException);
             });
         });
     });
