@@ -73,7 +73,16 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                                     args[1] = patchedEventListener;
                                 } else {
                                     args[1] = (event: Event) => {
-                                        unpatchedEventListener(new ErrorEvent(args[0], { ...event, error: new Error(/* @todo */) }));
+                                        // Bug #178: Chrome, Edge and Opera do fire an event of type error.
+                                        if (event.type === 'error') {
+                                            Object.defineProperties(event, {
+                                                type: { value: 'processorerror' }
+                                            });
+
+                                            unpatchedEventListener(event);
+                                        } else {
+                                            unpatchedEventListener(new ErrorEvent(args[0], { ...event, error: new Error(/* @todo */) }));
+                                        }
                                     };
 
                                     patchedEventListeners.set(unpatchedEventListener, args[1]);
@@ -81,7 +90,10 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             }
                         }
 
-                        return addEventListener.call(nativeAudioWorkletNode, args[0], args[1], args[2]);
+                        // Bug #178: Chrome, Edge and Opera do fire an event of type error.
+                        addEventListener.call(nativeAudioWorkletNode, 'error', args[1], args[2]);
+
+                        return addEventListener.call(nativeAudioWorkletNode, ...args);
                     };
                 })(nativeAudioWorkletNode.addEventListener);
 
@@ -96,6 +108,9 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                                 args[1] = patchedEventListener;
                             }
                         }
+
+                        // Bug #178: Chrome, Edge and Opera do fire an event of type error.
+                        removeEventListener.call(nativeAudioWorkletNode, 'error', args[1], args[2]);
 
                         return removeEventListener.call(nativeAudioWorkletNode, args[0], args[1], args[2]);
                     };

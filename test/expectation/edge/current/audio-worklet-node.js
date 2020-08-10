@@ -61,4 +61,28 @@ describe('AudioWorklet', () => {
             audioWorkletNode.port.postMessage(null);
         });
     });
+
+    describe('with a failing processor', () => {
+        beforeEach(async function () {
+            this.timeout(10000);
+
+            await audioContext.audioWorklet.addModule('base/test/fixtures/failing-processor.js');
+        });
+
+        // bug #178
+
+        it('should fire an error event', function (done) {
+            this.timeout(10000);
+
+            const audioWorkletNode = new AudioWorkletNode(audioContext, 'failing-processor');
+
+            audioWorkletNode.onprocessorerror = function (event) {
+                expect(event.type).to.equal('error');
+
+                done();
+            };
+
+            audioWorkletNode.connect(audioContext.destination);
+        });
+    });
 });
