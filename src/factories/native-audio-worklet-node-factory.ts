@@ -81,7 +81,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
 
                                             unpatchedEventListener(event);
                                         } else {
-                                            unpatchedEventListener(new ErrorEvent(args[0], { ...event, error: new Error(/* @todo */) }));
+                                            unpatchedEventListener(new ErrorEvent(args[0], { ...event }));
                                         }
                                     };
 

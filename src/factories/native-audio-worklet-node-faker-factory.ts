@@ -414,7 +414,14 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     } catch (error) {
                         isActive = false;
 
-                        nativeAudioWorkletNodeFaker.dispatchEvent(new ErrorEvent('processorerror', { error }));
+                        nativeAudioWorkletNodeFaker.dispatchEvent(
+                            new ErrorEvent('processorerror', {
+                                colno: error.colno,
+                                filename: error.filename,
+                                lineno: error.lineno,
+                                message: error.message
+                            })
+                        );
                     }
 
                     if (!isActive) {

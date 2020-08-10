@@ -588,15 +588,12 @@ describe('AudioWorkletNode', () => {
 
                         audioWorkletNode.onprocessorerror = function (event) {
                             expect(event).to.be.an.instanceOf(ErrorEvent);
+                            expect(event.colno).to.be.a('number');
                             expect(event.currentTarget).to.equal(audioWorkletNode);
-
-                            // Bug #156: Chrome & Opera do not yet fire an ErrorEvent.
-                            if (window.AudioWorkletNode === undefined) {
-                                expect(event.error).to.be.an.instanceOf(TypeError);
-                            } else {
-                                expect(event.error).to.be.an.instanceOf(Error);
-                            }
-
+                            expect(event.error).to.be.null;
+                            expect(event.filename).to.be.a('string');
+                            expect(event.lineno).to.be.a('number');
+                            expect(event.message).to.be.a('string');
                             expect(event.target).to.equal(audioWorkletNode);
                             expect(event.type).to.equal('processorerror');
 
@@ -629,8 +626,12 @@ describe('AudioWorkletNode', () => {
 
                         audioWorkletNode.onprocessorerror = function (event) {
                             expect(event).to.be.an.instanceOf(ErrorEvent);
+                            expect(event.colno).to.be.a('number');
                             expect(event.currentTarget).to.equal(audioWorkletNode);
-                            expect(event.error).to.be.an.instanceOf(Error);
+                            expect(event.error).to.be.null;
+                            expect(event.filename).to.be.a('string');
+                            expect(event.lineno).to.be.a('number');
+                            expect(event.message).to.be.a('string');
                             expect(event.target).to.equal(audioWorkletNode);
                             expect(event.type).to.equal('processorerror');
 
@@ -1115,8 +1116,12 @@ describe('AudioWorkletNode', () => {
 
                         audioWorkletNode.addEventListener('processorerror', function (event) {
                             expect(event).to.be.an.instanceOf(ErrorEvent);
+                            expect(event.colno).to.be.a('number');
                             expect(event.currentTarget).to.equal(audioWorkletNode);
-                            expect(event.error).to.be.an.instanceOf(Error);
+                            expect(event.error).to.be.null;
+                            expect(event.filename).to.be.a('string');
+                            expect(event.lineno).to.be.a('number');
+                            expect(event.message).to.be.a('string');
                             expect(event.target).to.equal(audioWorkletNode);
                             expect(event.type).to.equal('processorerror');
 

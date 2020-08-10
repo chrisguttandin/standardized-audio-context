@@ -109,7 +109,14 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
                 break;
             }
         } catch (error) {
-            proxy.dispatchEvent(new ErrorEvent('processorerror', { error }));
+            proxy.dispatchEvent(
+                new ErrorEvent('processorerror', {
+                    colno: error.colno,
+                    filename: error.filename,
+                    lineno: error.lineno,
+                    message: error.message
+                })
+            );
 
             break;
         }
