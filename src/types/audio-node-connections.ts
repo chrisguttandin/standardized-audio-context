@@ -9,7 +9,7 @@ export type TAudioNodeConnections<T extends TContext> = Readonly<{
 
     outputs: Set<TOutputConnection<T>>;
 
-    passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioNodeInputConnection<T>>>;
+    passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioNodeInputConnection>>;
 
     renderer: T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null;
 }>;

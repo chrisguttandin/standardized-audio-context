@@ -18,7 +18,6 @@ import {
 } from '../types';
 
 export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFakerFactoryFactory = (
-    auxiliaryGainNodeStore,
     connectMultipleOutputs,
     createIndexSizeError,
     createInvalidStateError,
@@ -30,6 +29,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
     createNotSupportedError,
     disconnectMultipleOutputs,
     exposeCurrentFrameAndCurrentTime,
+    getActiveAudioWorkletNodeInputs,
     monitorConnections
 ) => {
     return (nativeContext, baseLatency, processorConstructor, options) => {
@@ -386,14 +386,16 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }
 
                     try {
-                        const potentiallyEmptyInputs = inputs.map((input, index) => {
-                            const auxiliaryGainNodes = auxiliaryGainNodeStore.get(nativeAudioWorkletNodeFaker);
+                        const activeInputs = getActiveAudioWorkletNodeInputs(nativeAudioWorkletNodeFaker);
 
-                            if (auxiliaryGainNodes === undefined || auxiliaryGainNodes.get(index) === undefined) {
-                                return [];
+                        const potentiallyEmptyInputs = inputs.map((input, index) => {
+                            const activeInput = activeInputs[index];
+
+                            if (activeInput.size > 0) {
+                                return input;
                             }
 
-                            return input;
+                            return [];
                         });
 
                         const activeSourceFlag = exposeCurrentFrameAndCurrentTime(

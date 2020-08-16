@@ -1,4 +1,4 @@
-import { AudioWorkletNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../src/module';
+import { AudioWorkletNode, ConstantSourceNode, GainNode, addAudioWorkletModule as ddDWrkltMdl } from '../../src/module';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
@@ -400,18 +400,56 @@ describe('AudioWorkletGlobalScope', () => {
                                         });
                                     });
 
-                                    describe('with an input connection', () => {
+                                    describe('with an active input connection', () => {
+                                        let constantSourceNode;
+
+                                        beforeEach(() => {
+                                            constantSourceNode = new ConstantSourceNode(context);
+
+                                            constantSourceNode.connect(audioWorkletNode);
+                                        });
+
+                                        it('should call process() with the current inputs', (done) => {
+                                            constantSourceNode.start();
+
+                                            audioWorkletNode.port.onmessage = ({ data }) => {
+                                                if (context.startRendering === undefined && data.currentTime < 0.1) {
+                                                    return;
+                                                }
+
+                                                audioWorkletNode.port.onmessage = null;
+
+                                                constantSourceNode.stop();
+                                                constantSourceNode.disconnect(audioWorkletNode);
+
+                                                expect(data.inputs.length).to.equal(1);
+                                                expect(data.inputs[0].length).to.equal(1);
+                                                expect(data.inputs[0][0].length).to.equal(128);
+
+                                                done();
+                                            };
+
+                                            if (context.startRendering !== undefined) {
+                                                context.startRendering();
+                                            }
+                                        });
+                                    });
+
+                                    describe('with an inactive input connection', () => {
                                         beforeEach(() => {
                                             new GainNode(context).connect(audioWorkletNode);
                                         });
 
                                         it('should call process() with the current inputs', (done) => {
                                             audioWorkletNode.port.onmessage = ({ data }) => {
+                                                if (context.startRendering === undefined && data.currentTime < 0.1) {
+                                                    return;
+                                                }
+
                                                 audioWorkletNode.port.onmessage = null;
 
                                                 expect(data.inputs.length).to.equal(1);
-                                                expect(data.inputs[0].length).to.equal(1);
-                                                expect(data.inputs[0][0].length).to.equal(128);
+                                                expect(data.inputs[0].length).to.equal(0);
 
                                                 done();
                                             };

@@ -159,18 +159,18 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
             if (this._audioBufferSourceNodeRenderer !== null) {
                 this._audioBufferSourceNodeRenderer.start = duration === undefined ? [when, offset] : [when, offset, duration];
-            } else {
-                setInternalStateToActive(this);
-
-                const resetInternalStateToPassive = () => {
-                    this._nativeAudioBufferSourceNode.removeEventListener('ended', resetInternalStateToPassive);
-
-                    // @todo Determine a meaningful delay instead of just using one second.
-                    setTimeout(() => setInternalStateToPassive(this), 1000);
-                };
-
-                this._nativeAudioBufferSourceNode.addEventListener('ended', resetInternalStateToPassive);
             }
+
+            setInternalStateToActive(this);
+
+            const resetInternalStateToPassive = () => {
+                this._nativeAudioBufferSourceNode.removeEventListener('ended', resetInternalStateToPassive);
+
+                // @todo Determine a meaningful delay instead of just using one second.
+                setTimeout(() => setInternalStateToPassive(this), 1000);
+            };
+
+            this._nativeAudioBufferSourceNode.addEventListener('ended', resetInternalStateToPassive);
         }
 
         public stop(when = 0): void {

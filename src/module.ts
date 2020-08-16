@@ -61,6 +61,7 @@ import { createExposeCurrentFrameAndCurrentTime } from './factories/expose-curre
 import { createFetchSource } from './factories/fetch-source';
 import { createGainNodeConstructor } from './factories/gain-node-constructor';
 import { createGainNodeRendererFactory } from './factories/gain-node-renderer-factory';
+import { createGetActiveAudioWorkletNodeInputs } from './factories/get-active-audio-worklet-node-inputs';
 import { createGetAudioNodeRenderer } from './factories/get-audio-node-renderer';
 import { createGetAudioParamRenderer } from './factories/get-audio-param-renderer';
 import { createGetBackupNativeContext } from './factories/get-backup-native-context';
@@ -136,6 +137,7 @@ import { createRenderAutomation } from './factories/render-automation';
 import { createRenderInputsOfAudioNode } from './factories/render-inputs-of-audio-node';
 import { createRenderInputsOfAudioParam } from './factories/render-inputs-of-audio-param';
 import { createRenderNativeOfflineAudioContext } from './factories/render-native-offline-audio-context';
+import { createSetActiveAudioWorkletNodeInputs } from './factories/set-active-audio-worklet-node-inputs';
 import { createStartRendering } from './factories/start-rendering';
 import { createStereoPannerNodeConstructor } from './factories/stereo-panner-node-constructor';
 import { createStereoPannerNodeRendererFactory } from './factories/stereo-panner-node-renderer-factory';
@@ -225,6 +227,7 @@ import {
     IWaveShaperNode
 } from './interfaces';
 import {
+    TActiveAudioWorkletNodeInputsStore,
     TAddAudioWorkletModuleFunction,
     TAnalyserNodeConstructor,
     TAudioBufferConstructor,
@@ -233,7 +236,6 @@ import {
     TAudioContextConstructor,
     TAudioParamAudioNodeStore,
     TAudioWorkletNodeConstructor,
-    TAuxiliaryGainNodeStore,
     TBiquadFilterNodeConstructor,
     TChannelMergerNodeConstructor,
     TChannelSplitterNodeConstructor,
@@ -281,7 +283,6 @@ const createNativeAnalyserNode = createNativeAnalyserNodeFactory(cacheTestResult
 const getAudioNodeRenderer = createGetAudioNodeRenderer(getAudioNodeConnections);
 const renderInputsOfAudioNode = createRenderInputsOfAudioNode(getAudioNodeConnections, getAudioNodeRenderer, isPartOfACycle);
 const createAnalyserNodeRenderer = createAnalyserNodeRendererFactory(createNativeAnalyserNode, getNativeAudioNode, renderInputsOfAudioNode);
-const auxiliaryGainNodeStore: TAuxiliaryGainNodeStore = new WeakMap();
 const getNativeContext = createGetNativeContext(CONTEXT_STORE);
 const audioParamAudioNodeStore: TAudioParamAudioNodeStore = new WeakMap();
 const eventTargetConstructor = createEventTargetConstructor(wrapEventListener);
@@ -290,7 +291,6 @@ const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
-    auxiliaryGainNodeStore,
     cacheTestResult,
     createIncrementCycleCounterFactory(
         CYCLE_COUNTERS,
@@ -854,8 +854,9 @@ const addUnrenderedAudioWorkletNode = createAddUnrenderedAudioWorkletNode(getUnr
 const connectMultipleOutputs = createConnectMultipleOutputs(createIndexSizeError);
 const deleteUnrenderedAudioWorkletNode = createDeleteUnrenderedAudioWorkletNode(getUnrenderedAudioWorkletNodes);
 const disconnectMultipleOutputs = createDisconnectMultipleOutputs(createIndexSizeError);
+const activeAudioWorkletNodeInputsStore: TActiveAudioWorkletNodeInputsStore = new WeakMap();
+const getActiveAudioWorkletNodeInputs = createGetActiveAudioWorkletNodeInputs(activeAudioWorkletNodeInputsStore, getValueForKey);
 const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFactory(
-    auxiliaryGainNodeStore,
     connectMultipleOutputs,
     createIndexSizeError,
     createInvalidStateError,
@@ -867,6 +868,7 @@ const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFacto
     createNotSupportedError,
     disconnectMultipleOutputs,
     exposeCurrentFrameAndCurrentTime,
+    getActiveAudioWorkletNodeInputs,
     monitorConnections
 );
 const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
@@ -895,6 +897,7 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     renderInputsOfAudioNode,
     renderNativeOfflineAudioContext
 );
+const setActiveAudioWorkletNodeInputs = createSetActiveAudioWorkletNodeInputs(activeAudioWorkletNodeInputsStore);
 
 // The AudioWorkletNode constructor is only available in a SecureContext.
 const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = isSecureContext
@@ -904,9 +907,11 @@ const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = is
           createAudioParam,
           createAudioWorkletNodeRenderer,
           createNativeAudioWorkletNode,
+          getAudioNodeConnections,
           getNativeContext,
           isNativeOfflineAudioContext,
           nativeAudioWorkletNodeConstructor,
+          setActiveAudioWorkletNodeInputs,
           wrapEventListener
       )
     : undefined;

@@ -117,18 +117,18 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
             if (this._oscillatorNodeRenderer !== null) {
                 this._oscillatorNodeRenderer.start = when;
-            } else {
-                setInternalStateToActive(this);
-
-                const resetInternalStateToPassive = () => {
-                    this._nativeOscillatorNode.removeEventListener('ended', resetInternalStateToPassive);
-
-                    // @todo Determine a meaningful delay instead of just using one second.
-                    setTimeout(() => setInternalStateToPassive(this), 1000);
-                };
-
-                this._nativeOscillatorNode.addEventListener('ended', resetInternalStateToPassive);
             }
+
+            setInternalStateToActive(this);
+
+            const resetInternalStateToPassive = () => {
+                this._nativeOscillatorNode.removeEventListener('ended', resetInternalStateToPassive);
+
+                // @todo Determine a meaningful delay instead of just using one second.
+                setTimeout(() => setInternalStateToPassive(this), 1000);
+            };
+
+            this._nativeOscillatorNode.addEventListener('ended', resetInternalStateToPassive);
         }
 
         public stop(when = 0): void {

@@ -64,9 +64,11 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     createAudioParam,
     createAudioWorkletNodeRenderer,
     createNativeAudioWorkletNode,
+    getAudioNodeConnections,
     getNativeContext,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
+    setActiveAudioWorkletNodeInputs,
     wrapEventListener
 ) => {
     return class AudioWorkletNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioWorkletNode<T> {
@@ -120,6 +122,10 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             if (isOffline) {
                 addUnrenderedAudioWorkletNode(nativeContext, <IAudioWorkletNode<IMinimalOfflineAudioContext | IOfflineAudioContext>>this);
             }
+
+            const { activeInputs } = getAudioNodeConnections(this);
+
+            setActiveAudioWorkletNodeInputs(nativeAudioWorkletNode, activeInputs);
         }
 
         get onprocessorerror(): null | TErrorEventHandler<this> {
