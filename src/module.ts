@@ -152,8 +152,8 @@ import { createTestAudioNodeConnectMethodSupport } from './factories/test-audio-
 import { createTestAudioScheduledSourceNodeStartMethodNegativeParametersSupport } from './factories/test-audio-scheduled-source-node-start-method-negative-parameters-support';
 import { createTestAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport } from './factories/test-audio-scheduled-source-node-stop-method-consecutive-calls-support';
 import { createTestAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './factories/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
-
 import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/test-audio-worklet-processor-no-outputs-support';
+import { createTestAudioWorkletProcessorPostMessageSupport } from './factories/test-audio-worklet-processor-post-message-support';
 import { createTestChannelMergerNodeChannelCountSupport } from './factories/test-channel-merger-node-channel-count-support';
 import { createTestConstantSourceNodeAccurateSchedulingSupport } from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createTestConvolverNodeBufferReassignabilitySupport } from './factories/test-convolver-node-buffer-reassignability-support';
@@ -739,10 +739,12 @@ const waveShaperNodeConstructor: TWaveShaperNodeConstructor = createWaveShaperNo
 );
 const isSecureContext = createIsSecureContext(window);
 const exposeCurrentFrameAndCurrentTime = createExposeCurrentFrameAndCurrentTime(window);
+const nativeAudioWorkletNodeConstructor = createNativeAudioWorkletNodeConstructor(window);
 
 // The addAudioWorkletModule() function is only available in a SecureContext.
 export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction = isSecureContext
     ? createAddAudioWorkletModule(
+          cacheTestResult,
           createNotSupportedError,
           createEvaluateSource(window),
           exposeCurrentFrameAndCurrentTime,
@@ -751,6 +753,7 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
           getNativeContext,
           new WeakMap(),
           new WeakMap(),
+          createTestAudioWorkletProcessorPostMessageSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
           // @todo window is guaranteed to be defined because isSecureContext checks that as well.
           <NonNullable<typeof window>>window
       )
@@ -874,7 +877,6 @@ const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
     createNotSupportedError,
     monitorConnections
 );
-const nativeAudioWorkletNodeConstructor = createNativeAudioWorkletNodeConstructor(window);
 const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     connectAudioParam,
     connectMultipleOutputs,
