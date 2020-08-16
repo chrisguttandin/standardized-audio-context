@@ -28,6 +28,7 @@ export const createTestAudioWorkletProcessorNoOutputsSupport: TTestAudioWorkletP
 
         try {
             await offlineAudioContext.audioWorklet.addModule(url);
+
             const gainNode = offlineAudioContext.createGain();
             const audioWorkletNode = new nativeAudioWorkletNodeConstructor(offlineAudioContext, 'a', { numberOfOutputs: 0 });
 
