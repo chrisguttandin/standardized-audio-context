@@ -1085,6 +1085,16 @@ describe('audioContextConstructor', () => {
                     }).to.throw(TypeError);
                 });
             });
+
+            describe('with a real and an imag argument of only one value', () => {
+                // bug #181
+
+                it('should return a PeriodicWave', () => {
+                    const periodicWave = audioContext.createPeriodicWave(new Float32Array([1]), new Float32Array([1]));
+
+                    expect(periodicWave).to.be.an.instanceOf(PeriodicWave);
+                });
+            });
         });
 
         describe('createStereoPanner()', () => {

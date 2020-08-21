@@ -195,7 +195,7 @@ describe('OscillatorNode', () => {
                             });
 
                             it('should return an instance with the given periodicWave', () => {
-                                const periodicWave = new PeriodicWave(context, { imag: [1], real: [1] });
+                                const periodicWave = new PeriodicWave(context, { imag: [1, 1], real: [1, 1] });
                                 const oscillatorNode = createOscillatorNode(context, { periodicWave });
 
                                 expect(oscillatorNode.type).to.equal('custom');

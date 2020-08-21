@@ -690,7 +690,7 @@ const pannerNodeConstructor: TPannerNodeConstructor = createPannerNodeConstructo
     getNativeContext,
     isNativeOfflineAudioContext
 );
-const createNativePeriodicWave = createNativePeriodicWaveFactory(getBackupNativeContext);
+const createNativePeriodicWave = createNativePeriodicWaveFactory(createIndexSizeError, getBackupNativeContext);
 const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(
     createNativePeriodicWave,
     getNativeContext,
