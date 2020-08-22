@@ -119,21 +119,16 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 const backupNativeContext = getBackupNativeContext(nativeContext);
                 const nativeContextOrBackupNativeContext = backupNativeContext !== null ? backupNativeContext : nativeContext;
 
-                return (
-                    nativeContextOrBackupNativeContext.audioWorklet
-                        .addModule(url, options)
-                        .then(() => URL.revokeObjectURL(url))
-                        // @todo This could be written more elegantly when Promise.finally() becomes avalaible.
-                        .catch((err) => {
-                            URL.revokeObjectURL(url);
+                return nativeContextOrBackupNativeContext.audioWorklet
+                    .addModule(url, options)
+                    .catch((err) => {
+                        if (err.code === undefined || err.name === 'SyntaxError') {
+                            err.code = 12;
+                        }
 
-                            if (err.code === undefined || err.name === 'SyntaxError') {
-                                err.code = 12;
-                            }
-
-                            throw err;
-                        })
-                );
+                        throw err;
+                    })
+                    .finally(() => URL.revokeObjectURL(url));
             });
         }
 
@@ -242,9 +237,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                     rslvdRqstsFCntxt.add(moduleURL);
                 }
             })
-            .catch(() => {}) // tslint:disable-line:no-empty
-            // @todo Use finally when it becomes available in all supported browsers.
-            .then(() => {
+            .finally(() => {
                 const ngngRqstsFCntxt = ongoingRequests.get(context);
 
                 if (ngngRqstsFCntxt !== undefined) {

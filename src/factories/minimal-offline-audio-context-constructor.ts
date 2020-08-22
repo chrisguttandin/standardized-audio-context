@@ -82,30 +82,14 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
 
             this._state = 'running';
 
-            return (
-                startRendering(this.destination, this._nativeOfflineAudioContext)
-                    .then((audioBuffer) => {
-                        this._state = null;
+            return startRendering(this.destination, this._nativeOfflineAudioContext).finally(() => {
+                this._state = null;
 
-                        /*
-                         * Bug #50: Deleting the AudioGraph is currently not possible anymore.
-                         * deleteAudioGraph(this, this._nativeOfflineAudioContext);
-                         */
-
-                        return <IAudioBuffer>audioBuffer;
-                    })
-                    // @todo This could be written more elegantly when Promise.finally() becomes avalaible.
-                    .catch((err) => {
-                        this._state = null;
-
-                        /*
-                         * Bug #50: Deleting the AudioGraph is currently not possible anymore.
-                         * deleteAudioGraph(this, this._nativeOfflineAudioContext);
-                         */
-
-                        throw err;
-                    })
-            );
+                /*
+                 * Bug #50: Deleting the AudioGraph is currently not possible anymore.
+                 * deleteAudioGraph(this, this._nativeOfflineAudioContext);
+                 */
+            });
         }
 
         private _waitForThePromiseToSettle(event: Event): void {
