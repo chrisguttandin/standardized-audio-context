@@ -84,29 +84,6 @@ describe('offlineAudioContextConstructor', () => {
                 }
             });
         });
-
-        describe('start()', () => {
-            // bug #92
-
-            it('should not respect a specified duration', () => {
-                const audioBuffer = offlineAudioContext.createBuffer(1, 4, 88200);
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1]), 0);
-
-                audioBufferSourceNode.buffer = audioBuffer;
-                audioBufferSourceNode.start(0, 0, 2 / offlineAudioContext.sampleRate);
-                audioBufferSourceNode.connect(offlineAudioContext.destination);
-
-                return offlineAudioContext.startRendering().then((buffer) => {
-                    const channelData = new Float32Array(4);
-
-                    buffer.copyFromChannel(channelData, 0);
-
-                    expect(Array.from(channelData)).to.deep.equal([1, 1, 0, 0]);
-                });
-            });
-        });
     });
 
     describe('createScriptProcessor()', () => {

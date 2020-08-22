@@ -144,7 +144,6 @@ import { createStereoPannerNodeRendererFactory } from './factories/stereo-panner
 import { createTestAudioBufferConstructorSupport } from './factories/test-audio-buffer-constructor-support';
 import { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './factories/test-audio-buffer-copy-channel-methods-subarray-support';
 import { createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport } from './factories/test-audio-buffer-source-node-start-method-consecutive-calls-support';
-import { createTestAudioBufferSourceNodeStartMethodDurationParameterSupport } from './factories/test-audio-buffer-source-node-start-method-duration-parameter-support';
 import { createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport } from './factories/test-audio-buffer-source-node-start-method-offset-clamping-support';
 import { createTestAudioBufferSourceNodeStopMethodNullifiedBufferSupport } from './factories/test-audio-buffer-source-node-stop-method-nullified-buffer-support';
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method-support';
@@ -375,7 +374,6 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
     cacheTestResult,
     createNativeAudioNode,
     createTestAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(createNativeAudioNode),
-    createTestAudioBufferSourceNodeStartMethodDurationParameterSupport(nativeOfflineAudioContextConstructor),
     createTestAudioBufferSourceNodeStartMethodOffsetClampingSupport(createNativeAudioNode),
     createTestAudioBufferSourceNodeStopMethodNullifiedBufferSupport(createNativeAudioNode),
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,

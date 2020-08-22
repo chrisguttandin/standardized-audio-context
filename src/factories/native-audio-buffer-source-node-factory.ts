@@ -2,7 +2,6 @@ import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-a
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { wrapAudioBufferSourceNodeStartMethodConsecutiveCalls } from '../helpers/wrap-audio-buffer-source-node-start-method-consecutive-calls';
-import { wrapAudioBufferSourceNodeStartMethodDurationParameter } from '../helpers/wrap-audio-buffer-source-node-start-method-duration-parameter';
 import { wrapAudioScheduledSourceNodeStartMethodNegativeParameters } from '../helpers/wrap-audio-scheduled-source-node-start-method-negative-parameters';
 import { wrapAudioScheduledSourceNodeStopMethodNegativeParameters } from '../helpers/wrap-audio-scheduled-source-node-stop-method-negative-parameters';
 import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
@@ -12,7 +11,6 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
     cacheTestResult,
     createNativeAudioNode,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
-    testAudioBufferSourceNodeStartMethodDurationParameterSupport,
     testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
     testAudioBufferSourceNodeStopMethodNullifiedBufferSupport,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
@@ -45,16 +43,6 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
             )
         ) {
             wrapAudioBufferSourceNodeStartMethodConsecutiveCalls(nativeAudioBufferSourceNode);
-        }
-
-        // Bug #92: Chrome & Edge do not respect the duration parameter yet.
-        if (
-            !cacheTestResult(
-                testAudioBufferSourceNodeStartMethodDurationParameterSupport,
-                testAudioBufferSourceNodeStartMethodDurationParameterSupport
-            )
-        ) {
-            wrapAudioBufferSourceNodeStartMethodDurationParameter(nativeAudioBufferSourceNode, nativeContext);
         }
 
         // Bug #154 & #155: Safari does not handle offsets which are equal to or greater than the duration of the buffer.

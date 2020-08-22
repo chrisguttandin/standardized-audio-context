@@ -12,7 +12,6 @@ export type TNativeAudioBufferSourceNodeFactoryFactory = (
     cacheTestResult: TCacheTestResultFunction,
     createNativeAudioNode: TNativeAudioNodeFactory,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport: (nativeContext: TNativeContext) => boolean,
-    testAudioBufferSourceNodeStartMethodDurationParameterSupport: () => Promise<boolean>,
     testAudioBufferSourceNodeStartMethodOffsetClampingSupport: (nativeContext: TNativeContext) => boolean,
     testAudioBufferSourceNodeStopMethodNullifiedBufferSupport: (nativeContext: TNativeContext) => boolean,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean,

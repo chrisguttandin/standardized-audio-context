@@ -345,7 +345,6 @@ export * from './stereo-panner-node-renderer-factory';
 export * from './test-audio-buffer-copy-channel-methods-subarray-support-factory';
 export * from './test-audio-buffer-constructor-support-factory';
 export * from './test-audio-buffer-source-node-start-method-consecutive-calls-support-factory';
-export * from './test-audio-buffer-source-node-start-method-duration-parameter-support-factory';
 export * from './test-audio-buffer-source-node-start-method-offset-clamping-support-factory';
 export * from './test-audio-buffer-source-node-stop-method-nullified-buffer-support-factory';
 export * from './test-audio-context-close-method-support-factory';
