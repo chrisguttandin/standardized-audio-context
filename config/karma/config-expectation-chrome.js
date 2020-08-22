@@ -30,6 +30,10 @@ module.exports = (config) => {
 
         frameworks: ['mocha', 'sinon-chai'],
 
+        mime: {
+            'application/javascript': ['xs']
+        },
+
         preprocessors: {
             'test/expectation/chrome/any/**/*.js': 'webpack',
             'test/expectation/chrome/current/**/*.js': 'webpack'

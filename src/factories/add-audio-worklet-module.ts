@@ -119,16 +119,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 const backupNativeContext = getBackupNativeContext(nativeContext);
                 const nativeContextOrBackupNativeContext = backupNativeContext !== null ? backupNativeContext : nativeContext;
 
-                return nativeContextOrBackupNativeContext.audioWorklet
-                    .addModule(url, options)
-                    .catch((err) => {
-                        if (err.code === undefined || err.name === 'SyntaxError') {
-                            err.code = 12;
-                        }
-
-                        throw err;
-                    })
-                    .finally(() => URL.revokeObjectURL(url));
+                return nativeContextOrBackupNativeContext.audioWorklet.addModule(url, options).finally(() => URL.revokeObjectURL(url));
             });
         }
 
@@ -177,6 +168,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]>(<any>window)._AWGS).pop();
 
                 if (evaluateAudioWorkletGlobalScope === undefined) {
+                    // Bug #182 Chrome, Edge and Opera do throw an instance of a SyntaxError instead of a DOMException.
                     throw new SyntaxError();
                 }
 
@@ -212,13 +204,6 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                         undefined
                     )
                 );
-            })
-            .catch((err) => {
-                if (err.code === undefined || err.name === 'SyntaxError') {
-                    err.code = 12;
-                }
-
-                throw err;
             });
 
         if (ongoingRequestsOfContext === undefined) {
