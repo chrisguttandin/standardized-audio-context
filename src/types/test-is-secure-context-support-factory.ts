@@ -1,1 +1,3 @@
-export type TTestIsSecureContextSupportFactory = (window: null | Window) => () => boolean;
+import { TWindow } from './window';
+
+export type TTestIsSecureContextSupportFactory = (window: null | TWindow) => () => boolean;

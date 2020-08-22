@@ -1,3 +1,4 @@
 import { TIsNativeAudioNodeFunction } from './is-native-audio-node-function';
+import { TWindow } from './window';
 
-export type TIsNativeAudioNodeFactory = (window: null | Window) => TIsNativeAudioNodeFunction;
+export type TIsNativeAudioNodeFactory = (window: null | TWindow) => TIsNativeAudioNodeFunction;

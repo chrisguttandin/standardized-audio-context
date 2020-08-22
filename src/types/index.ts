@@ -373,6 +373,7 @@ export * from './wave-shaper-node-constructor';
 export * from './wave-shaper-node-constructor-factory';
 export * from './wave-shaper-node-renderer-factory-factory';
 export * from './wave-shaper-node-renderer-factory';
+export * from './window';
 export * from './window-factory';
 export * from './wrap-audio-buffer-copy-channel-methods-factory';
 export * from './wrap-audio-buffer-copy-channel-methods-function';
