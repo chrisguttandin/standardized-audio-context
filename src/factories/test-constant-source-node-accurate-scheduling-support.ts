@@ -11,7 +11,7 @@ export const createTestConstantSourceNodeAccurateSchedulingSupport: TTestConstan
 
         const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
 
-        // Bug #62: Edge & Safari do not support ConstantSourceNodes.
+        // Bug #62: Safari does not support ConstantSourceNodes.
         if (nativeOfflineAudioContext.createConstantSource === undefined) {
             return true;
         }

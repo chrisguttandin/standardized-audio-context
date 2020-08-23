@@ -19,7 +19,7 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
 
         assignNativeAudioNodeOption(nativeConvolverNode, options, 'buffer');
 
-        // Bug #113: Edge & Safari allow to set the channelCount to a value larger than 2.
+        // Bug #113: Safari does allow to set the channelCount to a value larger than 2.
         if (options.channelCount > 2) {
             throw createNotSupportedError();
         }
@@ -37,7 +37,7 @@ export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactor
             }
         );
 
-        // Bug #114: Edge & Safari allow to set the channelCountMode to 'max'.
+        // Bug #114: Safari allows to set the channelCountMode to 'max'.
         if (options.channelCountMode === 'max') {
             throw createNotSupportedError();
         }

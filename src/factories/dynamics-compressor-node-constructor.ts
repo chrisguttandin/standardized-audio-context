@@ -63,10 +63,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
             return this._attack;
         }
 
-        /*
-         * Bug #108: Only Chrome, Firefox and Opera disallow a channelCount of three and above yet which is why the getter and setter needs
-         * to be overwritten here.
-         */
+        // Bug #108: Safari allows a channelCount of three and above which is why the getter and setter needs to be overwritten here.
         get channelCount(): number {
             return this._nativeDynamicsCompressorNode.channelCount;
         }

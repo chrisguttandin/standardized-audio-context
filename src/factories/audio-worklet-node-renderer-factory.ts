@@ -162,7 +162,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 
             const nativeAudioWorkletNodeIsOwnedByContext = isOwnedByContext(nativeAudioWorkletNode, nativeOfflineAudioContext);
 
-            // Bug #61: Only Chrome & Opera have an implementation of the AudioWorkletNode yet.
+            // Bug #61: Only Chrome, Edge, Firefox & Opera have an implementation of the AudioWorkletNode yet.
             if (nativeAudioWorkletNodeConstructor === null) {
                 const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
                 const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeOfflineAudioContext, {
@@ -214,7 +214,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         throw new Error('Missing the native OfflineAudioContext constructor.');
                     }
 
-                    // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
+                    // Bug #47: The AudioDestinationNode in Safari gets not initialized correctly.
                     const numberOfInputChannels = proxy.channelCount * proxy.numberOfInputs;
                     const numberOfParameters =
                         processorConstructor.parameterDescriptors === undefined ? 0 : processorConstructor.parameterDescriptors.length;

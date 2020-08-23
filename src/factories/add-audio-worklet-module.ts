@@ -37,7 +37,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
         const nativeContext = getNativeContext(context);
         const absoluteUrl = new URL(moduleURL, window.location.href).toString();
 
-        // Bug #59: Only Chrome & Opera do implement the audioWorklet property.
+        // Bug #59: Safari does not implement the audioWorklet property.
         if (nativeContext.audioWorklet !== undefined) {
             return Promise.all([
                 fetchSource(moduleURL),
@@ -77,7 +77,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                           ` extends (class extends AudioWorkletProcessor {__b=new WeakSet();constructor(){super();(p=>p.postMessage=(q=>(m,t)=>q.call(p,m,t?t.filter(u=>!this.__b.has(u)):t))(p.postMessage))(this.port)}}) `
                       );
                 /*
-                 * Bug #170: Chrome does call process() with an array with empty channelData for each input if no input is connected.
+                 * Bug #170: Chrome and Edge do call process() with an array with empty channelData for each input if no input is connected.
                  *
                  * Bug #179: Firefox does not allow to transfer any buffer which has been passed to the process() method as an argument.
                  *

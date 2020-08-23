@@ -28,7 +28,7 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
 
         const curve = options.curve;
 
-        // Bug #104: Chrome will throw an InvalidAccessError when the curve has less than two samples.
+        // Bug #104: Chrome, Edge and Opera will throw an InvalidAccessError when the curve has less than two samples.
         if (curve !== null && curve.length < 2) {
             throw createInvalidStateError();
         }

@@ -63,7 +63,7 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
             wrapAudioBufferSourceNodeStopMethodNullifiedBuffer(nativeAudioBufferSourceNode, nativeContext);
         }
 
-        // Bug #44: Only Chrome, Firefox & Opera throw a RangeError yet.
+        // Bug #44: Safari does not throw a RangeError yet.
         if (
             !cacheTestResult(testAudioScheduledSourceNodeStartMethodNegativeParametersSupport, () =>
                 testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)

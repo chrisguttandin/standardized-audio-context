@@ -47,7 +47,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
                 throw createInvalidStateError();
             }
 
-            // Bug #47: The AudioDestinationNode in Edge and Safari do not initialize the maxChannelCount property correctly.
+            // Bug #47: The AudioDestinationNode in Safari does not initialize the maxChannelCount property correctly.
             if (value > this._nativeAudioDestinationNode.maxChannelCount) {
                 throw createIndexSizeError();
             }

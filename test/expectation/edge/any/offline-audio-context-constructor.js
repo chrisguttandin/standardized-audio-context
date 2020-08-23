@@ -53,26 +53,33 @@ describe('offlineAudioContextConstructor', () => {
             });
         });
 
+        describe('stop()', () => {
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+
+                expect(() => audioBufferSourceNode.stop(-1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
+            });
+        });
+    });
+
+    describe('createConstantSourceNode()', () => {
         // bug #164
 
         it('should not mute cycles', function () {
             this.timeout(20000);
 
-            const audioBuffer = offlineAudioContext.createBuffer(1, offlineAudioContext.length, offlineAudioContext.sampleRate);
-            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
+            const constantSourceNode = offlineAudioContext.createConstantSource();
             const gainNode = offlineAudioContext.createGain();
 
-            for (let i = 0; i < offlineAudioContext.length; i += 1) {
-                audioBuffer.getChannelData(0)[i] = 1;
-            }
-
-            audioBufferSourceNode.buffer = audioBuffer;
-
-            audioBufferSourceNode.connect(gainNode).connect(offlineAudioContext.destination);
+            constantSourceNode.connect(gainNode).connect(offlineAudioContext.destination);
 
             gainNode.connect(gainNode);
 
-            audioBufferSourceNode.start(0);
+            constantSourceNode.start(0);
 
             return offlineAudioContext.startRendering().then((renderedBuffer) => {
                 const channelData = new Float32Array(renderedBuffer.length);
@@ -82,6 +89,55 @@ describe('offlineAudioContextConstructor', () => {
                 for (const sample of channelData) {
                     expect(sample).to.not.equal(0);
                 }
+            });
+        });
+    });
+
+    describe('createDelay()', () => {
+        describe('with a delayTime of 128 samples', () => {
+            let audioBufferSourceNode;
+            let delayNode;
+            let gainNode;
+
+            afterEach(() => {
+                audioBufferSourceNode.disconnect(gainNode);
+                delayNode.disconnect(gainNode);
+                gainNode.disconnect(delayNode);
+                gainNode.disconnect(offlineAudioContext.destination);
+            });
+
+            beforeEach(() => {
+                audioBufferSourceNode = offlineAudioContext.createBufferSource();
+                delayNode = offlineAudioContext.createDelay();
+                gainNode = offlineAudioContext.createGain();
+
+                const audioBuffer = offlineAudioContext.createBuffer(1, 1, offlineAudioContext.sampleRate);
+
+                audioBuffer.getChannelData(0)[0] = 2;
+
+                audioBufferSourceNode.buffer = audioBuffer;
+
+                delayNode.delayTime.value = 128 / offlineAudioContext.sampleRate;
+
+                gainNode.gain.value = 0.5;
+
+                audioBufferSourceNode.connect(gainNode).connect(delayNode).connect(gainNode).connect(offlineAudioContext.destination);
+            });
+
+            // bug #163
+
+            it('should have a minimum delayTime of 256 samples', () => {
+                audioBufferSourceNode.start(0);
+
+                return offlineAudioContext.startRendering().then((renderedBuffer) => {
+                    const channelData = new Float32Array(512);
+
+                    renderedBuffer.copyFromChannel(channelData, 0);
+
+                    expect(channelData[0]).to.equal(1);
+                    expect(channelData[256]).to.be.above(0.49);
+                    expect(channelData[256]).to.be.below(0.51);
+                });
             });
         });
     });
@@ -104,6 +160,22 @@ describe('offlineAudioContextConstructor', () => {
                     expect(listener).to.have.not.been.called;
                 });
             });
+        });
+    });
+
+    describe('decodeAudioData()', () => {
+        // bug #6
+
+        it('should not call the errorCallback at all', (done) => {
+            const errorCallback = spy();
+
+            offlineAudioContext.decodeAudioData(null, () => {}, errorCallback);
+
+            setTimeout(() => {
+                expect(errorCallback).to.have.not.been.called;
+
+                done();
+            }, 1000);
         });
     });
 

@@ -12,7 +12,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
     return (context, nativeContext) => {
         const nativeListener = nativeContext.listener;
 
-        // Bug #117: Only Chrome & Opera support the new interface already.
+        // Bug #117: Only Chrome, Edge & Opera support the new interface already.
         const createFakeAudioParams = () => {
             const channelMergerNode = createNativeChannelMergerNode(nativeContext, {
                 channelCount: 1,
@@ -43,7 +43,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                 });
 
                 /*
-                 * Bug #62 & #74: Edge & Safari do not support ConstantSourceNodes and do not export the correct values for maxValue and
+                 * Bug #62 & #74: Safari does not support ConstantSourceNodes and does not export the correct values for maxValue and
                  * minValue for GainNodes.
                  */
                 return createAudioParam(

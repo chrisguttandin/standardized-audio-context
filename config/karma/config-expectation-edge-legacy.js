@@ -14,7 +14,7 @@ module.exports = (config) => {
             EdgeBrowserStack: {
                 base: 'BrowserStack',
                 browser: 'edge',
-                browser_version: '18.0', // eslint-disable-line camelcase
+                browser_version: '81', // eslint-disable-line camelcase
                 os: 'Windows',
                 os_version: '10' // eslint-disable-line camelcase
             }
@@ -31,6 +31,10 @@ module.exports = (config) => {
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
+
+        mime: {
+            'application/javascript': ['xs']
+        },
 
         preprocessors: {
             'test/expectation/edge/any/**/*.js': 'webpack',

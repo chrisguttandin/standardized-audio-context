@@ -11,7 +11,7 @@ export const createNativeDynamicsCompressorNodeFactory: TNativeDynamicsCompresso
 
         assignNativeAudioNodeOptions(nativeDynamicsCompressorNode, options);
 
-        // Bug #108: Only Chrome, Firefox and Opera disallow a channelCount of three and above yet.
+        // Bug #108: Safari allows a channelCount of three and above.
         if (options.channelCount > 2) {
             throw createNotSupportedError();
         }

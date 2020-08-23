@@ -20,7 +20,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     return (anyContext, audioData) => {
         const nativeContext = isNativeContext(anyContext) ? anyContext : getNativeContext(anyContext);
 
-        // Bug #43: Only Chrome and Opera do throw a DataCloneError.
+        // Bug #43: Only Chrome, Edge and Opera do throw a DataCloneError.
         if (detachedArrayBuffers.has(audioData)) {
             const err = createDataCloneError();
 
@@ -54,7 +54,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             });
 
             return promise.then((audioBuffer) => {
-                // Bug #157: Only Chrome & Opera do allow the bufferOffset to be out-of-bounds.
+                // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
                 if (
                     !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
                         testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)

@@ -65,7 +65,7 @@ oscillatorNode.start();
 
 This is an almost complete implementation of the [`AudioContext`](https://webaudio.github.io/web-audio-api/#audiocontext) interface. It only misses the `createScriptProcessor()` method which is deprecated anyway.
 
-⚠️ <!-- Bug #150 --> Setting the sampleRate is only supported on Chrome, Firefox and Opera at the moment.
+⚠️ <!-- Bug #150 --> Setting the sampleRate is not supported in Safari so far.
 
 ⚠️ <!-- Bug #131 --> Safari allows only 4 running AudioContexts at the same time. Creating the fifth AudioContext will throw an [`UnknownError`](https://heycam.github.io/webidl/#unknownerror).
 
@@ -164,7 +164,7 @@ The properties and methods are described in greater detail below.
 
 #### audioWorklet
 
-⚠️ <!-- Bug #59 --> The [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet) is accessible as a property of an AudioContext or OfflineAudioContext. It uses the ScriptProcessorNode internally to create an [`AudioWorkletProcessor`](https://webaudio.github.io/web-audio-api/#audioworkletprocessor) in any browser but Chrome and Opera. For now, this means it will only provide the performance improvements that you would normally expect from using an [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworkletnode) in Chrome and Opera.
+⚠️ <!-- Bug #59 --> The [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet) is accessible as a property of an AudioContext or OfflineAudioContext. It uses the ScriptProcessorNode internally to create an [`AudioWorkletProcessor`](https://webaudio.github.io/web-audio-api/#audioworkletprocessor) in Safari. This means it will only provide the performance improvements that you would normally expect from using an [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworkletnode) in Chrome, Edge, Firefox and Opera.
 
 ⚠️ <!-- Bug #59 --> The fact that the internal implementation relies on a ScriptProcessorNode also implies that the [`channelCountMode`](https://webaudio.github.io/web-audio-api/#dom-audionode-channelcountmode) can only be `'explicit'` for now. It also means that the total number of channels of all inputs plus the number of all parameters can't be larger than six.
 

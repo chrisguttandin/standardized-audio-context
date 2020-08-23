@@ -62,7 +62,7 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
             super(context, false, nativePannerNode, pannerNodeRenderer);
 
             this._nativePannerNode = nativePannerNode;
-            // Bug #74: Edge & Safari do not export the correct values for maxValue and minValue for GainNodes.
+            // Bug #74: Safari does not export the correct values for maxValue and minValue.
             this._orientationX = createAudioParam(
                 this,
                 isOffline,

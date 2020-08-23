@@ -7,7 +7,7 @@ export const createNativePannerNodeFactory: TNativePannerNodeFactoryFactory = (c
     return (nativeContext, options) => {
         const nativePannerNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createPanner());
 
-        // Bug #124: Edge & Safari do not support modifying the orientation and the position with AudioParams.
+        // Bug #124: Safari does not support modifying the orientation and the position with AudioParams.
         if (nativePannerNode.orientationX === undefined) {
             return createNativePannerNodeFaker(nativeContext, options);
         }

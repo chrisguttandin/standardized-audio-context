@@ -9,11 +9,11 @@ export const createNativeChannelSplitterNodeFactory: TNativeChannelSplitterNodeF
         });
 
         // Bug #96: Safari does not have the correct channelCount.
-        // Bug #29: Edge & Safari do not have the correct channelCountMode.
-        // Bug #31: Edge & Safari do not have the correct channelInterpretation.
+        // Bug #29: Safari does not have the correct channelCountMode.
+        // Bug #31: Safari does not have the correct channelInterpretation.
         assignNativeAudioNodeOptions(nativeChannelSplitterNode, options);
 
-        // Bug #29, #30, #31, #32, #96 & #97: Only Chrome, Firefox & Opera partially support the spec yet.
+        // Bug #29, #30, #31, #32, #96 & #97: Only Chrome, Edge, Firefox & Opera partially support the spec yet.
         wrapChannelSplitterNode(nativeChannelSplitterNode);
 
         return nativeChannelSplitterNode;

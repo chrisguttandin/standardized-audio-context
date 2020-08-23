@@ -35,24 +35,8 @@ describe('MinimalAudioContext', () => {
             minimalAudioContext = new MinimalAudioContext();
         });
 
-        // Bug #150 Only Chrome, Firefox and Opera support setting the sampleRate.
-        if ((/Chrome/.test(navigator.userAgent) && !/Edge\//.test(navigator.userAgent)) || /Firefox/.test(navigator.userAgent)) {
-            it('should allow to set the sampleRate to 8 kHz', () => {
-                const sampleRate = 8000;
-
-                minimalAudioContext = new MinimalAudioContext({ sampleRate });
-
-                expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
-            });
-
-            it('should allow to set the sampleRate to 96 kHz', () => {
-                const sampleRate = 96000;
-
-                minimalAudioContext = new MinimalAudioContext({ sampleRate });
-
-                expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
-            });
-        } else {
+        // Bug #150 Safari does not support setting the sampleRate.
+        if (isSafari(navigator)) {
             it('should not allow to set the sampleRate to 8 kHz', (done) => {
                 try {
                     minimalAudioContext = new MinimalAudioContext({ sampleRate: 8000 });
@@ -79,6 +63,22 @@ describe('MinimalAudioContext', () => {
 
                     done();
                 }
+            });
+        } else {
+            it('should allow to set the sampleRate to 8 kHz', () => {
+                const sampleRate = 8000;
+
+                minimalAudioContext = new MinimalAudioContext({ sampleRate });
+
+                expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
+            });
+
+            it('should allow to set the sampleRate to 96 kHz', () => {
+                const sampleRate = 96000;
+
+                minimalAudioContext = new MinimalAudioContext({ sampleRate });
+
+                expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
             });
         }
 

@@ -39,14 +39,14 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 throw createUnknownError();
             }
 
-            // Bug #51 Only Chrome and Opera throw an error if the given latencyHint is invalid.
+            // Bug #51 Only Chrome, Edge and Opera throw an error if the given latencyHint is invalid.
             if (!isValidLatencyHint(options.latencyHint)) {
                 throw new TypeError(
                     `The provided value '${options.latencyHint}' is not a valid enum value of type AudioContextLatencyCategory.`
                 );
             }
 
-            // Bug #150 Only Chrome, Firefox and Opera support setting the sampleRate.
+            // Bug #150 Safari does not support setting the sampleRate.
             if (options.sampleRate !== undefined && nativeAudioContext.sampleRate !== options.sampleRate) {
                 throw createNotSupportedError();
             }
@@ -75,8 +75,8 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             this._state = null;
 
             /*
-             * Bug #34: Chrome and Opera pretend to be running right away, but fire an onstatechange event when the state actually changes
-             * to 'running'.
+             * Bug #34: Chrome, Edge and Opera pretend to be running right away, but fire an onstatechange event when the state actually
+             * changes to 'running'.
              */
             if (nativeAudioContext.state === 'running') {
                 this._state = 'suspended';

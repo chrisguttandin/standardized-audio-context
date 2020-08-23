@@ -54,7 +54,7 @@ export const createPannerNodeRendererFactory: TPannerNodeRendererFactoryFactory 
             // If the initially used nativePannerNode was not constructed on the same OfflineAudioContext it needs to be created again.
             const nativePannerNodeIsOwnedByContext = isOwnedByContext(nativePannerNode, nativeOfflineAudioContext);
 
-            // Bug #124: Edge & Safari do not support modifying the orientation and the position with AudioParams.
+            // Bug #124: Safari does not support modifying the orientation and the position with AudioParams.
             if ('bufferSize' in nativePannerNode) {
                 nativeGainNode = createNativeGainNode(nativeOfflineAudioContext, { ...commonAudioNodeOptions, gain: 1 });
             } else if (!nativePannerNodeIsOwnedByContext) {

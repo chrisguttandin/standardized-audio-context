@@ -49,8 +49,8 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             this._constantSourceNodeRenderer = constantSourceNodeRenderer;
             this._nativeConstantSourceNode = nativeConstantSourceNode;
             /*
-             * Bug #62 & #74: Edge & Safari do not support ConstantSourceNodes and do not export the correct values for maxValue and
-             * minValue for GainNodes.
+             * Bug #62 & #74: Safari does not support ConstantSourceNodes and does not export the correct values for maxValue and minValue
+             * for GainNodes.
              */
             this._offset = createAudioParam(
                 this,

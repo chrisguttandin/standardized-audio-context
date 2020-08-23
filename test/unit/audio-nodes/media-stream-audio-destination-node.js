@@ -60,7 +60,7 @@ describe('MediaStreamAudioDestinationNode', () => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                // Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
                                 if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
                                     context = backupNativeContext;
                                 } else {
@@ -317,8 +317,8 @@ describe('MediaStreamAudioDestinationNode', () => {
 
                         afterEach(() => {
                             /*
-                             * Bug #94: Edge & Safari also expose a close() method on an OfflineAudioContext which is why the extra check
-                             * for the startRendering() method is necessary.
+                             * Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why the extra check for the
+                             * startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
                             if (

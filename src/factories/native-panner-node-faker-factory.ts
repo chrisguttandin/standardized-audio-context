@@ -160,7 +160,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.coneOuterGain;
             },
             set coneOuterGain(value) {
-                // Bug #127: Edge & Safari do not throw an InvalidStateError yet.
+                // Bug #127: Safari does not throw an InvalidStateError yet.
                 if (value < 0 || value > 1) {
                     throw createInvalidStateError();
                 }
@@ -183,7 +183,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.maxDistance;
             },
             set maxDistance(value) {
-                // Bug #128: Edge & Safari do not throw an error yet.
+                // Bug #128: Safari does not throw an error yet.
                 if (value < 0) {
                     throw new RangeError();
                 }
@@ -229,7 +229,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.refDistance;
             },
             set refDistance(value) {
-                // Bug #129: Edge & Safari do not throw an error yet.
+                // Bug #129: Safari does not throw an error yet.
                 if (value < 0) {
                     throw new RangeError();
                 }
@@ -240,7 +240,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.rolloffFactor;
             },
             set rolloffFactor(value) {
-                // Bug #130: Edge & Safari do not throw an error yet.
+                // Bug #130: Safari does not throw an error yet.
                 if (value < 0) {
                     throw new RangeError();
                 }

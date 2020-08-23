@@ -112,7 +112,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                     }
 
                     const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
-                        // Bug #47: The AudioDestinationNode in Edge and Safari gets not initialized correctly.
+                        // Bug #47: The AudioDestinationNode in Safari gets not initialized correctly.
                         proxy.context.destination.channelCount,
                         // Bug #17: Safari does not yet expose the length.
                         proxy.context.length,

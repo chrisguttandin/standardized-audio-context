@@ -72,7 +72,7 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
             if (typeof audioBuffer.copyFromChannel !== 'function') {
                 wrapAudioBufferCopyChannelMethods(audioBuffer);
                 wrapAudioBufferGetChannelDataMethod(audioBuffer);
-                // Bug #157: Only Chrome & Opera do allow the bufferOffset to be out-of-bounds.
+                // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
             } else if (
                 !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
                     testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)

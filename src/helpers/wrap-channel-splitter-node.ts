@@ -14,10 +14,7 @@ export const wrapChannelSplitterNode = (channelSplitterNode: TNativeChannelSplit
         }
     });
 
-    /*
-     * Bug #30: Only Chrome, Firefox & Opera throw an error when attempting to change the channelCountMode to something other than
-     * explicit.
-     */
+    // Bug #30: Safari does not throw an error when attempting to change the channelCountMode to something other than explicit.
     Object.defineProperty(channelSplitterNode, 'channelCountMode', {
         get: () => 'explicit',
         set: (value) => {
@@ -27,10 +24,7 @@ export const wrapChannelSplitterNode = (channelSplitterNode: TNativeChannelSplit
         }
     });
 
-    /*
-     * Bug #32: Only Chrome, Firefox & Opera throws an error when attempting to change the channelInterpretation to something other than
-     * discrete.
-     */
+    // Bug #32: Safari does not throw an error when attempting to change the channelInterpretation to something other than discrete.
     Object.defineProperty(channelSplitterNode, 'channelInterpretation', {
         get: () => 'discrete',
         set: (value) => {

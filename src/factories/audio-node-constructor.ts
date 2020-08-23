@@ -581,7 +581,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                         setInternalStateToActive(destination);
                     }
                 } catch (err) {
-                    // Bug #41: Only Chrome, Firefox and Opera throw the correct exception by now.
+                    // Bug #41: Safari does not throw the correct exception so far.
                     if (err.code === 12) {
                         throw createInvalidAccessError();
                     }

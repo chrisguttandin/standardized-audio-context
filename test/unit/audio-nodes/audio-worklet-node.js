@@ -74,7 +74,7 @@ describe('AudioWorkletNode', () => {
                             if (audioContextState === 'closed') {
                                 const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
 
-                                // Bug #94: Edge also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
+                                // Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
                                 if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
                                     context = backupNativeContext;
                                 } else {
@@ -756,7 +756,7 @@ describe('AudioWorkletNode', () => {
                             expect(gain.defaultValue).to.equal(1);
                             expect(gain.exponentialRampToValueAtTime).to.be.a('function');
                             expect(gain.linearRampToValueAtTime).to.be.a('function');
-                            // Bug #82: Chrome & Opera's native implementation is a little different from other AudioParams.
+                            // Bug #82: Chrome, Edge & Opera's native implementation is a little different from other AudioParams.
                             expect(gain.maxValue).to.be.at.most(3.4028234663852886e38);
                             expect(gain.maxValue).to.be.at.least(3.402820018375656e38);
                             expect(gain.minValue).to.be.at.most(-3.402820018375656e38);
@@ -1245,8 +1245,8 @@ describe('AudioWorkletNode', () => {
 
                         afterEach(() => {
                             /*
-                             * Bug #94: Edge & Safari also expose a close() method on an OfflineAudioContext which is why the extra check
-                             * for the startRendering() method is necessary.
+                             * Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why the extra check for the
+                             * startRendering() method is necessary.
                              * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
                              */
                             if (

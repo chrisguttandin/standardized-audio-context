@@ -39,7 +39,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             throw createInvalidStateError();
                         }
                     },
-                    // Bug #156: Chrome does not yet fire an ErrorEvent.
+                    // Bug #156: Chrome and Edge do not yet fire an ErrorEvent.
                     onprocessorerror: {
                         get: () => onprocessorerror,
                         set: (value) => {
@@ -117,8 +117,8 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                 })(nativeAudioWorkletNode.removeEventListener);
 
                 /*
-                 * Bug #86: Chrome does not invoke the process() function if the corresponding AudioWorkletNode is unconnected but has an
-                 * output.
+                 * Bug #86: Chrome and Edge do not invoke the process() function if the corresponding AudioWorkletNode is unconnected but
+                 * has an output.
                  */
                 if (options.numberOfOutputs !== 0) {
                     const nativeGainNode = createNativeGainNode(nativeContext, {
@@ -149,7 +149,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
 
                 return nativeAudioWorkletNode;
             } catch (err) {
-                // Bug #60: Chrome & Opera throw an InvalidStateError instead of a NotSupportedError.
+                // Bug #60: Chrome, Edge & Opera throw an InvalidStateError instead of a NotSupportedError.
                 if (err.code === 11) {
                     throw createNotSupportedError();
                 }

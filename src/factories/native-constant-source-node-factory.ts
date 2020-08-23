@@ -13,7 +13,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 ) => {
     return (nativeContext, options) => {
-        // Bug #62: Edge & Safari do not support ConstantSourceNodes.
+        // Bug #62: Safari does not support ConstantSourceNodes.
         if (nativeContext.createConstantSource === undefined) {
             return createNativeConstantSourceNodeFaker(nativeContext, options);
         }
@@ -26,7 +26,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
 
         assignNativeAudioNodeAudioParamValue(nativeConstantSourceNode, options, 'offset');
 
-        // Bug #44: Only Chrome, Firefox & Opera throw a RangeError yet.
+        // Bug #44: Safari does not throw a RangeError yet.
         if (
             !cacheTestResult(testAudioScheduledSourceNodeStartMethodNegativeParametersSupport, () =>
                 testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
