@@ -9,7 +9,7 @@ describe('audioBufferConstructor', () => {
 
     // bug #33
 
-    it('should not allow to construct a AudioBuffer', () => {
+    it('should not allow to construct an AudioBuffer', () => {
         expect(() => {
             new AudioBuffer(audioContext, { length: 1 });
         }).to.throw(TypeError, "function is not a constructor (evaluating 'new AudioBuffer(audioContext, { length: 1 })')");
