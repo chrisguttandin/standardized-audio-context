@@ -83,14 +83,6 @@ describe('audioContextConstructor', () => {
         });
     });
 
-    describe('outputLatency', () => {
-        // bug #40
-
-        it('should not be implemented', () => {
-            expect(audioContext.outputLatency).to.be.undefined;
-        });
-    });
-
     describe('destination', () => {
         describe('numberOfOutputs', () => {
             // bug #168
@@ -98,6 +90,14 @@ describe('audioContextConstructor', () => {
             it('should be zero', () => {
                 expect(audioContext.destination.numberOfOutputs).to.equal(0);
             });
+        });
+    });
+
+    describe('outputLatency', () => {
+        // bug #40
+
+        it('should not be implemented', () => {
+            expect(audioContext.outputLatency).to.be.undefined;
         });
     });
 

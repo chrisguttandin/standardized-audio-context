@@ -70,7 +70,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #164
 
         it('should not mute cycles', function () {
-            this.timeout(10000);
+            this.timeout(20000);
 
             const constantSourceNode = offlineAudioContext.createConstantSource();
             const gainNode = offlineAudioContext.createGain();
@@ -176,6 +176,16 @@ describe('offlineAudioContextConstructor', () => {
 
                 done();
             }, 1000);
+        });
+    });
+
+    describe('startRendering()', () => {
+        // bug #158
+
+        it('should not advance currentTime', () => {
+            offlineAudioContext.startRendering().then(() => {
+                expect(offlineAudioContext.currentTime).to.equal(0);
+            });
         });
     });
 });
