@@ -12,6 +12,7 @@ export type TIsSupportedPromiseFactory = (
     testConstantSourceNodeAccurateSchedulingSupport: () => boolean,
     testConvolverNodeBufferReassignabilitySupport: () => boolean,
     testConvolverNodeChannelCountSupport: () => boolean,
+    testDomExceptionContrucorSupport: () => boolean,
     testIsSecureContextSupport: () => boolean,
     testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport: () => boolean,
     testStereoPannerNodeDefaultValueSupport: () => Promise<boolean>,

@@ -1,1 +1,1 @@
-export type TDataCloneErrorFactory = () => DOMException | Error;
+export type TDataCloneErrorFactory = () => DOMException;

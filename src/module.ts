@@ -193,6 +193,7 @@ import { isDCCurve } from './helpers/is-dc-curve';
 import { isPartOfACycle } from './helpers/is-part-of-a-cycle';
 import { overwriteAccessors } from './helpers/overwrite-accessors';
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
+import { testDomExceptionConstructorSupport } from './helpers/test-dom-exception-constructor-support';
 import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
@@ -1061,6 +1062,7 @@ export const isSupported = () =>
         createTestConstantSourceNodeAccurateSchedulingSupport(createNativeAudioNode, nativeOfflineAudioContextConstructor),
         createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),
         createTestConvolverNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
+        testDomExceptionConstructorSupport,
         createTestIsSecureContextSupport(window),
         createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport(nativeAudioContextConstructor),
         createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),

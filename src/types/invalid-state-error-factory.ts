@@ -1,1 +1,1 @@
-export type TInvalidStateErrorFactory = () => DOMException | Error;
+export type TInvalidStateErrorFactory = () => DOMException;

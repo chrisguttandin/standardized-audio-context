@@ -13,6 +13,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestConstantSourceNodeAccurateSchedulingSupport;
     let fakeTestConvolverNodeBufferReassignabilitySupport;
     let fakeTestConvolverNodeChannelCountSupport;
+    let fakeTestDomExceptionContrucorSupport;
     let fakeTestIsSecureContextSupport;
     let fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport;
     let fakeTestStereoPannerNodeDefaultValueSupport;
@@ -30,6 +31,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestConstantSourceNodeAccurateSchedulingSupport = () => true;
         fakeTestConvolverNodeBufferReassignabilitySupport = () => true;
         fakeTestConvolverNodeChannelCountSupport = () => true;
+        fakeTestDomExceptionContrucorSupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
         fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport = () => true;
         fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.resolve(true);
@@ -49,6 +51,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -73,6 +76,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -99,6 +103,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -123,6 +128,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -149,6 +155,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -173,6 +180,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -197,6 +205,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -221,6 +230,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -247,6 +257,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -271,6 +282,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -297,6 +309,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -321,6 +334,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -345,6 +359,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -369,6 +384,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -393,6 +409,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -419,6 +436,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -443,6 +461,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -467,6 +486,32 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for the DOMException constructor fails', async () => {
+        fakeTestDomExceptionContrucorSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -493,6 +538,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -517,6 +563,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -543,6 +590,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -567,6 +615,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -593,6 +642,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -617,6 +667,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -641,6 +692,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -665,6 +717,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
@@ -689,6 +742,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestConstantSourceNodeAccurateSchedulingSupport,
             fakeTestConvolverNodeBufferReassignabilitySupport,
             fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionContrucorSupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,

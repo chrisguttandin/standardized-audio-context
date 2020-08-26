@@ -1,1 +1,1 @@
-export type TNotSupportedErrorFactory = () => DOMException | Error;
+export type TNotSupportedErrorFactory = () => DOMException;

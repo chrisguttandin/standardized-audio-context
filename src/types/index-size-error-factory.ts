@@ -1,1 +1,1 @@
-export type TIndexSizeErrorFactory = () => DOMException | Error;
+export type TIndexSizeErrorFactory = () => DOMException;

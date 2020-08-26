@@ -1,1 +1,1 @@
-export type TEncodingErrorFactory = () => DOMException | Error;
+export type TEncodingErrorFactory = () => DOMException;

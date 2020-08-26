@@ -1,1 +1,1 @@
-export type TAbortErrorFactory = () => DOMException | Error;
+export type TAbortErrorFactory = () => DOMException;

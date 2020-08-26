@@ -1,1 +1,1 @@
-export type TUnknownErrorFactory = () => DOMException | Error;
+export type TUnknownErrorFactory = () => DOMException;
