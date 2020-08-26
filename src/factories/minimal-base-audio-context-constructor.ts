@@ -22,13 +22,6 @@ export const createMinimalBaseAudioContextConstructor: TMinimalBaseAudioContextC
 
             CONTEXT_STORE.set(<T>(<unknown>this), _nativeContext);
 
-            // Bug #93: Edge will set the sampleRate of an AudioContext to zero when it is closed.
-            const sampleRate = _nativeContext.sampleRate;
-
-            Object.defineProperty(_nativeContext, 'sampleRate', {
-                get: () => sampleRate
-            });
-
             if (isNativeOfflineAudioContext(_nativeContext)) {
                 unrenderedAudioWorkletNodeStore.set(_nativeContext, new Set());
             }
