@@ -10,8 +10,6 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     detachedArrayBuffers,
     getNativeContext,
     isNativeContext,
-    isNativeOfflineAudioContext,
-    nativeOfflineAudioContextConstructor,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     testPromiseSupport,
     wrapAudioBufferCopyChannelMethods,
@@ -36,15 +34,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
 
         // Bug #21: Safari does not support promises yet.
         if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeContext))) {
-            // Bug #101: Edge does not decode something on a closed OfflineAudioContext.
-            const nativeContextOrBackupNativeContext =
-                nativeContext.state === 'closed' &&
-                nativeOfflineAudioContextConstructor !== null &&
-                isNativeOfflineAudioContext(nativeContext)
-                    ? new nativeOfflineAudioContextConstructor(1, 1, nativeContext.sampleRate)
-                    : nativeContext;
-
-            return nativeContextOrBackupNativeContext.decodeAudioData(audioData).then((audioBuffer) => {
+            return nativeContext.decodeAudioData(audioData).then((audioBuffer) => {
                 // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
                 if (
                     !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>

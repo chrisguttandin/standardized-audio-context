@@ -768,8 +768,6 @@ export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     new WeakSet(),
     getNativeContext,
     isNativeContext,
-    isNativeOfflineAudioContext,
-    nativeOfflineAudioContextConstructor,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
     testPromiseSupport,
     wrapAudioBufferCopyChannelMethods,
