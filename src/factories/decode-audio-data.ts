@@ -44,16 +44,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                     ? new nativeOfflineAudioContextConstructor(1, 1, nativeContext.sampleRate)
                     : nativeContext;
 
-            const promise = nativeContextOrBackupNativeContext.decodeAudioData(audioData).catch((err: DOMException | Error) => {
-                // Bug #27: Edge is rejecting invalid arrayBuffers with a DOMException.
-                if (err instanceof DOMException && err.name === 'NotSupportedError') {
-                    throw new TypeError();
-                }
-
-                throw err;
-            });
-
-            return promise.then((audioBuffer) => {
+            return nativeContextOrBackupNativeContext.decodeAudioData(audioData).then((audioBuffer) => {
                 // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
                 if (
                     !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
