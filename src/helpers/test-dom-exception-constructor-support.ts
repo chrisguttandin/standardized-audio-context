@@ -4,6 +4,8 @@
  *
  * Bug #27: Edge up to version v18 did reject an invalid arrayBuffer passed to decodeAudioData() with a DOMException.
  *
+ * Bug #64: Edge up to version v18 did not support the MediaStreamAudioDestinationNode.
+ *
  * Bug #101: Edge up to version v18 refused to execute decodeAudioData() on a closed context.
  *
  * Bug #145: Edge up to version v18 did throw an IndexSizeError when an OfflineAudioContext was created with a sampleRate of zero.

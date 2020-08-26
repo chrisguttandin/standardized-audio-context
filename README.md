@@ -240,8 +240,6 @@ This is an implementation of the [`createMediaStreamDestination()`](https://weba
 
 It does only work with an AudioContext but not with an OfflineAudioContext.
 
-⚠️ <!-- Bug #64 --> Edge up to version 18 did unfortunately not support the `MediaStreamAudioDestinationNode` and it is very complicated (if not impossible) to polyfill. Therefore this method will throw a `NotSupportedError` in Edge v18 and below.
-
 #### createMediaStreamSource() / MediaStreamAudioSourceNode
 
 This is an implementation of the [`createMediaStreamSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediastreamsource) factory method. The [`MediaStreamAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediastreamaudiosourcenode) constructor may be used as an alternative.

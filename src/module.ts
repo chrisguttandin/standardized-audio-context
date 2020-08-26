@@ -803,10 +803,7 @@ const mediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstr
     getNativeContext,
     isNativeOfflineAudioContext
 );
-const createNativeMediaStreamAudioDestinationNode = createNativeMediaStreamAudioDestinationNodeFactory(
-    createNativeAudioNode,
-    createNotSupportedError
-);
+const createNativeMediaStreamAudioDestinationNode = createNativeMediaStreamAudioDestinationNodeFactory(createNativeAudioNode);
 const mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNodeConstructor = createMediaStreamAudioDestinationNodeConstructor(
     audioNodeConstructor,
     createNativeMediaStreamAudioDestinationNode,

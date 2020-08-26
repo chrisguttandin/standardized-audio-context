@@ -2,15 +2,9 @@ import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-nod
 import { TNativeMediaStreamAudioDestinationNodeFactoryFactory } from '../types';
 
 export const createNativeMediaStreamAudioDestinationNodeFactory: TNativeMediaStreamAudioDestinationNodeFactoryFactory = (
-    createNativeAudioNode,
-    createNotSupportedError
+    createNativeAudioNode
 ) => {
     return (nativeAudioContext, options) => {
-        // Bug #64: Edge does not support MediaStreamAudioDestinationNodes.
-        if (nativeAudioContext.createMediaStreamDestination === undefined) {
-            throw createNotSupportedError();
-        }
-
         const nativeMediaStreamAudioDestinationNode = createNativeAudioNode(nativeAudioContext, (ntvDCntxt) => {
             return ntvDCntxt.createMediaStreamDestination();
         });
