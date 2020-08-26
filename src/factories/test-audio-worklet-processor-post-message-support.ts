@@ -21,7 +21,7 @@ export const createTestAudioWorkletProcessorPostMessageSupport: TTestAudioWorkle
                 type: 'application/javascript; charset=utf-8'
             }
         );
-        const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 128, 3200);
+        const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 128, 8000);
         const url = URL.createObjectURL(blob);
 
         let isEmittingMessageEvents = false;

@@ -21,7 +21,7 @@ export const createTestAudioWorkletProcessorNoOutputsSupport: TTestAudioWorkletP
         const blob = new Blob(['class A extends AudioWorkletProcessor{process(){this.port.postMessage(0)}}registerProcessor("a",A)'], {
             type: 'application/javascript; charset=utf-8'
         });
-        const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 128, 3200);
+        const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 128, 8000);
         const url = URL.createObjectURL(blob);
 
         let isCallingProcess = false;
