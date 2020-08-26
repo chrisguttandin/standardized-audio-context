@@ -631,7 +631,6 @@ const createOscillatorNodeRenderer = createOscillatorNodeRendererFactory(
 const oscillatorNodeConstructor: TOscillatorNodeConstructor = createOscillatorNodeConstructor(
     audioNodeConstructor,
     createAudioParam,
-    createInvalidStateError,
     createNativeOscillatorNode,
     createOscillatorNodeRenderer,
     getNativeContext,

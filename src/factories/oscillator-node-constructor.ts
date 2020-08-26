@@ -23,7 +23,6 @@ const DEFAULT_OPTIONS = {
 export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory = (
     audioNodeConstructor,
     createAudioParam,
-    createInvalidStateError,
     createNativeOscillatorNode,
     createOscillatorNodeRenderer,
     getNativeContext,
@@ -93,11 +92,6 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         set type(value) {
             this._nativeOscillatorNode.type = value;
-
-            // Bug #57: Edge will not throw an error when assigning the type to 'custom'. But it still will change the value.
-            if (value === 'custom') {
-                throw createInvalidStateError();
-            }
 
             if (this._oscillatorNodeRenderer !== null) {
                 this._oscillatorNodeRenderer.periodicWave = null;

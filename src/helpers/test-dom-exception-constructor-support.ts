@@ -4,6 +4,8 @@
  *
  * Bug #27: Edge up to version v18 did reject an invalid arrayBuffer passed to decodeAudioData() with a DOMException.
  *
+ * Bug #57: Edge up to version v18 did not throw an error when assigning the type of an OscillatorNode to 'custom'.
+ *
  * Bug #64: Edge up to version v18 did not support the MediaStreamAudioDestinationNode.
  *
  * Bug #93: Edge up to version v18 did set the sampleRate of an AudioContext to zero when it was closed.
