@@ -32,8 +32,7 @@ export const createStereoPannerNodeConstructor: TStereoPannerNodeConstructorFact
 
             super(context, false, nativeStereoPannerNode, stereoPannerNodeRenderer);
 
-            // Bug #106: Edge does not export a maxValue and minValue property.
-            this._pan = createAudioParam(this, isOffline, nativeStereoPannerNode.pan, 1, -1);
+            this._pan = createAudioParam(this, isOffline, nativeStereoPannerNode.pan);
         }
 
         get pan(): IAudioParam {

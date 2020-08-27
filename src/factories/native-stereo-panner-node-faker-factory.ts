@@ -261,6 +261,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
         );
 
         Object.defineProperty(panGainNode.gain, 'defaultValue', { get: () => 0 });
+        Object.defineProperty(panGainNode.gain, 'minValue', { get: () => -1 });
 
         const nativeStereoPannerNodeFakerFactory = {
             get bufferSize(): undefined {
