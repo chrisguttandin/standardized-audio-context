@@ -210,11 +210,6 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             },
             set panningModel(value) {
                 pannerNode.panningModel = value;
-
-                // Bug #123: Edge does not support HRTF as panningModel.
-                if (pannerNode.panningModel !== value && value === 'HRTF') {
-                    throw createNotSupportedError();
-                }
             },
             get positionX(): TNativePannerNode['positionX'] {
                 return positionXGainNode.gain;

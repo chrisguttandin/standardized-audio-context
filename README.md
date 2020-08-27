@@ -262,8 +262,6 @@ This is an implementation of the [`createOscillator()`](https://webaudio.github.
 
 This is an implementation of the [`createPanner()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createpanner) factory method. The [`PannerNode`](https://webaudio.github.io/web-audio-api/#pannernode) constructor may be used as an alternative.
 
-⚠️ <!-- Bug #123 --> The panningModel can only be savely assigned to `'equalpower'`. This is because Edge has no native implementation of the `'HRTF'` panningModel. An attempt to set the panningModel to `'HRTF'` in Edge will throw a `NotSupportedError`.
-
 #### createPeriodicWave() / PeriodicWave
 
 This is an implementation of the [`createPeriodicWave()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createperiodicwave) factory method. The [`PeriodicWave`](https://webaudio.github.io/web-audio-api/#periodicwave) constructor may be used as an alternative.
