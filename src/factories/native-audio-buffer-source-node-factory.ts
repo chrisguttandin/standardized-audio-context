@@ -27,7 +27,6 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
 
         assignNativeAudioNodeAudioParamValue(nativeAudioBufferSourceNode, options, 'playbackRate');
 
-        // Bug #71: Edge does not allow to set the buffer to null.
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'buffer');
 
         // Bug #149: Safari does not yet support the detune AudioParam.

@@ -10,6 +10,8 @@
  *
  * Bug #64: Edge up to version v18 did not support the MediaStreamAudioDestinationNode.
  *
+ * Bug #71: Edge up to version v18 did not allow to set the buffer of an AudioBufferSourceNode to null.
+ *
  * Bug #93: Edge up to version v18 did set the sampleRate of an AudioContext to zero when it was closed.
  *
  * Bug #101: Edge up to version v18 refused to execute decodeAudioData() on a closed context.

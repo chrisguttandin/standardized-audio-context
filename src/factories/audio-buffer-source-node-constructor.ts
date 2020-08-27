@@ -81,26 +81,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         }
 
         set buffer(value) {
-            // Bug #71: Edge does not allow to set the buffer to null.
-            try {
-                this._nativeAudioBufferSourceNode.buffer = value;
-            } catch (err) {
-                if (value !== null || err.code !== 17) {
-                    throw err;
-                }
-
-                // This will modify the buffer in place. Luckily that works in Edge and has the same effect as setting the buffer to null.
-                if (this._nativeAudioBufferSourceNode.buffer !== null) {
-                    const buffer = this._nativeAudioBufferSourceNode.buffer;
-                    const numberOfChannels = buffer.numberOfChannels;
-
-                    for (let i = 0; i < numberOfChannels; i += 1) {
-                        buffer.getChannelData(i).fill(0);
-                    }
-
-                    this._isBufferNullified = true;
-                }
-            }
+            this._nativeAudioBufferSourceNode.buffer = value;
 
             // Bug #72: Only Chrome, Edge & Opera do not allow to reassign the buffer yet.
             if (value !== null) {
