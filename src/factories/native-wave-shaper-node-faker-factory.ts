@@ -71,7 +71,7 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
             },
             set curve(value) {
                 // Bug #102: Safari does not throw an InvalidStateError when the curve has less than two samples.
-                if (curve !== null && curve.length < 2) {
+                if (value !== null && value.length < 2) {
                     throw createInvalidStateError();
                 }
 
