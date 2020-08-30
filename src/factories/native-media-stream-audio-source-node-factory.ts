@@ -15,7 +15,10 @@ export const createNativeMediaStreamAudioSourceNodeFactory: TNativeMediaStreamAu
             return ntvDCntxt.createMediaStreamSource(new MediaStream(filteredAudioStreamTracks));
         });
 
-        // Bug #63: Edge does not expose the mediaStream yet.
+        /*
+         * Bug #151 & #159: The given mediaStream gets reconstructed before it gets passed to the native node which is why the accessor
+         * needs to be overwritten as it would otherwise expose the reconstructed version.
+         */
         Object.defineProperty(nativeMediaStreamAudioSourceNode, 'mediaStream', { value: mediaStream });
 
         return nativeMediaStreamAudioSourceNode;
