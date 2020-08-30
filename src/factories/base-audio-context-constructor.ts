@@ -20,14 +20,7 @@ import {
     IWaveShaperNode,
     IWorkletOptions
 } from '../interfaces';
-import {
-    TBaseAudioContextConstructorFactory,
-    TContext,
-    TDecodeErrorCallback,
-    TDecodeSuccessCallback,
-    TNativeContext,
-    TTypedArray
-} from '../types';
+import { TBaseAudioContextConstructorFactory, TContext, TDecodeErrorCallback, TDecodeSuccessCallback, TNativeContext } from '../types';
 
 export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFactory = (
     addAudioWorkletModule,
@@ -115,7 +108,7 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
             return new gainNodeConstructor(<T>(<unknown>this));
         }
 
-        public createIIRFilter(feedforward: number[] | TTypedArray, feedback: number[] | TTypedArray): IIIRFilterNode<T> {
+        public createIIRFilter(feedforward: Iterable<number>, feedback: Iterable<number>): IIIRFilterNode<T> {
             return new iIRFilterNodeConstructor(<T>(<unknown>this), { feedback, feedforward });
         }
 
@@ -128,8 +121,8 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
         }
 
         public createPeriodicWave(
-            real: number[],
-            imag: number[],
+            real: Iterable<number>,
+            imag: Iterable<number>,
             constraints: Partial<IPeriodicWaveConstraints> = { disableNormalization: false }
         ): IPeriodicWave {
             return new periodicWaveConstructor(<T>(<unknown>this), { ...constraints, imag, real });

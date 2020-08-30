@@ -171,10 +171,10 @@ describe('audioContextConstructor', () => {
                     // bug #25
 
                     it('should not allow to use setValueCurveAtTime after calling cancelScheduledValues', () => {
-                        gainNode.gain.setValueCurveAtTime(new Float32Array([1, 1]), 0, 1);
+                        gainNode.gain.setValueCurveAtTime([1, 1], 0, 1);
                         gainNode.gain.cancelScheduledValues(0.2);
                         expect(() => {
-                            gainNode.gain.setValueCurveAtTime(new Float32Array([1, 1]), 0.4, 1);
+                            gainNode.gain.setValueCurveAtTime([1, 1], 0.4, 1);
                         }).to.throw(Error);
                     });
                 });

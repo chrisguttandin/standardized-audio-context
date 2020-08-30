@@ -26,7 +26,6 @@ const DEFAULT_OPTIONS = {
     channelInterpretation: 'speakers',
     numberOfInputs: 1,
     numberOfOutputs: 1,
-    outputChannelCount: undefined,
     parameterData: {},
     processorOptions: {}
 } as const;
@@ -41,7 +40,9 @@ const createChannelCount = (length: number): number[] => {
     return channelCount;
 };
 
-const sanitizedOptions = (options: IAudioWorkletNodeOptions): { outputChannelCount: number[] } & IAudioWorkletNodeOptions => {
+const sanitizedOptions = (
+    options: Partial<Pick<IAudioWorkletNodeOptions, 'outputChannelCount'>> & Omit<IAudioWorkletNodeOptions, 'outputChannelCount'>
+): IAudioWorkletNodeOptions => {
     return {
         ...options,
         outputChannelCount:

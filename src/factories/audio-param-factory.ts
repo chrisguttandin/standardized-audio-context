@@ -135,7 +135,9 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 return audioParam;
             },
-            setValueCurveAtTime(values: Float32Array, startTime: number, duration: number): IAudioParam {
+            setValueCurveAtTime(values: Iterable<number>, startTime: number, duration: number): IAudioParam {
+                // Bug 183: Safari only accepts a Float32Array.
+                const convertedValues = values instanceof Float32Array ? values : new Float32Array(values);
                 /*
                  * Bug #152: Safari does not correctly interpolate the values of the curve.
                  * @todo Unfortunately there is no way to test for this behavior in synchronous fashion which is why testing for the
@@ -150,15 +152,15 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                     const interpolatedValues = new Float32Array(numberOfInterpolatedValues);
 
                     for (let i = 0; i < numberOfInterpolatedValues; i += 1) {
-                        const theoreticIndex = ((values.length - 1) / duration) * ((firstSample + i) / sampleRate - startTime);
+                        const theoreticIndex = ((convertedValues.length - 1) / duration) * ((firstSample + i) / sampleRate - startTime);
                         const lowerIndex = Math.floor(theoreticIndex);
                         const upperIndex = Math.ceil(theoreticIndex);
 
                         interpolatedValues[i] =
                             lowerIndex === upperIndex
-                                ? values[lowerIndex]
-                                : (1 - (theoreticIndex - lowerIndex)) * values[lowerIndex] +
-                                  (1 - (upperIndex - theoreticIndex)) * values[upperIndex];
+                                ? convertedValues[lowerIndex]
+                                : (1 - (theoreticIndex - lowerIndex)) * convertedValues[lowerIndex] +
+                                  (1 - (upperIndex - theoreticIndex)) * convertedValues[upperIndex];
                     }
 
                     if (audioParamRenderer === null) {
@@ -174,14 +176,14 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                         audioParam.setValueAtTime(interpolatedValues[interpolatedValues.length - 1], timeOfLastSample);
                     }
 
-                    audioParam.setValueAtTime(values[values.length - 1], endTime);
+                    audioParam.setValueAtTime(convertedValues[convertedValues.length - 1], endTime);
                 } else {
                     if (audioParamRenderer === null) {
                         automationEventList.flush(audioNode.context.currentTime);
                     }
 
-                    automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
-                    nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
+                    automationEventList.add(createSetValueCurveAutomationEvent(convertedValues, startTime, duration));
+                    nativeAudioParam.setValueCurveAtTime(convertedValues, startTime, duration);
                 }
 
                 return audioParam;

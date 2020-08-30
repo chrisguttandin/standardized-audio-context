@@ -841,6 +841,7 @@ describe('offlineAudioContextConstructor', () => {
 
                 audioBufferSourceNode.buffer = audioBuffer;
 
+                // Bug #184: Safari requires the curve to be a Float32Array.
                 gainNode.gain.setValueCurveAtTime(new Float32Array([1, 3]), 0, 2 / offlineAudioContext.sampleRate);
 
                 audioBufferSourceNode.connect(gainNode).connect(offlineAudioContext.destination);

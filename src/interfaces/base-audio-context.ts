@@ -45,13 +45,13 @@ export interface IBaseAudioContext<T extends TContext> extends IMinimalBaseAudio
 
     createGain(): IGainNode<T>;
 
-    createIIRFilter(feedforward: number[], feedback: number[]): IIIRFilterNode<T>;
+    createIIRFilter(feedforward: Iterable<number>, feedback: Iterable<number>): IIIRFilterNode<T>;
 
     createOscillator(): IOscillatorNode<T>;
 
     createPanner(): IPannerNode<T>;
 
-    createPeriodicWave(real: number[], imag: number[], constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
+    createPeriodicWave(real: Iterable<number>, imag: Iterable<number>, constraints?: Partial<IPeriodicWaveConstraints>): IPeriodicWave;
 
     createStereoPanner(): IStereoPannerNode<T>;
 

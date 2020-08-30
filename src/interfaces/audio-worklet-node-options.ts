@@ -5,7 +5,7 @@ export interface IAudioWorkletNodeOptions extends IAudioNodeOptions {
 
     numberOfOutputs: number;
 
-    outputChannelCount: undefined | number[];
+    outputChannelCount: Iterable<number>;
 
     parameterData: { [name: string]: number };
 

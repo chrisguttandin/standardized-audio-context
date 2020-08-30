@@ -6,27 +6,28 @@ import {
     TNativeAudioBuffer,
     TNativeAudioBufferSourceNode,
     TNativeIIRFilterNode,
-    TNativeOfflineAudioContext,
-    TTypedArray
+    TNativeOfflineAudioContext
 } from '../types';
 
 const filterFullBuffer = (
     renderedBuffer: TNativeAudioBuffer,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
-    feedback: number[] | TTypedArray,
-    feedforward: number[] | TTypedArray
+    feedback: Iterable<number>,
+    feedforward: Iterable<number>
 ) => {
-    const feedbackLength = feedback.length;
-    const feedforwardLength = feedforward.length;
+    const convertedFeedback = feedback instanceof Float64Array ? feedback : new Float64Array(feedback);
+    const convertedFeedforward = feedforward instanceof Float64Array ? feedforward : new Float64Array(feedforward);
+    const feedbackLength = convertedFeedback.length;
+    const feedforwardLength = convertedFeedforward.length;
     const minLength = Math.min(feedbackLength, feedforwardLength);
 
-    if (feedback[0] !== 1) {
+    if (convertedFeedback[0] !== 1) {
         for (let i = 0; i < feedbackLength; i += 1) {
-            feedforward[i] /= feedback[0];
+            convertedFeedforward[i] /= convertedFeedback[0];
         }
 
         for (let i = 1; i < feedforwardLength; i += 1) {
-            feedback[i] /= feedback[0];
+            convertedFeedback[i] /= convertedFeedback[0];
         }
     }
 
@@ -49,7 +50,19 @@ const filterFullBuffer = (
         xBuffer.fill(0);
         yBuffer.fill(0);
 
-        filterBuffer(feedback, feedbackLength, feedforward, feedforwardLength, minLength, xBuffer, yBuffer, 0, bufferLength, input, output);
+        filterBuffer(
+            convertedFeedback,
+            feedbackLength,
+            convertedFeedforward,
+            feedforwardLength,
+            minLength,
+            xBuffer,
+            yBuffer,
+            0,
+            bufferLength,
+            input,
+            output
+        );
     }
 
     return filteredBuffer;
@@ -63,10 +76,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
     renderInputsOfAudioNode,
     renderNativeOfflineAudioContext
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
-        feedback: number[] | TTypedArray,
-        feedforward: number[] | TTypedArray
-    ) => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(feedback: Iterable<number>, feedforward: Iterable<number>) => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioBufferSourceNode | TNativeIIRFilterNode>();
 
         let filteredBufferPromise: null | Promise<null | TNativeAudioBuffer> = null;

@@ -5,12 +5,8 @@ const DEFAULT_OPTIONS = {
     disableNormalization: false
 } as const;
 
-const createZeroFilledCopy = (array: number[]): number[] => {
-    const copy = array.slice(0);
-
-    copy.fill(0);
-
-    return copy;
+const createZeroFilledCopy = (iteable: Iterable<number>): number[] => {
+    return Array.from(iteable, () => 0);
 };
 
 const sanitizedOptions = (options: { disableNormalization: boolean } & Partial<IPeriodicWaveOptions>): IPeriodicWaveOptions => {

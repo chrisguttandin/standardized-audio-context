@@ -152,8 +152,9 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
             }
         };
 
-        if (curve !== nativeWaveShaperNodeFaker.curve) {
-            nativeWaveShaperNodeFaker.curve = curve;
+        if (curve !== null) {
+            // Bug #184: Safari does not accept a plain array.
+            nativeWaveShaperNodeFaker.curve = curve instanceof Float32Array ? curve : new Float32Array(curve);
         }
 
         if (oversample !== nativeWaveShaperNodeFaker.oversample) {

@@ -26,14 +26,15 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
 
         assignNativeAudioNodeOptions(nativeWaveShaperNode, options);
 
-        const curve = options.curve;
+        const curve = options.curve === null || options.curve instanceof Float32Array ? options.curve : new Float32Array(options.curve);
 
         // Bug #104: Chrome, Edge and Opera will throw an InvalidAccessError when the curve has less than two samples.
         if (curve !== null && curve.length < 2) {
             throw createInvalidStateError();
         }
 
-        assignNativeAudioNodeOption(nativeWaveShaperNode, options, 'curve');
+        // Bug #184: Safari requires the curve to be a Float32Array.
+        assignNativeAudioNodeOption(nativeWaveShaperNode, { curve }, 'curve');
         assignNativeAudioNodeOption(nativeWaveShaperNode, options, 'oversample');
 
         let disconnectNativeAudioBufferSourceNode: null | (() => void) = null;

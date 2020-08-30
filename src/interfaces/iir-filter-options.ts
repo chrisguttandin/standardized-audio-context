@@ -1,8 +1,7 @@
-import { TTypedArray } from '../types';
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IIIRFilterOptions extends IAudioNodeOptions {
-    feedback: number[] | TTypedArray;
+    feedback: Iterable<number>;
 
-    feedforward: number[] | TTypedArray;
+    feedforward: Iterable<number>;
 }

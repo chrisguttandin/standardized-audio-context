@@ -30,7 +30,8 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
     proxy: IAudioWorkletNode<T>,
     renderedBuffer: null | TNativeAudioBuffer,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
-    options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
+    options: IAudioWorkletNodeOptions,
+    outputChannelCount: number[],
     processorConstructor: undefined | IAudioWorkletProcessorConstructor,
     exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction
 ): Promise<null | TNativeAudioBuffer> => {
@@ -38,7 +39,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
     // Bug #17: Safari does not yet expose the length.
     const length = renderedBuffer === null ? Math.ceil(proxy.context.length / 128) * 128 : renderedBuffer.length;
     const numberOfInputChannels = options.channelCount * options.numberOfInputs;
-    const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
+    const numberOfOutputChannels = outputChannelCount.reduce((sum, value) => sum + value, 0);
     const processedBuffer =
         numberOfOutputChannels === 0
             ? null
@@ -51,7 +52,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
     const audioNodeConnections = getAudioNodeConnections(proxy);
     const audioWorkletProcessor = await getAudioWorkletProcessor(nativeOfflineAudioContext, proxy);
     const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
-    const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
+    const outputs = createNestedArrays(options.numberOfOutputs, outputChannelCount);
     const parameters: { [name: string]: Float32Array } = Array.from(proxy.parameters.keys()).reduce(
         (prmtrs, name) => ({ ...prmtrs, [name]: new Float32Array(128) }),
         {}
@@ -73,7 +74,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
         }
 
         for (let j = 0; j < options.numberOfInputs; j += 1) {
-            for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
+            for (let k = 0; k < outputChannelCount[j]; k += 1) {
                 // The byteLength will be 0 when the ArrayBuffer was transferred.
                 if (outputs[j][k].byteLength === 0) {
                     outputs[j][k] = new Float32Array(128);
@@ -97,11 +98,11 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
 
             if (processedBuffer !== null) {
                 for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
-                    for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
+                    for (let k = 0; k < outputChannelCount[j]; k += 1) {
                         copyToChannel(processedBuffer, outputs[j], k, outputChannelSplitterNodeOutput + k, i);
                     }
 
-                    outputChannelSplitterNodeOutput += options.outputChannelCount[j];
+                    outputChannelSplitterNodeOutput += outputChannelCount[j];
                 }
             }
 
@@ -145,7 +146,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
 ) => {
     return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
         name: string,
-        options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
+        options: IAudioWorkletNodeOptions,
         processorConstructor: undefined | IAudioWorkletProcessorConstructor
     ) => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioWorkletNode | TNativeGainNode>();
@@ -161,10 +162,13 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
             let nativeOutputNodes: null | [TNativeChannelSplitterNode, TNativeChannelMergerNode[], TNativeGainNode] = null;
 
             const nativeAudioWorkletNodeIsOwnedByContext = isOwnedByContext(nativeAudioWorkletNode, nativeOfflineAudioContext);
+            const outputChannelCount = Array.isArray(options.outputChannelCount)
+                ? options.outputChannelCount
+                : Array.from(options.outputChannelCount);
 
             // Bug #61: Only Chrome, Edge, Firefox & Opera have an implementation of the AudioWorkletNode yet.
             if (nativeAudioWorkletNodeConstructor === null) {
-                const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
+                const numberOfOutputChannels = outputChannelCount.reduce((sum, value) => sum + value, 0);
                 const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeOfflineAudioContext, {
                     channelCount: Math.max(1, numberOfOutputChannels),
                     channelCountMode: 'explicit',
@@ -179,7 +183,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                             channelCount: 1,
                             channelCountMode: 'explicit',
                             channelInterpretation: 'speakers',
-                            numberOfInputs: options.outputChannelCount[i]
+                            numberOfInputs: outputChannelCount[i]
                         })
                     );
                 }
@@ -299,6 +303,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         numberOfChannels === 0 ? null : await renderBuffer(),
                         nativeOfflineAudioContext,
                         options,
+                        outputChannelCount,
                         processorConstructor,
                         exposeCurrentFrameAndCurrentTime
                     );
@@ -327,11 +332,11 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 for (let i = 0, outputChannelSplitterNodeOutput = 0; i < proxy.numberOfOutputs; i += 1) {
                     const outputChannelMergerNode = outputChannelMergerNodes[i];
 
-                    for (let j = 0; j < options.outputChannelCount[i]; j += 1) {
+                    for (let j = 0; j < outputChannelCount[i]; j += 1) {
                         outputChannelSplitterNode.connect(outputChannelMergerNode, outputChannelSplitterNodeOutput + j, j);
                     }
 
-                    outputChannelSplitterNodeOutput += options.outputChannelCount[i];
+                    outputChannelSplitterNodeOutput += outputChannelCount[i];
                 }
 
                 return outputGainNode;

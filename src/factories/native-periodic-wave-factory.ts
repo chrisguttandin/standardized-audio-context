@@ -6,16 +6,16 @@ export const createNativePeriodicWaveFactory: TNativePeriodicWaveFactoryFactory 
         const backupNativeContext = getBackupNativeContext(nativeContext);
 
         // Bug #180: Safari does not allow to use ordinary arrays.
-        const wrappedImag = new Float32Array(imag);
-        const wrappedReal = new Float32Array(real);
+        const convertedImag = imag instanceof Float32Array ? imag : new Float32Array(imag);
+        const convertedReal = real instanceof Float32Array ? real : new Float32Array(real);
 
         const nativePeriodicWave =
             backupNativeContext === null
-                ? nativeContext.createPeriodicWave(wrappedReal, wrappedImag, { disableNormalization })
-                : backupNativeContext.createPeriodicWave(wrappedReal, wrappedImag, { disableNormalization });
+                ? nativeContext.createPeriodicWave(convertedReal, convertedImag, { disableNormalization })
+                : backupNativeContext.createPeriodicWave(convertedReal, convertedImag, { disableNormalization });
 
         // Bug #181: No browser does throw an IndexSizeError so far if the given arrays have less than two values.
-        if (imag.length < 2) {
+        if (Array.from(imag).length < 2) {
             throw createIndexSizeError();
         }
 

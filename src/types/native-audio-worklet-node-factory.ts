@@ -9,5 +9,5 @@ export type TNativeAudioWorkletNodeFactory = (
     nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
     name: string,
     processorConstructor: undefined | IAudioWorkletProcessorConstructor,
-    options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions
+    options: IAudioWorkletNodeOptions
 ) => TNativeAudioWorkletNode;

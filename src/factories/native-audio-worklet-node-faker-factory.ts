@@ -37,15 +37,17 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             throw createNotSupportedError();
         }
 
-        if (options.outputChannelCount !== undefined) {
-            // @todo Check if any of the channelCount values is greater than the implementation's maximum number of channels.
-            if (options.outputChannelCount.some((channelCount) => channelCount < 1)) {
-                throw createNotSupportedError();
-            }
+        const outputChannelCount = Array.isArray(options.outputChannelCount)
+            ? options.outputChannelCount
+            : Array.from(options.outputChannelCount);
 
-            if (options.outputChannelCount.length !== options.numberOfOutputs) {
-                throw createIndexSizeError();
-            }
+        // @todo Check if any of the channelCount values is greater than the implementation's maximum number of channels.
+        if (outputChannelCount.some((channelCount) => channelCount < 1)) {
+            throw createNotSupportedError();
+        }
+
+        if (outputChannelCount.length !== options.numberOfOutputs) {
+            throw createIndexSizeError();
         }
 
         // Bug #61: This is not part of the standard but required for the faker to work.
@@ -54,7 +56,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         }
 
         const numberOfInputChannels = options.channelCount * options.numberOfInputs;
-        const numberOfOutputChannels = options.outputChannelCount.reduce((sum, value) => sum + value, 0);
+        const numberOfOutputChannels = outputChannelCount.reduce((sum, value) => sum + value, 0);
         const numberOfParameters =
             processorConstructor.parameterDescriptors === undefined ? 0 : processorConstructor.parameterDescriptors.length;
 
@@ -146,7 +148,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     channelCount: 1,
                     channelCountMode: 'explicit',
                     channelInterpretation: 'speakers',
-                    numberOfInputs: options.outputChannelCount[i]
+                    numberOfInputs: outputChannelCount[i]
                 })
             );
         }
@@ -333,7 +335,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
         audioWorkletProcessorPromise.then((dWrkltPrcssr) => (audioWorkletProcessor = dWrkltPrcssr));
 
         const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
-        const outputs = createNestedArrays(options.numberOfOutputs, options.outputChannelCount);
+        const outputs = createNestedArrays(options.numberOfOutputs, outputChannelCount);
         const parameters: { [name: string]: Float32Array } =
             processorConstructor.parameterDescriptors === undefined
                 ? []
@@ -352,11 +354,11 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             for (let i = 0, outputChannelSplitterNodeOutput = 0; i < options.numberOfOutputs; i += 1) {
                 const outputChannelMergerNode = outputChannelMergerNodes[i];
 
-                for (let j = 0; j < options.outputChannelCount[i]; j += 1) {
+                for (let j = 0; j < outputChannelCount[i]; j += 1) {
                     outputChannelSplitterNode.disconnect(outputChannelMergerNode, outputChannelSplitterNodeOutput + j, j);
                 }
 
-                outputChannelSplitterNodeOutput += options.outputChannelCount[i];
+                outputChannelSplitterNodeOutput += outputChannelCount[i];
             }
         };
 
@@ -377,7 +379,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }
 
                     for (let j = 0; j < options.numberOfInputs; j += 1) {
-                        for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
+                        for (let k = 0; k < outputChannelCount[j]; k += 1) {
                             // The byteLength will be 0 when the ArrayBuffer was transferred.
                             if (outputs[j][k].byteLength === 0) {
                                 outputs[j][k] = new Float32Array(128);
@@ -407,11 +409,11 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                         isActive = activeSourceFlag;
 
                         for (let j = 0, outputChannelSplitterNodeOutput = 0; j < options.numberOfOutputs; j += 1) {
-                            for (let k = 0; k < options.outputChannelCount[j]; k += 1) {
+                            for (let k = 0; k < outputChannelCount[j]; k += 1) {
                                 copyToChannel(outputBuffer, outputs[j], k, outputChannelSplitterNodeOutput + k, i);
                             }
 
-                            outputChannelSplitterNodeOutput += options.outputChannelCount[j];
+                            outputChannelSplitterNodeOutput += outputChannelCount[j];
                         }
                     } catch (error) {
                         isActive = false;
@@ -495,11 +497,11 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                 for (let i = 0, outputChannelSplitterNodeOutput = 0; i < options.numberOfOutputs; i += 1) {
                     const outputChannelMergerNode = outputChannelMergerNodes[i];
 
-                    for (let j = 0; j < options.outputChannelCount[i]; j += 1) {
+                    for (let j = 0; j < outputChannelCount[i]; j += 1) {
                         outputChannelSplitterNode.connect(outputChannelMergerNode, outputChannelSplitterNodeOutput + j, j);
                     }
 
-                    outputChannelSplitterNodeOutput += options.outputChannelCount[i];
+                    outputChannelSplitterNodeOutput += outputChannelCount[i];
                 }
             }
 

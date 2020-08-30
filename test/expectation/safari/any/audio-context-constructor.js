@@ -739,6 +739,16 @@ describe('audioContextConstructor', () => {
                         expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
                     });
                 });
+
+                describe('setValueCurveAtTime()', () => {
+                    // bug #183
+
+                    it('should not accept a plain array', () => {
+                        expect(() => {
+                            gainNode.gain.setValueCurveAtTime([1, 1], 0, 1);
+                        }).to.throw(TypeError);
+                    });
+                });
             });
         });
 
@@ -1106,20 +1116,30 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createWaveShaper()', () => {
+            let waveShaperNode;
+
+            beforeEach(() => {
+                waveShaperNode = audioContext.createWaveShaper();
+            });
+
             describe('curve', () => {
                 // bug #102
 
                 it('should allow to assign a curve with less than two samples', () => {
-                    const waveShaperNode = audioContext.createWaveShaper();
-
                     waveShaperNode.curve = new Float32Array([1]);
+                });
+
+                // bug #184
+
+                it('should not accept a plain array', () => {
+                    expect(() => {
+                        waveShaperNode.curve = [1, 1];
+                    }).to.throw(TypeError);
                 });
 
                 // bug #103
 
                 it('should not allow to assign null', () => {
-                    const waveShaperNode = audioContext.createWaveShaper();
-
                     expect(() => {
                         waveShaperNode.curve = null;
                     }).to.throw(TypeError, 'The WaveShaperNode.curve attribute must be an instance of Float32Array');

@@ -489,7 +489,7 @@ describe('GainNode', () => {
                                     return renderer({
                                         start(startTime, { audioBufferSourceNode, gainNode }) {
                                             gainNode.gain.setValueCurveAtTime(
-                                                new Float32Array([0, 0.25, 0.5, 0.75, 1]),
+                                                [0, 0.25, 0.5, 0.75, 1],
                                                 roundToSamples(startTime, context.sampleRate),
                                                 6 / context.sampleRate
                                             );

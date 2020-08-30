@@ -1,12 +1,10 @@
-import { TTypedArray } from '../types';
-
 // This implementation as shamelessly inspired by source code of
 // tslint:disable-next-line:max-line-length
 // {@link https://chromium.googlesource.com/chromium/src.git/+/master/third_party/WebKit/Source/platform/audio/IIRFilter.cpp|Chromium's IIRFilter}.
 export const filterBuffer = (
-    feedback: number[] | TTypedArray,
+    feedback: Float64Array,
     feedbackLength: number,
-    feedforward: number[] | TTypedArray,
+    feedforward: Float64Array,
     feedforwardLength: number,
     minLength: number,
     xBuffer: Float32Array,

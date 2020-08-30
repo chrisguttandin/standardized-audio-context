@@ -1,5 +1,5 @@
 import { testClonabilityOfAudioWorkletNodeOptions } from '../helpers/test-clonability-of-audio-worklet-node-options';
-import { TNativeAudioWorkletNode, TNativeAudioWorkletNodeFactoryFactory } from '../types';
+import { TNativeAudioWorkletNode, TNativeAudioWorkletNodeFactoryFactory, TNativeAudioWorkletNodeOptions } from '../types';
 
 export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactoryFactory = (
     createInvalidStateError,
@@ -13,7 +13,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
         if (nativeAudioWorkletNodeConstructor !== null) {
             try {
                 const nativeAudioWorkletNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
-                    return new nativeAudioWorkletNodeConstructor(ntvCntxt, name, options);
+                    return new nativeAudioWorkletNodeConstructor(ntvCntxt, name, <TNativeAudioWorkletNodeOptions>options);
                 });
                 const patchedEventListeners: Map<
                     EventListenerOrEventListenerObject,

@@ -9,6 +9,6 @@ import {
 
 export type TAudioWorkletNodeRendererFactory = <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
     name: string,
-    options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions,
+    options: IAudioWorkletNodeOptions,
     processorConstructor: undefined | IAudioWorkletProcessorConstructor
 ) => IAudioNodeRenderer<T, IAudioWorkletNode<T>>;

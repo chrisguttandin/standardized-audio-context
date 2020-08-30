@@ -1,7 +1,7 @@
 import { IPeriodicWaveConstraints } from './periodic-wave-constraints';
 
 export interface IPeriodicWaveOptions extends IPeriodicWaveConstraints {
-    imag: number[];
+    imag: Iterable<number>;
 
-    real: number[];
+    real: Iterable<number>;
 }

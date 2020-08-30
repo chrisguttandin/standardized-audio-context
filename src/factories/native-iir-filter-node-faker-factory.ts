@@ -1,7 +1,7 @@
 import { computeBufferSize } from '../helpers/compute-buffer-size';
 import { filterBuffer } from '../helpers/filter-buffer';
 import { interceptConnections } from '../helpers/intercept-connections';
-import { TNativeAudioNode, TNativeIIRFilterNode, TNativeIIRFilterNodeFakerFactoryFactory, TTypedArray } from '../types';
+import { TNativeAudioNode, TNativeIIRFilterNode, TNativeIIRFilterNodeFakerFactoryFactory } from '../types';
 
 function divide(a: [number, number], b: [number, number]): [number, number] {
     const denominator = b[0] * b[0] + b[1] * b[1];
@@ -13,7 +13,7 @@ function multiply(a: [number, number], b: [number, number]): [number, number] {
     return [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]];
 }
 
-function evaluatePolynomial(coefficient: number[] | TTypedArray, z: [number, number]): [number, number] {
+function evaluatePolynomial(coefficient: Float64Array, z: [number, number]): [number, number] {
     let result: [number, number] = [0, 0];
 
     for (let i = coefficient.length - 1; i >= 0; i -= 1) {
@@ -33,33 +33,35 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
 ) => {
     return (nativeContext, baseLatency, { channelCount, channelCountMode, channelInterpretation, feedback, feedforward }) => {
         const bufferSize = computeBufferSize(baseLatency, nativeContext.sampleRate);
-        const feedbackLength = feedback.length;
-        const feedforwardLength = feedforward.length;
+        const convertedFeedback = feedback instanceof Float64Array ? feedback : new Float64Array(feedback);
+        const convertedFeedforward = feedforward instanceof Float64Array ? feedforward : new Float64Array(feedforward);
+        const feedbackLength = convertedFeedback.length;
+        const feedforwardLength = convertedFeedforward.length;
         const minLength = Math.min(feedbackLength, feedforwardLength);
 
-        if (feedback.length === 0 || feedback.length > 20) {
+        if (feedbackLength === 0 || feedbackLength > 20) {
             throw createNotSupportedError();
         }
 
-        if (feedback[0] === 0) {
+        if (convertedFeedback[0] === 0) {
             throw createInvalidStateError();
         }
 
-        if (feedforward.length === 0 || feedforward.length > 20) {
+        if (feedforwardLength === 0 || feedforwardLength > 20) {
             throw createNotSupportedError();
         }
 
-        if (feedforward[0] === 0) {
+        if (convertedFeedforward[0] === 0) {
             throw createInvalidStateError();
         }
 
-        if (feedback[0] !== 1) {
+        if (convertedFeedback[0] !== 1) {
             for (let i = 0; i < feedforwardLength; i += 1) {
-                feedforward[i] /= feedback[0];
+                convertedFeedforward[i] /= convertedFeedback[0];
             }
 
             for (let i = 1; i < feedbackLength; i += 1) {
-                feedback[i] /= feedback[0];
+                convertedFeedback[i] /= convertedFeedback[0];
             }
         }
 
@@ -99,9 +101,9 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
                 const output = outputBuffer.getChannelData(i);
 
                 bufferIndexes[i] = filterBuffer(
-                    feedback,
+                    convertedFeedback,
                     feedbackLength,
-                    feedforward,
+                    convertedFeedforward,
                     feedforwardLength,
                     minLength,
                     xBuffers[i],
@@ -167,8 +169,8 @@ export const createNativeIIRFilterNodeFakerFactory: TNativeIIRFilterNodeFakerFac
                 for (let i = 0; i < length; i += 1) {
                     const omega = -Math.PI * (frequencyHz[i] / nyquist);
                     const z: [number, number] = [Math.cos(omega), Math.sin(omega)];
-                    const numerator = evaluatePolynomial(feedforward, z);
-                    const denominator = evaluatePolynomial(feedback, z);
+                    const numerator = evaluatePolynomial(convertedFeedforward, z);
+                    const denominator = evaluatePolynomial(convertedFeedback, z);
                     const response = divide(numerator, denominator);
 
                     magResponse[i] = Math.sqrt(response[0] * response[0] + response[1] * response[1]);

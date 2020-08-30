@@ -5,5 +5,5 @@ export type TNativeAudioWorkletNodeFakerFactory = (
     nativeContext: TNativeContext,
     baseLatency: null | number,
     processorConstructor: IAudioWorkletProcessorConstructor,
-    options: { outputChannelCount: number[] } & IAudioWorkletNodeOptions
+    options: IAudioWorkletNodeOptions
 ) => INativeAudioWorkletNodeFaker;
