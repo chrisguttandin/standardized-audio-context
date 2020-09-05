@@ -415,26 +415,29 @@ describe('DelayNode', () => {
                                 });
                             });
 
-                            describe('with a modified value', () => {
-                                it('should modify the signal', function () {
-                                    this.timeout(10000);
+                            // Bug #185: Chrome and Edge add an extra sample to the delay.
+                            if (!/Chrome/.test(navigator.userAgent)) {
+                                describe('with a modified value', () => {
+                                    it('should modify the signal', function () {
+                                        this.timeout(10000);
 
-                                    return renderer({
-                                        prepare({ delayNode }) {
-                                            delayNode.delayTime.value = 3 / context.sampleRate;
-                                        },
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(channelData[0]).to.be.closeTo(0, 0.00001);
-                                        expect(channelData[1]).to.be.closeTo(0, 0.00001);
-                                        expect(channelData[2]).to.be.closeTo(0, 0.00001);
-                                        expect(channelData[3]).to.be.closeTo(1, 0.00001);
-                                        expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                        return renderer({
+                                            prepare({ delayNode }) {
+                                                delayNode.delayTime.value = 3 / context.sampleRate;
+                                            },
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime);
+                                            }
+                                        }).then((channelData) => {
+                                            expect(channelData[0]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[1]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[2]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
+                                            expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                        });
                                     });
                                 });
-                            });
+                            }
 
                             describe('with a call to cancelAndHoldAtTime()', () => {
                                 // @todo
@@ -463,80 +466,89 @@ describe('DelayNode', () => {
                             });
 
                             describe('with a call to setValueAtTime()', () => {
-                                it('should modify the signal', function () {
-                                    this.timeout(10000);
+                                // Bug #185: Chrome and Edge add an extra sample to the delay.
+                                if (!/Chrome/.test(navigator.userAgent)) {
+                                    it('should modify the signal', function () {
+                                        this.timeout(10000);
 
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode, delayNode }) {
-                                            delayNode.delayTime.setValueAtTime(
-                                                3 / context.sampleRate,
-                                                roundToSamples(startTime, context.sampleRate, 2)
-                                            );
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode, delayNode }) {
+                                                delayNode.delayTime.setValueAtTime(
+                                                    3 / context.sampleRate,
+                                                    roundToSamples(startTime, context.sampleRate, 2)
+                                                );
 
-                                            audioBufferSourceNode.start(startTime);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(channelData[0]).to.equal(1);
-                                        expect(channelData[1]).to.equal(0.5);
-                                        expect(channelData[2]).to.equal(0);
-                                        expect(channelData[3]).to.be.closeTo(1, 0.00001);
-                                        expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                                audioBufferSourceNode.start(startTime);
+                                            }
+                                        }).then((channelData) => {
+                                            expect(channelData[0]).to.equal(1);
+                                            expect(channelData[1]).to.equal(0.5);
+                                            expect(channelData[2]).to.equal(0);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
+                                            expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                        });
                                     });
-                                });
+                                }
                             });
 
                             describe('with a call to setValueCurveAtTime()', () => {
-                                it('should modify the signal', function () {
-                                    this.timeout(10000);
+                                // Bug #185: Chrome and Edge add an extra sample to the delay.
+                                if (!/Chrome/.test(navigator.userAgent)) {
+                                    it('should modify the signal', function () {
+                                        this.timeout(10000);
 
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode, delayNode }) {
-                                            delayNode.delayTime.setValueCurveAtTime(
-                                                new Float32Array([0, 0.25, 0.5, 0.75, 1]),
-                                                roundToSamples(startTime, context.sampleRate),
-                                                6 / context.sampleRate
-                                            );
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode, delayNode }) {
+                                                delayNode.delayTime.setValueCurveAtTime(
+                                                    new Float32Array([0, 0.25, 0.5, 0.75, 1]),
+                                                    roundToSamples(startTime, context.sampleRate),
+                                                    6 / context.sampleRate
+                                                );
 
-                                            audioBufferSourceNode.start(startTime);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([1, 0, 0, 0, 0]);
+                                                audioBufferSourceNode.start(startTime);
+                                            }
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([1, 0, 0, 0, 0]);
+                                        });
                                     });
-                                });
+                                }
                             });
 
                             describe('with another AudioNode connected to the AudioParam', () => {
-                                it('should modify the signal', function () {
-                                    this.timeout(10000);
+                                // Bug #185: Chrome and Edge add an extra sample to the delay.
+                                if (!/Chrome/.test(navigator.userAgent)) {
+                                    it('should modify the signal', function () {
+                                        this.timeout(10000);
 
-                                    return renderer({
-                                        prepare({ delayNode }) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                                            const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
-                                            const value = 3 / context.sampleRate;
+                                        return renderer({
+                                            prepare({ delayNode }) {
+                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                                const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+                                                const value = 3 / context.sampleRate;
 
-                                            audioBuffer.copyToChannel(new Float32Array([value, value, value, value, value]), 0);
+                                                audioBuffer.copyToChannel(new Float32Array([value, value, value, value, value]), 0);
 
-                                            audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+                                                audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
 
-                                            delayNode.delayTime.value = 0;
+                                                delayNode.delayTime.value = 0;
 
-                                            audioBufferSourceNodeForAudioParam.connect(delayNode.delayTime);
+                                                audioBufferSourceNodeForAudioParam.connect(delayNode.delayTime);
 
-                                            return { audioBufferSourceNodeForAudioParam };
-                                        },
-                                        start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
-                                            audioBufferSourceNode.start(startTime);
-                                            audioBufferSourceNodeForAudioParam.start(startTime);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(channelData[0]).to.be.closeTo(0, 0.00001);
-                                        expect(channelData[1]).to.be.closeTo(0, 0.00001);
-                                        expect(channelData[2]).to.be.closeTo(0, 0.00001);
-                                        expect(channelData[3]).to.be.closeTo(1, 0.00001);
-                                        expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                                return { audioBufferSourceNodeForAudioParam };
+                                            },
+                                            start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                                audioBufferSourceNode.start(startTime);
+                                                audioBufferSourceNodeForAudioParam.start(startTime);
+                                            }
+                                        }).then((channelData) => {
+                                            expect(channelData[0]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[1]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[2]).to.be.closeTo(0, 0.00001);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
+                                            expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                        });
                                     });
-                                });
+                                }
                             });
 
                             // @todo Test other automations as well.
