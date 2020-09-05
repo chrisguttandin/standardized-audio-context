@@ -1,10 +1,6 @@
 import { TWrapChannelMergerNodeFactory } from '../types';
 
-export const createWrapChannelMergerNode: TWrapChannelMergerNodeFactory = (
-    createInvalidStateError,
-    createNativeAudioNode,
-    monitorConnectionsFunction
-) => {
+export const createWrapChannelMergerNode: TWrapChannelMergerNodeFactory = (createInvalidStateError, monitorConnectionsFunction) => {
     return (nativeContext, channelMergerNode) => {
         channelMergerNode.channelCount = 1;
         channelMergerNode.channelCountMode = 'explicit';
@@ -24,7 +20,7 @@ export const createWrapChannelMergerNode: TWrapChannelMergerNodeFactory = (
         });
 
         // Bug #20: Safari requires a connection of any kind to treat the input signal correctly.
-        const audioBufferSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createBufferSource());
+        const audioBufferSourceNode = nativeContext.createBufferSource();
 
         const whenConnected = () => {
             const length = channelMergerNode.numberOfInputs;

@@ -17,7 +17,7 @@ export const createScriptProcessor = (context, bufferSize, numberOfInputChannels
 
             const { activeInputs } = AUDIO_NODE_CONNECTIONS_STORE.get(destination);
 
-            activeInputs[args[1] || 0].add([destination, args[0] || 0]);
+            activeInputs[args[1] || 0].add([scriptProcessorNodeProxy, args[0] || 0, () => {}]);
 
             return destination;
         },

@@ -70,7 +70,6 @@ const filterFullBuffer = (
 
 export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFactory = (
     createNativeAudioBufferSourceNode,
-    createNativeAudioNode,
     getNativeAudioNode,
     nativeOfflineAudioContextConstructor,
     renderInputsOfAudioNode,
@@ -105,9 +104,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                     playbackRate: 1
                 });
             } else if (!nativeIIRFilterNodeIsOwnedByContext) {
-                nativeIIRFilterNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => {
-                    return ntvCntxt.createIIRFilter(<number[]>feedforward, <number[]>feedback);
-                });
+                nativeIIRFilterNode = nativeOfflineAudioContext.createIIRFilter(<number[]>feedforward, <number[]>feedback);
             }
 
             renderedNativeAudioNodes.set(

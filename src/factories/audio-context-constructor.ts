@@ -1,3 +1,4 @@
+import { deactivateAudioGraph } from '../helpers/deactivate-audio-graph';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import {
     IAudioContext,
@@ -114,12 +115,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 this._state = null;
             }
 
-            return this._nativeAudioContext.close();
-
-            /*
-             * Bug #50: Deleting the AudioGraph is currently not possible anymore.
-             * ...then(() => deleteAudioGraph(this, this._nativeAudioContext));
-             */
+            return this._nativeAudioContext.close().then(() => deactivateAudioGraph(this));
         }
 
         public createMediaElementSource(mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this> {

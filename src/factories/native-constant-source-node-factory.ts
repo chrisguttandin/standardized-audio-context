@@ -7,7 +7,6 @@ import { TNativeConstantSourceNodeFactoryFactory } from '../types';
 export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFactoryFactory = (
     addSilentConnection,
     cacheTestResult,
-    createNativeAudioNode,
     createNativeConstantSourceNodeFaker,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
@@ -18,9 +17,7 @@ export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFac
             return createNativeConstantSourceNodeFaker(nativeContext, options);
         }
 
-        const nativeConstantSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
-            return ntvCntxt.createConstantSource();
-        });
+        const nativeConstantSourceNode = nativeContext.createConstantSource();
 
         assignNativeAudioNodeOptions(nativeConstantSourceNode, options);
 

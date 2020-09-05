@@ -1,3 +1,4 @@
+import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { IAudioParam, IMinimalOfflineAudioContext, IOscillatorNode, IOscillatorNodeRenderer, IOscillatorOptions } from '../interfaces';
@@ -113,16 +114,22 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
                 this._oscillatorNodeRenderer.start = when;
             }
 
-            setInternalStateToActive(this);
+            if (this.context.state !== 'closed') {
+                setInternalStateToActive(this);
 
-            const resetInternalStateToPassive = () => {
-                this._nativeOscillatorNode.removeEventListener('ended', resetInternalStateToPassive);
+                const resetInternalStateToPassive = () => {
+                    this._nativeOscillatorNode.removeEventListener('ended', resetInternalStateToPassive);
 
-                // @todo Determine a meaningful delay instead of just using one second.
-                setTimeout(() => setInternalStateToPassive(this), 1000);
-            };
+                    // @todo Determine a meaningful delay instead of just using one second.
+                    setTimeout(() => {
+                        if (isActiveAudioNode(this)) {
+                            setInternalStateToPassive(this);
+                        }
+                    }, 1000);
+                };
 
-            this._nativeOscillatorNode.addEventListener('ended', resetInternalStateToPassive);
+                this._nativeOscillatorNode.addEventListener('ended', resetInternalStateToPassive);
+            }
         }
 
         public stop(when = 0): void {

@@ -474,14 +474,7 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             gain: 0
         });
 
-        const connectFakeGraph = () =>
-            scriptProcessorNode
-                .connect(nativeGainNode)
-                /*
-                 * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is used here
-                 * to make sure to connect the right destination.
-                 */
-                .connect(nativeGainNode.context.destination);
+        const connectFakeGraph = () => scriptProcessorNode.connect(nativeGainNode).connect(nativeContext.destination);
         const disconnectFakeGraph = () => {
             scriptProcessorNode.disconnect(nativeGainNode);
             nativeGainNode.disconnect();

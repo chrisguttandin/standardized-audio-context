@@ -26,7 +26,6 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     evaluateSource,
     exposeCurrentFrameAndCurrentTime,
     fetchSource,
-    getBackupNativeContext,
     getNativeContext,
     ongoingRequests,
     resolvedRequests,
@@ -116,10 +115,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 const blob = new Blob([wrappedSource], { type: 'application/javascript; charset=utf-8' });
                 const url = URL.createObjectURL(blob);
 
-                const backupNativeContext = getBackupNativeContext(nativeContext);
-                const nativeContextOrBackupNativeContext = backupNativeContext !== null ? backupNativeContext : nativeContext;
-
-                return nativeContextOrBackupNativeContext.audioWorklet.addModule(url, options).finally(() => URL.revokeObjectURL(url));
+                return nativeContext.audioWorklet.addModule(url, options).finally(() => URL.revokeObjectURL(url));
             });
         }
 

@@ -3,9 +3,9 @@ import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativePannerNodeFactoryFactory } from '../types';
 
-export const createNativePannerNodeFactory: TNativePannerNodeFactoryFactory = (createNativeAudioNode, createNativePannerNodeFaker) => {
+export const createNativePannerNodeFactory: TNativePannerNodeFactoryFactory = (createNativePannerNodeFaker) => {
     return (nativeContext, options) => {
-        const nativePannerNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createPanner());
+        const nativePannerNode = nativeContext.createPanner();
 
         // Bug #124: Safari does not support modifying the orientation and the position with AudioParams.
         if (nativePannerNode.orientationX === undefined) {

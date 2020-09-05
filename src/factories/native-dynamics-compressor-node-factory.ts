@@ -2,12 +2,9 @@ import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-a
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeDynamicsCompressorNodeFactoryFactory } from '../types';
 
-export const createNativeDynamicsCompressorNodeFactory: TNativeDynamicsCompressorNodeFactoryFactory = (
-    createNativeAudioNode,
-    createNotSupportedError
-) => {
+export const createNativeDynamicsCompressorNodeFactory: TNativeDynamicsCompressorNodeFactoryFactory = (createNotSupportedError) => {
     return (nativeContext, options) => {
-        const nativeDynamicsCompressorNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createDynamicsCompressor());
+        const nativeDynamicsCompressorNode = nativeContext.createDynamicsCompressor();
 
         assignNativeAudioNodeOptions(nativeDynamicsCompressorNode, options);
 

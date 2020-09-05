@@ -4,6 +4,8 @@
  *
  * Bug #27: Edge up to version v18 did reject an invalid arrayBuffer passed to decodeAudioData() with a DOMException.
  *
+ * Bug #50: Edge up to version v18 did not allow to create AudioNodes on a closed context.
+ *
  * Bug #57: Edge up to version v18 did not throw an error when assigning the type of an OscillatorNode to 'custom'.
  *
  * Bug #63: Edge up to version v18 did not expose the mediaElement property of a MediaElementAudioSourceNode.

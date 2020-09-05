@@ -1,3 +1,4 @@
+import { deactivateAudioGraph } from '../helpers/deactivate-audio-graph';
 import { testPromiseSupport } from '../helpers/test-promise-support';
 import { IAudioBuffer, IOfflineAudioContext, IOfflineAudioContextOptions } from '../interfaces';
 import { TAudioContextState, TNativeOfflineAudioContext, TOfflineAudioContextConstructorFactory } from '../types';
@@ -96,10 +97,7 @@ export const createOfflineAudioContextConstructor: TOfflineAudioContextConstruct
             return startRendering(this.destination, this._nativeOfflineAudioContext).finally(() => {
                 this._state = null;
 
-                /*
-                 * Bug #50: Deleting the AudioGraph is currently not possible anymore.
-                 * deleteAudioGraph(this, this._nativeOfflineAudioContext);
-                 */
+                deactivateAudioGraph(this);
             });
         }
 

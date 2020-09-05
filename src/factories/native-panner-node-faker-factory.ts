@@ -5,7 +5,6 @@ import { TNativeAudioNode, TNativePannerNode, TNativePannerNodeFakerFactoryFacto
 export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFactory = (
     connectNativeAudioNodeToNativeAudioNode,
     createInvalidStateError,
-    createNativeAudioNode,
     createNativeChannelMergerNode,
     createNativeGainNode,
     createNativeScriptProcessorNode,
@@ -34,7 +33,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             ...audioNodeOptions
         }
     ) => {
-        const pannerNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createPanner());
+        const pannerNode = nativeContext.createPanner();
 
         // Bug #125: Safari does not throw an error yet.
         if (audioNodeOptions.channelCount > 2) {

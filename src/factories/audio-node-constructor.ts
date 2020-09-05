@@ -501,7 +501,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             AUDIO_NODE_STORE.set(this, nativeAudioNode);
             EVENT_LISTENERS.set(this, new Set());
 
-            if (isActive) {
+            if (context.state !== 'closed' && isActive) {
                 setInternalStateToActive(this);
             }
 
@@ -577,7 +577,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                         this._nativeAudioNode.disconnect(...connection);
                     }
 
-                    if (!isPassive && isPassiveAudioNode(destination)) {
+                    if (this.context.state !== 'closed' && !isPassive && isPassiveAudioNode(destination)) {
                         setInternalStateToActive(destination);
                     }
                 } catch (err) {

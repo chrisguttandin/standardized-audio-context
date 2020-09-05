@@ -1,4 +1,5 @@
 import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
+import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { IAudioParam, IConstantSourceNode, IConstantSourceOptions } from '../interfaces';
@@ -87,16 +88,22 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
                 this._constantSourceNodeRenderer.start = when;
             }
 
-            setInternalStateToActive(this);
+            if (this.context.state !== 'closed') {
+                setInternalStateToActive(this);
 
-            const resetInternalStateToPassive = () => {
-                this._nativeConstantSourceNode.removeEventListener('ended', resetInternalStateToPassive);
+                const resetInternalStateToPassive = () => {
+                    this._nativeConstantSourceNode.removeEventListener('ended', resetInternalStateToPassive);
 
-                // @todo Determine a meaningful delay instead of just using one second.
-                setTimeout(() => setInternalStateToPassive(this), 1000);
-            };
+                    // @todo Determine a meaningful delay instead of just using one second.
+                    setTimeout(() => {
+                        if (isActiveAudioNode(this)) {
+                            setInternalStateToPassive(this);
+                        }
+                    }, 1000);
+                };
 
-            this._nativeConstantSourceNode.addEventListener('ended', resetInternalStateToPassive);
+                this._nativeConstantSourceNode.addEventListener('ended', resetInternalStateToPassive);
+            }
         }
 
         public stop(when = 0): void {

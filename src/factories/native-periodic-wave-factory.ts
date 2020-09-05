@@ -1,18 +1,12 @@
 import { TNativePeriodicWaveFactoryFactory } from '../types';
 
-export const createNativePeriodicWaveFactory: TNativePeriodicWaveFactoryFactory = (createIndexSizeError, getBackupNativeContext) => {
+export const createNativePeriodicWaveFactory: TNativePeriodicWaveFactoryFactory = (createIndexSizeError) => {
     return (nativeContext, { disableNormalization, imag, real }) => {
-        // Bug #50: Only Edge does currently not allow to create AudioNodes (and other objects) on a closed context yet.
-        const backupNativeContext = getBackupNativeContext(nativeContext);
-
         // Bug #180: Safari does not allow to use ordinary arrays.
         const convertedImag = imag instanceof Float32Array ? imag : new Float32Array(imag);
         const convertedReal = real instanceof Float32Array ? real : new Float32Array(real);
 
-        const nativePeriodicWave =
-            backupNativeContext === null
-                ? nativeContext.createPeriodicWave(convertedReal, convertedImag, { disableNormalization })
-                : backupNativeContext.createPeriodicWave(convertedReal, convertedImag, { disableNormalization });
+        const nativePeriodicWave = nativeContext.createPeriodicWave(convertedReal, convertedImag, { disableNormalization });
 
         // Bug #181: No browser does throw an IndexSizeError so far if the given arrays have less than two values.
         if (Array.from(imag).length < 2) {

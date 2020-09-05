@@ -4,13 +4,9 @@ import { testAnalyserNodeGetFloatTimeDomainDataMethodSupport } from '../helpers/
 import { wrapAnalyserNodeGetFloatTimeDomainDataMethod } from '../helpers/wrap-analyser-node-get-float-time-domain-data-method';
 import { TNativeAnalyserNodeFactoryFactory } from '../types';
 
-export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory = (
-    cacheTestResult,
-    createIndexSizeError,
-    createNativeAudioNode
-) => {
+export const createNativeAnalyserNodeFactory: TNativeAnalyserNodeFactoryFactory = (cacheTestResult, createIndexSizeError) => {
     return (nativeContext, options) => {
-        const nativeAnalyserNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createAnalyser());
+        const nativeAnalyserNode = nativeContext.createAnalyser();
 
         // Bug #37: Firefox does not create an AnalyserNode with the default properties.
         assignNativeAudioNodeOptions(nativeAnalyserNode, options);

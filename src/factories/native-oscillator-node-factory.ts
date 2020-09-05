@@ -8,14 +8,13 @@ import { TNativeOscillatorNodeFactoryFactory } from '../types';
 export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFactory = (
     addSilentConnection,
     cacheTestResult,
-    createNativeAudioNode,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 ) => {
     return (nativeContext, options) => {
-        const nativeOscillatorNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createOscillator());
+        const nativeOscillatorNode = nativeContext.createOscillator();
 
         assignNativeAudioNodeOptions(nativeOscillatorNode, options);
 

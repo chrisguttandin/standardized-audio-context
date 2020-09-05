@@ -5,14 +5,13 @@ import { TNativeAudioNode, TNativeWaveShaperNode, TNativeWaveShaperNodeFakerFact
 export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerFactoryFactory = (
     createConnectedNativeAudioBufferSourceNode,
     createInvalidStateError,
-    createNativeAudioNode,
     createNativeGainNode,
     isDCCurve,
     monitorConnections
 ) => {
     return (nativeContext, { curve, oversample, ...audioNodeOptions }) => {
-        const negativeWaveShaperNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createWaveShaper());
-        const positiveWaveShaperNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createWaveShaper());
+        const negativeWaveShaperNode = nativeContext.createWaveShaper();
+        const positiveWaveShaperNode = nativeContext.createWaveShaper();
 
         assignNativeAudioNodeOptions(negativeWaveShaperNode, audioNodeOptions);
         assignNativeAudioNodeOptions(positiveWaveShaperNode, audioNodeOptions);

@@ -3,7 +3,6 @@ import { TNativeAudioWorkletNode, TNativeAudioWorkletNodeFactoryFactory, TNative
 
 export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactoryFactory = (
     createInvalidStateError,
-    createNativeAudioNode,
     createNativeAudioWorkletNodeFaker,
     createNativeGainNode,
     createNotSupportedError,
@@ -12,9 +11,11 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
     return (nativeContext, baseLatency, nativeAudioWorkletNodeConstructor, name, processorConstructor, options) => {
         if (nativeAudioWorkletNodeConstructor !== null) {
             try {
-                const nativeAudioWorkletNode = createNativeAudioNode(nativeContext, (ntvCntxt) => {
-                    return new nativeAudioWorkletNodeConstructor(ntvCntxt, name, <TNativeAudioWorkletNodeOptions>options);
-                });
+                const nativeAudioWorkletNode = new nativeAudioWorkletNodeConstructor(
+                    nativeContext,
+                    name,
+                    <TNativeAudioWorkletNodeOptions>options
+                );
                 const patchedEventListeners: Map<
                     EventListenerOrEventListenerObject,
                     NonNullable<TNativeAudioWorkletNode['onprocessorerror']>
@@ -128,20 +129,10 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                         gain: 0
                     });
 
-                    nativeAudioWorkletNode
-                        .connect(nativeGainNode)
-                        /*
-                         * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is
-                         * used here to make sure to connect the right destination.
-                         */
-                        .connect(nativeGainNode.context.destination);
+                    nativeAudioWorkletNode.connect(nativeGainNode).connect(nativeContext.destination);
 
                     const whenConnected = () => nativeGainNode.disconnect();
-                    /*
-                     * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is
-                     * used here to make sure to connect the right destination.
-                     */
-                    const whenDisconnected = () => nativeGainNode.connect(nativeGainNode.context.destination);
+                    const whenDisconnected = () => nativeGainNode.connect(nativeContext.destination);
 
                     // @todo Disconnect the connection when the process() function of the AudioWorkletNode returns false.
                     return monitorConnections(nativeAudioWorkletNode, whenConnected, whenDisconnected);

@@ -2,13 +2,9 @@ import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
 import { TNativeConvolverNodeFactoryFactory } from '../types';
 
-export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactory = (
-    createNativeAudioNode,
-    createNotSupportedError,
-    overwriteAccessors
-) => {
+export const createNativeConvolverNodeFactory: TNativeConvolverNodeFactoryFactory = (createNotSupportedError, overwriteAccessors) => {
     return (nativeContext, options) => {
-        const nativeConvolverNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createConvolver());
+        const nativeConvolverNode = nativeContext.createConvolver();
 
         assignNativeAudioNodeOptions(nativeConvolverNode, options);
 

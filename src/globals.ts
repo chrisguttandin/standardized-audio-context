@@ -22,8 +22,6 @@ export const AUDIO_PARAM_CONNECTIONS_STORE: TAudioParamConnectionsStore = new We
 
 export const AUDIO_PARAM_STORE: TAudioParamStore = new WeakMap();
 
-export const BACKUP_NATIVE_CONTEXT_STORE: WeakMap<TNativeContext, TNativeContext> = new WeakMap();
-
 export const CONTEXT_STORE: TContextStore = new WeakMap();
 
 export const EVENT_LISTENERS: WeakMap<IAudioNode<TContext>, Set<TInternalStateEventListener>> = new WeakMap();

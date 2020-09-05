@@ -1,7 +1,6 @@
 import { TTestConstantSourceNodeAccurateSchedulingSupportFactory } from '../types';
 
 export const createTestConstantSourceNodeAccurateSchedulingSupport: TTestConstantSourceNodeAccurateSchedulingSupportFactory = (
-    createNativeAudioNode,
     nativeOfflineAudioContextConstructor
 ) => {
     return () => {
@@ -16,7 +15,7 @@ export const createTestConstantSourceNodeAccurateSchedulingSupport: TTestConstan
             return true;
         }
 
-        const nativeConstantSourceNode = createNativeAudioNode(nativeOfflineAudioContext, (ntvCntxt) => ntvCntxt.createConstantSource());
+        const nativeConstantSourceNode = nativeOfflineAudioContext.createConstantSource();
 
         /*
          * @todo This is using bug #75 to detect bug #70. That works because both bugs were unique to

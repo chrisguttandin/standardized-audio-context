@@ -9,7 +9,6 @@ import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
 export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceNodeFactoryFactory = (
     addSilentConnection,
     cacheTestResult,
-    createNativeAudioNode,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
     testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
     testAudioBufferSourceNodeStopMethodNullifiedBufferSupport,
@@ -21,7 +20,7 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 ) => {
     return (nativeContext, options) => {
-        const nativeAudioBufferSourceNode = createNativeAudioNode(nativeContext, (ntvCntxt) => ntvCntxt.createBufferSource());
+        const nativeAudioBufferSourceNode = nativeContext.createBufferSource();
 
         assignNativeAudioNodeOptions(nativeAudioBufferSourceNode, options);
 

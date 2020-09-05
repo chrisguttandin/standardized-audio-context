@@ -1,5 +1,4 @@
 import { GainNode, MediaElementAudioSourceNode } from '../../../src/module';
-import { BACKUP_NATIVE_CONTEXT_STORE } from '../../../src/globals';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createNativeAudioContext } from '../../helper/create-native-audio-context';
@@ -64,20 +63,13 @@ describe('MediaElementAudioSourceNode', () => {
                     describe(`with an audioContextState of "${audioContextState}"`, () => {
                         afterEach(() => {
                             if (audioContextState === 'closed') {
-                                const backupNativeContext = BACKUP_NATIVE_CONTEXT_STORE.get(context._nativeContext);
-
-                                // Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why this check is necessary.
-                                if (backupNativeContext !== undefined && backupNativeContext.startRendering === undefined) {
-                                    context = backupNativeContext;
-                                } else {
-                                    context.close = undefined;
-                                }
+                                context.close = undefined;
                             }
                         });
 
                         beforeEach(() => {
                             if (audioContextState === 'closed') {
-                                if (context.close === undefined) {
+                                if (typeof context.startRendering === 'function') {
                                     return context.startRendering();
                                 }
 

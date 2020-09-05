@@ -9,13 +9,7 @@ export const createAddSilentConnection: TAddSilentConnectionFactory = (createNat
             gain: 0
         });
 
-        nativeAudioScheduledSourceNode
-            .connect(nativeGainNode)
-            /*
-             * Bug #50: Edge does not yet allow to create AudioNodes on a closed AudioContext. Therefore the context property is
-             * used here to make sure to connect the right destination.
-             */
-            .connect(nativeGainNode.context.destination);
+        nativeAudioScheduledSourceNode.connect(nativeGainNode).connect(nativeContext.destination);
 
         const disconnect = () => {
             nativeAudioScheduledSourceNode.removeEventListener('ended', disconnect);
