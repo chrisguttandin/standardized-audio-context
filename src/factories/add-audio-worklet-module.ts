@@ -97,7 +97,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                  *         inputs.forEach(this.__collectBuffers);
                  *         outputs.forEach(this.__collectBuffers);
                  *         this.__collectBuffers(Object.values(parameters));
-
+                 *
                  *         return super.process(
                  *             (inputs.map((input) => input.some((channelData) => channelData.length === 0)) ? [ ] : input),
                  *             outputs,
