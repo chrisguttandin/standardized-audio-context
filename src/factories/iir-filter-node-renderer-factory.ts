@@ -104,6 +104,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                     playbackRate: 1
                 });
             } else if (!nativeIIRFilterNodeIsOwnedByContext) {
+                // @todo TypeScript defines the parameters of createIIRFilter() as arrays of numbers.
                 nativeIIRFilterNode = nativeOfflineAudioContext.createIIRFilter(<number[]>feedforward, <number[]>feedback);
             }
 

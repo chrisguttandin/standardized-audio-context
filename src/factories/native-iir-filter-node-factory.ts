@@ -8,6 +8,7 @@ export const createNativeIIRFilterNodeFactory: TNativeIIRFilterNodeFactoryFactor
             return createNativeIIRFilterNodeFaker(nativeContext, baseLatency, options);
         }
 
+        // @todo TypeScript defines the parameters of createIIRFilter() as arrays of numbers.
         const nativeIIRFilterNode = nativeContext.createIIRFilter(<number[]>options.feedforward, <number[]>options.feedback);
 
         assignNativeAudioNodeOptions(nativeIIRFilterNode, options);
