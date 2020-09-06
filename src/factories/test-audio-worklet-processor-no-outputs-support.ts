@@ -29,14 +29,19 @@ export const createTestAudioWorkletProcessorNoOutputsSupport: TTestAudioWorkletP
         try {
             await offlineAudioContext.audioWorklet.addModule(url);
 
-            const gainNode = offlineAudioContext.createGain();
             const audioWorkletNode = new nativeAudioWorkletNodeConstructor(offlineAudioContext, 'a', { numberOfOutputs: 0 });
+            const oscillator = offlineAudioContext.createOscillator();
 
             audioWorkletNode.port.onmessage = () => (isCallingProcess = true);
 
-            gainNode.connect(audioWorkletNode);
+            oscillator.connect(audioWorkletNode);
+            oscillator.start(0);
 
             await offlineAudioContext.startRendering();
+
+            if (!isCallingProcess) {
+                await new Promise((resolve) => setTimeout(resolve, 5));
+            }
         } catch {
             // Ignore errors.
         } finally {
