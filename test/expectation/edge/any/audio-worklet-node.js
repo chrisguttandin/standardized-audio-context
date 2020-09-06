@@ -59,4 +59,28 @@ describe('AudioWorklet', () => {
             audioWorkletNode.port.postMessage(null);
         });
     });
+
+    describe('with a closed context', () => {
+        let audioContext;
+
+        beforeEach(() => {
+            audioContext = new AudioContext();
+        });
+
+        beforeEach(async () => {
+            await audioContext.close();
+            await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+        });
+
+        // bug #186
+
+        it('should throw a DOMException', () => {
+            expect(() => new AudioWorkletNode(audioContext, 'gain-processor'))
+                .to.throw(
+                    DOMException,
+                    "Failed to construct 'AudioWorkletNode': AudioWorkletNode cannot be created: No execution context available."
+                )
+                .with.property('name', 'InvalidStateError');
+        });
+    });
 });

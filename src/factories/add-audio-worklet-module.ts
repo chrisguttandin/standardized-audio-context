@@ -27,6 +27,8 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     exposeCurrentFrameAndCurrentTime,
     fetchSource,
     getNativeContext,
+    getOrCreateBackupOfflineAudioContext,
+    isNativeOfflineAudioContext,
     ongoingRequests,
     resolvedRequests,
     testAudioWorkletProcessorPostMessageSupport,
@@ -115,7 +117,19 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 const blob = new Blob([wrappedSource], { type: 'application/javascript; charset=utf-8' });
                 const url = URL.createObjectURL(blob);
 
-                return nativeContext.audioWorklet.addModule(url, options).finally(() => URL.revokeObjectURL(url));
+                return nativeContext.audioWorklet
+                    .addModule(url, options)
+                    .then(() => {
+                        if (isNativeOfflineAudioContext(nativeContext)) {
+                            return;
+                        }
+
+                        // Bug #186: Chrome, Edge and Opera do not allow to create an AudioWorkletNode on a closed AudioContext.
+                        const backupOfflineAudioContext = getOrCreateBackupOfflineAudioContext(nativeContext);
+
+                        return backupOfflineAudioContext.audioWorklet.addModule(url, options);
+                    })
+                    .finally(() => URL.revokeObjectURL(url));
             });
         }
 

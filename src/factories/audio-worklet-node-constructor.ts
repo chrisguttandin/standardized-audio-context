@@ -15,6 +15,7 @@ import {
     TAudioWorkletNodeConstructorFactory,
     TContext,
     TErrorEventHandler,
+    TNativeAudioContext,
     TNativeAudioParam,
     TNativeAudioWorkletNode
 } from '../types';
@@ -66,6 +67,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     createAudioWorkletNodeRenderer,
     createNativeAudioWorkletNode,
     getAudioNodeConnections,
+    getBackupOfflineAudioContext,
     getNativeContext,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
@@ -85,8 +87,13 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
             const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
             const processorConstructor = nodeNameToProcessorConstructorMap?.get(name);
+            // Bug #186: Chrome, Edge and Opera do not allow to create an AudioWorkletNode on a closed AudioContext.
+            const nativeContextOrBackupOfflineAudioContext =
+                isOffline || nativeContext.state !== 'closed'
+                    ? nativeContext
+                    : getBackupOfflineAudioContext(<TNativeAudioContext>nativeContext) ?? nativeContext;
             const nativeAudioWorkletNode = createNativeAudioWorkletNode(
-                nativeContext,
+                nativeContextOrBackupOfflineAudioContext,
                 isOffline ? null : (<IMinimalAudioContext>(<any>context)).baseLatency,
                 nativeAudioWorkletNodeConstructor,
                 name,

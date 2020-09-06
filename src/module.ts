@@ -64,7 +64,9 @@ import { createGainNodeRendererFactory } from './factories/gain-node-renderer-fa
 import { createGetActiveAudioWorkletNodeInputs } from './factories/get-active-audio-worklet-node-inputs';
 import { createGetAudioNodeRenderer } from './factories/get-audio-node-renderer';
 import { createGetAudioParamRenderer } from './factories/get-audio-param-renderer';
+import { createGetBackupOfflineAudioContext } from './factories/get-backup-offline-audio-context';
 import { createGetNativeContext } from './factories/get-native-context';
+import { createGetOrCreateBackupOfflineAudioContext } from './factories/get-or-create-backup-offline-audio-context';
 import { createGetUnrenderedAudioWorkletNodes } from './factories/get-unrendered-audio-worklet-nodes';
 import { createIIRFilterNodeConstructor } from './factories/iir-filter-node-constructor';
 import { createIIRFilterNodeRendererFactory } from './factories/iir-filter-node-renderer-factory';
@@ -234,6 +236,7 @@ import {
     TAudioContextConstructor,
     TAudioParamAudioNodeStore,
     TAudioWorkletNodeConstructor,
+    TBackupOfflineAudioContextStore,
     TBiquadFilterNodeConstructor,
     TChannelMergerNodeConstructor,
     TChannelSplitterNodeConstructor,
@@ -701,6 +704,11 @@ const waveShaperNodeConstructor: TWaveShaperNodeConstructor = createWaveShaperNo
 );
 const isSecureContext = createIsSecureContext(window);
 const exposeCurrentFrameAndCurrentTime = createExposeCurrentFrameAndCurrentTime(window);
+const backupOfflineAudioContextStore: TBackupOfflineAudioContextStore = new WeakMap();
+const getOrCreateBackupOfflineAudioContext = createGetOrCreateBackupOfflineAudioContext(
+    backupOfflineAudioContextStore,
+    nativeOfflineAudioContextConstructor
+);
 const nativeAudioWorkletNodeConstructor = createNativeAudioWorkletNodeConstructor(window);
 
 // The addAudioWorkletModule() function is only available in a SecureContext.
@@ -712,6 +720,8 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
           exposeCurrentFrameAndCurrentTime,
           createFetchSource(createAbortError),
           getNativeContext,
+          getOrCreateBackupOfflineAudioContext,
+          isNativeOfflineAudioContext,
           new WeakMap(),
           new WeakMap(),
           createTestAudioWorkletProcessorPostMessageSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
@@ -848,6 +858,7 @@ const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     renderInputsOfAudioNode,
     renderNativeOfflineAudioContext
 );
+const getBackupOfflineAudioContext = createGetBackupOfflineAudioContext(backupOfflineAudioContextStore);
 const setActiveAudioWorkletNodeInputs = createSetActiveAudioWorkletNodeInputs(activeAudioWorkletNodeInputsStore);
 
 // The AudioWorkletNode constructor is only available in a SecureContext.
@@ -859,6 +870,7 @@ const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = is
           createAudioWorkletNodeRenderer,
           createNativeAudioWorkletNode,
           getAudioNodeConnections,
+          getBackupOfflineAudioContext,
           getNativeContext,
           isNativeOfflineAudioContext,
           nativeAudioWorkletNodeConstructor,

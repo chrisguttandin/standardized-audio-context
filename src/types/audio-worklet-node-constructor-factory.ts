@@ -4,6 +4,7 @@ import { TAudioParamFactory } from './audio-param-factory';
 import { TAudioWorkletNodeConstructor } from './audio-worklet-node-constructor';
 import { TAudioWorkletNodeRendererFactory } from './audio-worklet-node-renderer-factory';
 import { TGetAudioNodeConnectionsFunction } from './get-audio-node-connections-function';
+import { TGetBackupOfflineAudioContextFunction } from './get-backup-offline-audio-context-function';
 import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeAudioWorkletNodeConstructor } from './native-audio-worklet-node-constructor';
@@ -18,6 +19,7 @@ export type TAudioWorkletNodeConstructorFactory = (
     createAudioWorkletNodeRenderer: TAudioWorkletNodeRendererFactory,
     createNativeAudioWorkletNode: TNativeAudioWorkletNodeFactory,
     getAudioNodeConnections: TGetAudioNodeConnectionsFunction,
+    getBackupOfflineAudioContext: TGetBackupOfflineAudioContextFunction,
     getNativeContext: TGetNativeContextFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
     nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
