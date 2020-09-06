@@ -8,6 +8,7 @@ module.exports = (config) => {
 
         files: [
             'test/expectation/safari/any/**/*.js',
+            'test/expectation/safari/current/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
@@ -18,7 +19,8 @@ module.exports = (config) => {
         frameworks: ['mocha', 'sinon-chai'],
 
         preprocessors: {
-            'test/expectation/safari/any/**/*.js': 'webpack'
+            'test/expectation/safari/any/**/*.js': 'webpack',
+            'test/expectation/safari/current/**/*.js': 'webpack'
         },
 
         webpack: {
