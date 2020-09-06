@@ -64,7 +64,16 @@ describe('module', () => {
             audioContext = new AudioContext(); // eslint-disable-line no-undef
 
             await new Promise((resolve) => {
-                setTimeout(resolve, 1000);
+                // eslint-disable-next-line no-undef
+                audioContext.onstatechange = () => {
+                    // eslint-disable-next-line no-undef
+                    if (audioContext.state === 'running') {
+                        // eslint-disable-next-line no-undef
+                        audioContext.onstatechange = null;
+
+                        setTimeout(resolve, 1000);
+                    }
+                };
             });
         });
     });
