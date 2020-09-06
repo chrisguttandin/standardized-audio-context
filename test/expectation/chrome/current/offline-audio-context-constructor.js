@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-
 describe('offlineAudioContextConstructor', () => {
     let offlineAudioContext;
 
