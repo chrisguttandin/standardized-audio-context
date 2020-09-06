@@ -775,6 +775,18 @@ describe('AudioWorkletNode', () => {
                             it('should be chainable', () => {
                                 expect(gain.exponentialRampToValueAtTime(1, 0)).to.equal(gain);
                             });
+
+                            it('should throw a RangeError', () => {
+                                expect(() => {
+                                    gain.exponentialRampToValueAtTime(0, 1);
+                                }).to.throw(RangeError);
+                            });
+
+                            it('should throw a RangeError', () => {
+                                expect(() => {
+                                    gain.exponentialRampToValueAtTime(1, -1);
+                                }).to.throw(RangeError);
+                            });
                         });
 
                         describe('linearRampToValueAtTime()', () => {

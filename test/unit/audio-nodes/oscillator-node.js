@@ -302,6 +302,18 @@ describe('OscillatorNode', () => {
 
                         expect(oscillatorNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(oscillatorNode.detune);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            oscillatorNode.detune.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            oscillatorNode.detune.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -373,6 +385,18 @@ describe('OscillatorNode', () => {
                 describe('exponentialRampToValueAtTime()', () => {
                     it('should be chainable', () => {
                         expect(oscillatorNode.frequency.exponentialRampToValueAtTime(1, 0)).to.equal(oscillatorNode.frequency);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            oscillatorNode.frequency.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            oscillatorNode.frequency.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 

@@ -303,6 +303,18 @@ describe('BiquadFilterNode', () => {
 
                         expect(biquadFilterNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.detune);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            biquadFilterNode.detune.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            biquadFilterNode.detune.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -374,6 +386,18 @@ describe('BiquadFilterNode', () => {
                 describe('exponentialRampToValueAtTime()', () => {
                     it('should be chainable', () => {
                         expect(biquadFilterNode.frequency.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.frequency);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            biquadFilterNode.frequency.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            biquadFilterNode.frequency.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 
@@ -449,6 +473,18 @@ describe('BiquadFilterNode', () => {
                         biquadFilterNode.gain.value = 1;
 
                         expect(biquadFilterNode.gain.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.gain);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            biquadFilterNode.gain.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            biquadFilterNode.gain.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 
@@ -572,6 +608,18 @@ describe('BiquadFilterNode', () => {
                 describe('exponentialRampToValueAtTime()', () => {
                     it('should be chainable', () => {
                         expect(biquadFilterNode.Q.exponentialRampToValueAtTime(1, 0)).to.equal(biquadFilterNode.Q);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            biquadFilterNode.Q.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            biquadFilterNode.Q.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 

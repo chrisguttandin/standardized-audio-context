@@ -311,6 +311,18 @@ describe('ConstantSourceNode', () => {
                     it('should be chainable', () => {
                         expect(constantSourceNode.offset.exponentialRampToValueAtTime(1, 0)).to.equal(constantSourceNode.offset);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            constantSourceNode.offset.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            constantSourceNode.offset.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {

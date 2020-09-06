@@ -293,6 +293,18 @@ describe('DelayNode', () => {
 
                         expect(delayNode.delayTime.exponentialRampToValueAtTime(1, 0)).to.equal(delayNode.delayTime);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            delayNode.delayTime.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            delayNode.delayTime.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {

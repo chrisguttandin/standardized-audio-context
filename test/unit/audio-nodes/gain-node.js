@@ -276,6 +276,18 @@ describe('GainNode', () => {
                     it('should be chainable', () => {
                         expect(gainNode.gain.exponentialRampToValueAtTime(1, 0)).to.equal(gainNode.gain);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            gainNode.gain.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            gainNode.gain.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {

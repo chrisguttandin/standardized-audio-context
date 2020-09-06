@@ -475,6 +475,18 @@ describe('AudioBufferSourceNode', () => {
                  * @todo         expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
                  * @todo     });
                  * @todo
+                 * @todo     it('should throw a RangeError', () => {
+                 * @todo         expect(() => {
+                 * @todo             audioBufferSourceNode.detune.exponentialRampToValueAtTime(0, 1);
+                 * @todo         }).to.throw(RangeError);
+                 * @todo     });
+                 * @todo
+                 * @todo     it('should throw a RangeError', () => {
+                 * @todo         expect(() => {
+                 * @todo             audioBufferSourceNode.detune.exponentialRampToValueAtTime(1, -1);
+                 * @todo         }).to.throw(RangeError);
+                 * @todo     });
+                 * @todo
                  * @todo });
                  * @todo
                  * @todo describe('linearRampToValueAtTime()', () => {
@@ -822,6 +834,18 @@ describe('AudioBufferSourceNode', () => {
                         expect(audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(1, 0)).to.equal(
                             audioBufferSourceNode.playbackRate
                         );
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 

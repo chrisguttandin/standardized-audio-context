@@ -280,6 +280,18 @@ describe('DynamicsCompressorNode', () => {
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.attack.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.attack.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.attack.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -426,6 +438,18 @@ describe('DynamicsCompressorNode', () => {
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.knee.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -528,6 +552,18 @@ describe('DynamicsCompressorNode', () => {
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -604,6 +640,18 @@ describe('DynamicsCompressorNode', () => {
                     it('should be chainable', () => {
                         expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.release.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -677,6 +725,18 @@ describe('DynamicsCompressorNode', () => {
                 describe('exponentialRampToValueAtTime()', () => {
                     it('should be chainable', () => {
                         // @todo expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 

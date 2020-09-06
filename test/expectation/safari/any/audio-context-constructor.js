@@ -430,6 +430,12 @@ describe('audioContextConstructor', () => {
                     it('should not throw any exception', () => {
                         audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
                     });
+
+                    // bug #187
+
+                    it('should not throw any exception', () => {
+                        audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(1, -1);
+                    });
                 });
             });
 

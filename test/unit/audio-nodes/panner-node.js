@@ -636,6 +636,18 @@ describe('PannerNode', () => {
                     it('should be chainable', () => {
                         expect(pannerNode.orientationX.exponentialRampToValueAtTime(1, 0)).to.equal(pannerNode.orientationX);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.orientationX.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.orientationX.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -711,6 +723,18 @@ describe('PannerNode', () => {
 
                         expect(pannerNode.orientationY.exponentialRampToValueAtTime(1, 0)).to.equal(pannerNode.orientationY);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.orientationY.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.orientationY.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -785,6 +809,18 @@ describe('PannerNode', () => {
                         pannerNode.orientationZ.value = 1;
 
                         expect(pannerNode.orientationZ.exponentialRampToValueAtTime(1, 0)).to.equal(pannerNode.orientationZ);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.orientationZ.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.orientationZ.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 
@@ -899,6 +935,18 @@ describe('PannerNode', () => {
                         pannerNode.positionX.value = 1;
 
                         expect(pannerNode.positionX.exponentialRampToValueAtTime(1, 0)).to.equal(pannerNode.positionX);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.positionX.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.positionX.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 
@@ -1123,6 +1171,18 @@ describe('PannerNode', () => {
 
                         expect(pannerNode.positionY.exponentialRampToValueAtTime(1, 0)).to.equal(pannerNode.positionY);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.positionY.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.positionY.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -1197,6 +1257,18 @@ describe('PannerNode', () => {
                         pannerNode.positionZ.value = 1;
 
                         expect(pannerNode.positionZ.exponentialRampToValueAtTime(1, 0)).to.equal(pannerNode.positionZ);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.positionZ.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            pannerNode.positionZ.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 

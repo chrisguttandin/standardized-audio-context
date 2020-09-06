@@ -77,6 +77,18 @@ describe('AudioListener', () => {
 
                         expect(listener.forwardX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardX);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.forwardX.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.forwardX.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -151,6 +163,18 @@ describe('AudioListener', () => {
                         listener.forwardY.value = 1;
 
                         expect(listener.forwardY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardY);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.forwardY.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.forwardY.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 
@@ -227,6 +251,18 @@ describe('AudioListener', () => {
 
                         expect(listener.forwardZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardZ);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.forwardZ.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.forwardZ.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -301,6 +337,18 @@ describe('AudioListener', () => {
                         listener.positionX.value = 1;
 
                         expect(listener.positionX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionX);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.positionX.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.positionX.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 
@@ -377,6 +425,18 @@ describe('AudioListener', () => {
 
                         expect(listener.positionY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionY);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.positionY.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.positionY.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -451,6 +511,18 @@ describe('AudioListener', () => {
                         listener.positionZ.value = 1;
 
                         expect(listener.positionZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionZ);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.positionZ.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.positionZ.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 
@@ -527,6 +599,18 @@ describe('AudioListener', () => {
 
                         expect(listener.upX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upX);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.upX.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.upX.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -602,6 +686,18 @@ describe('AudioListener', () => {
 
                         expect(listener.upY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upY);
                     });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.upY.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.upY.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
                 });
 
                 describe('linearRampToValueAtTime()', () => {
@@ -676,6 +772,18 @@ describe('AudioListener', () => {
                         listener.upZ.value = 1;
 
                         expect(listener.upZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upZ);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.upZ.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            listener.upZ.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
                     });
                 });
 
