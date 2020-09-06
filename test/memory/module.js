@@ -79,6 +79,18 @@ describe('module', () => {
     });
 
     describe('with a GainNode', () => {
+        beforeEach(async function () {
+            this.timeout(10000);
+
+            await page.evaluate(async () => {
+                new GainNode(audioContext); // eslint-disable-line no-undef
+
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 1000);
+                });
+            });
+        });
+
         describe('with unconnected GainNodes', () => {
             let run;
 
@@ -152,6 +164,18 @@ describe('module', () => {
     });
 
     describe('with an AudioBufferSourceNode', () => {
+        beforeEach(async function () {
+            this.timeout(10000);
+
+            await page.evaluate(async () => {
+                new AudioBufferSourceNode(audioContext); // eslint-disable-line no-undef
+
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 1000);
+                });
+            });
+        });
+
         describe('with unconnected AudioBufferSourceNodes', () => {
             let run;
 
