@@ -8,21 +8,18 @@ const DEFAULT_OPTIONS = {
     numberOfOutputs: 6
 } as const;
 
-const sanitizedOptions = (options: IChannelSplitterOptions) => {
-    return { ...options, channelCount: options.numberOfOutputs };
-};
-
 export const createChannelSplitterNodeConstructor: TChannelSplitterNodeConstructorFactory = (
     audioNodeConstructor,
     createChannelSplitterNodeRenderer,
     createNativeChannelSplitterNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    sanitizeChannelSplitterOptions
 ) => {
     return class ChannelSplitterNode<T extends TContext> extends audioNodeConstructor<T> {
         constructor(context: T, options?: Partial<IChannelSplitterOptions>) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
+            const mergedOptions = sanitizeChannelSplitterOptions({ ...DEFAULT_OPTIONS, ...options });
             const nativeChannelSplitterNode = createNativeChannelSplitterNode(nativeContext, mergedOptions);
             const channelSplitterNodeRenderer = <TAudioNodeRenderer<T, this>>(
                 (isNativeOfflineAudioContext(nativeContext) ? createChannelSplitterNodeRenderer() : null)

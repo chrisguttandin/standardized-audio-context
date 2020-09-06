@@ -185,6 +185,9 @@ import { isActiveAudioNode } from './helpers/is-active-audio-node';
 import { isDCCurve } from './helpers/is-dc-curve';
 import { isPartOfACycle } from './helpers/is-part-of-a-cycle';
 import { overwriteAccessors } from './helpers/overwrite-accessors';
+import { sanitizeAudioWorkletNodeOptions } from './helpers/sanitize-audio-worklet-node-options';
+import { sanitizeChannelSplitterOptions } from './helpers/sanitize-channel-splitter-options';
+import { sanitizePeriodicWaveOptions } from './helpers/sanitize-periodic-wave-options';
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport } from './helpers/test-audio-buffer-source-node-start-method-consecutive-calls-support';
 import { testAudioBufferSourceNodeStartMethodOffsetClampingSupport } from './helpers/test-audio-buffer-source-node-start-method-offset-clamping-support';
@@ -453,7 +456,8 @@ const channelSplitterNodeConstructor: TChannelSplitterNodeConstructor = createCh
     createChannelSplitterNodeRenderer,
     createNativeChannelSplitterNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    sanitizeChannelSplitterOptions
 );
 const createNativeConstantSourceNodeFaker = createNativeConstantSourceNodeFakerFactory(
     addSilentConnection,
@@ -663,7 +667,8 @@ const createNativePeriodicWave = createNativePeriodicWaveFactory(createIndexSize
 const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(
     createNativePeriodicWave,
     getNativeContext,
-    new WeakSet()
+    new WeakSet(),
+    sanitizePeriodicWaveOptions
 );
 const nativeStereoPannerNodeFakerFactory = createNativeStereoPannerNodeFakerFactory(
     createNativeChannelMergerNode,
@@ -874,6 +879,7 @@ const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = is
           getNativeContext,
           isNativeOfflineAudioContext,
           nativeAudioWorkletNodeConstructor,
+          sanitizeAudioWorkletNodeOptions,
           setActiveAudioWorkletNodeInputs,
           wrapEventListener
       )

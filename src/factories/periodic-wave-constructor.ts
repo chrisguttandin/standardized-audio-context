@@ -5,38 +5,16 @@ const DEFAULT_OPTIONS = {
     disableNormalization: false
 } as const;
 
-const createZeroFilledCopy = (iteable: Iterable<number>): number[] => {
-    return Array.from(iteable, () => 0);
-};
-
-const sanitizedOptions = (options: { disableNormalization: boolean } & Partial<IPeriodicWaveOptions>): IPeriodicWaveOptions => {
-    const { imag, real } = options;
-
-    if (imag === undefined) {
-        if (real === undefined) {
-            return { ...options, imag: [0, 0], real: [0, 0] };
-        }
-
-        return { ...options, imag: createZeroFilledCopy(real), real };
-    }
-
-    if (real === undefined) {
-        return { ...options, imag, real: createZeroFilledCopy(imag) };
-    }
-
-    return { ...options, imag, real };
-};
-
 export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (
     createNativePeriodicWave,
     getNativeContext,
-    periodicWaveStore
+    periodicWaveStore,
+    sanitizePeriodicWaveOptions
 ) => {
     return class PeriodicWave<T extends TContext> implements IPeriodicWave {
         constructor(context: T, options?: Partial<IPeriodicWaveOptions>) {
             const nativeContext = getNativeContext(context);
-            const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
-
+            const mergedOptions = sanitizePeriodicWaveOptions({ ...DEFAULT_OPTIONS, ...options });
             const periodicWave = createNativePeriodicWave(nativeContext, mergedOptions);
 
             periodicWaveStore.add(periodicWave);

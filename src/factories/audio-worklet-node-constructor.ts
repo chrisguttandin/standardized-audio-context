@@ -31,25 +31,6 @@ const DEFAULT_OPTIONS = {
     processorOptions: {}
 } as const;
 
-const sanitizedOptions = (
-    options: Partial<Pick<IAudioWorkletNodeOptions, 'outputChannelCount'>> & Omit<IAudioWorkletNodeOptions, 'outputChannelCount'>
-): IAudioWorkletNodeOptions => {
-    return {
-        ...options,
-        outputChannelCount:
-            options.outputChannelCount !== undefined
-                ? options.outputChannelCount
-                : options.numberOfInputs === 1 && options.numberOfOutputs === 1
-                ? /*
-                   * Bug #61: This should be the computedNumberOfChannels, but unfortunately that is almost impossible to fake. That's why
-                   * the channelCountMode is required to be 'explicit' as long as there is not a native implementation in every browser. That
-                   * makes sure the computedNumberOfChannels is equivilant to the channelCount which makes it much easier to compute.
-                   */
-                  [options.channelCount]
-                : Array.from({ length: options.numberOfOutputs }, () => 1)
-    };
-};
-
 export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFactory = (
     addUnrenderedAudioWorkletNode,
     audioNodeConstructor,
@@ -61,6 +42,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     getNativeContext,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
+    sanitizeAudioWorkletNodeOptions,
     setActiveAudioWorkletNodeInputs,
     wrapEventListener
 ) => {
@@ -74,7 +56,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
         constructor(context: T, name: string, options?: Partial<IAudioWorkletNodeOptions>) {
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const mergedOptions = sanitizedOptions({ ...DEFAULT_OPTIONS, ...options });
+            const mergedOptions = sanitizeAudioWorkletNodeOptions({ ...DEFAULT_OPTIONS, ...options });
             const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
             const processorConstructor = nodeNameToProcessorConstructorMap?.get(name);
             // Bug #186: Chrome, Edge and Opera do not allow to create an AudioWorkletNode on a closed AudioContext.

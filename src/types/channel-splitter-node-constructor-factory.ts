@@ -4,11 +4,13 @@ import { TChannelSplitterNodeRendererFactory } from './channel-splitter-node-ren
 import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeChannelSplitterNodeFactory } from './native-channel-splitter-node-factory';
+import { TSanitizeChannelSplitterOptionsFunction } from './sanitize-channel-splitter-options-function';
 
 export type TChannelSplitterNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
     createChannelSplitterNodeRenderer: TChannelSplitterNodeRendererFactory,
     createNativeChannelSplitterNode: TNativeChannelSplitterNodeFactory,
     getNativeContext: TGetNativeContextFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    sanitizeChannelSplitterOptions: TSanitizeChannelSplitterOptionsFunction
 ) => TChannelSplitterNodeConstructor;
