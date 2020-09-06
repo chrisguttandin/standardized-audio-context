@@ -50,7 +50,9 @@ describe('module', () => {
     before(async function () {
         this.timeout(10000);
 
-        browser = await puppeteer.launch();
+        browser = await puppeteer.launch({
+            args: ['--js-flags=--expose-gc']
+        });
     });
 
     beforeEach(async function () {
@@ -89,6 +91,8 @@ describe('module', () => {
                     setTimeout(resolve, 1000);
                 });
             });
+
+            await page.evaluate(() => gc()); // eslint-disable-line no-undef
         });
 
         describe('with unconnected GainNodes', () => {
@@ -174,6 +178,8 @@ describe('module', () => {
                     setTimeout(resolve, 1000);
                 });
             });
+
+            await page.evaluate(() => gc()); // eslint-disable-line no-undef
         });
 
         describe('with unconnected AudioBufferSourceNodes', () => {
