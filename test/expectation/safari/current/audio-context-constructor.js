@@ -8,26 +8,23 @@ describe('audioContextConstructor', () => {
     });
 
     describe('state', () => {
-        // This test will not work on Travis since it requires the browser settings to be changed to allow popups.
-        // eslint-disable-next-line no-undef
-        if (!process.env.TRAVIS) {
-            // bug #188
+        // bug #188
 
-            it("should set the state of the context to 'interrupted'", (done) => {
-                const oscillator = audioContext.createOscillator();
-                const currentTime = audioContext.currentTime;
+        // This test will only work when changing the browser settings to allow popups.
+        it("should set the state of the context to 'interrupted'", (done) => {
+            const oscillator = audioContext.createOscillator();
+            const currentTime = audioContext.currentTime;
 
-                oscillator.start(currentTime);
-                oscillator.stop(currentTime + 0.1);
+            oscillator.start(currentTime);
+            oscillator.stop(currentTime + 0.1);
 
-                window.open('about:blank', '_blank');
+            window.open('about:blank', '_blank');
 
-                setTimeout(() => {
-                    expect(audioContext.state).to.equal('interrupted');
+            setTimeout(() => {
+                expect(audioContext.state).to.equal('interrupted');
 
-                    done();
-                }, 500);
-            });
-        }
+                done();
+            }, 500);
+        });
     });
 });
