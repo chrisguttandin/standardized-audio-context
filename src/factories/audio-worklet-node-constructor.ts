@@ -31,16 +31,6 @@ const DEFAULT_OPTIONS = {
     processorOptions: {}
 } as const;
 
-const createChannelCount = (length: number): number[] => {
-    const channelCount: number[] = [];
-
-    for (let i = 0; i < length; i += 1) {
-        channelCount.push(1);
-    }
-
-    return channelCount;
-};
-
 const sanitizedOptions = (
     options: Partial<Pick<IAudioWorkletNodeOptions, 'outputChannelCount'>> & Omit<IAudioWorkletNodeOptions, 'outputChannelCount'>
 ): IAudioWorkletNodeOptions => {
@@ -56,7 +46,7 @@ const sanitizedOptions = (
                    * makes sure the computedNumberOfChannels is equivilant to the channelCount which makes it much easier to compute.
                    */
                   [options.channelCount]
-                : createChannelCount(options.numberOfOutputs)
+                : Array.from({ length: options.numberOfOutputs }, () => 1)
     };
 };
 
