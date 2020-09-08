@@ -74,8 +74,8 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 const patchedSourceWithoutImportStatements = isSupportingPostMessage
                     ? sourceWithoutImportStatements
                     : sourceWithoutImportStatements.replace(
-                          /\s+extends\s+AudioWorkletProcessor\s+/,
-                          ` extends (class extends AudioWorkletProcessor {__b=new WeakSet();constructor(){super();(p=>p.postMessage=(q=>(m,t)=>q.call(p,m,t?t.filter(u=>!this.__b.has(u)):t))(p.postMessage))(this.port)}}) `
+                          /\s+extends\s+AudioWorkletProcessor\s*{/,
+                          ` extends (class extends AudioWorkletProcessor {__b=new WeakSet();constructor(){super();(p=>p.postMessage=(q=>(m,t)=>q.call(p,m,t?t.filter(u=>!this.__b.has(u)):t))(p.postMessage))(this.port)}}){`
                       );
                 /*
                  * Bug #170: Chrome and Edge do call process() with an array with empty channelData for each input if no input is connected.
