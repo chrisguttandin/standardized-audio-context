@@ -33,7 +33,13 @@ You can then import the `AudioContext` and `OfflineAudioContext` like this:
 import { AudioContext, OfflineAudioContext } from 'standardized-audio-context';
 ```
 
-Afterwards the `AudioContext`/`OfflineAudioContext` can be used in the same way as their native counterparts. The following snippet will produce a nice and clean sine wave.
+It is also possible to load `standardized-audio-context` with a service like [jspm](https://jspm.org). The import statement from above would then need to be changed to point to a URL.
+
+```js
+import { AudioContext, OfflineAudioContext } from 'https://jspm.dev/standardized-audio-context';
+```
+
+Once the `AudioContext` and/or `OfflineAudioContext` are imported they can be used in the same way as their native counterparts. The following snippet will for example produce a nice and clean (as well as annoying) sine wave.
 
 ```js
 import { AudioContext } from 'standardized-audio-context';
