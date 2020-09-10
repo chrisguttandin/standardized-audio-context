@@ -113,6 +113,8 @@ describe('module', () => {
 
                 await page.evaluate(run, 1000);
 
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
         });
@@ -136,6 +138,8 @@ describe('module', () => {
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
@@ -161,6 +165,8 @@ describe('module', () => {
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
@@ -206,6 +212,8 @@ describe('module', () => {
 
                 await page.evaluate(run, 1000);
 
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
         });
@@ -235,6 +243,8 @@ describe('module', () => {
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
@@ -268,6 +278,8 @@ describe('module', () => {
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
