@@ -95,43 +95,6 @@ describe('MinimalAudioContext', () => {
                 done();
             }
         });
-
-        // Bug #131 Safari returns null when there are four other AudioContexts running already.
-        if (isSafari(navigator)) {
-            describe('with four running MinimalAudioContexts', () => {
-                let gainNodes;
-                let minimalAudioContexts;
-
-                afterEach(() => {
-                    [minimalAudioContext, ...minimalAudioContexts].forEach((mnmlDCntxt, index) =>
-                        gainNodes[index].disconnect(mnmlDCntxt.destination)
-                    );
-
-                    return Promise.all(minimalAudioContexts.map((mnmlDCntxt) => mnmlDCntxt.close()));
-                });
-
-                beforeEach(() => {
-                    minimalAudioContext = new MinimalAudioContext();
-                    minimalAudioContexts = [new MinimalAudioContext(), new MinimalAudioContext(), new MinimalAudioContext()];
-
-                    gainNodes = [minimalAudioContext, ...minimalAudioContexts].map((mnmlDCntxt) => {
-                        const gainNode = new GainNode(mnmlDCntxt);
-
-                        gainNode.connect(mnmlDCntxt.destination);
-
-                        return gainNode;
-                    });
-                });
-
-                it('should throw an error', () => {
-                    expect(() => {
-                        new MinimalAudioContext({ latencyHint: 'balanced' });
-                    })
-                        .to.throw(DOMException)
-                        .with.property('name', 'UnknownError');
-                });
-            });
-        }
     });
 
     describe('with a constructed MinimalAudioContext', () => {

@@ -95,41 +95,6 @@ describe('AudioContext', () => {
                 done();
             }
         });
-
-        // Bug #131 Safari returns null when there are four other AudioContexts running already.
-        if (isSafari(navigator)) {
-            describe('with four running AudioContexts', () => {
-                let audioContexts;
-                let gainNodes;
-
-                afterEach(() => {
-                    [audioContext, ...audioContexts].forEach((dCntxt, index) => gainNodes[index].disconnect(dCntxt.destination));
-
-                    return Promise.all(audioContexts.map((dCntxt) => dCntxt.close()));
-                });
-
-                beforeEach(() => {
-                    audioContext = new AudioContext();
-                    audioContexts = [new AudioContext(), new AudioContext(), new AudioContext()];
-
-                    gainNodes = [audioContext, ...audioContexts].map((dCntxt) => {
-                        const gainNode = dCntxt.createGain();
-
-                        gainNode.connect(dCntxt.destination);
-
-                        return gainNode;
-                    });
-                });
-
-                it('should throw an error', () => {
-                    expect(() => {
-                        new AudioContext({ latencyHint: 'balanced' });
-                    })
-                        .to.throw(DOMException)
-                        .with.property('name', 'UnknownError');
-                });
-            });
-        }
     });
 
     describe('with a constructed AudioContext', () => {
