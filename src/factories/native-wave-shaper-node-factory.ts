@@ -32,7 +32,7 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
             throw createInvalidStateError();
         }
 
-        // Bug #184: Safari requires the curve to be a Float32Array.
+        // Only values of type Float32Array can be assigned to the curve property.
         assignNativeAudioNodeOption(nativeWaveShaperNode, { curve }, 'curve');
         assignNativeAudioNodeOption(nativeWaveShaperNode, options, 'oversample');
 
