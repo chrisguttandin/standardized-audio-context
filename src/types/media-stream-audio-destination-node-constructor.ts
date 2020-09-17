@@ -2,5 +2,5 @@ import { IAudioContext, IAudioNodeOptions, IMediaStreamAudioDestinationNode, IMi
 
 export type TMediaStreamAudioDestinationNodeConstructor = new <T extends IAudioContext | IMinimalAudioContext>(
     context: T,
-    options?: IAudioNodeOptions
+    options?: Partial<IAudioNodeOptions>
 ) => IMediaStreamAudioDestinationNode<T>;
