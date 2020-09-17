@@ -2,9 +2,11 @@ import { TWrapChannelMergerNodeFactory } from '../types';
 
 export const createWrapChannelMergerNode: TWrapChannelMergerNodeFactory = (createInvalidStateError, monitorConnectionsFunction) => {
     return (nativeContext, channelMergerNode) => {
+        // Bug #15: Safari does not return the default properties.
         channelMergerNode.channelCount = 1;
         channelMergerNode.channelCountMode = 'explicit';
 
+        // Bug #16: Safari does not throw an error when setting a different channelCount or channelCountMode.
         Object.defineProperty(channelMergerNode, 'channelCount', {
             get: () => 1,
             set: () => {

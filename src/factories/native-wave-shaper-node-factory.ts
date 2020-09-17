@@ -8,19 +8,19 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
     createNativeWaveShaperNodeFaker,
     isDCCurve,
     monitorConnections,
+    nativeAudioContextConstructor,
     overwriteAccessors
 ) => {
     return (nativeContext, options) => {
         const nativeWaveShaperNode = nativeContext.createWaveShaper();
 
-        try {
-            // Bug #102: Safari does not throw an InvalidStateError when the curve has less than two samples.
-            // Bug #119: Safari does not correctly map the values. Bug #102 is only used to detect Safari in this case.
-            nativeWaveShaperNode.curve = new Float32Array([1]);
-
+        /*
+         * Bug #119: Safari does not correctly map the values.
+         * @todo Unfortunately there is no way to test for this behavior in a synchronous fashion which is why testing for the existence of
+         * the webkitAudioContext is used as a workaround here.
+         */
+        if (nativeAudioContextConstructor !== null && nativeAudioContextConstructor.name === 'webkitAudioContext') {
             return createNativeWaveShaperNodeFaker(nativeContext, options);
-        } catch {
-            // Ignore errors.
         }
 
         assignNativeAudioNodeOptions(nativeWaveShaperNode, options);

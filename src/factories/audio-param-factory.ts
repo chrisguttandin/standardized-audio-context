@@ -150,7 +150,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 const convertedValues = values instanceof Float32Array ? values : new Float32Array(values);
                 /*
                  * Bug #152: Safari does not correctly interpolate the values of the curve.
-                 * @todo Unfortunately there is no way to test for this behavior in synchronous fashion which is why testing for the
+                 * @todo Unfortunately there is no way to test for this behavior in a synchronous fashion which is why testing for the
                  * existence of the webkitAudioContext is used as a workaround here.
                  */
                 if (nativeAudioContextConstructor !== null && nativeAudioContextConstructor.name === 'webkitAudioContext') {
