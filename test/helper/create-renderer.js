@@ -156,7 +156,6 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
             if (impulseOffset !== null) {
                 const expectedPlaybackOffset = impulseOffset + startTimeOffset;
                 const expectedThirdImpulseOffset = impulseOffset + startTimeOffset * 2;
-                const playbackChannelData = inputBuffer.getChannelData(1);
 
                 if (
                     lastPlaybackOffset <= expectedPlaybackOffset &&
@@ -166,6 +165,8 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
                     const index = expectedPlaybackOffset - lastPlaybackOffset;
 
                     if (impulseChannelData.slice(index, index + 1)[0] === 1) {
+                        const playbackChannelData = inputBuffer.getChannelData(1);
+
                         channelData = playbackChannelData.slice(index, index + length);
                     } else {
                         clearTimeout(timeoutId);
