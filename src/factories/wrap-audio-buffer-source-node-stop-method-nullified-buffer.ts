@@ -4,7 +4,7 @@ export const createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer: TWrapAudi
     overwriteAccessors
 ) => {
     return (nativeAudioBufferSourceNode, nativeContext) => {
-        const nullifiedBuffer = nativeContext.createBuffer(1, 1, nativeContext.sampleRate);
+        const nullifiedBuffer = nativeContext.createBuffer(1, 1, 44100);
 
         if (nativeAudioBufferSourceNode.buffer === null) {
             nativeAudioBufferSourceNode.buffer = nullifiedBuffer;
