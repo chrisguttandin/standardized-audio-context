@@ -93,6 +93,7 @@ describe('AudioBuffer', () => {
     for (const [description, { createAudioBuffer, createContext }] of Object.entries(testCases)) {
         describe(`with the ${description}`, () => {
             let context;
+            let sampleRate;
 
             afterEach(() => {
                 if (context !== null && context.close !== undefined) {
@@ -100,7 +101,15 @@ describe('AudioBuffer', () => {
                 }
             });
 
-            beforeEach(() => (context = createContext === null ? null : createContext()));
+            beforeEach(() => {
+                if (createContext === null) {
+                    context = null;
+                    sampleRate = 44100;
+                } else {
+                    context = createContext();
+                    sampleRate = context.sampleRate;
+                }
+            });
 
             describe('constructor()', () => {
                 for (const audioContextState of createContext === null ? ['running'] : ['closed', 'running']) {
@@ -127,7 +136,7 @@ describe('AudioBuffer', () => {
                             beforeEach(async function () {
                                 this.timeout(10000);
 
-                                audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                                audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                             });
 
                             it('should return an instance of the AudioBuffer constructor', () => {
@@ -137,10 +146,10 @@ describe('AudioBuffer', () => {
                             it('should return an implementation of the AudioBuffer interface', () => {
                                 const length = 1000;
 
-                                expect(audioBuffer.duration).to.be.closeTo(length / 44100, 0.001);
+                                expect(audioBuffer.duration).to.be.closeTo(length / sampleRate, 0.001);
                                 expect(audioBuffer.length).to.equal(length);
                                 expect(audioBuffer.numberOfChannels).to.equal(1);
-                                expect(audioBuffer.sampleRate).to.equal(44100);
+                                expect(audioBuffer.sampleRate).to.equal(sampleRate);
                                 expect(audioBuffer.getChannelData).to.be.a('function');
                                 expect(audioBuffer.copyFromChannel).to.be.a('function');
                                 expect(audioBuffer.copyToChannel).to.be.a('function');
@@ -196,7 +205,7 @@ describe('AudioBuffer', () => {
                                     this.timeout(10000);
 
                                     const length = 250;
-                                    const audioBuffer = await createAudioBuffer(context, { length, sampleRate: 44100 });
+                                    const audioBuffer = await createAudioBuffer(context, { length, sampleRate });
 
                                     expect(audioBuffer.length).to.equal(length);
                                 });
@@ -208,7 +217,7 @@ describe('AudioBuffer', () => {
                                     const audioBuffer = await createAudioBuffer(context, {
                                         length: 1000,
                                         numberOfChannels,
-                                        sampleRate: 44100
+                                        sampleRate
                                     });
 
                                     expect(audioBuffer.numberOfChannels).to.equal(numberOfChannels);
@@ -219,20 +228,18 @@ describe('AudioBuffer', () => {
                                     it('should return an AudioBuffer with the given sampleRate of 8 kHz', async function () {
                                         this.timeout(10000);
 
-                                        const sampleRate = 8000;
-                                        const audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
+                                        const audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 8000 });
 
-                                        expect(audioBuffer.sampleRate).to.equal(sampleRate);
+                                        expect(audioBuffer.sampleRate).to.equal(8000);
                                     });
                                 }
 
                                 it('should return an AudioBuffer with the given sampleRate of 96 kHz', async function () {
                                     this.timeout(10000);
 
-                                    const sampleRate = 96000;
-                                    const audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
+                                    const audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 96000 });
 
-                                    expect(audioBuffer.sampleRate).to.equal(sampleRate);
+                                    expect(audioBuffer.sampleRate).to.equal(96000);
                                 });
                             });
                         }
@@ -242,7 +249,7 @@ describe('AudioBuffer', () => {
                                 describe('with zero as the numberOfChannels', () => {
                                     it('should throw a NotSupportedError', (done) => {
                                         try {
-                                            createAudioBuffer(context, { length: 1000, numberOfChannels: 0, sampleRate: 44100 });
+                                            createAudioBuffer(context, { length: 1000, numberOfChannels: 0, sampleRate });
                                         } catch (err) {
                                             expect(err.code).to.equal(9);
                                             expect(err.name).to.equal('NotSupportedError');
@@ -255,7 +262,7 @@ describe('AudioBuffer', () => {
                                 describe('with a length of zero', () => {
                                     it('should throw a NotSupportedError', (done) => {
                                         try {
-                                            createAudioBuffer(context, { length: 0, sampleRate: 44100 });
+                                            createAudioBuffer(context, { length: 0, sampleRate });
                                         } catch (err) {
                                             expect(err.code).to.equal(9);
                                             expect(err.name).to.equal('NotSupportedError');
@@ -289,7 +296,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                 });
 
                 it('should be readonly', () => {
@@ -305,7 +312,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                 });
 
                 it('should be readonly', () => {
@@ -321,7 +328,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                 });
 
                 it('should be readonly', () => {
@@ -337,7 +344,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                 });
 
                 it('should be readonly', () => {
@@ -353,7 +360,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                 });
 
                 describe('with an index of an existing channel', () => {
@@ -387,7 +394,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                     destinationValues = Array.from({ length: 10 }, () => Math.fround(Math.random()));
                     destination = new Float32Array(destinationValues);
                 });
@@ -430,7 +437,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                     sourceValues = Array.from({ length: 10 }, () => Math.fround(Math.random()));
                     source = new Float32Array(sourceValues);
                 });
@@ -485,7 +492,7 @@ describe('AudioBuffer', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 44100 });
+                    audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate });
                     destination = new Float32Array(10);
                     source = new Float32Array(10);
 
