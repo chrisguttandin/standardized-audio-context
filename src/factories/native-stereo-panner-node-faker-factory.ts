@@ -162,8 +162,8 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
                 inputGainNode.connect(channelSplitterNode);
                 inputGainNode.connect(panWaveShaperNode.inputs[0]);
 
-                channelSplitterNode.connect(leftInputForLeftOutputGainNode, 1);
-                channelSplitterNode.connect(leftInputForRightOutputGainNode, 1);
+                channelSplitterNode.connect(leftInputForLeftOutputGainNode, 0);
+                channelSplitterNode.connect(leftInputForRightOutputGainNode, 0);
                 channelSplitterNode.connect(rightInputForLeftOutputGainNode, 1);
                 channelSplitterNode.connect(rightInputForRightOutputGainNode, 1);
 
@@ -189,8 +189,8 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
                 inputGainNode.disconnect(channelSplitterNode);
                 inputGainNode.disconnect(panWaveShaperNode.inputs[0]);
 
-                channelSplitterNode.disconnect(leftInputForLeftOutputGainNode, 1);
-                channelSplitterNode.disconnect(leftInputForRightOutputGainNode, 1);
+                channelSplitterNode.disconnect(leftInputForLeftOutputGainNode, 0);
+                channelSplitterNode.disconnect(leftInputForRightOutputGainNode, 0);
                 channelSplitterNode.disconnect(rightInputForLeftOutputGainNode, 1);
                 channelSplitterNode.disconnect(rightInputForRightOutputGainNode, 1);
 
