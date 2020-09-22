@@ -773,7 +773,7 @@ describe('OscillatorNode', () => {
                             length: context.length === undefined ? 5 : undefined,
                             prepare(destination) {
                                 const firstDummyGainNode = new GainNode(context);
-                                const oscillatorNode = createOscillatorNode(context, { frequency: 11025 });
+                                const oscillatorNode = createOscillatorNode(context, { frequency: context.sampleRate / 4 });
                                 const secondDummyGainNode = new GainNode(context);
 
                                 oscillatorNode.connect(firstDummyGainNode).connect(destination);
@@ -1128,7 +1128,7 @@ describe('OscillatorNode', () => {
                                         const masterGainNode = new GainNode(context, {
                                             gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
                                         });
-                                        const oscillatorNode = createOscillatorNode(context, { frequency: 11025 });
+                                        const oscillatorNode = createOscillatorNode(context, { frequency: context.sampleRate / 4 });
 
                                         if (withADirectConnection) {
                                             oscillatorNode.connect(masterGainNode);

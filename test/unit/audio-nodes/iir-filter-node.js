@@ -953,23 +953,27 @@ describe('IIRFilterNode', () => {
                             const iIRFilterNode = createIIRFilterNode(context, { feedback: [1, -0.5], feedforward: [1, -1] });
                             const magResponse = new Float32Array(5);
                             const phaseResponse = new Float32Array(5);
+                            const value = context.sampleRate / 100;
 
-                            iIRFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
+                            iIRFilterNode.getFrequencyResponse(
+                                new Float32Array([value, value * 2, value * 4, value * 8, value * 16]),
+                                magResponse,
+                                phaseResponse
+                            );
 
                             expect(Array.from(magResponse)).to.deep.equal([
-                                0.056942202150821686,
-                                0.11359700560569763,
-                                0.2249375581741333,
-                                0.43307945132255554,
-                                0.7616625428199768
+                                0.12515009939670563,
+                                0.2472923994064331,
+                                0.4725210964679718,
+                                0.8136365413665771,
+                                1.1401270627975464
                             ]);
-                            expect(Array.from(phaseResponse)).to.deep.equal([
-                                1.5280766487121582,
-                                1.4854952096939087,
-                                1.401282548904419,
-                                1.2399859428405762,
-                                0.9627721309661865
-                            ]);
+
+                            expect(phaseResponse[0]).to.equal(1.4767954349517822);
+                            expect(phaseResponse[1]).to.equal(1.3842469453811646);
+                            expect(phaseResponse[2]).to.equal(1.208533763885498);
+                            expect(phaseResponse[3]).to.be.closeTo(0.9144487, 0.0000001);
+                            expect(phaseResponse[4]).to.equal(0.5450617074966431);
                         });
                     });
                 });
