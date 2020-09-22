@@ -49,7 +49,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             if (value === null && this._nativeConvolverNode.buffer !== null) {
                 const nativeContext = this._nativeConvolverNode.context;
 
-                this._nativeConvolverNode.buffer = nativeContext.createBuffer(1, 1, nativeContext.sampleRate);
+                this._nativeConvolverNode.buffer = nativeContext.createBuffer(1, 1, 44100);
                 this._isBufferNullified = true;
             } else {
                 this._isBufferNullified = false;

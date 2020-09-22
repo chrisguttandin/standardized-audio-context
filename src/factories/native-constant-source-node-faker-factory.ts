@@ -13,7 +13,7 @@ export const createNativeConstantSourceNodeFakerFactory: TNativeConstantSourceNo
     monitorConnections
 ) => {
     return (nativeContext, { offset, ...audioNodeOptions }) => {
-        const audioBuffer = nativeContext.createBuffer(1, 2, nativeContext.sampleRate);
+        const audioBuffer = nativeContext.createBuffer(1, 2, 44100);
         const audioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext, {
             buffer: null,
             channelCount: 2,
