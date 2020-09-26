@@ -311,7 +311,8 @@ const audioNodeConstructor = createAudioNodeConstructor(
         getAudioNodeTailTime,
         getNativeAudioNode,
         insertElementInSet,
-        isActiveAudioNode
+        isActiveAudioNode,
+        isPartOfACycle
     ),
     cacheTestResult,
     createIncrementCycleCounterFactory(

@@ -9,6 +9,7 @@ import { TGetAudioNodeTailTimeFunction } from './get-audio-node-tail-time-functi
 import { TGetNativeAudioNodeFunction } from './get-native-audio-node-function';
 import { TInsertElementInSetFunction } from './insert-element-in-set-function';
 import { TIsActiveAudioNodeFunction } from './is-active-audio-node-function';
+import { TIsPartOfACycleFunction } from './is-part-of-a-cycle-function';
 
 export type TAddConnectionToAudioNodeFactory = (
     addActiveInputConnectionToAudioNode: TAddActiveInputConnectionToAudioNodeFunction,
@@ -20,5 +21,6 @@ export type TAddConnectionToAudioNodeFactory = (
     getAudioNodeTailTime: TGetAudioNodeTailTimeFunction,
     getNativeAudioNode: TGetNativeAudioNodeFunction,
     insertElementInSet: TInsertElementInSetFunction,
-    isActiveAudioNode: TIsActiveAudioNodeFunction
+    isActiveAudioNode: TIsActiveAudioNodeFunction,
+    isPartOfACycle: TIsPartOfACycleFunction
 ) => TAddConnectionToAudioNodeFunction;
