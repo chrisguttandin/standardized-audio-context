@@ -4,6 +4,7 @@ import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connect
 import { addActiveInputConnectionToAudioNode } from '../helpers/add-active-input-connection-to-audio-node';
 import { addActiveInputConnectionToAudioParam } from '../helpers/add-active-input-connection-to-audio-param';
 import { addPassiveInputConnectionToAudioNode } from '../helpers/add-passive-input-connection-to-audio-node';
+import { addPassiveInputConnectionToAudioParam } from '../helpers/add-passive-input-connection-to-audio-param';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { deleteActiveInputConnection } from '../helpers/delete-active-input-connection';
 import { deleteActiveInputConnectionToAudioNode } from '../helpers/delete-active-input-connection-to-audio-node';
@@ -35,7 +36,6 @@ import {
     IOfflineAudioContext
 } from '../interfaces';
 import {
-    TActiveInputConnection,
     TAudioNodeConstructorFactory,
     TAudioNodeTailTimeStore,
     TChannelCountMode,
@@ -48,25 +48,6 @@ import {
     TPassiveAudioParamInputConnection
 } from '../types';
 import { createGetAudioNodeTailTime } from './get-audio-node-tail-time';
-
-const addPassiveInputConnectionToAudioParam = <T extends TContext>(
-    passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioParamInputConnection>>,
-    [source, output, eventListener]: TActiveInputConnection<T>,
-    ignoreDuplicates: boolean
-) => {
-    const passiveInputConnections = passiveInputs.get(source);
-
-    if (passiveInputConnections === undefined) {
-        passiveInputs.set(source, new Set([[output, eventListener]]));
-    } else {
-        insertElementInSet(
-            passiveInputConnections,
-            [output, eventListener],
-            (passiveInputConnection) => passiveInputConnection[0] === output,
-            ignoreDuplicates
-        );
-    }
-};
 
 const deletePassiveInputConnectionToAudioNode = <T extends TContext>(
     passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioNodeInputConnection>>,
