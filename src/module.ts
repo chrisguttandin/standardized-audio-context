@@ -8,6 +8,7 @@ import {
     createSetValueCurveAutomationEvent
 } from 'automation-events';
 import { createAbortError } from './factories/abort-error';
+import { createAddActiveInputConnectionToAudioNode } from './factories/add-active-input-connection-to-audio-node';
 import { createAddAudioNodeConnections } from './factories/add-audio-node-connections';
 import { createAddAudioParamConnections } from './factories/add-audio-param-connections';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
@@ -275,6 +276,7 @@ import {
 export * from './interfaces/index';
 export * from './types/index';
 
+const addActiveInputConnectionToAudioNode = createAddActiveInputConnectionToAudioNode(insertElementInSet);
 const audioNodeTailTimeStore = new WeakMap();
 const getAudioNodeTailTime = createGetAudioNodeTailTime(audioNodeTailTimeStore);
 const cacheTestResult = createCacheTestResult(new Map(), new WeakMap());
@@ -294,7 +296,7 @@ const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
-    createAddConnectionToAudioNode(getAudioNodeTailTime),
+    createAddConnectionToAudioNode(addActiveInputConnectionToAudioNode, getAudioNodeTailTime),
     cacheTestResult,
     createIncrementCycleCounterFactory(
         CYCLE_COUNTERS,

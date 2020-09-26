@@ -1,4 +1,3 @@
-import { addActiveInputConnectionToAudioNode } from '../helpers/add-active-input-connection-to-audio-node';
 import { addPassiveInputConnectionToAudioNode } from '../helpers/add-passive-input-connection-to-audio-node';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { deleteActiveInputConnectionToAudioNode } from '../helpers/delete-active-input-connection-to-audio-node';
@@ -15,7 +14,10 @@ import { setInternalStateToActive } from '../helpers/set-internal-state-to-activ
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
 import { TAddConnectionToAudioNodeFactory, TInternalStateEventListener } from '../types';
 
-export const createAddConnectionToAudioNode: TAddConnectionToAudioNodeFactory = (getAudioNodeTailTime) => {
+export const createAddConnectionToAudioNode: TAddConnectionToAudioNodeFactory = (
+    addActiveInputConnectionToAudioNode,
+    getAudioNodeTailTime
+) => {
     return (source, destination, output, input, isOffline) => {
         const { activeInputs, passiveInputs } = getAudioNodeConnections(destination);
         const { outputs } = getAudioNodeConnections(source);
