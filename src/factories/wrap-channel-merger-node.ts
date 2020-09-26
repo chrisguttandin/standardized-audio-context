@@ -1,6 +1,6 @@
 import { TWrapChannelMergerNodeFactory } from '../types';
 
-export const createWrapChannelMergerNode: TWrapChannelMergerNodeFactory = (createInvalidStateError, monitorConnectionsFunction) => {
+export const createWrapChannelMergerNode: TWrapChannelMergerNodeFactory = (createInvalidStateError, monitorConnections) => {
     return (nativeContext, channelMergerNode) => {
         // Bug #15: Safari does not return the default properties.
         channelMergerNode.channelCount = 1;
@@ -33,6 +33,6 @@ export const createWrapChannelMergerNode: TWrapChannelMergerNodeFactory = (creat
         };
         const whenDisconnected = () => audioBufferSourceNode.disconnect(channelMergerNode);
 
-        monitorConnectionsFunction(channelMergerNode, whenConnected, whenDisconnected);
+        monitorConnections(channelMergerNode, whenConnected, whenDisconnected);
     };
 };
