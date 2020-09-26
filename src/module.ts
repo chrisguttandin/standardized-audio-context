@@ -11,6 +11,7 @@ import { createAbortError } from './factories/abort-error';
 import { createAddAudioNodeConnections } from './factories/add-audio-node-connections';
 import { createAddAudioParamConnections } from './factories/add-audio-param-connections';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
+import { createAddConnectionToAudioNode } from './factories/add-connection-to-audio-node';
 import { createAddSilentConnection } from './factories/add-silent-connection';
 import { createAddUnrenderedAudioWorkletNode } from './factories/add-unrendered-audio-worklet-node';
 import { createAnalyserNodeConstructor } from './factories/analyser-node-constructor';
@@ -63,6 +64,7 @@ import { createGainNodeConstructor } from './factories/gain-node-constructor';
 import { createGainNodeRendererFactory } from './factories/gain-node-renderer-factory';
 import { createGetActiveAudioWorkletNodeInputs } from './factories/get-active-audio-worklet-node-inputs';
 import { createGetAudioNodeRenderer } from './factories/get-audio-node-renderer';
+import { createGetAudioNodeTailTime } from './factories/get-audio-node-tail-time';
 import { createGetAudioParamRenderer } from './factories/get-audio-param-renderer';
 import { createGetBackupOfflineAudioContext } from './factories/get-backup-offline-audio-context';
 import { createGetNativeContext } from './factories/get-native-context';
@@ -274,6 +276,7 @@ export * from './interfaces/index';
 export * from './types/index';
 
 const audioNodeTailTimeStore = new WeakMap();
+const getAudioNodeTailTime = createGetAudioNodeTailTime(audioNodeTailTimeStore);
 const cacheTestResult = createCacheTestResult(new Map(), new WeakMap());
 const window = createWindow();
 const createNativeAnalyserNode = createNativeAnalyserNodeFactory(cacheTestResult, createIndexSizeError);
@@ -291,7 +294,7 @@ const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
-    audioNodeTailTimeStore,
+    createAddConnectionToAudioNode(getAudioNodeTailTime),
     cacheTestResult,
     createIncrementCycleCounterFactory(
         CYCLE_COUNTERS,

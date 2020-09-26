@@ -1,13 +1,10 @@
 import { AUDIO_NODE_STORE, EVENT_LISTENERS } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
-import { addActiveInputConnectionToAudioNode } from '../helpers/add-active-input-connection-to-audio-node';
 import { addActiveInputConnectionToAudioParam } from '../helpers/add-active-input-connection-to-audio-param';
-import { addPassiveInputConnectionToAudioNode } from '../helpers/add-passive-input-connection-to-audio-node';
 import { addPassiveInputConnectionToAudioParam } from '../helpers/add-passive-input-connection-to-audio-param';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { deleteActiveInputConnection } from '../helpers/delete-active-input-connection';
-import { deleteActiveInputConnectionToAudioNode } from '../helpers/delete-active-input-connection-to-audio-node';
 import { deleteActiveInputConnectionToAudioParam } from '../helpers/delete-active-input-connection-to-audio-param';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
 import { deletePassiveInputConnectionToAudioNode } from '../helpers/delete-passive-input-connection-to-audio-node';
@@ -37,7 +34,6 @@ import {
 } from '../interfaces';
 import {
     TAudioNodeConstructorFactory,
-    TAudioNodeTailTimeStore,
     TChannelCountMode,
     TChannelInterpretation,
     TContext,
@@ -45,83 +41,6 @@ import {
     TNativeAudioNode,
     TNativeAudioParam
 } from '../types';
-import { createGetAudioNodeTailTime } from './get-audio-node-tail-time';
-
-const addConnectionToAudioNodeOfAudioContext = <T extends TContext>(
-    source: IAudioNode<T>,
-    destination: IAudioNode<T>,
-    output: number,
-    input: number,
-    isOffline: boolean,
-    audioNodeTailTimeStore: TAudioNodeTailTimeStore
-): boolean => {
-    const { activeInputs, passiveInputs } = getAudioNodeConnections(destination);
-    const { outputs } = getAudioNodeConnections(source);
-    const eventListeners = getEventListenersOfAudioNode(source);
-    const getAudioNodeTailTime = createGetAudioNodeTailTime(audioNodeTailTimeStore);
-
-    const eventListener: TInternalStateEventListener = (isActive) => {
-        const nativeDestinationAudioNode = getNativeAudioNode(destination);
-        const nativeSourceAudioNode = getNativeAudioNode(source);
-
-        if (isActive) {
-            const partialConnection = deletePassiveInputConnectionToAudioNode(passiveInputs, source, output, input);
-
-            addActiveInputConnectionToAudioNode(activeInputs, source, partialConnection, false);
-
-            if (!isOffline && !isPartOfACycle(source)) {
-                connectNativeAudioNodeToNativeAudioNode(nativeSourceAudioNode, nativeDestinationAudioNode, output, input);
-            }
-
-            if (isPassiveAudioNode(destination)) {
-                setInternalStateToActive(destination);
-            }
-        } else {
-            const partialConnection = deleteActiveInputConnectionToAudioNode(activeInputs, source, output, input);
-
-            addPassiveInputConnectionToAudioNode(passiveInputs, input, partialConnection, false);
-
-            if (!isOffline && !isPartOfACycle(source)) {
-                disconnectNativeAudioNodeFromNativeAudioNode(nativeSourceAudioNode, nativeDestinationAudioNode, output, input);
-            }
-
-            const tailTime = getAudioNodeTailTime(destination);
-
-            if (tailTime === 0) {
-                if (isActiveAudioNode(destination)) {
-                    setInternalStateToPassiveWhenNecessary(destination, activeInputs);
-                }
-            } else {
-                setTimeout(() => {
-                    if (isActiveAudioNode(destination)) {
-                        setInternalStateToPassiveWhenNecessary(destination, activeInputs);
-                    }
-                }, tailTime * 1000);
-            }
-        }
-    };
-
-    if (
-        insertElementInSet(
-            outputs,
-            [destination, output, input],
-            (outputConnection) => outputConnection[0] === destination && outputConnection[1] === output && outputConnection[2] === input,
-            true
-        )
-    ) {
-        eventListeners.add(eventListener);
-
-        if (isActiveAudioNode(source)) {
-            addActiveInputConnectionToAudioNode(activeInputs, source, [output, input, eventListener], true);
-        } else {
-            addPassiveInputConnectionToAudioNode(passiveInputs, input, [source, output, eventListener], true);
-        }
-
-        return true;
-    }
-
-    return false;
-};
 
 const addConnectionToAudioParamOfAudioContext = <T extends TContext>(
     source: IAudioNode<T>,
@@ -330,7 +249,7 @@ const deleteConnectionToDestination = <T extends TContext, U extends TContext>(
 
 export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     addAudioNodeConnections,
-    audioNodeTailTimeStore,
+    addConnectionToAudioNode,
     cacheTestResult,
     createIncrementCycleCounter,
     createIndexSizeError,
@@ -465,13 +384,12 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                     throw err;
                 }
 
-                const isNewConnectionToAudioNode = addConnectionToAudioNodeOfAudioContext(
+                const isNewConnectionToAudioNode = addConnectionToAudioNode(
                     this,
                     <IAudioNode<TContext>>destination,
                     output,
                     input,
-                    isOffline,
-                    audioNodeTailTimeStore
+                    isOffline
                 );
 
                 // Bug #164: Only Firefox detects cycles so far.
