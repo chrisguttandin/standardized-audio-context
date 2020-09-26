@@ -2,6 +2,7 @@ import { AUDIO_NODE_STORE, EVENT_LISTENERS } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
+import { deleteActiveInputConnection } from '../helpers/delete-active-input-connection';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
 import { disconnectNativeAudioNodeFromNativeAudioNode } from '../helpers/disconnect-native-audio-node-from-native-audio-node';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
@@ -299,22 +300,6 @@ const addConnectionToAudioParamOfAudioContext = <T extends TContext>(
     }
 
     return false;
-};
-
-const deleteActiveInputConnection = <T extends TContext>(
-    activeInputConnections: Set<TActiveInputConnection<T>>,
-    source: IAudioNode<T>,
-    output: number
-): null | TActiveInputConnection<T> => {
-    for (const activeInputConnection of activeInputConnections) {
-        if (activeInputConnection[0] === source && activeInputConnection[1] === output) {
-            activeInputConnections.delete(activeInputConnection);
-
-            return activeInputConnection;
-        }
-    }
-
-    return null;
 };
 
 const deleteInputConnectionOfAudioNode = <T extends TContext>(
