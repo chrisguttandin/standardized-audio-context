@@ -1,10 +1,22 @@
 import { TAddActiveInputConnectionToAudioNodeFunction } from './add-active-input-connection-to-audio-node-function';
 import { TAddConnectionToAudioNodeFunction } from './add-connection-to-audio-node-function';
 import { TAddPassiveInputConnectionToAudioNodeFunction } from './add-passive-input-connection-to-audio-node-function';
+import { TConnectNativeAudioNodeToNativeAudioNodeFunction } from './connect-native-audio-node-to-native-audio-node-function';
+import { TDisconnectNativeAudioNodeFromNativeAudioNodeFunction } from './disconnect-native-audio-node-from-native-audio-node-function';
+import { TGetAudioNodeConnectionsFunction } from './get-audio-node-connections-function';
 import { TGetAudioNodeTailTimeFunction } from './get-audio-node-tail-time-function';
+import { TGetNativeAudioNodeFunction } from './get-native-audio-node-function';
+import { TInsertElementInSetFunction } from './insert-element-in-set-function';
+import { TIsActiveAudioNodeFunction } from './is-active-audio-node-function';
 
 export type TAddConnectionToAudioNodeFactory = (
     addActiveInputConnectionToAudioNode: TAddActiveInputConnectionToAudioNodeFunction,
     addPassiveInputConnectionToAudioNode: TAddPassiveInputConnectionToAudioNodeFunction,
-    getAudioNodeTailTime: TGetAudioNodeTailTimeFunction
+    connectNativeAudioNodeToNativeAudioNode: TConnectNativeAudioNodeToNativeAudioNodeFunction,
+    disconnectNativeAudioNodeFromNativeAudioNode: TDisconnectNativeAudioNodeFromNativeAudioNodeFunction,
+    getAudioNodeConnections: TGetAudioNodeConnectionsFunction,
+    getAudioNodeTailTime: TGetAudioNodeTailTimeFunction,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    insertElementInSet: TInsertElementInSetFunction,
+    isActiveAudioNode: TIsActiveAudioNodeFunction
 ) => TAddConnectionToAudioNodeFunction;

@@ -298,7 +298,17 @@ const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
-    createAddConnectionToAudioNode(addActiveInputConnectionToAudioNode, addPassiveInputConnectionToAudioNode, getAudioNodeTailTime),
+    createAddConnectionToAudioNode(
+        addActiveInputConnectionToAudioNode,
+        addPassiveInputConnectionToAudioNode,
+        connectNativeAudioNodeToNativeAudioNode,
+        disconnectNativeAudioNodeFromNativeAudioNode,
+        getAudioNodeConnections,
+        getAudioNodeTailTime,
+        getNativeAudioNode,
+        insertElementInSet,
+        isActiveAudioNode
+    ),
     cacheTestResult,
     createIncrementCycleCounterFactory(
         CYCLE_COUNTERS,
