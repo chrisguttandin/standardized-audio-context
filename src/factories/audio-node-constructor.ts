@@ -5,6 +5,7 @@ import { addActiveInputConnectionToAudioNode } from '../helpers/add-active-input
 import { addActiveInputConnectionToAudioParam } from '../helpers/add-active-input-connection-to-audio-param';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { deleteActiveInputConnection } from '../helpers/delete-active-input-connection';
+import { deleteActiveInputConnectionToAudioNode } from '../helpers/delete-active-input-connection-to-audio-node';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
 import { disconnectNativeAudioNodeFromNativeAudioNode } from '../helpers/disconnect-native-audio-node-from-native-audio-node';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
@@ -45,18 +46,6 @@ import {
     TPassiveAudioParamInputConnection
 } from '../types';
 import { createGetAudioNodeTailTime } from './get-audio-node-tail-time';
-
-const deleteActiveInputConnectionToAudioNode = <T extends TContext>(
-    activeInputs: Set<TActiveInputConnection<T>>[],
-    source: IAudioNode<T>,
-    output: number,
-    input: number
-) => {
-    return pickElementFromSet(
-        activeInputs[input],
-        (activeInputConnection) => activeInputConnection[0] === source && activeInputConnection[1] === output
-    );
-};
 
 const deleteActiveInputConnectionToAudioParam = <T extends TContext>(
     activeInputs: Set<TActiveInputConnection<T>>,
