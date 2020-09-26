@@ -200,6 +200,7 @@ export * from './is-native-context-function';
 export * from './is-native-offline-audio-context-factory';
 export * from './is-native-offline-audio-context-function';
 export * from './is-part-of-a-cycle-function';
+export * from './is-passive-audio-node-function';
 export * from './is-secure-context-factory';
 export * from './is-supported-promise-factory';
 export * from './media-element-audio-source-node-constructor';

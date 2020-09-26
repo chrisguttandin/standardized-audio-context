@@ -10,6 +10,7 @@ import { TGetNativeAudioNodeFunction } from './get-native-audio-node-function';
 import { TInsertElementInSetFunction } from './insert-element-in-set-function';
 import { TIsActiveAudioNodeFunction } from './is-active-audio-node-function';
 import { TIsPartOfACycleFunction } from './is-part-of-a-cycle-function';
+import { TIsPassiveAudioNodeFunction } from './is-passive-audio-node-function';
 
 export type TAddConnectionToAudioNodeFactory = (
     addActiveInputConnectionToAudioNode: TAddActiveInputConnectionToAudioNodeFunction,
@@ -22,5 +23,6 @@ export type TAddConnectionToAudioNodeFactory = (
     getNativeAudioNode: TGetNativeAudioNodeFunction,
     insertElementInSet: TInsertElementInSetFunction,
     isActiveAudioNode: TIsActiveAudioNodeFunction,
-    isPartOfACycle: TIsPartOfACycleFunction
+    isPartOfACycle: TIsPartOfACycleFunction,
+    isPassiveAudioNode: TIsPassiveAudioNodeFunction
 ) => TAddConnectionToAudioNodeFunction;

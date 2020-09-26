@@ -1,7 +1,6 @@
 import { ACTIVE_AUDIO_NODE_STORE } from '../globals';
-import { IAudioNode } from '../interfaces';
-import { TContext } from '../types';
+import { TIsPassiveAudioNodeFunction } from '../types';
 
-export const isPassiveAudioNode = <T extends TContext>(audioNode: IAudioNode<T>): boolean => {
+export const isPassiveAudioNode: TIsPassiveAudioNodeFunction = (audioNode) => {
     return !ACTIVE_AUDIO_NODE_STORE.has(audioNode);
 };

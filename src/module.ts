@@ -190,6 +190,7 @@ import { insertElementInSet } from './helpers/insert-element-in-set';
 import { isActiveAudioNode } from './helpers/is-active-audio-node';
 import { isDCCurve } from './helpers/is-dc-curve';
 import { isPartOfACycle } from './helpers/is-part-of-a-cycle';
+import { isPassiveAudioNode } from './helpers/is-passive-audio-node';
 import { overwriteAccessors } from './helpers/overwrite-accessors';
 import { pickElementFromSet } from './helpers/pick-element-from-set';
 import { sanitizeAudioWorkletNodeOptions } from './helpers/sanitize-audio-worklet-node-options';
@@ -312,7 +313,8 @@ const audioNodeConstructor = createAudioNodeConstructor(
         getNativeAudioNode,
         insertElementInSet,
         isActiveAudioNode,
-        isPartOfACycle
+        isPartOfACycle,
+        isPassiveAudioNode
     ),
     cacheTestResult,
     createIncrementCycleCounterFactory(
