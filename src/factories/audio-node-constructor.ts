@@ -11,18 +11,17 @@ import { deleteActiveInputConnectionToAudioNode } from '../helpers/delete-active
 import { deleteActiveInputConnectionToAudioParam } from '../helpers/delete-active-input-connection-to-audio-param';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
 import { deletePassiveInputConnectionToAudioNode } from '../helpers/delete-passive-input-connection-to-audio-node';
+import { deletePassiveInputConnectionToAudioParam } from '../helpers/delete-passive-input-connection-to-audio-param';
 import { disconnectNativeAudioNodeFromNativeAudioNode } from '../helpers/disconnect-native-audio-node-from-native-audio-node';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
 import { getEventListenersOfAudioNode } from '../helpers/get-event-listeners-of-audio-node';
 import { getNativeAudioNode } from '../helpers/get-native-audio-node';
 import { getNativeAudioParam } from '../helpers/get-native-audio-param';
-import { getValueForKey } from '../helpers/get-value-for-key';
 import { insertElementInSet } from '../helpers/insert-element-in-set';
 import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { isPartOfACycle } from '../helpers/is-part-of-a-cycle';
 import { isPassiveAudioNode } from '../helpers/is-passive-audio-node';
-import { pickElementFromSet } from '../helpers/pick-element-from-set';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
 import { testAudioNodeDisconnectMethodSupport } from '../helpers/test-audio-node-disconnect-method-support';
@@ -44,28 +43,9 @@ import {
     TContext,
     TInternalStateEventListener,
     TNativeAudioNode,
-    TNativeAudioParam,
-    TPassiveAudioParamInputConnection
+    TNativeAudioParam
 } from '../types';
 import { createGetAudioNodeTailTime } from './get-audio-node-tail-time';
-
-const deletePassiveInputConnectionToAudioParam = <T extends TContext>(
-    passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioParamInputConnection>>,
-    source: IAudioNode<T>,
-    output: number
-) => {
-    const passiveInputConnections = getValueForKey(passiveInputs, source);
-    const matchingConnection = pickElementFromSet(
-        passiveInputConnections,
-        (passiveInputConnection) => passiveInputConnection[0] === output
-    );
-
-    if (passiveInputConnections.size === 0) {
-        passiveInputs.delete(source);
-    }
-
-    return matchingConnection;
-};
 
 const addConnectionToAudioNodeOfAudioContext = <T extends TContext>(
     source: IAudioNode<T>,
