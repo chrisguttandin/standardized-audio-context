@@ -2,6 +2,7 @@ import { AUDIO_NODE_STORE, EVENT_LISTENERS } from '../globals';
 import { isAudioNode } from '../guards/audio-node';
 import { isAudioNodeOutputConnection } from '../guards/audio-node-output-connection';
 import { addActiveInputConnectionToAudioNode } from '../helpers/add-active-input-connection-to-audio-node';
+import { addActiveInputConnectionToAudioParam } from '../helpers/add-active-input-connection-to-audio-param';
 import { connectNativeAudioNodeToNativeAudioNode } from '../helpers/connect-native-audio-node-to-native-audio-node';
 import { deleteActiveInputConnection } from '../helpers/delete-active-input-connection';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
@@ -44,20 +45,6 @@ import {
     TPassiveAudioParamInputConnection
 } from '../types';
 import { createGetAudioNodeTailTime } from './get-audio-node-tail-time';
-
-const addActiveInputConnectionToAudioParam = <T extends TContext>(
-    activeInputs: Set<TActiveInputConnection<T>>,
-    source: IAudioNode<T>,
-    [output, eventListener]: TPassiveAudioParamInputConnection,
-    ignoreDuplicates: boolean
-) => {
-    insertElementInSet(
-        activeInputs,
-        [source, output, eventListener],
-        (activeInputConnection) => activeInputConnection[0] === source && activeInputConnection[1] === output,
-        ignoreDuplicates
-    );
-};
 
 const deleteActiveInputConnectionToAudioNode = <T extends TContext>(
     activeInputs: Set<TActiveInputConnection<T>>[],
