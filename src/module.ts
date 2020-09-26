@@ -13,6 +13,7 @@ import { createAddAudioNodeConnections } from './factories/add-audio-node-connec
 import { createAddAudioParamConnections } from './factories/add-audio-param-connections';
 import { createAddAudioWorkletModule } from './factories/add-audio-worklet-module';
 import { createAddConnectionToAudioNode } from './factories/add-connection-to-audio-node';
+import { createAddPassiveInputConnectionToAudioNode } from './factories/add-passive-input-connection-to-audio-node';
 import { createAddSilentConnection } from './factories/add-silent-connection';
 import { createAddUnrenderedAudioWorkletNode } from './factories/add-unrendered-audio-worklet-node';
 import { createAnalyserNodeConstructor } from './factories/analyser-node-constructor';
@@ -277,6 +278,7 @@ export * from './interfaces/index';
 export * from './types/index';
 
 const addActiveInputConnectionToAudioNode = createAddActiveInputConnectionToAudioNode(insertElementInSet);
+const addPassiveInputConnectionToAudioNode = createAddPassiveInputConnectionToAudioNode(insertElementInSet);
 const audioNodeTailTimeStore = new WeakMap();
 const getAudioNodeTailTime = createGetAudioNodeTailTime(audioNodeTailTimeStore);
 const cacheTestResult = createCacheTestResult(new Map(), new WeakMap());
@@ -296,7 +298,7 @@ const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
-    createAddConnectionToAudioNode(addActiveInputConnectionToAudioNode, getAudioNodeTailTime),
+    createAddConnectionToAudioNode(addActiveInputConnectionToAudioNode, addPassiveInputConnectionToAudioNode, getAudioNodeTailTime),
     cacheTestResult,
     createIncrementCycleCounterFactory(
         CYCLE_COUNTERS,

@@ -11,6 +11,8 @@ export * from './add-audio-worklet-module-factory';
 export * from './add-audio-worklet-module-function';
 export * from './add-connection-to-audio-node-factory';
 export * from './add-connection-to-audio-node-function';
+export * from './add-passive-input-connection-to-audio-node-factory';
+export * from './add-passive-input-connection-to-audio-node-function';
 export * from './add-silent-connection-factory';
 export * from './add-silent-connection-function';
 export * from './add-unrendered-audio-worklet-node-factory';
