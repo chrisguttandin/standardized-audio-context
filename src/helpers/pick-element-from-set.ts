@@ -1,4 +1,6 @@
-export const pickElementFromSet = <T>(set: Set<T>, predicate: (element: T) => boolean): T => {
+import { TPickElementFromSetFunction } from '../types';
+
+export const pickElementFromSet: TPickElementFromSetFunction = (set, predicate) => {
     const matchingElements = Array.from(set).filter(predicate);
 
     if (matchingElements.length > 1) {

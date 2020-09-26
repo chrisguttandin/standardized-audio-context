@@ -52,6 +52,7 @@ import { createDecodeAudioData } from './factories/decode-audio-data';
 import { createDecrementCycleCounter } from './factories/decrement-cycle-counter';
 import { createDelayNodeConstructor } from './factories/delay-node-constructor';
 import { createDelayNodeRendererFactory } from './factories/delay-node-renderer-factory';
+import { createDeleteActiveInputConnectionToAudioNode } from './factories/delete-active-input-connection-to-audio-node';
 import { createDeleteUnrenderedAudioWorkletNode } from './factories/delete-unrendered-audio-worklet-node';
 import { createDetectCycles } from './factories/detect-cycles';
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
@@ -190,6 +191,7 @@ import { isActiveAudioNode } from './helpers/is-active-audio-node';
 import { isDCCurve } from './helpers/is-dc-curve';
 import { isPartOfACycle } from './helpers/is-part-of-a-cycle';
 import { overwriteAccessors } from './helpers/overwrite-accessors';
+import { pickElementFromSet } from './helpers/pick-element-from-set';
 import { sanitizeAudioWorkletNodeOptions } from './helpers/sanitize-audio-worklet-node-options';
 import { sanitizeChannelSplitterOptions } from './helpers/sanitize-channel-splitter-options';
 import { sanitizePeriodicWaveOptions } from './helpers/sanitize-periodic-wave-options';
@@ -279,6 +281,7 @@ export * from './types/index';
 
 const addActiveInputConnectionToAudioNode = createAddActiveInputConnectionToAudioNode(insertElementInSet);
 const addPassiveInputConnectionToAudioNode = createAddPassiveInputConnectionToAudioNode(insertElementInSet);
+const deleteActiveInputConnectionToAudioNode = createDeleteActiveInputConnectionToAudioNode(pickElementFromSet);
 const audioNodeTailTimeStore = new WeakMap();
 const getAudioNodeTailTime = createGetAudioNodeTailTime(audioNodeTailTimeStore);
 const cacheTestResult = createCacheTestResult(new Map(), new WeakMap());
@@ -302,6 +305,7 @@ const audioNodeConstructor = createAudioNodeConstructor(
         addActiveInputConnectionToAudioNode,
         addPassiveInputConnectionToAudioNode,
         connectNativeAudioNodeToNativeAudioNode,
+        deleteActiveInputConnectionToAudioNode,
         disconnectNativeAudioNodeFromNativeAudioNode,
         getAudioNodeConnections,
         getAudioNodeTailTime,

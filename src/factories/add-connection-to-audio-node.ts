@@ -1,4 +1,3 @@
-import { deleteActiveInputConnectionToAudioNode } from '../helpers/delete-active-input-connection-to-audio-node';
 import { deletePassiveInputConnectionToAudioNode } from '../helpers/delete-passive-input-connection-to-audio-node';
 import { getEventListenersOfAudioNode } from '../helpers/get-event-listeners-of-audio-node';
 import { isPartOfACycle } from '../helpers/is-part-of-a-cycle';
@@ -11,6 +10,7 @@ export const createAddConnectionToAudioNode: TAddConnectionToAudioNodeFactory = 
     addActiveInputConnectionToAudioNode,
     addPassiveInputConnectionToAudioNode,
     connectNativeAudioNodeToNativeAudioNode,
+    deleteActiveInputConnectionToAudioNode,
     disconnectNativeAudioNodeFromNativeAudioNode,
     getAudioNodeConnections,
     getAudioNodeTailTime,
