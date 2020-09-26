@@ -6,6 +6,7 @@ import { TDeleteActiveInputConnectionToAudioNodeFunction } from './delete-active
 import { TDisconnectNativeAudioNodeFromNativeAudioNodeFunction } from './disconnect-native-audio-node-from-native-audio-node-function';
 import { TGetAudioNodeConnectionsFunction } from './get-audio-node-connections-function';
 import { TGetAudioNodeTailTimeFunction } from './get-audio-node-tail-time-function';
+import { TGetEventListenersOfAudioNodeFunction } from './get-event-listeners-of-audio-node-function';
 import { TGetNativeAudioNodeFunction } from './get-native-audio-node-function';
 import { TInsertElementInSetFunction } from './insert-element-in-set-function';
 import { TIsActiveAudioNodeFunction } from './is-active-audio-node-function';
@@ -20,6 +21,7 @@ export type TAddConnectionToAudioNodeFactory = (
     disconnectNativeAudioNodeFromNativeAudioNode: TDisconnectNativeAudioNodeFromNativeAudioNodeFunction,
     getAudioNodeConnections: TGetAudioNodeConnectionsFunction,
     getAudioNodeTailTime: TGetAudioNodeTailTimeFunction,
+    getEventListenersOfAudioNode: TGetEventListenersOfAudioNodeFunction,
     getNativeAudioNode: TGetNativeAudioNodeFunction,
     insertElementInSet: TInsertElementInSetFunction,
     isActiveAudioNode: TIsActiveAudioNodeFunction,

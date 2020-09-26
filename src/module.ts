@@ -183,6 +183,7 @@ import { connectNativeAudioNodeToNativeAudioNode } from './helpers/connect-nativ
 import { disconnectNativeAudioNodeFromNativeAudioNode } from './helpers/disconnect-native-audio-node-from-native-audio-node';
 import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
 import { getAudioParamConnections } from './helpers/get-audio-param-connections';
+import { getEventListenersOfAudioNode } from './helpers/get-event-listeners-of-audio-node';
 import { getNativeAudioNode } from './helpers/get-native-audio-node';
 import { getNativeAudioParam } from './helpers/get-native-audio-param';
 import { getValueForKey } from './helpers/get-value-for-key';
@@ -310,6 +311,7 @@ const audioNodeConstructor = createAudioNodeConstructor(
         disconnectNativeAudioNodeFromNativeAudioNode,
         getAudioNodeConnections,
         getAudioNodeTailTime,
+        getEventListenersOfAudioNode,
         getNativeAudioNode,
         insertElementInSet,
         isActiveAudioNode,
