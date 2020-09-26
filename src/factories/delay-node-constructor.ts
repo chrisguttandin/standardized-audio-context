@@ -15,7 +15,8 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
     createDelayNodeRenderer,
     createNativeDelayNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 ) => {
     return class DelayNode<T extends TContext> extends audioNodeConstructor<T> implements IDelayNode<T> {
         private _delayTime: IAudioParam;
@@ -30,6 +31,8 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
             super(context, false, nativeDelayNode, delayNodeRenderer);
 
             this._delayTime = createAudioParam(this, isOffline, nativeDelayNode.delayTime);
+
+            setAudioNodeTailTime(this, mergedOptions.maxDelayTime);
         }
 
         get delayTime(): IAudioParam {

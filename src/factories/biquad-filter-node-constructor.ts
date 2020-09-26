@@ -20,7 +20,8 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
     createInvalidAccessError,
     createNativeBiquadFilterNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 ) => {
     return class BiquadFilterNode<T extends TContext> extends audioNodeConstructor<T> implements IBiquadFilterNode<T> {
         private _detune: IAudioParam;
@@ -63,6 +64,9 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
                 MOST_NEGATIVE_SINGLE_FLOAT
             );
             this._nativeBiquadFilterNode = nativeBiquadFilterNode;
+
+            // @todo Determine a meaningful tail-time instead of just using one second.
+            setAudioNodeTailTime(this, 1);
         }
 
         get detune(): IAudioParam {

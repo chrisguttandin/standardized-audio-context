@@ -13,7 +13,8 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
     createNativeIIRFilterNode,
     createIIRFilterNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 ) => {
     return class IIRFilterNode<T extends TContext> extends audioNodeConstructor<T> implements IIIRFilterNode<T> {
         private _nativeIIRFilterNode: TNativeIIRFilterNode;
@@ -41,6 +42,9 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             wrapIIRFilterNodeGetFrequencyResponseMethod(nativeIIRFilterNode);
 
             this._nativeIIRFilterNode = nativeIIRFilterNode;
+
+            // @todo Determine a meaningful tail-time instead of just using one second.
+            setAudioNodeTailTime(this, 1);
         }
 
         public getFrequencyResponse(frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void {

@@ -94,12 +94,9 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
                 const resetInternalStateToPassive = () => {
                     this._nativeConstantSourceNode.removeEventListener('ended', resetInternalStateToPassive);
 
-                    // @todo Determine a meaningful delay instead of just using one second.
-                    setTimeout(() => {
-                        if (isActiveAudioNode(this)) {
-                            setInternalStateToPassive(this);
-                        }
-                    }, 1000);
+                    if (isActiveAudioNode(this)) {
+                        setInternalStateToPassive(this);
+                    }
                 };
 
                 this._nativeConstantSourceNode.addEventListener('ended', resetInternalStateToPassive);

@@ -15,7 +15,8 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
     createNativeWaveShaperNode,
     createWaveShaperNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 ) => {
     return class WaveShaperNode<T extends TContext> extends audioNodeConstructor<T> implements IWaveShaperNode<T> {
         private _isCurveNullified: boolean;
@@ -34,6 +35,9 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
 
             this._isCurveNullified = false;
             this._nativeWaveShaperNode = nativeWaveShaperNode;
+
+            // @todo Determine a meaningful tail-time instead of just using one second.
+            setAudioNodeTailTime(this, 1);
         }
 
         get curve(): null | Float32Array {

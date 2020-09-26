@@ -5,6 +5,7 @@ import { TDelayNodeRendererFactory } from './delay-node-renderer-factory';
 import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeDelayNodeFactory } from './native-delay-node-factory';
+import { TSetAudioNodeTailTimeFunction } from './set-audio-node-tail-time-function';
 
 export type TDelayNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
@@ -12,5 +13,6 @@ export type TDelayNodeConstructorFactory = (
     createDelayNodeRenderer: TDelayNodeRendererFactory,
     createNativeDelayNode: TNativeDelayNodeFactory,
     getNativeContext: TGetNativeContextFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    setAudioNodeTailTime: TSetAudioNodeTailTimeFunction
 ) => TDelayNodeConstructor;

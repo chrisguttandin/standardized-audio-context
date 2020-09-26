@@ -5,6 +5,7 @@ import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-
 import { TNativePannerNodeFactory } from './native-panner-node-factory';
 import { TPannerNodeConstructor } from './panner-node-constructor';
 import { TPannerNodeRendererFactory } from './panner-node-renderer-factory';
+import { TSetAudioNodeTailTimeFunction } from './set-audio-node-tail-time-function';
 
 export type TPannerNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
@@ -12,5 +13,6 @@ export type TPannerNodeConstructorFactory = (
     createNativePannerNode: TNativePannerNodeFactory,
     createPannerNodeRenderer: TPannerNodeRendererFactory,
     getNativeContext: TGetNativeContextFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    setAudioNodeTailTime: TSetAudioNodeTailTimeFunction
 ) => TPannerNodeConstructor;

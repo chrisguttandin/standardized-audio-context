@@ -14,7 +14,8 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
     createConvolverNodeRenderer,
     createNativeConvolverNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 ) => {
     return class ConvolverNode<T extends TContext> extends audioNodeConstructor<T> implements IConvolverNode<T> {
         private _isBufferNullified: boolean;
@@ -32,6 +33,10 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
 
             this._isBufferNullified = false;
             this._nativeConvolverNode = nativeConvolverNode;
+
+            if (mergedOptions.buffer !== null) {
+                setAudioNodeTailTime(this, mergedOptions.buffer.duration);
+            }
         }
 
         get buffer(): null | TAnyAudioBuffer {
@@ -51,8 +56,12 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
 
                 this._nativeConvolverNode.buffer = nativeContext.createBuffer(1, 1, 44100);
                 this._isBufferNullified = true;
+
+                setAudioNodeTailTime(this, 0);
             } else {
                 this._isBufferNullified = false;
+
+                setAudioNodeTailTime(this, this._nativeConvolverNode.buffer === null ? 0 : this._nativeConvolverNode.buffer.duration);
             }
         }
 

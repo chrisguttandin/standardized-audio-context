@@ -362,9 +362,13 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
             }
         };
 
+        const activeInputIndexes = new Map<number, number>();
+
         // tslint:disable-next-line:deprecation
         scriptProcessorNode.onaudioprocess = ({ inputBuffer, outputBuffer }: AudioProcessingEvent) => {
             if (audioWorkletProcessor !== null) {
+                const activeInputs = getActiveAudioWorkletNodeInputs(nativeAudioWorkletNodeFaker);
+
                 for (let i = 0; i < bufferSize; i += 128) {
                     for (let j = 0; j < options.numberOfInputs; j += 1) {
                         for (let k = 0; k < options.channelCount; k += 1) {
@@ -388,16 +392,30 @@ export const createNativeAudioWorkletNodeFakerFactory: TNativeAudioWorkletNodeFa
                     }
 
                     try {
-                        const activeInputs = getActiveAudioWorkletNodeInputs(nativeAudioWorkletNodeFaker);
-
                         const potentiallyEmptyInputs = inputs.map((input, index) => {
                             const activeInput = activeInputs[index];
 
                             if (activeInput.size > 0) {
+                                activeInputIndexes.set(index, bufferSize / 128);
+
                                 return input;
                             }
 
-                            return [];
+                            const count = activeInputIndexes.get(index);
+
+                            if (count === undefined) {
+                                return [];
+                            }
+
+                            if (input.every((channelData) => channelData.every((sample) => sample === 0))) {
+                                if (count === 1) {
+                                    activeInputIndexes.delete(index);
+                                } else {
+                                    activeInputIndexes.set(index, count - 1);
+                                }
+                            }
+
+                            return input;
                         });
 
                         const activeSourceFlag = exposeCurrentFrameAndCurrentTime(

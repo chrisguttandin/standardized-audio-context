@@ -35,7 +35,8 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
     createNativePannerNode,
     createPannerNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 ) => {
     return class PannerNode<T extends TContext> extends audioNodeConstructor<T> implements IPannerNode<T> {
         private _nativePannerNode: TNativePannerNode;
@@ -105,6 +106,9 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
                 MOST_POSITIVE_SINGLE_FLOAT,
                 MOST_NEGATIVE_SINGLE_FLOAT
             );
+
+            // @todo Determine a meaningful tail-time instead of just using one second.
+            setAudioNodeTailTime(this, 1);
         }
 
         get coneInnerAngle(): number {

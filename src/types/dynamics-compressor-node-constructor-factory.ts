@@ -6,6 +6,7 @@ import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeDynamicsCompressorNodeFactory } from './native-dynamics-compressor-node-factory';
 import { TNotSupportedErrorFactory } from './not-supported-error-factory';
+import { TSetAudioNodeTailTimeFunction } from './set-audio-node-tail-time-function';
 
 export type TDynamicsCompressorNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
@@ -14,5 +15,6 @@ export type TDynamicsCompressorNodeConstructorFactory = (
     createNativeDynamicsCompressorNode: TNativeDynamicsCompressorNodeFactory,
     createNotSupportedError: TNotSupportedErrorFactory,
     getNativeContext: TGetNativeContextFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    setAudioNodeTailTime: TSetAudioNodeTailTimeFunction
 ) => TDynamicsCompressorNodeConstructor;

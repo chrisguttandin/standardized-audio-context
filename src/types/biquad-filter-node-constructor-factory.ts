@@ -6,6 +6,7 @@ import { TGetNativeContextFunction } from './get-native-context-function';
 import { TInvalidAccessErrorFactory } from './invalid-access-error-factory';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeBiquadFilterNodeFactory } from './native-biquad-filter-node-factory';
+import { TSetAudioNodeTailTimeFunction } from './set-audio-node-tail-time-function';
 
 export type TBiquadFilterNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
@@ -14,5 +15,6 @@ export type TBiquadFilterNodeConstructorFactory = (
     createInvalidAccessError: TInvalidAccessErrorFactory,
     createNativeBiquadFilterNode: TNativeBiquadFilterNodeFactory,
     getNativeContext: TGetNativeContextFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    setAudioNodeTailTime: TSetAudioNodeTailTimeFunction
 ) => TBiquadFilterNodeConstructor;

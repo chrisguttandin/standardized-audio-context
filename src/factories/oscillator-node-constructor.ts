@@ -120,12 +120,9 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
                 const resetInternalStateToPassive = () => {
                     this._nativeOscillatorNode.removeEventListener('ended', resetInternalStateToPassive);
 
-                    // @todo Determine a meaningful delay instead of just using one second.
-                    setTimeout(() => {
-                        if (isActiveAudioNode(this)) {
-                            setInternalStateToPassive(this);
-                        }
-                    }, 1000);
+                    if (isActiveAudioNode(this)) {
+                        setInternalStateToPassive(this);
+                    }
                 };
 
                 this._nativeOscillatorNode.addEventListener('ended', resetInternalStateToPassive);

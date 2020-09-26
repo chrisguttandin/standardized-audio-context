@@ -1,5 +1,6 @@
 import { TAddAudioNodeConnectionsFunction } from './add-audio-node-connections-function';
 import { TAudioNodeConstructor } from './audio-node-constructor';
+import { TAudioNodeTailTimeStore } from './audio-node-tail-time-store';
 import { TCacheTestResultFunction } from './cache-test-result-function';
 import { TDecrementCycleCounterFunction } from './decrement-cycle-counter-function';
 import { TDetectCyclesFunction } from './detect-cycles-function';
@@ -16,6 +17,7 @@ import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 
 export type TAudioNodeConstructorFactory = (
     addAudioNodeConnections: TAddAudioNodeConnectionsFunction,
+    audioNodeTailTimeStore: TAudioNodeTailTimeStore,
     cacheTestResult: TCacheTestResultFunction,
     createIncrementCycleCounter: TIncrementCycleCounterFactory,
     createIndexSizeError: TIndexSizeErrorFactory,

@@ -26,7 +26,8 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
     createNativeDynamicsCompressorNode,
     createNotSupportedError,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 ) => {
     return class DynamicsCompressorNode<T extends TContext> extends audioNodeConstructor<T> implements IDynamicsCompressorNode<T> {
         private _attack: IAudioParam;
@@ -56,6 +57,8 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
             this._ratio = createAudioParam(this, isOffline, nativeDynamicsCompressorNode.ratio);
             this._release = createAudioParam(this, isOffline, nativeDynamicsCompressorNode.release);
             this._threshold = createAudioParam(this, isOffline, nativeDynamicsCompressorNode.threshold);
+
+            setAudioNodeTailTime(this, 0.006);
         }
 
         get attack(): IAudioParam {

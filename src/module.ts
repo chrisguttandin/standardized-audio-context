@@ -138,6 +138,7 @@ import { createRenderInputsOfAudioNode } from './factories/render-inputs-of-audi
 import { createRenderInputsOfAudioParam } from './factories/render-inputs-of-audio-param';
 import { createRenderNativeOfflineAudioContext } from './factories/render-native-offline-audio-context';
 import { createSetActiveAudioWorkletNodeInputs } from './factories/set-active-audio-worklet-node-inputs';
+import { createSetAudioNodeTailTime } from './factories/set-audio-node-tail-time';
 import { createStartRendering } from './factories/start-rendering';
 import { createStereoPannerNodeConstructor } from './factories/stereo-panner-node-constructor';
 import { createStereoPannerNodeRendererFactory } from './factories/stereo-panner-node-renderer-factory';
@@ -272,6 +273,7 @@ import {
 export * from './interfaces/index';
 export * from './types/index';
 
+const audioNodeTailTimeStore = new WeakMap();
 const cacheTestResult = createCacheTestResult(new Map(), new WeakMap());
 const window = createWindow();
 const createNativeAnalyserNode = createNativeAnalyserNodeFactory(cacheTestResult, createIndexSizeError);
@@ -289,6 +291,7 @@ const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
+    audioNodeTailTimeStore,
     cacheTestResult,
     createIncrementCycleCounterFactory(
         CYCLE_COUNTERS,
@@ -422,6 +425,7 @@ const createBiquadFilterNodeRenderer = createBiquadFilterNodeRendererFactory(
     renderAutomation,
     renderInputsOfAudioNode
 );
+const setAudioNodeTailTime = createSetAudioNodeTailTime(audioNodeTailTimeStore);
 const biquadFilterNodeConstructor: TBiquadFilterNodeConstructor = createBiquadFilterNodeConstructor(
     audioNodeConstructor,
     createAudioParam,
@@ -429,7 +433,8 @@ const biquadFilterNodeConstructor: TBiquadFilterNodeConstructor = createBiquadFi
     createInvalidAccessError,
     createNativeBiquadFilterNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 );
 const monitorConnections = createMonitorConnections(insertElementInSet, isNativeAudioNode);
 const wrapChannelMergerNode = createWrapChannelMergerNode(createInvalidStateError, monitorConnections);
@@ -499,7 +504,8 @@ const convolverNodeConstructor: TConvolverNodeConstructor = createConvolverNodeC
     createConvolverNodeRenderer,
     createNativeConvolverNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 );
 const createDelayNodeRenderer = createDelayNodeRendererFactory(
     connectAudioParam,
@@ -514,7 +520,8 @@ const delayNodeConstructor: TDelayNodeConstructor = createDelayNodeConstructor(
     createDelayNodeRenderer,
     createNativeDelayNode,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 );
 const createNativeDynamicsCompressorNode = createNativeDynamicsCompressorNodeFactory(createNotSupportedError);
 const createDynamicsCompressorNodeRenderer = createDynamicsCompressorNodeRendererFactory(
@@ -531,7 +538,8 @@ const dynamicsCompressorNodeConstructor: TDynamicsCompressorNodeConstructor = cr
     createNativeDynamicsCompressorNode,
     createNotSupportedError,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 );
 const createGainNodeRenderer = createGainNodeRendererFactory(
     connectAudioParam,
@@ -573,7 +581,8 @@ const iIRFilterNodeConstructor: TIIRFilterNodeConstructor = createIIRFilterNodeC
     createNativeIIRFilterNode,
     createIIRFilterNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 );
 const createAudioListener = createAudioListenerFactory(
     createAudioParam,
@@ -662,7 +671,8 @@ const pannerNodeConstructor: TPannerNodeConstructor = createPannerNodeConstructo
     createNativePannerNode,
     createPannerNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 );
 const createNativePeriodicWave = createNativePeriodicWaveFactory(createIndexSizeError);
 const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(
@@ -706,7 +716,8 @@ const waveShaperNodeConstructor: TWaveShaperNodeConstructor = createWaveShaperNo
     createNativeWaveShaperNode,
     createWaveShaperNodeRenderer,
     getNativeContext,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    setAudioNodeTailTime
 );
 const isSecureContext = createIsSecureContext(window);
 const exposeCurrentFrameAndCurrentTime = createExposeCurrentFrameAndCurrentTime(window);
