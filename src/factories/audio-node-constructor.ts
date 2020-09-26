@@ -10,6 +10,7 @@ import { deleteActiveInputConnection } from '../helpers/delete-active-input-conn
 import { deleteActiveInputConnectionToAudioNode } from '../helpers/delete-active-input-connection-to-audio-node';
 import { deleteActiveInputConnectionToAudioParam } from '../helpers/delete-active-input-connection-to-audio-param';
 import { deleteEventListenerOfAudioNode } from '../helpers/delete-event-listeners-of-audio-node';
+import { deletePassiveInputConnectionToAudioNode } from '../helpers/delete-passive-input-connection-to-audio-node';
 import { disconnectNativeAudioNodeFromNativeAudioNode } from '../helpers/disconnect-native-audio-node-from-native-audio-node';
 import { getAudioNodeConnections } from '../helpers/get-audio-node-connections';
 import { getAudioParamConnections } from '../helpers/get-audio-param-connections';
@@ -44,29 +45,9 @@ import {
     TInternalStateEventListener,
     TNativeAudioNode,
     TNativeAudioParam,
-    TPassiveAudioNodeInputConnection,
     TPassiveAudioParamInputConnection
 } from '../types';
 import { createGetAudioNodeTailTime } from './get-audio-node-tail-time';
-
-const deletePassiveInputConnectionToAudioNode = <T extends TContext>(
-    passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioNodeInputConnection>>,
-    source: IAudioNode<T>,
-    output: number,
-    input: number
-) => {
-    const passiveInputConnections = getValueForKey(passiveInputs, source);
-    const matchingConnection = pickElementFromSet(
-        passiveInputConnections,
-        (passiveInputConnection) => passiveInputConnection[0] === output && passiveInputConnection[1] === input
-    );
-
-    if (passiveInputConnections.size === 0) {
-        passiveInputs.delete(source);
-    }
-
-    return matchingConnection;
-};
 
 const deletePassiveInputConnectionToAudioParam = <T extends TContext>(
     passiveInputs: WeakMap<IAudioNode<T>, Set<TPassiveAudioParamInputConnection>>,
