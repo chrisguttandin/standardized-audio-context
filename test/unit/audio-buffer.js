@@ -20,7 +20,14 @@ const createAudioBufferWithDecodeAudioDataPromiseFunction = (context, { length, 
         throw new Error("The sampleRate can't be changed when creating an AudioBuffer through decoding.");
     }
 
-    return loadFixtureAsArrayBuffer('1000-frames-of-noise-mono.wav').then((arrayBuffer) => context.decodeAudioData(arrayBuffer));
+    return loadFixtureAsArrayBuffer('1000-frames-of-noise-mono.wav').then((arrayBuffer) => {
+        const dataView = new DataView(arrayBuffer);
+
+        dataView.setUint32(24, sampleRate, true);
+        dataView.setUint32(28, sampleRate * length * 2, true);
+
+        return context.decodeAudioData(arrayBuffer);
+    });
 };
 const createAudioBufferWithDecodeAudioDataSuccessCallbackFunction = (context, { length, numberOfChannels = 1, sampleRate }) => {
     if (length !== 1000) {
@@ -35,7 +42,14 @@ const createAudioBufferWithDecodeAudioDataSuccessCallbackFunction = (context, { 
         throw new Error("The sampleRate can't be changed when creating an AudioBuffer through decoding.");
     }
 
-    return loadFixtureAsArrayBuffer('1000-frames-of-noise-mono.wav').then((arrayBuffer) => context.decodeAudioData(arrayBuffer));
+    return loadFixtureAsArrayBuffer('1000-frames-of-noise-mono.wav').then((arrayBuffer) => {
+        const dataView = new DataView(arrayBuffer);
+
+        dataView.setUint32(24, sampleRate, true);
+        dataView.setUint32(28, sampleRate * length * 2, true);
+
+        return context.decodeAudioData(arrayBuffer);
+    });
 };
 const createAudioBufferWithConstructor = (_, { length, numberOfChannels = 1, sampleRate }) => {
     return Promise.resolve(new AudioBuffer({ length, numberOfChannels, sampleRate }));
