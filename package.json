@@ -21,7 +21,7 @@
     "dependencies": {
         "@babel/runtime": "^7.11.2",
         "automation-events": "^3.0.0",
-        "tslib": "^2.0.1"
+        "tslib": "^2.0.2"
     },
     "description": "A cross-browser implementation of the AudioContext which aims to closely follow the standard.",
     "devDependencies": {
