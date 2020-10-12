@@ -1,4 +1,4 @@
-import babel from 'rollup-plugin-babel';
+import babel from '@rollup/plugin-babel';
 
 // eslint-disable-next-line import/no-default-export
 export default {
@@ -10,6 +10,7 @@ export default {
     },
     plugins: [
         babel({
+            babelHelpers: 'runtime',
             exclude: 'node_modules/**',
             plugins: ['@babel/plugin-external-helpers', '@babel/plugin-transform-runtime'],
             presets: [
@@ -19,8 +20,7 @@ export default {
                         modules: false
                     }
                 ]
-            ],
-            runtimeHelpers: true
+            ]
         })
     ]
 };
