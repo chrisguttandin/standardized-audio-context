@@ -64,7 +64,7 @@
         "rollup": "^2.32.1",
         "sinon": "^9.2.0",
         "sinon-chai": "^3.5.0",
-        "ts-loader": "^8.0.6",
+        "ts-loader": "^8.0.7",
         "tsconfig-holy-grail": "^11.0.31",
         "tslint": "^6.1.3",
         "tslint-config-holy-grail": "^53.0.6",
