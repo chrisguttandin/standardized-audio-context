@@ -53,7 +53,7 @@
         "karma-mocha": "^2.0.1",
         "karma-opera-launcher": "^1.0.0",
         "karma-safari-launcher": "^1.0.0",
-        "karma-sauce-launcher": "^4.1.6",
+        "karma-sauce-launcher": "^4.3.3",
         "karma-sinon-chai": "^2.0.2",
         "karma-webpack": "^4.0.2",
         "load-grunt-config": "^3.0.1",
