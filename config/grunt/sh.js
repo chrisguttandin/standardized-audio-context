@@ -57,10 +57,10 @@ module.exports = (grunt) => {
             cmd: `karma start config/karma/config-integration.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },
         'test-integration-node': {
-            cmd: 'mocha --bail --recursive --require config/mocha/config-integration.js test/integration'
+            cmd: 'mocha --bail --parallel --recursive --require config/mocha/config-integration.js test/integration'
         },
         'test-memory': {
-            cmd: 'mocha --bail --recursive --require config/mocha/config-memory.js test/memory'
+            cmd: 'mocha --bail --parallel --recursive --require config/mocha/config-memory.js test/memory'
         },
         'test-unit': {
             cmd: `karma start config/karma/config-unit.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
