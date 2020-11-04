@@ -124,7 +124,7 @@ describe('PeriodicWave', () => {
                         });
 
                         describe('with invalid options', () => {
-                            describe('with imag and real with a different length', () => {
+                            describe('with an imag and real property with a different length', () => {
                                 it('should throw an IndexSizeError', (done) => {
                                     try {
                                         createPeriodicWave(context, { imag: [1, 2, 3], real: [1, 2, 3, 4, 5] });
