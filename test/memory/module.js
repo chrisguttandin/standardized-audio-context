@@ -20,7 +20,9 @@ const compileBundle = () => {
 
         compiler.outputFileSystem = memoryFileSystem;
         compiler.run((err, stats) => {
-            if (stats.hasErrors() || stats.hasWarnings()) {
+            if (err !== null) {
+                reject(err);
+            } else if (stats.hasErrors() || stats.hasWarnings()) {
                 reject(new Error(stats.toString({ errorDetails: true, warnings: true })));
             } else {
                 resolve(memoryFileSystem.readFileSync('/bundle.js', 'utf-8')); // eslint-disable-line node/no-sync
