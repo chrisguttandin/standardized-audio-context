@@ -137,6 +137,19 @@ describe('PeriodicWave', () => {
                                 });
                             });
 
+                            describe('with an imag and real property with a length of 1', () => {
+                                it('should throw an IndexSizeError', (done) => {
+                                    try {
+                                        createPeriodicWave(context, { imag: [1], real: [1] });
+                                    } catch (err) {
+                                        expect(err.code).to.equal(1);
+                                        expect(err.name).to.equal('IndexSizeError');
+
+                                        done();
+                                    }
+                                });
+                            });
+
                             if (description.includes('constructor')) {
                                 describe('with an imag property of only one value', () => {
                                     it('should throw an IndexSizeError', (done) => {
