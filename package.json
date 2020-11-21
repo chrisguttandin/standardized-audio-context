@@ -19,7 +19,7 @@
         }
     ],
     "dependencies": {
-        "@babel/runtime": "^7.12.1",
+        "@babel/runtime": "^7.12.5",
         "automation-events": "^3.0.2",
         "tslib": "^2.0.3"
     },
