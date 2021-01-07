@@ -6,7 +6,7 @@ export const createFetchSource: TFetchSourceFactory = (createAbortError) => {
             const response = await fetch(url);
 
             if (response.ok) {
-                return response.text();
+                return [await response.text(), response.url];
             }
         } catch {
             // Ignore errors.

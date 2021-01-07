@@ -1,1 +1,1 @@
-export type TFetchSourceFunction = (url: string) => Promise<string>;
+export type TFetchSourceFunction = (url: string) => Promise<[string, string]>;

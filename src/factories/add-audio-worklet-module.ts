@@ -36,14 +36,13 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
 ) => {
     return (context, moduleURL, options = { credentials: 'omit' }) => {
         const nativeContext = getNativeContext(context);
-        const absoluteUrl = new URL(moduleURL, window.location.href).toString();
 
         // Bug #59: Safari does not implement the audioWorklet property.
         if (nativeContext.audioWorklet !== undefined) {
             return Promise.all([
                 fetchSource(moduleURL),
                 Promise.resolve(cacheTestResult(testAudioWorkletProcessorPostMessageSupport, testAudioWorkletProcessorPostMessageSupport))
-            ]).then(([source, isSupportingPostMessage]) => {
+            ]).then(([[source, absoluteUrl], isSupportingPostMessage]) => {
                 const [importStatements, sourceWithoutImportStatements] = splitImportStatements(source, absoluteUrl);
                 /*
                  * Bug #179: Firefox does not allow to transfer any buffer which has been passed to the process() method as an argument.
@@ -150,7 +149,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
         }
 
         const promise = fetchSource(moduleURL)
-            .then((source) => {
+            .then(([source, absoluteUrl]) => {
                 const [importStatements, sourceWithoutImportStatements] = splitImportStatements(source, absoluteUrl);
 
                 /*
