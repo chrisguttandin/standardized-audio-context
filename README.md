@@ -391,6 +391,20 @@ isSupported().then((isSupported) => {
 });
 ```
 
+## Gotchas
+
+Safari on iOS will throw an error when creating certain nodes if the channel count of the context destination exceeds 1. As a workaround you can explicitly set the channel count of the destination as shown below.
+
+```js
+// Limit channel count to fix Safari
+import { AudioContext } from 'standardized-audio-context';
+
+const context = new AudioContext();
+
+context.destination.channelCount = 1;
+context.destination.channelCountMode = 'explicit';
+```
+
 ## Browser Support
 
 The goal of this package is to provide a consistent API. But at the same time this package should
