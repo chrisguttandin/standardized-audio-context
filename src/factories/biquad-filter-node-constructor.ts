@@ -94,7 +94,16 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
         }
 
         public getFrequencyResponse(frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void {
-            this._nativeBiquadFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+            // Bug #189: Safari does throw an InvalidStateError.
+            try {
+                this._nativeBiquadFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+            } catch (err) {
+                if (err.code === 11) {
+                    throw createInvalidAccessError();
+                }
+
+                throw err;
+            }
 
             // Bug #68: Safari does not throw an error if the parameters differ in their length.
             if (frequencyHz.length !== magResponse.length || magResponse.length !== phaseResponse.length) {

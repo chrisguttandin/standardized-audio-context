@@ -58,13 +58,13 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
         return {
             connectGraph(): void {
                 inputGainNode.connect(leftGainNode);
-                inputGainNode.connect(panWaveShaperNode.inputs[0]);
+                inputGainNode.connect(panWaveShaperNode.inputs === undefined ? panWaveShaperNode : panWaveShaperNode.inputs[0]);
                 inputGainNode.connect(rightGainNode);
 
                 panWaveShaperNode.connect(panGainNode);
 
-                panGainNode.connect(leftWaveShaperNode.inputs[0]);
-                panGainNode.connect(rightWaveShaperNode.inputs[0]);
+                panGainNode.connect(leftWaveShaperNode.inputs === undefined ? leftWaveShaperNode : leftWaveShaperNode.inputs[0]);
+                panGainNode.connect(rightWaveShaperNode.inputs === undefined ? rightWaveShaperNode : rightWaveShaperNode.inputs[0]);
 
                 leftWaveShaperNode.connect(leftGainNode.gain);
                 rightWaveShaperNode.connect(rightGainNode.gain);
@@ -74,13 +74,13 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             },
             disconnectGraph(): void {
                 inputGainNode.disconnect(leftGainNode);
-                inputGainNode.disconnect(panWaveShaperNode.inputs[0]);
+                inputGainNode.disconnect(panWaveShaperNode.inputs === undefined ? panWaveShaperNode : panWaveShaperNode.inputs[0]);
                 inputGainNode.disconnect(rightGainNode);
 
                 panWaveShaperNode.disconnect(panGainNode);
 
-                panGainNode.disconnect(leftWaveShaperNode.inputs[0]);
-                panGainNode.disconnect(rightWaveShaperNode.inputs[0]);
+                panGainNode.disconnect(leftWaveShaperNode.inputs === undefined ? leftWaveShaperNode : leftWaveShaperNode.inputs[0]);
+                panGainNode.disconnect(rightWaveShaperNode.inputs === undefined ? rightWaveShaperNode : rightWaveShaperNode.inputs[0]);
 
                 leftWaveShaperNode.disconnect(leftGainNode.gain);
                 rightWaveShaperNode.disconnect(rightGainNode.gain);
@@ -160,7 +160,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
         return {
             connectGraph(): void {
                 inputGainNode.connect(channelSplitterNode);
-                inputGainNode.connect(panWaveShaperNode.inputs[0]);
+                inputGainNode.connect(panWaveShaperNode.inputs === undefined ? panWaveShaperNode : panWaveShaperNode.inputs[0]);
 
                 channelSplitterNode.connect(leftInputForLeftOutputGainNode, 0);
                 channelSplitterNode.connect(leftInputForRightOutputGainNode, 0);
@@ -169,10 +169,26 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
                 panWaveShaperNode.connect(panGainNode);
 
-                panGainNode.connect(leftInputForLeftOutputWaveShaperNode.inputs[0]);
-                panGainNode.connect(leftInputForRightOutputWaveShaperNode.inputs[0]);
-                panGainNode.connect(rightInputForLeftOutputWaveShaperNode.inputs[0]);
-                panGainNode.connect(rightInputForRightOutputWaveShaperNode.inputs[0]);
+                panGainNode.connect(
+                    leftInputForLeftOutputWaveShaperNode.inputs === undefined
+                        ? leftInputForLeftOutputWaveShaperNode
+                        : leftInputForLeftOutputWaveShaperNode.inputs[0]
+                );
+                panGainNode.connect(
+                    leftInputForRightOutputWaveShaperNode.inputs === undefined
+                        ? leftInputForRightOutputWaveShaperNode
+                        : leftInputForRightOutputWaveShaperNode.inputs[0]
+                );
+                panGainNode.connect(
+                    rightInputForLeftOutputWaveShaperNode.inputs === undefined
+                        ? rightInputForLeftOutputWaveShaperNode
+                        : rightInputForLeftOutputWaveShaperNode.inputs[0]
+                );
+                panGainNode.connect(
+                    rightInputForRightOutputWaveShaperNode.inputs === undefined
+                        ? rightInputForRightOutputWaveShaperNode
+                        : rightInputForRightOutputWaveShaperNode.inputs[0]
+                );
 
                 leftInputForLeftOutputWaveShaperNode.connect(leftInputForLeftOutputGainNode.gain);
                 leftInputForRightOutputWaveShaperNode.connect(leftInputForRightOutputGainNode.gain);
@@ -187,7 +203,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
             },
             disconnectGraph(): void {
                 inputGainNode.disconnect(channelSplitterNode);
-                inputGainNode.disconnect(panWaveShaperNode.inputs[0]);
+                inputGainNode.disconnect(panWaveShaperNode.inputs === undefined ? panWaveShaperNode : panWaveShaperNode.inputs[0]);
 
                 channelSplitterNode.disconnect(leftInputForLeftOutputGainNode, 0);
                 channelSplitterNode.disconnect(leftInputForRightOutputGainNode, 0);
@@ -196,10 +212,26 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
 
                 panWaveShaperNode.disconnect(panGainNode);
 
-                panGainNode.disconnect(leftInputForLeftOutputWaveShaperNode.inputs[0]);
-                panGainNode.disconnect(leftInputForRightOutputWaveShaperNode.inputs[0]);
-                panGainNode.disconnect(rightInputForLeftOutputWaveShaperNode.inputs[0]);
-                panGainNode.disconnect(rightInputForRightOutputWaveShaperNode.inputs[0]);
+                panGainNode.disconnect(
+                    leftInputForLeftOutputWaveShaperNode.inputs === undefined
+                        ? leftInputForLeftOutputWaveShaperNode
+                        : leftInputForLeftOutputWaveShaperNode.inputs[0]
+                );
+                panGainNode.disconnect(
+                    leftInputForRightOutputWaveShaperNode.inputs === undefined
+                        ? leftInputForRightOutputWaveShaperNode
+                        : leftInputForRightOutputWaveShaperNode.inputs[0]
+                );
+                panGainNode.disconnect(
+                    rightInputForLeftOutputWaveShaperNode.inputs === undefined
+                        ? rightInputForLeftOutputWaveShaperNode
+                        : rightInputForLeftOutputWaveShaperNode.inputs[0]
+                );
+                panGainNode.disconnect(
+                    rightInputForRightOutputWaveShaperNode.inputs === undefined
+                        ? rightInputForRightOutputWaveShaperNode
+                        : rightInputForRightOutputWaveShaperNode.inputs[0]
+                );
 
                 leftInputForLeftOutputWaveShaperNode.disconnect(leftInputForLeftOutputGainNode.gain);
                 leftInputForRightOutputWaveShaperNode.disconnect(leftInputForRightOutputGainNode.gain);
@@ -261,6 +293,7 @@ export const createNativeStereoPannerNodeFakerFactory: TNativeStereoPannerNodeFa
         );
 
         Object.defineProperty(panGainNode.gain, 'defaultValue', { get: () => 0 });
+        Object.defineProperty(panGainNode.gain, 'maxValue', { get: () => 1 });
         Object.defineProperty(panGainNode.gain, 'minValue', { get: () => -1 });
 
         const nativeStereoPannerNodeFakerFactory = {

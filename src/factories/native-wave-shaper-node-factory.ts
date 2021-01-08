@@ -17,9 +17,14 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
         /*
          * Bug #119: Safari does not correctly map the values.
          * @todo Unfortunately there is no way to test for this behavior in a synchronous fashion which is why testing for the existence of
-         * the webkitAudioContext is used as a workaround here.
+         * the webkitAudioContext is used as a workaround here. Testing for the automationRate property is necessary because this workaround
+         * isn't necessary anymore since v14.0.2 of Safari.
          */
-        if (nativeAudioContextConstructor !== null && nativeAudioContextConstructor.name === 'webkitAudioContext') {
+        if (
+            nativeAudioContextConstructor !== null &&
+            nativeAudioContextConstructor.name === 'webkitAudioContext' &&
+            nativeContext.createGain().gain.automationRate === undefined
+        ) {
             return createNativeWaveShaperNodeFaker(nativeContext, options);
         }
 
