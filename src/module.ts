@@ -197,6 +197,7 @@ import { pickElementFromSet } from './helpers/pick-element-from-set';
 import { sanitizeAudioWorkletNodeOptions } from './helpers/sanitize-audio-worklet-node-options';
 import { sanitizeChannelSplitterOptions } from './helpers/sanitize-channel-splitter-options';
 import { sanitizePeriodicWaveOptions } from './helpers/sanitize-periodic-wave-options';
+import { setValueAtTimeUntilPossible } from './helpers/set-value-at-time-until-possible';
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport } from './helpers/test-audio-buffer-source-node-start-method-consecutive-calls-support';
 import { testAudioBufferSourceNodeStartMethodOffsetClampingSupport } from './helpers/test-audio-buffer-source-node-start-method-offset-clamping-support';
@@ -417,7 +418,8 @@ const createAudioParam = createAudioParamFactory(
     createSetTargetAutomationEvent,
     createSetValueAutomationEvent,
     createSetValueCurveAutomationEvent,
-    nativeAudioContextConstructor
+    nativeAudioContextConstructor,
+    setValueAtTimeUntilPossible
 );
 const audioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructor = createAudioBufferSourceNodeConstructor(
     audioNodeConstructor,

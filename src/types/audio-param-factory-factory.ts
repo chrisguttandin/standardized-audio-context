@@ -14,6 +14,7 @@ import { TAudioParamFactory } from './audio-param-factory';
 import { TAudioParamRendererFactory } from './audio-param-renderer-factory';
 import { TAudioParamStore } from './audio-param-store';
 import { TNativeAudioContextConstructor } from './native-audio-context-constructor';
+import { TSetValueAtTimeUntilPossibleFunction } from './set-value-at-time-until-possible-function';
 
 export type TAudioParamFactoryFactory = (
     addAudioParamConnections: TAddAudioParamConnectionsFunction,
@@ -27,5 +28,6 @@ export type TAudioParamFactoryFactory = (
     createSetTargetAutomationEvent: typeof createSetTargetAutomationEventFunction,
     createSetValueAutomationEvent: typeof createSetValueAutomationEventFunction,
     createSetValueCurveAutomationEvent: typeof createSetValueCurveAutomationEventFunction,
-    nativeAudioContextConstructor: null | TNativeAudioContextConstructor
+    nativeAudioContextConstructor: null | TNativeAudioContextConstructor,
+    setValueAtTimeUntilPossible: TSetValueAtTimeUntilPossibleFunction
 ) => TAudioParamFactory;

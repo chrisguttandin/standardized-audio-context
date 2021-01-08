@@ -14,7 +14,8 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
     createSetTargetAutomationEvent,
     createSetValueAutomationEvent,
     createSetValueCurveAutomationEvent,
-    nativeAudioContextConstructor
+    nativeAudioContextConstructor,
+    setValueAtTimeUntilPossible
 ) => {
     return <T extends TContext>(
         audioNode: IAudioNode<T>,
@@ -183,10 +184,10 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                     const timeOfLastSample = lastSample / sampleRate;
 
                     if (timeOfLastSample < endTime) {
-                        audioParam.setValueAtTime(interpolatedValues[interpolatedValues.length - 1], timeOfLastSample);
+                        setValueAtTimeUntilPossible(audioParam, interpolatedValues[interpolatedValues.length - 1], timeOfLastSample);
                     }
 
-                    audioParam.setValueAtTime(convertedValues[convertedValues.length - 1], endTime);
+                    setValueAtTimeUntilPossible(audioParam, convertedValues[convertedValues.length - 1], endTime);
                 } else {
                     if (audioParamRenderer === null) {
                         automationEventList.flush(audioNode.context.currentTime);
