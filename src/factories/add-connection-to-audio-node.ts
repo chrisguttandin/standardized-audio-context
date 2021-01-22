@@ -1,7 +1,8 @@
 import { deletePassiveInputConnectionToAudioNode } from '../helpers/delete-passive-input-connection-to-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
-import { TAddConnectionToAudioNodeFactory, TInternalStateEventListener } from '../types';
+import { IAudioNode } from '../interfaces';
+import { TAddConnectionToAudioNodeFactory, TContext, TInternalStateEventListener } from '../types';
 
 export const createAddConnectionToAudioNode: TAddConnectionToAudioNodeFactory = (
     addActiveInputConnectionToAudioNode,
@@ -18,6 +19,8 @@ export const createAddConnectionToAudioNode: TAddConnectionToAudioNodeFactory = 
     isPartOfACycle,
     isPassiveAudioNode
 ) => {
+    const tailTimeTimeoutIds = new WeakMap<IAudioNode<TContext>, number>();
+
     return (source, destination, output, input, isOffline) => {
         const { activeInputs, passiveInputs } = getAudioNodeConnections(destination);
         const { outputs } = getAudioNodeConnections(source);
@@ -55,11 +58,20 @@ export const createAddConnectionToAudioNode: TAddConnectionToAudioNodeFactory = 
                         setInternalStateToPassiveWhenNecessary(destination, activeInputs);
                     }
                 } else {
-                    setTimeout(() => {
-                        if (isActiveAudioNode(destination)) {
-                            setInternalStateToPassiveWhenNecessary(destination, activeInputs);
-                        }
-                    }, tailTime * 1000);
+                    const tailTimeTimeoutId = tailTimeTimeoutIds.get(destination);
+
+                    if (tailTimeTimeoutId !== undefined) {
+                        clearTimeout(tailTimeTimeoutId);
+                    }
+
+                    tailTimeTimeoutIds.set(
+                        destination,
+                        setTimeout(() => {
+                            if (isActiveAudioNode(destination)) {
+                                setInternalStateToPassiveWhenNecessary(destination, activeInputs);
+                            }
+                        }, tailTime * 1000)
+                    );
                 }
             }
         };
