@@ -415,6 +415,8 @@ Supporting a browser only means that it is supported on the feature level. It is
 possible that a transpiler like [Babel](https://babeljs.io) is necessary to use this package in
 every supported browser without encountering any syntax errors.
 
+This package doesn't work with Node.js.
+
 ## TypeScript
 
 This package is written in [TypeScript](https://www.typescriptlang.org/) which means it can be used seamlessly in any TypeScript project. But that is entirely optional.
