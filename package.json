@@ -23,7 +23,7 @@
         "automation-events": "^3.0.4",
         "tslib": "^2.1.0"
     },
-    "description": "A cross-browser implementation of the AudioContext which aims to closely follow the standard.",
+    "description": "A cross-browser wrapper for the Web Audio API which aims to closely follow the standard.",
     "devDependencies": {
         "@babel/core": "^7.12.10",
         "@babel/plugin-external-helpers": "^7.12.1",
