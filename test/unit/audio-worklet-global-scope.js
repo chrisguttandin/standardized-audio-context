@@ -488,7 +488,7 @@ describe('AudioWorkletGlobalScope', () => {
                                     let zeros;
 
                                     beforeEach(() => {
-                                        zeros = new Array(128);
+                                        zeros = Array.from({ length: 128 });
 
                                         zeros.fill(0);
                                     });
@@ -571,7 +571,7 @@ describe('AudioWorkletGlobalScope', () => {
                                     let values;
 
                                     beforeEach(() => {
-                                        values = new Array(128);
+                                        values = Array.from({ length: 128 });
 
                                         values.fill(1);
                                     });
