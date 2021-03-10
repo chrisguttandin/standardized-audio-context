@@ -57,7 +57,7 @@
         "karma-sinon-chai": "^2.0.2",
         "karma-webpack": "^4.0.2",
         "load-grunt-config": "^3.0.1",
-        "mocha": "^8.2.1",
+        "mocha": "^8.3.1",
         "prettier": "^2.2.1",
         "pretty-quick": "^3.1.0",
         "puppeteer": "^5.5.0",
