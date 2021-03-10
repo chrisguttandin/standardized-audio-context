@@ -29,7 +29,7 @@
         "@babel/plugin-external-helpers": "^7.12.13",
         "@babel/plugin-transform-runtime": "^7.13.10",
         "@babel/preset-env": "^7.13.10",
-        "@babel/register": "^7.12.10",
+        "@babel/register": "^7.13.8",
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-angular": "^11.0.0",
         "@rollup/plugin-babel": "^5.2.2",
