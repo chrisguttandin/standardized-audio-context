@@ -1,1 +1,1 @@
-export type TNativeScriptProcessorNode = ScriptProcessorNode;
+export type TNativeScriptProcessorNode = ScriptProcessorNode; // tslint:disable-line:deprecation
