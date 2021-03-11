@@ -229,22 +229,18 @@ describe('decodeAudioData()', () => {
                         });
                 });
 
-                it('should neuter the arrayBuffer', function (done) {
+                it('should neuter the arrayBuffer', async function () {
                     this.timeout(10000);
 
-                    decodeAudioData(context, arrayBuffer);
+                    await decodeAudioData(context, arrayBuffer);
 
-                    setTimeout(() => {
-                        expect(() => {
-                            // Firefox will throw an error when using a neutered ArrayBuffer.
-                            const uint8Array = new Uint8Array(arrayBuffer);
+                    expect(() => {
+                        // Firefox will throw an error when using a neutered ArrayBuffer.
+                        const uint8Array = new Uint8Array(arrayBuffer);
 
-                            // Chrome, Opera and Safari will throw an error when trying to convert a typed array with a neutered ArrayBuffer.
-                            Array.from(uint8Array);
-                        }).to.throw(Error);
-
-                        done();
-                    });
+                        // Chrome, Opera and Safari will throw an error when trying to convert a typed array with a neutered ArrayBuffer.
+                        Array.from(uint8Array);
+                    }).to.throw(Error);
                 });
 
                 it('should allow to encode various arrayBuffers in parallel', function () {

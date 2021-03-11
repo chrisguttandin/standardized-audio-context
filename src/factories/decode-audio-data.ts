@@ -52,10 +52,10 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
 
         // Bug #21: Safari does not return a Promise yet.
         return new Promise((resolve, reject) => {
-            const complete = () => {
+            const complete = async () => {
                 // Bug #133: Safari does neuter the ArrayBuffer.
                 try {
-                    detachArrayBuffer(audioData);
+                    await detachArrayBuffer(audioData);
                 } catch {
                     // Ignore errors.
                 }
@@ -81,8 +81,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
 
                         audioBufferStore.add(audioBuffer);
 
-                        complete();
-                        resolve(audioBuffer);
+                        complete().then(() => resolve(audioBuffer));
                     },
                     (err: DOMException | Error) => {
                         // Bug #4: Safari returns null instead of an error.
