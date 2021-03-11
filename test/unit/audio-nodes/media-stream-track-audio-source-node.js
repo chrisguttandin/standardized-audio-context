@@ -48,7 +48,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
      * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
      */
     // eslint-disable-next-line no-undef
-    if (!process.env.TRAVIS) {
+    if (!process.env.CI) {
         for (const [description, { createContext, createMediaStreamTrackAudioSourceNode }] of Object.entries(testCases)) {
             describe(`with the ${description}`, () => {
                 let context;

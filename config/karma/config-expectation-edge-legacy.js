@@ -11,8 +11,6 @@ module.exports = (config) => {
 
         browsers: ['EdgeBrowserStack'],
 
-        captureTimeout: 120000,
-
         concurrency: 1,
 
         customLaunchers: {
@@ -70,7 +68,7 @@ module.exports = (config) => {
             plugins: [
                 new DefinePlugin({
                     'process.env': {
-                        CI: JSON.stringify(env.CI)
+                        CI: JSON.stringify(true)
                     }
                 })
             ],

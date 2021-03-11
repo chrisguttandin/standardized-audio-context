@@ -408,7 +408,7 @@ describe('MediaElementAudioSourceNode', () => {
                 describe('without any parameters', () => {
                     // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
                     // eslint-disable-next-line no-undef
-                    if (!process.env.TRAVIS) {
+                    if (!process.env.CI) {
                         let renderer;
 
                         afterEach(() => pauseMediaElement());
@@ -459,7 +459,7 @@ describe('MediaElementAudioSourceNode', () => {
                     describe('with a connection from the given output', () => {
                         // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
                         // eslint-disable-next-line no-undef
-                        if (!process.env.TRAVIS) {
+                        if (!process.env.CI) {
                             let renderer;
 
                             afterEach(() => pauseMediaElement());
@@ -511,7 +511,7 @@ describe('MediaElementAudioSourceNode', () => {
                     describe('with a connection to the given destination', () => {
                         // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
                         // eslint-disable-next-line no-undef
-                        if (!process.env.TRAVIS) {
+                        if (!process.env.CI) {
                             let renderer;
 
                             afterEach(() => pauseMediaElement());

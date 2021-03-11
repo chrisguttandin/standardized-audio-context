@@ -83,8 +83,6 @@ module.exports = (config) => {
 
             browsers: ['OperaBrowserStack'],
 
-            captureTimeout: 120000,
-
             customLaunchers: {
                 OperaBrowserStack: {
                     base: 'BrowserStack',

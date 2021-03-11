@@ -104,7 +104,7 @@ describe('audioContextConstructor', () => {
     describe('state', () => {
         // @todo For some reason this test does currently not pass when running on BrowserStack.
         // eslint-disable-next-line no-undef
-        if (!process.env.TRAVIS) {
+        if (!process.env.CI) {
             // bug #34
 
             it('should be set to running right away', () => {
