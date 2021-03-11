@@ -1,19 +1,27 @@
+const { env } = require('process');
+const { DefinePlugin } = require('webpack');
+
 module.exports = (config) => {
     config.set({
         basePath: '../../',
 
-        browserNoActivityTimeout: 240000,
+        browserDisconnectTimeout: 100000,
+
+        browserNoActivityTimeout: 100000,
 
         browsers: ['FirefoxDeveloperHeadless'],
 
+        concurrency: 1,
+
         files: [
-            'test/expectation/firefox/any/**/*.js',
-            'test/expectation/firefox/developer/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
-                served: true
-            }
+                served: true,
+                watched: true
+            },
+            'test/expectation/firefox/any/**/*.js',
+            'test/expectation/firefox/developer/**/*.js'
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
@@ -27,6 +35,8 @@ module.exports = (config) => {
             'test/expectation/firefox/developer/**/*.js': 'webpack'
         },
 
+        reporters: ['dots'],
+
         webpack: {
             mode: 'development',
             module: {
@@ -34,13 +44,27 @@ module.exports = (config) => {
                     {
                         test: /\.ts?$/,
                         use: {
-                            loader: 'ts-loader'
+                            loader: 'ts-loader',
+                            options: {
+                                compilerOptions: {
+                                    declaration: false,
+                                    declarationMap: false
+                                }
+                            }
                         }
                     }
                 ]
             },
+            plugins: [
+                new DefinePlugin({
+                    'process.env': {
+                        CI: JSON.stringify(env.CI)
+                    }
+                })
+            ],
             resolve: {
-                extensions: ['.js', '.ts']
+                extensions: ['.js', '.ts'],
+                fallback: { util: false }
             }
         },
 

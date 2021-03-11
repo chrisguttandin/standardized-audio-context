@@ -5,9 +5,9 @@ module.exports = (config) => {
     config.set({
         basePath: '../../',
 
-        browserDisconnectTimeout: 20000,
+        browserDisconnectTimeout: 100000,
 
-        browserNoActivityTimeout: 240000,
+        browserNoActivityTimeout: 100000,
 
         client: {
             mocha: {
@@ -15,16 +15,20 @@ module.exports = (config) => {
             }
         },
 
+        concurrency: 1,
+
         files: [
             {
                 included: false,
                 pattern: 'src/**',
-                served: false
+                served: false,
+                watched: true
             },
             {
                 included: false,
                 pattern: 'test/fixtures/**',
-                served: true
+                served: true,
+                watched: true
             },
             'test/unit/**/*.js'
         ],
@@ -48,7 +52,13 @@ module.exports = (config) => {
                     {
                         test: /\.ts?$/,
                         use: {
-                            loader: 'ts-loader'
+                            loader: 'ts-loader',
+                            options: {
+                                compilerOptions: {
+                                    declaration: false,
+                                    declarationMap: false
+                                }
+                            }
                         }
                     }
                 ]
@@ -56,12 +66,13 @@ module.exports = (config) => {
             plugins: [
                 new DefinePlugin({
                     'process.env': {
-                        TRAVIS: JSON.stringify(env.TRAVIS)
+                        CI: JSON.stringify(env.CI)
                     }
                 })
             ],
             resolve: {
-                extensions: ['.js', '.ts']
+                extensions: ['.js', '.ts'],
+                fallback: { util: false }
             }
         },
 
@@ -70,11 +81,14 @@ module.exports = (config) => {
         }
     });
 
-    if (env.TRAVIS) {
+    if (env.CI) {
         config.set({
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.TRAVIS_REPO_SLUG}/${env.TRAVIS_JOB_NUMBER}/unit-${env.TARGET}`,
+                build: `${env.GITHUB_RUN_ID}/unit-${env.TARGET}`,
+                forceLocal: true,
+                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
+                project: env.GITHUB_REPOSITORY,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
             },
@@ -89,8 +103,6 @@ module.exports = (config) => {
                     : env.TARGET === 'firefox'
                     ? ['FirefoxBrowserStack']
                     : ['EdgeBrowserStack', 'FirefoxBrowserStack'],
-
-            captureTimeout: 120000,
 
             customLaunchers: {
                 ChromeBrowserStack: {

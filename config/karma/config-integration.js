@@ -1,10 +1,13 @@
 const { env } = require('process');
+const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => {
     config.set({
         basePath: '../../',
 
-        browserNoActivityTimeout: 240000,
+        browserDisconnectTimeout: 100000,
+
+        browserNoActivityTimeout: 100000,
 
         browsers:
             env.TARGET === 'chrome'
@@ -19,7 +22,7 @@ module.exports = (config) => {
                 ? ['SafariBrowserStack']
                 : ['ChromeBrowserStack', 'EdgeBrowserStack', 'FirefoxBrowserStack', 'OperaBrowserStack', 'SafariBrowserStack'],
 
-        concurrency: 2,
+        concurrency: 1,
 
         customLaunchers: {
             ChromeBrowserStack: {
@@ -63,7 +66,8 @@ module.exports = (config) => {
             {
                 included: false,
                 pattern: 'src/**',
-                served: false
+                served: false,
+                watched: true
             },
             'test/integration/**/*.js'
         ],
@@ -74,6 +78,8 @@ module.exports = (config) => {
             'test/integration/**/*.js': 'webpack'
         },
 
+        reporters: ['dots'],
+
         webpack: {
             mode: 'development',
             module: {
@@ -81,13 +87,27 @@ module.exports = (config) => {
                     {
                         test: /\.ts?$/,
                         use: {
-                            loader: 'ts-loader'
+                            loader: 'ts-loader',
+                            options: {
+                                compilerOptions: {
+                                    declaration: false,
+                                    declarationMap: false
+                                }
+                            }
                         }
                     }
                 ]
             },
+            plugins: [
+                new DefinePlugin({
+                    'process.env': {
+                        CI: JSON.stringify(env.CI)
+                    }
+                })
+            ],
             resolve: {
-                extensions: ['.js', '.ts']
+                extensions: ['.js', '.ts'],
+                fallback: { util: false }
             }
         },
 
@@ -96,16 +116,17 @@ module.exports = (config) => {
         }
     });
 
-    if (env.TRAVIS) {
+    if (env.CI) {
         config.set({
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.TRAVIS_REPO_SLUG}/${env.TRAVIS_JOB_NUMBER}/integration-${env.TARGET}`,
+                build: `${env.GITHUB_RUN_ID}/integration-${env.TARGET}`,
+                forceLocal: true,
+                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
+                project: env.GITHUB_REPOSITORY,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
-            },
-
-            captureTimeout: 120000
+            }
         });
     } else {
         const environment = require('../environment/local.json');

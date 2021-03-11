@@ -5,14 +5,19 @@ module.exports = (config) => {
     config.set({
         basePath: '../../',
 
-        browserNoActivityTimeout: 240000,
+        browserDisconnectTimeout: 100000,
+
+        browserNoActivityTimeout: 100000,
+
+        concurrency: 1,
 
         files: [
             'test/expectation/opera/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
-                served: true
+                served: true,
+                watched: true
             }
         ],
 
@@ -26,6 +31,8 @@ module.exports = (config) => {
             'test/expectation/opera/**/*.js': 'webpack'
         },
 
+        reporters: ['dots'],
+
         webpack: {
             mode: 'development',
             module: {
@@ -33,7 +40,13 @@ module.exports = (config) => {
                     {
                         test: /\.ts?$/,
                         use: {
-                            loader: 'ts-loader'
+                            loader: 'ts-loader',
+                            options: {
+                                compilerOptions: {
+                                    declaration: false,
+                                    declarationMap: false
+                                }
+                            }
                         }
                     }
                 ]
@@ -41,12 +54,13 @@ module.exports = (config) => {
             plugins: [
                 new DefinePlugin({
                     'process.env': {
-                        TRAVIS: JSON.stringify(env.TRAVIS)
+                        CI: JSON.stringify(env.CI)
                     }
                 })
             ],
             resolve: {
-                extensions: ['.js', '.ts']
+                extensions: ['.js', '.ts'],
+                fallback: { util: false }
             }
         },
 
@@ -55,11 +69,14 @@ module.exports = (config) => {
         }
     });
 
-    if (env.TRAVIS) {
+    if (env.CI) {
         config.set({
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.TRAVIS_REPO_SLUG}/${env.TRAVIS_JOB_NUMBER}/expectation-opera`,
+                build: `${env.GITHUB_RUN_ID}/expectation-opera`,
+                forceLocal: true,
+                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
+                project: env.GITHUB_REPOSITORY,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
             },

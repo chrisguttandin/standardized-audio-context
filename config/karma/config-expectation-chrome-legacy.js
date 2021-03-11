@@ -5,11 +5,15 @@ module.exports = (config) => {
     config.set({
         basePath: '../../',
 
-        browserNoActivityTimeout: 240000,
+        browserDisconnectTimeout: 100000,
+
+        browserNoActivityTimeout: 100000,
 
         browsers: ['ChromeBrowserStack'],
 
         captureTimeout: 120000,
+
+        concurrency: 1,
 
         customLaunchers: {
             ChromeBrowserStack: {
@@ -22,13 +26,14 @@ module.exports = (config) => {
         },
 
         files: [
-            'test/expectation/chrome/any/**/*.js',
-            'test/expectation/chrome/legacy/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
-                served: true
-            }
+                served: true,
+                watched: true
+            },
+            'test/expectation/chrome/any/**/*.js',
+            'test/expectation/chrome/legacy/**/*.js'
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
@@ -42,6 +47,8 @@ module.exports = (config) => {
             'test/expectation/chrome/legacy/**/*.js': 'webpack'
         },
 
+        reporters: ['dots'],
+
         webpack: {
             mode: 'development',
             module: {
@@ -49,7 +56,13 @@ module.exports = (config) => {
                     {
                         test: /\.ts?$/,
                         use: {
-                            loader: 'ts-loader'
+                            loader: 'ts-loader',
+                            options: {
+                                compilerOptions: {
+                                    declaration: false,
+                                    declarationMap: false
+                                }
+                            }
                         }
                     }
                 ]
@@ -57,12 +70,13 @@ module.exports = (config) => {
             plugins: [
                 new DefinePlugin({
                     'process.env': {
-                        TRAVIS: JSON.stringify(true)
+                        CI: JSON.stringify(env.CI)
                     }
                 })
             ],
             resolve: {
-                extensions: ['.js', '.ts']
+                extensions: ['.js', '.ts'],
+                fallback: { util: false }
             }
         },
 
@@ -71,11 +85,14 @@ module.exports = (config) => {
         }
     });
 
-    if (env.TRAVIS) {
+    if (env.CI) {
         config.set({
             browserStack: {
                 accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.TRAVIS_REPO_SLUG}/${env.TRAVIS_JOB_NUMBER}/expectation-chrome-legacy`,
+                build: `${env.GITHUB_RUN_ID}/expectation-chrome-legacy`,
+                forceLocal: true,
+                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
+                project: env.GITHUB_REPOSITORY,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
             }

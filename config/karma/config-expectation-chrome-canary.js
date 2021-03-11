@@ -5,11 +5,13 @@ module.exports = (config) => {
     config.set({
         basePath: '../../',
 
-        browserDisconnectTimeout: 20000,
+        browserDisconnectTimeout: 100000,
 
-        browserNoActivityTimeout: 240000,
+        browserNoActivityTimeout: 100000,
 
         browsers: ['ChromeCanaryHeadlessWithNoRequiredUserGesture'],
+
+        concurrency: 1,
 
         customLaunchers: {
             ChromeCanaryHeadlessWithNoRequiredUserGesture: {
@@ -19,13 +21,14 @@ module.exports = (config) => {
         },
 
         files: [
-            'test/expectation/chrome/any/**/*.js',
-            'test/expectation/chrome/canary/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
-                served: true
-            }
+                served: true,
+                watched: true
+            },
+            'test/expectation/chrome/any/**/*.js',
+            'test/expectation/chrome/canary/**/*.js'
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
@@ -39,6 +42,8 @@ module.exports = (config) => {
             'test/expectation/chrome/canary/**/*.js': 'webpack'
         },
 
+        reporters: ['dots'],
+
         webpack: {
             mode: 'development',
             module: {
@@ -46,7 +51,13 @@ module.exports = (config) => {
                     {
                         test: /\.ts?$/,
                         use: {
-                            loader: 'ts-loader'
+                            loader: 'ts-loader',
+                            options: {
+                                compilerOptions: {
+                                    declaration: false,
+                                    declarationMap: false
+                                }
+                            }
                         }
                     }
                 ]
@@ -54,12 +65,13 @@ module.exports = (config) => {
             plugins: [
                 new DefinePlugin({
                     'process.env': {
-                        TRAVIS: JSON.stringify(env.TRAVIS)
+                        CI: JSON.stringify(env.CI)
                     }
                 })
             ],
             resolve: {
-                extensions: ['.js', '.ts']
+                extensions: ['.js', '.ts'],
+                fallback: { util: false }
             }
         },
 
