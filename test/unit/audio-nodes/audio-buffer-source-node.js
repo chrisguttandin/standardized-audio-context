@@ -6,7 +6,6 @@ import { createNativeAudioContext } from '../../helper/create-native-audio-conte
 import { createNativeOfflineAudioContext } from '../../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
-import { isSafari } from '../../helper/is-safari';
 import { roundToSamples } from '../../helper/round-to-samples';
 import { spy } from 'sinon';
 
@@ -1067,61 +1066,36 @@ describe('AudioBufferSourceNode', () => {
                             });
 
                             describe('with another AudioNode connected to the AudioParam', () => {
-                                // Bug #147: Safari does not support connecting something to the playbackRate AudioParam.
-                                if (!isSafari(navigator)) {
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                        return renderer({
-                                            prepare({ audioBufferSourceNode }) {
-                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                                                const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+                                    return renderer({
+                                        prepare({ audioBufferSourceNode }) {
+                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                            const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
 
-                                                audioBuffer.copyToChannel(new Float32Array([0.5, 0.5, 0.5, 0.5, 0.5]), 0);
+                                            audioBuffer.copyToChannel(new Float32Array([0.5, 0.5, 0.5, 0.5, 0.5]), 0);
 
-                                                audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+                                            audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
 
-                                                audioBufferSourceNode.playbackRate.value = 0;
+                                            audioBufferSourceNode.playbackRate.value = 0;
 
-                                                audioBufferSourceNodeForAudioParam.connect(audioBufferSourceNode.playbackRate);
+                                            audioBufferSourceNodeForAudioParam.connect(audioBufferSourceNode.playbackRate);
 
-                                                return { audioBufferSourceNodeForAudioParam };
-                                            },
-                                            start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
-                                                audioBufferSourceNode.start(startTime);
-                                                audioBufferSourceNodeForAudioParam.start(startTime);
-                                            }
-                                        }).then((channelData) => {
-                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
-                                        });
+                                            return { audioBufferSourceNodeForAudioParam };
+                                        },
+                                        start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                            audioBufferSourceNode.start(startTime);
+                                            audioBufferSourceNodeForAudioParam.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                        expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                        expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                        expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                        expect(channelData[4]).to.be.closeTo(0, 0.1);
                                     });
-                                } else {
-                                    it('should throw a NotSupportedError', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            prepare({ audioBufferSourceNode }) {
-                                                const gainNode = new GainNode(context);
-
-                                                try {
-                                                    gainNode.connect(audioBufferSourceNode.playbackRate);
-
-                                                    throw new Error('This should never be called.');
-                                                } catch (err) {
-                                                    expect(err.code).to.equal(9);
-                                                    expect(err.name).to.equal('NotSupportedError');
-                                                }
-                                            },
-                                            start(startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        });
-                                    });
-                                }
+                                });
                             });
 
                             // @todo Test other automations as well.
@@ -1213,23 +1187,9 @@ describe('AudioBufferSourceNode', () => {
                                 }
                             });
 
-                            // Bug #147: Safari does not support connecting something to the playbackRate AudioParam.
-                            if (!isSafari(navigator)) {
-                                it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                    audioBufferSourceNode.connect(audioNodeOrAudioParam).connect(audioBufferSourceNode.playbackRate);
-                                });
-                            } else {
-                                it('should throw a NotSupportedError if the connection creates a cycle by connecting to an AudioParam of the source', (done) => {
-                                    try {
-                                        audioBufferSourceNode.connect(audioNodeOrAudioParam).connect(audioBufferSourceNode.playbackRate);
-                                    } catch (err) {
-                                        expect(err.code).to.equal(9);
-                                        expect(err.name).to.equal('NotSupportedError');
-
-                                        done();
-                                    }
-                                });
-                            }
+                            it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                                audioBufferSourceNode.connect(audioNodeOrAudioParam).connect(audioBufferSourceNode.playbackRate);
+                            });
                         }
                     });
 

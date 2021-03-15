@@ -405,11 +405,11 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             const nativeAudioParam = getNativeAudioParam(destination);
 
             /*
-             * Bug #147 & #153: Safari does not support to connect an input signal to the playbackRate AudioParam of an
+             * Bug #73, #147 & #153: Safari does not support to connect an input signal to the playbackRate AudioParam of an
              * AudioBufferSourceNode. This can't be easily detected and that's why the outdated name property is used here to identify
-             * Safari.
+             * Safari. In addition to that the maxValue property is used to only detect the affected versions below v14.0.2.
              */
-            if ((<TNativeAudioParam & { name: string }>nativeAudioParam).name === 'playbackRate') {
+            if ((<TNativeAudioParam & { name: string }>nativeAudioParam).name === 'playbackRate' && nativeAudioParam.maxValue === 1024) {
                 throw createNotSupportedError();
             }
 
