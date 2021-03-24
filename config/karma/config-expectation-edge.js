@@ -9,8 +9,6 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        captureTimeout: 120000,
-
         concurrency: 1,
 
         files: [

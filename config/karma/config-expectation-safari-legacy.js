@@ -11,8 +11,6 @@ module.exports = (config) => {
 
         browsers: ['SafariBrowserStack'],
 
-        captureTimeout: 120000,
-
         concurrency: 1,
 
         customLaunchers: {
@@ -37,6 +35,10 @@ module.exports = (config) => {
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
+
+        mime: {
+            'application/javascript': ['xs']
+        },
 
         preprocessors: {
             'test/expectation/safari/any/**/*.js': 'webpack',

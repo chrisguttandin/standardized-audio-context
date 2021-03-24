@@ -69,6 +69,12 @@ module.exports = (config) => {
                 served: false,
                 watched: true
             },
+            {
+                included: false,
+                pattern: 'test/fixtures/**',
+                served: true,
+                watched: true
+            },
             'test/integration/**/*.js'
         ],
 

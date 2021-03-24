@@ -26,6 +26,10 @@ module.exports = (config) => {
 
         frameworks: ['mocha', 'sinon-chai'],
 
+        mime: {
+            'application/javascript': ['xs']
+        },
+
         preprocessors: {
             'test/expectation/safari/any/**/*.js': 'webpack',
             'test/expectation/safari/current/**/*.js': 'webpack'

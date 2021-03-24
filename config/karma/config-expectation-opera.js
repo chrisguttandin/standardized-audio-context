@@ -12,13 +12,13 @@ module.exports = (config) => {
         concurrency: 1,
 
         files: [
-            'test/expectation/opera/**/*.js',
             {
                 included: false,
                 pattern: 'test/fixtures/**',
                 served: true,
                 watched: true
-            }
+            },
+            'test/expectation/opera/**/*.js'
         ],
 
         frameworks: ['mocha', 'sinon-chai'],

@@ -11,8 +11,6 @@ module.exports = (config) => {
 
         browsers: ['FirefoxBrowserStack'],
 
-        captureTimeout: 120000,
-
         concurrency: 1,
 
         customLaunchers: {
