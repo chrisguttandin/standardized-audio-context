@@ -85,10 +85,13 @@ module.exports = (config) => {
 
             browsers: ['EdgeBrowserStack'],
 
+            captureTimeout: 300000,
+
             customLaunchers: {
                 EdgeBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'edge',
+                    captureTimeout: 300,
                     os: 'Windows',
                     os_version: '10' // eslint-disable-line camelcase
                 }
