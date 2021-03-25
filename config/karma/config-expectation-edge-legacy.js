@@ -93,7 +93,9 @@ module.exports = (config) => {
                 project: env.GITHUB_REPOSITORY,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
-            }
+            },
+
+            captureTimeout: 300000
         });
     } else {
         const environment = require('../environment/local.json');

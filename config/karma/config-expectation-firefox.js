@@ -85,6 +85,8 @@ module.exports = (config) => {
 
             browsers: ['FirefoxBrowserStack'],
 
+            captureTimeout: 300000,
+
             customLaunchers: {
                 FirefoxBrowserStack: {
                     base: 'BrowserStack',
