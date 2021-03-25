@@ -89,8 +89,9 @@ module.exports = (config) => {
                 OperaBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'opera',
+                    captureTimeout: 300,
                     os: 'OS X',
-                    os_version: 'Mojave' // eslint-disable-line camelcase
+                    os_version: 'Big Sur' // eslint-disable-line camelcase
                 }
             }
         });

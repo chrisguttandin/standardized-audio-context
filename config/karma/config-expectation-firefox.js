@@ -91,6 +91,7 @@ module.exports = (config) => {
                 FirefoxBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'firefox',
+                    captureTimeout: 300,
                     os: 'Windows',
                     os_version: '10' // eslint-disable-line camelcase
                 }
