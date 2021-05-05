@@ -37,6 +37,7 @@ export const createTestAudioWorkletProcessorPostMessageSupport: TTestAudioWorkle
             audioWorkletNode.onprocessorerror = () => (isEmittingProcessorErrorEvents = true);
 
             oscillator.connect(audioWorkletNode);
+            oscillator.start(0);
 
             await offlineAudioContext.startRendering();
         } catch {
