@@ -18,9 +18,15 @@ export const createTestAudioWorkletProcessorNoOutputsSupport: TTestAudioWorkletP
             return false;
         }
 
-        const blob = new Blob(['class A extends AudioWorkletProcessor{process(){this.port.postMessage(0)}}registerProcessor("a",A)'], {
-            type: 'application/javascript; charset=utf-8'
-        });
+        const blob = new Blob(
+            [
+                'let c,p;class A extends AudioWorkletProcessor{constructor(){super();this.port.onmessage=(e)=>{p=e.data;p.onmessage=()=>{p.postMessage(c);p.close()};this.port.postMessage(0)}}process(){c=1}}registerProcessor("a",A)'
+            ],
+            {
+                type: 'application/javascript; charset=utf-8'
+            }
+        );
+        const messageChannel = new MessageChannel();
         const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 128, 8000);
         const url = URL.createObjectURL(blob);
 
@@ -32,6 +38,11 @@ export const createTestAudioWorkletProcessorNoOutputsSupport: TTestAudioWorkletP
             const audioWorkletNode = new nativeAudioWorkletNodeConstructor(offlineAudioContext, 'a', { numberOfOutputs: 0 });
             const oscillator = offlineAudioContext.createOscillator();
 
+            await new Promise<void>((resolve) => {
+                audioWorkletNode.port.onmessage = () => resolve();
+                audioWorkletNode.port.postMessage(messageChannel.port2, [messageChannel.port2]);
+            });
+
             audioWorkletNode.port.onmessage = () => (isCallingProcess = true);
 
             oscillator.connect(audioWorkletNode);
@@ -39,12 +50,14 @@ export const createTestAudioWorkletProcessorNoOutputsSupport: TTestAudioWorkletP
 
             await offlineAudioContext.startRendering();
 
-            if (!isCallingProcess) {
-                await new Promise((resolve) => setTimeout(resolve, 5));
-            }
+            isCallingProcess = await new Promise((resolve) => {
+                messageChannel.port1.onmessage = ({ data }) => resolve(data === 1);
+                messageChannel.port1.postMessage(0);
+            });
         } catch {
             // Ignore errors.
         } finally {
+            messageChannel.port1.close();
             URL.revokeObjectURL(url);
         }
 
