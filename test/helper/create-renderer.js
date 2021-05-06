@@ -267,7 +267,7 @@ export const createRenderer = ({ context, create, length, prepare }) => {
                             : indexOfCurrentTry === 3
                             ? '3rd'
                             : `${indexOfCurrentTry}th`;
-                    const message = `${err.message.slice(0, -1)} when tried for the ${currentTry} time.`;
+                    const message = `${err.message.slice(0, -1)} when tried for the ${currentTry} time. ${context.currentTime}`;
 
                     if (indexOfCurrentTry < MAX_RETRIES) {
                         console.warn(message); // eslint-disable-line no-console
