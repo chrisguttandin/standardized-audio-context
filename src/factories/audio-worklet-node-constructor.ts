@@ -44,6 +44,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     nativeAudioWorkletNodeConstructor,
     sanitizeAudioWorkletNodeOptions,
     setActiveAudioWorkletNodeInputs,
+    testAudioWorkletNodeOptionsClonability,
     wrapEventListener
 ) => {
     return class AudioWorkletNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioWorkletNode<T> {
@@ -57,6 +58,10 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const mergedOptions = sanitizeAudioWorkletNodeOptions({ ...DEFAULT_OPTIONS, ...options });
+
+            // Bug #191: Safari doesn't throw an error if the options aren't clonable.
+            testAudioWorkletNodeOptionsClonability(mergedOptions);
+
             const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
             const processorConstructor = nodeNameToProcessorConstructorMap?.get(name);
             // Bug #186: Chrome, Edge and Opera do not allow to create an AudioWorkletNode on a closed AudioContext.

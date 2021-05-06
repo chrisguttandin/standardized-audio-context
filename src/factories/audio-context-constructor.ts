@@ -37,7 +37,18 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 throw new Error('Missing the native AudioContext constructor.');
             }
 
-            const nativeAudioContext = new nativeAudioContextConstructor(options);
+            let nativeAudioContext: TNativeAudioContext;
+
+            try {
+                nativeAudioContext = new nativeAudioContextConstructor(options);
+            } catch (err) {
+                // Bug #192 Safari does throw a SyntaxError if the sampleRate is not supported.
+                if (err.code === 12 && err.message === 'sampleRate is not in range') {
+                    throw createNotSupportedError();
+                }
+
+                throw err;
+            }
 
             // Bug #131 Safari returns null when there are four other AudioContexts running already.
             if (nativeAudioContext === null) {

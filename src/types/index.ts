@@ -361,6 +361,7 @@ export * from './test-audio-context-close-method-support-factory';
 export * from './test-audio-context-decode-audio-data-method-type-error-support-factory';
 export * from './test-audio-context-options-support-factory';
 export * from './test-audio-node-connect-method-support-factory';
+export * from './test-audio-worklet-node-options-clonability-function';
 export * from './test-audio-worklet-processor-no-outputs-support-factory';
 export * from './test-audio-worklet-processor-post-message-support-factory';
 export * from './test-channel-merger-node-channel-count-support-factory';

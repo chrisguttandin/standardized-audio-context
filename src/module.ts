@@ -205,6 +205,7 @@ import { testAudioBufferSourceNodeStopMethodNullifiedBufferSupport } from './hel
 import { testAudioScheduledSourceNodeStartMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-start-method-negative-parameters-support';
 import { testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport } from './helpers/test-audio-scheduled-source-node-stop-method-consecutive-calls-support';
 import { testAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
+import { testAudioWorkletNodeOptionsClonability } from './helpers/test-audio-worklet-node-options-clonability';
 import { testDomExceptionConstructorSupport } from './helpers/test-dom-exception-constructor-support';
 import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
@@ -921,6 +922,7 @@ const audioWorkletNodeConstructor: undefined | TAudioWorkletNodeConstructor = is
           nativeAudioWorkletNodeConstructor,
           sanitizeAudioWorkletNodeOptions,
           setActiveAudioWorkletNodeInputs,
+          testAudioWorkletNodeOptionsClonability,
           wrapEventListener
       )
     : undefined;
