@@ -13,7 +13,6 @@ import { createNativeAudioContext } from '../../helper/create-native-audio-conte
 import { createNativeOfflineAudioContext } from '../../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
-import { isSafari } from '../../helper/is-safari';
 import { roundToSamples } from '../../helper/round-to-samples';
 import { spy } from 'sinon';
 
@@ -456,8 +455,6 @@ describe('ConstantSourceNode', () => {
                                     this.timeout(10000);
 
                                     return renderer({
-                                        // @todo For some reason tests run more reliably in Safari when each iteration starts at the same fraction of a second.
-                                        blockSize: isSafari(navigator) ? context.sampleRate : 128,
                                         start(startTime, { constantSourceNode }) {
                                             constantSourceNode.offset.setValueAtTime(1, startTime);
                                             constantSourceNode.offset.linearRampToValueAtTime(

@@ -1,5 +1,4 @@
 import { GainNode, MinimalAudioContext } from '../../../src/module';
-import { isSafari } from '../../helper/is-safari';
 import { spy } from 'sinon';
 
 describe('MinimalAudioContext', () => {
@@ -29,58 +28,27 @@ describe('MinimalAudioContext', () => {
         it('should not allow to set the latencyHint to an unsupported value', () => {
             expect(() => {
                 minimalAudioContext = new MinimalAudioContext({ latencyHint: 'negative' });
-            }).to.throw(TypeError, "The provided value 'negative' is not a valid enum value of type AudioContextLatencyCategory.");
+            }).to.throw(TypeError);
 
             // Create a new AudioContext to ensure the afterEach hooks keeps working.
             minimalAudioContext = new MinimalAudioContext();
         });
 
-        // Bug #150 Safari does not support setting the sampleRate.
-        if (isSafari(navigator)) {
-            it('should not allow to set the sampleRate to 8 kHz', (done) => {
-                try {
-                    minimalAudioContext = new MinimalAudioContext({ sampleRate: 8000 });
-                } catch (err) {
-                    expect(err.code).to.equal(9);
-                    expect(err.name).to.equal('NotSupportedError');
+        it('should allow to set the sampleRate to 8 kHz', () => {
+            const sampleRate = 8000;
 
-                    // Create a new AudioContext to ensure the afterEach hooks keeps working.
-                    minimalAudioContext = new MinimalAudioContext();
+            minimalAudioContext = new MinimalAudioContext({ sampleRate });
 
-                    done();
-                }
-            });
+            expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
+        });
 
-            it('should not allow to set the sampleRate to 96 kHz', (done) => {
-                try {
-                    minimalAudioContext = new MinimalAudioContext({ sampleRate: 96000 });
-                } catch (err) {
-                    expect(err.code).to.equal(9);
-                    expect(err.name).to.equal('NotSupportedError');
+        it('should allow to set the sampleRate to 96 kHz', () => {
+            const sampleRate = 96000;
 
-                    // Create a new AudioContext to ensure the afterEach hooks keeps working.
-                    minimalAudioContext = new MinimalAudioContext();
+            minimalAudioContext = new MinimalAudioContext({ sampleRate });
 
-                    done();
-                }
-            });
-        } else {
-            it('should allow to set the sampleRate to 8 kHz', () => {
-                const sampleRate = 8000;
-
-                minimalAudioContext = new MinimalAudioContext({ sampleRate });
-
-                expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
-            });
-
-            it('should allow to set the sampleRate to 96 kHz', () => {
-                const sampleRate = 96000;
-
-                minimalAudioContext = new MinimalAudioContext({ sampleRate });
-
-                expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
-            });
-        }
+            expect(minimalAudioContext.sampleRate).to.equal(sampleRate);
+        });
 
         it('should not allow to set the sampleRate to zero', (done) => {
             try {

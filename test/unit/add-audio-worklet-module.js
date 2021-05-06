@@ -3,6 +3,7 @@ import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
+import { isSafari } from '../helper/is-safari';
 
 const createAddAudioWorkletModuleWithAudioWorkletOfContext = (context) => {
     return context.audioWorklet.addModule;
@@ -123,8 +124,8 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
             });
 
             describe('with a module which contains an import statement', () => {
-                if (!/Firefox/.test(navigator.userAgent)) {
-                    // Bug #176 Firefox does not support import statements yet.
+                if (!/Firefox/.test(navigator.userAgent) && !isSafari(navigator)) {
+                    // Bug #176 Firefox and Safari do not support import statements yet.
                     it('should return a resolving promise', function () {
                         this.timeout(10000);
 

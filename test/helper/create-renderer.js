@@ -1,6 +1,5 @@
 import { AudioBuffer, AudioBufferSourceNode, AudioContext, ChannelMergerNode, GainNode, MinimalAudioContext } from '../../src/module';
 import { createScriptProcessor } from './create-script-processor';
-import { isSafari } from './is-safari';
 import { roundToSamples } from './round-to-samples';
 
 const createBufferNode = ({ audioNodes, context }) => {
@@ -196,7 +195,7 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
             }
         };
 
-        const startTime = roundToSamples(0, sampleRate, impulseStartSample + startTimeOffset - (isSafari(navigator) ? 0.1 : 0));
+        const startTime = roundToSamples(0, sampleRate, impulseStartSample + startTimeOffset);
 
         firstImpulseNode.start(roundToSamples(0, sampleRate, impulseStartSample));
         secondImpulseNode.start(startTime);

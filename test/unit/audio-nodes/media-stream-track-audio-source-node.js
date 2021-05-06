@@ -1,4 +1,4 @@
-import { GainNode, MediaStreamTrackAudioSourceNode } from '../../../src/module';
+import { AudioContext, GainNode, MediaStreamTrackAudioSourceNode } from '../../../src/module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createNativeAudioContext } from '../../helper/create-native-audio-context';
@@ -93,7 +93,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                 audioElement.pause();
                             });
                     } else if (isSafari(navigator)) {
-                        const audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
+                        const audioContext = new AudioContext();
                         const oscillatorNode = audioContext.createOscillator();
                         const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
 
