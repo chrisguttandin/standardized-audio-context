@@ -70,12 +70,9 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                  * }
                  * ```
                  */
-                const patchedSourceWithoutImportStatements = isSupportingPostMessage
-                    ? sourceWithoutImportStatements
-                    : sourceWithoutImportStatements.replace(
-                          /\s+extends\s+AudioWorkletProcessor\s*{/,
-                          ` extends (class extends AudioWorkletProcessor {__b=new WeakSet();constructor(){super();(p=>p.postMessage=(q=>(m,t)=>q.call(p,m,t?t.filter(u=>!this.__b.has(u)):t))(p.postMessage))(this.port)}}){`
-                      );
+                const patchedAudioWorkletProcessor = isSupportingPostMessage
+                    ? 'AudioWorkletProcessor'
+                    : 'class extends AudioWorkletProcessor {__b=new WeakSet();constructor(){super();(p=>p.postMessage=(q=>(m,t)=>q.call(p,m,t?t.filter(u=>!this.__b.has(u)):t))(p.postMessage))(this.port)}}';
                 /*
                  * Bug #170: Chrome and Edge do call process() with an array with empty channelData for each input if no input is connected.
                  *
@@ -87,26 +84,29 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                  *
                  * ```js
                  * `${ importStatements };
-                 * ((registerProcessor) => {${ sourceWithoutImportStatements }
-                 * })((name, processorCtor) => registerProcessor(name, class extends processorCtor {
+                 * ((AudioWorkletProcessor, registerProcessor) => {${ sourceWithoutImportStatements }
+                 * })(
+                 *     ${ patchedAudioWorkletProcessor },
+                 *     (name, processorCtor) => registerProcessor(name, class extends processorCtor {
                  *
-                 *     __collectBuffers = (array) => {
-                 *         array.forEach((element) => this.__buffers.add(element.buffer));
-                 *     };
+                 *         __collectBuffers = (array) => {
+                 *             array.forEach((element) => this.__buffers.add(element.buffer));
+                 *         };
                  *
-                 *     process (inputs, outputs, parameters) {
-                 *         inputs.forEach(this.__collectBuffers);
-                 *         outputs.forEach(this.__collectBuffers);
-                 *         this.__collectBuffers(Object.values(parameters));
+                 *         process (inputs, outputs, parameters) {
+                 *             inputs.forEach(this.__collectBuffers);
+                 *             outputs.forEach(this.__collectBuffers);
+                 *             this.__collectBuffers(Object.values(parameters));
                  *
-                 *         return super.process(
-                 *             (inputs.map((input) => input.some((channelData) => channelData.length === 0)) ? [ ] : input),
-                 *             outputs,
-                 *             parameters
-                 *         );
-                 *     }
+                 *             return super.process(
+                 *                 (inputs.map((input) => input.some((channelData) => channelData.length === 0)) ? [ ] : input),
+                 *                 outputs,
+                 *                 parameters
+                 *             );
+                 *         }
                  *
-                 * }));
+                 *     })
+                 * );
                  *
                  * registerProcessor('__sac', class extends AudioWorkletProcessor{
                  *
@@ -121,8 +121,8 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 const bufferRegistration = isSupportingPostMessage
                     ? ''
                     : 'i.forEach(this.__c);o.forEach(this.__c);this.__c(Object.values(p));';
-                const wrappedSource = `${importStatements};(registerProcessor=>{${patchedSourceWithoutImportStatements}
-})((n,p)=>registerProcessor(n,class extends p{${memberDefinition}process(i,o,p){${bufferRegistration}return super.process(i.map(j=>j.some(k=>k.length===0)?[]:j),o,p)}}));registerProcessor('__sac',class extends AudioWorkletProcessor{process(){return !1}})`;
+                const wrappedSource = `${importStatements};((AudioWorkletProcessor,registerProcessor)=>{${sourceWithoutImportStatements}
+})(${patchedAudioWorkletProcessor},(n,p)=>registerProcessor(n,class extends p{${memberDefinition}process(i,o,p){${bufferRegistration}return super.process(i.map(j=>j.some(k=>k.length===0)?[]:j),o,p)}}));registerProcessor('__sac',class extends AudioWorkletProcessor{process(){return !1}})`;
                 const blob = new Blob([wrappedSource], { type: 'application/javascript; charset=utf-8' });
                 const url = URL.createObjectURL(blob);
 
