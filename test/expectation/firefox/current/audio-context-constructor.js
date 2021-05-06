@@ -1,3 +1,5 @@
+Object.defineProperty(navigator, 'isSecureContext', { value: true });
+
 describe('audioContextConstructor', () => {
     let audioContext;
 

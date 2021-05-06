@@ -77,6 +77,9 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
     const recorderBufferSize = 8192;
     const recorderScriptProcessorNode = createScriptProcessor(context, recorderBufferSize, 2, 1);
     const sampleRate = context.sampleRate;
+
+    console.log('sampleRate', sampleRate); // eslint-disable-line no-console
+
     const secondImpulseNode = createImpulseNode({ context, length });
     const thirdImpulseNode = createImpulseNode({ context, length });
 
@@ -168,6 +171,8 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
 
                         channelData = playbackChannelData.slice(index, index + length);
                     } else {
+                        console.log('value', Array.from(impulseChannelData.slice(index, index + 6))); // eslint-disable-line no-console
+
                         clearTimeout(timeoutId);
                         disconnect();
                         reject(new Error('Recording the second impulse was not possible.'));

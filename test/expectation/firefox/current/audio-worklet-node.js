@@ -1,3 +1,5 @@
+Object.defineProperty(navigator, 'isSecureContext', { value: true });
+
 describe('AudioWorkletNode', () => {
     let offlineAudioContext;
 
