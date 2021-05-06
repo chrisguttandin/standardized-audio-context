@@ -15,7 +15,8 @@ export const createGetOrCreateBackupOfflineAudioContext: TGetOrCreateBackupOffli
             throw new Error('Missing the native OfflineAudioContext constructor.');
         }
 
-        backupOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 8000);
+        // Bug #141: Safari does not support creating an OfflineAudioContext with less than 44100 Hz.
+        backupOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
 
         backupOfflineAudioContextStore.set(nativeContext, backupOfflineAudioContext);
 

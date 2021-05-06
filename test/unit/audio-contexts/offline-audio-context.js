@@ -41,15 +41,12 @@ describe('OfflineAudioContext', () => {
                     });
                 }
 
-                // Bug #141: Safari does not support OfflineAudioContexts with 8000 Hz.
-                if (!isSafari(navigator)) {
-                    it('should return a OfflineAudioContext with the given sampleRate of 8 kHz', () => {
-                        const sampleRate = 8000;
-                        const offlineAudioContext = new OfflineAudioContext({ length: 1000, sampleRate });
+                it('should return a OfflineAudioContext with the given sampleRate of 8 kHz', () => {
+                    const sampleRate = 8000;
+                    const offlineAudioContext = new OfflineAudioContext({ length: 1000, sampleRate });
 
-                        expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
-                    });
-                }
+                    expect(offlineAudioContext.sampleRate).to.equal(sampleRate);
+                });
 
                 it('should return a OfflineAudioContext with the given sampleRate of 96 kHz', () => {
                     const sampleRate = 96000;
