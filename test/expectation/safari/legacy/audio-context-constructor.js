@@ -1,9 +1,27 @@
+import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
+
 describe('audioContextConstructor', () => {
     let audioContext;
 
     afterEach(() => audioContext.close());
 
     describe('without a constructed AudioContext', () => {
+        // bug #51
+
+        it('should allow to set the latencyHint to an unsupported value', () => {
+            audioContext = new webkitAudioContext({ latencyHint: 'negative' }); // eslint-disable-line new-cap, no-undef
+        });
+
+        // bug #150
+
+        it('should not allow to set the sampleRate', () => {
+            const sampleRate = 16000;
+
+            audioContext = new webkitAudioContext({ sampleRate }); // eslint-disable-line new-cap, no-undef
+
+            expect(audioContext.sampleRate).to.not.equal(sampleRate);
+        });
+
         describe('with four running AudioContexts', () => {
             let audioContexts;
             let gainNodes;
@@ -40,6 +58,54 @@ describe('audioContextConstructor', () => {
             audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
         });
 
+        it('should not provide an unprefixed constructor', () => {
+            expect(window.AudioContext).to.be.undefined;
+        });
+
+        describe('audioWorklet', () => {
+            // bug #59
+
+            it('should not be implemented', () => {
+                expect(audioContext.audioWorklet).to.be.undefined;
+            });
+        });
+
+        describe('baseLatency', () => {
+            // bug #39
+
+            it('should not be implemented', () => {
+                expect(audioContext.baseLatency).to.be.undefined;
+            });
+        });
+
+        describe('destination', () => {
+            describe('channelCount', () => {
+                // bug #169
+
+                it('should throw an error', () => {
+                    expect(() => {
+                        audioContext.destination.channelCount = 1;
+                    }).to.throw(DOMException);
+                });
+            });
+        });
+
+        describe('listener', () => {
+            // bug #117
+
+            it('should not be implemented', () => {
+                expect(audioContext.listener.forwardX).to.be.undefined;
+                expect(audioContext.listener.forwardY).to.be.undefined;
+                expect(audioContext.listener.forwardZ).to.be.undefined;
+                expect(audioContext.listener.positionX).to.be.undefined;
+                expect(audioContext.listener.positionY).to.be.undefined;
+                expect(audioContext.listener.positionZ).to.be.undefined;
+                expect(audioContext.listener.upX).to.be.undefined;
+                expect(audioContext.listener.upY).to.be.undefined;
+                expect(audioContext.listener.upZ).to.be.undefined;
+            });
+        });
+
         describe('createAnalyser()', () => {
             describe('maxDecibels', () => {
                 // bug #118
@@ -64,6 +130,16 @@ describe('audioContextConstructor', () => {
                     analyserNode.minDecibels = minDecibels;
 
                     expect(analyserNode.minDecibels).to.equal(minDecibels);
+                });
+            });
+
+            describe('getFloatTimeDomainData()', () => {
+                // bug #36
+
+                it('should not have a getFloatTimeDomainData method', () => {
+                    const analyserNode = audioContext.createAnalyser();
+
+                    expect(analyserNode.getFloatTimeDomainData).to.be.undefined;
                 });
             });
         });
@@ -224,6 +300,31 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createBufferSource()', () => {
+            describe('buffer', () => {
+                // bug #72
+
+                it('should allow to assign the buffer multiple times', () => {
+                    const audioBufferSourceNode = audioContext.createBufferSource();
+
+                    audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
+                    audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
+                });
+            });
+
+            describe('detune', () => {
+                let audioBufferSourceNode;
+
+                beforeEach(() => {
+                    audioBufferSourceNode = audioContext.createBufferSource();
+                });
+
+                // bug #149
+
+                it('should not be implemented', () => {
+                    expect(audioBufferSourceNode.detune).to.be.undefined;
+                });
+            });
+
             describe('playbackRate', () => {
                 let audioBufferSourceNode;
 
@@ -244,6 +345,14 @@ describe('audioContextConstructor', () => {
 
                     it('should be -1024', () => {
                         expect(audioBufferSourceNode.playbackRate.minValue).to.equal(-1024);
+                    });
+                });
+
+                describe('name', () => {
+                    // bug #153
+
+                    it('should export the name as a property', () => {
+                        expect(audioBufferSourceNode.playbackRate.name).to.equal('playbackRate');
                     });
                 });
 
@@ -303,6 +412,21 @@ describe('audioContextConstructor', () => {
             });
 
             describe('stop()', () => {
+                // bug #18
+
+                it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', () => {
+                    const audioBuffer = audioContext.createBuffer(1, 100, 44100);
+                    const audioBufferSourceNode = audioContext.createBufferSource();
+
+                    audioBufferSourceNode.buffer = audioBuffer;
+                    audioBufferSourceNode.connect(audioContext.destination);
+                    audioBufferSourceNode.start();
+                    audioBufferSourceNode.stop(audioContext.currentTime + 1);
+                    expect(() => {
+                        audioBufferSourceNode.stop();
+                    }).to.throw(Error);
+                });
+
                 // bug #162
 
                 it('should throw a DOMException when called without a value', () => {
@@ -394,6 +518,14 @@ describe('audioContextConstructor', () => {
             });
         });
 
+        describe('createConstantSource()', () => {
+            // bug #62
+
+            it('should not be implemented', () => {
+                expect(audioContext.createConstantSource).to.be.undefined;
+            });
+        });
+
         describe('createConvolver()', () => {
             let convolverNode;
 
@@ -438,6 +570,24 @@ describe('audioContextConstructor', () => {
 
                 it('should not throw an error', () => {
                     dynamicsCompressorNode.channelCountMode = 'max';
+                });
+            });
+
+            describe('reduction', () => {
+                // bug #111
+
+                it('should return an implementation of the AudioParam interface', () => {
+                    expect(dynamicsCompressorNode.reduction.cancelAndHoldAtTime).to.be.undefined;
+                    expect(dynamicsCompressorNode.reduction.cancelScheduledValues).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.defaultValue).to.be.a('number');
+                    expect(dynamicsCompressorNode.reduction.exponentialRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.linearRampToValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.maxValue).to.be.a('number');
+                    expect(dynamicsCompressorNode.reduction.minValue).to.be.a('number');
+                    expect(dynamicsCompressorNode.reduction.setTargetAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.setValueAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.setValueCurveAtTime).to.be.a('function');
+                    expect(dynamicsCompressorNode.reduction.value).to.be.a('number');
                 });
             });
         });
@@ -496,6 +646,14 @@ describe('audioContextConstructor', () => {
                     gainNode = audioContext.createGain();
                 });
 
+                describe('cancelAndHoldAtTime()', () => {
+                    // bug #28
+
+                    it('should not be implemented', () => {
+                        expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
+                    });
+                });
+
                 describe('maxValue', () => {
                     // bug #74
 
@@ -521,6 +679,14 @@ describe('audioContextConstructor', () => {
                         }).to.throw(TypeError);
                     });
                 });
+            });
+        });
+
+        describe('createIIRFilter()', () => {
+            // bug #9
+
+            it('should not be implemented', () => {
+                expect(audioContext.createIIRFilter).to.be.undefined;
             });
         });
 
@@ -695,6 +861,100 @@ describe('audioContextConstructor', () => {
             });
         });
 
+        describe('createPanner()', () => {
+            let pannerNode;
+
+            beforeEach(() => {
+                pannerNode = audioContext.createPanner();
+            });
+
+            describe('channelCount', () => {
+                // bug #125
+
+                it('should not throw an error', () => {
+                    pannerNode.channelCount = 4;
+                });
+            });
+
+            describe('channelCountMode', () => {
+                // bug #126
+
+                it('should not throw an error', () => {
+                    pannerNode.channelCountMode = 'max';
+                });
+            });
+
+            describe('coneOuterGain', () => {
+                // bug #127
+
+                it('should not throw an error', () => {
+                    pannerNode.coneOuterGain = 3;
+                });
+            });
+
+            describe('maxDistance', () => {
+                // bug #128
+
+                it('should not throw an error', () => {
+                    pannerNode.maxDistance = -10;
+                });
+            });
+
+            describe('orientationX', () => {
+                // bug #124
+
+                it('should not be implemented', () => {
+                    expect(pannerNode.orientationX).to.be.undefined;
+                });
+            });
+
+            describe('refDistance', () => {
+                // bug #129
+
+                it('should not throw an error', () => {
+                    pannerNode.refDistance = -10;
+                });
+            });
+
+            describe('rolloffFactor', () => {
+                // bug #130
+
+                it('should not throw an error', () => {
+                    pannerNode.rolloffFactor = -10;
+                });
+            });
+        });
+
+        describe('createPeriodicWave()', () => {
+            describe('with regular arrays', () => {
+                // bug #180
+
+                it('should throw an error', () => {
+                    expect(() => {
+                        audioContext.createPeriodicWave([1, 1], [1, 1]);
+                    }).to.throw(TypeError);
+                });
+            });
+
+            describe('with a real and an imag argument of only one value', () => {
+                // bug #181
+
+                it('should return a PeriodicWave', () => {
+                    const periodicWave = audioContext.createPeriodicWave(new Float32Array([1]), new Float32Array([1]));
+
+                    expect(periodicWave).to.be.an.instanceOf(PeriodicWave);
+                });
+            });
+        });
+
+        describe('createStereoPanner()', () => {
+            // bug #105
+
+            it('should not be implemented', () => {
+                expect(audioContext.createStereoPanner).to.be.undefined;
+            });
+        });
+
         describe('createWaveShaper()', () => {
             let waveShaperNode;
 
@@ -715,6 +975,109 @@ describe('audioContextConstructor', () => {
                     expect(() => {
                         waveShaperNode.curve = null;
                     }).to.throw(TypeError, 'The WaveShaperNode.curve attribute must be an instance of Float32Array');
+                });
+            });
+        });
+
+        describe('decodeAudioData()', () => {
+            // bug #1
+
+            it('should require the success callback function as a parameter', async function () {
+                this.timeout(10000);
+
+                const arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
+
+                expect(() => {
+                    audioContext.decodeAudioData(arrayBuffer);
+                }).to.throw(TypeError, 'Not enough arguments');
+            });
+
+            // bug #5
+
+            it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
+                this.timeout(10000);
+
+                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+                    audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
+                        expect(audioBuffer.copyFromChannel).to.be.undefined;
+                        expect(audioBuffer.copyToChannel).to.be.undefined;
+
+                        done();
+                    });
+                });
+            });
+
+            // bug #21
+
+            it('should not return a promise', async function () {
+                this.timeout(10000);
+
+                const arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
+
+                expect(audioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
+            });
+
+            // bug #26
+
+            it('should throw a synchronous error', (done) => {
+                try {
+                    audioContext.decodeAudioData(null, () => {});
+                } catch (err) {
+                    done();
+                }
+            });
+        });
+
+        describe('getOutputTimestamp()', () => {
+            // bug #38
+
+            it('should not be implemented', () => {
+                expect(audioContext.getOutputTimestamp).to.be.undefined;
+            });
+        });
+
+        describe('resume()', () => {
+            afterEach(() => {
+                // Create a closeable AudioContext to align the behaviour with other tests.
+                audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
+            });
+
+            beforeEach(() => audioContext.close());
+
+            // bug #56
+
+            it('should throw undefined with a closed AudioContext', (done) => {
+                audioContext.resume().catch((err) => {
+                    expect(err).to.be.undefined;
+
+                    done();
+                });
+            });
+        });
+
+        describe('startRendering()', () => {
+            // bug #160
+
+            it('should expose a startRendering method', () => {
+                expect(audioContext.startRendering).to.be.a('function');
+            });
+        });
+
+        describe('suspend()', () => {
+            afterEach(() => {
+                // Create a closeable AudioContext to align the behaviour with other tests.
+                audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
+            });
+
+            beforeEach(() => audioContext.close());
+
+            // bug #56
+
+            it('should throw undefined with a closed AudioContext', (done) => {
+                audioContext.suspend().catch((err) => {
+                    expect(err).to.be.undefined;
+
+                    done();
                 });
             });
         });

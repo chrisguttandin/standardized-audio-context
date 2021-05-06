@@ -4,7 +4,9 @@ describe('iIRFilterNodeConstructor', () => {
     afterEach(() => audioContext.close());
 
     beforeEach(() => {
-        audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
+        const audioContextConstructor = typeof webkitAudioContext === 'undefined' ? AudioContext : webkitAudioContext; // eslint-disable-line no-undef
+
+        audioContext = new audioContextConstructor(); // eslint-disable-line new-cap
     });
 
     // bug #33

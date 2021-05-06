@@ -4,7 +4,39 @@ describe('audioContextConstructor', () => {
     afterEach(() => audioContext.close());
 
     beforeEach(() => {
-        audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
+        audioContext = new AudioContext();
+    });
+
+    describe('audioWorklet', () => {
+        describe('addModule()', () => {
+            describe('with a module which contains an import statement', () => {
+                // bug #176
+
+                it('should throw an error', function (done) {
+                    this.timeout(10000);
+
+                    audioContext.audioWorklet
+                        .addModule('base/test/fixtures/gibberish-processor.js')
+                        .then(() => new AudioWorkletNode(audioContext, 'gibberish-processor'))
+                        .catch((err) => {
+                            expect(err.code).to.equal(11);
+                            expect(err.name).to.equal('InvalidStateError');
+
+                            done();
+                        });
+                });
+            });
+
+            describe('with an unparsable module', () => {
+                // bug #190
+
+                it('should not throw an error', function () {
+                    this.timeout(10000);
+
+                    return audioContext.audioWorklet.addModule('base/test/fixtures/unparsable-processor.xs');
+                });
+            });
+        });
     });
 
     describe('state', () => {
