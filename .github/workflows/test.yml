@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - master
+            - secure-context-fix
     pull_request:
         branches:
             - master
