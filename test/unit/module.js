@@ -1,4 +1,4 @@
-window.isSecureContext = true;
+Object.defineProperty(navigator, 'isSecureContext', { value: true });
 
 import {
     AnalyserNode,
