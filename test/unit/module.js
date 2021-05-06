@@ -1,3 +1,5 @@
+window.isSecureContext = true;
+
 import {
     AnalyserNode,
     AudioBuffer,
