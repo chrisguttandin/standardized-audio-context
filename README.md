@@ -4,7 +4,6 @@
 
 **A cross-browser wrapper for the Web Audio API which aims to closely follow the standard.**
 
-[![tests](https://img.shields.io/travis/chrisguttandin/standardized-audio-context/master.svg?style=flat-square)](https://travis-ci.org/chrisguttandin/standardized-audio-context)
 [![dependencies](https://img.shields.io/david/chrisguttandin/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
 [![version](https://img.shields.io/npm/v/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
 
