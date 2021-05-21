@@ -141,21 +141,22 @@ export const createBaseAudioContextConstructor: TBaseAudioContextConstructorFact
             successCallback?: TDecodeSuccessCallback,
             errorCallback?: TDecodeErrorCallback
         ): Promise<IAudioBuffer> {
-            return decodeAudioData(this._nativeContext, audioData)
-                .then((audioBuffer) => {
+            return decodeAudioData(this._nativeContext, audioData).then(
+                (audioBuffer) => {
                     if (typeof successCallback === 'function') {
                         successCallback(audioBuffer);
                     }
 
                     return audioBuffer;
-                })
-                .catch((err) => {
+                },
+                (err) => {
                     if (typeof errorCallback === 'function') {
                         errorCallback(err);
                     }
 
                     throw err;
-                });
+                }
+            );
         }
     };
 };
