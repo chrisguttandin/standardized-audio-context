@@ -35,14 +35,10 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
         // Bug #21: Safari does not support promises yet.
         if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeContext))) {
             return nativeContext.decodeAudioData(audioData).then((audioBuffer) => {
-                (async () => {
-                    // Bug #133: Safari does neuter the ArrayBuffer.
-                    try {
-                        await detachArrayBuffer(audioData);
-                    } catch {
-                        // Ignore errors.
-                    }
-                })();
+                // Bug #133: Safari does neuter the ArrayBuffer.
+                detachArrayBuffer(audioData).catch(() => {
+                    // Ignore errors.
+                });
 
                 // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
                 if (
