@@ -40,7 +40,7 @@
         "eslint-config-holy-grail": "^49.0.11",
         "grunt": "^1.4.1",
         "grunt-babel": "^8.0.0",
-        "grunt-cli": "^1.4.2",
+        "grunt-cli": "^1.4.3",
         "grunt-contrib-clean": "^2.0.0",
         "grunt-contrib-watch": "^1.1.0",
         "grunt-sh": "^0.2.0",
