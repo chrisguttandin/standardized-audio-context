@@ -76,12 +76,6 @@
         "src/"
     ],
     "homepage": "https://github.com/chrisguttandin/standardized-audio-context",
-    "husky": {
-        "hooks": {
-            "commit-msg": "commitlint --edit --extends @commitlint/config-angular",
-            "pre-commit": "pretty-quick --config config/prettier/config.json --staged && grunt lint"
-        }
-    },
     "keywords": [
         "AudioWorklet",
         "Polyfill",
@@ -98,6 +92,7 @@
         "url": "https://github.com/chrisguttandin/standardized-audio-context.git"
     },
     "scripts": {
+        "prepare": "husky install",
         "prepublishOnly": "grunt build",
         "test": "grunt lint && grunt test"
     },
