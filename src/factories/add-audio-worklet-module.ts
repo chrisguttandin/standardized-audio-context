@@ -29,6 +29,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     getNativeContext,
     getOrCreateBackupOfflineAudioContext,
     isNativeOfflineAudioContext,
+    nativeAudioWorkletNodeConstructor,
     ongoingRequests,
     resolvedRequests,
     testAudioWorkletProcessorPostMessageSupport,
@@ -139,9 +140,13 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                         return backupOfflineAudioContext.audioWorklet.addModule(url, options).then(() => backupOfflineAudioContext);
                     })
                     .then((nativeContextOrBackupOfflineAudioContext) => {
+                        if (nativeAudioWorkletNodeConstructor === null) {
+                            throw new SyntaxError();
+                        }
+
                         try {
                             // Bug #190: Safari doesn't throw an error when loading an unparsable module.
-                            new AudioWorkletNode(nativeContextOrBackupOfflineAudioContext, '__sac'); // tslint:disable-line:no-unused-expression
+                            new nativeAudioWorkletNodeConstructor(nativeContextOrBackupOfflineAudioContext, '__sac'); // tslint:disable-line:no-unused-expression
                         } catch {
                             throw new SyntaxError();
                         }

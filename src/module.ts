@@ -768,6 +768,7 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
           getNativeContext,
           getOrCreateBackupOfflineAudioContext,
           isNativeOfflineAudioContext,
+          nativeAudioWorkletNodeConstructor,
           new WeakMap(),
           new WeakMap(),
           createTestAudioWorkletProcessorPostMessageSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
@@ -820,12 +821,13 @@ const mediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstr
     getNativeContext,
     isNativeOfflineAudioContext
 );
-const mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNodeConstructor = createMediaStreamAudioDestinationNodeConstructor(
-    audioNodeConstructor,
-    createNativeMediaStreamAudioDestinationNode,
-    getNativeContext,
-    isNativeOfflineAudioContext
-);
+const mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNodeConstructor =
+    createMediaStreamAudioDestinationNodeConstructor(
+        audioNodeConstructor,
+        createNativeMediaStreamAudioDestinationNode,
+        getNativeContext,
+        isNativeOfflineAudioContext
+    );
 const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
     audioNodeConstructor,
     createNativeMediaStreamAudioSourceNode,
@@ -836,11 +838,8 @@ const createNativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrack
     createInvalidStateError,
     isNativeOfflineAudioContext
 );
-const mediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructor = createMediaStreamTrackAudioSourceNodeConstructor(
-    audioNodeConstructor,
-    createNativeMediaStreamTrackAudioSourceNode,
-    getNativeContext
-);
+const mediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructor =
+    createMediaStreamTrackAudioSourceNodeConstructor(audioNodeConstructor, createNativeMediaStreamTrackAudioSourceNode, getNativeContext);
 const audioContextConstructor: TAudioContextConstructor = createAudioContextConstructor(
     baseAudioContextConstructor,
     createInvalidStateError,

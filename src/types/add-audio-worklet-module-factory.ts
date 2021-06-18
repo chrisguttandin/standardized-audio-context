@@ -7,6 +7,7 @@ import { TFetchSourceFunction } from './fetch-source-function';
 import { TGetNativeContextFunction } from './get-native-context-function';
 import { TGetOrCreateBackupOfflineAudioContextFunction } from './get-or-create-backup-offline-audio-context-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
+import { TNativeAudioWorkletNodeConstructor } from './native-audio-worklet-node-constructor';
 import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 import { TWindow } from './window';
 
@@ -19,6 +20,7 @@ export type TAddAudioWorkletModuleFactory = (
     getNativeContext: TGetNativeContextFunction,
     getOrCreateBackupOfflineAudioContext: TGetOrCreateBackupOfflineAudioContextFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
     ongoingRequests: WeakMap<TContext, Map<string, Promise<void>>>,
     resolvedRequests: WeakMap<TContext, Set<string>>,
     testAudioWorkletProcessorPostMessageSupport: () => Promise<boolean>,
