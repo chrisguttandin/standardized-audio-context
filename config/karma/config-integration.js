@@ -11,54 +11,45 @@ module.exports = (config) => {
 
         browsers:
             env.TARGET === 'chrome'
-                ? ['ChromeBrowserStack']
+                ? ['ChromeSauceLabs']
                 : env.TARGET === 'edge'
-                ? ['EdgeBrowserStack']
+                ? ['EdgeSauceLabs']
                 : env.TARGET === 'firefox'
-                ? ['FirefoxBrowserStack']
-                : env.TARGET === 'opera'
-                ? ['OperaBrowserStack']
+                ? ['FirefoxSauceLabs']
                 : env.TARGET === 'safari'
-                ? ['SafariBrowserStack']
-                : ['ChromeBrowserStack', 'EdgeBrowserStack', 'FirefoxBrowserStack', 'OperaBrowserStack', 'SafariBrowserStack'],
+                ? ['SafariSauceLabs']
+                : ['ChromeSauceLabs', 'EdgeSauceLabs', 'FirefoxSauceLabs', 'OperaSauceLabs', 'SafariSauceLabs'],
 
         concurrency: 1,
 
         customLaunchers: {
-            ChromeBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'chrome',
-                browser_version: '80', // eslint-disable-line camelcase
-                os: 'OS X',
-                os_version: 'High Sierra' // eslint-disable-line camelcase
+            ChromeSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'chrome',
+                captureTimeout: 300,
+                platform: 'macOS 11.00',
+                version: '80.0'
             },
-            EdgeBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'edge',
-                browser_version: '80', // eslint-disable-line camelcase
-                os: 'Windows',
-                os_version: '10' // eslint-disable-line camelcase
+            EdgeSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'MicrosoftEdge',
+                captureTimeout: 300,
+                platform: 'macOS 11.00',
+                version: '80.0'
             },
-            FirefoxBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'firefox',
-                browser_version: '69', // eslint-disable-line camelcase
-                os: 'Windows',
-                os_version: '10' // eslint-disable-line camelcase
+            FirefoxSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'firefox',
+                captureTimeout: 300,
+                platform: 'macOS 11.00',
+                version: '69.0'
             },
-            OperaBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'opera',
-                browser_version: '67', // eslint-disable-line camelcase
-                os: 'OS X',
-                os_version: 'Mojave' // eslint-disable-line camelcase
-            },
-            SafariBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'safari',
-                browser_version: '11.1', // eslint-disable-line camelcase
-                os: 'OS X',
-                os_version: 'High Sierra' // eslint-disable-line camelcase
+            SafariSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'safari',
+                captureTimeout: 300,
+                platform: 'macOS 10.13',
+                version: '11.1'
             }
         },
 
@@ -124,21 +115,15 @@ module.exports = (config) => {
 
     if (env.CI) {
         config.set({
-            browserStack: {
-                accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.GITHUB_RUN_ID}/integration-${env.TARGET}`,
-                forceLocal: true,
-                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
-                project: env.GITHUB_REPOSITORY,
-                username: env.BROWSER_STACK_USERNAME,
-                video: false
+            sauceLabs: {
+                recordVideo: false
             }
         });
     } else {
         const environment = require('../environment/local.json');
 
         config.set({
-            browserStack: environment.browserStack
+            sauceLabs: { ...environment.sauceLabs, recordVideo: false }
         });
     }
 };

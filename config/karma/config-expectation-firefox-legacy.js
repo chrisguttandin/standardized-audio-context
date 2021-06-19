@@ -9,18 +9,17 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        browsers: ['FirefoxBrowserStack'],
+        browsers: ['FirefoxSauceLabs'],
 
         concurrency: 1,
 
         customLaunchers: {
-            FirefoxBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'firefox',
-                browser_version: '70', // eslint-disable-line camelcase
+            FirefoxSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'firefox',
+                browserVersion: '70.0',
                 captureTimeout: 300,
-                os: 'Windows',
-                os_version: '10' // eslint-disable-line camelcase
+                platform: 'macOS 11.00'
             }
         },
 
@@ -86,23 +85,15 @@ module.exports = (config) => {
 
     if (env.CI) {
         config.set({
-            browserStack: {
-                accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.GITHUB_RUN_ID}/expectation-firefox-legacy`,
-                forceLocal: true,
-                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
-                project: env.GITHUB_REPOSITORY,
-                username: env.BROWSER_STACK_USERNAME,
-                video: false
-            },
-
-            captureTimeout: 300000
+            sauceLabs: {
+                recordVideo: false
+            }
         });
     } else {
         const environment = require('../environment/local.json');
 
         config.set({
-            browserStack: environment.browserStack
+            sauceLabs: { ...environment.sauceLabs, recordVideo: false }
         });
     }
 };

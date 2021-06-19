@@ -77,49 +77,40 @@ module.exports = (config) => {
 
     if (env.CI) {
         config.set({
-            browserStack: {
-                accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.GITHUB_RUN_ID}/unit-${env.TARGET}`,
-                forceLocal: true,
-                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
-                project: env.GITHUB_REPOSITORY,
-                username: env.BROWSER_STACK_USERNAME,
-                video: false
-            },
-
-            /*
-             * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-             * 'ChromeBrowserStack',
-             */
             browsers:
-                env.TARGET === 'edge'
-                    ? ['EdgeBrowserStack']
+                env.TARGET === 'chrome'
+                    ? ['ChromeSauceLabs']
                     : env.TARGET === 'firefox'
-                    ? ['FirefoxBrowserStack']
-                    : ['EdgeBrowserStack', 'FirefoxBrowserStack'],
+                    ? ['FirefoxSauceLabs']
+                    : ['ChromeSauceLabs', 'FirefoxSauceLabs'],
 
             customLaunchers: {
-                ChromeBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'chrome',
-                    os: 'Windows',
-                    os_version: '10', // eslint-disable-line camelcase
-                    timeout: 1800
+                ChromeSauceLabs: {
+                    'base': 'SauceLabs',
+                    'browserName': 'chrome',
+                    'captureTimeout': 300,
+                    'goog:chromeOptions': {
+                        args: ['--autoplay-policy=no-user-gesture-required']
+                    },
+                    'platform': 'macOS 11.00'
                 },
-                EdgeBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'edge',
-                    os: 'Windows',
-                    os_version: '10', // eslint-disable-line camelcase
-                    timeout: 1800
-                },
-                FirefoxBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'firefox',
-                    os: 'Windows',
-                    os_version: '10', // eslint-disable-line camelcase
-                    timeout: 1800
+                FirefoxSauceLabs: {
+                    'base': 'SauceLabs',
+                    'browserName': 'firefox',
+                    'captureTimeout': 300,
+                    'moz:firefoxOptions': {
+                        prefs: {
+                            'media.autoplay.default': 0,
+                            'media.navigator.permission.disabled': true,
+                            'media.navigator.streams.fake': true
+                        }
+                    },
+                    'platform': 'macOS 11.00'
                 }
+            },
+
+            sauceLabs: {
+                recordVideo: false
             }
         });
     } else {

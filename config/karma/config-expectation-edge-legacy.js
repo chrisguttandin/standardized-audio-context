@@ -9,17 +9,17 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        browsers: ['EdgeBrowserStack'],
+        browsers: ['EdgeSauceLabs'],
 
         concurrency: 1,
 
         customLaunchers: {
-            EdgeBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'edge',
-                browser_version: '81', // eslint-disable-line camelcase
-                os: 'Windows',
-                os_version: '10' // eslint-disable-line camelcase
+            EdgeSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'MicrosoftEdge',
+                captureTimeout: 300,
+                platform: 'macOS 11.00',
+                version: '81.0'
             }
         },
 
@@ -85,23 +85,15 @@ module.exports = (config) => {
 
     if (env.CI) {
         config.set({
-            browserStack: {
-                accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.GITHUB_RUN_ID}/expectation-edge-legacy`,
-                forceLocal: true,
-                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
-                project: env.GITHUB_REPOSITORY,
-                username: env.BROWSER_STACK_USERNAME,
-                video: false
-            },
-
-            captureTimeout: 300000
+            sauceLabs: {
+                recordVideo: false
+            }
         });
     } else {
         const environment = require('../environment/local.json');
 
         config.set({
-            browserStack: environment.browserStack
+            sauceLabs: { ...environment.sauceLabs, recordVideo: false }
         });
     }
 };

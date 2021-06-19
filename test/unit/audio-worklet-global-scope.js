@@ -413,7 +413,10 @@ describe('AudioWorkletGlobalScope', () => {
                                             constantSourceNode.start();
 
                                             audioWorkletNode.port.onmessage = ({ data }) => {
-                                                if (context.startRendering === undefined && data.currentTime < 0.1) {
+                                                if (
+                                                    context.startRendering === undefined &&
+                                                    (data.inputs.length === 0 || data.inputs[0].length === 0)
+                                                ) {
                                                     return;
                                                 }
 

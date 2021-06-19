@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - master
+            - sauce-labs
     pull_request:
         branches:
             - master
@@ -46,19 +47,13 @@ jobs:
                       target: node
                       type: integration
                     - node-version: 14.x
-                      target: opera
-                      type: expectation
-                    - node-version: 14.x
-                      target: opera
-                      type: integration
-                    - node-version: 14.x
                       target: safari
                       type: integration
                     - node-version: 14.x
                       target: safari-legacy
                       type: expectation
                 node-version: [14.x]
-                target: [edge, firefox]
+                target: [chrome, firefox]
                 type: [unit]
             max-parallel: 3
 
@@ -83,8 +78,8 @@ jobs:
               run: npm ci
 
             - env:
-                  BROWSER_STACK_ACCESS_KEY: ${{ secrets.BROWSER_STACK_ACCESS_KEY }}
-                  BROWSER_STACK_USERNAME: ${{ secrets.BROWSER_STACK_USERNAME }}
+                  SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+                  SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
                   TARGET: ${{ matrix.target }}
                   TYPE: ${{ matrix.type }}
               name: Run ${{ matrix.type }} tests

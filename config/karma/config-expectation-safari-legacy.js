@@ -9,18 +9,17 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        browsers: ['SafariBrowserStack'],
+        browsers: ['SafariSauceLabs'],
 
         concurrency: 1,
 
         customLaunchers: {
-            SafariBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'Safari',
-                browser_version: '12.1', // eslint-disable-line camelcase
+            SafariSauceLabs: {
+                base: 'SauceLabs',
+                browserName: 'safari',
+                browserVersion: '12.0',
                 captureTimeout: 300,
-                os: 'OS X',
-                os_version: 'Mojave' // eslint-disable-line camelcase
+                platform: 'macOS 10.14'
             }
         },
 
@@ -86,23 +85,15 @@ module.exports = (config) => {
 
     if (env.CI) {
         config.set({
-            browserStack: {
-                accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.GITHUB_RUN_ID}/expectation-safari-legacy`,
-                forceLocal: true,
-                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
-                project: env.GITHUB_REPOSITORY,
-                username: env.BROWSER_STACK_USERNAME,
-                video: false
-            },
-
-            captureTimeout: 300000
+            sauceLabs: {
+                recordVideo: false
+            }
         });
     } else {
         const environment = require('../environment/local.json');
 
         config.set({
-            browserStack: environment.browserStack
+            sauceLabs: { ...environment.sauceLabs, recordVideo: false }
         });
     }
 };

@@ -73,28 +73,21 @@ module.exports = (config) => {
 
     if (env.CI) {
         config.set({
-            browserStack: {
-                accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.GITHUB_RUN_ID}/expectation-edge`,
-                forceLocal: true,
-                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
-                project: env.GITHUB_REPOSITORY,
-                username: env.BROWSER_STACK_USERNAME,
-                video: false
-            },
-
-            browsers: ['EdgeBrowserStack'],
+            browsers: ['EdgeSauceLabs'],
 
             captureTimeout: 300000,
 
             customLaunchers: {
-                EdgeBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'edge',
+                EdgeSauceLabs: {
+                    base: 'SauceLabs',
+                    browserName: 'MicrosoftEdge',
                     captureTimeout: 300,
-                    os: 'Windows',
-                    os_version: '10' // eslint-disable-line camelcase
+                    platform: 'macOS 11.00'
                 }
+            },
+
+            sauceLabs: {
+                recordVideo: false
             }
         });
     } else {
