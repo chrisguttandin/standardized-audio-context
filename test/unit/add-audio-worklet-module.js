@@ -104,14 +104,36 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
                     return addAudioWorkletModule('base/test/fixtures/gain-processor.js');
                 });
 
-                it('should return a resolving promise', function () {
-                    this.timeout(10000);
+                describe('with the same module', () => {
+                    it('should return a resolving promise', function () {
+                        this.timeout(10000);
 
-                    return addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+                        return addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+                    });
+
+                    it('should be possible to create an AudioWorkletNode', async function () {
+                        this.timeout(10000);
+
+                        await addAudioWorkletModule('base/test/fixtures/gain-processor.js');
+
+                        new AudioWorkletNode(context, 'gain-processor');
+                    });
                 });
 
-                it('should be possible to create an AudioWorkletNode', () => {
-                    new AudioWorkletNode(context, 'gain-processor');
+                describe('with another module', () => {
+                    it('should return a resolving promise', function () {
+                        this.timeout(10000);
+
+                        return addAudioWorkletModule('base/test/fixtures/inspector-processor.js');
+                    });
+
+                    it('should be possible to create an AudioWorkletNode', async function () {
+                        this.timeout(10000);
+
+                        await addAudioWorkletModule('base/test/fixtures/inspector-processor.js');
+
+                        new AudioWorkletNode(context, 'inspector-processor');
+                    });
                 });
             });
 

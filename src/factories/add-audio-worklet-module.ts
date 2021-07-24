@@ -35,11 +35,17 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     testAudioWorkletProcessorPostMessageSupport,
     window
 ) => {
+    let index = 0;
+
     return (context, moduleURL, options = { credentials: 'omit' }) => {
         const nativeContext = getNativeContext(context);
 
         // Bug #59: Safari does not implement the audioWorklet property.
         if (nativeContext.audioWorklet !== undefined) {
+            const currentIndex = index + 1;
+
+            index = currentIndex;
+
             return Promise.all([
                 fetchSource(moduleURL),
                 Promise.resolve(cacheTestResult(testAudioWorkletProcessorPostMessageSupport, testAudioWorkletProcessorPostMessageSupport))
@@ -109,7 +115,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                  *     })
                  * );
                  *
-                 * registerProcessor('__sac', class extends AudioWorkletProcessor{
+                 * registerProcessor(`__sac${currentIndex}`, class extends AudioWorkletProcessor{
                  *
                  *     process () {
                  *         return false;
@@ -123,7 +129,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                     ? ''
                     : 'i.forEach(this.__c);o.forEach(this.__c);this.__c(Object.values(p));';
                 const wrappedSource = `${importStatements};((AudioWorkletProcessor,registerProcessor)=>{${sourceWithoutImportStatements}
-})(${patchedAudioWorkletProcessor},(n,p)=>registerProcessor(n,class extends p{${memberDefinition}process(i,o,p){${bufferRegistration}return super.process(i.map(j=>j.some(k=>k.length===0)?[]:j),o,p)}}));registerProcessor('__sac',class extends AudioWorkletProcessor{process(){return !1}})`;
+})(${patchedAudioWorkletProcessor},(n,p)=>registerProcessor(n,class extends p{${memberDefinition}process(i,o,p){${bufferRegistration}return super.process(i.map(j=>j.some(k=>k.length===0)?[]:j),o,p)}}));registerProcessor('__sac${currentIndex}',class extends AudioWorkletProcessor{process(){return !1}})`;
                 const blob = new Blob([wrappedSource], { type: 'application/javascript; charset=utf-8' });
                 const url = URL.createObjectURL(blob);
 
@@ -146,7 +152,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
 
                         try {
                             // Bug #190: Safari doesn't throw an error when loading an unparsable module.
-                            new nativeAudioWorkletNodeConstructor(nativeContextOrBackupOfflineAudioContext, '__sac'); // tslint:disable-line:no-unused-expression
+                            new nativeAudioWorkletNodeConstructor(nativeContextOrBackupOfflineAudioContext, `__sac${currentIndex}`); // tslint:disable-line:no-unused-expression
                         } catch {
                             throw new SyntaxError();
                         }
