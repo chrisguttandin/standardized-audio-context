@@ -1,5 +1,6 @@
 import { TConnectNativeAudioNodeToNativeAudioNodeFunction } from './connect-native-audio-node-to-native-audio-node-function';
 import { TDisconnectNativeAudioNodeFromNativeAudioNodeFunction } from './disconnect-native-audio-node-from-native-audio-node-function';
+import { TGetFirstSampleFunction } from './get-first-sample-function';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
 import { TMonitorConnectionsFunction } from './monitor-connections-function';
 import { TNativeChannelMergerNodeFactory } from './native-channel-merger-node-factory';
@@ -18,5 +19,6 @@ export type TNativePannerNodeFakerFactoryFactory = (
     createNativeWaveShaperNode: TNativeWaveShaperNodeFactory,
     createNotSupportedError: TNotSupportedErrorFactory,
     disconnectNativeAudioNodeToNativeAudioNode: TDisconnectNativeAudioNodeFromNativeAudioNodeFunction,
+    getFirstSample: TGetFirstSampleFunction,
     monitorConnections: TMonitorConnectionsFunction
 ) => TNativePannerNodeFakerFactory;

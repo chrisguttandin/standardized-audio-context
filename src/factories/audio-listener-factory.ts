@@ -7,6 +7,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
     createNativeChannelMergerNode,
     createNativeConstantSourceNode,
     createNativeScriptProcessorNode,
+    getFirstSample,
     isNativeOfflineAudioContext
 ) => {
     return (context, nativeContext) => {
@@ -58,15 +59,17 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
             let lastOrientation = [0, 0, -1, 0, 1, 0];
             let lastPosition = [0, 0, 0];
 
+            const buffer = new Float32Array(1);
+
             // tslint:disable-next-line:deprecation
             scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
                 const orientation: [number, number, number, number, number, number] = [
-                    inputBuffer.getChannelData(0)[0],
-                    inputBuffer.getChannelData(1)[0],
-                    inputBuffer.getChannelData(2)[0],
-                    inputBuffer.getChannelData(3)[0],
-                    inputBuffer.getChannelData(4)[0],
-                    inputBuffer.getChannelData(5)[0]
+                    getFirstSample(inputBuffer, buffer, 0),
+                    getFirstSample(inputBuffer, buffer, 1),
+                    getFirstSample(inputBuffer, buffer, 2),
+                    getFirstSample(inputBuffer, buffer, 3),
+                    getFirstSample(inputBuffer, buffer, 4),
+                    getFirstSample(inputBuffer, buffer, 5)
                 ];
 
                 if (orientation.some((value, index) => value !== lastOrientation[index])) {
@@ -76,9 +79,9 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                 }
 
                 const positon: [number, number, number] = [
-                    inputBuffer.getChannelData(6)[0],
-                    inputBuffer.getChannelData(7)[0],
-                    inputBuffer.getChannelData(8)[0]
+                    getFirstSample(inputBuffer, buffer, 6),
+                    getFirstSample(inputBuffer, buffer, 7),
+                    getFirstSample(inputBuffer, buffer, 8)
                 ];
 
                 if (positon.some((value, index) => value !== lastPosition[index])) {

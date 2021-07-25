@@ -159,6 +159,7 @@ export * from './get-audio-param-renderer-function';
 export * from './get-backup-offline-audio-context-factory';
 export * from './get-backup-offline-audio-context-function';
 export * from './get-event-listeners-of-audio-node-function';
+export * from './get-first-sample-function';
 export * from './get-native-audio-node-function';
 export * from './get-native-audio-param-function';
 export * from './get-native-context-factory';

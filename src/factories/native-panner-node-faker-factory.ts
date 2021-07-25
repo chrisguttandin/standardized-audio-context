@@ -11,6 +11,7 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
     createNativeWaveShaperNode,
     createNotSupportedError,
     disconnectNativeAudioNodeFromNativeAudioNode,
+    getFirstSample,
     monitorConnections
 ) => {
     return (
@@ -75,12 +76,14 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
         let lastOrientation: [number, number, number] = [orientationX, orientationY, orientationZ];
         let lastPosition: [number, number, number] = [positionX, positionY, positionZ];
 
+        const buffer = new Float32Array(1);
+
         // tslint:disable-next-line:deprecation
         scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
             const orientation: [number, number, number] = [
-                inputBuffer.getChannelData(0)[0],
-                inputBuffer.getChannelData(1)[0],
-                inputBuffer.getChannelData(2)[0]
+                getFirstSample(inputBuffer, buffer, 0),
+                getFirstSample(inputBuffer, buffer, 1),
+                getFirstSample(inputBuffer, buffer, 2)
             ];
 
             if (orientation.some((value, index) => value !== lastOrientation[index])) {
@@ -90,9 +93,9 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
             }
 
             const positon: [number, number, number] = [
-                inputBuffer.getChannelData(3)[0],
-                inputBuffer.getChannelData(4)[0],
-                inputBuffer.getChannelData(5)[0]
+                getFirstSample(inputBuffer, buffer, 3),
+                getFirstSample(inputBuffer, buffer, 4),
+                getFirstSample(inputBuffer, buffer, 5)
             ];
 
             if (positon.some((value, index) => value !== lastPosition[index])) {
