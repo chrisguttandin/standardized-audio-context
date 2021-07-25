@@ -368,7 +368,9 @@ describe('ConstantSourceNode', () => {
                     });
 
                     it('should be chainable', () => {
-                        expect(constantSourceNode.offset.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(constantSourceNode.offset);
+                        expect(constantSourceNode.offset.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
+                            constantSourceNode.offset
+                        );
                     });
                 });
 
@@ -531,11 +533,7 @@ describe('ConstantSourceNode', () => {
                                         }
                                     }).then((channelData) => {
                                         expect(Array.from(channelData)).to.deep.equal([
-                                            0,
-                                            0.1666666716337204,
-                                            0.3333333432674408,
-                                            0.5,
-                                            0.6666666865348816
+                                            0, 0.1666666716337204, 0.3333333432674408, 0.5, 0.6666666865348816
                                         ]);
                                     });
                                 });

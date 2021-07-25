@@ -670,7 +670,7 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(pannerNode.orientationX.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(pannerNode.orientationX);
+                        expect(pannerNode.orientationX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.orientationX);
                     });
                 });
 
@@ -757,7 +757,7 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(pannerNode.orientationY.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(pannerNode.orientationY);
+                        expect(pannerNode.orientationY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.orientationY);
                     });
                 });
 
@@ -844,7 +844,7 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(pannerNode.orientationZ.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(pannerNode.orientationZ);
+                        expect(pannerNode.orientationZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.orientationZ);
                     });
                 });
 
@@ -994,7 +994,7 @@ describe('PannerNode', () => {
                     });
 
                     it('should be chainable', () => {
-                        expect(pannerNode.positionX.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(pannerNode.positionX);
+                        expect(pannerNode.positionX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.positionX);
                     });
                 });
 
@@ -1066,11 +1066,7 @@ describe('PannerNode', () => {
                                         }
                                     }).then((channelData) => {
                                         expect(Array.from(channelData)).to.deep.equal([
-                                            0.7071067690849304,
-                                            0.3535533845424652,
-                                            0,
-                                            -0.3535533845424652,
-                                            -0.7071067690849304
+                                            0.7071067690849304, 0.3535533845424652, 0, -0.3535533845424652, -0.7071067690849304
                                         ]);
                                     });
                                 });
@@ -1089,11 +1085,7 @@ describe('PannerNode', () => {
                                         }
                                     }).then((channelData) => {
                                         expect(Array.from(channelData)).to.deep.equal([
-                                            0.05000000074505806,
-                                            0.02500000037252903,
-                                            0,
-                                            -0.02500000037252903,
-                                            -0.05000000074505806
+                                            0.05000000074505806, 0.02500000037252903, 0, -0.02500000037252903, -0.05000000074505806
                                         ]);
                                     });
                                 });
@@ -1205,7 +1197,7 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(pannerNode.positionY.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(pannerNode.positionY);
+                        expect(pannerNode.positionY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.positionY);
                     });
                 });
 
@@ -1292,7 +1284,7 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(pannerNode.positionZ.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(pannerNode.positionZ);
+                        expect(pannerNode.positionZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.positionZ);
                     });
                 });
 

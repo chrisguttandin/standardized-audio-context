@@ -334,7 +334,7 @@ describe('GainNode', () => {
                     });
 
                     it('should be chainable', () => {
-                        expect(gainNode.gain.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(gainNode.gain);
+                        expect(gainNode.gain.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(gainNode.gain);
                     });
                 });
 
@@ -502,11 +502,7 @@ describe('GainNode', () => {
                                         }
                                     }).then((channelData) => {
                                         expect(Array.from(channelData)).to.deep.equal([
-                                            0,
-                                            0.0833333358168602,
-                                            0,
-                                            -0.25,
-                                            -0.6666666865348816
+                                            0, 0.0833333358168602, 0, -0.25, -0.6666666865348816
                                         ]);
                                     });
                                 });

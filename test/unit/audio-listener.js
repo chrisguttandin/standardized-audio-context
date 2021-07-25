@@ -113,7 +113,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.forwardX.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.forwardX);
+                        expect(listener.forwardX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardX);
                     });
                 });
 
@@ -262,7 +262,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.forwardY.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.forwardY);
+                        expect(listener.forwardY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardY);
                     });
                 });
 
@@ -411,7 +411,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.forwardZ.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.forwardZ);
+                        expect(listener.forwardZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardZ);
                     });
                 });
 
@@ -562,7 +562,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.positionX.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.positionX);
+                        expect(listener.positionX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionX);
                     });
                 });
 
@@ -710,7 +710,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.positionY.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.positionY);
+                        expect(listener.positionY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionY);
                     });
                 });
 
@@ -859,7 +859,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.positionZ.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.positionZ);
+                        expect(listener.positionZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionZ);
                     });
                 });
 
@@ -1008,7 +1008,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.upX.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.upX);
+                        expect(listener.upX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upX);
                     });
                 });
 
@@ -1157,7 +1157,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.upY.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.upY);
+                        expect(listener.upY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upY);
                     });
                 });
 
@@ -1308,7 +1308,7 @@ describe('AudioListener', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(listener.upZ.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(listener.upZ);
+                        expect(listener.upZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upZ);
                     });
                 });
 

@@ -314,7 +314,7 @@ describe('DynamicsCompressorNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.attack.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                        expect(dynamicsCompressorNode.attack.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
                             dynamicsCompressorNode.attack
                         );
                     });
@@ -472,7 +472,7 @@ describe('DynamicsCompressorNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                        expect(dynamicsCompressorNode.knee.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
                             dynamicsCompressorNode.knee
                         );
                     });
@@ -586,7 +586,7 @@ describe('DynamicsCompressorNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                        expect(dynamicsCompressorNode.ratio.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
                             dynamicsCompressorNode.ratio
                         );
                     });
@@ -674,7 +674,7 @@ describe('DynamicsCompressorNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                        expect(dynamicsCompressorNode.release.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
                             dynamicsCompressorNode.release
                         );
                     });
@@ -760,7 +760,7 @@ describe('DynamicsCompressorNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.threshold.setValueAtTime(new Float32Array([-1]), 0, 0)).to.equal(
+                        expect(dynamicsCompressorNode.threshold.setValueCurveAtTime(new Float32Array([-1, 0]), 0, 1)).to.equal(
                             dynamicsCompressorNode.threshold
                         );
                     });

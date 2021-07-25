@@ -429,7 +429,7 @@ describe('StereoPannerNode', () => {
                     });
 
                     it('should be chainable', () => {
-                        expect(stereoPannerNode.pan.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(stereoPannerNode.pan);
+                        expect(stereoPannerNode.pan.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(stereoPannerNode.pan);
                     });
                 });
 
@@ -548,11 +548,7 @@ describe('StereoPannerNode', () => {
                                                     expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
                                                 } else {
                                                     expect(Array.from(channelData)).to.deep.equal([
-                                                        0.4571067690849304,
-                                                        0.2285533845424652,
-                                                        0,
-                                                        -0.2285533845424652,
-                                                        -0.4571067690849304
+                                                        0.4571067690849304, 0.2285533845424652, 0, -0.2285533845424652, -0.4571067690849304
                                                     ]);
                                                 }
                                             });
@@ -593,11 +589,7 @@ describe('StereoPannerNode', () => {
                                                     expect(channelData[4]).to.be.closeTo(-0.7071067, 0.000001);
                                                 } else {
                                                     expect(Array.from(channelData)).to.deep.equal([
-                                                        0.4571067690849304,
-                                                        0.2285533845424652,
-                                                        0,
-                                                        -0.125,
-                                                        -0.25
+                                                        0.4571067690849304, 0.2285533845424652, 0, -0.125, -0.25
                                                     ]);
                                                 }
                                             });
@@ -626,11 +618,7 @@ describe('StereoPannerNode', () => {
                                                     expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
                                                 } else {
                                                     expect(Array.from(channelData)).to.deep.equal([
-                                                        0.25,
-                                                        0.125,
-                                                        0,
-                                                        -0.2285533845424652,
-                                                        -0.4571067690849304
+                                                        0.25, 0.125, 0, -0.2285533845424652, -0.4571067690849304
                                                     ]);
                                                 }
                                             });
@@ -701,11 +689,7 @@ describe('StereoPannerNode', () => {
                                                     expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
                                                 } else {
                                                     expect(Array.from(channelData)).to.deep.equal([
-                                                        0.4571067690849304,
-                                                        0.2285533845424652,
-                                                        0,
-                                                        -0.2285533845424652,
-                                                        -0.4571067690849304
+                                                        0.4571067690849304, 0.2285533845424652, 0, -0.2285533845424652, -0.4571067690849304
                                                     ]);
                                                 }
                                             });

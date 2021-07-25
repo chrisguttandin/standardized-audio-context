@@ -337,7 +337,7 @@ describe('BiquadFilterNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.detune.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(biquadFilterNode.detune);
+                        expect(biquadFilterNode.detune.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(biquadFilterNode.detune);
                     });
                 });
 
@@ -421,7 +421,9 @@ describe('BiquadFilterNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.frequency.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(biquadFilterNode.frequency);
+                        expect(biquadFilterNode.frequency.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
+                            biquadFilterNode.frequency
+                        );
                     });
                 });
 
@@ -508,7 +510,7 @@ describe('BiquadFilterNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.gain.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(biquadFilterNode.gain);
+                        expect(biquadFilterNode.gain.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(biquadFilterNode.gain);
                     });
                 });
 
@@ -643,7 +645,9 @@ describe('BiquadFilterNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.frequency.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(biquadFilterNode.frequency);
+                        expect(biquadFilterNode.frequency.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
+                            biquadFilterNode.frequency
+                        );
                     });
                 });
 

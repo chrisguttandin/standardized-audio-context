@@ -809,7 +809,7 @@ describe('AudioWorkletNode', () => {
 
                         describe('setValueCurveAtTime()', () => {
                             it('should be chainable', () => {
-                                expect(gain.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(gain);
+                                expect(gain.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(gain);
                             });
                         });
                     });

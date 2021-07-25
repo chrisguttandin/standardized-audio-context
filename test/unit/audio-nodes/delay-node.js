@@ -351,7 +351,7 @@ describe('DelayNode', () => {
                     });
 
                     it('should be chainable', () => {
-                        expect(delayNode.delayTime.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(delayNode.delayTime);
+                        expect(delayNode.delayTime.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(delayNode.delayTime);
                     });
                 });
 

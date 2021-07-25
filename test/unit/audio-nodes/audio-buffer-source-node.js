@@ -515,7 +515,7 @@ describe('AudioBufferSourceNode', () => {
                  * @todo describe('setValueCurveAtTime()', () => {
                  * @todo
                  * @todo     it('should be chainable', () => {
-                 * @todo         expect(audioBufferSourceNode.detune.setValueAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(audioBufferSourceNode.detune);
+                 * @todo         expect(audioBufferSourceNode.detune.setValueCurveAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(audioBufferSourceNode.detune);
                  * @todo     });
                  * @todo
                  * @todo });
@@ -894,7 +894,7 @@ describe('AudioBufferSourceNode', () => {
                     });
 
                     it('should be chainable', () => {
-                        expect(audioBufferSourceNode.playbackRate.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(
+                        expect(audioBufferSourceNode.playbackRate.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
                             audioBufferSourceNode.playbackRate
                         );
                     });

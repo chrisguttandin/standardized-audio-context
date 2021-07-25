@@ -336,7 +336,7 @@ describe('OscillatorNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(oscillatorNode.detune.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(oscillatorNode.detune);
+                        expect(oscillatorNode.detune.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(oscillatorNode.detune);
                     });
                 });
 
@@ -420,7 +420,9 @@ describe('OscillatorNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(oscillatorNode.frequency.setValueAtTime(new Float32Array([1]), 0, 0)).to.equal(oscillatorNode.frequency);
+                        expect(oscillatorNode.frequency.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
+                            oscillatorNode.frequency
+                        );
                     });
                 });
 
