@@ -620,7 +620,8 @@ const createAudioListener = createAudioListenerFactory(
     createNativeConstantSourceNode,
     createNativeScriptProcessorNode,
     getFirstSample,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    overwriteAccessors
 );
 const unrenderedAudioWorkletNodeStore: TUnrenderedAudioWorkletNodeStore = new WeakMap();
 const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstructor(

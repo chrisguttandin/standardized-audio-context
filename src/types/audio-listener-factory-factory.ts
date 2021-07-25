@@ -5,6 +5,7 @@ import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-
 import { TNativeChannelMergerNodeFactory } from './native-channel-merger-node-factory';
 import { TNativeConstantSourceNodeFactory } from './native-constant-source-node-factory';
 import { TNativeScriptProcessorNodeFactory } from './native-script-processor-node-factory';
+import { TOverwriteAccessorsFunction } from './overwrite-accessors-function';
 
 export type TAudioListenerFactoryFactory = (
     createAudioParam: TAudioParamFactory,
@@ -12,5 +13,6 @@ export type TAudioListenerFactoryFactory = (
     createNativeConstantSourceNode: TNativeConstantSourceNodeFactory,
     createNativeScriptProcessorNode: TNativeScriptProcessorNodeFactory,
     getFirstSample: TGetFirstSampleFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    overwriteAccessors: TOverwriteAccessorsFunction
 ) => TAudioListenerFactory;

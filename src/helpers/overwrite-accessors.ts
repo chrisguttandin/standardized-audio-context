@@ -1,7 +1,7 @@
 import { TOverwriteAccessorsFunction } from '../types';
 
 export const overwriteAccessors: TOverwriteAccessorsFunction = (object, property, createGetter, createSetter) => {
-    let prototype = Object.getPrototypeOf(object);
+    let prototype = object;
 
     while (!prototype.hasOwnProperty(property)) {
         prototype = Object.getPrototypeOf(prototype);

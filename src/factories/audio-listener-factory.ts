@@ -8,13 +8,15 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
     createNativeConstantSourceNode,
     createNativeScriptProcessorNode,
     getFirstSample,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    overwriteAccessors
 ) => {
     return (context, nativeContext) => {
         const nativeListener = nativeContext.listener;
 
         // Bug #117: Only Chrome, Edge & Opera support the new interface already.
         const createFakeAudioParams = () => {
+            const buffer = new Float32Array(1);
             const channelMergerNode = createNativeChannelMergerNode(nativeContext, {
                 channelCount: 1,
                 channelCountMode: 'explicit',
@@ -22,14 +24,72 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                 numberOfInputs: 9
             });
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const scriptProcessorNode = createNativeScriptProcessorNode(nativeContext, 256, 9, 0);
 
-            const createFakeAudioParam = (input: number, value: number) => {
+            let isScriptProcessorNodeCreated = false;
+            let lastOrientation: [number, number, number, number, number, number] = [0, 0, -1, 0, 1, 0];
+            let lastPosition: [number, number, number] = [0, 0, 0];
+
+            const createScriptProcessorNode = () => {
+                if (isScriptProcessorNodeCreated) {
+                    return;
+                }
+
+                isScriptProcessorNodeCreated = true;
+
+                const scriptProcessorNode = createNativeScriptProcessorNode(nativeContext, 256, 9, 0);
+
+                // tslint:disable-next-line:deprecation
+                scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                    const orientation: [number, number, number, number, number, number] = [
+                        getFirstSample(inputBuffer, buffer, 0),
+                        getFirstSample(inputBuffer, buffer, 1),
+                        getFirstSample(inputBuffer, buffer, 2),
+                        getFirstSample(inputBuffer, buffer, 3),
+                        getFirstSample(inputBuffer, buffer, 4),
+                        getFirstSample(inputBuffer, buffer, 5)
+                    ];
+
+                    if (orientation.some((value, index) => value !== lastOrientation[index])) {
+                        nativeListener.setOrientation(...orientation); // tslint:disable-line:deprecation
+
+                        lastOrientation = orientation;
+                    }
+
+                    const positon: [number, number, number] = [
+                        getFirstSample(inputBuffer, buffer, 6),
+                        getFirstSample(inputBuffer, buffer, 7),
+                        getFirstSample(inputBuffer, buffer, 8)
+                    ];
+
+                    if (positon.some((value, index) => value !== lastPosition[index])) {
+                        nativeListener.setPosition(...positon); // tslint:disable-line:deprecation
+
+                        lastPosition = positon;
+                    }
+                };
+
+                channelMergerNode.connect(scriptProcessorNode);
+            };
+            const createSetOrientation = (index: number) => (value: number) => {
+                if (value !== lastOrientation[index]) {
+                    lastOrientation[index] = value;
+
+                    nativeListener.setOrientation(...lastOrientation); // tslint:disable-line:deprecation
+                }
+            };
+            const createSetPosition = (index: number) => (value: number) => {
+                if (value !== lastPosition[index]) {
+                    lastPosition[index] = value;
+
+                    nativeListener.setPosition(...lastPosition); // tslint:disable-line:deprecation
+                }
+            };
+            const createFakeAudioParam = (input: number, initialValue: number, setValue: (value: number) => void) => {
                 const constantSourceNode = createNativeConstantSourceNode(nativeContext, {
                     channelCount: 1,
                     channelCountMode: 'explicit',
                     channelInterpretation: 'discrete',
-                    offset: value
+                    offset: initialValue
                 });
 
                 constantSourceNode.connect(channelMergerNode, 0, input);
@@ -39,7 +99,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
 
                 Object.defineProperty(constantSourceNode.offset, 'defaultValue', {
                     get(): number {
-                        return value;
+                        return initialValue;
                     }
                 });
 
@@ -47,61 +107,43 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                  * Bug #62 & #74: Safari does not support ConstantSourceNodes and does not export the correct values for maxValue and
                  * minValue for GainNodes.
                  */
-                return createAudioParam(
+                const audioParam = createAudioParam(
                     <any>{ context },
                     isOffline,
                     constantSourceNode.offset,
                     MOST_POSITIVE_SINGLE_FLOAT,
                     MOST_NEGATIVE_SINGLE_FLOAT
                 );
+
+                overwriteAccessors(
+                    audioParam,
+                    'value',
+                    (get) => () => get.call(audioParam),
+                    (set) => (value) => {
+                        set.call(audioParam, value);
+
+                        createScriptProcessorNode();
+
+                        if (isOffline) {
+                            // Bug #117: Using setOrientation() and setPosition() doesn't work with an OfflineAudioContext.
+                            setValue(value);
+                        }
+                    }
+                );
+
+                return audioParam;
             };
-
-            let lastOrientation = [0, 0, -1, 0, 1, 0];
-            let lastPosition = [0, 0, 0];
-
-            const buffer = new Float32Array(1);
-
-            // tslint:disable-next-line:deprecation
-            scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
-                const orientation: [number, number, number, number, number, number] = [
-                    getFirstSample(inputBuffer, buffer, 0),
-                    getFirstSample(inputBuffer, buffer, 1),
-                    getFirstSample(inputBuffer, buffer, 2),
-                    getFirstSample(inputBuffer, buffer, 3),
-                    getFirstSample(inputBuffer, buffer, 4),
-                    getFirstSample(inputBuffer, buffer, 5)
-                ];
-
-                if (orientation.some((value, index) => value !== lastOrientation[index])) {
-                    nativeListener.setOrientation(...orientation); // tslint:disable-line:deprecation
-
-                    lastOrientation = orientation;
-                }
-
-                const positon: [number, number, number] = [
-                    getFirstSample(inputBuffer, buffer, 6),
-                    getFirstSample(inputBuffer, buffer, 7),
-                    getFirstSample(inputBuffer, buffer, 8)
-                ];
-
-                if (positon.some((value, index) => value !== lastPosition[index])) {
-                    nativeListener.setPosition(...positon); // tslint:disable-line:deprecation
-
-                    lastPosition = positon;
-                }
-            };
-            channelMergerNode.connect(scriptProcessorNode);
 
             return {
-                forwardX: createFakeAudioParam(0, 0),
-                forwardY: createFakeAudioParam(1, 0),
-                forwardZ: createFakeAudioParam(2, -1),
-                positionX: createFakeAudioParam(6, 0),
-                positionY: createFakeAudioParam(7, 0),
-                positionZ: createFakeAudioParam(8, 0),
-                upX: createFakeAudioParam(3, 0),
-                upY: createFakeAudioParam(4, 1),
-                upZ: createFakeAudioParam(5, 0)
+                forwardX: createFakeAudioParam(0, 0, createSetOrientation(0)),
+                forwardY: createFakeAudioParam(1, 0, createSetOrientation(1)),
+                forwardZ: createFakeAudioParam(2, -1, createSetOrientation(2)),
+                positionX: createFakeAudioParam(6, 0, createSetPosition(0)),
+                positionY: createFakeAudioParam(7, 0, createSetPosition(1)),
+                positionZ: createFakeAudioParam(8, 0, createSetPosition(2)),
+                upX: createFakeAudioParam(3, 0, createSetOrientation(3)),
+                upY: createFakeAudioParam(4, 1, createSetOrientation(4)),
+                upZ: createFakeAudioParam(5, 0, createSetOrientation(5))
             };
         };
 
