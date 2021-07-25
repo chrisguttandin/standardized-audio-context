@@ -1,7 +1,9 @@
+import { ConstantSourceNode, PannerNode } from '../../src/module';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
+import { createRenderer } from '../helper/create-renderer';
 
 const testCases = {
     'a MinimalAudioContext': {
@@ -115,7 +117,69 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007035539, 0.00000001);
+                                expect(channelData[1]).to.be.closeTo(0.007035539, 0.00000001);
+                                expect(channelData[2]).to.be.closeTo(0.007035539, 0.00000001);
+                                expect(channelData[3]).to.be.closeTo(0.007035539, 0.00000001);
+                                expect(channelData[4]).to.be.closeTo(0.007035539, 0.00000001);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.forwardX.value = -1;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.00651345, 0.00000001);
+                                expect(channelData[1]).to.be.closeTo(0.00651345, 0.00000001);
+                                expect(channelData[2]).to.be.closeTo(0.00651345, 0.00000001);
+                                expect(channelData[3]).to.be.closeTo(0.00651345, 0.00000001);
+                                expect(channelData[4]).to.be.closeTo(0.00651345, 0.00000001);
+                            });
+                        });
+                    });
+                });
             });
 
             describe('forwardY', () => {
@@ -202,7 +266,69 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007035539, 0.00000001);
+                                expect(channelData[1]).to.be.closeTo(0.007035539, 0.00000001);
+                                expect(channelData[2]).to.be.closeTo(0.007035539, 0.00000001);
+                                expect(channelData[3]).to.be.closeTo(0.007035539, 0.00000001);
+                                expect(channelData[4]).to.be.closeTo(0.007035539, 0.00000001);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.forwardY.value = -1;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007035482, 0.00000001);
+                                expect(channelData[1]).to.be.closeTo(0.007035482, 0.00000001);
+                                expect(channelData[2]).to.be.closeTo(0.007035482, 0.00000001);
+                                expect(channelData[3]).to.be.closeTo(0.007035482, 0.00000001);
+                                expect(channelData[4]).to.be.closeTo(0.007035482, 0.00000001);
+                            });
+                        });
+                    });
+                });
             });
 
             describe('forwardZ', () => {
@@ -289,7 +415,71 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                // Changing only the forwardZ AudioParam while keeping the value of forwardX at 0 doesn't have an effect.
+                                context.listener.forwardX.value = -1;
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.00651345, 0.00000001);
+                                expect(channelData[1]).to.be.closeTo(0.00651345, 0.00000001);
+                                expect(channelData[2]).to.be.closeTo(0.00651345, 0.00000001);
+                                expect(channelData[3]).to.be.closeTo(0.00651345, 0.00000001);
+                                expect(channelData[4]).to.be.closeTo(0.00651345, 0.00000001);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.forwardZ.value = 1;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([
+                                    0.0064865294843912125, 0.0064865294843912125, 0.0064865294843912125, 0.0064865294843912125,
+                                    0.0064865294843912125
+                                ]);
+                            });
+                        });
+                    });
+                });
             });
 
             describe('positionX', () => {
@@ -376,7 +566,68 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.positionX.value = 1;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([
+                                    0.007035974878817797, 0.007035974878817797, 0.007035974878817797, 0.007035974878817797,
+                                    0.007035974878817797
+                                ]);
+                            });
+                        });
+                    });
+                });
             });
 
             describe('positionY', () => {
@@ -463,7 +714,69 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.positionY.value = 1;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007042165, 0.000000001);
+                                expect(channelData[1]).to.be.closeTo(0.007042165, 0.000000001);
+                                expect(channelData[2]).to.be.closeTo(0.007042165, 0.000000001);
+                                expect(channelData[3]).to.be.closeTo(0.007042165, 0.000000001);
+                                expect(channelData[4]).to.be.closeTo(0.007042165, 0.000000001);
+                            });
+                        });
+                    });
+                });
             });
 
             describe('positionZ', () => {
@@ -550,7 +863,69 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.positionZ.value = 1;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007105881, 0.000000001);
+                                expect(channelData[1]).to.be.closeTo(0.007105881, 0.000000001);
+                                expect(channelData[2]).to.be.closeTo(0.007105881, 0.000000001);
+                                expect(channelData[3]).to.be.closeTo(0.007105881, 0.000000001);
+                                expect(channelData[4]).to.be.closeTo(0.007105881, 0.000000001);
+                            });
+                        });
+                    });
+                });
             });
 
             describe('upX', () => {
@@ -637,7 +1012,69 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
+                                expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.upX.value = 1;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007032075, 0.000000001);
+                                expect(channelData[1]).to.be.closeTo(0.007032075, 0.000000001);
+                                expect(channelData[2]).to.be.closeTo(0.007032075, 0.000000001);
+                                expect(channelData[3]).to.be.closeTo(0.007032075, 0.000000001);
+                                expect(channelData[4]).to.be.closeTo(0.007032075, 0.000000001);
+                            });
+                        });
+                    });
+                });
             });
 
             describe('upY', () => {
@@ -724,7 +1161,71 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                // Changing only the upY AudioParam while keeping the value of upX at 0 doesn't have an effect.
+                                context.listener.upX.value = 1;
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(channelData[0]).to.be.closeTo(0.007032075, 0.000000001);
+                                expect(channelData[1]).to.be.closeTo(0.007032075, 0.000000001);
+                                expect(channelData[2]).to.be.closeTo(0.007032075, 0.000000001);
+                                expect(channelData[3]).to.be.closeTo(0.007032075, 0.000000001);
+                                expect(channelData[4]).to.be.closeTo(0.007032075, 0.000000001);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.upY.value = 100;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([
+                                    0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
+                                    0.007035556249320507
+                                ]);
+                            });
+                        });
+                    });
+                });
             });
 
             describe('upZ', () => {
@@ -811,7 +1312,71 @@ describe('AudioListener', () => {
                     });
                 });
 
-                // @todo automation
+                describe('automation', () => {
+                    let renderer;
+
+                    beforeEach(function () {
+                        this.timeout(10000);
+
+                        renderer = createRenderer({
+                            context,
+                            length: context.length === undefined ? 5 : undefined,
+                            prepare(destination) {
+                                const constantSourceNode = new ConstantSourceNode(context);
+                                const pannerNode = new PannerNode(context, {
+                                    positionX: 1,
+                                    positionY: 10,
+                                    positionZ: 100
+                                });
+
+                                // Changing only the upZ AudioParam while keeping the value of upX and upY at 0 doesn't have an effect.
+                                context.listener.upX.value = 1;
+                                context.listener.upY.value = 100;
+
+                                constantSourceNode.connect(pannerNode).connect(destination);
+
+                                return { constantSourceNode, pannerNode };
+                            }
+                        });
+                    });
+
+                    describe('without any automation', () => {
+                        it('should not modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([
+                                    0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
+                                    0.007035556249320507
+                                ]);
+                            });
+                        });
+                    });
+
+                    describe('with a modified value', () => {
+                        it('should modify the signal', function () {
+                            this.timeout(10000);
+
+                            return renderer({
+                                prepare() {
+                                    context.listener.upZ.value = 1;
+                                },
+                                start(startTime, { constantSourceNode }) {
+                                    constantSourceNode.start(startTime);
+                                }
+                            }).then((channelData) => {
+                                expect(Array.from(channelData)).to.deep.equal([
+                                    0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
+                                    0.007035556249320507
+                                ]);
+                            });
+                        });
+                    });
+                });
             });
         });
     }
