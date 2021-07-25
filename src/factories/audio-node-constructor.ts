@@ -420,7 +420,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                     this._nativeAudioNode.disconnect(nativeAudioParam, output);
                 }
             } catch (err) {
-                // Bug #58: Only Firefox does throw an InvalidStateError yet.
+                // Bug #58: Only Firefox does throw an InvalidAccessError yet.
                 if (err.code === 12) {
                     throw createInvalidAccessError();
                 }
