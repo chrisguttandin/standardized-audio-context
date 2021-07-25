@@ -187,7 +187,7 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
                     } else {
                         reject(new Error('Recording the third impulse was not possible.'));
                     }
-                } else if (lastPlaybackOffset >= expectedPlaybackOffset + startTimeOffset) {
+                } else if (lastPlaybackOffset >= expectedThirdImpulseOffset) {
                     clearTimeout(timeoutId);
                     disconnect();
                     reject(new Error('Rendering the result was not possible.'));
