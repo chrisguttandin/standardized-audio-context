@@ -61,60 +61,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardX.cancelAndHoldAtTime(0)).to.equal(listener.forwardX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardX.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardX.cancelAndHoldAtTime(0)).to.equal(listener.forwardX);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardX.cancelScheduledValues(0)).to.equal(listener.forwardX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardX.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardX.cancelScheduledValues(0)).to.equal(listener.forwardX);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.forwardX.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.forwardX.value = 1;
 
-                        expect(listener.forwardX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardX);
-                    });
+                            try {
+                                listener.forwardX.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.forwardX.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.forwardX.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.forwardX.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.forwardX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardX);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.forwardX.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.forwardX.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardX.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardX.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardX.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardX);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardX.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardX);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardX.setValueAtTime(1, 0)).to.equal(listener.forwardX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardX.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardX.setValueAtTime(1, 0)).to.equal(listener.forwardX);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardX);
+                        });
+                    }
                 });
 
                 describe('automation', () => {
@@ -210,60 +311,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardY.cancelAndHoldAtTime(0)).to.equal(listener.forwardY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardY.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardY.cancelAndHoldAtTime(0)).to.equal(listener.forwardY);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardY.cancelScheduledValues(0)).to.equal(listener.forwardY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardY.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardY.cancelScheduledValues(0)).to.equal(listener.forwardY);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.forwardY.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.forwardY.value = 1;
 
-                        expect(listener.forwardY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardY);
-                    });
+                            try {
+                                listener.forwardY.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.forwardY.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.forwardY.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.forwardY.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.forwardY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardY);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.forwardY.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.forwardY.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardY.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardY.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardY.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardY);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardY.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardY);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardY.setValueAtTime(1, 0)).to.equal(listener.forwardY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardY.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardY.setValueAtTime(1, 0)).to.equal(listener.forwardY);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardY);
+                        });
+                    }
                 });
 
                 describe('automation', () => {
@@ -359,60 +561,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardZ.cancelAndHoldAtTime(0)).to.equal(listener.forwardZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardZ.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardZ.cancelAndHoldAtTime(0)).to.equal(listener.forwardZ);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardZ.cancelScheduledValues(0)).to.equal(listener.forwardZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardZ.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardZ.cancelScheduledValues(0)).to.equal(listener.forwardZ);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.forwardZ.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.forwardZ.value = 1;
 
-                        expect(listener.forwardZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardZ);
-                    });
+                            try {
+                                listener.forwardZ.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.forwardZ.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.forwardZ.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.forwardZ.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.forwardZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.forwardZ);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.forwardZ.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.forwardZ.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardZ.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardZ.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardZ.linearRampToValueAtTime(1, 0)).to.equal(listener.forwardZ);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardZ.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.forwardZ);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardZ.setValueAtTime(1, 0)).to.equal(listener.forwardZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardZ.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardZ.setValueAtTime(1, 0)).to.equal(listener.forwardZ);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.forwardZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.forwardZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.forwardZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.forwardZ);
+                        });
+                    }
                 });
 
                 describe('automation', () => {
@@ -510,60 +813,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionX.cancelAndHoldAtTime(0)).to.equal(listener.positionX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionX.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionX.cancelAndHoldAtTime(0)).to.equal(listener.positionX);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionX.cancelScheduledValues(0)).to.equal(listener.positionX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionX.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionX.cancelScheduledValues(0)).to.equal(listener.positionX);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.positionX.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.positionX.value = 1;
 
-                        expect(listener.positionX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionX);
-                    });
+                            try {
+                                listener.positionX.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.positionX.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.positionX.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.positionX.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.positionX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionX);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.positionX.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.positionX.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionX.linearRampToValueAtTime(1, 0)).to.equal(listener.positionX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionX.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionX.linearRampToValueAtTime(1, 0)).to.equal(listener.positionX);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionX.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionX);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionX.setValueAtTime(1, 0)).to.equal(listener.positionX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionX.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionX.setValueAtTime(1, 0)).to.equal(listener.positionX);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionX);
+                        });
+                    }
                 });
 
                 describe('automation', () => {
@@ -658,60 +1062,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionY.cancelAndHoldAtTime(0)).to.equal(listener.positionY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionY.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionY.cancelAndHoldAtTime(0)).to.equal(listener.positionY);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionY.cancelScheduledValues(0)).to.equal(listener.positionY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionY.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionY.cancelScheduledValues(0)).to.equal(listener.positionY);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.positionY.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.positionY.value = 1;
 
-                        expect(listener.positionY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionY);
-                    });
+                            try {
+                                listener.positionY.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.positionY.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.positionY.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.positionY.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.positionY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionY);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.positionY.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.positionY.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionY.linearRampToValueAtTime(1, 0)).to.equal(listener.positionY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionY.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionY.linearRampToValueAtTime(1, 0)).to.equal(listener.positionY);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionY.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionY);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionY.setValueAtTime(1, 0)).to.equal(listener.positionY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionY.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionY.setValueAtTime(1, 0)).to.equal(listener.positionY);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionY);
+                        });
+                    }
                 });
 
                 describe('automation', () => {
@@ -807,60 +1312,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionZ.cancelAndHoldAtTime(0)).to.equal(listener.positionZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionZ.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionZ.cancelAndHoldAtTime(0)).to.equal(listener.positionZ);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionZ.cancelScheduledValues(0)).to.equal(listener.positionZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionZ.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionZ.cancelScheduledValues(0)).to.equal(listener.positionZ);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.positionZ.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.positionZ.value = 1;
 
-                        expect(listener.positionZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionZ);
-                    });
+                            try {
+                                listener.positionZ.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.positionZ.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.positionZ.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.positionZ.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.positionZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.positionZ);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.positionZ.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.positionZ.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionZ.linearRampToValueAtTime(1, 0)).to.equal(listener.positionZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionZ.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionZ.linearRampToValueAtTime(1, 0)).to.equal(listener.positionZ);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionZ.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.positionZ);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionZ.setValueAtTime(1, 0)).to.equal(listener.positionZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionZ.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionZ.setValueAtTime(1, 0)).to.equal(listener.positionZ);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.positionZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.positionZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.positionZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.positionZ);
+                        });
+                    }
                 });
 
                 describe('automation', () => {
@@ -956,60 +1562,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upX.cancelAndHoldAtTime(0)).to.equal(listener.upX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upX.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upX.cancelAndHoldAtTime(0)).to.equal(listener.upX);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upX.cancelScheduledValues(0)).to.equal(listener.upX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upX.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upX.cancelScheduledValues(0)).to.equal(listener.upX);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.upX.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.upX.value = 1;
 
-                        expect(listener.upX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upX);
-                    });
+                            try {
+                                listener.upX.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.upX.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.upX.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.upX.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.upX.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upX);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.upX.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.upX.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upX.linearRampToValueAtTime(1, 0)).to.equal(listener.upX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upX.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upX.linearRampToValueAtTime(1, 0)).to.equal(listener.upX);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upX.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upX.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upX);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upX.setValueAtTime(1, 0)).to.equal(listener.upX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upX.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upX.setValueAtTime(1, 0)).to.equal(listener.upX);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upX);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upX);
+                        });
+                    }
                 });
 
                 describe('automation', () => {
@@ -1105,60 +1812,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upY.cancelAndHoldAtTime(0)).to.equal(listener.upY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upY.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upY.cancelAndHoldAtTime(0)).to.equal(listener.upY);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upY.cancelScheduledValues(0)).to.equal(listener.upY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upY.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upY.cancelScheduledValues(0)).to.equal(listener.upY);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.upY.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.upY.value = 1;
 
-                        expect(listener.upY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upY);
-                    });
+                            try {
+                                listener.upY.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.upY.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.upY.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.upY.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.upY.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upY);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.upY.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.upY.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upY.linearRampToValueAtTime(1, 0)).to.equal(listener.upY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upY.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upY.linearRampToValueAtTime(1, 0)).to.equal(listener.upY);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upY.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upY.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upY);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upY.setValueAtTime(1, 0)).to.equal(listener.upY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upY.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upY.setValueAtTime(1, 0)).to.equal(listener.upY);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upY);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upY);
+                        });
+                    }
                 });
 
                 describe('automation', () => {
@@ -1256,60 +2064,161 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upZ.cancelAndHoldAtTime(0)).to.equal(listener.upZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upZ.cancelAndHoldAtTime(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upZ.cancelAndHoldAtTime(0)).to.equal(listener.upZ);
+                        });
+                    }
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upZ.cancelScheduledValues(0)).to.equal(listener.upZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upZ.cancelScheduledValues(0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upZ.cancelScheduledValues(0)).to.equal(listener.upZ);
+                        });
+                    }
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
-                        listener.upZ.value = 1;
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.upZ.value = 1;
 
-                        expect(listener.upZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upZ);
-                    });
+                            try {
+                                listener.upZ.exponentialRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.upZ.exponentialRampToValueAtTime(0, 1);
-                        }).to.throw(RangeError);
-                    });
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                            listener.upZ.value = 1;
 
-                    it('should throw a RangeError', () => {
-                        expect(() => {
-                            listener.upZ.exponentialRampToValueAtTime(1, -1);
-                        }).to.throw(RangeError);
-                    });
+                            expect(listener.upZ.exponentialRampToValueAtTime(1, 0)).to.equal(listener.upZ);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.upZ.exponentialRampToValueAtTime(0, 1);
+                            }).to.throw(RangeError);
+                        });
+
+                        it('should throw a RangeError', () => {
+                            expect(() => {
+                                listener.upZ.exponentialRampToValueAtTime(1, -1);
+                            }).to.throw(RangeError);
+                        });
+                    }
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upZ.linearRampToValueAtTime(1, 0)).to.equal(listener.upZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upZ.linearRampToValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upZ.linearRampToValueAtTime(1, 0)).to.equal(listener.upZ);
+                        });
+                    }
                 });
 
                 describe('setTargetAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upZ.setTargetAtTime(1, 0, 0.1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upZ.setTargetAtTime(1, 0, 0.1)).to.equal(listener.upZ);
+                        });
+                    }
                 });
 
                 describe('setValueAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upZ.setValueAtTime(1, 0)).to.equal(listener.upZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upZ.setValueAtTime(1, 0);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upZ.setValueAtTime(1, 0)).to.equal(listener.upZ);
+                        });
+                    }
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(listener.upZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upZ);
-                    });
+                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
+                        it('should throw a NotSupportedError', (done) => {
+                            try {
+                                listener.upZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1);
+                            } catch (err) {
+                                expect(err.code).to.equal(9);
+                                expect(err.name).to.equal('NotSupportedError');
+
+                                done();
+                            }
+                        });
+                    } else {
+                        it('should be chainable', () => {
+                            expect(listener.upZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(listener.upZ);
+                        });
+                    }
                 });
 
                 describe('automation', () => {

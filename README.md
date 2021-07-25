@@ -175,6 +175,10 @@ The properties and methods are described in greater detail below.
 
 ⚠️ <!-- Bug #59 --> Another thing to keep in mind is that the fallback will evaluate the `AudioWorkletProcessor` on the global scope. It gets isolated in a basic way to mimic the [`AudioWorkletGlobalScope`](https://webaudio.github.io/web-audio-api/#audioworkletglobalscope) but that can't be done in a way which makes it impossible for an attacker to break out of that sandbox. This should not be a problem unless you load an AudioWorklet from an untrusted source.
 
+#### listener
+
+⚠️ <!-- Bug #117 --> Firefox and Safari up to version 14.0.1 do not support modifying the listener via AudioParams. Therefore calling any of the scheduling functions on the AudioParams of a listener of an OfflineAudioContext throws a `NotSupportedError`.
+
 #### createAnalyser() / AnalyserNode
 
 This is an implementation of the [`createAnalyser()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createanalyser) factory method. The [`AnalyserNode`](https://webaudio.github.io/web-audio-api/#analysernode) constructor may be used as an alternative.

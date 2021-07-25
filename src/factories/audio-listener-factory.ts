@@ -7,6 +7,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
     createNativeChannelMergerNode,
     createNativeConstantSourceNode,
     createNativeScriptProcessorNode,
+    createNotSupportedError,
     getFirstSample,
     isNativeOfflineAudioContext,
     overwriteAccessors
@@ -120,7 +121,13 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                     'value',
                     (get) => () => get.call(audioParam),
                     (set) => (value) => {
-                        set.call(audioParam, value);
+                        try {
+                            set.call(audioParam, value);
+                        } catch (err) {
+                            if (err.code !== 9) {
+                                throw err;
+                            }
+                        }
 
                         createScriptProcessorNode();
 
@@ -130,6 +137,112 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                         }
                     }
                 );
+
+                audioParam.cancelAndHoldAtTime = ((cancelAndHoldAtTime) => {
+                    if (isOffline) {
+                        return () => {
+                            throw createNotSupportedError();
+                        };
+                    }
+
+                    return (...args: Parameters<IAudioParam['cancelAndHoldAtTime']>) => {
+                        const value = cancelAndHoldAtTime.apply(audioParam, args);
+
+                        createScriptProcessorNode();
+
+                        return value;
+                    };
+                })(audioParam.cancelAndHoldAtTime);
+                audioParam.cancelScheduledValues = ((cancelScheduledValues) => {
+                    if (isOffline) {
+                        return () => {
+                            throw createNotSupportedError();
+                        };
+                    }
+
+                    return (...args: Parameters<IAudioParam['cancelScheduledValues']>) => {
+                        const value = cancelScheduledValues.apply(audioParam, args);
+
+                        createScriptProcessorNode();
+
+                        return value;
+                    };
+                })(audioParam.cancelScheduledValues);
+                audioParam.exponentialRampToValueAtTime = ((exponentialRampToValueAtTime) => {
+                    if (isOffline) {
+                        return () => {
+                            throw createNotSupportedError();
+                        };
+                    }
+
+                    return (...args: Parameters<IAudioParam['exponentialRampToValueAtTime']>) => {
+                        const value = exponentialRampToValueAtTime.apply(audioParam, args);
+
+                        createScriptProcessorNode();
+
+                        return value;
+                    };
+                })(audioParam.exponentialRampToValueAtTime);
+                audioParam.linearRampToValueAtTime = ((linearRampToValueAtTime) => {
+                    if (isOffline) {
+                        return () => {
+                            throw createNotSupportedError();
+                        };
+                    }
+
+                    return (...args: Parameters<IAudioParam['linearRampToValueAtTime']>) => {
+                        const value = linearRampToValueAtTime.apply(audioParam, args);
+
+                        createScriptProcessorNode();
+
+                        return value;
+                    };
+                })(audioParam.linearRampToValueAtTime);
+                audioParam.setTargetAtTime = ((setTargetAtTime) => {
+                    if (isOffline) {
+                        return () => {
+                            throw createNotSupportedError();
+                        };
+                    }
+
+                    return (...args: Parameters<IAudioParam['setTargetAtTime']>) => {
+                        const value = setTargetAtTime.apply(audioParam, args);
+
+                        createScriptProcessorNode();
+
+                        return value;
+                    };
+                })(audioParam.setTargetAtTime);
+                audioParam.setValueAtTime = ((setValueAtTime) => {
+                    if (isOffline) {
+                        return () => {
+                            throw createNotSupportedError();
+                        };
+                    }
+
+                    return (...args: Parameters<IAudioParam['setValueAtTime']>) => {
+                        const value = setValueAtTime.apply(audioParam, args);
+
+                        createScriptProcessorNode();
+
+                        return value;
+                    };
+                })(audioParam.setValueAtTime);
+                audioParam.setValueCurveAtTime = ((setValueCurveAtTime) => {
+                    if (isOffline) {
+                        return () => {
+                            throw createNotSupportedError();
+                        };
+                    }
+
+                    return (...args: Parameters<IAudioParam['setValueCurveAtTime']>) => {
+                        const value = setValueCurveAtTime.apply(audioParam, args);
+
+                        createScriptProcessorNode();
+
+                        return value;
+                    };
+                })(audioParam.setValueCurveAtTime);
 
                 return audioParam;
             };

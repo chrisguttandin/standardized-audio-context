@@ -619,6 +619,7 @@ const createAudioListener = createAudioListenerFactory(
     createNativeChannelMergerNode,
     createNativeConstantSourceNode,
     createNativeScriptProcessorNode,
+    createNotSupportedError,
     getFirstSample,
     isNativeOfflineAudioContext,
     overwriteAccessors
