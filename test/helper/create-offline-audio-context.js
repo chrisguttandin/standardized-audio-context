@@ -1,3 +1,7 @@
 import { OfflineAudioContext } from '../../src/module';
 
-export const createOfflineAudioContext = ({ length = 5 } = { length: 5 }) => new OfflineAudioContext({ length, sampleRate: 44100 });
+export const createOfflineAudioContext = (options) => {
+    const { length } = { length: 5, ...options };
+
+    new OfflineAudioContext({ length, sampleRate: 44100 });
+};
