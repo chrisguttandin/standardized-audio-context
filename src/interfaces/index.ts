@@ -40,6 +40,7 @@ export * from './delay-node';
 export * from './delay-options';
 export * from './dynamics-compressor-node';
 export * from './dynamics-compressor-options';
+export * from './event-target';
 export * from './gain-node';
 export * from './gain-options';
 export * from './iir-filter-node';

@@ -264,7 +264,10 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     isNativeAudioParam,
     isNativeOfflineAudioContext
 ) => {
-    return class AudioNode<T extends TContext> extends eventTargetConstructor implements IAudioNode<T> {
+    return class AudioNode<T extends TContext, EventMap extends Record<string, Event> = {}>
+        extends eventTargetConstructor<EventMap>
+        implements IAudioNode<T, EventMap>
+    {
         private _context: T;
 
         private _nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode;

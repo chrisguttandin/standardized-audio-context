@@ -2,6 +2,7 @@ import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
 import {
     IAudioParam,
     IAudioWorkletNode,
+    IAudioWorkletNodeEventMap,
     IAudioWorkletNodeOptions,
     IMinimalAudioContext,
     IMinimalOfflineAudioContext,
@@ -47,7 +48,10 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     testAudioWorkletNodeOptionsClonability,
     wrapEventListener
 ) => {
-    return class AudioWorkletNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioWorkletNode<T> {
+    return class AudioWorkletNode<T extends TContext>
+        extends audioNodeConstructor<T, IAudioWorkletNodeEventMap>
+        implements IAudioWorkletNode<T>
+    {
         private _nativeAudioWorkletNode: TNativeAudioWorkletNode;
 
         private _onprocessorerror: null | TErrorEventHandler<this>;

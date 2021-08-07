@@ -1,3 +1,3 @@
-export interface IAudioWorkletNodeEventMap {
+export interface IAudioWorkletNodeEventMap extends Record<string, Event> {
     processorerror: ErrorEvent;
 }

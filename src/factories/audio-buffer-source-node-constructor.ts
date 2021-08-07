@@ -2,7 +2,7 @@ import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../const
 import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
-import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam } from '../interfaces';
+import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IAudioScheduledSourceNodeEventMap } from '../interfaces';
 import {
     TAnyAudioBuffer,
     TAudioBufferSourceNodeConstructorFactory,
@@ -34,7 +34,10 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
     isNativeOfflineAudioContext,
     wrapEventListener
 ) => {
-    return class AudioBufferSourceNode<T extends TContext> extends audioNodeConstructor<T> implements IAudioBufferSourceNode<T> {
+    return class AudioBufferSourceNode<T extends TContext>
+        extends audioNodeConstructor<T, IAudioScheduledSourceNodeEventMap>
+        implements IAudioBufferSourceNode<T>
+    {
         private _audioBufferSourceNodeRenderer: TAudioBufferSourceNodeRenderer<T>;
 
         private _isBufferNullified: boolean;
@@ -129,7 +132,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
             const nativeOnEnded = this._nativeAudioBufferSourceNode.onended;
 
-            this._onended = nativeOnEnded !== null && nativeOnEnded === wrappedListener ? value : <null | TEventHandler<this>>nativeOnEnded;
+            this._onended = nativeOnEnded !== null && nativeOnEnded === wrappedListener ? value : nativeOnEnded;
         }
 
         get playbackRate(): IAudioParam {

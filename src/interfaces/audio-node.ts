@@ -1,7 +1,8 @@
-import { TChannelCountMode, TChannelInterpretation, TContext, TNativeEventTarget } from '../types';
+import { TChannelCountMode, TChannelInterpretation, TContext } from '../types';
 import { IAudioParam } from './audio-param';
+import { IEventTarget } from './event-target';
 
-export interface IAudioNode<T extends TContext> extends TNativeEventTarget {
+export interface IAudioNode<T extends TContext, EventMap extends Record<string, Event> = {}> extends IEventTarget<EventMap> {
     channelCount: number;
 
     channelCountMode: TChannelCountMode;
@@ -14,10 +15,18 @@ export interface IAudioNode<T extends TContext> extends TNativeEventTarget {
 
     readonly numberOfOutputs: number;
 
-    connect<U extends TContext, V extends IAudioNode<U>>(destinationNode: V, output?: number, input?: number): V;
+    connect<U extends TContext, OtherEventMap extends Record<string, Event>, V extends IAudioNode<U, OtherEventMap>>(
+        destinationNode: V,
+        output?: number,
+        input?: number
+    ): V;
     connect(destinationParam: IAudioParam, output?: number): void;
 
     disconnect(output?: number): void;
-    disconnect<U extends TContext>(destinationNode: IAudioNode<U>, output?: number, input?: number): void;
+    disconnect<U extends TContext, OtherEventMap extends Record<string, Event>>(
+        destinationNode: IAudioNode<U, OtherEventMap>,
+        output?: number,
+        input?: number
+    ): void;
     disconnect(destinationParam: IAudioParam, output?: number): void;
 }

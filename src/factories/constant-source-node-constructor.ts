@@ -2,7 +2,7 @@ import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../const
 import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
-import { IAudioParam, IConstantSourceNode, IConstantSourceOptions } from '../interfaces';
+import { IAudioParam, IAudioScheduledSourceNodeEventMap, IConstantSourceNode, IConstantSourceOptions } from '../interfaces';
 import {
     TConstantSourceNodeConstructorFactory,
     TConstantSourceNodeRenderer,
@@ -27,7 +27,10 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
     isNativeOfflineAudioContext,
     wrapEventListener
 ) => {
-    return class ConstantSourceNode<T extends TContext> extends audioNodeConstructor<T> implements IConstantSourceNode<T> {
+    return class ConstantSourceNode<T extends TContext>
+        extends audioNodeConstructor<T, IAudioScheduledSourceNodeEventMap>
+        implements IConstantSourceNode<T>
+    {
         private _constantSourceNodeRenderer: TConstantSourceNodeRenderer<T>;
 
         private _nativeConstantSourceNode: TNativeConstantSourceNode;
@@ -78,7 +81,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
             const nativeOnEnded = this._nativeConstantSourceNode.onended;
 
-            this._onended = nativeOnEnded !== null && nativeOnEnded === wrappedListener ? value : <null | TEventHandler<this>>nativeOnEnded;
+            this._onended = nativeOnEnded !== null && nativeOnEnded === wrappedListener ? value : nativeOnEnded;
         }
 
         public start(when = 0): void {
