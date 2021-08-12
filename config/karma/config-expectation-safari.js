@@ -11,6 +11,13 @@ module.exports = (config) => {
 
         browsers: ['Safari'],
 
+        client: {
+            mocha: {
+                bail: true,
+                timeout: 20000
+            }
+        },
+
         concurrency: 1,
 
         files: [

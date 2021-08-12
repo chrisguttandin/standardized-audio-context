@@ -11,6 +11,13 @@ module.exports = (config) => {
 
         browsers: ['ChromeHeadlessWithNoRequiredUserGesture'],
 
+        client: {
+            mocha: {
+                bail: true,
+                timeout: 20000
+            }
+        },
+
         concurrency: 1,
 
         customLaunchers: {

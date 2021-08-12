@@ -11,6 +11,13 @@ module.exports = (config) => {
 
         browsers: ['ChromeBrowserStack'],
 
+        client: {
+            mocha: {
+                bail: true,
+                timeout: 20000
+            }
+        },
+
         concurrency: 1,
 
         customLaunchers: {
