@@ -6,5 +6,5 @@ export const createNativeScriptProcessorNode: TNativeScriptProcessorNodeFactory 
     numberOfInputChannels,
     numberOfOutputChannels
 ) => {
-    return nativeContext.createScriptProcessor(bufferSize, numberOfInputChannels, numberOfOutputChannels);
+    return nativeContext.createScriptProcessor(bufferSize, numberOfInputChannels, numberOfOutputChannels); // tslint:disable-line deprecation
 };

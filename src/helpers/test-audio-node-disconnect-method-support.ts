@@ -2,7 +2,7 @@ import { TNativeAudioContext } from '../types';
 
 export const testAudioNodeDisconnectMethodSupport = (nativeAudioContext: TNativeAudioContext): Promise<boolean> => {
     return new Promise((resolve) => {
-        const analyzer = nativeAudioContext.createScriptProcessor(256, 1, 1);
+        const analyzer = nativeAudioContext.createScriptProcessor(256, 1, 1); // tslint:disable-line deprecation
 
         const dummy = nativeAudioContext.createGain();
 
@@ -26,7 +26,7 @@ export const testAudioNodeDisconnectMethodSupport = (nativeAudioContext: TNative
 
         // tslint:disable-next-line:deprecation
         analyzer.onaudioprocess = (event) => {
-            const chnnlDt = event.inputBuffer.getChannelData(0);
+            const chnnlDt = event.inputBuffer.getChannelData(0); // tslint:disable-line deprecation
 
             if (Array.prototype.some.call(chnnlDt, (sample: number) => sample === 1)) {
                 resolve(true);
