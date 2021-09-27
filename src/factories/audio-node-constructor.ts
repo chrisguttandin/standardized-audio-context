@@ -262,7 +262,8 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     isNativeAudioContext,
     isNativeAudioNode,
     isNativeAudioParam,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    nativeAudioWorkletNodeConstructor
 ) => {
     return class AudioNode<T extends TContext, EventMap extends Record<string, Event> = {}>
         extends eventTargetConstructor<EventMap>
@@ -290,7 +291,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                 isNativeAudioContext(nativeContext) &&
                 true !==
                     cacheTestResult(testAudioNodeDisconnectMethodSupport, () => {
-                        return testAudioNodeDisconnectMethodSupport(nativeContext);
+                        return testAudioNodeDisconnectMethodSupport(nativeContext, nativeAudioWorkletNodeConstructor);
                     })
             ) {
                 wrapAudioNodeDisconnectMethod(nativeAudioNode);

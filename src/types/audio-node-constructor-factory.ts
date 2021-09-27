@@ -13,6 +13,7 @@ import { TIsNativeAudioContextFunction } from './is-native-audio-context-functio
 import { TIsNativeAudioNodeFunction } from './is-native-audio-node-function';
 import { TIsNativeAudioParamFunction } from './is-native-audio-param-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
+import { TNativeAudioWorkletNodeConstructor } from './native-audio-worklet-node-constructor';
 import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 
 export type TAudioNodeConstructorFactory = (
@@ -30,5 +31,6 @@ export type TAudioNodeConstructorFactory = (
     isNativeAudioContext: TIsNativeAudioContextFunction,
     isNativeAudioNode: TIsNativeAudioNodeFunction,
     isNativeAudioParam: TIsNativeAudioParamFunction,
-    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor
 ) => TAudioNodeConstructor;

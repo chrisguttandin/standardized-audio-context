@@ -304,6 +304,7 @@ const nativeAudioContextConstructor = createNativeAudioContextConstructor(window
 const isNativeAudioContext = createIsNativeAudioContext(nativeAudioContextConstructor);
 const isNativeAudioNode = createIsNativeAudioNode(window);
 const isNativeAudioParam = createIsNativeAudioParam(window);
+const nativeAudioWorkletNodeConstructor = createNativeAudioWorkletNodeConstructor(window);
 const audioNodeConstructor = createAudioNodeConstructor(
     createAddAudioNodeConnections(AUDIO_NODE_CONNECTIONS_STORE),
     createAddConnectionToAudioNode(
@@ -349,7 +350,8 @@ const audioNodeConstructor = createAudioNodeConstructor(
     isNativeAudioContext,
     isNativeAudioNode,
     isNativeAudioParam,
-    isNativeOfflineAudioContext
+    isNativeOfflineAudioContext,
+    nativeAudioWorkletNodeConstructor
 );
 const analyserNodeConstructor: TAnalyserNodeConstructor = createAnalyserNodeConstructor(
     audioNodeConstructor,
@@ -760,7 +762,6 @@ const getOrCreateBackupOfflineAudioContext = createGetOrCreateBackupOfflineAudio
     backupOfflineAudioContextStore,
     nativeOfflineAudioContextConstructor
 );
-const nativeAudioWorkletNodeConstructor = createNativeAudioWorkletNodeConstructor(window);
 
 // The addAudioWorkletModule() function is only available in a SecureContext.
 export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction = isSecureContext
