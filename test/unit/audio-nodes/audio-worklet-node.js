@@ -748,11 +748,8 @@ describe('AudioWorkletNode', () => {
                             expect(gain.defaultValue).to.equal(1);
                             expect(gain.exponentialRampToValueAtTime).to.be.a('function');
                             expect(gain.linearRampToValueAtTime).to.be.a('function');
-                            // Bug #82: Opera's native implementation is a little different from other AudioParams.
-                            expect(gain.maxValue).to.be.at.most(3.4028234663852886e38);
-                            expect(gain.maxValue).to.be.at.least(3.402820018375656e38);
-                            expect(gain.minValue).to.be.at.most(-3.402820018375656e38);
-                            expect(gain.minValue).to.be.at.least(-3.4028234663852886e38);
+                            expect(gain.maxValue).to.equal(3.4028234663852886e38);
+                            expect(gain.minValue).to.equal(-3.4028234663852886e38);
                             expect(gain.setTargetAtTime).to.be.a('function');
                             expect(gain.setValueAtTime).to.be.a('function');
                             expect(gain.setValueCurveAtTime).to.be.a('function');
