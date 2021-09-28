@@ -30,7 +30,7 @@
         "@babel/plugin-transform-runtime": "^7.15.0",
         "@babel/preset-env": "^7.15.6",
         "@babel/register": "^7.15.3",
-        "@commitlint/cli": "^13.1.0",
+        "@commitlint/cli": "^13.2.0",
         "@commitlint/config-angular": "^13.1.0",
         "@rollup/plugin-babel": "^5.3.0",
         "chai": "^4.3.4",
