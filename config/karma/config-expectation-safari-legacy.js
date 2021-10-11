@@ -76,7 +76,7 @@ module.exports = (config) => {
             plugins: [
                 new DefinePlugin({
                     'process.env': {
-                        CI: JSON.stringify(env.CI)
+                        CI: JSON.stringify(true)
                     }
                 })
             ],
