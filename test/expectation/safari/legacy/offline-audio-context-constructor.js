@@ -171,18 +171,10 @@ describe('offlineAudioContextConstructor', () => {
                 biquadFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
 
                 expect(Array.from(magResponse)).to.deep.equal([
-                    1.1107852458953857,
-                    0.8106917142868042,
-                    0.20565471053123474,
-                    0.04845593497157097,
-                    0.011615658178925514
+                    1.1107852458953857, 0.8106917142868042, 0.20565471053123474, 0.04845593497157097, 0.011615658178925514
                 ]);
                 expect(Array.from(phaseResponse)).to.deep.equal([
-                    -0.7254799008369446,
-                    -1.8217267990112305,
-                    -2.6273605823516846,
-                    -2.906902313232422,
-                    -3.0283825397491455
+                    -0.7254799008369446, -1.8217267990112305, -2.6273605823516846, -2.906902313232422, -3.0283825397491455
                 ]);
             });
 
@@ -713,7 +705,12 @@ describe('offlineAudioContextConstructor', () => {
             const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
 
             scriptProcessorNode.connect(offlineAudioContext.destination);
+
+            let numberOfInvocations = 0;
+
             scriptProcessorNode.onaudioprocess = (event) => {
+                numberOfInvocations += 1;
+
                 // Bug #5: Safari does not support copyFromChannel().
                 const channelData = event.outputBuffer.getChannelData(0);
 
@@ -725,6 +722,8 @@ describe('offlineAudioContextConstructor', () => {
                 const channelData = event.renderedBuffer.getChannelData(0);
 
                 expect(Array.from(channelData)).to.not.contain(1);
+
+                expect(numberOfInvocations).to.be.above(0);
 
                 done();
             };

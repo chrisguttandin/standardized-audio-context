@@ -233,18 +233,10 @@ describe('audioContextConstructor', () => {
                     biquadFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
 
                     expect(Array.from(magResponse)).to.deep.equal([
-                        1.1107852458953857,
-                        0.8106917142868042,
-                        0.20565471053123474,
-                        0.04845593497157097,
-                        0.011615658178925514
+                        1.1107852458953857, 0.8106917142868042, 0.20565471053123474, 0.04845593497157097, 0.011615658178925514
                     ]);
                     expect(Array.from(phaseResponse)).to.deep.equal([
-                        -0.7254799008369446,
-                        -1.8217267990112305,
-                        -2.6273605823516846,
-                        -2.906902313232422,
-                        -3.0283825397491455
+                        -0.7254799008369446, -1.8217267990112305, -2.6273605823516846, -2.906902313232422, -3.0283825397491455
                     ]);
                 });
 
@@ -593,51 +585,61 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createGain()', () => {
-            // bug #12
+            // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+            // eslint-disable-next-line no-undef
+            if (!process.env.CI) {
+                // bug #12
 
-            it('should not allow to disconnect a specific destination', (done) => {
-                const analyzer = audioContext.createScriptProcessor(256, 1, 1);
-                const candidate = audioContext.createGain();
-                const dummy = audioContext.createGain();
-                // Bug #95: Safari does not play/loop one sample buffers.
-                const ones = audioContext.createBuffer(1, 2, 44100);
-                const channelData = ones.getChannelData(0);
+                it('should not allow to disconnect a specific destination', (done) => {
+                    const analyzer = audioContext.createScriptProcessor(256, 1, 1);
+                    const candidate = audioContext.createGain();
+                    const dummy = audioContext.createGain();
+                    // Bug #95: Safari does not play/loop one sample buffers.
+                    const ones = audioContext.createBuffer(1, 2, 44100);
+                    const channelData = ones.getChannelData(0);
 
-                channelData[0] = 1;
-                channelData[1] = 1;
+                    channelData[0] = 1;
+                    channelData[1] = 1;
 
-                const source = audioContext.createBufferSource();
+                    const source = audioContext.createBufferSource();
 
-                source.buffer = ones;
-                source.loop = true;
+                    source.buffer = ones;
+                    source.loop = true;
 
-                source.connect(candidate).connect(analyzer).connect(audioContext.destination);
+                    source.connect(candidate).connect(analyzer).connect(audioContext.destination);
 
-                candidate.connect(dummy);
-                candidate.disconnect(dummy);
+                    candidate.connect(dummy);
+                    candidate.disconnect(dummy);
 
-                analyzer.onaudioprocess = (event) => {
-                    const chnnlDt = event.inputBuffer.getChannelData(0);
+                    let numberOfInvocations = 0;
 
-                    if (Array.prototype.some.call(chnnlDt, (sample) => sample === 1)) {
-                        done(new Error('This should never be called.'));
-                    }
-                };
+                    analyzer.onaudioprocess = (event) => {
+                        numberOfInvocations += 1;
 
-                source.start();
+                        const chnnlDt = event.inputBuffer.getChannelData(0);
 
-                setTimeout(() => {
-                    source.stop();
+                        if (Array.prototype.some.call(chnnlDt, (sample) => sample === 1)) {
+                            done(new Error('This should never be called.'));
+                        }
+                    };
 
-                    analyzer.onaudioprocess = null;
+                    source.start();
 
-                    source.disconnect(candidate);
-                    candidate.disconnect(analyzer);
-                    analyzer.disconnect(audioContext.destination);
+                    setTimeout(() => {
+                        source.stop();
 
-                    done();
-                }, 500);
-            });
+                        analyzer.onaudioprocess = null;
+
+                        source.disconnect(candidate);
+                        candidate.disconnect(analyzer);
+                        analyzer.disconnect(audioContext.destination);
+
+                        expect(numberOfInvocations).to.be.above(0);
+
+                        done();
+                    }, 500);
+                });
+            }
 
             describe('gain', () => {
                 let gainNode;
@@ -707,108 +709,124 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createMediaStreamSource()', () => {
-            // bug #165
+            // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+            // eslint-disable-next-line no-undef
+            if (!process.env.CI) {
+                // bug #165
 
-            it('output silence after being disconnected', function (done) {
-                this.timeout(10000);
+                it('output silence after being disconnected', function (done) {
+                    this.timeout(10000);
 
-                const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
-                const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStreamAudioDestinationNode.stream);
-                const oscillatorNode = audioContext.createOscillator();
-                const scriptProcessorNode = audioContext.createScriptProcessor(256, 1, 1);
-
-                oscillatorNode.connect(mediaStreamAudioDestinationNode);
-                mediaStreamAudioSourceNode.connect(scriptProcessorNode).connect(audioContext.destination);
-
-                oscillatorNode.start();
-
-                setTimeout(() => {
-                    mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
-
-                    setTimeout(() => {
-                        mediaStreamAudioSourceNode.connect(scriptProcessorNode);
-
-                        scriptProcessorNode.onaudioprocess = (event) => {
-                            const channelData = event.inputBuffer.getChannelData(0);
-
-                            if (Array.prototype.some.call(channelData, (sample) => sample !== 0)) {
-                                done(new Error('This should never be called.'));
-                            }
-                        };
-
-                        setTimeout(() => {
-                            oscillatorNode.stop();
-
-                            scriptProcessorNode.onaudioprocess = null;
-
-                            oscillatorNode.disconnect(mediaStreamAudioDestinationNode);
-                            mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
-                            scriptProcessorNode.disconnect(audioContext.destination);
-
-                            done();
-                        }, 2000);
-                    }, 2000);
-                }, 500);
-            });
-
-            describe('with an audio track that gets removed from the mediaStream after construction', () => {
-                let mediaStream;
-                let mediaStreamTracks;
-                let oscillatorNode;
-
-                afterEach(() => {
-                    for (const mediaStreamTrack of mediaStreamTracks) {
-                        mediaStreamTrack.stop();
-                    }
-
-                    oscillatorNode.stop();
-                });
-
-                beforeEach(() => {
                     const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
-
-                    oscillatorNode = audioContext.createOscillator();
+                    const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStreamAudioDestinationNode.stream);
+                    const oscillatorNode = audioContext.createOscillator();
+                    const scriptProcessorNode = audioContext.createScriptProcessor(256, 1, 1);
 
                     oscillatorNode.connect(mediaStreamAudioDestinationNode);
+                    mediaStreamAudioSourceNode.connect(scriptProcessorNode).connect(audioContext.destination);
+
                     oscillatorNode.start();
-
-                    mediaStream = mediaStreamAudioDestinationNode.stream;
-                    mediaStreamTracks = mediaStream.getTracks();
-                });
-
-                // bug #151
-
-                it('should not use the audio track as input anymore', (done) => {
-                    const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStream);
-                    const scriptProcessorNode = audioContext.createScriptProcessor(512);
-
-                    for (const mediaStreamTrack of mediaStreamTracks) {
-                        mediaStream.removeTrack(mediaStreamTrack);
-                    }
-
-                    scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
-                        const channelData = inputBuffer.getChannelData(0);
-
-                        for (let i = 0; i < 512; i += 1) {
-                            if (channelData[i] !== 0) {
-                                mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
-
-                                done(new Error('The signal is expected to be zero at all time.'));
-
-                                break;
-                            }
-                        }
-                    };
-
-                    mediaStreamAudioSourceNode.connect(scriptProcessorNode);
 
                     setTimeout(() => {
                         mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
 
-                        done();
-                    }, 1000);
+                        setTimeout(() => {
+                            mediaStreamAudioSourceNode.connect(scriptProcessorNode);
+
+                            let numberOfInvocations = 0;
+
+                            scriptProcessorNode.onaudioprocess = (event) => {
+                                numberOfInvocations += 1;
+
+                                const channelData = event.inputBuffer.getChannelData(0);
+
+                                if (Array.prototype.some.call(channelData, (sample) => sample !== 0)) {
+                                    done(new Error('This should never be called.'));
+                                }
+                            };
+
+                            setTimeout(() => {
+                                oscillatorNode.stop();
+
+                                scriptProcessorNode.onaudioprocess = null;
+
+                                oscillatorNode.disconnect(mediaStreamAudioDestinationNode);
+                                mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+                                scriptProcessorNode.disconnect(audioContext.destination);
+
+                                expect(numberOfInvocations).to.be.above(0);
+
+                                done();
+                            }, 2000);
+                        }, 2000);
+                    }, 500);
                 });
-            });
+
+                describe('with an audio track that gets removed from the mediaStream after construction', () => {
+                    let mediaStream;
+                    let mediaStreamTracks;
+                    let oscillatorNode;
+
+                    afterEach(() => {
+                        for (const mediaStreamTrack of mediaStreamTracks) {
+                            mediaStreamTrack.stop();
+                        }
+
+                        oscillatorNode.stop();
+                    });
+
+                    beforeEach(() => {
+                        const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
+
+                        oscillatorNode = audioContext.createOscillator();
+
+                        oscillatorNode.connect(mediaStreamAudioDestinationNode);
+                        oscillatorNode.start();
+
+                        mediaStream = mediaStreamAudioDestinationNode.stream;
+                        mediaStreamTracks = mediaStream.getTracks();
+                    });
+
+                    // bug #151
+
+                    it('should not use the audio track as input anymore', (done) => {
+                        const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStream);
+                        const scriptProcessorNode = audioContext.createScriptProcessor(512);
+
+                        for (const mediaStreamTrack of mediaStreamTracks) {
+                            mediaStream.removeTrack(mediaStreamTrack);
+                        }
+
+                        let numberOfInvocations = 0;
+
+                        scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                            numberOfInvocations += 1;
+
+                            const channelData = inputBuffer.getChannelData(0);
+
+                            for (let i = 0; i < 512; i += 1) {
+                                if (channelData[i] !== 0) {
+                                    mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                                    done(new Error('The signal is expected to be zero at all time.'));
+
+                                    break;
+                                }
+                            }
+                        };
+
+                        mediaStreamAudioSourceNode.connect(scriptProcessorNode);
+
+                        setTimeout(() => {
+                            mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+
+                            expect(numberOfInvocations).to.be.above(0);
+
+                            done();
+                        }, 1000);
+                    });
+                });
+            }
         });
 
         describe('createOscillator()', () => {

@@ -164,8 +164,12 @@ describe('offlineAudioContextConstructor', () => {
             const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
             const channelData = new Float32Array(scriptProcessorNode.bufferSize);
 
+            let numberOfInvocations = 0;
+
             scriptProcessorNode.connect(offlineAudioContext.destination);
             scriptProcessorNode.onaudioprocess = (event) => {
+                numberOfInvocations += 1;
+
                 channelData.fill(1);
 
                 event.outputBuffer.copyToChannel(channelData, 0);
@@ -177,6 +181,8 @@ describe('offlineAudioContextConstructor', () => {
                 buffer.copyFromChannel(chnnlDt, 0, 256);
 
                 expect(Array.from(chnnlDt)).to.not.contain(1);
+
+                expect(numberOfInvocations).to.be.above(0);
             });
         });
     });
