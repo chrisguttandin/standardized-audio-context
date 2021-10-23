@@ -1,4 +1,4 @@
-import { IAudioDestinationNode, IAudioNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { IAudioDestinationNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import {
     TAudioDestinationNodeRendererFactory,
     TNativeAudioDestinationNode,
@@ -11,16 +11,14 @@ export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFa
 >(
     renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    let nativeAudioDestinationNodePromise: null | Promise<TNativeAudioDestinationNode> = null;
+    const renderedNativeAudioDestinationNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioDestinationNode>();
 
-    const createAudioDestinationNode = async (
-        proxy: IAudioDestinationNode<T>,
-        nativeOfflineAudioContext: TNativeOfflineAudioContext,
-        trace: readonly IAudioNode<T>[]
-    ) => {
+    const createAudioDestinationNode = async (proxy: IAudioDestinationNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
         const nativeAudioDestinationNode = nativeOfflineAudioContext.destination;
 
-        await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode, trace);
+        renderedNativeAudioDestinationNodes.set(nativeOfflineAudioContext, nativeAudioDestinationNode);
+
+        await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
 
         return nativeAudioDestinationNode;
     };
@@ -28,14 +26,15 @@ export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFa
     return {
         render(
             proxy: IAudioDestinationNode<T>,
-            nativeOfflineAudioContext: TNativeOfflineAudioContext,
-            trace: readonly IAudioNode<T>[]
+            nativeOfflineAudioContext: TNativeOfflineAudioContext
         ): Promise<TNativeAudioDestinationNode> {
-            if (nativeAudioDestinationNodePromise === null) {
-                nativeAudioDestinationNodePromise = createAudioDestinationNode(proxy, nativeOfflineAudioContext, trace);
+            const renderedNativeAudioDestinationNode = renderedNativeAudioDestinationNodes.get(nativeOfflineAudioContext);
+
+            if (renderedNativeAudioDestinationNode !== undefined) {
+                return Promise.resolve(renderedNativeAudioDestinationNode);
             }
 
-            return nativeAudioDestinationNodePromise;
+            return createAudioDestinationNode(proxy, nativeOfflineAudioContext);
         }
     };
 };

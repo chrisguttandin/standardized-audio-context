@@ -1,4 +1,4 @@
-import { IAudioNode, IAudioParam, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { IAudioParam, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TNativeAudioParam, TNativeOfflineAudioContext, TRenderInputsOfAudioParamFactory } from '../types';
 
 export const createRenderInputsOfAudioParam: TRenderInputsOfAudioParamFactory = (
@@ -9,15 +9,14 @@ export const createRenderInputsOfAudioParam: TRenderInputsOfAudioParamFactory = 
     return async <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
         audioParam: IAudioParam,
         nativeOfflineAudioContext: TNativeOfflineAudioContext,
-        nativeAudioParam: TNativeAudioParam,
-        trace: readonly IAudioNode<T>[]
+        nativeAudioParam: TNativeAudioParam
     ): Promise<void> => {
         const audioParamConnections = getAudioParamConnections<T>(audioParam);
 
         await Promise.all(
             Array.from(audioParamConnections.activeInputs).map(async ([source, output]) => {
                 const audioNodeRenderer = getAudioNodeRenderer(source);
-                const renderedNativeAudioNode = await audioNodeRenderer.render(source, nativeOfflineAudioContext, trace);
+                const renderedNativeAudioNode = await audioNodeRenderer.render(source, nativeOfflineAudioContext);
 
                 if (!isPartOfACycle(source)) {
                     renderedNativeAudioNode.connect(nativeAudioParam, output);

@@ -5,6 +5,5 @@ import { TNativeOfflineAudioContext } from './native-offline-audio-context';
 export type TRenderInputsOfAudioNodeFunction = <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
     audioNode: IAudioNode<T>,
     nativeOfflineAudioContext: TNativeOfflineAudioContext,
-    nativeAudioNode: TNativeAudioNode,
-    trace: readonly IAudioNode<T>[]
+    nativeAudioNode: TNativeAudioNode
 ) => Promise<void>;

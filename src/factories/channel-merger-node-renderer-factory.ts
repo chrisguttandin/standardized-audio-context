@@ -10,11 +10,7 @@ export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererF
     return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioNode>();
 
-        const createAudioNode = async (
-            proxy: IAudioNode<T>,
-            nativeOfflineAudioContext: TNativeOfflineAudioContext,
-            trace: readonly IAudioNode<T>[]
-        ) => {
+        const createAudioNode = async (proxy: IAudioNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeAudioNode = getNativeAudioNode<T, TNativeAudioNode>(proxy);
 
             // If the initially used nativeAudioNode was not constructed on the same OfflineAudioContext it needs to be created again.
@@ -33,24 +29,20 @@ export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererF
 
             renderedNativeAudioNodes.set(nativeOfflineAudioContext, nativeAudioNode);
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode, trace);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioNode);
 
             return nativeAudioNode;
         };
 
         return {
-            render(
-                proxy: IAudioNode<T>,
-                nativeOfflineAudioContext: TNativeOfflineAudioContext,
-                trace: readonly IAudioNode<T>[]
-            ): Promise<TNativeAudioNode> {
+            render(proxy: IAudioNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeAudioNode> {
                 const renderedNativeAudioNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeAudioNode !== undefined) {
                     return Promise.resolve(renderedNativeAudioNode);
                 }
 
-                return createAudioNode(proxy, nativeOfflineAudioContext, trace);
+                return createAudioNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

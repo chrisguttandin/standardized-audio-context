@@ -11,11 +11,9 @@ export const createStartRendering: TStartRenderingFactory = (
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
-    const trace = [] as const;
-
     return (destination, nativeOfflineAudioContext) =>
         getAudioNodeRenderer(destination)
-            .render(destination, nativeOfflineAudioContext, trace)
+            .render(destination, nativeOfflineAudioContext)
             /*
              * Bug #86 & #87: Invoking the renderer of an AudioWorkletNode might be necessary if it has no direct or indirect connection to the
              * destination.
@@ -23,7 +21,7 @@ export const createStartRendering: TStartRenderingFactory = (
             .then(() =>
                 Promise.all(
                     Array.from(getUnrenderedAudioWorkletNodes(nativeOfflineAudioContext)).map((audioWorkletNode) =>
-                        getAudioNodeRenderer(audioWorkletNode).render(audioWorkletNode, nativeOfflineAudioContext, trace)
+                        getAudioNodeRenderer(audioWorkletNode).render(audioWorkletNode, nativeOfflineAudioContext)
                     )
                 )
             )

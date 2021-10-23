@@ -1,6 +1,6 @@
 import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IConvolverNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { IConvolverNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TConvolverNodeRendererFactoryFactory, TNativeConvolverNode, TNativeOfflineAudioContext } from '../types';
 
 export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFactory = (
@@ -11,11 +11,7 @@ export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFa
     return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeConvolverNodes = new WeakMap<TNativeOfflineAudioContext, TNativeConvolverNode>();
 
-        const createConvolverNode = async (
-            proxy: IConvolverNode<T>,
-            nativeOfflineAudioContext: TNativeOfflineAudioContext,
-            trace: readonly IAudioNode<T>[]
-        ) => {
+        const createConvolverNode = async (proxy: IConvolverNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeConvolverNode = getNativeAudioNode<T, TNativeConvolverNode>(proxy);
 
             // If the initially used nativeConvolverNode was not constructed on the same OfflineAudioContext it needs to be created again.
@@ -36,27 +32,23 @@ export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFa
             renderedNativeConvolverNodes.set(nativeOfflineAudioContext, nativeConvolverNode);
 
             if (isNativeAudioNodeFaker(nativeConvolverNode)) {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode.inputs[0], trace);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode.inputs[0]);
             } else {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode, trace);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode);
             }
 
             return nativeConvolverNode;
         };
 
         return {
-            render(
-                proxy: IConvolverNode<T>,
-                nativeOfflineAudioContext: TNativeOfflineAudioContext,
-                trace: readonly IAudioNode<T>[]
-            ): Promise<TNativeConvolverNode> {
+            render(proxy: IConvolverNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeConvolverNode> {
                 const renderedNativeConvolverNode = renderedNativeConvolverNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeConvolverNode !== undefined) {
                     return Promise.resolve(renderedNativeConvolverNode);
                 }
 
-                return createConvolverNode(proxy, nativeOfflineAudioContext, trace);
+                return createConvolverNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

@@ -1,6 +1,6 @@
 import { filterBuffer } from '../helpers/filter-buffer';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import {
     TIIRFilterNodeRendererFactoryFactory,
     TNativeAudioBuffer,
@@ -80,11 +80,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
 
         let filteredBufferPromise: null | Promise<null | TNativeAudioBuffer> = null;
 
-        const createAudioNode = async (
-            proxy: IIIRFilterNode<T>,
-            nativeOfflineAudioContext: TNativeOfflineAudioContext,
-            trace: readonly IAudioNode<T>[]
-        ) => {
+        const createAudioNode = async (proxy: IIIRFilterNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeAudioBufferSourceNode: null | TNativeAudioBufferSourceNode = null;
             let nativeIIRFilterNode = getNativeAudioNode<T, TNativeIIRFilterNode>(proxy);
 
@@ -128,7 +124,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                     );
 
                     filteredBufferPromise = (async () => {
-                        await renderInputsOfAudioNode(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination, trace);
+                        await renderInputsOfAudioNode(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination);
 
                         const renderedBuffer = await renderNativeOfflineAudioContext(partialOfflineAudioContext);
 
@@ -144,7 +140,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                 return nativeAudioBufferSourceNode;
             }
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeIIRFilterNode, trace);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeIIRFilterNode);
 
             return nativeIIRFilterNode;
         };
@@ -152,8 +148,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
         return {
             render(
                 proxy: IIIRFilterNode<T>,
-                nativeOfflineAudioContext: TNativeOfflineAudioContext,
-                trace: readonly IAudioNode<T>[]
+                nativeOfflineAudioContext: TNativeOfflineAudioContext
             ): Promise<TNativeAudioBufferSourceNode | TNativeIIRFilterNode> {
                 const renderedNativeAudioNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
 
@@ -161,7 +156,7 @@ export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFa
                     return Promise.resolve(renderedNativeAudioNode);
                 }
 
-                return createAudioNode(proxy, nativeOfflineAudioContext, trace);
+                return createAudioNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

@@ -1,6 +1,6 @@
 import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IMinimalOfflineAudioContext, IOfflineAudioContext, IWaveShaperNode } from '../interfaces';
+import { IMinimalOfflineAudioContext, IOfflineAudioContext, IWaveShaperNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeWaveShaperNode, TWaveShaperNodeRendererFactoryFactory } from '../types';
 
 export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactoryFactory = (
@@ -11,11 +11,7 @@ export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactory
     return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
         const renderedNativeWaveShaperNodes = new WeakMap<TNativeOfflineAudioContext, TNativeWaveShaperNode>();
 
-        const createWaveShaperNode = async (
-            proxy: IWaveShaperNode<T>,
-            nativeOfflineAudioContext: TNativeOfflineAudioContext,
-            trace: readonly IAudioNode<T>[]
-        ) => {
+        const createWaveShaperNode = async (proxy: IWaveShaperNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeWaveShaperNode = getNativeAudioNode<T, TNativeWaveShaperNode>(proxy);
 
             // If the initially used nativeWaveShaperNode was not constructed on the same OfflineAudioContext it needs to be created again.
@@ -36,27 +32,23 @@ export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactory
             renderedNativeWaveShaperNodes.set(nativeOfflineAudioContext, nativeWaveShaperNode);
 
             if (isNativeAudioNodeFaker(nativeWaveShaperNode)) {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeWaveShaperNode.inputs[0], trace);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeWaveShaperNode.inputs[0]);
             } else {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeWaveShaperNode, trace);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeWaveShaperNode);
             }
 
             return nativeWaveShaperNode;
         };
 
         return {
-            render(
-                proxy: IWaveShaperNode<T>,
-                nativeOfflineAudioContext: TNativeOfflineAudioContext,
-                trace: readonly IAudioNode<T>[]
-            ): Promise<TNativeWaveShaperNode> {
+            render(proxy: IWaveShaperNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeWaveShaperNode> {
                 const renderedNativeWaveShaperNode = renderedNativeWaveShaperNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeWaveShaperNode !== undefined) {
                     return Promise.resolve(renderedNativeWaveShaperNode);
                 }
 
-                return createWaveShaperNode(proxy, nativeOfflineAudioContext, trace);
+                return createWaveShaperNode(proxy, nativeOfflineAudioContext);
             }
         };
     };

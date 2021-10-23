@@ -1,5 +1,5 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IMinimalOfflineAudioContext, IOfflineAudioContext, IOscillatorNode, IPeriodicWave } from '../interfaces';
+import { IMinimalOfflineAudioContext, IOfflineAudioContext, IOscillatorNode, IPeriodicWave } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeOscillatorNode, TOscillatorNodeRendererFactoryFactory } from '../types';
 
 export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactoryFactory = (
@@ -16,11 +16,7 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
         let start: null | number = null;
         let stop: null | number = null;
 
-        const createOscillatorNode = async (
-            proxy: IOscillatorNode<T>,
-            nativeOfflineAudioContext: TNativeOfflineAudioContext,
-            trace: readonly IAudioNode<T>[]
-        ) => {
+        const createOscillatorNode = async (proxy: IOscillatorNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
             let nativeOscillatorNode = getNativeAudioNode<T, TNativeOscillatorNode>(proxy);
 
             // If the initially used nativeOscillatorNode was not constructed on the same OfflineAudioContext it needs to be created again.
@@ -51,14 +47,14 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
             renderedNativeOscillatorNodes.set(nativeOfflineAudioContext, nativeOscillatorNode);
 
             if (!nativeOscillatorNodeIsOwnedByContext) {
-                await renderAutomation(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune, trace);
-                await renderAutomation(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency, trace);
+                await renderAutomation(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
+                await renderAutomation(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
             } else {
-                await connectAudioParam(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune, trace);
-                await connectAudioParam(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency, trace);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
+                await connectAudioParam(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
             }
 
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeOscillatorNode, trace);
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeOscillatorNode);
 
             return nativeOscillatorNode;
         };
@@ -73,18 +69,14 @@ export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactory
             set stop(value: number) {
                 stop = value;
             },
-            render(
-                proxy: IOscillatorNode<T>,
-                nativeOfflineAudioContext: TNativeOfflineAudioContext,
-                trace: readonly IAudioNode<T>[]
-            ): Promise<TNativeOscillatorNode> {
+            render(proxy: IOscillatorNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeOscillatorNode> {
                 const renderedNativeOscillatorNode = renderedNativeOscillatorNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeOscillatorNode !== undefined) {
                     return Promise.resolve(renderedNativeOscillatorNode);
                 }
 
-                return createOscillatorNode(proxy, nativeOfflineAudioContext, trace);
+                return createOscillatorNode(proxy, nativeOfflineAudioContext);
             }
         };
     };
