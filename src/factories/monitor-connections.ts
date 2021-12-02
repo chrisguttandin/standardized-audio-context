@@ -5,13 +5,13 @@ export const createMonitorConnections: TMonitorConnectionsFactory = (insertEleme
         const connections = new Set<[TNativeAudioNode, number, number] | [TNativeAudioParam, number]>();
 
         nativeAudioNode.connect = <TNativeAudioNode['connect']>((connect) => {
-            // tslint:disable-next-line:invalid-void
-            return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input = 0): void | TNativeAudioNode => {
+            // tslint:disable-next-line:invalid-void no-inferrable-types
+            return (destination: TNativeAudioNode | TNativeAudioParam, output = 0, input: number = 0): void | TNativeAudioNode => {
                 const wasDisconnected = connections.size === 0;
 
                 if (isNativeAudioNode(destination)) {
                     // @todo TypeScript cannot infer the overloaded signature with 3 arguments yet.
-                    (<(destination: TNativeAudioNode, output: number, input: number) => TNativeAudioNode>connect).call(
+                    (<(destination: TNativeAudioNode, output?: number, input?: number) => TNativeAudioNode>connect).call(
                         nativeAudioNode,
                         destination,
                         output,
