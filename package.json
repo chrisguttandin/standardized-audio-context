@@ -60,7 +60,7 @@
         "prettier": "^2.5.1",
         "pretty-quick": "^3.1.2",
         "puppeteer": "^13.0.0",
-        "rollup": "^2.61.0",
+        "rollup": "^2.61.1",
         "sinon": "^11.1.2",
         "sinon-chai": "^3.7.0",
         "ts-loader": "^9.2.6",
