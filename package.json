@@ -25,7 +25,7 @@
     },
     "description": "A cross-browser wrapper for the Web Audio API which aims to closely follow the standard.",
     "devDependencies": {
-        "@babel/core": "^7.16.0",
+        "@babel/core": "^7.16.5",
         "@babel/plugin-external-helpers": "^7.16.0",
         "@babel/plugin-transform-runtime": "^7.16.4",
         "@babel/preset-env": "^7.16.4",
