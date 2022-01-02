@@ -9,6 +9,9 @@ module.exports = (grunt) => {
         'build-es5': {
             cmd: 'rollup --config config/rollup/bundle.js'
         },
+        'build-node': {
+            cmd: 'babel ./build/es2019 --config-file ./config/babel/build.json --out-dir ./build/node'
+        },
         'lint-config': {
             cmd: `eslint --config config/eslint/config.json --ext .js ${fix ? '--fix ' : ''}--report-unused-disable-directives *.js config/`
         },
