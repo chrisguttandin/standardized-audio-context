@@ -28,7 +28,7 @@
         "@babel/cli": "^7.16.7",
         "@babel/core": "^7.16.7",
         "@babel/plugin-external-helpers": "^7.16.7",
-        "@babel/plugin-transform-runtime": "^7.16.5",
+        "@babel/plugin-transform-runtime": "^7.16.7",
         "@babel/preset-env": "^7.16.5",
         "@babel/register": "^7.16.5",
         "@commitlint/cli": "^16.0.1",
