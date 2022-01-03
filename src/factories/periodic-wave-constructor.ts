@@ -11,7 +11,7 @@ export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (
     periodicWaveStore,
     sanitizePeriodicWaveOptions
 ) => {
-    return class PeriodicWave<T extends TContext> implements IPeriodicWave {
+    class PeriodicWave<T extends TContext> implements IPeriodicWave {
         constructor(context: T, options?: Partial<IPeriodicWaveOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = sanitizePeriodicWaveOptions({ ...DEFAULT_OPTIONS, ...options });
@@ -22,12 +22,16 @@ export const createPeriodicWaveConstructor: TPeriodicWaveConstructorFactory = (
             // This does violate all good pratices but it is used here to simplify the handling of periodic waves.
             return periodicWave;
         }
+    }
 
-        public static [Symbol.hasInstance](instance: unknown): boolean {
+    Object.defineProperty(PeriodicWave, Symbol.hasInstance, {
+        value: (instance: unknown): boolean => {
             return (
                 (instance !== null && typeof instance === 'object' && Object.getPrototypeOf(instance) === PeriodicWave.prototype) ||
                 periodicWaveStore.has(<any>instance)
             );
         }
-    };
+    });
+
+    return PeriodicWave;
 };

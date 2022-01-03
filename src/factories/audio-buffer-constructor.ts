@@ -19,7 +19,7 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
 ) => {
     let nativeOfflineAudioContext: null | TNativeOfflineAudioContext = null;
 
-    return class AudioBuffer implements IAudioBuffer {
+    class AudioBuffer implements IAudioBuffer {
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public copyFromChannel!: (destination: Float32Array, channelNumber: number, bufferOffset?: number) => void;
 
@@ -89,12 +89,16 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
              */
             return audioBuffer;
         }
+    }
 
-        public static [Symbol.hasInstance](instance: unknown): boolean {
+    Object.defineProperty(AudioBuffer, Symbol.hasInstance, {
+        value: (instance: unknown): boolean => {
             return (
                 (instance !== null && typeof instance === 'object' && Object.getPrototypeOf(instance) === AudioBuffer.prototype) ||
                 audioBufferStore.has(<any>instance)
             );
         }
-    };
+    });
+
+    return AudioBuffer;
 };
