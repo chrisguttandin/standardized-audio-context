@@ -39,7 +39,7 @@
         "cz-conventional-changelog": "^3.3.0",
         "eslint": "^8.13.0",
         "eslint-config-holy-grail": "^52.0.3",
-        "grunt": "^1.4.1",
+        "grunt": "^1.5.1",
         "grunt-cli": "^1.4.3",
         "grunt-contrib-clean": "^2.0.0",
         "grunt-sh": "^0.2.0",
