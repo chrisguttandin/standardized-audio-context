@@ -16,11 +16,9 @@ module.exports = (config) => {
                 ? ['EdgeBrowserStack']
                 : env.TARGET === 'firefox'
                 ? ['FirefoxBrowserStack']
-                : env.TARGET === 'opera'
-                ? ['OperaBrowserStack']
                 : env.TARGET === 'safari'
                 ? ['SafariBrowserStack']
-                : ['ChromeBrowserStack', 'EdgeBrowserStack', 'FirefoxBrowserStack', 'OperaBrowserStack', 'SafariBrowserStack'],
+                : ['ChromeBrowserStack', 'EdgeBrowserStack', 'FirefoxBrowserStack', 'SafariBrowserStack'],
 
         concurrency: 1,
 
@@ -45,13 +43,6 @@ module.exports = (config) => {
                 browser_version: '69', // eslint-disable-line camelcase
                 os: 'Windows',
                 os_version: '10' // eslint-disable-line camelcase
-            },
-            OperaBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'opera',
-                browser_version: '67', // eslint-disable-line camelcase
-                os: 'OS X',
-                os_version: 'Mojave' // eslint-disable-line camelcase
             },
             SafariBrowserStack: {
                 base: 'BrowserStack',

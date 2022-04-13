@@ -46,9 +46,6 @@ jobs:
                       target: node
                       type: integration
                     - node-version: 16.x
-                      target: opera
-                      type: integration
-                    - node-version: 16.x
                       target: safari
                       type: integration
                     - node-version: 16.x

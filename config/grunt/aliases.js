@@ -25,7 +25,7 @@ module.exports = {
         ),
         ...filter(
             isType('integration'),
-            ...filter(isTarget('chrome', 'edge', 'firefox', 'opera', 'safari'), 'sh:test-integration-browser'),
+            ...filter(isTarget('chrome', 'edge', 'firefox', 'safari'), 'sh:test-integration-browser'),
             ...filter(isTarget('node'), 'sh:test-integration-node')
         ),
         ...filter(isType('memory'), 'sh:test-memory'),
