@@ -20,7 +20,6 @@ module.exports = {
             ...filter(isTarget('firefox'), 'sh:test-expectation-firefox'),
             ...filter(isTarget(), 'sh:test-expectation-firefox-developer'),
             ...filter(isTarget('firefox-legacy'), 'sh:test-expectation-firefox-legacy'),
-            ...filter(isTarget('opera'), 'sh:test-expectation-opera'),
             ...filter(isTarget(), 'sh:test-expectation-safari'),
             ...filter(isTarget('safari-legacy'), 'sh:test-expectation-safari-legacy')
         ),
