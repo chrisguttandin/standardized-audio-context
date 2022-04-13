@@ -130,7 +130,6 @@ module.exports = (config) => {
                 'Edge',
                 'FirefoxDeveloperHeadlessWithPrefs',
                 'FirefoxHeadlessWithPrefs',
-                'OperaWithNoRequiredUserGestureAndNoThrottling',
                 'Safari'
             ],
 
@@ -163,14 +162,6 @@ module.exports = (config) => {
                         'media.navigator.permission.disabled': true,
                         'media.navigator.streams.fake': true
                     }
-                },
-                OperaWithNoRequiredUserGestureAndNoThrottling: {
-                    base: 'Opera',
-                    flags: [
-                        '--autoplay-policy=no-user-gesture-required',
-                        '--disable-background-timer-throttling',
-                        '--disable-renderer-backgrounding'
-                    ]
                 }
             }
         });

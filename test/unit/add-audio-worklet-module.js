@@ -69,7 +69,7 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
                         if (/Firefox/.test(navigator.userAgent)) {
                             expect(err).to.be.an.instanceOf(Error);
                         } else {
-                            // Bug #182 Chrome, Edge and Opera do throw an instance of a SyntaxError instead of a DOMException.
+                            // Bug #182 Chrome and Edge do throw an instance of a SyntaxError instead of a DOMException.
                             expect(err).to.be.an.instanceOf(SyntaxError);
                         }
 
