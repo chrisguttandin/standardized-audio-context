@@ -10,7 +10,7 @@ export const createNativeChannelSplitterNode: TNativeChannelSplitterNodeFactory 
     // Bug #31: Safari does not have the correct channelInterpretation.
     assignNativeAudioNodeOptions(nativeChannelSplitterNode, options);
 
-    // Bug #29, #30, #31, #32, #96 & #97: Only Chrome, Edge, Firefox & Opera partially support the spec yet.
+    // Bug #29, #30, #31, #32, #96 & #97: Only Chrome, Edge & Firefox partially support the spec yet.
     wrapChannelSplitterNode(nativeChannelSplitterNode);
 
     return nativeChannelSplitterNode;

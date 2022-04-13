@@ -87,7 +87,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         set buffer(value) {
             this._nativeAudioBufferSourceNode.buffer = value;
 
-            // Bug #72: Only Chrome, Edge & Opera do not allow to reassign the buffer yet.
+            // Bug #72: Only Chrome & Edge do not allow to reassign the buffer yet.
             if (value !== null) {
                 if (this._isBufferSet) {
                     throw createInvalidStateError();

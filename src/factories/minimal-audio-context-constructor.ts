@@ -50,7 +50,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 throw createUnknownError();
             }
 
-            // Bug #51 Only Chrome Edge, and Opera throw an error if the given latencyHint is invalid.
+            // Bug #51 Only Chrome and Edge throw an error if the given latencyHint is invalid.
             if (!isValidLatencyHint(options.latencyHint)) {
                 throw new TypeError(
                     `The provided value '${options.latencyHint}' is not a valid enum value of type AudioContextLatencyCategory.`
@@ -101,8 +101,8 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
             this._state = null;
 
             /*
-             * Bug #34: Chrome, Edge and Opera pretend to be running right away, but fire an onstatechange event when the state actually
-             * changes to 'running'.
+             * Bug #34: Chrome and Edge pretend to be running right away, but fire an onstatechange event when the state actually changes
+             * to 'running'.
              */
             if (nativeAudioContext.state === 'running') {
                 this._state = 'suspended';
@@ -170,7 +170,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
             }
 
             return this._nativeAudioContext.resume().catch((err) => {
-                // Bug #55: Chrome, Edge and Opera do throw an InvalidAccessError instead of an InvalidStateError.
+                // Bug #55: Chrome and Edge do throw an InvalidAccessError instead of an InvalidStateError.
                 // Bug #56: Safari invokes the catch handler but without an error.
                 if (err === undefined || err.code === 15) {
                     throw createInvalidStateError();

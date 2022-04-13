@@ -55,7 +55,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
                 this._nativeWaveShaperNode.curve = new Float32Array([0, 0]);
             } else {
                 // Bug #102: Safari does not throw an InvalidStateError when the curve has less than two samples.
-                // Bug #104: Chrome, Edge and Opera will throw an InvalidAccessError when the curve has less than two samples.
+                // Bug #104: Chrome and Edge will throw an InvalidAccessError when the curve has less than two samples.
                 if (value.length < 2) {
                     throw createInvalidStateError();
                 }

@@ -83,7 +83,7 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
         }
 
         /*
-         * Bug #109: Only Chrome, Firefox and Opera disallow a channelCountMode of 'max' yet which is why the getter and setter needs to be
+         * Bug #109: Only Chrome and Firefox disallow a channelCountMode of 'max' yet which is why the getter and setter needs to be
          * overwritten here.
          */
         get channelCountMode(): TChannelCountMode {

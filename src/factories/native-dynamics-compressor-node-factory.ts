@@ -13,7 +13,7 @@ export const createNativeDynamicsCompressorNodeFactory: TNativeDynamicsCompresso
             throw createNotSupportedError();
         }
 
-        // Bug #109: Only Chrome, Firefox and Opera disallow a channelCountMode of 'max'.
+        // Bug #109: Only Chrome and Firefox disallow a channelCountMode of 'max'.
         if (options.channelCountMode === 'max') {
             throw createNotSupportedError();
         }

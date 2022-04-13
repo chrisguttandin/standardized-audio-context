@@ -161,7 +161,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                 ? options.outputChannelCount
                 : Array.from(options.outputChannelCount);
 
-            // Bug #61: Only Chrome, Edge, Firefox & Opera have an implementation of the AudioWorkletNode yet.
+            // Bug #61: Only Chrome, Edge & Firefox have an implementation of the AudioWorkletNode yet.
             if (nativeAudioWorkletNodeConstructor === null) {
                 const numberOfOutputChannels = outputChannelCount.reduce((sum, value) => sum + value, 0);
                 const outputChannelSplitterNode = createNativeChannelSplitterNode(nativeOfflineAudioContext, {

@@ -169,7 +169,7 @@ The properties and methods are described in greater detail below.
 
 #### audioWorklet
 
-⚠️ <!-- Bug #59 --> The [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet) is accessible as a property of an AudioContext or OfflineAudioContext. It uses the ScriptProcessorNode internally to create an [`AudioWorkletProcessor`](https://webaudio.github.io/web-audio-api/#audioworkletprocessor) in Safari. This means it will only provide the performance improvements that you would normally expect from using an [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworkletnode) in Chrome, Edge, Firefox and Opera.
+⚠️ <!-- Bug #59 --> The [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet) is accessible as a property of an AudioContext or OfflineAudioContext. It uses the ScriptProcessorNode internally to create an [`AudioWorkletProcessor`](https://webaudio.github.io/web-audio-api/#audioworkletprocessor) in Safari. This means it will only provide the performance improvements that you would normally expect from using an [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworkletnode) in Chrome, Edge and Firefox.
 
 ⚠️ <!-- Bug #59 --> The fact that the internal implementation relies on a ScriptProcessorNode also implies that the [`channelCountMode`](https://webaudio.github.io/web-audio-api/#dom-audionode-channelcountmode) can only be `'explicit'` for now. It also means that the total number of channels of all inputs plus the number of all parameters can't be larger than six.
 
@@ -410,9 +410,9 @@ eventually ships a fix. Once that happens the workaround and the backing expecta
 removed. The expectation test however gets recycled and will now be used as part of the browser
 check performed when calling `isSupported()`.
 
-The list of currently supported browsers includes Chrome v81+, Edge v81+, Firefox v70+, Opera v68+
-and Safari v12.1+. Please note that the tests are only executed in the current and upcoming version
-of each browser.
+The list of currently supported browsers includes Chrome v81+, Edge v81+, Firefox v70+ and Safari
+v12.1+. Please note that the tests are only executed in the current and upcoming version of each
+browser.
 
 Supporting a browser only means that it is supported on the feature level. It is absolutely
 possible that a transpiler like [Babel](https://babeljs.io) is necessary to use this package in

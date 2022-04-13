@@ -4,7 +4,7 @@ export const createEvaluateSource: TEvaluateSourceFactory = (window) => {
     return (source) =>
         new Promise((resolve, reject) => {
             if (window === null) {
-                // Bug #182 Chrome, Edge and Opera do throw an instance of a SyntaxError instead of a DOMException.
+                // Bug #182 Chrome and Edge do throw an instance of a SyntaxError instead of a DOMException.
                 reject(new SyntaxError());
 
                 return;
@@ -13,7 +13,7 @@ export const createEvaluateSource: TEvaluateSourceFactory = (window) => {
             const head = window.document.head;
 
             if (head === null) {
-                // Bug #182 Chrome, Edge and Opera do throw an instance of a SyntaxError instead of a DOMException.
+                // Bug #182 Chrome and Edge do throw an instance of a SyntaxError instead of a DOMException.
                 reject(new SyntaxError());
             } else {
                 const script = window.document.createElement('script');
@@ -45,7 +45,7 @@ export const createEvaluateSource: TEvaluateSourceFactory = (window) => {
 
                 script.onerror = () => {
                     removeErrorEventListenerAndRevokeUrl();
-                    // Bug #182 Chrome, Edge and Opera do throw an instance of a SyntaxError instead of a DOMException.
+                    // Bug #182 Chrome and Edge do throw an instance of a SyntaxError instead of a DOMException.
                     reject(new SyntaxError());
                 };
                 script.onload = () => {

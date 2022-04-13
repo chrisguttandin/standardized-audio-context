@@ -18,7 +18,7 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     return (anyContext, audioData) => {
         const nativeContext = isNativeContext(anyContext) ? anyContext : getNativeContext(anyContext);
 
-        // Bug #43: Only Chrome, Edge and Opera do throw a DataCloneError.
+        // Bug #43: Only Chrome and Edge do throw a DataCloneError.
         if (detachedArrayBuffers.has(audioData)) {
             const err = createDataCloneError();
 

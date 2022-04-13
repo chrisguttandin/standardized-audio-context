@@ -74,7 +74,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                                     args[1] = patchedEventListener;
                                 } else {
                                     args[1] = (event: Event) => {
-                                        // Bug #178: Chrome, Edge and Opera do fire an event of type error.
+                                        // Bug #178: Chrome and Edge do fire an event of type error.
                                         if (event.type === 'error') {
                                             Object.defineProperties(event, {
                                                 type: { value: 'processorerror' }
@@ -91,7 +91,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             }
                         }
 
-                        // Bug #178: Chrome, Edge and Opera do fire an event of type error.
+                        // Bug #178: Chrome and Edge do fire an event of type error.
                         addEventListener.call(nativeAudioWorkletNode, 'error', args[1], args[2]);
 
                         return addEventListener.call(nativeAudioWorkletNode, ...args);
@@ -110,7 +110,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             }
                         }
 
-                        // Bug #178: Chrome, Edge and Opera do fire an event of type error.
+                        // Bug #178: Chrome and Edge do fire an event of type error.
                         removeEventListener.call(nativeAudioWorkletNode, 'error', args[1], args[2]);
 
                         return removeEventListener.call(nativeAudioWorkletNode, args[0], args[1], args[2]);
@@ -140,7 +140,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
 
                 return nativeAudioWorkletNode;
             } catch (err) {
-                // Bug #60: Chrome, Edge & Opera throw an InvalidStateError instead of a NotSupportedError.
+                // Bug #60: Chrome & Edge throw an InvalidStateError instead of a NotSupportedError.
                 if (err.code === 11) {
                     throw createNotSupportedError();
                 }
@@ -149,7 +149,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
             }
         }
 
-        // Bug #61: Only Chrome & Opera have an implementation of the AudioWorkletNode yet.
+        // Bug #61: Only Chrome & Edge have an implementation of the AudioWorkletNode yet.
         if (processorConstructor === undefined) {
             throw createNotSupportedError();
         }

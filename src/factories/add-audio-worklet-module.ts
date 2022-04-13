@@ -88,7 +88,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                           const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]>(<any>window)._AWGS).pop();
 
                           if (evaluateAudioWorkletGlobalScope === undefined) {
-                              // Bug #182 Chrome, Edge and Opera do throw an instance of a SyntaxError instead of a DOMException.
+                              // Bug #182 Chrome and Edge do throw an instance of a SyntaxError instead of a DOMException.
                               throw new SyntaxError();
                           }
 
@@ -225,7 +225,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                                   return nativeContext;
                               }
 
-                              // Bug #186: Chrome, Edge and Opera do not allow to create an AudioWorkletNode on a closed AudioContext.
+                              // Bug #186: Chrome and Edge do not allow to create an AudioWorkletNode on a closed AudioContext.
                               const backupOfflineAudioContext = getOrCreateBackupOfflineAudioContext(nativeContext);
 
                               return backupOfflineAudioContext.audioWorklet.addModule(url, options).then(() => backupOfflineAudioContext);
