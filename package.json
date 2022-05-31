@@ -41,7 +41,6 @@
         "eslint-config-holy-grail": "^52.0.17",
         "grunt": "^1.5.3",
         "grunt-cli": "^1.4.3",
-        "grunt-contrib-clean": "^2.0.1",
         "grunt-sh": "^0.2.0",
         "husky": "^8.0.1",
         "karma": "^6.3.20",
