@@ -6,7 +6,7 @@ const isTarget = (...targets) => env.TARGET === undefined || targets.includes(en
 const isType = (...types) => env.TYPE === undefined || types.includes(env.TYPE);
 
 module.exports = {
-    build: ['clean:build', 'sh:build-es2019', 'sh:build-es5', 'sh:build-node'],
+    build: ['sh:clean', 'sh:build-es2019', 'sh:build-es5', 'sh:build-node'],
     lint: ['sh:lint-config', 'sh:lint-src', 'sh:lint-test'],
     test: [
         'build',

@@ -12,6 +12,9 @@ module.exports = (grunt) => {
         'build-node': {
             cmd: 'babel ./build/es2019 --config-file ./config/babel/build.json --out-dir ./build/node'
         },
+        'clean': {
+            cmd: 'rimraf build/*'
+        },
         'lint-config': {
             cmd: `eslint --config config/eslint/config.json --ext .js ${fix ? '--fix ' : ''}--report-unused-disable-directives *.js config/`
         },
