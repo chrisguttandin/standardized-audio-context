@@ -93,8 +93,6 @@ describe('module', () => {
                     setTimeout(resolve, 1000);
                 });
             });
-
-            await page.evaluate(() => gc()); // eslint-disable-line no-undef
         });
 
         describe('with unconnected GainNodes', () => {
@@ -110,6 +108,8 @@ describe('module', () => {
 
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 const numberOfObjects = await countObjects(page);
 
@@ -136,6 +136,8 @@ describe('module', () => {
 
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 const numberOfObjects = await countObjects(page);
 
@@ -164,6 +166,8 @@ describe('module', () => {
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
 
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
@@ -186,8 +190,6 @@ describe('module', () => {
                     setTimeout(resolve, 1000);
                 });
             });
-
-            await page.evaluate(() => gc()); // eslint-disable-line no-undef
         });
 
         describe('with unconnected AudioBufferSourceNodes', () => {
@@ -209,6 +211,8 @@ describe('module', () => {
 
                 // Run the test once because the first run will trigger some memoizations.
                 await page.evaluate(run, 1);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 const numberOfObjects = await countObjects(page);
 
@@ -241,6 +245,8 @@ describe('module', () => {
 
                 // Run the test once because the first run will trigger some memoizations.
                 await page.evaluate(run, 1);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 const numberOfObjects = await countObjects(page);
 
@@ -276,6 +282,8 @@ describe('module', () => {
 
                 // Run the test once because the first run will trigger some memoizations.
                 await page.evaluate(run, 1);
+
+                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 const numberOfObjects = await countObjects(page);
 
