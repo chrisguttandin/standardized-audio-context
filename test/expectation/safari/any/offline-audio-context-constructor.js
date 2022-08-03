@@ -3,58 +3,9 @@ import { spy } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
     let offlineAudioContext;
-    let offlineAudioContextConstructor;
 
     beforeEach(() => {
-        offlineAudioContextConstructor = typeof webkitOfflineAudioContext === 'undefined' ? OfflineAudioContext : webkitOfflineAudioContext; // eslint-disable-line no-undef
-        offlineAudioContext = new offlineAudioContextConstructor(1, 25600, 44100); // eslint-disable-line new-cap
-    });
-
-    describe('constructor()', () => {
-        describe('with zero as the numberOfChannels', () => {
-            // bug #146
-
-            it('should throw a SyntaxError', (done) => {
-                try {
-                    new offlineAudioContextConstructor(0, 1, 44100); // eslint-disable-line new-cap
-                } catch (err) {
-                    expect(err.code).to.equal(12);
-                    expect(err.name).to.equal('SyntaxError');
-
-                    done();
-                }
-            });
-        });
-
-        describe('with a length of zero', () => {
-            // bug #143
-
-            it('should throw a SyntaxError', (done) => {
-                try {
-                    new offlineAudioContextConstructor(1, 0, 44100); // eslint-disable-line new-cap
-                } catch (err) {
-                    expect(err.code).to.equal(12);
-                    expect(err.name).to.equal('SyntaxError');
-
-                    done();
-                }
-            });
-        });
-
-        describe('with a sampleRate of zero', () => {
-            // bug #144
-
-            it('should throw a SyntaxError', (done) => {
-                try {
-                    new offlineAudioContextConstructor(1, 1, 0); // eslint-disable-line new-cap
-                } catch (err) {
-                    expect(err.code).to.equal(12);
-                    expect(err.name).to.equal('SyntaxError');
-
-                    done();
-                }
-            });
-        });
+        offlineAudioContext = new OfflineAudioContext({ length: 25600, sampleRate: 44100 });
     });
 
     describe('destination', () => {

@@ -107,6 +107,43 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createAnalyser()', () => {
+            // bug #41
+
+            it('should throw a SyntaxError when calling connect() with a node of another AudioContext', (done) => {
+                const analyserNode = audioContext.createAnalyser();
+                const anotherAudioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
+
+                try {
+                    analyserNode.connect(anotherAudioContext.destination);
+                } catch (err) {
+                    expect(err.code).to.equal(12);
+                    expect(err.name).to.equal('SyntaxError');
+
+                    done();
+                } finally {
+                    anotherAudioContext.close();
+                }
+            });
+
+            // bug #58
+
+            it('should throw a SyntaxError when calling connect() with an AudioParam of another AudioContext', (done) => {
+                const analyserNode = audioContext.createAnalyser();
+                const anotherAudioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
+                const gainNode = anotherAudioContext.createGain();
+
+                try {
+                    analyserNode.connect(gainNode.gain);
+                } catch (err) {
+                    expect(err.code).to.equal(12);
+                    expect(err.name).to.equal('SyntaxError');
+
+                    done();
+                } finally {
+                    anotherAudioContext.close();
+                }
+            });
+
             describe('maxDecibels', () => {
                 // bug #118
 
@@ -821,6 +858,97 @@ describe('audioContextConstructor', () => {
                             mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
 
                             expect(numberOfInvocations).to.be.above(0);
+
+                            done();
+                        }, 1000);
+                    });
+                });
+
+                describe('with a mediaStream with two audio tracks', () => {
+                    let audioBufferSourceNode;
+                    let gainNodes;
+                    let mediaStream;
+                    let mediaStreamAudioDestinationNodes;
+
+                    afterEach(() => {
+                        audioBufferSourceNode.stop();
+
+                        audioBufferSourceNode.disconnect(gainNodes[0]);
+                        audioBufferSourceNode.disconnect(gainNodes[1]);
+                        gainNodes[0].disconnect(mediaStreamAudioDestinationNodes[0]);
+                        gainNodes[1].disconnect(mediaStreamAudioDestinationNodes[1]);
+                    });
+
+                    beforeEach(() => {
+                        audioBufferSourceNode = audioContext.createBufferSource();
+                        gainNodes = [audioContext.createGain(), audioContext.createGain()];
+                        mediaStreamAudioDestinationNodes = [
+                            audioContext.createMediaStreamDestination(),
+                            audioContext.createMediaStreamDestination()
+                        ];
+
+                        const audioBuffer = audioContext.createBuffer(1, 2, audioContext.sampleRate);
+
+                        audioBuffer.getChannelData(0)[0] = 1;
+                        audioBuffer.getChannelData(0)[1] = 1;
+
+                        audioBufferSourceNode.buffer = audioBuffer;
+                        audioBufferSourceNode.loop = true;
+
+                        audioBufferSourceNode.connect(gainNodes[0]).connect(mediaStreamAudioDestinationNodes[0]);
+                        audioBufferSourceNode.connect(gainNodes[1]).connect(mediaStreamAudioDestinationNodes[1]);
+
+                        audioBufferSourceNode.start();
+
+                        const audioStreamTracks = mediaStreamAudioDestinationNodes.map(({ stream }) => stream.getAudioTracks()[0]);
+
+                        if (audioStreamTracks[0].id > audioStreamTracks[1].id) {
+                            mediaStream = mediaStreamAudioDestinationNodes[0].stream;
+
+                            gainNodes[0].gain.value = 0;
+                            mediaStream.addTrack(audioStreamTracks[1]);
+                        } else {
+                            mediaStream = mediaStreamAudioDestinationNodes[1].stream;
+
+                            gainNodes[1].gain.value = 0;
+                            mediaStream.addTrack(audioStreamTracks[0]);
+                        }
+                    });
+
+                    // bug #159
+
+                    it('should pick the first track', (done) => {
+                        const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStream);
+                        const scriptProcessorNode = audioContext.createScriptProcessor(512);
+
+                        let numberOfInvocations = 0;
+
+                        scriptProcessorNode.onaudioprocess = ({ inputBuffer }) => {
+                            numberOfInvocations += 1;
+
+                            if (numberOfInvocations > 10) {
+                                const channelData = inputBuffer.getChannelData(0);
+
+                                for (let i = 0; i < 512; i += 1) {
+                                    if (channelData[i] !== 0) {
+                                        mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+                                        scriptProcessorNode.disconnect(audioContext.destination);
+
+                                        done(new Error('The signal is expected to be zero at all time.'));
+
+                                        break;
+                                    }
+                                }
+                            }
+                        };
+
+                        mediaStreamAudioSourceNode.connect(scriptProcessorNode).connect(audioContext.destination);
+
+                        setTimeout(() => {
+                            mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
+                            scriptProcessorNode.disconnect(audioContext.destination);
+
+                            expect(numberOfInvocations).to.be.above(10);
 
                             done();
                         }, 1000);
