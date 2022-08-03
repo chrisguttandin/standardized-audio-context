@@ -80,12 +80,13 @@ describe('MediaStreamAudioSourceNode', () => {
 
                         audioElement.play();
 
+                        mediaStream = audioElement.captureStream();
+
                         await new Promise((resolve, reject) => {
                             audioElement.oncanplaythrough = resolve;
                             audioElement.onerror = () => reject(audioElement.error);
                         });
 
-                        mediaStream = audioElement.captureStream();
                         teardownMediaStream = () =>
                             new Promise((resolve, reject) => {
                                 audioElement.onerror = () => reject(audioElement.error);
