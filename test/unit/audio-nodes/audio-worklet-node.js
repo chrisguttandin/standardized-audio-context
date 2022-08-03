@@ -582,7 +582,12 @@ describe('AudioWorkletNode', () => {
                             expect(event).to.be.an.instanceOf(ErrorEvent);
                             expect(event.colno).to.be.a('number');
                             expect(event.currentTarget).to.equal(audioWorkletNode);
-                            expect(event.error).to.be.null;
+
+                            // Bug #193: Only Firefox initializes the error property with undefined.
+                            if (event.error !== null) {
+                                expect(event.error).to.be.undefined;
+                            }
+
                             expect(event.filename).to.be.a('string');
                             expect(event.lineno).to.be.a('number');
                             expect(event.message).to.be.a('string');
@@ -620,7 +625,12 @@ describe('AudioWorkletNode', () => {
                             expect(event).to.be.an.instanceOf(ErrorEvent);
                             expect(event.colno).to.be.a('number');
                             expect(event.currentTarget).to.equal(audioWorkletNode);
-                            expect(event.error).to.be.null;
+
+                            // Bug #193: Only Firefox initializes the error property with undefined.
+                            if (event.error !== null) {
+                                expect(event.error).to.be.undefined;
+                            }
+
                             expect(event.filename).to.be.a('string');
                             expect(event.lineno).to.be.a('number');
                             expect(event.message).to.be.a('string');
@@ -1119,7 +1129,12 @@ describe('AudioWorkletNode', () => {
                             expect(event).to.be.an.instanceOf(ErrorEvent);
                             expect(event.colno).to.be.a('number');
                             expect(event.currentTarget).to.equal(audioWorkletNode);
-                            expect(event.error).to.be.null;
+
+                            // Bug #193: Only Firefox initializes the error property with undefined.
+                            if (event.error !== null) {
+                                expect(event.error).to.be.undefined;
+                            }
+
                             expect(event.filename).to.be.a('string');
                             expect(event.lineno).to.be.a('number');
                             expect(event.message).to.be.a('string');
