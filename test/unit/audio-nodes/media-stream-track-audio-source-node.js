@@ -78,14 +78,18 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                         audioElement.src = 'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
                         audioElement.muted = true;
 
-                        audioElement.play();
+                        const playPromise = audioElement.play();
 
                         mediaStream = audioElement.captureStream();
 
-                        await new Promise((resolve, reject) => {
-                            audioElement.oncanplaythrough = resolve;
-                            audioElement.onerror = () => reject(audioElement.error);
-                        });
+                        await Promise.all([
+                            playPromise,
+                            new Promise((resolve, reject) => {
+                                audioElement.oncanplaythrough = resolve;
+                                audioElement.onerror = () => reject(audioElement.error);
+                            }),
+                            playPromise
+                        ]);
 
                         teardownMediaStream = () =>
                             new Promise((resolve, reject) => {
