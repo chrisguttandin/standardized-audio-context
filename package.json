@@ -37,7 +37,7 @@
         "chai": "^4.3.6",
         "commitizen": "^4.2.5",
         "cz-conventional-changelog": "^3.3.0",
-        "eslint": "^8.21.0",
+        "eslint": "^8.22.0",
         "eslint-config-holy-grail": "^52.0.26",
         "grunt": "^1.5.3",
         "grunt-cli": "^1.4.3",
