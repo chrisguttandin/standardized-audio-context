@@ -4,7 +4,6 @@
 
 **A cross-browser wrapper for the Web Audio API which aims to closely follow the standard.**
 
-[![dependencies](https://img.shields.io/david/chrisguttandin/standardized-audio-context.svg?style=flat-square)](https://github.com/chrisguttandin/standardized-audio-context/network/dependencies)
 [![version](https://img.shields.io/npm/v/standardized-audio-context.svg?style=flat-square)](https://www.npmjs.com/package/standardized-audio-context)
 
 This package provides a subset (although it's almost complete) of the [Web Audio API](https://webaudio.github.io/web-audio-api) which works in a reliable and consistent way in every supported browser. In contrast to other popular polyfills `standardized-audio-context` does not patch or modify anything on the global scope. In other words, it does not cause any side effects. It can therefore be used safely inside of libraries. It's what's known as a [ponyfill](https://github.com/sindresorhus/ponyfill).
