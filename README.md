@@ -12,9 +12,7 @@ One of the goals of `standardized-audio-context` is to only implement missing fu
 avoid rewriting built-in features whenever possible. Please take a look at the paragraph about the
 [browser support](#browser-support) below for more information.
 
-There are of course some things which cannot be faked in a way that makes them as performant as
-they could be when implemented natively. The most obvious amongst those things is the
-[`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet). Please have a look at the [list of all supported methods](https://github.com/chrisguttandin/standardized-audio-context#api) below for more detailed information.
+There are some things which cannot be faked in a way that makes them as performant as they could be when implemented natively. The most prominent amongst those things is the [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet). Please have a look at the [list of all supported methods](https://github.com/chrisguttandin/standardized-audio-context#api) below for more detailed information.
 
 ## Usage
 
@@ -254,7 +252,7 @@ This is an implementation of the [`createMediaStreamSource()`](https://webaudio.
 
 It does only work with an AudioContext but not with an OfflineAudioContext.
 
-⚠️ <!-- Bug #165 --> Safari outputs silence if the MediaStreamAudioSourceNode remains disconnected for about two seconds.
+⚠️ <!-- Bug #165 --> Safari outputs silence if the MediaStreamAudioSourceNode is disconnected for about two seconds.
 
 #### createMediaStreamTrackSource() / MediaStreamTrackAudioSourceNode
 
@@ -409,9 +407,7 @@ eventually ships a fix. Once that happens the workaround and the backing expecta
 removed. The expectation test however gets recycled and will now be used as part of the browser
 check performed when calling `isSupported()`.
 
-The list of currently supported browsers includes Chrome v81+, Edge v81+, Firefox v70+ and Safari
-v12.1+. Please note that the tests are only executed in the current and upcoming version of each
-browser.
+The list of currently supported browsers includes Chrome v81+, Edge v81+, Firefox v70+ and Safari v12.1+. Please note that the tests only run in the current and upcoming version of each browser.
 
 Supporting a browser only means that it is supported on the feature level. It is absolutely
 possible that a transpiler like [Babel](https://babeljs.io) is necessary to use this package in
@@ -430,6 +426,4 @@ API which does not always match the actually available implementations.
 
 ## Tests
 
-All implemented methods are covered by a large number of tests which are executed in the browsers
-mentioned above. Many thanks to [BrowserStack](https://www.browserstack.com) and
-[Sauce Labs](https://saucelabs.com) for allowing this module to be tested with their services.
+All implemented methods are covered by a large number of tests which run in all the browsers mentioned above. Many thanks to [BrowserStack](https://www.browserstack.com) and [Sauce Labs](https://saucelabs.com) for allowing this module to be tested with their services.
