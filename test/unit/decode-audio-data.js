@@ -185,7 +185,6 @@ describe('decodeAudioData()', () => {
                 beforeEach(async function () {
                     this.timeout(10000);
 
-                    // PNG files are not supported by any browser :-)
                     arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
                 });
 
