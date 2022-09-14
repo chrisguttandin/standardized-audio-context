@@ -54,7 +54,7 @@ export const createConvolverNodeConstructor: TConvolverNodeConstructorFactory = 
             if (value === null && this._nativeConvolverNode.buffer !== null) {
                 const nativeContext = this._nativeConvolverNode.context;
 
-                this._nativeConvolverNode.buffer = nativeContext.createBuffer(1, 1, 44100);
+                this._nativeConvolverNode.buffer = nativeContext.createBuffer(1, 1, nativeContext.sampleRate);
                 this._isBufferNullified = true;
 
                 setAudioNodeTailTime(this, 0);

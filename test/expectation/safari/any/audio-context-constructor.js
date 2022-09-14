@@ -54,7 +54,7 @@ describe('audioContextConstructor', () => {
             // bug #115
 
             it('should not allow to assign the buffer to null', () => {
-                const audioBuffer = audioContext.createBuffer(2, 100, 44100);
+                const audioBuffer = audioContext.createBuffer(2, 100, audioContext.sampleRate);
 
                 convolverNode.buffer = audioBuffer;
                 convolverNode.buffer = null;
