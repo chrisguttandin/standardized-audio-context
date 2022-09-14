@@ -1,4 +1,4 @@
-import { GainNode, MediaElementAudioSourceNode } from '../../../src/module';
+import { AnalyserNode, GainNode, MediaElementAudioSourceNode } from '../../../src/module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createNativeAudioContext } from '../../helper/create-native-audio-context';
@@ -364,7 +364,8 @@ describe('MediaElementAudioSourceNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            async prepare(destination) {
+                                const analyserNode = new AnalyserNode(context);
                                 const firstDummyGainNode = new GainNode(context);
                                 const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
                                 const secondDummyGainNode = new GainNode(context);
@@ -372,6 +373,22 @@ describe('MediaElementAudioSourceNode', () => {
                                 mediaElementAudioSourceNode.connect(firstDummyGainNode).connect(destination);
 
                                 mediaElementAudioSourceNode.connect(secondDummyGainNode);
+
+                                await new Promise((resolve) => {
+                                    mediaElementAudioSourceNode.connect(analyserNode);
+
+                                    const data = new Uint8Array(analyserNode.fftSize);
+                                    const intervalId = setInterval(() => {
+                                        analyserNode.getByteTimeDomainData(data);
+
+                                        if (data.some((sample) => sample !== 128)) {
+                                            mediaElementAudioSourceNode.disconnect(analyserNode);
+
+                                            clearInterval(intervalId);
+                                            resolve();
+                                        }
+                                    });
+                                });
 
                                 return { firstDummyGainNode, mediaElementAudioSourceNode, secondDummyGainNode };
                             }
