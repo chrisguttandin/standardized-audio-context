@@ -115,7 +115,7 @@ describe('detectCycles()', () => {
             getAudioNodeConnections.withArgs(yetAnotherAudioNode).returns({ outputs: outputsOfYetAnotherAudioNode });
         });
 
-        it('should detect a cycle', () => {
+        it('should detect two cycles', () => {
             expect(detectCycles([audioNode], anotherAudioNode)).to.deep.equal([
                 [audioNode, anotherAudioNode],
                 [audioNode, anotherAudioNode, yetAnotherAudioNode]
@@ -140,7 +140,7 @@ describe('detectCycles()', () => {
             getAudioNodeConnections.withArgs(yetAnotherAudioNode).returns({ outputs: outputsOfYetAnotherAudioNode });
         });
 
-        it('should detect a cycle', () => {
+        it('should detect no cycle', () => {
             expect(detectCycles([audioNode], anotherAudioNode)).to.deep.equal([]);
         });
     });
