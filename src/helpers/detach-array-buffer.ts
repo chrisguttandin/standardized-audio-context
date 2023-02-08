@@ -15,6 +15,8 @@ export const detachArrayBuffer = (arrayBuffer: ArrayBuffer): Promise<void> => {
 
         try {
             port1.postMessage(arrayBuffer, [arrayBuffer]);
+        } catch {
+            // Ignore errors.
         } finally {
             closeAndResolve();
         }
