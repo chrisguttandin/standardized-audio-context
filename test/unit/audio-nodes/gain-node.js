@@ -470,6 +470,48 @@ describe('GainNode', () => {
                                 });
                             });
 
+                            describe('with a call to exponentialRampToValueAtTime()', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { audioBufferSourceNode, gainNode }) {
+                                            gainNode.gain.exponentialRampToValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 5));
+
+                                            audioBufferSourceNode.start(startTime);
+                                        },
+                                        verifyChannelData: false
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.at.most(1);
+                                        expect(channelData[1]).to.be.below(0.5);
+                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                        expect(channelData[3]).to.be.above(-0.5);
+                                        expect(channelData[4]).to.be.above(-1);
+                                    });
+                                });
+                            });
+
+                            describe('with a call to linearRampToValueAtTime()', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { audioBufferSourceNode, gainNode }) {
+                                            gainNode.gain.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 5));
+
+                                            audioBufferSourceNode.start(startTime);
+                                        },
+                                        verifyChannelData: false
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.at.most(1);
+                                        expect(channelData[1]).to.be.below(0.5);
+                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                        expect(channelData[3]).to.be.above(-0.5);
+                                        expect(channelData[4]).to.be.above(-1);
+                                    });
+                                });
+                            });
+
                             describe('with a call to setValueAtTime()', () => {
                                 it('should modify the signal', function () {
                                     this.timeout(10000);

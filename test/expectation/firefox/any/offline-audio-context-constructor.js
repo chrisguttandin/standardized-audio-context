@@ -47,6 +47,68 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
+    describe('createConstantSource()', () => {
+        let constantSourceNode;
+
+        beforeEach(() => {
+            constantSourceNode = offlineAudioContext.createConstantSource();
+        });
+
+        describe('offset', () => {
+            describe('exponentialRampToValueAtTime()', () => {
+                // bug #194
+
+                it('should not apply a exponential ramp', () => {
+                    constantSourceNode.offset.exponentialRampToValueAtTime(0.5, 1);
+                    constantSourceNode.connect(offlineAudioContext.destination);
+                    constantSourceNode.start();
+
+                    return offlineAudioContext.startRendering().then((renderedBuffer) => {
+                        const channelData = new Float32Array(offlineAudioContext.sampleRate);
+
+                        renderedBuffer.copyFromChannel(channelData, 0);
+
+                        for (const sample of channelData) {
+                            expect(sample).to.equal(1);
+                        }
+
+                        renderedBuffer.copyFromChannel(channelData, 0, offlineAudioContext.sampleRate);
+
+                        for (const sample of channelData) {
+                            expect(sample).to.equal(0.5);
+                        }
+                    });
+                });
+            });
+
+            describe('linearRampToValueAtTime()', () => {
+                // bug #195
+
+                it('should not apply a linear ramp', () => {
+                    constantSourceNode.offset.linearRampToValueAtTime(0, 1);
+                    constantSourceNode.connect(offlineAudioContext.destination);
+                    constantSourceNode.start();
+
+                    return offlineAudioContext.startRendering().then((renderedBuffer) => {
+                        const channelData = new Float32Array(offlineAudioContext.sampleRate);
+
+                        renderedBuffer.copyFromChannel(channelData, 0);
+
+                        for (const sample of channelData) {
+                            expect(sample).to.equal(1);
+                        }
+
+                        renderedBuffer.copyFromChannel(channelData, 0, offlineAudioContext.sampleRate);
+
+                        for (const sample of channelData) {
+                            expect(sample).to.equal(0);
+                        }
+                    });
+                });
+            });
+        });
+    });
+
     describe('createDynamicsCompressor()', () => {
         // bug #112
 

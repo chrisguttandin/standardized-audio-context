@@ -107,8 +107,16 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                     throw new RangeError();
                 }
 
+                const currentTime = audioNode.context.currentTime;
+
                 if (audioParamRenderer === null) {
-                    automationEventList.flush(audioNode.context.currentTime);
+                    automationEventList.flush(currentTime);
+                }
+
+                // Bug #194: Firefox does not implicitly call setValueAtTime() if there is no previous event.
+                if (Array.from(automationEventList).length === 0) {
+                    automationEventList.add(createSetValueAutomationEvent(nativeAudioParam.defaultValue, currentTime));
+                    nativeAudioParam.setValueAtTime(nativeAudioParam.defaultValue, currentTime);
                 }
 
                 automationEventList.add(createExponentialRampToValueAutomationEvent(value, endTime));
@@ -117,8 +125,16 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 return audioParam;
             },
             linearRampToValueAtTime(value: number, endTime: number): IAudioParam {
+                const currentTime = audioNode.context.currentTime;
+
                 if (audioParamRenderer === null) {
-                    automationEventList.flush(audioNode.context.currentTime);
+                    automationEventList.flush(currentTime);
+                }
+
+                // Bug #195: Firefox does not implicitly call setValueAtTime() if there is no previous event.
+                if (Array.from(automationEventList).length === 0) {
+                    automationEventList.add(createSetValueAutomationEvent(nativeAudioParam.defaultValue, currentTime));
+                    nativeAudioParam.setValueAtTime(nativeAudioParam.defaultValue, currentTime);
                 }
 
                 automationEventList.add(createLinearRampToValueAutomationEvent(value, endTime));
