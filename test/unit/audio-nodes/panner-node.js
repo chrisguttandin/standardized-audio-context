@@ -261,6 +261,12 @@ describe('PannerNode', () => {
                                 const orientationX = 0.5;
                                 const pannerNode = createPannerNode(context, { orientationX });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(pannerNode.orientationX.defaultValue).to.equal(orientationX);
+                                } else {
+                                    expect(pannerNode.orientationX.defaultValue).to.equal(1);
+                                }
+
                                 expect(pannerNode.orientationX.value).to.equal(orientationX);
                             });
 
@@ -268,12 +274,24 @@ describe('PannerNode', () => {
                                 const orientationY = 0.5;
                                 const pannerNode = createPannerNode(context, { orientationY });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(pannerNode.orientationY.defaultValue).to.equal(orientationY);
+                                } else {
+                                    expect(pannerNode.orientationY.defaultValue).to.equal(0);
+                                }
+
                                 expect(pannerNode.orientationY.value).to.equal(orientationY);
                             });
 
                             it('should return an instance with the given initial value for orientationZ', () => {
                                 const orientationZ = 0.5;
                                 const pannerNode = createPannerNode(context, { orientationZ });
+
+                                if (description.startsWith('constructor')) {
+                                    expect(pannerNode.orientationZ.defaultValue).to.equal(orientationZ);
+                                } else {
+                                    expect(pannerNode.orientationZ.defaultValue).to.equal(0);
+                                }
 
                                 expect(pannerNode.orientationZ.value).to.equal(orientationZ);
                             });
@@ -289,6 +307,12 @@ describe('PannerNode', () => {
                                 const positionX = 0.5;
                                 const pannerNode = createPannerNode(context, { positionX });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(pannerNode.positionX.defaultValue).to.equal(positionX);
+                                } else {
+                                    expect(pannerNode.positionX.defaultValue).to.equal(0);
+                                }
+
                                 expect(pannerNode.positionX.value).to.equal(positionX);
                             });
 
@@ -296,12 +320,24 @@ describe('PannerNode', () => {
                                 const positionY = 0.5;
                                 const pannerNode = createPannerNode(context, { positionY });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(pannerNode.positionY.defaultValue).to.equal(positionY);
+                                } else {
+                                    expect(pannerNode.positionY.defaultValue).to.equal(0);
+                                }
+
                                 expect(pannerNode.positionY.value).to.equal(positionY);
                             });
 
                             it('should return an instance with the given initial value for positionZ', () => {
                                 const positionZ = 0.5;
                                 const pannerNode = createPannerNode(context, { positionZ });
+
+                                if (description.startsWith('constructor')) {
+                                    expect(pannerNode.positionZ.defaultValue).to.equal(positionZ);
+                                } else {
+                                    expect(pannerNode.positionZ.defaultValue).to.equal(0);
+                                }
 
                                 expect(pannerNode.positionZ.value).to.equal(positionZ);
                             });

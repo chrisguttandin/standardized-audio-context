@@ -232,6 +232,12 @@ describe('AudioBufferSourceNode', () => {
                                 const playbackRate = 2;
                                 const audioBufferSourceNode = createAudioBufferSourceNode(context, { playbackRate });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(audioBufferSourceNode.playbackRate.defaultValue).to.equal(playbackRate);
+                                } else {
+                                    expect(audioBufferSourceNode.playbackRate.defaultValue).to.equal(1);
+                                }
+
                                 expect(audioBufferSourceNode.playbackRate.value).to.equal(playbackRate);
                             });
                         });

@@ -156,6 +156,12 @@ describe('StereoPannerNode', () => {
                                 const pan = 0.5;
                                 const stereoPannerNode = createStereoPannerNode(context, { pan });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(stereoPannerNode.pan.defaultValue).to.equal(pan);
+                                } else {
+                                    expect(stereoPannerNode.pan.defaultValue).to.equal(0);
+                                }
+
                                 expect(stereoPannerNode.pan.value).to.equal(pan);
                             });
                         });

@@ -162,6 +162,12 @@ describe('GainNode', () => {
                                 const gain = 0.5;
                                 const gainNode = createGainNode(context, { gain });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(gainNode.gain.defaultValue).to.equal(gain);
+                                } else {
+                                    expect(gainNode.gain.defaultValue).to.equal(1);
+                                }
+
                                 expect(gainNode.gain.value).to.equal(gain);
                             });
                         });

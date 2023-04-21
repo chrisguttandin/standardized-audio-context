@@ -24,11 +24,13 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
         maxValue: null | number = null,
         minValue: null | number = null
     ): IAudioParam => {
-        const automationEventList = new AutomationEventList(nativeAudioParam.defaultValue);
+        // Bug #196 Only Safari sets the defaultValue to the initial value.
+        const defaultValue = nativeAudioParam.value;
+        const automationEventList = new AutomationEventList(defaultValue);
         const audioParamRenderer = isAudioParamOfOfflineAudioContext ? createAudioParamRenderer(automationEventList) : null;
         const audioParam = {
             get defaultValue(): number {
-                return nativeAudioParam.defaultValue;
+                return defaultValue;
             },
             get maxValue(): number {
                 return maxValue === null ? nativeAudioParam.maxValue : maxValue;
@@ -115,8 +117,8 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 // Bug #194: Firefox does not implicitly call setValueAtTime() if there is no previous event.
                 if (Array.from(automationEventList).length === 0) {
-                    automationEventList.add(createSetValueAutomationEvent(nativeAudioParam.defaultValue, currentTime));
-                    nativeAudioParam.setValueAtTime(nativeAudioParam.defaultValue, currentTime);
+                    automationEventList.add(createSetValueAutomationEvent(defaultValue, currentTime));
+                    nativeAudioParam.setValueAtTime(defaultValue, currentTime);
                 }
 
                 automationEventList.add(createExponentialRampToValueAutomationEvent(value, endTime));
@@ -133,8 +135,8 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
 
                 // Bug #195: Firefox does not implicitly call setValueAtTime() if there is no previous event.
                 if (Array.from(automationEventList).length === 0) {
-                    automationEventList.add(createSetValueAutomationEvent(nativeAudioParam.defaultValue, currentTime));
-                    nativeAudioParam.setValueAtTime(nativeAudioParam.defaultValue, currentTime);
+                    automationEventList.add(createSetValueAutomationEvent(defaultValue, currentTime));
+                    nativeAudioParam.setValueAtTime(defaultValue, currentTime);
                 }
 
                 automationEventList.add(createLinearRampToValueAutomationEvent(value, endTime));

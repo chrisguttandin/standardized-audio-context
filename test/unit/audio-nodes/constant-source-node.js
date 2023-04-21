@@ -168,6 +168,12 @@ describe('ConstantSourceNode', () => {
                                 const offset = 0.5;
                                 const constantSourceNode = createConstantSourceNode(context, { offset });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(constantSourceNode.offset.defaultValue).to.equal(offset);
+                                } else {
+                                    expect(constantSourceNode.offset.defaultValue).to.equal(1);
+                                }
+
                                 expect(constantSourceNode.offset.value).to.equal(offset);
                             });
                         });

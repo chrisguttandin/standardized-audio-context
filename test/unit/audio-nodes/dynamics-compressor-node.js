@@ -153,6 +153,12 @@ describe('DynamicsCompressorNode', () => {
                                 const attack = 0.5;
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context, { attack });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(dynamicsCompressorNode.attack.defaultValue).to.equal(attack);
+                                } else {
+                                    expect(dynamicsCompressorNode.attack.defaultValue).to.equal(Math.fround(0.003));
+                                }
+
                                 expect(dynamicsCompressorNode.attack.value).to.equal(attack);
                             });
 
@@ -181,12 +187,24 @@ describe('DynamicsCompressorNode', () => {
                                 const knee = 20;
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context, { knee });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(dynamicsCompressorNode.knee.defaultValue).to.equal(knee);
+                                } else {
+                                    expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
+                                }
+
                                 expect(dynamicsCompressorNode.knee.value).to.equal(knee);
                             });
 
                             it('should return an instance with the given initial value for ratio', () => {
                                 const ratio = 10;
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context, { ratio });
+
+                                if (description.startsWith('constructor')) {
+                                    expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(ratio);
+                                } else {
+                                    expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
+                                }
 
                                 expect(dynamicsCompressorNode.ratio.value).to.equal(ratio);
                             });
@@ -195,12 +213,24 @@ describe('DynamicsCompressorNode', () => {
                                 const release = 0.5;
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context, { release });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(dynamicsCompressorNode.release.defaultValue).to.equal(release);
+                                } else {
+                                    expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
+                                }
+
                                 expect(dynamicsCompressorNode.release.value).to.equal(release);
                             });
 
                             it('should return an instance with the given initial value for threshold', () => {
                                 const threshold = -50;
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context, { threshold });
+
+                                if (description.startsWith('constructor')) {
+                                    expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(threshold);
+                                } else {
+                                    expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);
+                                }
 
                                 expect(dynamicsCompressorNode.threshold.value).to.equal(threshold);
                             });

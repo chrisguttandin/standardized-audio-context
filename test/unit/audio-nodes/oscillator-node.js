@@ -176,12 +176,24 @@ describe('OscillatorNode', () => {
                                 const detune = 0.5;
                                 const oscillatorNode = createOscillatorNode(context, { detune });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(oscillatorNode.detune.defaultValue).to.equal(detune);
+                                } else {
+                                    expect(oscillatorNode.detune.defaultValue).to.equal(0);
+                                }
+
                                 expect(oscillatorNode.detune.value).to.equal(detune);
                             });
 
                             it('should return an instance with the given initial value for frequency', () => {
                                 const frequency = 500;
                                 const oscillatorNode = createOscillatorNode(context, { frequency });
+
+                                if (description.startsWith('constructor')) {
+                                    expect(oscillatorNode.frequency.defaultValue).to.equal(frequency);
+                                } else {
+                                    expect(oscillatorNode.frequency.defaultValue).to.equal(440);
+                                }
 
                                 expect(oscillatorNode.frequency.value).to.equal(frequency);
                             });

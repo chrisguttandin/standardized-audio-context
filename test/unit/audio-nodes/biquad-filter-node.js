@@ -174,6 +174,12 @@ describe('BiquadFilterNode', () => {
                                 const detune = 0.5;
                                 const biquadFilterNode = createBiquadFilterNode(context, { detune });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(biquadFilterNode.detune.defaultValue).to.equal(detune);
+                                } else {
+                                    expect(biquadFilterNode.detune.defaultValue).to.equal(0);
+                                }
+
                                 expect(biquadFilterNode.detune.value).to.equal(detune);
                             });
 
@@ -181,12 +187,24 @@ describe('BiquadFilterNode', () => {
                                 const frequency = 1000;
                                 const biquadFilterNode = createBiquadFilterNode(context, { frequency });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(biquadFilterNode.frequency.defaultValue).to.equal(frequency);
+                                } else {
+                                    expect(biquadFilterNode.frequency.defaultValue).to.equal(350);
+                                }
+
                                 expect(biquadFilterNode.frequency.value).to.equal(frequency);
                             });
 
                             it('should return an instance with the given initial value for gain', () => {
                                 const gain = 0.5;
                                 const biquadFilterNode = createBiquadFilterNode(context, { gain });
+
+                                if (description.startsWith('constructor')) {
+                                    expect(biquadFilterNode.gain.defaultValue).to.equal(gain);
+                                } else {
+                                    expect(biquadFilterNode.gain.defaultValue).to.equal(0);
+                                }
 
                                 expect(biquadFilterNode.gain.value).to.equal(gain);
                             });
@@ -201,6 +219,12 @@ describe('BiquadFilterNode', () => {
                             it('should return an instance with the given initial value for Q', () => {
                                 const Q = 2;
                                 const biquadFilterNode = createBiquadFilterNode(context, { Q });
+
+                                if (description.startsWith('constructor')) {
+                                    expect(biquadFilterNode.Q.defaultValue).to.equal(Q);
+                                } else {
+                                    expect(biquadFilterNode.Q.defaultValue).to.equal(1);
+                                }
 
                                 expect(biquadFilterNode.Q.value).to.equal(Q);
                             });

@@ -141,6 +141,12 @@ describe('DelayNode', () => {
                                 const delayTime = 0.5;
                                 const delayNode = createDelayNode(context, { delayTime });
 
+                                if (description.startsWith('constructor')) {
+                                    expect(delayNode.delayTime.defaultValue).to.equal(delayTime);
+                                } else {
+                                    expect(delayNode.delayTime.defaultValue).to.equal(0);
+                                }
+
                                 expect(delayNode.delayTime.value).to.equal(delayTime);
                             });
 
