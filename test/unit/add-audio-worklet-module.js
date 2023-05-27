@@ -3,7 +3,6 @@ import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
-import { isSafari } from '../helper/is-safari';
 
 const createAddAudioWorkletModuleWithAudioWorkletOfContext = (context) => {
     return context.audioWorklet.addModule;
@@ -65,13 +64,7 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
                     this.timeout(10000);
 
                     addAudioWorkletModule('base/test/fixtures/unparsable-processor.xs').catch((err) => {
-                        // Bug #177 Firefox does not throw a SyntaxError.
-                        if (/Firefox/.test(navigator.userAgent)) {
-                            expect(err).to.be.an.instanceOf(Error);
-                        } else {
-                            // Bug #182 Chrome and Edge do throw an instance of a SyntaxError instead of a DOMException.
-                            expect(err).to.be.an.instanceOf(SyntaxError);
-                        }
+                        expect(err).to.be.an.instanceOf(SyntaxError);
 
                         done();
                     });
@@ -146,14 +139,11 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
             });
 
             describe('with a module which contains an import statement', () => {
-                if (!/Firefox/.test(navigator.userAgent) && !isSafari(navigator)) {
-                    // Bug #176 Firefox and Safari do not support import statements yet.
-                    it('should return a resolving promise', function () {
-                        this.timeout(10000);
+                it('should return a resolving promise', function () {
+                    this.timeout(10000);
 
-                        return addAudioWorkletModule('base/test/fixtures/gibberish-processor.js');
-                    });
-                }
+                    return addAudioWorkletModule('base/test/fixtures/gibberish-processor.js');
+                });
             });
         });
     }
