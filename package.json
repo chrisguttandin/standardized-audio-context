@@ -30,7 +30,7 @@
         "@babel/plugin-external-helpers": "^7.22.5",
         "@babel/plugin-transform-runtime": "^7.22.5",
         "@babel/preset-env": "^7.22.5",
-        "@babel/register": "^7.21.0",
+        "@babel/register": "^7.22.5",
         "@commitlint/cli": "^17.6.5",
         "@commitlint/config-angular": "^17.6.5",
         "@rollup/plugin-babel": "^6.0.3",
