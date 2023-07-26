@@ -41,6 +41,9 @@ export const createTestAudioWorkletProcessorPostMessageSupport: TTestAudioWorkle
             oscillator.start(0);
 
             await offlineAudioContext.startRendering();
+
+            // Bug #197: Safari does not deliver the messages before the promise returned by startRendering() resolves.
+            await new Promise((resolve) => setTimeout(resolve));
         } catch {
             // Ignore errors.
         } finally {
