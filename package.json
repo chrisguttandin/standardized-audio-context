@@ -59,7 +59,7 @@
         "puppeteer": "^21.3.5",
         "rimraf": "^5.0.5",
         "rollup": "^3.29.4",
-        "sinon": "^15.2.0",
+        "sinon": "^16.0.0",
         "sinon-chai": "^3.7.0",
         "ts-loader": "^9.4.4",
         "tsconfig-holy-grail": "^14.0.8",
