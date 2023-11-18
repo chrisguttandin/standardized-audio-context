@@ -37,12 +37,6 @@ jobs:
                       target: edge-legacy
                       type: expectation
                     - node-version: 18.x
-                      target: firefox
-                      type: expectation
-                    - node-version: 18.x
-                      target: firefox
-                      type: integration
-                    - node-version: 18.x
                       target: node
                       type: integration
                     - node-version: 18.x
