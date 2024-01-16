@@ -20,7 +20,7 @@
     ],
     "dependencies": {
         "@babel/runtime": "^7.23.8",
-        "automation-events": "^6.0.13",
+        "automation-events": "^6.0.14",
         "tslib": "^2.6.2"
     },
     "description": "A cross-browser wrapper for the Web Audio API which aims to closely follow the standard.",
