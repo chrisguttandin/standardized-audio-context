@@ -58,7 +58,7 @@
         "prettier": "^3.2.2",
         "puppeteer": "^21.7.0",
         "rimraf": "^5.0.5",
-        "rollup": "^4.9.1",
+        "rollup": "^4.9.5",
         "sinon": "^17.0.1",
         "sinon-chai": "^3.7.0",
         "ts-loader": "^9.5.1",
