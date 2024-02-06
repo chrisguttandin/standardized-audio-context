@@ -5,7 +5,7 @@
             "@babel/preset-env",
             {
                 "targets": {
-                    "node": "18.2"
+                    "node": "20.9"
                 }
             }
         ]
