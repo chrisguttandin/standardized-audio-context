@@ -30,5 +30,21 @@ describe('audioContextConstructor', () => {
                 }, 500);
             });
         });
+
+        // Bug #198
+
+        describe('getOutputTimestamp()', () => {
+            it('should expose a wrong contextTime', function (done) {
+                this.timeout(0);
+
+                setTimeout(() => {
+                    expect(audioContext.currentTime).to.above(9);
+                    expect(audioContext.getOutputTimestamp().contextTime).to.below(1);
+                    expect(audioContext.getOutputTimestamp().contextTime * audioContext.sampleRate).to.above(9);
+
+                    done();
+                }, 10000);
+            });
+        });
     });
 });
