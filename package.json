@@ -57,7 +57,7 @@
         "mocha": "^10.6.0",
         "prettier": "^3.3.2",
         "puppeteer": "^22.12.1",
-        "rimraf": "^5.0.6",
+        "rimraf": "^5.0.8",
         "rollup": "^4.17.2",
         "sinon": "^17.0.2",
         "sinon-chai": "^3.7.0",
