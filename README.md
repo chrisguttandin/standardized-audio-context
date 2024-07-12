@@ -427,3 +427,7 @@ API which does not always match the actually available implementations.
 ## Tests
 
 All implemented methods are covered by a large number of tests which run in all the browsers mentioned above. Many thanks to [BrowserStack](https://www.browserstack.com) and [Sauce Labs](https://saucelabs.com) for allowing this module to be tested with their services.
+
+## Security contact information
+
+To report a security vulnerability, please use the [Tidelift security contact](https://tidelift.com/security). Tidelift will coordinate the fix and disclosure.
