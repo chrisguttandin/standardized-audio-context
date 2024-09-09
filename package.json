@@ -95,7 +95,7 @@
         "lint:config": "eslint --config config/eslint/config.json --ext .js --report-unused-disable-directives config/",
         "lint:src": "tslint --config config/tslint/src.json --project src/tsconfig.json src/*.ts src/**/*.ts",
         "lint:test": "eslint --config config/eslint/test.json --ext .js --report-unused-disable-directives test/",
-        "prepare": "husky install",
+        "prepare": "husky",
         "prepublishOnly": "npm run build",
         "test": "grunt lint && grunt test"
     },
