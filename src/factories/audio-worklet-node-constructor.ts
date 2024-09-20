@@ -68,11 +68,11 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
             const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
             const processorConstructor = nodeNameToProcessorConstructorMap?.get(name);
-            // Bug #186: Chrome and Edge do not allow to create an AudioWorkletNode on a closed AudioContext.
+            // Bug #186: Chrome does not allow to create an AudioWorkletNode on a closed AudioContext.
             const nativeContextOrBackupOfflineAudioContext =
                 isOffline || nativeContext.state !== 'closed'
                     ? nativeContext
-                    : getBackupOfflineAudioContext(<TNativeAudioContext>nativeContext) ?? nativeContext;
+                    : (getBackupOfflineAudioContext(<TNativeAudioContext>nativeContext) ?? nativeContext);
             const nativeAudioWorkletNode = createNativeAudioWorkletNode(
                 nativeContextOrBackupOfflineAudioContext,
                 isOffline ? null : (<IMinimalAudioContext>(<any>context)).baseLatency,

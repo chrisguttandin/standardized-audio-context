@@ -23,12 +23,6 @@ module.exports = (grunt) => {
         'test-expectation-chrome-legacy': {
             cmd: `karma start config/karma/config-expectation-chrome-legacy.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },
-        'test-expectation-edge': {
-            cmd: `karma start config/karma/config-expectation-edge.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
-        },
-        'test-expectation-edge-legacy': {
-            cmd: `karma start config/karma/config-expectation-edge-legacy.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
-        },
         'test-expectation-firefox': {
             cmd: `karma start config/karma/config-expectation-firefox.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },

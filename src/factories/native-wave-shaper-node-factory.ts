@@ -32,7 +32,7 @@ export const createNativeWaveShaperNodeFactory: TNativeWaveShaperNodeFactoryFact
 
         const curve = options.curve === null || options.curve instanceof Float32Array ? options.curve : new Float32Array(options.curve);
 
-        // Bug #104: Chrome and Edge will throw an InvalidAccessError when the curve has less than two samples.
+        // Bug #104: Chrome throws an InvalidAccessError when the curve has less than two samples.
         if (curve !== null && curve.length < 2) {
             throw createInvalidStateError();
         }

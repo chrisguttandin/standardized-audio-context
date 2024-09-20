@@ -47,7 +47,7 @@ export const createTestAudioContextDecodeAudioDataMethodTypeErrorSupport: TTestA
 
             // Bug #21: Safari does not support promises yet.
             if (promise !== undefined) {
-                // Bug #6: Chrome, Edge and Firefox do not call the errorCallback.
+                // Bug #6: Chrome and Firefox do not call the errorCallback.
                 promise.catch(resolvePromise);
             }
         });

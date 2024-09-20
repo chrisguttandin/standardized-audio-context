@@ -9,8 +9,8 @@ const createBufferNode = ({ audioNodes, context }) => {
             audioNode._nativeAudioNode === undefined
                 ? 0
                 : audioNode._nativeAudioNode.bufferSize === undefined
-                ? 0
-                : audioNode._nativeAudioNode.bufferSize;
+                  ? 0
+                  : audioNode._nativeAudioNode.bufferSize;
 
         return accumulator + bufferSizeOfAudioNode;
     }, 0);
@@ -129,10 +129,6 @@ const renderOnRealTimeContext = async ({ blockSize, context, length, prepare, pr
         let lastPlaybackOffset = null;
 
         recorderScriptProcessorNode.onaudioprocess = ({ inputBuffer, playbackTime }) => {
-            /*
-             * @todo Add an expectation test to prove the following assumption.
-             * Keeping track of the playbackOffset is necessary because Edge doesn't always report the correct playbackTime.
-             */
             if (lastPlaybackOffset === null) {
                 lastPlaybackOffset = Math.round(playbackTime * sampleRate);
             } else {
@@ -263,10 +259,10 @@ export const createRenderer = ({ context, create, length, prepare }) => {
                         indexOfCurrentTry === 1
                             ? '1st'
                             : indexOfCurrentTry === 2
-                            ? '2nd'
-                            : indexOfCurrentTry === 3
-                            ? '3rd'
-                            : `${indexOfCurrentTry}th`;
+                              ? '2nd'
+                              : indexOfCurrentTry === 3
+                                ? '3rd'
+                                : `${indexOfCurrentTry}th`;
                     const message = `${err.message.slice(0, -1)} when tried for the ${currentTry} time.`;
 
                     if (indexOfCurrentTry < MAX_RETRIES) {

@@ -634,7 +634,7 @@ describe('AudioWorkletGlobalScope', () => {
 
             describe('registerProcessor()', () => {
                 describe('with an empty string as name', () => {
-                    // Bug #134: Chrome & Edge have the only native implementation so far and don't throw the expected error.
+                    // Bug #134: Chrome has the only native implementation so far and throws the expected error.
                     if (window.AudioWorkletNode === undefined) {
                         it('should throw an error', function (done) {
                             this.timeout(10000);
@@ -656,7 +656,7 @@ describe('AudioWorkletGlobalScope', () => {
                         await addAudioWorkletModule(context, 'gain-processor');
                     });
 
-                    // Bug #135: Chrome & Edge have the only native implementation so far and don't throw the expected error.
+                    // Bug #135: Chrome has the only native implementation so far and throws the expected error.
                     if (window.AudioWorkletNode === undefined) {
                         it('should throw an error', function (done) {
                             this.timeout(10000);
@@ -673,7 +673,7 @@ describe('AudioWorkletGlobalScope', () => {
 
                 describe('with a unique name', () => {
                     describe('with a processor without a valid constructor', () => {
-                        // Bug #136: Chrome & Edge have the only native implementation so far and don't throw the expected error.
+                        // Bug #136: Chrome has the only native implementation so far and throws the expected error.
                         if (window.AudioWorkletNode === undefined) {
                             it('should throw an error', function (done) {
                                 this.timeout(10000);
@@ -688,7 +688,7 @@ describe('AudioWorkletGlobalScope', () => {
                     });
 
                     describe('with a processor without a prototype', () => {
-                        // Bug #137: Chrome & Edge have the only native implementation so far and don't throw the expected error.
+                        // Bug #137: Chrome has the only native implementation so far and throws the expected error.
                         if (window.AudioWorkletNode === undefined) {
                             it('should throw an error', function (done) {
                                 this.timeout(10000);
@@ -711,7 +711,7 @@ describe('AudioWorkletGlobalScope', () => {
                     });
 
                     describe('with a processor with an invalid parameterDescriptors property', () => {
-                        // Bug #139: Chrome & Edge have the only native implementation so far and don't throw the expected error.
+                        // Bug #139: Chrome has the only native implementation so far and throws the expected error.
                         if (window.AudioWorkletNode === undefined) {
                             it('should throw an error', function (done) {
                                 this.timeout(10000);

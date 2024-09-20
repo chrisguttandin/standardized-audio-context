@@ -91,24 +91,12 @@ module.exports = (config) => {
              * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
              * 'ChromeBrowserStack',
              */
-            browsers:
-                env.TARGET === 'edge'
-                    ? ['EdgeBrowserStack']
-                    : env.TARGET === 'firefox'
-                    ? ['FirefoxBrowserStack']
-                    : ['EdgeBrowserStack', 'FirefoxBrowserStack'],
+            browsers: env.TARGET === 'firefox' ? ['FirefoxBrowserStack'] : ['ChromeBrowserStack', 'FirefoxBrowserStack'],
 
             customLaunchers: {
                 ChromeBrowserStack: {
                     base: 'BrowserStack',
                     browser: 'chrome',
-                    os: 'Windows',
-                    os_version: '10', // eslint-disable-line camelcase
-                    timeout: 1800
-                },
-                EdgeBrowserStack: {
-                    base: 'BrowserStack',
-                    browser: 'edge',
                     os: 'Windows',
                     os_version: '10', // eslint-disable-line camelcase
                     timeout: 1800
@@ -127,7 +115,6 @@ module.exports = (config) => {
             browsers: [
                 'ChromeCanaryHeadlessWithNoRequiredUserGesture',
                 'ChromeHeadlessWithNoRequiredUserGesture',
-                'Edge',
                 'FirefoxDeveloperHeadlessWithPrefs',
                 'FirefoxHeadlessWithPrefs',
                 'Safari'
@@ -143,9 +130,6 @@ module.exports = (config) => {
                 ChromeHeadlessWithNoRequiredUserGesture: {
                     base: 'ChromeHeadless',
                     flags: ['--autoplay-policy=no-user-gesture-required']
-                },
-                Edge: {
-                    base: 'ChromiumHeadless'
                 },
                 FirefoxDeveloperHeadlessWithPrefs: {
                     base: 'FirefoxDeveloperHeadless',
@@ -165,7 +149,5 @@ module.exports = (config) => {
                 }
             }
         });
-
-        env.CHROMIUM_BIN = '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge';
     }
 };

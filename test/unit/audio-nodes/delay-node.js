@@ -433,7 +433,7 @@ describe('DelayNode', () => {
                                 });
                             });
 
-                            // Bug #185: Chrome and Edge add an extra sample to the delay.
+                            // Bug #185: Chrome adds an extra sample to the delay.
                             if (!/Chrome/.test(navigator.userAgent)) {
                                 describe('with a modified value', () => {
                                     it('should modify the signal', function () {
@@ -484,7 +484,7 @@ describe('DelayNode', () => {
                             });
 
                             describe('with a call to setValueAtTime()', () => {
-                                // Bug #185: Chrome and Edge add an extra sample to the delay.
+                                // Bug #185: Chrome adds an extra sample to the delay.
                                 if (!/Chrome/.test(navigator.userAgent)) {
                                     it('should modify the signal', function () {
                                         this.timeout(10000);
@@ -510,7 +510,7 @@ describe('DelayNode', () => {
                             });
 
                             describe('with a call to setValueCurveAtTime()', () => {
-                                // Bug #185: Chrome and Edge add an extra sample to the delay.
+                                // Bug #185: Chrome adds an extra sample to the delay.
                                 if (!/Chrome/.test(navigator.userAgent)) {
                                     it('should modify the signal', function () {
                                         this.timeout(10000);
@@ -533,7 +533,7 @@ describe('DelayNode', () => {
                             });
 
                             describe('with another AudioNode connected to the AudioParam', () => {
-                                // Bug #185: Chrome and Edge add an extra sample to the delay.
+                                // Bug #185: Chrome adds an extra sample to the delay.
                                 if (!/Chrome/.test(navigator.userAgent)) {
                                     it('should modify the signal', function () {
                                         this.timeout(10000);

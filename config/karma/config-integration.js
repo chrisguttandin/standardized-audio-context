@@ -12,13 +12,11 @@ module.exports = (config) => {
         browsers:
             env.TARGET === 'chrome'
                 ? ['ChromeBrowserStack']
-                : env.TARGET === 'edge'
-                ? ['EdgeBrowserStack']
                 : env.TARGET === 'firefox'
-                ? ['FirefoxBrowserStack']
-                : env.TARGET === 'safari'
-                ? ['SafariBrowserStack']
-                : ['ChromeBrowserStack', 'EdgeBrowserStack', 'FirefoxBrowserStack', 'SafariBrowserStack'],
+                  ? ['FirefoxBrowserStack']
+                  : env.TARGET === 'safari'
+                    ? ['SafariBrowserStack']
+                    : ['ChromeBrowserStack', 'FirefoxBrowserStack', 'SafariBrowserStack'],
 
         concurrency: 1,
 
@@ -29,13 +27,6 @@ module.exports = (config) => {
                 browser_version: '80', // eslint-disable-line camelcase
                 os: 'OS X',
                 os_version: 'High Sierra' // eslint-disable-line camelcase
-            },
-            EdgeBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'edge',
-                browser_version: '80', // eslint-disable-line camelcase
-                os: 'Windows',
-                os_version: '10' // eslint-disable-line camelcase
             },
             FirefoxBrowserStack: {
                 base: 'BrowserStack',

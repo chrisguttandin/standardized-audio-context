@@ -55,7 +55,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 throw createUnknownError();
             }
 
-            // Bug #51 Only Chrome and Edge throw an error if the given latencyHint is invalid.
+            // Bug #51 Only Chrome throws an error if the given latencyHint is invalid.
             if (!isValidLatencyHint(options.latencyHint)) {
                 throw new TypeError(
                     `The provided value '${options.latencyHint}' is not a valid enum value of type AudioContextLatencyCategory.`
@@ -77,16 +77,16 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 typeof nativeAudioContext.baseLatency === 'number'
                     ? nativeAudioContext.baseLatency
                     : latencyHint === 'balanced'
-                    ? 512 / sampleRate
-                    : latencyHint === 'interactive' || latencyHint === undefined
-                    ? 256 / sampleRate
-                    : latencyHint === 'playback'
-                    ? 1024 / sampleRate
-                    : /*
-                       * @todo The min (256) and max (16384) values are taken from the allowed bufferSize values of a
-                       * ScriptProcessorNode.
-                       */
-                      (Math.max(2, Math.min(128, Math.round((latencyHint * sampleRate) / 128))) * 128) / sampleRate;
+                      ? 512 / sampleRate
+                      : latencyHint === 'interactive' || latencyHint === undefined
+                        ? 256 / sampleRate
+                        : latencyHint === 'playback'
+                          ? 1024 / sampleRate
+                          : /*
+                             * @todo The min (256) and max (16384) values are taken from the allowed bufferSize values of a
+                             * ScriptProcessorNode.
+                             */
+                            (Math.max(2, Math.min(128, Math.round((latencyHint * sampleRate) / 128))) * 128) / sampleRate;
             this._nativeAudioContext = nativeAudioContext;
 
             // Bug #188: Safari will set the context's state to 'interrupted' in case the user switches tabs.
@@ -106,8 +106,8 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             this._state = null;
 
             /*
-             * Bug #34: Chrome and Edge pretend to be running right away, but fire an onstatechange event when the state actually changes
-             * to 'running'.
+             * Bug #34: Chrome pretends to be running right away, but dispatches an onstatechange event when the state actually changes to
+             * 'running'.
              */
             if (nativeAudioContext.state === 'running') {
                 this._state = 'suspended';
@@ -191,7 +191,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             }
 
             return this._nativeAudioContext.resume().catch((err) => {
-                // Bug #55: Chrome and Edge do throw an InvalidAccessError instead of an InvalidStateError.
+                // Bug #55: Chrome throws an InvalidAccessError instead of an InvalidStateError.
                 // Bug #56: Safari invokes the catch handler but without an error.
                 if (err === undefined || err.code === 15) {
                     throw createInvalidStateError();

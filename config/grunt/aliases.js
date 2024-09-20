@@ -15,8 +15,6 @@ module.exports = {
             ...filter(isTarget('chrome'), 'sh:test-expectation-chrome'),
             ...filter(isTarget(), 'sh:test-expectation-chrome-canary'),
             ...filter(isTarget('chrome-legacy'), 'sh:test-expectation-chrome-legacy'),
-            ...filter(isTarget('edge'), 'sh:test-expectation-edge'),
-            ...filter(isTarget('edge-legacy'), 'sh:test-expectation-edge-legacy'),
             ...filter(isTarget('firefox'), 'sh:test-expectation-firefox'),
             ...filter(isTarget(), 'sh:test-expectation-firefox-developer'),
             ...filter(isTarget('firefox-legacy'), 'sh:test-expectation-firefox-legacy'),
@@ -25,7 +23,7 @@ module.exports = {
         ),
         ...filter(
             isType('integration'),
-            ...filter(isTarget('chrome', 'edge', 'firefox', 'safari'), 'sh:test-integration-browser'),
+            ...filter(isTarget('chrome', 'firefox', 'safari'), 'sh:test-integration-browser'),
             ...filter(isTarget('node'), 'sh:test-integration-node')
         ),
         ...filter(isType('memory'), 'sh:test-memory'),

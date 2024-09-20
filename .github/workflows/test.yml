@@ -28,15 +28,6 @@ jobs:
                       target: chromium
                       type: memory
                     - node-version: 20.x
-                      target: edge
-                      type: expectation
-                    - node-version: 20.x
-                      target: edge
-                      type: integration
-                    - node-version: 20.x
-                      target: edge-legacy
-                      type: expectation
-                    - node-version: 20.x
                       target: node
                       type: integration
                     - node-version: 20.x
@@ -46,7 +37,7 @@ jobs:
                       target: safari-legacy
                       type: expectation
                 node-version: [20.x]
-                target: [edge, firefox]
+                target: [firefox]
                 type: [unit]
             max-parallel: 3
 

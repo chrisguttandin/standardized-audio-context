@@ -27,7 +27,7 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
             assignNativeAudioNodeOption(nativeOscillatorNode, options, 'type');
         }
 
-        // Bug #44: Only Chrome & Edge throw a RangeError yet.
+        // Bug #44: Only Chrome throws a RangeError yet.
         if (
             !cacheTestResult(testAudioScheduledSourceNodeStartMethodNegativeParametersSupport, () =>
                 testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)

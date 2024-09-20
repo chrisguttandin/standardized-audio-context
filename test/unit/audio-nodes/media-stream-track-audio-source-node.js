@@ -43,8 +43,8 @@ const testCases = {
 
 describe('MediaStreamTrackAudioSourceNode', () => {
     /*
-     * Bug #65: Only Chrome & Edge implement captureStream() so far. But Firefox can be configured to allow user media access without any
-     * user interaction. Safari already supports createMediaStreamDestination().
+     * Bug #65: Only Chrome implements captureStream() so far. But Firefox can be configured to allow user media access without any user
+     * interaction. Safari already supports createMediaStreamDestination().
      * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
      */
     // eslint-disable-next-line no-undef

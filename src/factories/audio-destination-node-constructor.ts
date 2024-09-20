@@ -41,7 +41,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
         }
 
         set channelCount(value) {
-            // Bug #52: Chrome, Edge & Safari do not throw an exception at all.
+            // Bug #52: Chrome and Safari throw no exception at all.
             // Bug #54: Firefox does throw an IndexSizeError.
             if (this._isNodeOfNativeOfflineAudioContext) {
                 throw createInvalidStateError();

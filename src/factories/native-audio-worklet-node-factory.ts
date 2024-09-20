@@ -40,7 +40,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             throw createInvalidStateError();
                         }
                     },
-                    // Bug #156: Chrome and Edge do not yet fire an ErrorEvent.
+                    // Bug #156: Chrome does not yet fire an ErrorEvent.
                     onprocessorerror: {
                         get: () => onprocessorerror,
                         set: (value) => {
@@ -64,8 +64,8 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                                 typeof args[1] === 'function'
                                     ? args[1]
                                     : typeof args[1] === 'object' && args[1] !== null && typeof args[1].handleEvent === 'function'
-                                    ? args[1].handleEvent
-                                    : null;
+                                      ? args[1].handleEvent
+                                      : null;
 
                             if (unpatchedEventListener !== null) {
                                 const patchedEventListener = patchedEventListeners.get(args[1]);
@@ -74,7 +74,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                                     args[1] = patchedEventListener;
                                 } else {
                                     args[1] = (event: Event) => {
-                                        // Bug #178: Chrome and Edge do fire an event of type error.
+                                        // Bug #178: Chrome dispatches an event of type error.
                                         if (event.type === 'error') {
                                             Object.defineProperties(event, {
                                                 type: { value: 'processorerror' }
@@ -91,7 +91,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             }
                         }
 
-                        // Bug #178: Chrome and Edge do fire an event of type error.
+                        // Bug #178: Chrome dispatches an event of type error.
                         addEventListener.call(nativeAudioWorkletNode, 'error', args[1], args[2]);
 
                         return addEventListener.call(nativeAudioWorkletNode, ...args);
@@ -110,7 +110,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             }
                         }
 
-                        // Bug #178: Chrome and Edge do fire an event of type error.
+                        // Bug #178: Chrome dispatches an event of type error.
                         removeEventListener.call(nativeAudioWorkletNode, 'error', args[1], args[2]);
 
                         return removeEventListener.call(nativeAudioWorkletNode, args[0], args[1], args[2]);
@@ -118,8 +118,8 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                 })(nativeAudioWorkletNode.removeEventListener);
 
                 /*
-                 * Bug #86: Chrome and Edge do not invoke the process() function if the corresponding AudioWorkletNode is unconnected but
-                 * has an output.
+                 * Bug #86: Chrome does not invoke the process() function if the corresponding AudioWorkletNode is unconnected but has an
+                 * output.
                  */
                 if (options.numberOfOutputs !== 0) {
                     const nativeGainNode = createNativeGainNode(nativeContext, {
@@ -140,7 +140,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
 
                 return nativeAudioWorkletNode;
             } catch (err) {
-                // Bug #60: Chrome & Edge throw an InvalidStateError instead of a NotSupportedError.
+                // Bug #60: Chrome throws an InvalidStateError instead of a NotSupportedError.
                 if (err.code === 11) {
                     throw createNotSupportedError();
                 }
@@ -149,7 +149,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
             }
         }
 
-        // Bug #61: Only Chrome & Edge have an implementation of the AudioWorkletNode yet.
+        // Bug #61: Only Chrome and Firefox have an implementation of the AudioWorkletNode yet.
         if (processorConstructor === undefined) {
             throw createNotSupportedError();
         }

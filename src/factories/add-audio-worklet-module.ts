@@ -88,7 +88,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                           const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]>(<any>window)._AWGS).pop();
 
                           if (evaluateAudioWorkletGlobalScope === undefined) {
-                              // Bug #182 Chrome and Edge do throw an instance of a SyntaxError instead of a DOMException.
+                              // Bug #182 Chrome throws an instance of a SyntaxError instead of a DOMException.
                               throw new SyntaxError();
                           }
 
@@ -166,7 +166,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                           ? 'AudioWorkletProcessor'
                           : 'class extends AudioWorkletProcessor {__b=new WeakSet();constructor(){super();(p=>p.postMessage=(q=>(m,t)=>q.call(p,m,t?t.filter(u=>!this.__b.has(u)):t))(p.postMessage))(this.port)}}';
                       /*
-                       * Bug #170: Chrome and Edge do call process() with an array with empty channelData for each input if no input is connected.
+                       * Bug #170: Chrome calls process() with an array with empty channelData for each input if no input is connected.
                        *
                        * Bug #179: Firefox does not allow to transfer any buffer which has been passed to the process() method as an argument.
                        *
@@ -225,7 +225,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                                   return nativeContext;
                               }
 
-                              // Bug #186: Chrome and Edge do not allow to create an AudioWorkletNode on a closed AudioContext.
+                              // Bug #186: Chrome does not allow to create an AudioWorkletNode on a closed AudioContext.
                               const backupOfflineAudioContext = getOrCreateBackupOfflineAudioContext(nativeContext);
 
                               return backupOfflineAudioContext.audioWorklet.addModule(url, options).then(() => backupOfflineAudioContext);

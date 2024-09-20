@@ -11,7 +11,7 @@ export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioCon
     return (nativeOfflineAudioContext) => {
         // Bug #21: Safari does not support promises yet.
         if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeOfflineAudioContext))) {
-            // Bug #158: Chrome and Edge do not advance currentTime if it is not accessed while rendering the audio.
+            // Bug #158: Chrome does not advance currentTime if it is not accessed while rendering the audio.
             return Promise.resolve(
                 cacheTestResult(testOfflineAudioContextCurrentTimeSupport, testOfflineAudioContextCurrentTimeSupport)
             ).then((isOfflineAudioContextCurrentTimeSupported) => {
