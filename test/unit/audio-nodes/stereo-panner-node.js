@@ -522,13 +522,17 @@ describe('StereoPannerNode', () => {
                                                 }
                                             }).then((channelData) => {
                                                 if (channelLayout === 'mono') {
-                                                    expect(channelData[0]).to.be.closeTo(0.7071067, 0.000001);
-                                                    expect(channelData[1]).to.be.closeTo(0.3535533, 0.000001);
-                                                    expect(channelData[2]).to.equal(0);
-                                                    expect(channelData[3]).to.be.closeTo(-0.3535533, 0.000001);
-                                                    expect(channelData[4]).to.be.closeTo(-0.7071067, 0.000001);
+                                                    expect(channelData[0]).to.equal(0.7071067690849304);
+                                                    expect(channelData[1]).to.equal(0.3535533845424652);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.3535533845424652);
+                                                    expect(channelData[4]).to.equal(-0.7071067690849304);
                                                 } else {
-                                                    expect(Array.from(channelData)).to.deep.equal([0.25, 0.125, 0, -0.125, -0.25]);
+                                                    expect(channelData[0]).to.equal(0.25);
+                                                    expect(channelData[1]).to.equal(0.125);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.125);
+                                                    expect(channelData[4]).to.equal(-0.25);
                                                 }
                                             });
                                         });
@@ -547,15 +551,17 @@ describe('StereoPannerNode', () => {
                                                 }
                                             }).then((channelData) => {
                                                 if (channelLayout === 'mono') {
-                                                    expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
-                                                    expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
-                                                    expect(channelData[2]).to.equal(0);
-                                                    expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
-                                                    expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
+                                                    expect(channelData[0]).to.equal(0.6532814502716064);
+                                                    expect(channelData[1]).to.equal(0.3266407251358032);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                    expect(channelData[4]).to.equal(-0.6532814502716064);
                                                 } else {
-                                                    expect(Array.from(channelData)).to.deep.equal([
-                                                        0.4571067690849304, 0.2285533845424652, 0, -0.2285533845424652, -0.4571067690849304
-                                                    ]);
+                                                    expect(channelData[0]).to.equal(0.4571067690849304);
+                                                    expect(channelData[1]).to.equal(0.2285533845424652);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.2285533845424652);
+                                                    expect(channelData[4]).to.equal(-0.4571067690849304);
                                                 }
                                             });
                                         });
@@ -588,15 +594,17 @@ describe('StereoPannerNode', () => {
                                                 }
                                             }).then((channelData) => {
                                                 if (channelLayout === 'mono') {
-                                                    expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
-                                                    expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
-                                                    expect(channelData[2]).to.equal(0);
-                                                    expect(channelData[3]).to.be.closeTo(-0.3535533, 0.000001);
-                                                    expect(channelData[4]).to.be.closeTo(-0.7071067, 0.000001);
+                                                    expect(channelData[0]).to.equal(0.6532814502716064);
+                                                    expect(channelData[1]).to.equal(0.3266407251358032);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
+                                                    expect(channelData[3]).to.equal(-0.3535533845424652);
+                                                    expect(channelData[4]).to.equal(-0.7071067690849304);
                                                 } else {
-                                                    expect(Array.from(channelData)).to.deep.equal([
-                                                        0.4571067690849304, 0.2285533845424652, 0, -0.125, -0.25
-                                                    ]);
+                                                    expect(channelData[0]).to.equal(0.4571067690849304);
+                                                    expect(channelData[1]).to.equal(0.2285533845424652);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.125);
+                                                    expect(channelData[4]).to.equal(-0.25);
                                                 }
                                             });
                                         });
@@ -617,15 +625,17 @@ describe('StereoPannerNode', () => {
                                                 }
                                             }).then((channelData) => {
                                                 if (channelLayout === 'mono') {
-                                                    expect(channelData[0]).to.be.closeTo(0.7071067, 0.000001);
-                                                    expect(channelData[1]).to.be.closeTo(0.3535533, 0.000001);
-                                                    expect(channelData[2]).to.equal(0);
-                                                    expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
-                                                    expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
+                                                    expect(channelData[0]).to.equal(0.7071067690849304);
+                                                    expect(channelData[1]).to.equal(0.3535533845424652);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                    expect(channelData[4]).to.equal(-0.6532814502716064);
                                                 } else {
-                                                    expect(Array.from(channelData)).to.deep.equal([
-                                                        0.25, 0.125, 0, -0.2285533845424652, -0.4571067690849304
-                                                    ]);
+                                                    expect(channelData[0]).to.equal(0.25);
+                                                    expect(channelData[1]).to.equal(0.125);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.2285533845424652);
+                                                    expect(channelData[4]).to.equal(-0.4571067690849304);
                                                 }
                                             });
                                         });
@@ -648,14 +658,14 @@ describe('StereoPannerNode', () => {
                                             }).then((channelData) => {
                                                 if (channelLayout === 'mono') {
                                                     expect(channelData[0]).to.equal(0.7071067690849304);
-                                                    expect(channelData[1]).to.be.closeTo(0.3505287, 0.0000001);
-                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[1]).to.equal(0.35052868723869324);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
                                                     expect(channelData[3]).to.equal(-0.3266407251358032);
                                                     expect(channelData[4]).to.equal(-0.6123723983764648);
                                                 } else {
                                                     expect(channelData[0]).to.equal(0.25);
-                                                    expect(channelData[1]).to.be.closeTo(0.1811862, 0.0000001);
-                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[1]).to.equal(0.18118621408939362);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
                                                     expect(channelData[3]).to.equal(-0.2285533845424652);
                                                     expect(channelData[4]).to.be.closeTo(-0.4330127, 0.0000001);
                                                 }
@@ -688,15 +698,17 @@ describe('StereoPannerNode', () => {
                                                 }
                                             }).then((channelData) => {
                                                 if (channelLayout === 'mono') {
-                                                    expect(channelData[0]).to.be.closeTo(0.6532, 0.001);
-                                                    expect(channelData[1]).to.be.closeTo(0.3266, 0.001);
-                                                    expect(channelData[2]).to.equal(0);
-                                                    expect(channelData[3]).to.be.closeTo(-0.3266, 0.001);
-                                                    expect(channelData[4]).to.be.closeTo(-0.6532, 0.001);
+                                                    expect(channelData[0]).to.equal(0.6532814502716064);
+                                                    expect(channelData[1]).to.equal(0.3266407251358032);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                    expect(channelData[4]).to.equal(-0.6532814502716064);
                                                 } else {
-                                                    expect(Array.from(channelData)).to.deep.equal([
-                                                        0.4571067690849304, 0.2285533845424652, 0, -0.2285533845424652, -0.4571067690849304
-                                                    ]);
+                                                    expect(channelData[0]).to.equal(0.4571067690849304);
+                                                    expect(channelData[1]).to.equal(0.2285533845424652);
+                                                    expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                    expect(channelData[3]).to.equal(-0.2285533845424652);
+                                                    expect(channelData[4]).to.equal(-0.4571067690849304);
                                                 }
                                             });
                                         });

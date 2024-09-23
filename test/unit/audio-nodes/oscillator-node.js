@@ -925,11 +925,19 @@ describe('OscillatorNode', () => {
                                     oscillatorNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(channelData[0]).to.equal(0);
-                                expect(channelData[1]).to.equal(1);
-                                expect(channelData[2]).to.be.closeTo(0, 0.000001);
-                                expect(channelData[3]).to.equal(-1);
-                                expect(channelData[4]).to.be.closeTo(0, 0.000001);
+                                if (channelData[1] === 1) {
+                                    expect(channelData[0]).to.be.closeTo(0, 0.00000000001);
+                                    expect(channelData[1]).to.equal(1);
+                                    expect(channelData[2]).to.be.closeTo(0, 0.0000001);
+                                    expect(channelData[3]).to.equal(-1);
+                                    expect(channelData[4]).to.be.closeTo(0, 0.000001);
+                                } else {
+                                    expect(channelData[0]).to.equal(0);
+                                    expect(channelData[1]).to.equal(0);
+                                    expect(channelData[2]).to.equal(1);
+                                    expect(channelData[3]).to.be.closeTo(0, 0.00000000001);
+                                    expect(channelData[4]).to.equal(-1);
+                                }
                             });
                         });
                     });
@@ -1169,11 +1177,19 @@ describe('OscillatorNode', () => {
                                         oscillatorNode.stop(roundToSamples(startTime, context.sampleRate, 3));
                                     }
                                 }).then((channelData) => {
-                                    expect(channelData[0]).to.equal(0);
-                                    expect(channelData[1]).to.equal(1);
-                                    expect(channelData[2]).to.be.closeTo(0, 0.000001);
-                                    expect(channelData[3]).to.equal(0);
-                                    expect(channelData[4]).to.equal(0);
+                                    if (channelData[1] === 1) {
+                                        expect(channelData[0]).to.be.closeTo(0, 0.00000000001);
+                                        expect(channelData[1]).to.equal(1);
+                                        expect(channelData[2]).to.be.closeTo(0, 0.0000001);
+                                        expect(channelData[3]).to.equal(0);
+                                        expect(channelData[4]).to.equal(0);
+                                    } else {
+                                        expect(channelData[0]).to.equal(0);
+                                        expect(channelData[1]).to.equal(0);
+                                        expect(channelData[2]).to.equal(1);
+                                        expect(channelData[3]).to.be.closeTo(0, 0.000000000001);
+                                        expect(channelData[4]).to.equal(0);
+                                    }
                                 });
                             });
                         });

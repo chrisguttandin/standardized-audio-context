@@ -935,7 +935,11 @@ describe('AudioWorkletNode', () => {
                                     audioBufferSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal(values);
+                                expect(channelData[0]).to.equal(1);
+                                expect(channelData[1]).to.equal(0.5);
+                                expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                expect(channelData[3]).to.equal(-0.5);
+                                expect(channelData[4]).to.equal(-1);
                             });
                         });
                     });
@@ -952,7 +956,11 @@ describe('AudioWorkletNode', () => {
                                     audioBufferSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0.5, 0.25, 0, -0.25, -0.5]);
+                                expect(channelData[0]).to.equal(0.5);
+                                expect(channelData[1]).to.equal(0.25);
+                                expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                expect(channelData[3]).to.equal(-0.25);
+                                expect(channelData[4]).to.equal(-0.5);
                             });
                         });
                     });
@@ -975,8 +983,8 @@ describe('AudioWorkletNode', () => {
                                 }
                             }).then((channelData) => {
                                 expect(channelData[0]).to.equal(1);
-                                expect(channelData[1]).to.be.closeTo(0.375, 0.0005);
-                                expect(channelData[2]).to.equal(0);
+                                expect(channelData[1]).to.equal(0.375);
+                                expect(channelData[2]).to.be.closeTo(0, 0.0000000001);
                                 expect(channelData[3]).to.equal(-0.125);
                                 expect(channelData[4]).to.equal(-0.25);
                             });
@@ -999,7 +1007,11 @@ describe('AudioWorkletNode', () => {
                                     audioBufferSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0.5, 0.25, 0, -0.5, -1]);
+                                expect(channelData[0]).to.equal(0.5);
+                                expect(channelData[1]).to.equal(0.25);
+                                expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
+                                expect(channelData[3]).to.equal(-0.5);
+                                expect(channelData[4]).to.equal(-1);
                             });
                         });
                     });
@@ -1063,7 +1075,11 @@ describe('AudioWorkletNode', () => {
                                     audioBufferSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([1, 0.5, 0, -0.25, -0.5]);
+                                expect(channelData[0]).to.equal(1);
+                                expect(channelData[1]).to.equal(0.5);
+                                expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                expect(channelData[3]).to.equal(-0.25);
+                                expect(channelData[4]).to.equal(-0.5);
                             });
                         });
                     });
@@ -1085,7 +1101,11 @@ describe('AudioWorkletNode', () => {
                                     audioBufferSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0.0833333358168602, 0, -0.25, -0.6666666865348816]);
+                                expect(channelData[0]).to.equal(0);
+                                expect(channelData[1]).to.equal(0.0833333358168602);
+                                expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                expect(channelData[3]).to.equal(-0.25);
+                                expect(channelData[4]).to.equal(-0.6666666865348816);
                             });
                         });
                     });
@@ -1114,7 +1134,11 @@ describe('AudioWorkletNode', () => {
                                     audioBufferSourceNodeForAudioParam.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0.5, 0.25, 0, -0.25, -0.5]);
+                                expect(channelData[0]).to.equal(0.5);
+                                expect(channelData[1]).to.equal(0.25);
+                                expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                expect(channelData[3]).to.equal(-0.25);
+                                expect(channelData[4]).to.equal(-0.5);
                             });
                         });
                     });

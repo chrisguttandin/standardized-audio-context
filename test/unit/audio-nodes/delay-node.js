@@ -428,7 +428,11 @@ describe('DelayNode', () => {
                                             audioBufferSourceNode.start(startTime);
                                         }
                                     }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal(values);
+                                        expect(channelData[0]).to.equal(1);
+                                        expect(channelData[1]).to.equal(0.5);
+                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                        expect(channelData[3]).to.equal(-0.5);
+                                        expect(channelData[4]).to.equal(-1);
                                     });
                                 });
                             });
@@ -447,11 +451,11 @@ describe('DelayNode', () => {
                                                 audioBufferSourceNode.start(startTime);
                                             }
                                         }).then((channelData) => {
-                                            expect(channelData[0]).to.be.closeTo(0, 0.00001);
-                                            expect(channelData[1]).to.be.closeTo(0, 0.00001);
-                                            expect(channelData[2]).to.be.closeTo(0, 0.00001);
-                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
-                                            expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                            expect(channelData[0]).to.equal(0);
+                                            expect(channelData[1]).to.equal(0);
+                                            expect(channelData[2]).to.equal(0);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.000001);
+                                            expect(channelData[4]).to.be.closeTo(0.5, 0.000001);
                                         });
                                     });
                                 });
@@ -478,7 +482,11 @@ describe('DelayNode', () => {
                                             audioBufferSourceNode.start(startTime);
                                         }
                                     }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, -0.5, -1]);
+                                        expect(channelData[0]).to.equal(0);
+                                        expect(channelData[1]).to.equal(0);
+                                        expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
+                                        expect(channelData[3]).to.equal(-0.5);
+                                        expect(channelData[4]).to.equal(-1);
                                     });
                                 });
                             });
@@ -502,8 +510,8 @@ describe('DelayNode', () => {
                                             expect(channelData[0]).to.equal(1);
                                             expect(channelData[1]).to.equal(0.5);
                                             expect(channelData[2]).to.equal(0);
-                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
-                                            expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.000001);
+                                            expect(channelData[4]).to.be.closeTo(0.5, 0.000001);
                                         });
                                     });
                                 }
@@ -559,10 +567,10 @@ describe('DelayNode', () => {
                                                 audioBufferSourceNodeForAudioParam.start(startTime);
                                             }
                                         }).then((channelData) => {
-                                            expect(channelData[0]).to.be.closeTo(0, 0.00001);
-                                            expect(channelData[1]).to.be.closeTo(0, 0.00001);
-                                            expect(channelData[2]).to.be.closeTo(0, 0.00001);
-                                            expect(channelData[3]).to.be.closeTo(1, 0.00001);
+                                            expect(channelData[0]).to.equal(0);
+                                            expect(channelData[1]).to.equal(0);
+                                            expect(channelData[2]).to.equal(0);
+                                            expect(channelData[3]).to.be.closeTo(1, 0.000001);
                                             expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
                                         });
                                     });

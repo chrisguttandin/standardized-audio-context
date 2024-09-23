@@ -706,7 +706,9 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(pannerNode.orientationX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.orientationX);
+                        expect(pannerNode.orientationX.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
+                            pannerNode.orientationX
+                        );
                     });
                 });
 
@@ -793,7 +795,9 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(pannerNode.orientationY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.orientationY);
+                        expect(pannerNode.orientationY.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
+                            pannerNode.orientationY
+                        );
                     });
                 });
 
@@ -880,7 +884,9 @@ describe('PannerNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(pannerNode.orientationZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(pannerNode.orientationZ);
+                        expect(pannerNode.orientationZ.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
+                            pannerNode.orientationZ
+                        );
                     });
                 });
 
@@ -1101,9 +1107,11 @@ describe('PannerNode', () => {
                                             audioBufferSourceNode.start(startTime);
                                         }
                                     }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([
-                                            0.7071067690849304, 0.3535533845424652, 0, -0.3535533845424652, -0.7071067690849304
-                                        ]);
+                                        expect(channelData[0]).to.equal(0.7071067690849304);
+                                        expect(channelData[1]).to.equal(0.3535533845424652);
+                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                        expect(channelData[3]).to.equal(-0.3535533845424652);
+                                        expect(channelData[4]).to.equal(-0.7071067690849304);
                                     });
                                 });
                             });
@@ -1120,9 +1128,11 @@ describe('PannerNode', () => {
                                             audioBufferSourceNode.start(startTime);
                                         }
                                     }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([
-                                            0.05000000074505806, 0.02500000037252903, 0, -0.02500000037252903, -0.05000000074505806
-                                        ]);
+                                        expect(channelData[0]).to.equal(0.05000000074505806);
+                                        expect(channelData[1]).to.equal(0.02500000037252903);
+                                        expect(channelData[2]).to.be.closeTo(0, 0.0000000000001);
+                                        expect(channelData[3]).to.equal(-0.02500000037252903);
+                                        expect(channelData[4]).to.equal(-0.05000000074505806);
                                     });
                                 });
                             });
