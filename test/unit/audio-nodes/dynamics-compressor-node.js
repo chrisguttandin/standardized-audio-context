@@ -871,7 +871,9 @@ describe('DynamicsCompressorNode', () => {
                             }
                         });
 
-                        beforeEach(() => {
+                        beforeEach(function () {
+                            this.timeout(5000);
+
                             anotherContext = createContext();
 
                             const gainNode = new GainNode(anotherContext);

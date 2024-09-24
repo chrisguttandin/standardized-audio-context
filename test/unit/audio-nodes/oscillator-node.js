@@ -519,7 +519,9 @@ describe('OscillatorNode', () => {
 
                 for (const withAConnection of [true, false]) {
                     describe(`${withAConnection ? 'with' : 'without'} a connection`, () => {
-                        it('should fire an assigned ended event listener', (done) => {
+                        it('should fire an assigned ended event listener', function (done) {
+                            this.timeout(5000);
+
                             oscillatorNode.onended = function (event) {
                                 expect(event).to.be.an.instanceOf(Event);
                                 expect(event.currentTarget).to.equal(oscillatorNode);

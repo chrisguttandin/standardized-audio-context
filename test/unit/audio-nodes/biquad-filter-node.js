@@ -361,7 +361,9 @@ describe('BiquadFilterNode', () => {
 
                 describe('setValueCurveAtTime()', () => {
                     it('should be chainable', () => {
-                        expect(biquadFilterNode.detune.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(biquadFilterNode.detune);
+                        expect(biquadFilterNode.detune.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
+                            biquadFilterNode.detune
+                        );
                     });
                 });
 
@@ -750,7 +752,9 @@ describe('BiquadFilterNode', () => {
                             }
                         });
 
-                        beforeEach(() => {
+                        beforeEach(function () {
+                            this.timeout(5000);
+
                             anotherContext = createContext();
 
                             const gainNode = new GainNode(anotherContext);

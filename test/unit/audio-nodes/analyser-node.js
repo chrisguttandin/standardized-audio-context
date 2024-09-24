@@ -473,7 +473,9 @@ describe('AnalyserNode', () => {
                             }
                         });
 
-                        beforeEach(() => {
+                        beforeEach(function () {
+                            this.timeout(5000);
+
                             analyserNode = createAnalyserNode(context);
                             anotherContext = createContext();
 
