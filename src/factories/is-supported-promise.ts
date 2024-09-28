@@ -12,7 +12,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = async (
     testConstantSourceNodeAccurateSchedulingSupport,
     testConvolverNodeBufferReassignabilitySupport,
     testConvolverNodeChannelCountSupport,
-    testDomExceptionContrucorSupport,
+    testDomExceptionConstructorSupport,
     testIsSecureContextSupport,
     testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
     testStereoPannerNodeDefaultValueSupport,
@@ -27,7 +27,7 @@ export const createIsSupportedPromise: TIsSupportedPromiseFactory = async (
         cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport) &&
         cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport) &&
         cacheTestResult(testConvolverNodeChannelCountSupport, testConvolverNodeChannelCountSupport) &&
-        cacheTestResult(testDomExceptionContrucorSupport, testDomExceptionContrucorSupport) &&
+        cacheTestResult(testDomExceptionConstructorSupport, testDomExceptionConstructorSupport) &&
         cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport) &&
         cacheTestResult(
             testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
