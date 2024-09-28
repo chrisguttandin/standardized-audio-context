@@ -1,6 +1,7 @@
 import type { testDomExceptionConstructorSupport as testDomExceptionConstructorSupportFunction } from '../helpers/test-dom-exception-constructor-support';
 import type { testTransferablesSupport as testTransferablesSupportFunction } from '../helpers/test-transferables-support';
 import type { createCacheTestResult } from './cache-test-result';
+import type { createTestAudioBufferConstructorSupport } from './test-audio-buffer-constructor-support';
 import type { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './test-audio-buffer-copy-channel-methods-subarray-support';
 import type { createTestAudioContextCloseMethodSupport } from './test-audio-context-close-method-support';
 import type { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './test-audio-context-decode-audio-data-method-type-error-support';
@@ -17,6 +18,7 @@ import type { createTestStereoPannerNodeDefaultValueSupport } from './test-stere
 
 export const createIsSupportedPromise = async (
     cacheTestResult: ReturnType<typeof createCacheTestResult>,
+    testAudioBufferConstructorSupport: ReturnType<typeof createTestAudioBufferConstructorSupport>,
     testAudioBufferCopyChannelMethodsSubarraySupport: ReturnType<typeof createTestAudioBufferCopyChannelMethodsSubarraySupport>,
     testAudioContextCloseMethodSupport: ReturnType<typeof createTestAudioContextCloseMethodSupport>,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: ReturnType<typeof createTestAudioContextDecodeAudioDataMethodTypeErrorSupport>,
@@ -36,6 +38,7 @@ export const createIsSupportedPromise = async (
     testTransferablesSupport: typeof testTransferablesSupportFunction
 ) => {
     if (
+        cacheTestResult(testAudioBufferConstructorSupport, testAudioBufferConstructorSupport) &&
         cacheTestResult(testAudioBufferCopyChannelMethodsSubarraySupport, testAudioBufferCopyChannelMethodsSubarraySupport) &&
         cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport) &&
         cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport) &&

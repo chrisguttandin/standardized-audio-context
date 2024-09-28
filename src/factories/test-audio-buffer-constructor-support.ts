@@ -1,6 +1,6 @@
 import { TTestAudioBufferConstructorSupportFactory } from '../types';
 
-// Bug #33: Safari exposes an AudioBuffer but it can't be used as a constructor.
+// Bug #33: Safari up to version 13.1 exposed an AudioBuffer but it couldn't be used as a constructor.
 export const createTestAudioBufferConstructorSupport: TTestAudioBufferConstructorSupportFactory = (nativeAudioBufferConstructor) => {
     return () => {
         if (nativeAudioBufferConstructor === null) {

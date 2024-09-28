@@ -376,8 +376,6 @@ const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstru
     cacheTestResult,
     createNotSupportedError,
     nativeAudioBufferConstructor,
-    nativeOfflineAudioContextConstructor,
-    createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor),
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 );
@@ -1069,6 +1067,7 @@ export const isAnyOfflineAudioContext = createIsAnyOfflineAudioContext(CONTEXT_S
 export const isSupported = () =>
     createIsSupportedPromise(
         cacheTestResult,
+        createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor),
         createTestAudioBufferCopyChannelMethodsSubarraySupport(nativeOfflineAudioContextConstructor),
         createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
         createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),

@@ -1,7 +1,7 @@
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from '../helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffer-get-channel-data-method';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
-import { TAudioBufferConstructorFactory, TNativeOfflineAudioContext } from '../types';
+import { TAudioBufferConstructorFactory } from '../types';
 
 const DEFAULT_OPTIONS = {
     numberOfChannels: 1
@@ -12,13 +12,9 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
     cacheTestResult,
     createNotSupportedError,
     nativeAudioBufferConstructor,
-    nativeOfflineAudioContextConstructor,
-    testNativeAudioBufferConstructorSupport,
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
-    let nativeOfflineAudioContext: null | TNativeOfflineAudioContext = null;
-
     return class AudioBuffer implements IAudioBuffer {
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public copyFromChannel!: (destination: Float32Array, channelNumber: number, bufferOffset?: number) => void;
@@ -42,25 +38,17 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
         public sampleRate!: number;
 
         constructor(options: IAudioBufferOptions) {
-            if (nativeOfflineAudioContextConstructor === null) {
-                throw new Error('Missing the native OfflineAudioContext constructor.');
+            if (nativeAudioBufferConstructor === null) {
+                throw new Error('Missing the native AudioBuffer constructor.');
             }
 
             const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS, ...options };
-
-            if (nativeOfflineAudioContext === null) {
-                nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
-            }
 
             /*
              * Bug #99: Firefox does not throw a NotSupportedError when the numberOfChannels is zero. But it only does it when using the
              * factory function. But since Firefox also supports the constructor everything should be fine.
              */
-            const audioBuffer =
-                nativeAudioBufferConstructor !== null &&
-                cacheTestResult(testNativeAudioBufferConstructorSupport, testNativeAudioBufferConstructorSupport)
-                    ? new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate })
-                    : nativeOfflineAudioContext.createBuffer(numberOfChannels, length, sampleRate);
+            const audioBuffer = new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate });
 
             // Bug #99: Safari does not throw an error when the numberOfChannels is zero.
             if (audioBuffer.numberOfChannels === 0) {
