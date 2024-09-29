@@ -163,7 +163,6 @@ import { createTestIsSecureContextSupport } from './factories/test-is-secure-con
 import { createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport } from './factories/test-media-stream-audio-source-node-media-stream-without-audio-track-support';
 import { createTestOfflineAudioContextCurrentTimeSupport } from './factories/test-offline-audio-context-current-time-support';
 import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
-import { createUnknownError } from './factories/unknown-error';
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
 import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-node-renderer-factory';
 import { createWindow } from './factories/window';
@@ -848,7 +847,6 @@ const audioContextConstructor: TAudioContextConstructor = createAudioContextCons
     baseAudioContextConstructor,
     createInvalidStateError,
     createNotSupportedError,
-    createUnknownError,
     mediaElementAudioSourceNodeConstructor,
     mediaStreamAudioDestinationNodeConstructor,
     mediaStreamAudioSourceNodeConstructor,
@@ -989,7 +987,6 @@ export { mediaStreamTrackAudioSourceNodeConstructor as MediaStreamTrackAudioSour
 const minimalAudioContextConstructor: TMinimalAudioContextConstructor = createMinimalAudioContextConstructor(
     createInvalidStateError,
     createNotSupportedError,
-    createUnknownError,
     minimalBaseAudioContextConstructor,
     nativeAudioContextConstructor
 );

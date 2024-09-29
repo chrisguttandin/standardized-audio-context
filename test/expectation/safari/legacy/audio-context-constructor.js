@@ -5,38 +5,6 @@ describe('audioContextConstructor', () => {
 
     afterEach(() => audioContext.close());
 
-    describe('without a constructed AudioContext', () => {
-        describe('with four running AudioContexts', () => {
-            let audioContexts;
-            let gainNodes;
-
-            afterEach(() => {
-                [audioContext, ...audioContexts].forEach((dCntxt, index) => gainNodes[index].disconnect(dCntxt.destination));
-
-                return Promise.all(audioContexts.map((dCntxt) => dCntxt.close()));
-            });
-
-            beforeEach(() => {
-                audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
-                audioContexts = [new webkitAudioContext(), new webkitAudioContext(), new webkitAudioContext()]; // eslint-disable-line new-cap, no-undef
-
-                gainNodes = [audioContext, ...audioContexts].map((dCntxt) => {
-                    const gainNode = dCntxt.createGain();
-
-                    gainNode.connect(dCntxt.destination);
-
-                    return gainNode;
-                });
-            });
-
-            // bug #131
-
-            it('should not allow to create another AudioContext', () => {
-                expect(new webkitAudioContext()).to.be.null; // eslint-disable-line new-cap, no-undef
-            });
-        });
-    });
-
     describe('with a constructed AudioContext', () => {
         beforeEach(() => {
             audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef

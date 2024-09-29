@@ -12,7 +12,6 @@ import {
 export const createMinimalAudioContextConstructor: TMinimalAudioContextConstructorFactory = (
     createInvalidStateError,
     createNotSupportedError,
-    createUnknownError,
     minimalBaseAudioContextConstructor,
     nativeAudioContextConstructor
 ) => {
@@ -43,11 +42,6 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 }
 
                 throw err;
-            }
-
-            // Bug #131 Safari returns null when there are four other AudioContexts running already.
-            if (nativeAudioContext === null) {
-                throw createUnknownError();
             }
 
             // Bug #51 Firefox doesn't throw an error if the given latencyHint is invalid.

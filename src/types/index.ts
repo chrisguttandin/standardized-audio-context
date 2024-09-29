@@ -372,7 +372,6 @@ export * from './test-is-secure-context-support-factory';
 export * from './test-media-stream-audio-source-node-media-stream-without-audio-track-support';
 export * from './test-offline-audio-context-current-time-support-factory';
 export * from './test-stereo-panner-node-default-value-support-factory';
-export * from './unknown-error-factory';
 export * from './unrendered-audio-worklet-node-store';
 export * from './unrendered-audio-worklet-nodes';
 export * from './wave-shaper-node-constructor';
