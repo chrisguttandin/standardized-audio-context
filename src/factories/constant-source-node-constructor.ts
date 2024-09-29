@@ -1,4 +1,3 @@
-import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
@@ -52,17 +51,7 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
             this._constantSourceNodeRenderer = constantSourceNodeRenderer;
             this._nativeConstantSourceNode = nativeConstantSourceNode;
-            /*
-             * Bug #62 & #74: Safari does not support ConstantSourceNodes and does not export the correct values for maxValue and minValue
-             * for GainNodes.
-             */
-            this._offset = createAudioParam(
-                this,
-                isOffline,
-                nativeConstantSourceNode.offset,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
+            this._offset = createAudioParam(this, isOffline, nativeConstantSourceNode.offset);
             this._onended = null;
         }
 

@@ -1,4 +1,3 @@
-import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { IAudioParam } from '../interfaces';
 import { TAudioListenerFactoryFactory } from '../types';
 
@@ -104,17 +103,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
                     }
                 });
 
-                /*
-                 * Bug #62 & #74: Safari does not support ConstantSourceNodes and does not export the correct values for maxValue and
-                 * minValue for GainNodes.
-                 */
-                const audioParam = createAudioParam(
-                    <any>{ context },
-                    isOffline,
-                    constantSourceNode.offset,
-                    MOST_POSITIVE_SINGLE_FLOAT,
-                    MOST_NEGATIVE_SINGLE_FLOAT
-                );
+                const audioParam = createAudioParam(<any>{ context }, isOffline, constantSourceNode.offset);
 
                 overwriteAccessors(
                     audioParam,

@@ -7,16 +7,10 @@ import { TNativeConstantSourceNodeFactoryFactory } from '../types';
 export const createNativeConstantSourceNodeFactory: TNativeConstantSourceNodeFactoryFactory = (
     addSilentConnection,
     cacheTestResult,
-    createNativeConstantSourceNodeFaker,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 ) => {
     return (nativeContext, options) => {
-        // Bug #62: Safari does not support ConstantSourceNodes.
-        if (nativeContext.createConstantSource === undefined) {
-            return createNativeConstantSourceNodeFaker(nativeContext, options);
-        }
-
         const nativeConstantSourceNode = nativeContext.createConstantSource();
 
         assignNativeAudioNodeOptions(nativeConstantSourceNode, options);
