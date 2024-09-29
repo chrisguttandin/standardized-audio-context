@@ -9,11 +9,7 @@ export const createNativeAudioDestinationNodeFactory: TNativeAudioDestinationNod
 
         // Bug #132: Safari does not have the correct channelCount.
         if (nativeAudioDestinationNode.channelCount !== channelCount) {
-            try {
-                nativeAudioDestinationNode.channelCount = channelCount;
-            } catch {
-                // Bug #169: Safari throws an error on each attempt to change the channelCount.
-            }
+            nativeAudioDestinationNode.channelCount = channelCount;
         }
 
         // Bug #83: Safari does not have the correct channelCountMode.
@@ -42,15 +38,7 @@ export const createNativeAudioDestinationNodeFactory: TNativeAudioDestinationNod
             (get) => () => get.call(gainNode),
             (set) => (value) => {
                 set.call(gainNode, value);
-
-                try {
-                    nativeAudioDestinationNode.channelCount = value;
-                } catch (err) {
-                    // Bug #169: Safari throws an error on each attempt to change the channelCount.
-                    if (value > nativeAudioDestinationNode.maxChannelCount) {
-                        throw err;
-                    }
-                }
+                nativeAudioDestinationNode.channelCount = value;
             }
         );
 

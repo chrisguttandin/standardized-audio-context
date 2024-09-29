@@ -9,6 +9,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #131: Safari up to version 13.1 returned null when there were four other AudioContexts running already.
  *
  * Bug #150: Safari up to version 13.1 did not support setting the sampleRate.
+ *
+ * Bug #169: Safari up to version 13.1 threw an error on each attempt to change the channelCount of an AudioDestinationNode.
  */
 export const createTestAudioBufferConstructorSupport: TTestAudioBufferConstructorSupportFactory = (nativeAudioBufferConstructor) => {
     return () => {

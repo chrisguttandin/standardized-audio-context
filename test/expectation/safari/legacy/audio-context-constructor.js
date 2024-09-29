@@ -14,18 +14,6 @@ describe('audioContextConstructor', () => {
             expect(window.AudioContext).to.be.undefined;
         });
 
-        describe('destination', () => {
-            describe('channelCount', () => {
-                // bug #169
-
-                it('should throw an error', () => {
-                    expect(() => {
-                        audioContext.destination.channelCount = 1;
-                    }).to.throw(DOMException);
-                });
-            });
-        });
-
         describe('createAnalyser()', () => {
             // bug #41
 
