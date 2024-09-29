@@ -4,6 +4,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #33: Safari up to version 13.1 exposed an AudioBuffer but it couldn't be used as a constructor. It also had a couple more bugs but
  * since this is easy to test it's used here as a placeholder.
  *
+ * Bug #15: Safari up to version 13.1 exposed the wrong default values for channelCount and channelCountMode of a ChannelMergerNode.
+ *
  * Bug #22: Safari up to version 13.1 filled the magResponse and phaseResponse arrays with a deprecated algorithm when calling
  * getFrequencyResponse() of a BiquadFilterNode.
  *
