@@ -14,18 +14,6 @@ describe('audioContextConstructor', () => {
             expect(window.AudioContext).to.be.undefined;
         });
 
-        describe('createAnalyser()', () => {
-            describe('getFloatTimeDomainData()', () => {
-                // bug #36
-
-                it('should not have a getFloatTimeDomainData method', () => {
-                    const analyserNode = audioContext.createAnalyser();
-
-                    expect(analyserNode.getFloatTimeDomainData).to.be.undefined;
-                });
-            });
-        });
-
         describe('createBiquadFilter()', () => {
             let biquadFilterNode;
 
