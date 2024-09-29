@@ -50,6 +50,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #150: Safari up to version 13.1 did not support setting the sampleRate.
  *
  * Bug #169: Safari up to version 13.1 threw an error on each attempt to change the channelCount of an AudioDestinationNode.
+ *
+ * Bug #180: Safari up to version 13.1 not allowed to use ordinary arrays as parameters of createPeriodicWave().
  */
 export const createTestAudioBufferConstructorSupport: TTestAudioBufferConstructorSupportFactory = (nativeAudioBufferConstructor) => {
     return () => {

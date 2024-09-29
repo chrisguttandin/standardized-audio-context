@@ -616,18 +616,6 @@ describe('audioContextConstructor', () => {
             });
         });
 
-        describe('createPeriodicWave()', () => {
-            describe('with regular arrays', () => {
-                // bug #180
-
-                it('should throw an error', () => {
-                    expect(() => {
-                        audioContext.createPeriodicWave([1, 1], [1, 1]);
-                    }).to.throw(TypeError);
-                });
-            });
-        });
-
         describe('createStereoPanner()', () => {
             // bug #105
 
