@@ -362,30 +362,21 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
             if (isAudioNode(destination)) {
                 const nativeDestinationAudioNode = getNativeAudioNode(destination);
 
-                try {
-                    const connection = connectNativeAudioNodeToNativeAudioNode(
-                        this._nativeAudioNode,
-                        nativeDestinationAudioNode,
-                        output,
-                        input
-                    );
+                const connection = connectNativeAudioNodeToNativeAudioNode(
+                    this._nativeAudioNode,
+                    nativeDestinationAudioNode,
+                    output,
+                    input
+                );
 
-                    const isPassive = isPassiveAudioNode(this);
+                const isPassive = isPassiveAudioNode(this);
 
-                    if (isOffline || isPassive) {
-                        this._nativeAudioNode.disconnect(...connection);
-                    }
+                if (isOffline || isPassive) {
+                    this._nativeAudioNode.disconnect(...connection);
+                }
 
-                    if (this.context.state !== 'closed' && !isPassive && isPassiveAudioNode(destination)) {
-                        setInternalStateToActive(destination);
-                    }
-                } catch (err) {
-                    // Bug #41: Safari does not throw the correct exception so far.
-                    if (err.code === 12) {
-                        throw createInvalidAccessError();
-                    }
-
-                    throw err;
+                if (this.context.state !== 'closed' && !isPassive && isPassiveAudioNode(destination)) {
+                    setInternalStateToActive(destination);
                 }
 
                 const isNewConnectionToAudioNode = addConnectionToAudioNode(

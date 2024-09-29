@@ -995,10 +995,7 @@ type minimalAudioContextConstructor = IMinimalAudioContext;
 
 export { minimalAudioContextConstructor as MinimalAudioContext };
 
-const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(
-    createNotSupportedError,
-    nativeOfflineAudioContextConstructor
-);
+const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(nativeOfflineAudioContextConstructor);
 const startRendering = createStartRendering(
     audioBufferStore,
     cacheTestResult,

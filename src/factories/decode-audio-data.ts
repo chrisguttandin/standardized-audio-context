@@ -1,5 +1,4 @@
 import { detachArrayBuffer } from '../helpers/detach-array-buffer';
-import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffer-get-channel-data-method';
 import { TDecodeAudioDataFactory } from '../types';
 
 export const createDecodeAudioData: TDecodeAudioDataFactory = (
@@ -78,10 +77,8 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                     audioData,
                     (audioBuffer) => {
                         // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-                        // Bug #100: Safari does throw a wrong error when calling getChannelData() with an out-of-bounds value.
                         if (typeof audioBuffer.copyFromChannel !== 'function') {
                             wrapAudioBufferCopyChannelMethods(audioBuffer);
-                            wrapAudioBufferGetChannelDataMethod(audioBuffer);
                         }
 
                         audioBufferStore.add(audioBuffer);

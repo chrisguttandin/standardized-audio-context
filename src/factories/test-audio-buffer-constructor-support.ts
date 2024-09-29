@@ -6,7 +6,14 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #39: Safari up to version 13.1 did not expose the baseLatency property of an AudioContext.
  *
+ * Bug #41: Safari up to version 13.1 threw a SyntaxError when trying to connect an AudioNode with an AudioNode of another AudioContext.
+ *
+ * Bug #100: Safari up to version 13.1 threw a SyntaxError when calling getChannelData() with an out-of-bounds value.
+ *
  * Bug #131: Safari up to version 13.1 returned null when there were four other AudioContexts running already.
+ *
+ * Bug #143, #144 & #146: Safari up to version 13.1 threw a SyntaxError when numberOfChannels, length or sampleRate were invalid when
+ * creating an OfflineAudioContext.
  *
  * Bug #150: Safari up to version 13.1 did not support setting the sampleRate.
  *

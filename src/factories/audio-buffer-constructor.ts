@@ -1,5 +1,4 @@
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from '../helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
-import { wrapAudioBufferGetChannelDataMethod } from '../helpers/wrap-audio-buffer-get-channel-data-method';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
 import { TAudioBufferConstructorFactory } from '../types';
 
@@ -56,10 +55,8 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
             }
 
             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-            // Bug #100: Safari does throw a wrong error when calling getChannelData() with an out-of-bounds value.
             if (typeof audioBuffer.copyFromChannel !== 'function') {
                 wrapAudioBufferCopyChannelMethods(audioBuffer);
-                wrapAudioBufferGetChannelDataMethod(audioBuffer);
                 // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
             } else if (
                 !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>

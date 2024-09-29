@@ -15,24 +15,6 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createAnalyser()', () => {
-            // bug #41
-
-            it('should throw a SyntaxError when calling connect() with a node of another AudioContext', (done) => {
-                const analyserNode = audioContext.createAnalyser();
-                const anotherAudioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
-
-                try {
-                    analyserNode.connect(anotherAudioContext.destination);
-                } catch (err) {
-                    expect(err.code).to.equal(12);
-                    expect(err.name).to.equal('SyntaxError');
-
-                    done();
-                } finally {
-                    anotherAudioContext.close();
-                }
-            });
-
             describe('maxDecibels', () => {
                 // bug #118
 
@@ -136,29 +118,6 @@ describe('audioContextConstructor', () => {
                     expect(() => {
                         audioContext.createBuffer(1, 10, 8000);
                     }).to.throw(DOMException);
-                });
-            });
-
-            describe('getChannelData()', () => {
-                let audioBuffer;
-
-                beforeEach(() => {
-                    audioBuffer = audioContext.createBuffer(2, 10, 44100);
-                });
-
-                describe('with an index of an unexisting channel', () => {
-                    // bug #100
-
-                    it('should throw a SyntaxError', (done) => {
-                        try {
-                            audioBuffer.getChannelData(2);
-                        } catch (err) {
-                            expect(err.code).to.equal(12);
-                            expect(err.name).to.equal('SyntaxError');
-
-                            done();
-                        }
-                    });
                 });
             });
         });

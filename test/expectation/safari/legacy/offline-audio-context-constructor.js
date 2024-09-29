@@ -42,51 +42,6 @@ describe('offlineAudioContextConstructor', () => {
                 }).to.throw(TypeError);
             });
         });
-
-        describe('with zero as the numberOfChannels', () => {
-            // bug #146
-
-            it('should throw a SyntaxError', (done) => {
-                try {
-                    new webkitOfflineAudioContext(0, 1, 44100); // eslint-disable-line new-cap, no-undef
-                } catch (err) {
-                    expect(err.code).to.equal(12);
-                    expect(err.name).to.equal('SyntaxError');
-
-                    done();
-                }
-            });
-        });
-
-        describe('with a length of zero', () => {
-            // bug #143
-
-            it('should throw a SyntaxError', (done) => {
-                try {
-                    new webkitOfflineAudioContext(1, 0, 44100); // eslint-disable-line new-cap, no-undef
-                } catch (err) {
-                    expect(err.code).to.equal(12);
-                    expect(err.name).to.equal('SyntaxError');
-
-                    done();
-                }
-            });
-        });
-
-        describe('with a sampleRate of zero', () => {
-            // bug #144
-
-            it('should throw a SyntaxError', (done) => {
-                try {
-                    new webkitOfflineAudioContext(1, 1, 0); // eslint-disable-line new-cap, no-undef
-                } catch (err) {
-                    expect(err.code).to.equal(12);
-                    expect(err.name).to.equal('SyntaxError');
-
-                    done();
-                }
-            });
-        });
     });
 
     describe('destination', () => {
