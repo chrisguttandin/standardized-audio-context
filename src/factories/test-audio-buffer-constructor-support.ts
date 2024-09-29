@@ -30,6 +30,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #100: Safari up to version 13.1 threw a SyntaxError when calling getChannelData() with an out-of-bounds value.
  *
+ * Bug #113: Safari up to version 13.1 allowed to set the channelCount of a ConvolverNode to a value larger than 2.
+ *
  * Bug #118: Safari up to version 13.1 threw no error if maxDecibels was assigned to a value less than minDecibels or minDecibels was
  * assigned to a value greater than maxDecibels.
  *
