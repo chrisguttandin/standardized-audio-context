@@ -136,22 +136,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('createBiquadFilter()', () => {
-        let biquadFilterNode;
-
-        beforeEach(() => {
-            biquadFilterNode = offlineAudioContext.createBiquadFilter();
-        });
-
-        describe('getFrequencyResponse()', () => {
-            // bug #68
-
-            it('should throw no error', () => {
-                biquadFilterNode.getFrequencyResponse(new Float32Array(), new Float32Array(1), new Float32Array(1));
-            });
-        });
-    });
-
     describe('createBufferSource()', () => {
         describe('buffer', () => {
             // bug #95

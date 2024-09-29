@@ -103,11 +103,6 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
                 throw err;
             }
-
-            // Bug #68: Safari does not throw an error if the parameters differ in their length.
-            if (frequencyHz.length !== magResponse.length || magResponse.length !== phaseResponse.length) {
-                throw createInvalidAccessError();
-            }
         }
     };
 };
