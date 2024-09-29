@@ -36,22 +36,6 @@ describe('audioContextConstructor', () => {
                     audioBufferSourceNode = audioContext.createBufferSource();
                 });
 
-                describe('maxValue', () => {
-                    // bug #73
-
-                    it('should be 1024', () => {
-                        expect(audioBufferSourceNode.playbackRate.maxValue).to.equal(1024);
-                    });
-                });
-
-                describe('minValue', () => {
-                    // bug #73
-
-                    it('should be -1024', () => {
-                        expect(audioBufferSourceNode.playbackRate.minValue).to.equal(-1024);
-                    });
-                });
-
                 describe('name', () => {
                     // bug #153
 

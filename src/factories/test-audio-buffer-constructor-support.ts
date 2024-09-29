@@ -24,6 +24,9 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #68: Safari up to version 13.1 did not throw an error if the parameters of getFrequencyResponse() of a BiquadFilterNode differed in
  * their length.
  *
+ * Bug #73: Safari up to version 13.1 did not expose the correct values for maxValue and minValue of the playbackRate AudioParam of an
+ * AudioBufferSourceNode.
+ *
  * Bug #76: Safari up to version 13.1 did not expose the correct values for maxValue and minValue of the frequency AudioParam of an
  * OscillatorNode.
  *

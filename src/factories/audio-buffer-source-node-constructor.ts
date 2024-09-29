@@ -1,4 +1,3 @@
-import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
@@ -66,14 +65,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             this._isBufferSet = mergedOptions.buffer !== null;
             this._nativeAudioBufferSourceNode = nativeAudioBufferSourceNode;
             this._onended = null;
-            // Bug #73: Safari does not export the correct values for maxValue and minValue.
-            this._playbackRate = createAudioParam(
-                this,
-                isOffline,
-                nativeAudioBufferSourceNode.playbackRate,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
+            this._playbackRate = createAudioParam(this, isOffline, nativeAudioBufferSourceNode.playbackRate);
         }
 
         get buffer(): null | TAnyAudioBuffer {
