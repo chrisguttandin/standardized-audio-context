@@ -110,7 +110,7 @@ import { createNativeBiquadFilterNode } from './factories/native-biquad-filter-n
 import { createNativeChannelMergerNode } from './factories/native-channel-merger-node';
 import { createNativeChannelSplitterNode } from './factories/native-channel-splitter-node';
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
-import { createNativeConvolverNodeFactory } from './factories/native-convolver-node-factory';
+import { createNativeConvolverNode } from './factories/native-convolver-node';
 import { createNativeDelayNode } from './factories/native-delay-node';
 import { createNativeDynamicsCompressorNodeFactory } from './factories/native-dynamics-compressor-node-factory';
 import { createNativeGainNode } from './factories/native-gain-node';
@@ -509,7 +509,6 @@ const constantSourceNodeConstructor: TConstantSourceNodeConstructor = createCons
     isNativeOfflineAudioContext,
     wrapEventListener
 );
-const createNativeConvolverNode = createNativeConvolverNodeFactory(createNotSupportedError, overwriteAccessors);
 const createConvolverNodeRenderer = createConvolverNodeRendererFactory(
     createNativeConvolverNode,
     getNativeAudioNode,
