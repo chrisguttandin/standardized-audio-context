@@ -57,11 +57,6 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 );
             }
 
-            // Bug #150 Safari does not support setting the sampleRate.
-            if (options.sampleRate !== undefined && nativeAudioContext.sampleRate !== options.sampleRate) {
-                throw createNotSupportedError();
-            }
-
             super(nativeAudioContext, 2);
 
             const { latencyHint } = options;

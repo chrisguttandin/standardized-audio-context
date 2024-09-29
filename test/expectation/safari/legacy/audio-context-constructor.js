@@ -6,16 +6,6 @@ describe('audioContextConstructor', () => {
     afterEach(() => audioContext.close());
 
     describe('without a constructed AudioContext', () => {
-        // bug #150
-
-        it('should not allow to set the sampleRate', () => {
-            const sampleRate = 16000;
-
-            audioContext = new webkitAudioContext({ sampleRate }); // eslint-disable-line new-cap, no-undef
-
-            expect(audioContext.sampleRate).to.not.equal(sampleRate);
-        });
-
         describe('with four running AudioContexts', () => {
             let audioContexts;
             let gainNodes;
