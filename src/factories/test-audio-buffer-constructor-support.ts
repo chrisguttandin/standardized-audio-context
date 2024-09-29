@@ -6,6 +6,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #15: Safari up to version 13.1 exposed the wrong default values for channelCount and channelCountMode of a ChannelMergerNode.
  *
+ * Bug #16: Safari up to version 13.1 threw no error when changing the channelCount or channelCountMode of a ChannelMergerNode.
+ *
  * Bug #22: Safari up to version 13.1 filled the magResponse and phaseResponse arrays with a deprecated algorithm when calling
  * getFrequencyResponse() of a BiquadFilterNode.
  *

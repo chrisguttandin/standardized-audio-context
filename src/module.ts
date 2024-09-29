@@ -464,7 +464,7 @@ const biquadFilterNodeConstructor: TBiquadFilterNodeConstructor = createBiquadFi
     setAudioNodeTailTime
 );
 const monitorConnections = createMonitorConnections(insertElementInSet, isNativeAudioNode);
-const wrapChannelMergerNode = createWrapChannelMergerNode(createInvalidStateError, monitorConnections);
+const wrapChannelMergerNode = createWrapChannelMergerNode(monitorConnections);
 const createNativeChannelMergerNode = createNativeChannelMergerNodeFactory(nativeAudioContextConstructor, wrapChannelMergerNode);
 const createChannelMergerNodeRenderer = createChannelMergerNodeRendererFactory(
     createNativeChannelMergerNode,

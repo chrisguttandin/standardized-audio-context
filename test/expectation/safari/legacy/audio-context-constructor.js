@@ -129,16 +129,6 @@ describe('audioContextConstructor', () => {
             });
         });
 
-        describe('createChannelMerger()', () => {
-            // bug #16
-
-            it('should allow to set the channelCountMode', () => {
-                const channelMergerNode = audioContext.createChannelMerger();
-
-                channelMergerNode.channelCountMode = 'clamped-max';
-            });
-        });
-
         describe('createChannelSplitter()', () => {
             // bug #96
 
