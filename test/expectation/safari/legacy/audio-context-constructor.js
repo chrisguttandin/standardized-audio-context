@@ -21,24 +21,6 @@ describe('audioContextConstructor', () => {
                 biquadFilterNode = audioContext.createBiquadFilter();
             });
 
-            describe('Q', () => {
-                describe('maxValue', () => {
-                    // bug #80
-
-                    it('should be 1000', () => {
-                        expect(biquadFilterNode.Q.maxValue).to.equal(1000);
-                    });
-                });
-
-                describe('minValue', () => {
-                    // bug #80
-
-                    it('should be 0.00009999999747378752', () => {
-                        expect(biquadFilterNode.Q.minValue).to.equal(0.00009999999747378752);
-                    });
-                });
-            });
-
             describe('getFrequencyResponse()', () => {
                 // bug #22
 

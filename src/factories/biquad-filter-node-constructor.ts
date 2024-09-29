@@ -43,8 +43,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
 
             super(context, false, nativeBiquadFilterNode, biquadFilterNodeRenderer);
 
-            // Bug #80: Safari does not export the correct values for maxValue and minValue.
-            this._Q = createAudioParam(this, isOffline, nativeBiquadFilterNode.Q, MOST_POSITIVE_SINGLE_FLOAT, MOST_NEGATIVE_SINGLE_FLOAT);
+            this._Q = createAudioParam(this, isOffline, nativeBiquadFilterNode.Q);
             // Bug #78: Firefox does not export the correct values for maxValue and minValue.
             this._detune = createAudioParam(
                 this,
