@@ -355,7 +355,6 @@ const audioNodeConstructor = createAudioNodeConstructor(
 const analyserNodeConstructor: TAnalyserNodeConstructor = createAnalyserNodeConstructor(
     audioNodeConstructor,
     createAnalyserNodeRenderer,
-    createIndexSizeError,
     createNativeAnalyserNode,
     getNativeContext,
     isNativeOfflineAudioContext

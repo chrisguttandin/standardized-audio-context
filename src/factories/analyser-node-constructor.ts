@@ -14,7 +14,6 @@ const DEFAULT_OPTIONS = {
 export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
     audionNodeConstructor,
     createAnalyserNodeRenderer,
-    createIndexSizeError,
     createNativeAnalyserNode,
     getNativeContext,
     isNativeOfflineAudioContext
@@ -52,16 +51,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
         }
 
         set maxDecibels(value) {
-            // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.
-            const maxDecibels = this._nativeAnalyserNode.maxDecibels;
-
             this._nativeAnalyserNode.maxDecibels = value;
-
-            if (!(value > this._nativeAnalyserNode.minDecibels)) {
-                this._nativeAnalyserNode.maxDecibels = maxDecibels;
-
-                throw createIndexSizeError();
-            }
         }
 
         get minDecibels(): number {
@@ -69,16 +59,7 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
         }
 
         set minDecibels(value) {
-            // Bug #118: Safari does not throw an error if maxDecibels is not more than minDecibels.
-            const minDecibels = this._nativeAnalyserNode.minDecibels;
-
             this._nativeAnalyserNode.minDecibels = value;
-
-            if (!(this._nativeAnalyserNode.maxDecibels > value)) {
-                this._nativeAnalyserNode.minDecibels = minDecibels;
-
-                throw createIndexSizeError();
-            }
         }
 
         get smoothingTimeConstant(): number {
