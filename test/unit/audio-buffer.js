@@ -4,7 +4,6 @@ import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offli
 import { createNativeAudioContext } from '../helper/create-native-audio-context';
 import { createNativeOfflineAudioContext } from '../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
-import { isSafari } from '../helper/is-safari';
 import { loadFixtureAsArrayBuffer } from '../helper/load-fixture';
 
 const createAudioBufferWithDecodeAudioDataPromiseFunction = (context, { length, numberOfChannels = 1, sampleRate }) => {
@@ -237,16 +236,13 @@ describe('AudioBuffer', () => {
                                     expect(audioBuffer.numberOfChannels).to.equal(numberOfChannels);
                                 });
 
-                                // Bug #140: Safari does not support AudioBuffers with 8000 Hz.
-                                if (!isSafari(navigator)) {
-                                    it('should return an AudioBuffer with the given sampleRate of 8 kHz', async function () {
-                                        this.timeout(10000);
+                                it('should return an AudioBuffer with the given sampleRate of 8 kHz', async function () {
+                                    this.timeout(10000);
 
-                                        const audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 8000 });
+                                    const audioBuffer = await createAudioBuffer(context, { length: 1000, sampleRate: 8000 });
 
-                                        expect(audioBuffer.sampleRate).to.equal(8000);
-                                    });
-                                }
+                                    expect(audioBuffer.sampleRate).to.equal(8000);
+                                });
 
                                 it('should return an AudioBuffer with the given sampleRate of 96 kHz', async function () {
                                     this.timeout(10000);

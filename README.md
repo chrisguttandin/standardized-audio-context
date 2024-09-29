@@ -184,8 +184,6 @@ This is an implementation of the [`createBiquadFilter()`](https://webaudio.githu
 
 This is an implementation of the [`createBuffer()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbuffer) factory method. The [`AudioBuffer`](https://webaudio.github.io/web-audio-api/#audiobuffer) constructor may be used as an alternative.
 
-⚠️ <!-- Bug #140 --> Safari does not support AudioBuffers with a sampleRate below 22050 Hz.
-
 #### createBufferSource() / AudioBufferSourceNode
 
 This is an implementation of the [`createBufferSource()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbuffersource) factory method. The [`AudioBufferSourceNode`](https://webaudio.github.io/web-audio-api/#AudioBufferSourceNode) constructor may be used as an alternative.

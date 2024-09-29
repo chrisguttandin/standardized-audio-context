@@ -27,6 +27,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #131: Safari up to version 13.1 returned null when there were four other AudioContexts running already.
  *
+ * Bug #140: Safari up to version 13.1 did not support creating an AudioBuffer with a sampleRate below 22050 Hz.
+ *
  * Bug #143, #144 & #146: Safari up to version 13.1 threw a SyntaxError when numberOfChannels, length or sampleRate were invalid when
  * creating an OfflineAudioContext.
  *

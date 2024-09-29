@@ -14,18 +14,6 @@ describe('audioContextConstructor', () => {
             expect(window.AudioContext).to.be.undefined;
         });
 
-        describe('createBuffer()', () => {
-            // bug #140
-
-            describe('with a sampleRate of 8000 Hz', () => {
-                it('should throw an error', () => {
-                    expect(() => {
-                        audioContext.createBuffer(1, 10, 8000);
-                    }).to.throw(DOMException);
-                });
-            });
-        });
-
         describe('createBufferSource()', () => {
             describe('detune', () => {
                 let audioBufferSourceNode;
