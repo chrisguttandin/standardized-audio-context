@@ -58,7 +58,6 @@ export * from './minimal-base-audio-context-event-map';
 export * from './minimal-offline-audio-context';
 export * from './native-audio-node-faker';
 export * from './native-audio-worklet-node-faker';
-export * from './native-constant-source-node-faker';
 export * from './native-convolver-node-faker';
 export * from './native-iir-filter-node-faker';
 export * from './native-panner-node-faker';
