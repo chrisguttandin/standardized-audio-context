@@ -87,7 +87,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         set buffer(value) {
             this._nativeAudioBufferSourceNode.buffer = value;
 
-            // Bug #72: Only Chrome does not allow to reassign the buffer yet.
+            // Bug #72: Firefox still allows to reassign the buffer.
             if (value !== null) {
                 if (this._isBufferSet) {
                     throw createInvalidStateError();

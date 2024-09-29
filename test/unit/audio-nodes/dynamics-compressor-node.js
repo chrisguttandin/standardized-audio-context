@@ -1128,7 +1128,7 @@ describe('DynamicsCompressorNode', () => {
                         });
 
                         /*
-                         * Bug #112: Firefox and Safari do not have a tail-time.
+                         * Bug #112: Firefox does not have a tail-time.
                          * it('should disconnect another destination in isolation', function () {
                          *     this.timeout(10000);
                          *

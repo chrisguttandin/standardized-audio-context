@@ -15,7 +15,7 @@ export const createAudioListenerFactory: TAudioListenerFactoryFactory = (
     return (context, nativeContext) => {
         const nativeListener = nativeContext.listener;
 
-        // Bug #117: Only Chrome supports the new interface already.
+        // Bug #117: Firefox does not yet support the new interface.
         const createFakeAudioParams = () => {
             const buffer = new Float32Array(1);
             const channelMergerNode = createNativeChannelMergerNode(nativeContext, {

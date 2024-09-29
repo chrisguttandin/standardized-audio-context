@@ -8,7 +8,7 @@ export const createNativePeriodicWaveFactory: TNativePeriodicWaveFactoryFactory 
 
         const nativePeriodicWave = nativeContext.createPeriodicWave(convertedReal, convertedImag, { disableNormalization });
 
-        // Bug #181: Safari does not throw an IndexSizeError so far if the given arrays have less than two values.
+        // Bug #181: Only Safari throws an IndexSizeError so far if the given arrays have less than two values.
         if (Array.from(imag).length < 2) {
             throw createIndexSizeError();
         }

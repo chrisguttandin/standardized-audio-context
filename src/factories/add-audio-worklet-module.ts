@@ -56,7 +56,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
 
         const nativeContext = getNativeContext(context);
 
-        // Bug #59: Safari does not implement the audioWorklet property.
+        // Bug #59: Firefox does not implement the audioWorklet property.
         const promise =
             nativeContext.audioWorklet === undefined
                 ? fetchSource(moduleURL)

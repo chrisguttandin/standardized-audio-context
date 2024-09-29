@@ -424,7 +424,7 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
                     this._nativeAudioNode.disconnect(nativeAudioParam, output);
                 }
             } catch (err) {
-                // Bug #58: Safari doesn't throw an InvalidAccessError yet.
+                // Bug #58: Chrome doesn't throw an InvalidAccessError yet.
                 if (err.code === 12) {
                     throw createInvalidAccessError();
                 }

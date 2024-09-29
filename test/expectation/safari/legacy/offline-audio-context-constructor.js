@@ -89,14 +89,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('audioWorklet', () => {
-        // bug #59
-
-        it('should not be implemented', () => {
-            expect(offlineAudioContext.audioWorklet).to.be.undefined;
-        });
-    });
-
     describe('destination', () => {
         // bug #132
 
@@ -196,16 +188,6 @@ describe('offlineAudioContextConstructor', () => {
             biquadFilterNode = offlineAudioContext.createBiquadFilter();
         });
 
-        describe('detune', () => {
-            describe('automationRate', () => {
-                // bug #84
-
-                it('should not be implemented', () => {
-                    expect(biquadFilterNode.detune.automationRate).to.be.undefined;
-                });
-            });
-        });
-
         describe('getFrequencyResponse()', () => {
             // bug #22
 
@@ -233,15 +215,6 @@ describe('offlineAudioContextConstructor', () => {
 
     describe('createBufferSource()', () => {
         describe('buffer', () => {
-            // bug #72
-
-            it('should allow to assign the buffer multiple times', () => {
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
-                audioBufferSourceNode.buffer = offlineAudioContext.createBuffer(2, 100, 44100);
-            });
-
             // bug #95
 
             it('should not play a buffer with only one sample', (done) => {
@@ -309,22 +282,6 @@ describe('offlineAudioContextConstructor', () => {
         });
 
         describe('start()', () => {
-            // bug #44
-
-            it('should throw a DOMException', () => {
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                expect(() => audioBufferSourceNode.start(-1))
-                    .to.throw(DOMException)
-                    .with.property('name', 'InvalidStateError');
-                expect(() => audioBufferSourceNode.start(0, -1))
-                    .to.throw(DOMException)
-                    .with.property('name', 'InvalidStateError');
-                expect(() => audioBufferSourceNode.start(0, 0, -1))
-                    .to.throw(DOMException)
-                    .with.property('name', 'InvalidStateError');
-            });
-
             // bug #155
 
             it('should ignore an offset which equals the duration', (done) => {
@@ -525,38 +482,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('createDynamicsCompressor()', () => {
-        // bug #112
-
-        it('should not have a tail-time', (done) => {
-            const audioBuffer = offlineAudioContext.createBuffer(1, 3, 44100);
-            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            const dynamicsCompressorNode = offlineAudioContext.createDynamicsCompressor();
-
-            audioBuffer.getChannelData(0)[0] = 1;
-            audioBuffer.getChannelData(0)[1] = 1;
-            audioBuffer.getChannelData(0)[2] = 1;
-
-            audioBufferSourceNode.buffer = audioBuffer;
-
-            audioBufferSourceNode.connect(dynamicsCompressorNode).connect(offlineAudioContext.destination);
-
-            audioBufferSourceNode.start(0);
-
-            offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
-                // Bug #5: Safari does not support copyFromChannel().
-                const channelData = renderedBuffer.getChannelData(0);
-
-                for (const sample of channelData) {
-                    expect(sample).to.equal(0);
-                }
-
-                done();
-            };
-            offlineAudioContext.startRendering();
-        });
-    });
-
     describe('createGain()', () => {
         // bug #12
 
@@ -594,65 +519,6 @@ describe('offlineAudioContextConstructor', () => {
         });
 
         describe('gain', () => {
-            describe('value', () => {
-                // bug #98
-
-                it('should ignore the value setter while an automation is running', function (done) {
-                    this.timeout(10000);
-
-                    const audioBuffer = offlineAudioContext.createBuffer(
-                        1,
-                        0.5 * offlineAudioContext.sampleRate,
-                        offlineAudioContext.sampleRate
-                    );
-                    const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-                    const gainNode = offlineAudioContext.createGain();
-
-                    // Bug #5: Safari does not support copyToChannel().
-                    for (let i = 0; i < 0.5 * offlineAudioContext.sampleRate; i += 1) {
-                        audioBuffer.getChannelData(0)[i] = 1;
-                    }
-
-                    audioBufferSourceNode.buffer = audioBuffer;
-
-                    gainNode.gain.setValueAtTime(-1, 0);
-                    gainNode.gain.linearRampToValueAtTime(1, 0.5);
-
-                    gainNode.gain.value = 100;
-
-                    audioBufferSourceNode.connect(gainNode).connect(offlineAudioContext.destination);
-
-                    audioBufferSourceNode.start();
-
-                    offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
-                        // Bug #5: Safari does not support copyFromChannel().
-                        const channelData = renderedBuffer.getChannelData(0);
-
-                        for (const sample of channelData) {
-                            expect(sample).to.be.at.least(-1);
-                            expect(sample).to.be.at.most(1);
-                        }
-
-                        done();
-                    };
-                    offlineAudioContext.startRendering();
-                });
-            });
-
-            describe('cancelAndHoldAtTime()', () => {
-                let gainNode;
-
-                beforeEach(() => {
-                    gainNode = offlineAudioContext.createGain();
-                });
-
-                // bug #28
-
-                it('should not be implemented', () => {
-                    expect(gainNode.gain.cancelAndHoldAtTime).to.be.undefined;
-                });
-            });
-
             describe('setValueCurveAtTime()', () => {
                 // bug #152
 
