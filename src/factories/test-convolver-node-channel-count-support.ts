@@ -1,6 +1,6 @@
 import { TTestConvolverNodeChannelCountSupportFactory } from '../types';
 
-// Chrome up to version v80, Edge up to version v80 and Opera up to version v67 did not allow to set the channelCount property of a ConvolverNode to 1. They also did not allow to set the channelCountMode to 'explicit'.
+// Chrome up to version 80, Edge up to version 80 and Opera up to version 67 did not allow to set the channelCount property of a ConvolverNode to 1. They also did not allow to set the channelCountMode to 'explicit'.
 export const createTestConvolverNodeChannelCountSupport: TTestConvolverNodeChannelCountSupportFactory = (
     nativeOfflineAudioContextConstructor
 ) => {
