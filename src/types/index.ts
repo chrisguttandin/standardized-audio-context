@@ -361,6 +361,7 @@ export * from './test-audio-worklet-node-options-clonability-function';
 export * from './test-audio-worklet-processor-no-outputs-support-factory';
 export * from './test-audio-worklet-processor-post-message-support-factory';
 export * from './test-channel-merger-node-channel-count-support-factory';
+export * from './test-constant-source-node-accurate-scheduling-support-factory';
 export * from './test-convolver-node-buffer-reassignability-support-factory';
 export * from './test-convolver-node-channel-count-support-factory';
 export * from './test-is-secure-context-support-factory';
