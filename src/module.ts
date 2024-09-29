@@ -330,7 +330,6 @@ const audioNodeConstructor = createAudioNodeConstructor(
     ),
     createIndexSizeError,
     createInvalidAccessError,
-    createNotSupportedError,
     createDecrementCycleCounter(
         connectNativeAudioNodeToNativeAudioNode,
         CYCLE_COUNTERS,

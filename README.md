@@ -190,8 +190,6 @@ This is an implementation of the [`createBufferSource()`](https://webaudio.githu
 
 ⚠️ <!-- Bug #149 --> The [detune AudioParam](https://webaudio.github.io/web-audio-api/#dom-audiobuffersourcenode-detune) is not implemented so far.
 
-⚠️ <!-- Bug #147 --> Safari up to version 14.0.1 did not support to connect a signal to the [playbackRate AudioParam](https://webaudio.github.io/web-audio-api/#dom-audiobuffersourcenode-playbackrate). Therefore an attempt to connect any other `AudioNode` to it will throw a `NotSupportedError` in those version of Safari.
-
 #### createChannelMerger() / ChannelMergerNode
 
 This is an implementation of the [`createChannelMerger()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createchannelmerger) factory method. The [`ChannelMergerNode`](https://webaudio.github.io/web-audio-api/#channelmergernode) constructor may be used as an alternative.

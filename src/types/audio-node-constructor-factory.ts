@@ -14,7 +14,6 @@ import { TIsNativeAudioNodeFunction } from './is-native-audio-node-function';
 import { TIsNativeAudioParamFunction } from './is-native-audio-param-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeAudioWorkletNodeConstructor } from './native-audio-worklet-node-constructor';
-import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 
 export type TAudioNodeConstructorFactory = (
     addAudioNodeConnections: TAddAudioNodeConnectionsFunction,
@@ -23,7 +22,6 @@ export type TAudioNodeConstructorFactory = (
     createIncrementCycleCounter: TIncrementCycleCounterFactory,
     createIndexSizeError: TIndexSizeErrorFactory,
     createInvalidAccessError: TInvalidAccessErrorFactory,
-    createNotSupportedError: TNotSupportedErrorFactory,
     decrementCycleCounter: TDecrementCycleCounterFunction,
     detectCycles: TDetectCyclesFunction,
     eventTargetConstructor: TEventTargetConstructor,

@@ -164,46 +164,6 @@ describe('offlineAudioContextConstructor', () => {
             });
         });
 
-        describe('playbackRate', () => {
-            // bug #147
-
-            it('should not respect a connected signal', (done) => {
-                const audioBuffer = offlineAudioContext.createBuffer(1, 3, 44100);
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-                const playbackRateAudioBuffer = offlineAudioContext.createBuffer(1, 3, 44100);
-                const playbackRateAudioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBuffer.getChannelData(0)[0] = 1;
-                audioBuffer.getChannelData(0)[1] = 0;
-                audioBuffer.getChannelData(0)[2] = -1;
-
-                playbackRateAudioBuffer.getChannelData(0)[0] = 2;
-                playbackRateAudioBuffer.getChannelData(0)[1] = 2;
-                playbackRateAudioBuffer.getChannelData(0)[2] = 2;
-
-                audioBufferSourceNode.buffer = audioBuffer;
-                playbackRateAudioBufferSourceNode.buffer = playbackRateAudioBuffer;
-
-                audioBufferSourceNode.connect(offlineAudioContext.destination);
-                playbackRateAudioBufferSourceNode.connect(audioBufferSourceNode.playbackRate);
-
-                audioBufferSourceNode.start(0);
-                playbackRateAudioBufferSourceNode.start(0);
-
-                offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
-                    // Bug #5: Safari does not support copyFromChannel().
-                    const channelData = renderedBuffer.getChannelData(0);
-
-                    expect(channelData[0]).to.equal(1);
-                    expect(channelData[1]).to.equal(0);
-                    expect(channelData[2]).to.equal(-1);
-
-                    done();
-                };
-                offlineAudioContext.startRendering();
-            });
-        });
-
         describe('start()', () => {
             // bug #155
 

@@ -51,6 +51,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #143, #144 & #146: Safari up to version 13.1 threw a SyntaxError when numberOfChannels, length or sampleRate were invalid when
  * creating an OfflineAudioContext.
  *
+ * Bug #147: Safari up to version 13.1 did not support to connect a signal to the playbackRate AudioParam of an AudioBufferSourceNode.
+ *
  * Bug #150: Safari up to version 13.1 did not support setting the sampleRate.
  *
  * Bug #169: Safari up to version 13.1 threw an error on each attempt to change the channelCount of an AudioDestinationNode.
