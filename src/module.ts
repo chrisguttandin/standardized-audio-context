@@ -645,7 +645,6 @@ const oscillatorNodeConstructor: TOscillatorNodeConstructor = createOscillatorNo
 const createConnectedNativeAudioBufferSourceNode = createConnectedNativeAudioBufferSourceNodeFactory(createNativeAudioBufferSourceNode);
 const createNativeWaveShaperNodeFaker = createNativeWaveShaperNodeFakerFactory(
     createConnectedNativeAudioBufferSourceNode,
-    createInvalidStateError,
     createNativeGainNode,
     isDCCurve,
     monitorConnections

@@ -632,12 +632,6 @@ describe('audioContextConstructor', () => {
             });
 
             describe('curve', () => {
-                // bug #102
-
-                it('should allow to assign a curve with less than two samples', () => {
-                    waveShaperNode.curve = new Float32Array([1]);
-                });
-
                 // bug #103
 
                 it('should not allow to assign null', () => {

@@ -33,6 +33,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #100: Safari up to version 13.1 threw a SyntaxError when calling getChannelData() with an out-of-bounds value.
  *
+ * Bug #102: Safari up to version 13.1 threw no error when the curve had less than two samples.
+ *
  * Bug #113: Safari up to version 13.1 allowed to set the channelCount of a ConvolverNode to a value larger than 2.
  *
  * Bug #114: Safari up to version 13.1 allowed to set the channelCountMode of a ConvolverNode to 'max'.

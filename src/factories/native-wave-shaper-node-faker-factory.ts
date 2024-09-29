@@ -4,7 +4,6 @@ import { TNativeAudioNode, TNativeWaveShaperNode, TNativeWaveShaperNodeFakerFact
 
 export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerFactoryFactory = (
     createConnectedNativeAudioBufferSourceNode,
-    createInvalidStateError,
     createNativeGainNode,
     isDCCurve,
     monitorConnections
@@ -69,11 +68,6 @@ export const createNativeWaveShaperNodeFakerFactory: TNativeWaveShaperNodeFakerF
                 return unmodifiedCurve;
             },
             set curve(value) {
-                // Bug #102: Safari does not throw an InvalidStateError when the curve has less than two samples.
-                if (value !== null && value.length < 2) {
-                    throw createInvalidStateError();
-                }
-
                 if (value === null) {
                     negativeWaveShaperNode.curve = value;
                     positiveWaveShaperNode.curve = value;
