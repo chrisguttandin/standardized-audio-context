@@ -624,24 +624,6 @@ describe('audioContextConstructor', () => {
             });
         });
 
-        describe('createWaveShaper()', () => {
-            let waveShaperNode;
-
-            beforeEach(() => {
-                waveShaperNode = audioContext.createWaveShaper();
-            });
-
-            describe('curve', () => {
-                // bug #103
-
-                it('should not allow to assign null', () => {
-                    expect(() => {
-                        waveShaperNode.curve = null;
-                    }).to.throw(TypeError, 'The WaveShaperNode.curve attribute must be an instance of Float32Array');
-                });
-            });
-        });
-
         describe('decodeAudioData()', () => {
             // bug #1
 

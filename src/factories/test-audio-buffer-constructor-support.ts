@@ -35,6 +35,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #102: Safari up to version 13.1 threw no error when the curve had less than two samples.
  *
+ * Bug #103: Safari up to version 13.1 not allowed to set the curve to null.
+ *
  * Bug #113: Safari up to version 13.1 allowed to set the channelCount of a ConvolverNode to a value larger than 2.
  *
  * Bug #114: Safari up to version 13.1 allowed to set the channelCountMode of a ConvolverNode to 'max'.
