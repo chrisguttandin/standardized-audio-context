@@ -552,32 +552,6 @@ describe('audioContextConstructor', () => {
             }
         });
 
-        describe('createOscillator()', () => {
-            describe('frequency', () => {
-                let oscillatorNode;
-
-                beforeEach(() => {
-                    oscillatorNode = audioContext.createOscillator();
-                });
-
-                describe('maxValue', () => {
-                    // bug #76
-
-                    it('should be 100000', () => {
-                        expect(oscillatorNode.frequency.maxValue).to.equal(100000);
-                    });
-                });
-
-                describe('minValue', () => {
-                    // bug #76
-
-                    it('should be 0', () => {
-                        expect(oscillatorNode.frequency.minValue).to.equal(0);
-                    });
-                });
-            });
-        });
-
         describe('createPanner()', () => {
             let pannerNode;
 
