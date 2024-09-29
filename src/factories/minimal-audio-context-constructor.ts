@@ -16,8 +16,6 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
     nativeAudioContextConstructor
 ) => {
     return class MinimalAudioContext extends minimalBaseAudioContextConstructor<IMinimalAudioContext> implements IMinimalAudioContext {
-        private _baseLatency: number;
-
         private _nativeAudioContext: TNativeAudioContext;
 
         private _nativeGainNode: null | TNativeGainNode;
@@ -53,24 +51,6 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
 
             super(nativeAudioContext, 2);
 
-            const { latencyHint } = options;
-            const { sampleRate } = nativeAudioContext;
-
-            // @todo The values for 'balanced', 'interactive' and 'playback' are just copied from Chrome's implementation.
-            this._baseLatency =
-                typeof nativeAudioContext.baseLatency === 'number'
-                    ? nativeAudioContext.baseLatency
-                    : latencyHint === 'balanced'
-                      ? 512 / sampleRate
-                      : latencyHint === 'interactive' || latencyHint === undefined
-                        ? 256 / sampleRate
-                        : latencyHint === 'playback'
-                          ? 1024 / sampleRate
-                          : /*
-                             * @todo The min (256) and max (16384) values are taken from the allowed bufferSize values of a
-                             * ScriptProcessorNode.
-                             */
-                            (Math.max(2, Math.min(128, Math.round((latencyHint * sampleRate) / 128))) * 128) / sampleRate;
             this._nativeAudioContext = nativeAudioContext;
 
             // Bug #188: Safari will set the context's state to 'interrupted' in case the user switches tabs.
@@ -109,7 +89,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
         }
 
         get baseLatency(): number {
-            return this._baseLatency;
+            return this._nativeAudioContext.baseLatency;
         }
 
         get state(): TAudioContextState {
