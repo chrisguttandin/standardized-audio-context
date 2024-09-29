@@ -1141,19 +1141,31 @@ describe('BiquadFilterNode', () => {
                 });
 
                 describe('with valid parameters', () => {
-                    // bug #22 This is not yet implemented in Safari.
-                    /*
-                     * it('should fill the magResponse and phaseResponse arrays', () => {
-                     *     const biquadFilterNode = audioContext.createBiquadFilter();
-                     *     const magResponse = new Float32Array(5);
-                     *     const phaseResponse = new Float32Array(5);
-                     *
-                     *     biquadFilterNode.getFrequencyResponse(new Float32Array([ 200, 400, 800, 1600, 3200 ]), magResponse, phaseResponse);
-                     *
-                     *     expect(Array.from(magResponse)).to.deep.equal([ 1.184295654296875, 0.9401244521141052, 0.2128090262413025, 0.048817940056324005, 0.011635963805019855 ]);
-                     *     expect(Array.from(phaseResponse)).to.deep.equal([ -0.6473332643508911, -1.862880825996399, -2.692772388458252, -2.9405176639556885, -3.044968605041504 ]);
-                     * });
-                     */
+                    let biquadFilterNode;
+                    let magResponse;
+                    let phaseResponse;
+
+                    beforeEach(() => {
+                        biquadFilterNode = createBiquadFilterNode(context);
+                        magResponse = new Float32Array(5);
+                        phaseResponse = new Float32Array(5);
+                    });
+
+                    it('should fill the magResponse and phaseResponse arrays', () => {
+                        biquadFilterNode.getFrequencyResponse(new Float32Array([200, 400, 800, 1600, 3200]), magResponse, phaseResponse);
+
+                        expect(magResponse[0]).to.be.closeTo(1.1843022108078003, 0.00001);
+                        expect(magResponse[1]).to.be.closeTo(0.9401395320892334, 0.0001);
+                        expect(magResponse[2]).to.be.closeTo(0.21287287771701813, 0.0001);
+                        expect(magResponse[3]).to.be.closeTo(0.048882875591516495, 0.0001);
+                        expect(magResponse[4]).to.be.closeTo(0.011700107716023922, 0.0001);
+
+                        expect(phaseResponse[0]).to.be.closeTo(-0.6473539471626282, 0.0001);
+                        expect(phaseResponse[1]).to.be.closeTo(-1.8628604412078857, 0.0001);
+                        expect(phaseResponse[2]).to.be.closeTo(-2.6926937103271484, 0.0001);
+                        expect(phaseResponse[3]).to.be.closeTo(-2.940378427505493, 0.001);
+                        expect(phaseResponse[4]).to.be.closeTo(-3.0446999073028564, 0.001);
+                    });
                 });
             });
         });
