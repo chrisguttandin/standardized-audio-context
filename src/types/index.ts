@@ -252,7 +252,6 @@ export * from './native-biquad-filter-node';
 export * from './native-biquad-filter-node-factory';
 export * from './native-channel-merger-node';
 export * from './native-channel-merger-node-factory';
-export * from './native-channel-merger-node-factory-factory';
 export * from './native-channel-splitter-node';
 export * from './native-channel-splitter-node-factory';
 export * from './native-constant-source-node';
@@ -388,6 +387,4 @@ export * from './wrap-audio-buffer-source-node-start-method-offset-clamping-func
 export * from './wrap-audio-buffer-source-node-stop-method-nullified-buffer-factory';
 export * from './wrap-audio-buffer-source-node-stop-method-nullified-buffer-function';
 export * from './wrap-audio-scheduled-source-node-stop-method-consecutive-calls-function';
-export * from './wrap-channel-merger-node-factory';
-export * from './wrap-channel-merger-node-function';
 export * from './wrap-event-listener-function';

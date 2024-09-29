@@ -107,7 +107,7 @@ import { createNativeAudioWorkletNodeConstructor } from './factories/native-audi
 import { createNativeAudioWorkletNodeFactory } from './factories/native-audio-worklet-node-factory';
 import { createNativeAudioWorkletNodeFakerFactory } from './factories/native-audio-worklet-node-faker-factory';
 import { createNativeBiquadFilterNode } from './factories/native-biquad-filter-node';
-import { createNativeChannelMergerNodeFactory } from './factories/native-channel-merger-node-factory';
+import { createNativeChannelMergerNode } from './factories/native-channel-merger-node';
 import { createNativeChannelSplitterNode } from './factories/native-channel-splitter-node';
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConstantSourceNodeFakerFactory } from './factories/native-constant-source-node-faker-factory';
@@ -169,7 +169,6 @@ import { createWindow } from './factories/window';
 import { createWrapAudioBufferCopyChannelMethods } from './factories/wrap-audio-buffer-copy-channel-methods';
 import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
 import { createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer } from './factories/wrap-audio-buffer-source-node-stop-method-nullified-buffer';
-import { createWrapChannelMergerNode } from './factories/wrap-channel-merger-node';
 import {
     AUDIO_NODE_CONNECTIONS_STORE,
     AUDIO_NODE_STORE,
@@ -464,8 +463,6 @@ const biquadFilterNodeConstructor: TBiquadFilterNodeConstructor = createBiquadFi
     setAudioNodeTailTime
 );
 const monitorConnections = createMonitorConnections(insertElementInSet, isNativeAudioNode);
-const wrapChannelMergerNode = createWrapChannelMergerNode(monitorConnections);
-const createNativeChannelMergerNode = createNativeChannelMergerNodeFactory(nativeAudioContextConstructor, wrapChannelMergerNode);
 const createChannelMergerNodeRenderer = createChannelMergerNodeRendererFactory(
     createNativeChannelMergerNode,
     getNativeAudioNode,

@@ -288,40 +288,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('createChannelMerger()', () => {
-        // bug #20
-
-        it('should not handle unconnected channels as silence', (done) => {
-            const sampleRate = offlineAudioContext.sampleRate;
-            // Bug #95: Safari does not play/loop one sample buffers.
-            const audioBuffer = offlineAudioContext.createBuffer(1, 2, sampleRate);
-            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            const channelMergerNode = offlineAudioContext.createChannelMerger(2);
-
-            // Bug #5: Safari does not support copyFromChannel().
-            audioBuffer.getChannelData(0)[0] = 1;
-            audioBuffer.getChannelData(0)[1] = 1;
-
-            audioBufferSourceNode.buffer = audioBuffer;
-
-            channelMergerNode.channelCountMode = 'explicit';
-
-            audioBufferSourceNode.connect(channelMergerNode, 0, 0).connect(offlineAudioContext.destination);
-
-            audioBufferSourceNode.start(0);
-
-            offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
-                // Bug #5: Safari does not support copyFromChannel().
-                const channelData = renderedBuffer.getChannelData(0);
-
-                expect(channelData[0]).to.equal(1);
-
-                done();
-            };
-            offlineAudioContext.startRendering();
-        });
-    });
-
     describe('createChannelSplitter()', () => {
         // bug #96
 
