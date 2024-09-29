@@ -15,14 +15,6 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createBuffer()', () => {
-            // bug #99
-
-            describe('with zero as the numberOfChannels', () => {
-                it('should throw no error', () => {
-                    audioContext.createBuffer(0, 10, 44100);
-                });
-            });
-
             // bug #140
 
             describe('with a sampleRate of 8000 Hz', () => {

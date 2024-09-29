@@ -9,7 +9,6 @@ const DEFAULT_OPTIONS = {
 export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
     audioBufferStore,
     cacheTestResult,
-    createNotSupportedError,
     nativeAudioBufferConstructor,
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
@@ -48,11 +47,6 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
              * factory function. But since Firefox also supports the constructor everything should be fine.
              */
             const audioBuffer = new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate });
-
-            // Bug #99: Safari does not throw an error when the numberOfChannels is zero.
-            if (audioBuffer.numberOfChannels === 0) {
-                throw createNotSupportedError();
-            }
 
             // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
             if (typeof audioBuffer.copyFromChannel !== 'function') {

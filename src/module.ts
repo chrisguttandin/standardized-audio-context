@@ -372,7 +372,6 @@ const wrapAudioBufferCopyChannelMethodsOutOfBounds = createWrapAudioBufferCopyCh
 const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstructor(
     audioBufferStore,
     cacheTestResult,
-    createNotSupportedError,
     nativeAudioBufferConstructor,
     wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
