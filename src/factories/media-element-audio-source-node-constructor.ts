@@ -4,21 +4,17 @@ import { TAudioNodeRenderer, TMediaElementAudioSourceNodeConstructorFactory, TNa
 export const createMediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstructorFactory = (
     audioNodeConstructor,
     createNativeMediaElementAudioSourceNode,
-    getNativeContext,
-    isNativeOfflineAudioContext
+    getNativeContext
 ) => {
-    return class MediaElementAudioSourceNode<T extends IAudioContext | IMinimalAudioContext> extends audioNodeConstructor<T>
-        implements IMediaElementAudioSourceNode<T> {
+    return class MediaElementAudioSourceNode<T extends IAudioContext | IMinimalAudioContext>
+        extends audioNodeConstructor<T>
+        implements IMediaElementAudioSourceNode<T>
+    {
         private _nativeMediaElementAudioSourceNode: TNativeMediaElementAudioSourceNode;
 
         constructor(context: T, options: IMediaElementAudioSourceOptions) {
             const nativeContext = getNativeContext(context);
             const nativeMediaElementAudioSourceNode = createNativeMediaElementAudioSourceNode(nativeContext, options);
-
-            // Bug #171: Safari allows to create a MediaElementAudioSourceNode with an OfflineAudioContext.
-            if (isNativeOfflineAudioContext(nativeContext)) {
-                throw TypeError();
-            }
 
             super(context, true, nativeMediaElementAudioSourceNode, <TAudioNodeRenderer<T>>null);
 

@@ -60,6 +60,12 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #169: Safari up to version 13.1 threw an error on each attempt to change the channelCount of an AudioDestinationNode.
  *
+ * Bug #171: Safari up to version 13.1 allowed to create a MediaElementAudioSourceNode with an OfflineAudioContext.
+ *
+ * Bug #172: Safari up to version 13.1 allowed to create a MediaStreamAudioSourceNode with an OfflineAudioContext.
+ *
+ * Bug #173: Safari up to version 13.1 allowed to create a MediaStreamAudioDestinationNode with an OfflineAudioContext.
+ *
  * Bug #180: Safari up to version 13.1 not allowed to use ordinary arrays as parameters of createPeriodicWave().
  */
 export const createTestAudioBufferConstructorSupport: TTestAudioBufferConstructorSupportFactory = (nativeAudioBufferConstructor) => {

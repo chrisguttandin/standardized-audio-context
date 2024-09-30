@@ -805,8 +805,7 @@ const baseAudioContextConstructor = createBaseAudioContextConstructor(
 const mediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstructor = createMediaElementAudioSourceNodeConstructor(
     audioNodeConstructor,
     createNativeMediaElementAudioSourceNode,
-    getNativeContext,
-    isNativeOfflineAudioContext
+    getNativeContext
 );
 const mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNodeConstructor =
     createMediaStreamAudioDestinationNodeConstructor(
@@ -818,12 +817,10 @@ const mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNo
 const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructor = createMediaStreamAudioSourceNodeConstructor(
     audioNodeConstructor,
     createNativeMediaStreamAudioSourceNode,
-    getNativeContext,
-    isNativeOfflineAudioContext
+    getNativeContext
 );
 const createNativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrackAudioSourceNodeFactory(
-    createInvalidStateError,
-    isNativeOfflineAudioContext
+    createInvalidStateError
 );
 const mediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructor =
     createMediaStreamTrackAudioSourceNodeConstructor(audioNodeConstructor, createNativeMediaStreamTrackAudioSourceNode, getNativeContext);

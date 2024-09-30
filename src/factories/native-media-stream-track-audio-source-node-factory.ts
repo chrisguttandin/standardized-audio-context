@@ -1,8 +1,7 @@
 import { TNativeMediaStreamTrackAudioSourceNodeFactoryFactory } from '../types';
 
 export const createNativeMediaStreamTrackAudioSourceNodeFactory: TNativeMediaStreamTrackAudioSourceNodeFactoryFactory = (
-    createInvalidStateError,
-    isNativeOfflineAudioContext
+    createInvalidStateError
 ) => {
     return (nativeAudioContext, { mediaStreamTrack }) => {
         // Bug #121: Only Firefox does yet support the MediaStreamTrackAudioSourceNode.
@@ -16,11 +15,6 @@ export const createNativeMediaStreamTrackAudioSourceNodeFactory: TNativeMediaStr
         // Bug #120: Firefox does not throw an error if the mediaStream has no audio track.
         if (mediaStreamTrack.kind !== 'audio') {
             throw createInvalidStateError();
-        }
-
-        // Bug #172: Safari allows to create a MediaStreamAudioSourceNode with an OfflineAudioContext.
-        if (isNativeOfflineAudioContext(nativeAudioContext)) {
-            throw new TypeError();
         }
 
         return nativeMediaStreamAudioSourceNode;
