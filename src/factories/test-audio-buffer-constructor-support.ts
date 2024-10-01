@@ -19,6 +19,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #41: Safari up to version 13.1 threw a SyntaxError when trying to connect an AudioNode with an AudioNode of another AudioContext.
  *
+ * Bug #56: Safari up to version 13.1 rejected the promise returned by resume() and suspend() without any error.
+ *
  * Bug #62: Safari up to version 13.1 had no ConstantSourceNode implementation.
  *
  * Bug #68: Safari up to version 13.1 did not throw an error if the parameters of getFrequencyResponse() of a BiquadFilterNode differed in

@@ -140,8 +140,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
 
             return this._nativeAudioContext.resume().catch((err) => {
                 // Bug #55: Chrome throws an InvalidAccessError instead of an InvalidStateError.
-                // Bug #56: Safari invokes the catch handler but without an error.
-                if (err === undefined || err.code === 15) {
+                if (err.code === 15) {
                     throw createInvalidStateError();
                 }
 
@@ -150,14 +149,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
         }
 
         public suspend(): Promise<void> {
-            return this._nativeAudioContext.suspend().catch((err) => {
-                // Bug #56: Safari invokes the catch handler but without an error.
-                if (err === undefined) {
-                    throw createInvalidStateError();
-                }
-
-                throw err;
-            });
+            return this._nativeAudioContext.suspend();
         }
     };
 };

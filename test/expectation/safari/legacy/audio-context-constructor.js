@@ -665,49 +665,11 @@ describe('audioContextConstructor', () => {
             });
         });
 
-        describe('resume()', () => {
-            afterEach(() => {
-                // Create a closeable AudioContext to align the behaviour with other tests.
-                audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
-            });
-
-            beforeEach(() => audioContext.close());
-
-            // bug #56
-
-            it('should throw undefined with a closed AudioContext', (done) => {
-                audioContext.resume().catch((err) => {
-                    expect(err).to.be.undefined;
-
-                    done();
-                });
-            });
-        });
-
         describe('startRendering()', () => {
             // bug #160
 
             it('should expose a startRendering method', () => {
                 expect(audioContext.startRendering).to.be.a('function');
-            });
-        });
-
-        describe('suspend()', () => {
-            afterEach(() => {
-                // Create a closeable AudioContext to align the behaviour with other tests.
-                audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
-            });
-
-            beforeEach(() => audioContext.close());
-
-            // bug #56
-
-            it('should throw undefined with a closed AudioContext', (done) => {
-                audioContext.suspend().catch((err) => {
-                    expect(err).to.be.undefined;
-
-                    done();
-                });
             });
         });
     });
