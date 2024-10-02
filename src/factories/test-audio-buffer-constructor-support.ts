@@ -19,6 +19,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #41: Safari up to version 13.1 threw a SyntaxError when trying to connect an AudioNode with an AudioNode of another AudioContext.
  *
+ * Bug #45: Safari up to version 13.1 threw no error when scheduling an exponential ramp to 0.
+ *
  * Bug #56: Safari up to version 13.1 rejected the promise returned by resume() and suspend() without any error.
  *
  * Bug #62: Safari up to version 13.1 had no ConstantSourceNode implementation.
@@ -87,6 +89,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #173: Safari up to version 13.1 allowed to create a MediaStreamAudioDestinationNode with an OfflineAudioContext.
  *
  * Bug #180: Safari up to version 13.1 not allowed to use ordinary arrays as parameters of createPeriodicWave().
+ *
+ * Bug #187: Safari up to version 13.1 threw no error when scheduling an exponential ramp with negative endTime.
  */
 export const createTestAudioBufferConstructorSupport: TTestAudioBufferConstructorSupportFactory = (nativeAudioBufferConstructor) => {
     return () => {

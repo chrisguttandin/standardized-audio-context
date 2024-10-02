@@ -43,20 +43,6 @@ describe('audioContextConstructor', () => {
                         expect(audioBufferSourceNode.playbackRate.name).to.equal('playbackRate');
                     });
                 });
-
-                describe('exponentialRampToValueAtTime()', () => {
-                    // bug #45
-
-                    it('should not throw any exception', () => {
-                        audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(0, 1);
-                    });
-
-                    // bug #187
-
-                    it('should not throw any exception', () => {
-                        audioBufferSourceNode.playbackRate.exponentialRampToValueAtTime(1, -1);
-                    });
-                });
             });
 
             describe('start()', () => {

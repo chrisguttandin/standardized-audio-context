@@ -99,16 +99,6 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 return audioParam;
             },
             exponentialRampToValueAtTime(value: number, endTime: number): IAudioParam {
-                // Bug #45: Safari does not throw an error yet.
-                if (value === 0) {
-                    throw new RangeError();
-                }
-
-                // Bug #187: Safari does not throw an error yet.
-                if (!Number.isFinite(endTime) || endTime < 0) {
-                    throw new RangeError();
-                }
-
                 const currentTime = audioNode.context.currentTime;
 
                 if (audioParamRenderer === null) {
