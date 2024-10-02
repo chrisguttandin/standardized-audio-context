@@ -264,7 +264,6 @@ export * from './native-delay-node-factory';
 export * from './native-delay-node';
 export * from './native-dynamics-compressor-node';
 export * from './native-dynamics-compressor-node-factory';
-export * from './native-dynamics-compressor-node-factory-factory';
 export * from './native-event-target';
 export * from './native-gain-node';
 export * from './native-gain-node-factory';

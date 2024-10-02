@@ -1,7 +1,6 @@
 import { IAudioParam, IDynamicsCompressorNode, IDynamicsCompressorOptions } from '../interfaces';
 import {
     TAudioNodeRenderer,
-    TChannelCountMode,
     TContext,
     TDynamicsCompressorNodeConstructorFactory,
     TNativeAudioParam,
@@ -24,7 +23,6 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
     createAudioParam,
     createDynamicsCompressorNodeRenderer,
     createNativeDynamicsCompressorNode,
-    createNotSupportedError,
     getNativeContext,
     isNativeOfflineAudioContext,
     setAudioNodeTailTime
@@ -63,43 +61,6 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
 
         get attack(): IAudioParam {
             return this._attack;
-        }
-
-        // Bug #108: Safari allows a channelCount of three and above which is why the getter and setter needs to be overwritten here.
-        get channelCount(): number {
-            return this._nativeDynamicsCompressorNode.channelCount;
-        }
-
-        set channelCount(value) {
-            const previousChannelCount = this._nativeDynamicsCompressorNode.channelCount;
-
-            this._nativeDynamicsCompressorNode.channelCount = value;
-
-            if (value > 2) {
-                this._nativeDynamicsCompressorNode.channelCount = previousChannelCount;
-
-                throw createNotSupportedError();
-            }
-        }
-
-        /*
-         * Bug #109: Only Chrome and Firefox disallow a channelCountMode of 'max' yet which is why the getter and setter needs to be
-         * overwritten here.
-         */
-        get channelCountMode(): TChannelCountMode {
-            return this._nativeDynamicsCompressorNode.channelCountMode;
-        }
-
-        set channelCountMode(value) {
-            const previousChannelCount = this._nativeDynamicsCompressorNode.channelCountMode;
-
-            this._nativeDynamicsCompressorNode.channelCountMode = value;
-
-            if (value === 'max') {
-                this._nativeDynamicsCompressorNode.channelCountMode = previousChannelCount;
-
-                throw createNotSupportedError();
-            }
         }
 
         get knee(): IAudioParam {

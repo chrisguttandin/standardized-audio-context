@@ -58,6 +58,10 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #103: Safari up to version 13.1 not allowed to set the curve to null.
  *
+ * Bug #108: Safari up to version 13.1 allowed to set the channelCount of a DynamicsCompressorNode to a value greater than 2.
+ *
+ * Bug #109: Safari up to version 13.1 allowed to set the channelCountMode of a DynamicsCompressorNode to 'max'.
+ *
  * Bug #113: Safari up to version 13.1 allowed to set the channelCount of a ConvolverNode to a value larger than 2.
  *
  * Bug #114: Safari up to version 13.1 allowed to set the channelCountMode of a ConvolverNode to 'max'.

@@ -112,7 +112,7 @@ import { createNativeChannelSplitterNode } from './factories/native-channel-spli
 import { createNativeConstantSourceNodeFactory } from './factories/native-constant-source-node-factory';
 import { createNativeConvolverNode } from './factories/native-convolver-node';
 import { createNativeDelayNode } from './factories/native-delay-node';
-import { createNativeDynamicsCompressorNodeFactory } from './factories/native-dynamics-compressor-node-factory';
+import { createNativeDynamicsCompressorNode } from './factories/native-dynamics-compressor-node';
 import { createNativeGainNode } from './factories/native-gain-node';
 import { createNativeIIRFilterNodeFactory } from './factories/native-iir-filter-node-factory';
 import { createNativeIIRFilterNodeFakerFactory } from './factories/native-iir-filter-node-faker-factory';
@@ -536,7 +536,6 @@ const delayNodeConstructor: TDelayNodeConstructor = createDelayNodeConstructor(
     isNativeOfflineAudioContext,
     setAudioNodeTailTime
 );
-const createNativeDynamicsCompressorNode = createNativeDynamicsCompressorNodeFactory(createNotSupportedError);
 const createDynamicsCompressorNodeRenderer = createDynamicsCompressorNodeRendererFactory(
     connectAudioParam,
     createNativeDynamicsCompressorNode,
@@ -549,7 +548,6 @@ const dynamicsCompressorNodeConstructor: TDynamicsCompressorNodeConstructor = cr
     createAudioParam,
     createDynamicsCompressorNodeRenderer,
     createNativeDynamicsCompressorNode,
-    createNotSupportedError,
     getNativeContext,
     isNativeOfflineAudioContext,
     setAudioNodeTailTime
