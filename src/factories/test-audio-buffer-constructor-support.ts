@@ -78,6 +78,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #150: Safari up to version 13.1 did not support setting the sampleRate.
  *
+ * Bug #150: Safari up to version 13.1 exposed a name property on each AudioParam.
+ *
  * Bug #160: Safari up to version 13.1 exposed a startRendering() method on an AudioContext.
  *
  * Bug #169: Safari up to version 13.1 threw an error on each attempt to change the channelCount of an AudioDestinationNode.

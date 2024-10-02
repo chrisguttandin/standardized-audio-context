@@ -29,22 +29,6 @@ describe('audioContextConstructor', () => {
                 });
             });
 
-            describe('playbackRate', () => {
-                let audioBufferSourceNode;
-
-                beforeEach(() => {
-                    audioBufferSourceNode = audioContext.createBufferSource();
-                });
-
-                describe('name', () => {
-                    // bug #153
-
-                    it('should export the name as a property', () => {
-                        expect(audioBufferSourceNode.playbackRate.name).to.equal('playbackRate');
-                    });
-                });
-            });
-
             describe('start()', () => {
                 // bug #69
 
