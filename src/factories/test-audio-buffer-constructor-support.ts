@@ -15,7 +15,11 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #29: Safari up to version 13.1 exposed the wrong default value for channelCountMode of a ChannelSplitterNode.
  *
+ * Bug #30: Safari up to version 13.1 allowed to set the channelCountMode of a ChannelSplitterNode to 'clamped-max' and 'max'.
+ *
  * Bug #31: Safari up to version 13.1 exposed the wrong default value for channelInterpretation of a ChannelSplitterNode.
+ *
+ * Bug #32: Safari up to version 13.1 allowed to set the channelInterpretation of a ChannelSplitterNode to 'speakers'.
  *
  * Bug #36: Safari up to version 13.1 did not support getFloatTimeDomainData() of an AnalyserNode.
  *
@@ -43,6 +47,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #94: Safari up to version 13.1 exposed a close() method on an OfflineAudioContext.
  *
  * Bug #96: Safari up to version 13.1 exposed the wrong default value for channelCount of a ChannelSplitterNode.
+ *
+ * Bug #97: Safari up to version 13.1 allowed to change the channelCount of a ChannelSplitterNode.
  *
  * Bug #99: Safari up to version 13.1 threw no error when creating an AudioBuffer without any channels.
  *

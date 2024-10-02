@@ -83,35 +83,6 @@ describe('audioContextConstructor', () => {
             });
         });
 
-        describe('createChannelSplitter()', () => {
-            // bug #97
-
-            it('should allow to set the channelCount', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter();
-
-                channelSplitterNode.channelCount = 6;
-                channelSplitterNode.channelCount = 2;
-            });
-
-            // bug #30
-
-            it('should allow to set the channelCountMode', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter();
-
-                channelSplitterNode.channelCountMode = 'explicit';
-                channelSplitterNode.channelCountMode = 'max';
-            });
-
-            // bug #32
-
-            it('should allow to set the channelInterpretation', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter();
-
-                channelSplitterNode.channelInterpretation = 'discrete';
-                channelSplitterNode.channelInterpretation = 'speakers';
-            });
-        });
-
         describe('createDynamicsCompressor()', () => {
             let dynamicsCompressorNode;
 
