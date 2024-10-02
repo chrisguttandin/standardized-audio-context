@@ -241,41 +241,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('createGain()', () => {
-        // bug #12
-
-        it('should not allow to disconnect a specific destination', (done) => {
-            const candidate = offlineAudioContext.createGain();
-            const dummy = offlineAudioContext.createGain();
-            // Bug #95: Safari does not play/loop one sample buffers.
-            const ones = offlineAudioContext.createBuffer(1, 2, 44100);
-
-            ones.getChannelData(0)[0] = 1;
-            ones.getChannelData(0)[1] = 1;
-
-            const source = offlineAudioContext.createBufferSource();
-
-            source.buffer = ones;
-
-            source.connect(candidate).connect(offlineAudioContext.destination);
-
-            candidate.connect(dummy);
-            candidate.disconnect(dummy);
-
-            source.start();
-
-            offlineAudioContext.oncomplete = (event) => {
-                const channelData = event.renderedBuffer.getChannelData(0);
-
-                expect(channelData[0]).to.equal(0);
-
-                source.disconnect(candidate);
-                candidate.disconnect(offlineAudioContext.destination);
-
-                done();
-            };
-            offlineAudioContext.startRendering();
-        });
-
         describe('gain', () => {
             describe('setValueCurveAtTime()', () => {
                 // bug #152

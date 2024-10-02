@@ -21,9 +21,7 @@ import { isPartOfACycle } from '../helpers/is-part-of-a-cycle';
 import { isPassiveAudioNode } from '../helpers/is-passive-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
-import { testAudioNodeDisconnectMethodSupport } from '../helpers/test-audio-node-disconnect-method-support';
 import { visitEachAudioNodeOnce } from '../helpers/visit-each-audio-node-once';
-import { wrapAudioNodeDisconnectMethod } from '../helpers/wrap-audio-node-disconnect-method';
 import {
     IAudioNode,
     IAudioNodeRenderer,
@@ -249,7 +247,6 @@ const deleteConnectionToDestination = <T extends TContext, U extends TContext>(
 export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     addAudioNodeConnections,
     addConnectionToAudioNode,
-    cacheTestResult,
     createIncrementCycleCounter,
     createIndexSizeError,
     createInvalidAccessError,
@@ -257,11 +254,9 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     detectCycles,
     eventTargetConstructor,
     getNativeContext,
-    isNativeAudioContext,
     isNativeAudioNode,
     isNativeAudioParam,
-    isNativeOfflineAudioContext,
-    nativeAudioWorkletNodeConstructor
+    isNativeOfflineAudioContext
 ) => {
     return class AudioNode<T extends TContext, EventMap extends Record<string, Event> = {}>
         extends eventTargetConstructor<EventMap>
@@ -281,19 +276,6 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
 
             this._context = context;
             this._nativeAudioNode = nativeAudioNode;
-
-            const nativeContext = getNativeContext(context);
-
-            // Bug #12: Safari does not support to disconnect a specific destination.
-            if (
-                isNativeAudioContext(nativeContext) &&
-                true !==
-                    cacheTestResult(testAudioNodeDisconnectMethodSupport, () => {
-                        return testAudioNodeDisconnectMethodSupport(nativeContext, nativeAudioWorkletNodeConstructor);
-                    })
-            ) {
-                wrapAudioNodeDisconnectMethod(nativeAudioNode);
-            }
 
             AUDIO_NODE_STORE.set(this, nativeAudioNode);
             EVENT_LISTENERS.set(this, new Set());

@@ -318,7 +318,6 @@ const audioNodeConstructor = createAudioNodeConstructor(
         isPartOfACycle,
         isPassiveAudioNode
     ),
-    cacheTestResult,
     createIncrementCycleCounterFactory(
         CYCLE_COUNTERS,
         disconnectNativeAudioNodeFromNativeAudioNode,
@@ -342,11 +341,9 @@ const audioNodeConstructor = createAudioNodeConstructor(
     createDetectCycles(audioParamAudioNodeStore, getAudioNodeConnections, getValueForKey),
     eventTargetConstructor,
     getNativeContext,
-    isNativeAudioContext,
     isNativeAudioNode,
     isNativeAudioParam,
-    isNativeOfflineAudioContext,
-    nativeAudioWorkletNodeConstructor
+    isNativeOfflineAudioContext
 );
 const analyserNodeConstructor: TAnalyserNodeConstructor = createAnalyserNodeConstructor(
     audioNodeConstructor,

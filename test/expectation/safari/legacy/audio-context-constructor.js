@@ -84,62 +84,6 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createGain()', () => {
-            // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-            // eslint-disable-next-line no-undef
-            if (!process.env.CI) {
-                // bug #12
-
-                it('should not allow to disconnect a specific destination', (done) => {
-                    const analyzer = audioContext.createScriptProcessor(256, 1, 1);
-                    const candidate = audioContext.createGain();
-                    const dummy = audioContext.createGain();
-                    // Bug #95: Safari does not play/loop one sample buffers.
-                    const ones = audioContext.createBuffer(1, 2, 44100);
-                    const channelData = ones.getChannelData(0);
-
-                    channelData[0] = 1;
-                    channelData[1] = 1;
-
-                    const source = audioContext.createBufferSource();
-
-                    source.buffer = ones;
-                    source.loop = true;
-
-                    source.connect(candidate).connect(analyzer).connect(audioContext.destination);
-
-                    candidate.connect(dummy);
-                    candidate.disconnect(dummy);
-
-                    let numberOfInvocations = 0;
-
-                    analyzer.onaudioprocess = (event) => {
-                        numberOfInvocations += 1;
-
-                        const chnnlDt = event.inputBuffer.getChannelData(0);
-
-                        if (Array.prototype.some.call(chnnlDt, (sample) => sample === 1)) {
-                            done(new Error('This should never be called.'));
-                        }
-                    };
-
-                    source.start();
-
-                    setTimeout(() => {
-                        source.stop();
-
-                        analyzer.onaudioprocess = null;
-
-                        source.disconnect(candidate);
-                        candidate.disconnect(analyzer);
-                        analyzer.disconnect(audioContext.destination);
-
-                        expect(numberOfInvocations).to.be.above(0);
-
-                        done();
-                    }, 500);
-                });
-            }
-
             describe('gain', () => {
                 let gainNode;
 
