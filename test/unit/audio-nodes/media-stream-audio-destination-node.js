@@ -307,12 +307,12 @@ describe('MediaStreamAudioDestinationNode', () => {
                             nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
                         });
 
-                        it('should throw an IndexSizeError', (done) => {
+                        it('should throw an InvalidAccessError', (done) => {
                             try {
                                 mediaStreamAudioDestinationNode.connect(nativeAudioNodeOrAudioParam);
                             } catch (err) {
-                                expect(err.code).to.equal(1);
-                                expect(err.name).to.equal('IndexSizeError');
+                                expect(err.code).to.equal(15);
+                                expect(err.name).to.equal('InvalidAccessError');
 
                                 done();
                             }

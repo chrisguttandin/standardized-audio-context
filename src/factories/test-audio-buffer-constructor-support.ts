@@ -109,6 +109,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #173: Safari up to version 13.1 allowed to create a MediaStreamAudioDestinationNode with an OfflineAudioContext.
  *
+ * Bug #174: Safari up to version 13.1 exposed the wrong value for numberOfOutputs of a MediaStreamAudioDestinationNode.
+ *
  * Bug #180: Safari up to version 13.1 not allowed to use ordinary arrays as parameters of createPeriodicWave().
  *
  * Bug #187: Safari up to version 13.1 threw no error when scheduling an exponential ramp with negative endTime.
