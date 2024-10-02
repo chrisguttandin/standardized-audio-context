@@ -1,11 +1,5 @@
 import { IAudioParam, IDynamicsCompressorNode, IDynamicsCompressorOptions } from '../interfaces';
-import {
-    TAudioNodeRenderer,
-    TContext,
-    TDynamicsCompressorNodeConstructorFactory,
-    TNativeAudioParam,
-    TNativeDynamicsCompressorNode
-} from '../types';
+import { TAudioNodeRenderer, TContext, TDynamicsCompressorNodeConstructorFactory, TNativeDynamicsCompressorNode } from '../types';
 
 const DEFAULT_OPTIONS = {
     attack: 0.003,
@@ -72,11 +66,6 @@ export const createDynamicsCompressorNodeConstructor: TDynamicsCompressorNodeCon
         }
 
         get reduction(): number {
-            // Bug #111: Safari returns an AudioParam instead of a number.
-            if (typeof (<TNativeAudioParam>(<any>this._nativeDynamicsCompressorNode.reduction)).value === 'number') {
-                return (<TNativeAudioParam>(<any>this._nativeDynamicsCompressorNode.reduction)).value;
-            }
-
             return this._nativeDynamicsCompressorNode.reduction;
         }
 

@@ -62,6 +62,9 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #109: Safari up to version 13.1 allowed to set the channelCountMode of a DynamicsCompressorNode to 'max'.
  *
+ * Bug #111: Safari up to version 13.1 exposed an AudioParam instead of a number as the value of the reduction property of a
+ * DynamicsCompressorNode.
+ *
  * Bug #113: Safari up to version 13.1 allowed to set the channelCount of a ConvolverNode to a value larger than 2.
  *
  * Bug #114: Safari up to version 13.1 allowed to set the channelCountMode of a ConvolverNode to 'max'.

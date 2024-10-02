@@ -83,32 +83,6 @@ describe('audioContextConstructor', () => {
             });
         });
 
-        describe('createDynamicsCompressor()', () => {
-            let dynamicsCompressorNode;
-
-            beforeEach(() => {
-                dynamicsCompressorNode = audioContext.createDynamicsCompressor();
-            });
-
-            describe('reduction', () => {
-                // bug #111
-
-                it('should return an implementation of the AudioParam interface', () => {
-                    expect(dynamicsCompressorNode.reduction.cancelAndHoldAtTime).to.be.undefined;
-                    expect(dynamicsCompressorNode.reduction.cancelScheduledValues).to.be.a('function');
-                    expect(dynamicsCompressorNode.reduction.defaultValue).to.be.a('number');
-                    expect(dynamicsCompressorNode.reduction.exponentialRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.reduction.linearRampToValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.reduction.maxValue).to.be.a('number');
-                    expect(dynamicsCompressorNode.reduction.minValue).to.be.a('number');
-                    expect(dynamicsCompressorNode.reduction.setTargetAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.reduction.setValueAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.reduction.setValueCurveAtTime).to.be.a('function');
-                    expect(dynamicsCompressorNode.reduction.value).to.be.a('number');
-                });
-            });
-        });
-
         describe('createGain()', () => {
             // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
             // eslint-disable-next-line no-undef
