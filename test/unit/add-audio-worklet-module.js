@@ -35,11 +35,7 @@ describe('audioWorklet.addModule() / addAudioWorkletModule()', () => {
             let addAudioWorkletModule;
             let context;
 
-            afterEach(() => {
-                if (context.close !== undefined) {
-                    return context.close();
-                }
-            });
+            afterEach(() => context.close?.());
 
             beforeEach(() => {
                 context = createContext();

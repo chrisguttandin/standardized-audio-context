@@ -127,11 +127,7 @@ describe('PannerNode', () => {
         describe(`with the ${description}`, () => {
             let context;
 
-            afterEach(() => {
-                if (context.close !== undefined) {
-                    return context.close();
-                }
-            });
+            afterEach(() => context.close?.());
 
             beforeEach(() => (context = createContext()));
 
@@ -146,11 +142,7 @@ describe('PannerNode', () => {
 
                         beforeEach(() => {
                             if (audioContextState === 'closed') {
-                                if (typeof context.startRendering === 'function') {
-                                    return context.startRendering();
-                                }
-
-                                return context.close();
+                                return context.close?.() ?? context.startRendering?.();
                             }
                         });
 
@@ -1447,11 +1439,7 @@ describe('PannerNode', () => {
                         let audioNodeOrAudioParam;
                         let pannerNode;
 
-                        afterEach(() => {
-                            if (anotherContext.close !== undefined) {
-                                return anotherContext.close();
-                            }
-                        });
+                        afterEach(() => anotherContext.close?.());
 
                         beforeEach(() => {
                             anotherContext = createContext();
@@ -1479,19 +1467,7 @@ describe('PannerNode', () => {
                         let nativeContext;
                         let pannerNode;
 
-                        afterEach(() => {
-                            /*
-                             * Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why the extra check for the
-                             * startRendering() method is necessary.
-                             * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
-                             */
-                            if (
-                                nativeContext.close !== undefined &&
-                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
-                            ) {
-                                return nativeContext.close();
-                            }
-                        });
+                        afterEach(() => nativeContext.close?.());
 
                         beforeEach(() => {
                             nativeContext = description.includes('Offline')

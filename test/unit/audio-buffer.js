@@ -135,11 +135,7 @@ describe('AudioBuffer', () => {
 
                         beforeEach(() => {
                             if (audioContextState === 'closed') {
-                                if (typeof context.startRendering === 'function') {
-                                    return context.startRendering();
-                                }
-
-                                return context.close();
+                                return context.close?.() ?? context.startRendering?.();
                             }
                         });
 
@@ -187,9 +183,7 @@ describe('AudioBuffer', () => {
 
                                     audioBufferSourceNode.buffer = audioBuffer;
 
-                                    return typeof anotherContext.startRendering === 'function'
-                                        ? anotherContext.startRendering()
-                                        : anotherContext.close();
+                                    return anotherContext.close?.() ?? anotherContext.startRendering?.();
                                 });
                             }
 

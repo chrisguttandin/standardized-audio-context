@@ -34,6 +34,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #80: Safari up to version 13.1 did not expose the correct values for maxValue and minValue of the Q AudioParam of a BiquadFilterNode.
  *
+ * Bug #94: Safari up to version 13.1 exposed a close() method on an OfflineAudioContext.
+ *
  * Bug #99: Safari up to version 13.1 threw no error when creating an AudioBuffer without any channels.
  *
  * Bug #100: Safari up to version 13.1 threw a SyntaxError when calling getChannelData() with an out-of-bounds value.
@@ -59,6 +61,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #147: Safari up to version 13.1 did not support to connect a signal to the playbackRate AudioParam of an AudioBufferSourceNode.
  *
  * Bug #150: Safari up to version 13.1 did not support setting the sampleRate.
+ *
+ * Bug #160: Safari up to version 13.1 exposed a startRendering() method on an AudioContext.
  *
  * Bug #169: Safari up to version 13.1 threw an error on each attempt to change the channelCount of an AudioDestinationNode.
  *

@@ -664,13 +664,5 @@ describe('audioContextConstructor', () => {
                 expect(audioContext.getOutputTimestamp).to.be.undefined;
             });
         });
-
-        describe('startRendering()', () => {
-            // bug #160
-
-            it('should expose a startRendering method', () => {
-                expect(audioContext.startRendering).to.be.a('function');
-            });
-        });
     });
 });

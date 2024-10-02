@@ -54,19 +54,7 @@ describe('decodeAudioData()', () => {
         describe(`with the ${description}`, () => {
             let context;
 
-            afterEach(() => {
-                /*
-                 * Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why the extra check for the
-                 * startRendering() method is necessary.
-                 * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
-                 */
-                if (
-                    context.close !== undefined &&
-                    (context.startRendering === undefined || !context.constructor.name.includes('Offline'))
-                ) {
-                    return context.close();
-                }
-            });
+            afterEach(() => context.close?.());
 
             beforeEach(() => (context = createContext()));
 

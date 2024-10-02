@@ -25,11 +25,7 @@ describe('AudioListener', () => {
         describe(`with ${description}`, () => {
             let context;
 
-            afterEach(() => {
-                if (context.close !== undefined) {
-                    return context.close();
-                }
-            });
+            afterEach(() => context.close?.());
 
             beforeEach(() => (context = createContext()));
 

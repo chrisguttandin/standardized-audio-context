@@ -44,11 +44,7 @@ describe('PeriodicWave', () => {
         describe(`with the ${description}`, () => {
             let context;
 
-            afterEach(() => {
-                if (context.close !== undefined) {
-                    return context.close();
-                }
-            });
+            afterEach(() => context.close?.());
 
             beforeEach(() => (context = createContext()));
 
@@ -63,11 +59,7 @@ describe('PeriodicWave', () => {
 
                         beforeEach(() => {
                             if (audioContextState === 'closed') {
-                                if (typeof context.startRendering === 'function') {
-                                    return context.startRendering();
-                                }
-
-                                return context.close();
+                                return context.close?.() ?? context.startRendering?.();
                             }
                         });
 

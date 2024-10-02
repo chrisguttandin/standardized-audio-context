@@ -34,11 +34,7 @@ describe('AudioWorkletGlobalScope', () => {
         describe(`with the ${description}`, () => {
             let context;
 
-            afterEach(() => {
-                if (context.close !== undefined) {
-                    return context.close();
-                }
-            });
+            afterEach(() => context.close?.());
 
             beforeEach(() => (context = createContext()));
 
@@ -78,9 +74,7 @@ describe('AudioWorkletGlobalScope', () => {
                         }
                     };
 
-                    if (context.startRendering !== undefined) {
-                        context.startRendering();
-                    }
+                    context.startRendering?.();
                 });
 
                 it('should advance over time in a callback', (done) => {
@@ -96,9 +90,7 @@ describe('AudioWorkletGlobalScope', () => {
 
                             setTimeout(() => audioWorkletNode.port.postMessage(null), 1000);
 
-                            if (context.startRendering !== undefined) {
-                                context.startRendering();
-                            }
+                            context.startRendering?.();
                         } else {
                             audioWorkletNode.port.onmessage = null;
 
@@ -130,9 +122,7 @@ describe('AudioWorkletGlobalScope', () => {
                         }
                     };
 
-                    if (context.startRendering !== undefined) {
-                        context.startRendering();
-                    }
+                    context.startRendering?.();
                 });
             });
 
@@ -172,9 +162,7 @@ describe('AudioWorkletGlobalScope', () => {
                         }
                     };
 
-                    if (context.startRendering !== undefined) {
-                        context.startRendering();
-                    }
+                    context.startRendering?.();
                 });
 
                 it('should advance over time in a callback', (done) => {
@@ -190,9 +178,7 @@ describe('AudioWorkletGlobalScope', () => {
 
                             setTimeout(() => audioWorkletNode.port.postMessage(null), 1000);
 
-                            if (context.startRendering !== undefined) {
-                                context.startRendering();
-                            }
+                            context.startRendering?.();
                         } else {
                             audioWorkletNode.port.onmessage = null;
 
@@ -224,9 +210,7 @@ describe('AudioWorkletGlobalScope', () => {
                         }
                     };
 
-                    if (context.startRendering !== undefined) {
-                        context.startRendering();
-                    }
+                    context.startRendering?.();
                 });
             });
 
@@ -360,9 +344,7 @@ describe('AudioWorkletGlobalScope', () => {
                                 }
                             };
 
-                            if (context.startRendering !== undefined) {
-                                context.startRendering();
-                            }
+                            context.startRendering?.();
                         });
                     });
 
@@ -394,9 +376,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                 done();
                                             };
 
-                                            if (context.startRendering !== undefined) {
-                                                context.startRendering();
-                                            }
+                                            context.startRendering?.();
                                         });
                                     });
 
@@ -429,9 +409,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                 done();
                                             };
 
-                                            if (context.startRendering !== undefined) {
-                                                context.startRendering();
-                                            }
+                                            context.startRendering?.();
                                         });
                                     });
 
@@ -454,9 +432,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                 done();
                                             };
 
-                                            if (context.startRendering !== undefined) {
-                                                context.startRendering();
-                                            }
+                                            context.startRendering?.();
                                         });
                                     });
 
@@ -476,9 +452,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                     done();
                                                 };
 
-                                                if (context.startRendering !== undefined) {
-                                                    context.startRendering();
-                                                }
+                                                context.startRendering?.();
                                             });
                                         });
                                     }
@@ -508,9 +482,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                 done();
                                             };
 
-                                            if (context.startRendering !== undefined) {
-                                                context.startRendering();
-                                            }
+                                            context.startRendering?.();
                                         });
                                     });
 
@@ -533,9 +505,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                 done();
                                             };
 
-                                            if (context.startRendering !== undefined) {
-                                                context.startRendering();
-                                            }
+                                            context.startRendering?.();
                                         });
                                     });
 
@@ -559,9 +529,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                     done();
                                                 };
 
-                                                if (context.startRendering !== undefined) {
-                                                    context.startRendering();
-                                                }
+                                                context.startRendering?.();
                                             });
                                         });
                                     }
@@ -590,9 +558,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                 done();
                                             };
 
-                                            if (context.startRendering !== undefined) {
-                                                context.startRendering();
-                                            }
+                                            context.startRendering?.();
                                         });
                                     });
 
@@ -620,9 +586,7 @@ describe('AudioWorkletGlobalScope', () => {
                                                 gain.setValueAtTime(1, currentTime + renderQuantum * i + sample);
                                             }
 
-                                            if (context.startRendering !== undefined) {
-                                                context.startRendering();
-                                            }
+                                            context.startRendering?.();
                                         });
                                     });
                                 });

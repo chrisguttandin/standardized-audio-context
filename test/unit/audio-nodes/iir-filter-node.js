@@ -69,11 +69,7 @@ describe('IIRFilterNode', () => {
             let feedback;
             let feedforward;
 
-            afterEach(() => {
-                if (context.close !== undefined) {
-                    return context.close();
-                }
-            });
+            afterEach(() => context.close?.());
 
             beforeEach(() => {
                 context = createContext();
@@ -92,11 +88,7 @@ describe('IIRFilterNode', () => {
 
                         beforeEach(() => {
                             if (audioContextState === 'closed') {
-                                if (typeof context.startRendering === 'function') {
-                                    return context.startRendering();
-                                }
-
-                                return context.close();
+                                return context.close?.() ?? context.startRendering?.();
                             }
                         });
 
@@ -292,11 +284,7 @@ describe('IIRFilterNode', () => {
                                                         }
                                                     }).then((channelData) => {
                                                         expect(Array.from(channelData)).to.deep.equal([
-                                                            0.5,
-                                                            -0.75,
-                                                            -0.125,
-                                                            -0.4375,
-                                                            -0.28125
+                                                            0.5, -0.75, -0.125, -0.4375, -0.28125
                                                         ]);
                                                         /*
                                                          * @todo The second channel should be 0.5, -1.25, 0.625 ...
@@ -542,11 +530,7 @@ describe('IIRFilterNode', () => {
                         let audioNodeOrAudioParam;
                         let iIRFilterNode;
 
-                        afterEach(() => {
-                            if (anotherContext.close !== undefined) {
-                                return anotherContext.close();
-                            }
-                        });
+                        afterEach(() => anotherContext.close?.());
 
                         beforeEach(() => {
                             anotherContext = createContext();
@@ -574,19 +558,7 @@ describe('IIRFilterNode', () => {
                         let nativeAudioNodeOrAudioParam;
                         let nativeContext;
 
-                        afterEach(() => {
-                            /*
-                             * Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why the extra check for the
-                             * startRendering() method is necessary.
-                             * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
-                             */
-                            if (
-                                nativeContext.close !== undefined &&
-                                (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
-                            ) {
-                                return nativeContext.close();
-                            }
-                        });
+                        afterEach(() => nativeContext.close?.());
 
                         beforeEach(() => {
                             iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
@@ -962,11 +934,7 @@ describe('IIRFilterNode', () => {
                             );
 
                             expect(Array.from(magResponse)).to.deep.equal([
-                                0.12515009939670563,
-                                0.2472923994064331,
-                                0.4725210964679718,
-                                0.8136365413665771,
-                                1.1401270627975464
+                                0.12515009939670563, 0.2472923994064331, 0.4725210964679718, 0.8136365413665771, 1.1401270627975464
                             ]);
 
                             expect(phaseResponse[0]).to.equal(1.4767954349517822);

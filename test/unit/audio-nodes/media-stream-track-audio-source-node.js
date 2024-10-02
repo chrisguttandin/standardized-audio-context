@@ -64,9 +64,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                         await teardownMediaStream();
                     }
 
-                    if (context.close !== undefined) {
-                        return context.close();
-                    }
+                    return context.close?.();
                 });
 
                 beforeEach(async function () {
@@ -137,11 +135,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                             beforeEach(() => {
                                 if (audioContextState === 'closed') {
-                                    if (typeof context.startRendering === 'function') {
-                                        return context.startRendering();
-                                    }
-
-                                    return context.close();
+                                    return context.close?.() ?? context.startRendering?.();
                                 }
                             });
 
@@ -390,11 +384,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                             let anotherContext;
                             let audioNodeOrAudioParam;
 
-                            afterEach(() => {
-                                if (anotherContext.close !== undefined) {
-                                    return anotherContext.close();
-                                }
-                            });
+                            afterEach(() => anotherContext.close?.());
 
                             beforeEach(() => {
                                 anotherContext = createContext();
@@ -420,19 +410,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                             let nativeAudioNodeOrAudioParam;
                             let nativeContext;
 
-                            afterEach(() => {
-                                /*
-                                 * Bug #94: Safari also exposes a close() method on an OfflineAudioContext which is why the extra check for
-                                 * the startRendering() method is necessary.
-                                 * Bug #160: Safari also exposes a startRendering() method on an AudioContext.
-                                 */
-                                if (
-                                    nativeContext.close !== undefined &&
-                                    (nativeContext.startRendering === undefined || !nativeContext.constructor.name.includes('Offline'))
-                                ) {
-                                    return nativeContext.close();
-                                }
-                            });
+                            afterEach(() => nativeContext.close?.());
 
                             beforeEach(() => {
                                 nativeContext = createNativeAudioContext();
