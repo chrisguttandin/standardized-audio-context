@@ -114,8 +114,7 @@ import { createNativeConvolverNode } from './factories/native-convolver-node';
 import { createNativeDelayNode } from './factories/native-delay-node';
 import { createNativeDynamicsCompressorNode } from './factories/native-dynamics-compressor-node';
 import { createNativeGainNode } from './factories/native-gain-node';
-import { createNativeIIRFilterNodeFactory } from './factories/native-iir-filter-node-factory';
-import { createNativeIIRFilterNodeFakerFactory } from './factories/native-iir-filter-node-faker-factory';
+import { createNativeIIRFilterNode } from './factories/native-iir-filter-node';
 import { createNativeMediaElementAudioSourceNode } from './factories/native-media-element-audio-source-node';
 import { createNativeMediaStreamAudioDestinationNode } from './factories/native-media-stream-audio-destination-node';
 import { createNativeMediaStreamAudioSourceNode } from './factories/native-media-stream-audio-source-node';
@@ -564,26 +563,13 @@ const gainNodeConstructor: TGainNodeConstructor = createGainNodeConstructor(
     getNativeContext,
     isNativeOfflineAudioContext
 );
-const createNativeIIRFilterNodeFaker = createNativeIIRFilterNodeFakerFactory(
-    createInvalidAccessError,
-    createInvalidStateError,
-    createNativeScriptProcessorNode,
-    createNotSupportedError
-);
 const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(
     cacheTestResult,
     createNativeGainNode,
     createNativeScriptProcessorNode,
     createTestOfflineAudioContextCurrentTimeSupport(createNativeGainNode, nativeOfflineAudioContextConstructor)
 );
-const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(
-    createNativeAudioBufferSourceNode,
-    getNativeAudioNode,
-    nativeOfflineAudioContextConstructor,
-    renderInputsOfAudioNode,
-    renderNativeOfflineAudioContext
-);
-const createNativeIIRFilterNode = createNativeIIRFilterNodeFactory(createNativeIIRFilterNodeFaker);
+const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(getNativeAudioNode, renderInputsOfAudioNode);
 const iIRFilterNodeConstructor: TIIRFilterNodeConstructor = createIIRFilterNodeConstructor(
     audioNodeConstructor,
     createNativeIIRFilterNode,

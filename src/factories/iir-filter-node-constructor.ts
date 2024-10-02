@@ -1,5 +1,5 @@
 import { wrapIIRFilterNodeGetFrequencyResponseMethod } from '../helpers/wrap-iir-filter-node-get-frequency-response-method';
-import { IIIRFilterNode, IIIRFilterOptions, IMinimalAudioContext } from '../interfaces';
+import { IIIRFilterNode, IIIRFilterOptions } from '../interfaces';
 import { TAudioNodeRenderer, TContext, TIIRFilterNodeConstructorFactory, TNativeIIRFilterNode } from '../types';
 
 const DEFAULT_OPTIONS = {
@@ -26,11 +26,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
-            const nativeIIRFilterNode = createNativeIIRFilterNode(
-                nativeContext,
-                isOffline ? null : (<IMinimalAudioContext>(<any>context)).baseLatency,
-                mergedOptions
-            );
+            const nativeIIRFilterNode = createNativeIIRFilterNode(nativeContext, mergedOptions);
             const iirFilterNodeRenderer = <TAudioNodeRenderer<T, this>>(
                 (isOffline ? createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward) : null)
             );

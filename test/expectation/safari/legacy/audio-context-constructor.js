@@ -103,14 +103,6 @@ describe('audioContextConstructor', () => {
             });
         });
 
-        describe('createIIRFilter()', () => {
-            // bug #9
-
-            it('should not be implemented', () => {
-                expect(audioContext.createIIRFilter).to.be.undefined;
-            });
-        });
-
         describe('createMediaStreamSource()', () => {
             // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
             // eslint-disable-next-line no-undef

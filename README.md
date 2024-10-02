@@ -224,8 +224,6 @@ This is an implementation of the [`createGain()`](https://webaudio.github.io/web
 
 This is an implementation of the [`createIIRFilter()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createiirfilter) factory method. The [`IIRFilterNode`](https://webaudio.github.io/web-audio-api/#iirfilternode) constructor may be used as an alternative.
 
-⚠️ <!-- Bug #9 --> It has to be faked internally with a ScriptProcessorNode in Safari which means it is not as performant as in other browsers which support it natively.
-
 #### createMediaElementSource() / MediaElementAudioSourceNode
 
 This is an implementation of the [`createMediaElementSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediaelementsource) factory method. The [`MediaElementAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediaelementaudiosourcenode) constructor may be used as an alternative.

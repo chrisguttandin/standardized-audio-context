@@ -276,14 +276,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('createIIRFilter()', () => {
-        // bug #9
-
-        it('should not be implemented', () => {
-            expect(offlineAudioContext.createIIRFilter).to.be.undefined;
-        });
-    });
-
     describe('createScriptProcessor()', () => {
         // bug #8
 

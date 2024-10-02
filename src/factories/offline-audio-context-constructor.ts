@@ -85,8 +85,8 @@ export const createOfflineAudioContextConstructor: TOfflineAudioContextConstruct
 
         public startRendering(): Promise<IAudioBuffer> {
             /*
-             * Bug #9 & #59: It is theoretically possible that startRendering() will first render a partialOfflineAudioContext. Therefore
-             * the state of the nativeOfflineAudioContext might no transition to running immediately.
+             * Bug #59: It is theoretically possible that startRendering() will first render a partialOfflineAudioContext. Therefore the
+             * state of the nativeOfflineAudioContext might no transition to running immediately.
              */
             if (this._state === 'running') {
                 return Promise.reject(createInvalidStateError());

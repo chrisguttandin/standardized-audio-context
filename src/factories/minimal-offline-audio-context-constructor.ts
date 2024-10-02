@@ -14,8 +14,10 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
     minimalBaseAudioContextConstructor,
     startRendering
 ) => {
-    return class MinimalOfflineAudioContext extends minimalBaseAudioContextConstructor<IMinimalOfflineAudioContext>
-        implements IMinimalOfflineAudioContext {
+    return class MinimalOfflineAudioContext
+        extends minimalBaseAudioContextConstructor<IMinimalOfflineAudioContext>
+        implements IMinimalOfflineAudioContext
+    {
         private _length: number;
 
         private _nativeOfflineAudioContext: TNativeOfflineAudioContext;
@@ -74,8 +76,8 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
 
         public startRendering(): Promise<IAudioBuffer> {
             /*
-             * Bug #9 & #59: It is theoretically possible that startRendering() will first render a partialOfflineAudioContext. Therefore
-             * the state of the nativeOfflineAudioContext might no transition to running immediately.
+             * Bug #59: It is theoretically possible that startRendering() will first render a partialOfflineAudioContext. Therefore the
+             * state of the nativeOfflineAudioContext might no transition to running immediately.
              */
             if (this._state === 'running') {
                 return Promise.reject(createInvalidStateError());

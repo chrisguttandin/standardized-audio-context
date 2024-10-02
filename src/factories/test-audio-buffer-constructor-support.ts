@@ -4,6 +4,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #33: Safari up to version 13.1 exposed an AudioBuffer but it couldn't be used as a constructor. It also had a couple more bugs but
  * since this is easy to test it's used here as a placeholder.
  *
+ * Bug #9: Safari up to version 13.1 had no IIRFilterNode implementation.
+ *
  * Bug #12: Safari up to version 13.1 not allowed to disconnect a specific destination.
  *
  * Bug #15: Safari up to version 13.1 exposed the wrong default values for channelCount and channelCountMode of a ChannelMergerNode.
