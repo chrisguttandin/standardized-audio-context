@@ -536,22 +536,6 @@ describe('audioContextConstructor', () => {
             }
         });
 
-        describe('createPanner()', () => {
-            let pannerNode;
-
-            beforeEach(() => {
-                pannerNode = audioContext.createPanner();
-            });
-
-            describe('orientationX', () => {
-                // bug #124
-
-                it('should not be implemented', () => {
-                    expect(pannerNode.orientationX).to.be.undefined;
-                });
-            });
-        });
-
         describe('createStereoPanner()', () => {
             // bug #105
 

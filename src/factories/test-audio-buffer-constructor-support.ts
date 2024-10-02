@@ -51,6 +51,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #118: Safari up to version 13.1 threw no error if maxDecibels was assigned to a value less than minDecibels or minDecibels was
  * assigned to a value greater than maxDecibels.
  *
+ * Bug #124: Safari up to version 13.1 did not support modifying the orientation and position of a PannerNode with AudioParams.
+ *
  * Bug #125: Safari up to version 13.1 allowed to set the channelCount of a PannerNode to a value larger than 2.
  *
  * Bug #126: Safari up to version 13.1 allowed to set the channelCountMode of a PannerNode to 'max'.

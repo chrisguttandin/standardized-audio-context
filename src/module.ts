@@ -122,8 +122,7 @@ import { createNativeMediaStreamAudioSourceNode } from './factories/native-media
 import { createNativeMediaStreamTrackAudioSourceNodeFactory } from './factories/native-media-stream-track-audio-source-node-factory';
 import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
 import { createNativeOscillatorNodeFactory } from './factories/native-oscillator-node-factory';
-import { createNativePannerNodeFactory } from './factories/native-panner-node-factory';
-import { createNativePannerNodeFakerFactory } from './factories/native-panner-node-faker-factory';
+import { createNativePannerNode } from './factories/native-panner-node';
 import { createNativePeriodicWaveFactory } from './factories/native-periodic-wave-factory';
 import { createNativeScriptProcessorNode } from './factories/native-script-processor-node';
 import { createNativeStereoPannerNodeFactory } from './factories/native-stereo-panner-node-factory';
@@ -657,28 +656,12 @@ const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(
     nativeAudioContextConstructor,
     overwriteAccessors
 );
-const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
-    connectNativeAudioNodeToNativeAudioNode,
-    createNativeChannelMergerNode,
-    createNativeGainNode,
-    createNativeScriptProcessorNode,
-    createNativeWaveShaperNode,
-    disconnectNativeAudioNodeFromNativeAudioNode,
-    getFirstSample,
-    monitorConnections
-);
-const createNativePannerNode = createNativePannerNodeFactory(createNativePannerNodeFaker);
 const createPannerNodeRenderer = createPannerNodeRendererFactory(
     connectAudioParam,
-    createNativeChannelMergerNode,
-    createNativeConstantSourceNode,
-    createNativeGainNode,
     createNativePannerNode,
     getNativeAudioNode,
-    nativeOfflineAudioContextConstructor,
     renderAutomation,
-    renderInputsOfAudioNode,
-    renderNativeOfflineAudioContext
+    renderInputsOfAudioNode
 );
 const pannerNodeConstructor: TPannerNodeConstructor = createPannerNodeConstructor(
     audioNodeConstructor,
