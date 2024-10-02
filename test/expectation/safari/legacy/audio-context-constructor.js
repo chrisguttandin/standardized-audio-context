@@ -84,14 +84,6 @@ describe('audioContextConstructor', () => {
         });
 
         describe('createChannelSplitter()', () => {
-            // bug #96
-
-            it('should have a wrong channelCount', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter(6);
-
-                expect(channelSplitterNode.channelCount).to.equal(2);
-            });
-
             // bug #97
 
             it('should allow to set the channelCount', () => {
@@ -101,14 +93,6 @@ describe('audioContextConstructor', () => {
                 channelSplitterNode.channelCount = 2;
             });
 
-            // bug #29
-
-            it('should have a wrong channelCountMode', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter();
-
-                expect(channelSplitterNode.channelCountMode).to.equal('max');
-            });
-
             // bug #30
 
             it('should allow to set the channelCountMode', () => {
@@ -116,14 +100,6 @@ describe('audioContextConstructor', () => {
 
                 channelSplitterNode.channelCountMode = 'explicit';
                 channelSplitterNode.channelCountMode = 'max';
-            });
-
-            // bug #31
-
-            it('should have a wrong channelInterpretation', () => {
-                const channelSplitterNode = audioContext.createChannelSplitter();
-
-                expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
             });
 
             // bug #32

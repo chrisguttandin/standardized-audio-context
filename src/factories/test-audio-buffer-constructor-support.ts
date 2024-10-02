@@ -13,6 +13,10 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #22: Safari up to version 13.1 filled the magResponse and phaseResponse arrays with a deprecated algorithm when calling
  * getFrequencyResponse() of a BiquadFilterNode.
  *
+ * Bug #29: Safari up to version 13.1 exposed the wrong default value for channelCountMode of a ChannelSplitterNode.
+ *
+ * Bug #31: Safari up to version 13.1 exposed the wrong default value for channelInterpretation of a ChannelSplitterNode.
+ *
  * Bug #36: Safari up to version 13.1 did not support getFloatTimeDomainData() of an AnalyserNode.
  *
  * Bug #39: Safari up to version 13.1 did not expose the baseLatency property of an AudioContext.
@@ -37,6 +41,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #80: Safari up to version 13.1 did not expose the correct values for maxValue and minValue of the Q AudioParam of a BiquadFilterNode.
  *
  * Bug #94: Safari up to version 13.1 exposed a close() method on an OfflineAudioContext.
+ *
+ * Bug #96: Safari up to version 13.1 exposed the wrong default value for channelCount of a ChannelSplitterNode.
  *
  * Bug #99: Safari up to version 13.1 threw no error when creating an AudioBuffer without any channels.
  *

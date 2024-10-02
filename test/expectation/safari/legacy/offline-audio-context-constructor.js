@@ -241,14 +241,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('createChannelSplitter()', () => {
-        // bug #96
-
-        it('should have a wrong channelCount', () => {
-            const channelSplitterNode = offlineAudioContext.createChannelSplitter(6);
-
-            expect(channelSplitterNode.channelCount).to.equal(2);
-        });
-
         // bug #97
 
         it('should allow to set the channelCount', () => {
@@ -258,14 +250,6 @@ describe('offlineAudioContextConstructor', () => {
             channelSplitterNode.channelCount = 2;
         });
 
-        // bug #29
-
-        it('should have a channelCountMode of max', () => {
-            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
-
-            expect(channelSplitterNode.channelCountMode).to.equal('max');
-        });
-
         // bug #30
 
         it('should allow to set the channelCountMode', () => {
@@ -273,14 +257,6 @@ describe('offlineAudioContextConstructor', () => {
 
             channelSplitterNode.channelCountMode = 'explicit';
             channelSplitterNode.channelCountMode = 'max';
-        });
-
-        // bug #31
-
-        it('should have a channelInterpretation of speakers', () => {
-            const channelSplitterNode = offlineAudioContext.createChannelSplitter();
-
-            expect(channelSplitterNode.channelInterpretation).to.equal('speakers');
         });
 
         // bug #32
