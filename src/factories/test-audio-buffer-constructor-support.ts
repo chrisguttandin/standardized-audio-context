@@ -51,6 +51,18 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #118: Safari up to version 13.1 threw no error if maxDecibels was assigned to a value less than minDecibels or minDecibels was
  * assigned to a value greater than maxDecibels.
  *
+ * Bug #125: Safari up to version 13.1 allowed to set the channelCount of a PannerNode to a value larger than 2.
+ *
+ * Bug #126: Safari up to version 13.1 allowed to set the channelCountMode of a PannerNode to 'max'.
+ *
+ * Bug #127: Safari up to version 13.1 allowed to set the coneOuterGain of a PannerNode to a value less than 0 or larger than 1.
+ * *
+ * Bug #128: Safari up to version 13.1 allowed to set the maxDistance of a PannerNode to a value less than 0.
+ *
+ * Bug #129: Safari up to version 13.1 allowed to set the refDistance of a PannerNode to a value less than 0.
+ *
+ * Bug #130: Safari up to version 13.1 allowed to set the rolloffFactor of a PannerNode to a value less than 0.
+ *
  * Bug #131: Safari up to version 13.1 returned null when there were four other AudioContexts running already.
  *
  * Bug #140: Safari up to version 13.1 did not support creating an AudioBuffer with a sampleRate below 22050 Hz.

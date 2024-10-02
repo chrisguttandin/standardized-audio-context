@@ -659,12 +659,10 @@ const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(
 );
 const createNativePannerNodeFaker = createNativePannerNodeFakerFactory(
     connectNativeAudioNodeToNativeAudioNode,
-    createInvalidStateError,
     createNativeChannelMergerNode,
     createNativeGainNode,
     createNativeScriptProcessorNode,
     createNativeWaveShaperNode,
-    createNotSupportedError,
     disconnectNativeAudioNodeFromNativeAudioNode,
     getFirstSample,
     monitorConnections
@@ -819,9 +817,7 @@ const mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstruc
     createNativeMediaStreamAudioSourceNode,
     getNativeContext
 );
-const createNativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrackAudioSourceNodeFactory(
-    createInvalidStateError
-);
+const createNativeMediaStreamTrackAudioSourceNode = createNativeMediaStreamTrackAudioSourceNodeFactory(createInvalidStateError);
 const mediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNodeConstructor =
     createMediaStreamTrackAudioSourceNodeConstructor(audioNodeConstructor, createNativeMediaStreamTrackAudioSourceNode, getNativeContext);
 const audioContextConstructor: TAudioContextConstructor = createAudioContextConstructor(

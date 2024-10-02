@@ -4,12 +4,10 @@ import { TNativeAudioNode, TNativePannerNode, TNativePannerNodeFakerFactoryFacto
 
 export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFactory = (
     connectNativeAudioNodeToNativeAudioNode,
-    createInvalidStateError,
     createNativeChannelMergerNode,
     createNativeGainNode,
     createNativeScriptProcessorNode,
     createNativeWaveShaperNode,
-    createNotSupportedError,
     disconnectNativeAudioNodeFromNativeAudioNode,
     getFirstSample,
     monitorConnections
@@ -35,16 +33,6 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
         }
     ) => {
         const pannerNode = nativeContext.createPanner();
-
-        // Bug #125: Safari does not throw an error yet.
-        if (audioNodeOptions.channelCount > 2) {
-            throw createNotSupportedError();
-        }
-
-        // Bug #126: Safari does not throw an error yet.
-        if (audioNodeOptions.channelCountMode === 'max') {
-            throw createNotSupportedError();
-        }
 
         assignNativeAudioNodeOptions(pannerNode, audioNodeOptions);
 
@@ -119,11 +107,6 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.channelCount;
             },
             set channelCount(value) {
-                // Bug #125: Safari does not throw an error yet.
-                if (value > 2) {
-                    throw createNotSupportedError();
-                }
-
                 inputGainNode.channelCount = value;
                 pannerNode.channelCount = value;
             },
@@ -131,11 +114,6 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.channelCountMode;
             },
             set channelCountMode(value) {
-                // Bug #126: Safari does not throw an error yet.
-                if (value === 'max') {
-                    throw createNotSupportedError();
-                }
-
                 inputGainNode.channelCountMode = value;
                 pannerNode.channelCountMode = value;
             },
@@ -162,11 +140,6 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.coneOuterGain;
             },
             set coneOuterGain(value) {
-                // Bug #127: Safari does not throw an InvalidStateError yet.
-                if (value < 0 || value > 1) {
-                    throw createInvalidStateError();
-                }
-
                 pannerNode.coneOuterGain = value;
             },
             get context(): TNativePannerNode['context'] {
@@ -185,11 +158,6 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.maxDistance;
             },
             set maxDistance(value) {
-                // Bug #128: Safari does not throw an error yet.
-                if (value < 0) {
-                    throw new RangeError();
-                }
-
                 pannerNode.maxDistance = value;
             },
             get numberOfInputs(): number {
@@ -226,22 +194,12 @@ export const createNativePannerNodeFakerFactory: TNativePannerNodeFakerFactoryFa
                 return pannerNode.refDistance;
             },
             set refDistance(value) {
-                // Bug #129: Safari does not throw an error yet.
-                if (value < 0) {
-                    throw new RangeError();
-                }
-
                 pannerNode.refDistance = value;
             },
             get rolloffFactor(): TNativePannerNode['rolloffFactor'] {
                 return pannerNode.rolloffFactor;
             },
             set rolloffFactor(value) {
-                // Bug #130: Safari does not throw an error yet.
-                if (value < 0) {
-                    throw new RangeError();
-                }
-
                 pannerNode.rolloffFactor = value;
             },
             addEventListener(...args: any[]): void {
