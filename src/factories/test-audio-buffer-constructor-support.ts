@@ -41,6 +41,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #73: Safari up to version 13.1 did not expose the correct values for maxValue and minValue of the playbackRate AudioParam of an
  * AudioBufferSourceNode.
  *
+ * Bug #74: Safari up to version 13.1 did not expose the correct values for maxValue and minValue of the gain AudioParam of an GainNode.
+ *
  * Bug #76: Safari up to version 13.1 did not expose the correct values for maxValue and minValue of the frequency AudioParam of an
  * OscillatorNode.
  *

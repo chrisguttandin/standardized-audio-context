@@ -1,4 +1,3 @@
-import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { IAudioParam, IGainNode, IGainOptions } from '../interfaces';
 import { TAudioNodeRenderer, TContext, TGainNodeConstructorFactory } from '../types';
 
@@ -29,8 +28,7 @@ export const createGainNodeConstructor: TGainNodeConstructorFactory = (
 
             super(context, false, nativeGainNode, gainNodeRenderer);
 
-            // Bug #74: Safari does not export the correct values for maxValue and minValue.
-            this._gain = createAudioParam(this, isOffline, nativeGainNode.gain, MOST_POSITIVE_SINGLE_FLOAT, MOST_NEGATIVE_SINGLE_FLOAT);
+            this._gain = createAudioParam(this, isOffline, nativeGainNode.gain);
         }
 
         get gain(): IAudioParam {

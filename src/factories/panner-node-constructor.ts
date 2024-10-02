@@ -1,4 +1,3 @@
-import { MOST_NEGATIVE_SINGLE_FLOAT, MOST_POSITIVE_SINGLE_FLOAT } from '../constants';
 import { IAudioParam, IPannerNode, IPannerOptions } from '../interfaces';
 import {
     TAudioNodeRenderer,
@@ -63,49 +62,12 @@ export const createPannerNodeConstructor: TPannerNodeConstructorFactory = (
             super(context, false, nativePannerNode, pannerNodeRenderer);
 
             this._nativePannerNode = nativePannerNode;
-            // Bug #74: Safari does not export the correct values for maxValue and minValue.
-            this._orientationX = createAudioParam(
-                this,
-                isOffline,
-                nativePannerNode.orientationX,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
-            this._orientationY = createAudioParam(
-                this,
-                isOffline,
-                nativePannerNode.orientationY,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
-            this._orientationZ = createAudioParam(
-                this,
-                isOffline,
-                nativePannerNode.orientationZ,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
-            this._positionX = createAudioParam(
-                this,
-                isOffline,
-                nativePannerNode.positionX,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
-            this._positionY = createAudioParam(
-                this,
-                isOffline,
-                nativePannerNode.positionY,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
-            this._positionZ = createAudioParam(
-                this,
-                isOffline,
-                nativePannerNode.positionZ,
-                MOST_POSITIVE_SINGLE_FLOAT,
-                MOST_NEGATIVE_SINGLE_FLOAT
-            );
+            this._orientationX = createAudioParam(this, isOffline, nativePannerNode.orientationX);
+            this._orientationY = createAudioParam(this, isOffline, nativePannerNode.orientationY);
+            this._orientationZ = createAudioParam(this, isOffline, nativePannerNode.orientationZ);
+            this._positionX = createAudioParam(this, isOffline, nativePannerNode.positionX);
+            this._positionY = createAudioParam(this, isOffline, nativePannerNode.positionY);
+            this._positionZ = createAudioParam(this, isOffline, nativePannerNode.positionZ);
 
             // @todo Determine a meaningful tail-time instead of just using one second.
             setAudioNodeTailTime(this, 1);

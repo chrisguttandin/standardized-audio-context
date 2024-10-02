@@ -91,22 +91,6 @@ describe('audioContextConstructor', () => {
                     gainNode = audioContext.createGain();
                 });
 
-                describe('maxValue', () => {
-                    // bug #74
-
-                    it('should be 1', () => {
-                        expect(gainNode.gain.maxValue).to.equal(1);
-                    });
-                });
-
-                describe('minValue', () => {
-                    // bug #74
-
-                    it('should be 0', () => {
-                        expect(gainNode.gain.minValue).to.equal(0);
-                    });
-                });
-
                 describe('setValueCurveAtTime()', () => {
                     // bug #183
 
