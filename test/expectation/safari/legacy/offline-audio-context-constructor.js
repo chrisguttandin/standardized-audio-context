@@ -40,42 +40,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('onstatechange', () => {
-        // bug #49
-
-        it('should transition directly from suspended to closed', (done) => {
-            // eslint-disable-next-line unicorn/consistent-function-scoping
-            const runTest = (evaluateTest) => {
-                offlineAudioContext = new webkitOfflineAudioContext(1, 1, 44100); // eslint-disable-line new-cap, no-undef
-
-                let previousState = offlineAudioContext.state;
-
-                offlineAudioContext.onstatechange = () => {
-                    const currentState = offlineAudioContext.state;
-
-                    if (currentState === 'closed') {
-                        offlineAudioContext.onstatechange = null;
-
-                        evaluateTest(previousState === 'suspended');
-                    }
-
-                    previousState = currentState;
-                };
-
-                offlineAudioContext.startRendering();
-            };
-            const evaluateTest = (hasTransitionedDirectlyFromSuspendedToClosed) => {
-                if (hasTransitionedDirectlyFromSuspendedToClosed) {
-                    done();
-                } else {
-                    runTest(evaluateTest);
-                }
-            };
-
-            runTest(evaluateTest);
-        });
-    });
-
     describe('createBufferSource()', () => {
         describe('buffer', () => {
             // bug #95

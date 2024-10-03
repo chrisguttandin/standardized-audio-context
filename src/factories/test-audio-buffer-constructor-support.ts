@@ -37,6 +37,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #48: Safari up to version 13.1 required at least one connected AudioNode to render an OfflineAudioContext.
  *
+ * Bug #49: Safari up to version 13.1 transitioned directly from suspended to closed when rendering an OfflineAudioContext.
+ *
  * Bug #56: Safari up to version 13.1 rejected the promise returned by resume() and suspend() without any error.
  *
  * Bug #62: Safari up to version 13.1 had no ConstantSourceNode implementation.
