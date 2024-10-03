@@ -28,22 +28,15 @@ export const createTestAudioContextDecodeAudioDataMethodTypeErrorSupport: TTestA
                 }
             };
 
-            let promise;
-
-            // Bug #26: Safari throws a synchronous error.
-            try {
-                promise = offlineAudioContext
-                    // Bug #1: Safari requires a successCallback.
-                    .decodeAudioData(
-                        <any>null,
-                        () => {
-                            // Ignore the success callback.
-                        },
-                        resolvePromise
-                    );
-            } catch (err) {
-                resolvePromise(err);
-            }
+            const promise = offlineAudioContext
+                // Bug #1: Safari requires a successCallback.
+                .decodeAudioData(
+                    <any>null,
+                    () => {
+                        // Ignore the success callback.
+                    },
+                    resolvePromise
+                );
 
             // Bug #21: Safari does not support promises yet.
             if (promise !== undefined) {

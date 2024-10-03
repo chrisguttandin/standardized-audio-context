@@ -238,16 +238,6 @@ describe('offlineAudioContextConstructor', () => {
 
             expect(offlineAudioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
         });
-
-        // bug #26
-
-        it('should throw a synchronous error', (done) => {
-            try {
-                offlineAudioContext.decodeAudioData(null, () => {});
-            } catch (err) {
-                done();
-            }
-        });
     });
 
     describe('startRendering()', () => {

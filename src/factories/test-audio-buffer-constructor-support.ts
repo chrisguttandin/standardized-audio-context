@@ -17,6 +17,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #22: Safari up to version 13.1 filled the magResponse and phaseResponse arrays with a deprecated algorithm when calling
  * getFrequencyResponse() of a BiquadFilterNode.
  *
+ * Bug #26: Safari up to version 13.1 possibly threw a synchronous error when calling decodeAudioData().
+ *
  * Bug #29: Safari up to version 13.1 exposed the wrong default value for channelCountMode of a ChannelSplitterNode.
  *
  * Bug #30: Safari up to version 13.1 allowed to set the channelCountMode of a ChannelSplitterNode to 'clamped-max' and 'max'.

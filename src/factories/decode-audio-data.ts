@@ -70,33 +70,28 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
                 complete();
             };
 
-            // Bug #26: Safari throws a synchronous error.
-            try {
-                // Bug #1: Safari requires a successCallback.
-                nativeContext.decodeAudioData(
-                    audioData,
-                    (audioBuffer) => {
-                        // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-                        if (typeof audioBuffer.copyFromChannel !== 'function') {
-                            wrapAudioBufferCopyChannelMethods(audioBuffer);
-                        }
-
-                        audioBufferStore.add(audioBuffer);
-
-                        complete().then(() => resolve(audioBuffer));
-                    },
-                    (err: DOMException | Error) => {
-                        // Bug #4: Safari returns null instead of an error.
-                        if (err === null) {
-                            fail(createEncodingError());
-                        } else {
-                            fail(err);
-                        }
+            // Bug #1: Safari requires a successCallback.
+            nativeContext.decodeAudioData(
+                audioData,
+                (audioBuffer) => {
+                    // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
+                    if (typeof audioBuffer.copyFromChannel !== 'function') {
+                        wrapAudioBufferCopyChannelMethods(audioBuffer);
                     }
-                );
-            } catch (err) {
-                fail(err);
-            }
+
+                    audioBufferStore.add(audioBuffer);
+
+                    complete().then(() => resolve(audioBuffer));
+                },
+                (err: DOMException | Error) => {
+                    // Bug #4: Safari returns null instead of an error.
+                    if (err === null) {
+                        fail(createEncodingError());
+                    } else {
+                        fail(err);
+                    }
+                }
+            );
         });
     };
 };

@@ -332,16 +332,6 @@ describe('audioContextConstructor', () => {
 
                 expect(audioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
             });
-
-            // bug #26
-
-            it('should throw a synchronous error', (done) => {
-                try {
-                    audioContext.decodeAudioData(null, () => {});
-                } catch (err) {
-                    done();
-                }
-            });
         });
 
         describe('getOutputTimestamp()', () => {
