@@ -117,6 +117,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #150: Safari up to version 13.1 did not support setting the sampleRate.
  *
+ * Bug #152: Safari up to version 13.1 interpolated the values of the curve incorrectly when calling setValueCurveAtTime() of an AudioParam.
+ *
  * Bug #153: Safari up to version 13.1 exposed a name property on each AudioParam.
  *
  * Bug #160: Safari up to version 13.1 exposed a startRendering() method on an AudioContext.

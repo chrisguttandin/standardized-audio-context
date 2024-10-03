@@ -332,7 +332,6 @@ export * from './set-active-audio-worklet-node-inputs-factory';
 export * from './set-active-audio-worklet-node-inputs-function';
 export * from './set-audio-node-tail-time-factory';
 export * from './set-audio-node-tail-time-function';
-export * from './set-value-at-time-until-possible-function';
 export * from './start-rendering-factory';
 export * from './start-rendering-function';
 export * from './stereo-panner-node-constructor';

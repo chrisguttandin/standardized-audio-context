@@ -13,9 +13,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
     createLinearRampToValueAutomationEvent,
     createSetTargetAutomationEvent,
     createSetValueAutomationEvent,
-    createSetValueCurveAutomationEvent,
-    nativeAudioContextConstructor,
-    setValueAtTimeUntilPossible
+    createSetValueCurveAutomationEvent
 ) => {
     return <T extends TContext>(
         audioNode: IAudioNode<T>,
@@ -155,53 +153,12 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 return audioParam;
             },
             setValueCurveAtTime(values: number[] | Float32Array, startTime: number, duration: number): IAudioParam {
-                /*
-                 * Bug #152: Safari does not correctly interpolate the values of the curve.
-                 * @todo Unfortunately there is no way to test for this behavior in a synchronous fashion which is why testing for the
-                 * existence of the webkitAudioContext is used as a workaround here.
-                 */
-                if (nativeAudioContextConstructor !== null && nativeAudioContextConstructor.name === 'webkitAudioContext') {
-                    const endTime = startTime + duration;
-                    const sampleRate = audioNode.context.sampleRate;
-                    const firstSample = Math.ceil(startTime * sampleRate);
-                    const lastSample = Math.floor(endTime * sampleRate);
-                    const numberOfInterpolatedValues = lastSample - firstSample;
-                    const interpolatedValues = new Float32Array(numberOfInterpolatedValues);
-
-                    for (let i = 0; i < numberOfInterpolatedValues; i += 1) {
-                        const theoreticIndex = ((values.length - 1) / duration) * ((firstSample + i) / sampleRate - startTime);
-                        const lowerIndex = Math.floor(theoreticIndex);
-                        const upperIndex = Math.ceil(theoreticIndex);
-
-                        interpolatedValues[i] =
-                            lowerIndex === upperIndex
-                                ? values[lowerIndex]
-                                : (1 - (theoreticIndex - lowerIndex)) * values[lowerIndex] +
-                                  (1 - (upperIndex - theoreticIndex)) * values[upperIndex];
-                    }
-
-                    if (audioParamRenderer === null) {
-                        automationEventList.flush(audioNode.context.currentTime);
-                    }
-
-                    automationEventList.add(createSetValueCurveAutomationEvent(interpolatedValues, startTime, duration));
-                    nativeAudioParam.setValueCurveAtTime(interpolatedValues, startTime, duration);
-
-                    const timeOfLastSample = lastSample / sampleRate;
-
-                    if (timeOfLastSample < endTime) {
-                        setValueAtTimeUntilPossible(audioParam, interpolatedValues[interpolatedValues.length - 1], timeOfLastSample);
-                    }
-
-                    setValueAtTimeUntilPossible(audioParam, values[values.length - 1], endTime);
-                } else {
-                    if (audioParamRenderer === null) {
-                        automationEventList.flush(audioNode.context.currentTime);
-                    }
-
-                    automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
-                    nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
+                if (audioParamRenderer === null) {
+                    automationEventList.flush(audioNode.context.currentTime);
                 }
+
+                automationEventList.add(createSetValueCurveAutomationEvent(values, startTime, duration));
+                nativeAudioParam.setValueCurveAtTime(values, startTime, duration);
 
                 return audioParam;
             }
