@@ -365,11 +365,16 @@ describe('ConstantSourceNode', () => {
                         constantSourceNode = createConstantSourceNode(context);
                     });
 
-                    it('should be chainable', () => {
-                        expect(constantSourceNode.offset.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
-                            constantSourceNode.offset
-                        );
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(constantSourceNode.offset.setValueCurveAtTime(values, 0, 1)).to.equal(constantSourceNode.offset);
+                            });
+                        });
+                    }
                 });
 
                 describe('automation', () => {

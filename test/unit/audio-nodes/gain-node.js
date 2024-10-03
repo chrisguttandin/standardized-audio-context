@@ -331,9 +331,16 @@ describe('GainNode', () => {
                         gainNode = createGainNode(context);
                     });
 
-                    it('should be chainable', () => {
-                        expect(gainNode.gain.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(gainNode.gain);
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(gainNode.gain.setValueCurveAtTime(values, 0, 1)).to.equal(gainNode.gain);
+                            });
+                        });
+                    }
                 });
 
                 describe('automation', () => {

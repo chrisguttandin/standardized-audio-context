@@ -335,11 +335,18 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.attack.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
-                            dynamicsCompressorNode.attack
-                        );
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(dynamicsCompressorNode.attack.setValueCurveAtTime(values, 0, 1)).to.equal(
+                                    dynamicsCompressorNode.attack
+                                );
+                            });
+                        });
+                    }
                 });
 
                 // @todo automation
@@ -493,11 +500,16 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.knee.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
-                            dynamicsCompressorNode.knee
-                        );
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(dynamicsCompressorNode.knee.setValueCurveAtTime(values, 0, 1)).to.equal(dynamicsCompressorNode.knee);
+                            });
+                        });
+                    }
                 });
 
                 // @todo automation
@@ -607,11 +619,18 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.ratio.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
-                            dynamicsCompressorNode.ratio
-                        );
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(dynamicsCompressorNode.ratio.setValueCurveAtTime(values, 0, 1)).to.equal(
+                                    dynamicsCompressorNode.ratio
+                                );
+                            });
+                        });
+                    }
                 });
 
                 // @todo automation
@@ -695,11 +714,18 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.release.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
-                            dynamicsCompressorNode.release
-                        );
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(dynamicsCompressorNode.release.setValueCurveAtTime(values, 0, 1)).to.equal(
+                                    dynamicsCompressorNode.release
+                                );
+                            });
+                        });
+                    }
                 });
 
                 // @todo automation
@@ -781,11 +807,18 @@ describe('DynamicsCompressorNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(dynamicsCompressorNode.threshold.setValueCurveAtTime(new Float32Array([-1, 0]), 0, 1)).to.equal(
-                            dynamicsCompressorNode.threshold
-                        );
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [-1, 0]],
+                        ['Float32Array', new Float32Array([-1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(dynamicsCompressorNode.threshold.setValueCurveAtTime(values, 0, 1)).to.equal(
+                                    dynamicsCompressorNode.threshold
+                                );
+                            });
+                        });
+                    }
                 });
 
                 // @todo automation

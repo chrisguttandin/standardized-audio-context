@@ -426,9 +426,16 @@ describe('StereoPannerNode', () => {
                         stereoPannerNode = createStereoPannerNode(context);
                     });
 
-                    it('should be chainable', () => {
-                        expect(stereoPannerNode.pan.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(stereoPannerNode.pan);
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(stereoPannerNode.pan.setValueCurveAtTime(values, 0, 1)).to.equal(stereoPannerNode.pan);
+                            });
+                        });
+                    }
                 });
 
                 describe('automation', () => {

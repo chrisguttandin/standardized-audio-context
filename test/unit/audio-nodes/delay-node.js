@@ -348,9 +348,16 @@ describe('DelayNode', () => {
                         delayNode = createDelayNode(context);
                     });
 
-                    it('should be chainable', () => {
-                        expect(delayNode.delayTime.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(delayNode.delayTime);
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(delayNode.delayTime.setValueCurveAtTime(values, 0, 1)).to.equal(delayNode.delayTime);
+                            });
+                        });
+                    }
                 });
 
                 describe('automation', () => {

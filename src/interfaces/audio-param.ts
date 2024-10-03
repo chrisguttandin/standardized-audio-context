@@ -19,5 +19,5 @@ export interface IAudioParam {
 
     setValueAtTime(value: number, startTime: number): IAudioParam;
 
-    setValueCurveAtTime(values: Iterable<number>, startTime: number, duration: number): IAudioParam;
+    setValueCurveAtTime(values: number[] | Float32Array, startTime: number, duration: number): IAudioParam;
 }

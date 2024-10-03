@@ -339,9 +339,16 @@ describe('OscillatorNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(oscillatorNode.detune.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(oscillatorNode.detune);
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(oscillatorNode.detune.setValueCurveAtTime(values, 0, 1)).to.equal(oscillatorNode.detune);
+                            });
+                        });
+                    }
                 });
 
                 // @todo automation
@@ -423,11 +430,16 @@ describe('OscillatorNode', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    it('should be chainable', () => {
-                        expect(oscillatorNode.frequency.setValueCurveAtTime(new Float32Array([1, 0]), 0, 1)).to.equal(
-                            oscillatorNode.frequency
-                        );
-                    });
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(oscillatorNode.frequency.setValueCurveAtTime(values, 0, 1)).to.equal(oscillatorNode.frequency);
+                            });
+                        });
+                    }
                 });
 
                 // @todo automation

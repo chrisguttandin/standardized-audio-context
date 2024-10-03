@@ -119,6 +119,9 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #180: Safari up to version 13.1 not allowed to use ordinary arrays as parameters of createPeriodicWave().
  *
+ * Bug #183: Safari up to version 13.1 only accepted a Float32Array as the values parameter for the setValueCurveAtTime() function of an
+ * AudioParam.
+ *
  * Bug #187: Safari up to version 13.1 threw no error when scheduling an exponential ramp with negative endTime.
  */
 export const createTestAudioBufferConstructorSupport: TTestAudioBufferConstructorSupportFactory = (nativeAudioBufferConstructor) => {
