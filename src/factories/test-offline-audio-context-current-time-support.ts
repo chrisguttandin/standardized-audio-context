@@ -10,12 +10,6 @@ export const createTestOfflineAudioContextCurrentTimeSupport: TTestOfflineAudioC
 
         const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
 
-        // Bug #21: Safari does not support promises yet.
-        return new Promise((resolve) => {
-            nativeOfflineAudioContext.oncomplete = () => {
-                resolve(nativeOfflineAudioContext.currentTime !== 0);
-            };
-            nativeOfflineAudioContext.startRendering();
-        });
+        return nativeOfflineAudioContext.startRendering().then(() => nativeOfflineAudioContext.currentTime !== 0);
     };
 };

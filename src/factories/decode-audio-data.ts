@@ -5,13 +5,10 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
     audioBufferStore,
     cacheTestResult,
     createDataCloneError,
-    createEncodingError,
     detachedArrayBuffers,
     getNativeContext,
     isNativeContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    testPromiseSupport,
-    wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
     return (anyContext, audioData) => {
@@ -31,67 +28,24 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             // Ignore errors.
         }
 
-        // Bug #21: Safari does not support promises yet.
-        if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeContext))) {
-            return nativeContext.decodeAudioData(audioData).then((audioBuffer) => {
-                // Bug #133: Safari does neuter the ArrayBuffer.
-                detachArrayBuffer(audioData).catch(() => {
-                    // Ignore errors.
-                });
-
-                // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
-                if (
-                    !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
-                        testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
-                    )
-                ) {
-                    wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
-                }
-
-                audioBufferStore.add(audioBuffer);
-
-                return audioBuffer;
+        return nativeContext.decodeAudioData(audioData).then((audioBuffer) => {
+            // Bug #133: Safari does neuter the ArrayBuffer.
+            detachArrayBuffer(audioData).catch(() => {
+                // Ignore errors.
             });
-        }
 
-        // Bug #21: Safari does not return a Promise yet.
-        return new Promise((resolve, reject) => {
-            const complete = async () => {
-                // Bug #133: Safari does neuter the ArrayBuffer.
-                try {
-                    await detachArrayBuffer(audioData);
-                } catch {
-                    // Ignore errors.
-                }
-            };
+            // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
+            if (
+                !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
+                    testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
+                )
+            ) {
+                wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
+            }
 
-            const fail = (err: DOMException | Error) => {
-                reject(err);
-                complete();
-            };
+            audioBufferStore.add(audioBuffer);
 
-            // Bug #1: Safari requires a successCallback.
-            nativeContext.decodeAudioData(
-                audioData,
-                (audioBuffer) => {
-                    // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-                    if (typeof audioBuffer.copyFromChannel !== 'function') {
-                        wrapAudioBufferCopyChannelMethods(audioBuffer);
-                    }
-
-                    audioBufferStore.add(audioBuffer);
-
-                    complete().then(() => resolve(audioBuffer));
-                },
-                (err: DOMException | Error) => {
-                    // Bug #4: Safari returns null instead of an error.
-                    if (err === null) {
-                        fail(createEncodingError());
-                    } else {
-                        fail(err);
-                    }
-                }
-            );
+            return audioBuffer;
         });
     };
 };

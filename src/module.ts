@@ -58,7 +58,6 @@ import { createDetectCycles } from './factories/detect-cycles';
 import { createDisconnectMultipleOutputs } from './factories/disconnect-multiple-outputs';
 import { createDynamicsCompressorNodeConstructor } from './factories/dynamics-compressor-node-constructor';
 import { createDynamicsCompressorNodeRendererFactory } from './factories/dynamics-compressor-node-renderer-factory';
-import { createEncodingError } from './factories/encoding-error';
 import { createEvaluateSource } from './factories/evaluate-source';
 import { createEventTargetConstructor } from './factories/event-target-constructor';
 import { createExposeCurrentFrameAndCurrentTime } from './factories/expose-current-frame-and-current-time';
@@ -200,7 +199,6 @@ import { testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport } from '.
 import { testAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
 import { testAudioWorkletNodeOptionsClonability } from './helpers/test-audio-worklet-node-options-clonability';
 import { testDomExceptionConstructorSupport } from './helpers/test-dom-exception-constructor-support';
-import { testPromiseSupport } from './helpers/test-promise-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
 import { wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls } from './helpers/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
@@ -709,13 +707,10 @@ export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     audioBufferStore,
     cacheTestResult,
     createDataCloneError,
-    createEncodingError,
     new WeakSet(),
     getNativeContext,
     isNativeContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    testPromiseSupport,
-    wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 );
 
@@ -925,7 +920,6 @@ const startRendering = createStartRendering(
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 );
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
-    cacheTestResult,
     createInvalidStateError,
     createNativeOfflineAudioContext,
     minimalBaseAudioContextConstructor,
@@ -938,7 +932,6 @@ export { minimalOfflineAudioContextConstructor as MinimalOfflineAudioContext };
 
 const offlineAudioContextConstructor: IOfflineAudioContextConstructor = createOfflineAudioContextConstructor(
     baseAudioContextConstructor,
-    cacheTestResult,
     createInvalidStateError,
     createNativeOfflineAudioContext,
     startRendering

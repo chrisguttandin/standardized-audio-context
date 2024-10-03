@@ -1,6 +1,4 @@
-import { testPromiseSupport } from '../helpers/test-promise-support';
-import { IOfflineAudioCompletionEvent } from '../interfaces';
-import { TNativeAudioBuffer, TRenderNativeOfflineAudioContextFactory } from '../types';
+import { TRenderNativeOfflineAudioContextFactory } from '../types';
 
 export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioContextFactory = (
     cacheTestResult,
@@ -8,12 +6,9 @@ export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioCon
     testOfflineAudioContextCurrentTimeSupport
 ) => {
     return (nativeOfflineAudioContext) => {
-        // Bug #21: Safari does not support promises yet.
-        if (cacheTestResult(testPromiseSupport, () => testPromiseSupport(nativeOfflineAudioContext))) {
-            // Bug #158: Chrome does not advance currentTime if it is not accessed while rendering the audio.
-            return Promise.resolve(
-                cacheTestResult(testOfflineAudioContextCurrentTimeSupport, testOfflineAudioContextCurrentTimeSupport)
-            ).then((isOfflineAudioContextCurrentTimeSupported) => {
+        // Bug #158: Chrome does not advance currentTime if it is not accessed while rendering the audio.
+        return Promise.resolve(cacheTestResult(testOfflineAudioContextCurrentTimeSupport, testOfflineAudioContextCurrentTimeSupport)).then(
+            (isOfflineAudioContextCurrentTimeSupported) => {
                 if (!isOfflineAudioContextCurrentTimeSupported) {
                     const scriptProcessorNode = createNativeScriptProcessorNode(nativeOfflineAudioContext, 512, 0, 1);
 
@@ -27,15 +22,7 @@ export const createRenderNativeOfflineAudioContext: TRenderNativeOfflineAudioCon
                 }
 
                 return nativeOfflineAudioContext.startRendering();
-            });
-        }
-
-        return new Promise<TNativeAudioBuffer>((resolve) => {
-            nativeOfflineAudioContext.oncomplete = (event: IOfflineAudioCompletionEvent) => {
-                resolve(event.renderedBuffer);
-            };
-
-            nativeOfflineAudioContext.startRendering();
-        });
+            }
+        );
     };
 };

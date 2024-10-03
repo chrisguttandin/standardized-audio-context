@@ -228,24 +228,6 @@ describe('offlineAudioContextConstructor', () => {
                 });
             });
         });
-
-        // bug #21
-
-        it('should not return a promise', async function () {
-            this.timeout(10000);
-
-            const arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
-
-            expect(offlineAudioContext.decodeAudioData(arrayBuffer, () => {})).to.be.undefined;
-        });
-    });
-
-    describe('startRendering()', () => {
-        // bug #21
-
-        it('should not return a promise', () => {
-            expect(offlineAudioContext.startRendering()).to.be.undefined;
-        });
     });
 
     describe('suspend()', () => {

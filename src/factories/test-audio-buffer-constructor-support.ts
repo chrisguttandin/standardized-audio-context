@@ -14,6 +14,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #20: Safari up to version 13.1 required a connection of any kind to treat the input signal of a ChannelMergerNode correctly.
  *
+ * Bug #21: Safari up to version 13.1 returned no promise when calling decodeAudioData() or startRendering().
+ *
  * Bug #22: Safari up to version 13.1 filled the magResponse and phaseResponse arrays with a deprecated algorithm when calling
  * getFrequencyResponse() of a BiquadFilterNode.
  *

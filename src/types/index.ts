@@ -130,7 +130,6 @@ export * from './dynamics-compressor-node-constructor';
 export * from './dynamics-compressor-node-constructor-factory';
 export * from './dynamics-compressor-node-renderer-factory';
 export * from './dynamics-compressor-node-renderer-factory-factory';
-export * from './encoding-error-factory';
 export * from './error-event-handler';
 export * from './evaluate-audio-worklet-global-scope-function';
 export * from './evaluate-source-factory';
