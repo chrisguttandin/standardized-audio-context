@@ -127,7 +127,6 @@ import { createNativeScriptProcessorNode } from './factories/native-script-proce
 import { createNativeStereoPannerNodeFactory } from './factories/native-stereo-panner-node-factory';
 import { createNativeStereoPannerNodeFakerFactory } from './factories/native-stereo-panner-node-faker-factory';
 import { createNativeWaveShaperNodeFactory } from './factories/native-wave-shaper-node-factory';
-import { createNativeWaveShaperNodeFakerFactory } from './factories/native-wave-shaper-node-faker-factory';
 import { createNotSupportedError } from './factories/not-supported-error';
 import { createOfflineAudioContextConstructor } from './factories/offline-audio-context-constructor';
 import { createOscillatorNodeConstructor } from './factories/oscillator-node-constructor';
@@ -621,19 +620,11 @@ const oscillatorNodeConstructor: TOscillatorNodeConstructor = createOscillatorNo
     wrapEventListener
 );
 const createConnectedNativeAudioBufferSourceNode = createConnectedNativeAudioBufferSourceNodeFactory(createNativeAudioBufferSourceNode);
-const createNativeWaveShaperNodeFaker = createNativeWaveShaperNodeFakerFactory(
-    createConnectedNativeAudioBufferSourceNode,
-    createNativeGainNode,
-    isDCCurve,
-    monitorConnections
-);
 const createNativeWaveShaperNode = createNativeWaveShaperNodeFactory(
     createConnectedNativeAudioBufferSourceNode,
     createInvalidStateError,
-    createNativeWaveShaperNodeFaker,
     isDCCurve,
     monitorConnections,
-    nativeAudioContextConstructor,
     overwriteAccessors
 );
 const createPannerNodeRenderer = createPannerNodeRendererFactory(

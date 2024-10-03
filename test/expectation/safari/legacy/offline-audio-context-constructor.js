@@ -272,31 +272,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('createWaveShaper()', () => {
-        // bug #119
-
-        it('should map the values incorrectly', (done) => {
-            const audioBuffer = offlineAudioContext.createBuffer(1, 5, offlineAudioContext.sampleRate);
-            const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-            const waveShaperNode = offlineAudioContext.createWaveShaper();
-
-            audioBufferSourceNode.buffer = audioBuffer;
-
-            waveShaperNode.curve = new Float32Array([1, 0.5, 0]);
-
-            audioBufferSourceNode.connect(waveShaperNode).connect(offlineAudioContext.destination);
-
-            audioBufferSourceNode.start(0);
-
-            offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
-                expect(renderedBuffer.getChannelData(0)[0]).to.equal(0.25);
-
-                done();
-            };
-            offlineAudioContext.startRendering();
-        });
-    });
-
     describe('decodeAudioData()', () => {
         // bug #1
 

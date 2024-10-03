@@ -60,7 +60,6 @@ export * from './native-audio-node-faker';
 export * from './native-audio-worklet-node-faker';
 export * from './native-convolver-node-faker';
 export * from './native-stereo-panner-node-faker';
-export * from './native-wave-shaper-node-faker';
 export * from './offline-audio-completion-event';
 export * from './offline-audio-context';
 export * from './offline-audio-context-constructor';
