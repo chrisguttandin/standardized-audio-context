@@ -13,16 +13,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('constructor()', () => {
-        describe('with a sampleRate of 8000 Hz', () => {
-            // bug #141
-
-            it('should throw an error', () => {
-                expect(() => {
-                    new webkitOfflineAudioContext(1, 1, 8000); // eslint-disable-line new-cap, no-undef
-                }).to.throw(DOMException);
-            });
-        });
-
         describe('with 32 as the value for numberOfChannels', () => {
             // bug #142
 

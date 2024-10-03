@@ -117,7 +117,7 @@ The properties and methods are described in greater detail below.
 
 This is an almost complete implementation of the [`OfflineAudioContext`](https://webaudio.github.io/web-audio-api/#offlineaudiocontext) interface. It only misses the `createScriptProcessor()` method which is deprecated anyway.
 
-⚠️ <!-- Bug #141 & #142 --> Safari does not support creating an OfflineAudioContext with more than 10 channels or with a sampleRate below 44100 Hz.
+⚠️ <!-- Bug #142 --> Safari does not support creating an OfflineAudioContext with more than 10 channels.
 
 It implements the following TypeScript interface.
 

@@ -21,7 +21,6 @@ export const createTestAudioWorkletProcessorPostMessageSupport: TTestAudioWorkle
                 type: 'application/javascript; charset=utf-8'
             }
         );
-        // Bug #141: Safari does not support creating an OfflineAudioContext with less than 44100 Hz.
         const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 128, 44100);
         const url = URL.createObjectURL(blob);
 
