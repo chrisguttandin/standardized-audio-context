@@ -33,6 +33,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #45: Safari up to version 13.1 threw no error when scheduling an exponential ramp to 0.
  *
+ * Bug #46: Safari up to version 13.1 not allowed to create an OfflineAudioContext with an OfflineAudioContextOptions object.
+ *
  * Bug #56: Safari up to version 13.1 rejected the promise returned by resume() and suspend() without any error.
  *
  * Bug #62: Safari up to version 13.1 had no ConstantSourceNode implementation.

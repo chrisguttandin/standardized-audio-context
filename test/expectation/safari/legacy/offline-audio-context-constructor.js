@@ -12,18 +12,6 @@ describe('offlineAudioContextConstructor', () => {
         expect(window.OfflineAudioContext).to.be.undefined;
     });
 
-    describe('constructor()', () => {
-        describe('with OfflineAudioContextOptions', () => {
-            // bug #46
-
-            it('should throw a TypeError', () => {
-                expect(() => {
-                    new webkitOfflineAudioContext({ length: 1, numberOfChannels: 1, sampleRate: 44100 }); // eslint-disable-line new-cap, no-undef
-                }).to.throw(TypeError);
-            });
-        });
-    });
-
     describe('destination', () => {
         // bug #132
 
