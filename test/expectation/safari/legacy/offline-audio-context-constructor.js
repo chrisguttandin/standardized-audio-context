@@ -77,43 +77,6 @@ describe('offlineAudioContextConstructor', () => {
         });
 
         describe('stop()', () => {
-            // bug #18
-
-            it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', () => {
-                const audioBuffer = offlineAudioContext.createBuffer(1, 100, 44100);
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBufferSourceNode.buffer = audioBuffer;
-                audioBufferSourceNode.connect(offlineAudioContext.destination);
-                audioBufferSourceNode.start();
-                audioBufferSourceNode.stop(1);
-                expect(() => {
-                    audioBufferSourceNode.stop();
-                }).to.throw(Error);
-            });
-
-            // bug #19
-
-            it('should not ignore calls to stop() of an already stopped AudioBufferSourceNode', (done) => {
-                const audioBuffer = offlineAudioContext.createBuffer(1, 100, 44100);
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBufferSourceNode.onended = () => {
-                    expect(() => {
-                        audioBufferSourceNode.stop();
-                    }).to.throw(Error);
-
-                    done();
-                };
-
-                audioBufferSourceNode.buffer = audioBuffer;
-                audioBufferSourceNode.connect(offlineAudioContext.destination);
-                audioBufferSourceNode.start();
-                audioBufferSourceNode.stop();
-
-                offlineAudioContext.startRendering();
-            });
-
             // bug #69
 
             it('should not ignore calls repeated calls to start()', () => {

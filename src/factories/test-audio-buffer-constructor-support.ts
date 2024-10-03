@@ -12,6 +12,10 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #16: Safari up to version 13.1 threw no error when changing the channelCount or channelCountMode of a ChannelMergerNode.
  *
+ * Bug #18: Safari up to version 13.1 threw an error when calling stop() of an AudioBufferSourceNode more than once.
+ *
+ * Bug #19: Safari up to version 13.1 threw an error when calling stop() of an already stopped AudioBufferSourceNode.
+ *
  * Bug #20: Safari up to version 13.1 required a connection of any kind to treat the input signal of a ChannelMergerNode correctly.
  *
  * Bug #21: Safari up to version 13.1 returned no promise when calling decodeAudioData() or startRendering().

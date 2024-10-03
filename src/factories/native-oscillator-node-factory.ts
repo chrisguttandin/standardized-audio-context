@@ -9,9 +9,7 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
     addSilentConnection,
     cacheTestResult,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
-    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
-    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
-    wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 ) => {
     return (nativeContext, options) => {
         const nativeOscillatorNode = nativeContext.createOscillator();
@@ -34,15 +32,6 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
             )
         ) {
             wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeOscillatorNode);
-        }
-
-        // Bug #19: Safari does not ignore calls to stop() of an already stopped AudioBufferSourceNode.
-        if (
-            !cacheTestResult(testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport, () =>
-                testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport(nativeContext)
-            )
-        ) {
-            wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls(nativeOscillatorNode, nativeContext);
         }
 
         // Bug #44: Only Firefox does not throw a RangeError yet.

@@ -52,23 +52,6 @@ describe('audioContextConstructor', () => {
                         .with.property('name', 'InvalidStateError');
                 });
             });
-
-            describe('stop()', () => {
-                // bug #18
-
-                it('should not allow calls to stop() of an AudioBufferSourceNode scheduled for stopping', () => {
-                    const audioBuffer = audioContext.createBuffer(1, 100, 44100);
-                    const audioBufferSourceNode = audioContext.createBufferSource();
-
-                    audioBufferSourceNode.buffer = audioBuffer;
-                    audioBufferSourceNode.connect(audioContext.destination);
-                    audioBufferSourceNode.start();
-                    audioBufferSourceNode.stop(audioContext.currentTime + 1);
-                    expect(() => {
-                        audioBufferSourceNode.stop();
-                    }).to.throw(Error);
-                });
-            });
         });
 
         describe('createMediaStreamSource()', () => {

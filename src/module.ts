@@ -193,13 +193,11 @@ import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './helpers/t
 import { testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport } from './helpers/test-audio-buffer-source-node-start-method-consecutive-calls-support';
 import { testAudioBufferSourceNodeStartMethodOffsetClampingSupport } from './helpers/test-audio-buffer-source-node-start-method-offset-clamping-support';
 import { testAudioScheduledSourceNodeStartMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-start-method-negative-parameters-support';
-import { testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport } from './helpers/test-audio-scheduled-source-node-stop-method-consecutive-calls-support';
 import { testAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
 import { testAudioWorkletNodeOptionsClonability } from './helpers/test-audio-worklet-node-options-clonability';
 import { testDomExceptionConstructorSupport } from './helpers/test-dom-exception-constructor-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapAudioBufferSourceNodeStartMethodOffsetClamping } from './helpers/wrap-audio-buffer-source-node-start-method-offset-clamping';
-import { wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls } from './helpers/wrap-audio-scheduled-source-node-stop-method-consecutive-calls';
 import { wrapEventListener } from './helpers/wrap-event-listener';
 import {
     IAnalyserNode,
@@ -375,10 +373,8 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
     testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
-    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
-    wrapAudioBufferSourceNodeStartMethodOffsetClamping,
-    wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
+    wrapAudioBufferSourceNodeStartMethodOffsetClamping
 );
 const renderAutomation = createRenderAutomation(createGetAudioParamRenderer(getAudioParamConnections), renderInputsOfAudioParam);
 const createAudioBufferSourceNodeRenderer = createAudioBufferSourceNodeRendererFactory(
@@ -589,9 +585,7 @@ const createNativeOscillatorNode = createNativeOscillatorNodeFactory(
     addSilentConnection,
     cacheTestResult,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
-    testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
-    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
-    wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 );
 const createOscillatorNodeRenderer = createOscillatorNodeRendererFactory(
     connectAudioParam,
