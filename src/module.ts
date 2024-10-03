@@ -162,7 +162,6 @@ import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-nod
 import { createWindow } from './factories/window';
 import { createWrapAudioBufferCopyChannelMethods } from './factories/wrap-audio-buffer-copy-channel-methods';
 import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
-import { createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer } from './factories/wrap-audio-buffer-source-node-stop-method-nullified-buffer';
 import {
     AUDIO_NODE_CONNECTIONS_STORE,
     AUDIO_NODE_STORE,
@@ -193,7 +192,6 @@ import { sanitizePeriodicWaveOptions } from './helpers/sanitize-periodic-wave-op
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport } from './helpers/test-audio-buffer-source-node-start-method-consecutive-calls-support';
 import { testAudioBufferSourceNodeStartMethodOffsetClampingSupport } from './helpers/test-audio-buffer-source-node-start-method-offset-clamping-support';
-import { testAudioBufferSourceNodeStopMethodNullifiedBufferSupport } from './helpers/test-audio-buffer-source-node-stop-method-nullified-buffer-support';
 import { testAudioScheduledSourceNodeStartMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-start-method-negative-parameters-support';
 import { testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport } from './helpers/test-audio-scheduled-source-node-stop-method-consecutive-calls-support';
 import { testAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
@@ -376,12 +374,10 @@ const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFacto
     cacheTestResult,
     testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
     testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
-    testAudioBufferSourceNodeStopMethodNullifiedBufferSupport,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
     wrapAudioBufferSourceNodeStartMethodOffsetClamping,
-    createWrapAudioBufferSourceNodeStopMethodNullifiedBuffer(overwriteAccessors),
     wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls
 );
 const renderAutomation = createRenderAutomation(createGetAudioParamRenderer(getAudioParamConnections), renderInputsOfAudioParam);

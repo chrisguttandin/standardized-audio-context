@@ -68,18 +68,6 @@ describe('audioContextConstructor', () => {
                         audioBufferSourceNode.stop();
                     }).to.throw(Error);
                 });
-
-                // bug #162
-
-                it('should throw a DOMException when called without a value', () => {
-                    const audioBufferSourceNode = audioContext.createBufferSource();
-
-                    audioBufferSourceNode.start();
-
-                    expect(() => audioBufferSourceNode.stop())
-                        .to.throw(DOMException)
-                        .with.property('name', 'InvalidStateError');
-                });
             });
         });
 
