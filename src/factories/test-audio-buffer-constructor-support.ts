@@ -62,6 +62,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #94: Safari up to version 13.1 exposed a close() method on an OfflineAudioContext.
  *
+ * Bug #95: Safari up to version 13.1 played no looped AudioBuffer with only a single sample.
+ *
  * Bug #96: Safari up to version 13.1 exposed the wrong default value for channelCount of a ChannelSplitterNode.
  *
  * Bug #97: Safari up to version 13.1 allowed to change the channelCount of a ChannelSplitterNode.

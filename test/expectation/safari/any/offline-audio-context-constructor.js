@@ -144,8 +144,7 @@ describe('offlineAudioContextConstructor', () => {
                 delayNode = offlineAudioContext.createDelay();
                 gainNode = offlineAudioContext.createGain();
 
-                // Bug #95: Safari does not play/loop one sample buffers.
-                const audioBuffer = offlineAudioContext.createBuffer(1, 2, offlineAudioContext.sampleRate);
+                const audioBuffer = offlineAudioContext.createBuffer(1, 1, offlineAudioContext.sampleRate);
 
                 audioBuffer.getChannelData(0)[0] = 2;
 

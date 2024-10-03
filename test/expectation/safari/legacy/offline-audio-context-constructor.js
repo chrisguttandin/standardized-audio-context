@@ -41,33 +41,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('createBufferSource()', () => {
-        describe('buffer', () => {
-            // bug #95
-
-            it('should not play a buffer with only one sample', (done) => {
-                const audioBuffer = offlineAudioContext.createBuffer(1, 1, 44100);
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBuffer.getChannelData(0)[0] = 1;
-
-                audioBufferSourceNode.buffer = audioBuffer;
-
-                audioBufferSourceNode.connect(offlineAudioContext.destination);
-                audioBufferSourceNode.start();
-
-                offlineAudioContext.oncomplete = (event) => {
-                    const channelData = event.renderedBuffer.getChannelData(0);
-
-                    expect(channelData[0]).to.equal(0);
-
-                    audioBufferSourceNode.disconnect(offlineAudioContext.destination);
-
-                    done();
-                };
-                offlineAudioContext.startRendering();
-            });
-        });
-
         describe('start()', () => {
             // bug #155
 
