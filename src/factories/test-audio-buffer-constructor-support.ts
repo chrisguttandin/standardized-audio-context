@@ -68,6 +68,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #103: Safari up to version 13.1 not allowed to set the curve to null.
  *
+ * Bug #105: Safari up to version 13.1 had no StereoPannerNode implementation.
+ *
  * Bug #108: Safari up to version 13.1 allowed to set the channelCount of a DynamicsCompressorNode to a value greater than 2.
  *
  * Bug #109: Safari up to version 13.1 allowed to set the channelCountMode of a DynamicsCompressorNode to 'max'.

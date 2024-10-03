@@ -114,8 +114,7 @@ describe('StereoPannerNode', () => {
 
                             it('should return an implementation of the AudioNode interface', () => {
                                 expect(stereoPannerNode.channelCount).to.equal(2);
-                                // Bug #105: The channelCountMode should have a default value of 'clamped-max'.
-                                expect(stereoPannerNode.channelCountMode).to.equal('explicit');
+                                expect(stereoPannerNode.channelCountMode).to.equal('clamped-max');
                                 expect(stereoPannerNode.channelInterpretation).to.equal('speakers');
                                 expect(stereoPannerNode.connect).to.be.a('function');
                                 expect(stereoPannerNode.context).to.be.an.instanceOf(context.constructor);
@@ -135,6 +134,13 @@ describe('StereoPannerNode', () => {
                                 const stereoPannerNode = createStereoPannerNode(context, { channelCount });
 
                                 expect(stereoPannerNode.channelCount).to.equal(channelCount);
+                            });
+
+                            it('should return an instance with the given channelCountMode', () => {
+                                const channelCountMode = 'explicit';
+                                const stereoPannerNode = createStereoPannerNode(context, { channelCountMode });
+
+                                expect(stereoPannerNode.channelCountMode).to.equal(channelCountMode);
                             });
 
                             it('should return an instance with the given channelInterpretation', () => {
@@ -163,23 +169,6 @@ describe('StereoPannerNode', () => {
                                 it('should throw a NotSupportedError', (done) => {
                                     try {
                                         createStereoPannerNode(context, { channelCount: 4 });
-                                    } catch (err) {
-                                        expect(err.code).to.equal(9);
-                                        expect(err.name).to.equal('NotSupportedError');
-
-                                        done();
-                                    }
-                                });
-                            });
-
-                            /*
-                             * Bug #105: The channelCountMode of 'clamped-max' should actually be the default value but it is not supported
-                             * to achieve a consistent behaviour of the polyfill and the native implementation.
-                             */
-                            describe("with a channelCountMode of 'clamped-max'", () => {
-                                it('should throw a NotSupportedError', (done) => {
-                                    try {
-                                        createStereoPannerNode(context, { channelCountMode: 'clamped-max' });
                                     } catch (err) {
                                         expect(err.code).to.equal(9);
                                         expect(err.name).to.equal('NotSupportedError');
@@ -242,7 +231,6 @@ describe('StereoPannerNode', () => {
                     stereoPannerNode = createStereoPannerNode(context);
                 });
 
-                // Bug #105: This is kind of a dump test right now as the default value is 'explicit' anyway.
                 it("should be assignable to 'explicit'", () => {
                     const channelCountMode = 'explicit';
 
@@ -1039,11 +1027,9 @@ describe('StereoPannerNode', () => {
                                     audioBufferSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(channelData[0]).to.be.closeTo(1, 0.0001);
-                                expect(channelData[1]).to.be.closeTo(1, 0.0001);
-                                expect(channelData[2]).to.be.closeTo(1, 0.0001);
-                                expect(channelData[3]).to.be.closeTo(1, 0.0001);
-                                expect(channelData[4]).to.be.closeTo(1, 0.0001);
+                                expect(Array.from(channelData)).to.deep.equal([
+                                    0.7071067690849304, 0.7071067690849304, 0.7071067690849304, 0.7071067690849304, 0.7071067690849304
+                                ]);
                             });
                         });
                     });

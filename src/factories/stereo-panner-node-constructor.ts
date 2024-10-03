@@ -3,11 +3,7 @@ import { TAudioNodeRenderer, TContext, TStereoPannerNodeConstructorFactory } fro
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
-    /*
-     * Bug #105: The channelCountMode should be 'clamped-max' according to the spec but is set to 'explicit' to achieve consistent
-     * behavior.
-     */
-    channelCountMode: 'explicit',
+    channelCountMode: 'clamped-max',
     channelInterpretation: 'speakers',
     pan: 0
 } as const;

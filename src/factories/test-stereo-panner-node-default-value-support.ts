@@ -12,15 +12,6 @@ export const createTestStereoPannerNodeDefaultValueSupport: TTestStereoPannerNod
         }
 
         const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
-
-        /*
-         * Bug #105: Safari does not support the StereoPannerNode. Therefore the returned value should normally be false but the faker does
-         * support the tested behaviour.
-         */
-        if (nativeOfflineAudioContext.createStereoPanner === undefined) {
-            return Promise.resolve(true);
-        }
-
         const constantSourceNode = nativeOfflineAudioContext.createConstantSource();
         const stereoPanner = nativeOfflineAudioContext.createStereoPanner();
 
