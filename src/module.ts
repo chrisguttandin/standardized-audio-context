@@ -565,9 +565,8 @@ const gainNodeConstructor: TGainNodeConstructor = createGainNodeConstructor(
 );
 const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(
     cacheTestResult,
-    createNativeGainNode,
     createNativeScriptProcessorNode,
-    createTestOfflineAudioContextCurrentTimeSupport(createNativeGainNode, nativeOfflineAudioContextConstructor)
+    createTestOfflineAudioContextCurrentTimeSupport(nativeOfflineAudioContextConstructor)
 );
 const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(getNativeAudioNode, renderInputsOfAudioNode);
 const iIRFilterNodeConstructor: TIIRFilterNodeConstructor = createIIRFilterNodeConstructor(

@@ -1,5 +1,5 @@
-import { spy, stub } from 'sinon';
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
+import { stub } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
     let offlineAudioContext;
@@ -40,23 +40,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('oncomplete', () => {
-        // bug #48
-
-        it('should not fire without any connected node', (done) => {
-            offlineAudioContext.oncomplete = spy();
-
-            offlineAudioContext.startRendering();
-
-            // Wait a second to be sure oncomplete was not called.
-            setTimeout(() => {
-                expect(offlineAudioContext.oncomplete).to.have.not.been.called;
-
-                done();
-            }, 1000);
-        });
-    });
-
     describe('onstatechange', () => {
         // bug #49
 
@@ -78,9 +61,6 @@ describe('offlineAudioContextConstructor', () => {
 
                     previousState = currentState;
                 };
-
-                // Bug #48: Connect a GainNode to make sure the rendering succeeds.
-                offlineAudioContext.createGain().connect(offlineAudioContext.destination);
 
                 offlineAudioContext.startRendering();
             };

@@ -35,6 +35,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #46: Safari up to version 13.1 not allowed to create an OfflineAudioContext with an OfflineAudioContextOptions object.
  *
+ * Bug #48: Safari up to version 13.1 required at least one connected AudioNode to render an OfflineAudioContext.
+ *
  * Bug #56: Safari up to version 13.1 rejected the promise returned by resume() and suspend() without any error.
  *
  * Bug #62: Safari up to version 13.1 had no ConstantSourceNode implementation.
