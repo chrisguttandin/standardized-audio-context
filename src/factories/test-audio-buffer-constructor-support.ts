@@ -98,6 +98,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #141: Safari up to version 13.1 not allowed to create an OfflineAudioContext with a sampleRate less than 44100 Hz.
  *
+ * Bug #142: Safari up to version 13.1 not allowed to create an OfflineAudioContext with more than 10 channels.
+ *
  * Bug #143, #144 & #146: Safari up to version 13.1 threw a SyntaxError when numberOfChannels, length or sampleRate were invalid when
  * creating an OfflineAudioContext.
  *

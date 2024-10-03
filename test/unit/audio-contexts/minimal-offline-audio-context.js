@@ -1,5 +1,4 @@
 import { AudioBuffer, AudioBufferSourceNode, MinimalOfflineAudioContext } from '../../../src/module';
-import { isSafari } from '../../helper/is-safari';
 import { spy } from 'sinon';
 
 describe('MinimalOfflineAudioContext', () => {
@@ -31,19 +30,16 @@ describe('MinimalOfflineAudioContext', () => {
                     expect(minimalOfflineAudioContext.length).to.equal(length);
                 });
 
-                // Bug #142: Safari does not support OfflineAudioContexts with 32 channels.
-                if (!isSafari(navigator)) {
-                    it('should return a MinimalOfflineAudioContext with the given numberOfChannels as maxChannelCount of its destination', () => {
-                        const numberOfChannels = 32;
-                        const minimalOfflineAudioContext = new MinimalOfflineAudioContext({
-                            length: 1000,
-                            numberOfChannels,
-                            sampleRate: 44100
-                        });
-
-                        expect(minimalOfflineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
+                it('should return a MinimalOfflineAudioContext with the given numberOfChannels as maxChannelCount of its destination', () => {
+                    const numberOfChannels = 32;
+                    const minimalOfflineAudioContext = new MinimalOfflineAudioContext({
+                        length: 1000,
+                        numberOfChannels,
+                        sampleRate: 44100
                     });
-                }
+
+                    expect(minimalOfflineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
+                });
 
                 it('should return a MinimalOfflineAudioContext with the given sampleRate of 8 kHz', () => {
                     const sampleRate = 8000;

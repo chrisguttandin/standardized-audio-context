@@ -1,5 +1,4 @@
 import { OfflineAudioContext } from '../../../src/module';
-import { isSafari } from '../../helper/is-safari';
 import { spy } from 'sinon';
 
 describe('OfflineAudioContext', () => {
@@ -31,15 +30,12 @@ describe('OfflineAudioContext', () => {
                     expect(offlineAudioContext.length).to.equal(length);
                 });
 
-                // Bug #142: Safari does not support OfflineAudioContexts with 32 channels.
-                if (!isSafari(navigator)) {
-                    it('should return a OfflineAudioContext with the given numberOfChannels as maxChannelCount of its destination', () => {
-                        const numberOfChannels = 32;
-                        const offlineAudioContext = new OfflineAudioContext({ length: 1000, numberOfChannels, sampleRate: 44100 });
+                it('should return a OfflineAudioContext with the given numberOfChannels as maxChannelCount of its destination', () => {
+                    const numberOfChannels = 32;
+                    const offlineAudioContext = new OfflineAudioContext({ length: 1000, numberOfChannels, sampleRate: 44100 });
 
-                        expect(offlineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
-                    });
-                }
+                    expect(offlineAudioContext.destination.maxChannelCount).to.equal(numberOfChannels);
+                });
 
                 it('should return a OfflineAudioContext with the given sampleRate of 8 kHz', () => {
                     const sampleRate = 8000;

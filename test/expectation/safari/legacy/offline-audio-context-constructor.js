@@ -13,16 +13,6 @@ describe('offlineAudioContextConstructor', () => {
     });
 
     describe('constructor()', () => {
-        describe('with 32 as the value for numberOfChannels', () => {
-            // bug #142
-
-            it('should throw an error', () => {
-                expect(() => {
-                    new webkitOfflineAudioContext(32, 1, 44100); // eslint-disable-line new-cap, no-undef
-                }).to.throw(DOMException);
-            });
-        });
-
         describe('with OfflineAudioContextOptions', () => {
             // bug #46
 
