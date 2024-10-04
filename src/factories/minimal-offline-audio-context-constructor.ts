@@ -16,8 +16,6 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
         extends minimalBaseAudioContextConstructor<IMinimalOfflineAudioContext>
         implements IMinimalOfflineAudioContext
     {
-        private _length: number;
-
         private _nativeOfflineAudioContext: TNativeOfflineAudioContext;
 
         private _state: null | TAudioContextState;
@@ -29,17 +27,11 @@ export const createMinimalOfflineAudioContextConstructor: TMinimalOfflineAudioCo
 
             super(nativeOfflineAudioContext, numberOfChannels);
 
-            this._length = length;
             this._nativeOfflineAudioContext = nativeOfflineAudioContext;
             this._state = null;
         }
 
         get length(): number {
-            // Bug #17: Safari does not yet expose the length.
-            if (this._nativeOfflineAudioContext.length === undefined) {
-                return this._length;
-            }
-
             return this._nativeOfflineAudioContext.length;
         }
 

@@ -32,14 +32,6 @@ describe('offlineAudioContextConstructor', () => {
         });
     });
 
-    describe('length', () => {
-        // bug #17
-
-        it('should not expose its length', () => {
-            expect(offlineAudioContext.length).to.be.undefined;
-        });
-    });
-
     describe('createScriptProcessor()', () => {
         // bug #8
 

@@ -12,6 +12,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #16: Safari up to version 13.1 threw no error when changing the channelCount or channelCountMode of a ChannelMergerNode.
  *
+ * Bug #17: Safari up to version 13.1 did not expose the length property of an OfflineAudioContext.
+ *
  * Bug #18: Safari up to version 13.1 threw an error when calling stop() of an AudioBufferSourceNode more than once.
  *
  * Bug #19: Safari up to version 13.1 threw an error when calling stop() of an already stopped AudioBufferSourceNode.
