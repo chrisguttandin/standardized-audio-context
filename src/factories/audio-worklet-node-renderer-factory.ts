@@ -212,7 +212,6 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         throw new Error('Missing the native OfflineAudioContext constructor.');
                     }
 
-                    // Bug #47: The AudioDestinationNode in Safari gets not initialized correctly.
                     const numberOfInputChannels = proxy.channelCount * proxy.numberOfInputs;
                     const numberOfParameters =
                         processorConstructor.parameterDescriptors === undefined ? 0 : processorConstructor.parameterDescriptors.length;

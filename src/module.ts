@@ -409,7 +409,6 @@ export { audioBufferSourceNodeConstructor as AudioBufferSourceNode };
 const audioDestinationNodeConstructor = createAudioDestinationNodeConstructor(
     audioNodeConstructor,
     createAudioDestinationNodeRenderer,
-    createIndexSizeError,
     createInvalidStateError,
     createNativeAudioDestinationNodeFactory(createNativeGainNode, overwriteAccessors),
     getNativeContext,

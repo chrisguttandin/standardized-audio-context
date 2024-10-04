@@ -45,6 +45,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #46: Safari up to version 13.1 not allowed to create an OfflineAudioContext with an OfflineAudioContextOptions object.
  *
+ * Bug #47: Safari up to version 13.1 initialized the maxChannelCount property of an AudioDestinationNode of an OfflineAudioContext with 0.
+ *
  * Bug #48: Safari up to version 13.1 required at least one connected AudioNode to render an OfflineAudioContext.
  *
  * Bug #49: Safari up to version 13.1 transitioned directly from suspended to closed when rendering an OfflineAudioContext.
@@ -67,6 +69,9 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * OscillatorNode.
  *
  * Bug #80: Safari up to version 13.1 did not expose the correct values for maxValue and minValue of the Q AudioParam of a BiquadFilterNode.
+ *
+ * Bug #83: Safari up to version 13.1 initialized the channelCountMode property of an AudioDestinationNode of an OfflineAudioContext with
+ * 'explicit'.
  *
  * Bug #94: Safari up to version 13.1 exposed a close() method on an OfflineAudioContext.
  *
@@ -117,6 +122,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #130: Safari up to version 13.1 allowed to set the rolloffFactor of a PannerNode to a value less than 0.
  *
  * Bug #131: Safari up to version 13.1 returned null when there were four other AudioContexts running already.
+ *
+ * Bug #132: Safari up to version 13.1 initialized the channelCount property of an AudioDestinationNode of an OfflineAudioContext with 2.
  *
  * Bug #140: Safari up to version 13.1 did not support creating an AudioBuffer with a sampleRate below 22050 Hz.
  *

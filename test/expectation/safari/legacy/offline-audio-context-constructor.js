@@ -12,26 +12,6 @@ describe('offlineAudioContextConstructor', () => {
         expect(window.OfflineAudioContext).to.be.undefined;
     });
 
-    describe('destination', () => {
-        // bug #132
-
-        it('should have a wrong channelCount property', () => {
-            expect(offlineAudioContext.destination.channelCount).to.equal(2);
-        });
-
-        // bug #83
-
-        it('should have a channelCountMode of max', () => {
-            expect(offlineAudioContext.destination.channelCountMode).to.equal('max');
-        });
-
-        // bug #47
-
-        it('should not have a maxChannelCount property', () => {
-            expect(offlineAudioContext.destination.maxChannelCount).to.equal(0);
-        });
-    });
-
     describe('createScriptProcessor()', () => {
         // bug #8
 

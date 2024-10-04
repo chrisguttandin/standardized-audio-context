@@ -4,25 +4,8 @@ export const createNativeAudioDestinationNodeFactory: TNativeAudioDestinationNod
     createNativeGainNode,
     overwriteAccessors
 ) => {
-    return (nativeContext, channelCount, isNodeOfNativeOfflineAudioContext) => {
+    return (nativeContext, channelCount) => {
         const nativeAudioDestinationNode = nativeContext.destination;
-
-        // Bug #132: Safari does not have the correct channelCount.
-        if (nativeAudioDestinationNode.channelCount !== channelCount) {
-            nativeAudioDestinationNode.channelCount = channelCount;
-        }
-
-        // Bug #83: Safari does not have the correct channelCountMode.
-        if (isNodeOfNativeOfflineAudioContext && nativeAudioDestinationNode.channelCountMode !== 'explicit') {
-            nativeAudioDestinationNode.channelCountMode = 'explicit';
-        }
-
-        // Bug #47: The AudioDestinationNode in Safari does not initialize the maxChannelCount property correctly.
-        if (nativeAudioDestinationNode.maxChannelCount === 0) {
-            Object.defineProperty(nativeAudioDestinationNode, 'maxChannelCount', {
-                value: channelCount
-            });
-        }
 
         // Bug #168: No browser does yet have an AudioDestinationNode with an output.
         const gainNode = createNativeGainNode(nativeContext, {

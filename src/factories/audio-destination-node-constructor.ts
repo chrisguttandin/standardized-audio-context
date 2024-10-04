@@ -10,7 +10,6 @@ import {
 export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstructorFactory = (
     audioNodeConstructor,
     createAudioDestinationNodeRenderer,
-    createIndexSizeError,
     createInvalidStateError,
     createNativeAudioDestinationNode,
     getNativeContext,
@@ -25,7 +24,7 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
         constructor(context: T, channelCount: number) {
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const nativeAudioDestinationNode = createNativeAudioDestinationNode(nativeContext, channelCount, isOffline);
+            const nativeAudioDestinationNode = createNativeAudioDestinationNode(nativeContext, channelCount);
             const audioDestinationNodeRenderer = <TAudioNodeRenderer<T, this>>(
                 (isOffline ? createAudioDestinationNodeRenderer(renderInputsOfAudioNode) : null)
             );
@@ -45,11 +44,6 @@ export const createAudioDestinationNodeConstructor: TAudioDestinationNodeConstru
             // Bug #54: Firefox does throw an IndexSizeError.
             if (this._isNodeOfNativeOfflineAudioContext) {
                 throw createInvalidStateError();
-            }
-
-            // Bug #47: The AudioDestinationNode in Safari does not initialize the maxChannelCount property correctly.
-            if (value > this._nativeAudioDestinationNode.maxChannelCount) {
-                throw createIndexSizeError();
             }
 
             this._nativeAudioDestinationNode.channelCount = value;
