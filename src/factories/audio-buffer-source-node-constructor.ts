@@ -16,7 +16,7 @@ const DEFAULT_OPTIONS = {
     channelCount: 2,
     channelCountMode: 'max',
     channelInterpretation: 'speakers',
-    // Bug #149: Safari does not yet support the detune AudioParam.
+    detune: 0,
     loop: false,
     loopEnd: 0,
     loopStart: 0,
@@ -38,6 +38,8 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         implements IAudioBufferSourceNode<T>
     {
         private _audioBufferSourceNodeRenderer: TAudioBufferSourceNodeRenderer<T>;
+
+        private _detune: IAudioParam;
 
         private _isBufferNullified: boolean;
 
@@ -61,6 +63,7 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             super(context, false, nativeAudioBufferSourceNode, audioBufferSourceNodeRenderer);
 
             this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
+            this._detune = createAudioParam(this, isOffline, nativeAudioBufferSourceNode.detune);
             this._isBufferNullified = false;
             this._isBufferSet = mergedOptions.buffer !== null;
             this._nativeAudioBufferSourceNode = nativeAudioBufferSourceNode;
@@ -87,6 +90,10 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
                 this._isBufferSet = true;
             }
+        }
+
+        get detune(): IAudioParam {
+            return this._detune;
         }
 
         get loop(): boolean {

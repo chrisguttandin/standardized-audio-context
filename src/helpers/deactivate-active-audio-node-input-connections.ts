@@ -27,23 +27,20 @@ export const deactivateActiveAudioNodeInputConnections = <T extends TContext>(
     );
 
     const audioParams = isAudioBufferSourceNode(audioNode)
-        ? [
-              // Bug #149: Safari does not yet support the detune AudioParam.
-              audioNode.playbackRate
-          ]
+        ? [audioNode.detune, audioNode.playbackRate]
         : isAudioWorkletNode(audioNode)
-        ? Array.from(audioNode.parameters.values())
-        : isBiquadFilterNode(audioNode)
-        ? [audioNode.Q, audioNode.detune, audioNode.frequency, audioNode.gain]
-        : isConstantSourceNode(audioNode)
-        ? [audioNode.offset]
-        : isGainNode(audioNode)
-        ? [audioNode.gain]
-        : isOscillatorNode(audioNode)
-        ? [audioNode.detune, audioNode.frequency]
-        : isStereoPannerNode(audioNode)
-        ? [audioNode.pan]
-        : [];
+          ? Array.from(audioNode.parameters.values())
+          : isBiquadFilterNode(audioNode)
+            ? [audioNode.Q, audioNode.detune, audioNode.frequency, audioNode.gain]
+            : isConstantSourceNode(audioNode)
+              ? [audioNode.offset]
+              : isGainNode(audioNode)
+                ? [audioNode.gain]
+                : isOscillatorNode(audioNode)
+                  ? [audioNode.detune, audioNode.frequency]
+                  : isStereoPannerNode(audioNode)
+                    ? [audioNode.pan]
+                    : [];
 
     for (const audioParam of audioParams) {
         const audioParamConnections = getAudioParamConnections<T>(audioParam);

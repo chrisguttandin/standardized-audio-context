@@ -9,6 +9,7 @@ export const createConnectedNativeAudioBufferSourceNodeFactory: TConnectedNative
             channelCount: 2,
             channelCountMode: 'max',
             channelInterpretation: 'speakers',
+            detune: 0,
             loop: false,
             loopEnd: 0,
             loopStart: 0,

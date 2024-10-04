@@ -16,12 +16,10 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
 
         assignNativeAudioNodeOptions(nativeAudioBufferSourceNode, options);
 
+        assignNativeAudioNodeAudioParamValue(nativeAudioBufferSourceNode, options, 'detune');
         assignNativeAudioNodeAudioParamValue(nativeAudioBufferSourceNode, options, 'playbackRate');
 
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'buffer');
-
-        // Bug #149: Safari does not yet support the detune AudioParam.
-
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loop');
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopEnd');
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopStart');

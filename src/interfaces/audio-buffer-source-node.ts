@@ -5,11 +5,7 @@ import { IAudioScheduledSourceNode } from './audio-scheduled-source-node';
 export interface IAudioBufferSourceNode<T extends TContext> extends IAudioScheduledSourceNode<T> {
     buffer: null | TAnyAudioBuffer;
 
-    /*
-     * Bug #149: Safari does not yet support the detune AudioParam.
-     *
-     * readonly detune: IAudioParam;
-     */
+    readonly detune: IAudioParam;
 
     loop: boolean;
 

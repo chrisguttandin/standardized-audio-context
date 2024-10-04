@@ -186,8 +186,6 @@ This is an implementation of the [`createBuffer()`](https://webaudio.github.io/w
 
 This is an implementation of the [`createBufferSource()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createbuffersource) factory method. The [`AudioBufferSourceNode`](https://webaudio.github.io/web-audio-api/#AudioBufferSourceNode) constructor may be used as an alternative.
 
-⚠️ <!-- Bug #149 --> The [detune AudioParam](https://webaudio.github.io/web-audio-api/#dom-audiobuffersourcenode-detune) is not implemented so far.
-
 #### createChannelMerger() / ChannelMergerNode
 
 This is an implementation of the [`createChannelMerger()`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-createchannelmerger) factory method. The [`ChannelMergerNode`](https://webaudio.github.io/web-audio-api/#channelmergernode) constructor may be used as an alternative.

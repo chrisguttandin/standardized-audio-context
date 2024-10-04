@@ -35,8 +35,7 @@ const processBuffer = async <T extends IMinimalOfflineAudioContext | IOfflineAud
     exposeCurrentFrameAndCurrentTime: TExposeCurrentFrameAndCurrentTimeFunction
 ): Promise<null | TNativeAudioBuffer> => {
     // Ceil the length to the next full render quantum.
-    // Bug #17: Safari does not yet expose the length.
-    const length = renderedBuffer === null ? Math.ceil(proxy.context.length / 128) * 128 : renderedBuffer.length;
+    const length = renderedBuffer === null ? Math.ceil(nativeOfflineAudioContext.length / 128) * 128 : renderedBuffer.length;
     const numberOfInputChannels = options.channelCount * options.numberOfInputs;
     const numberOfOutputChannels = outputChannelCount.reduce((sum, value) => sum + value, 0);
     const processedBuffer =
@@ -223,8 +222,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                         const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor(
                             numberOfChannels,
                             // Ceil the length to the next full render quantum.
-                            // Bug #17: Safari does not yet expose the length.
-                            Math.ceil(proxy.context.length / 128) * 128,
+                            Math.ceil(nativeOfflineAudioContext.length / 128) * 128,
                             nativeOfflineAudioContext.sampleRate
                         );
                         const gainNodes: TNativeGainNode[] = [];
@@ -310,6 +308,7 @@ export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFac
                     channelCount: 2,
                     channelCountMode: 'max',
                     channelInterpretation: 'speakers',
+                    detune: 0,
                     loop: false,
                     loopEnd: 0,
                     loopStart: 0,

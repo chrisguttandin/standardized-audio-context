@@ -127,6 +127,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #147: Safari up to version 13.1 did not support to connect a signal to the playbackRate AudioParam of an AudioBufferSourceNode.
  *
+ * Bug #149: Safari up to version 13.1 had no detune AudioParam implementation of an AudioBufferSourceNode.
+ *
  * Bug #150: Safari up to version 13.1 did not support setting the sampleRate.
  *
  * Bug #152: Safari up to version 13.1 interpolated the values of the curve incorrectly when calling setValueCurveAtTime() of an AudioParam.

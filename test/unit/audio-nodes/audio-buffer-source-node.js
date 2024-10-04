@@ -35,11 +35,9 @@ const createAudioBufferSourceNodeWithFactoryFunction = (context, options = null)
         audioBufferSourceNode.channelInterpretation = options.channelInterpretation;
     }
 
-    /*
-     * @todo if (options !== null && options.detune !== undefined) {
-     * @todo     audioBufferSourceNode.detune.value = options.detune;
-     * @todo }
-     */
+    if (options !== null && options.detune !== undefined) {
+        audioBufferSourceNode.detune.value = options.detune;
+    }
 
     if (options !== null && options.loop !== undefined) {
         audioBufferSourceNode.loop = options.loop;
@@ -146,7 +144,7 @@ describe('AudioBufferSourceNode', () => {
 
                             it('should return an implementation of the AudioBufferSourceNode interface', () => {
                                 expect(audioBufferSourceNode.buffer).to.be.null;
-                                // expect(audioBufferSourceNode.detune).not.to.be.undefined;
+                                expect(audioBufferSourceNode.detune).not.to.be.undefined;
                                 expect(audioBufferSourceNode.loop).to.be.false;
                                 expect(audioBufferSourceNode.loopEnd).to.equal(0);
                                 expect(audioBufferSourceNode.loopStart).to.equal(0);
@@ -190,14 +188,18 @@ describe('AudioBufferSourceNode', () => {
                                 expect(audioBufferSourceNode.channelInterpretation).to.equal(channelInterpretation);
                             });
 
-                            /*
-                             * @todo it('should return an instance with the given initial value for detune', () => {
-                             * @todo     const detune = 0.5;
-                             * @todo     const audioBufferSourceNode = createAudioBufferSourceNode(context, { detune });
-                             * @todo
-                             * @todo     expect(audioBufferSourceNode.detune.value).to.equal(detune);
-                             * @todo });
-                             */
+                            it('should return an instance with the given initial value for detune', () => {
+                                const detune = 0.5;
+                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { detune });
+
+                                if (description.startsWith('constructor')) {
+                                    expect(audioBufferSourceNode.detune.defaultValue).to.equal(detune);
+                                } else {
+                                    expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
+                                }
+
+                                expect(audioBufferSourceNode.detune.value).to.equal(detune);
+                            });
 
                             it('should return an instance with the given loop', () => {
                                 const loop = true;
@@ -429,228 +431,97 @@ describe('AudioBufferSourceNode', () => {
             });
 
             describe('detune', () => {
-                /*
-                 * @todo let audioBufferSourceNode;
-                 * @todo
-                 * @todo beforeEach(() => {
-                 * @todo     audioBufferSourceNode = createAudioBufferSourceNode(context);
-                 * @todo });
-                 * @todo
-                 * @todo it('should return an implementation of the AudioParam interface', () => {
-                 * @todo     expect(audioBufferSourceNode.detune.cancelAndHoldAtTime).to.be.a('function');
-                 * @todo     expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
-                 * @todo     expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
-                 * @todo     expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a('function');
-                 * @todo     expect(audioBufferSourceNode.detune.linearRampToValueAtTime).to.be.a('function');
-                 * @todo     expect(audioBufferSourceNode.detune.maxValue).to.equal(3.4028234663852886e38);
-                 * @todo     expect(audioBufferSourceNode.detune.minValue).to.equal(-3.4028234663852886e38);
-                 * @todo     expect(audioBufferSourceNode.detune.setTargetAtTime).to.be.a('function');
-                 * @todo     expect(audioBufferSourceNode.detune.setValueAtTime).to.be.a('function');
-                 * @todo     expect(audioBufferSourceNode.detune.setValueCurveAtTime).to.be.a('function');
-                 * @todo     expect(audioBufferSourceNode.detune.value).to.equal(0);
-                 * @todo });
-                 * @todo
-                 * @todo it('should be readonly', () => {
-                 * @todo     expect(() => {
-                 * @todo         audioBufferSourceNode.detune = 'anything';
-                 * @todo     }).to.throw(TypeError);
-                 * @todo });
-                 * @todo
-                 * @todo describe('cancelAndHoldAtTime()', () => { });
-                 * @todo
-                 * @todo describe('cancelScheduledValues()', () => {
-                 * @todo
-                 * @todo     it('should be chainable', () => {
-                 * @todo         expect(audioBufferSourceNode.detune.cancelScheduledValues(0)).to.equal(audioBufferSourceNode.detune);
-                 * @todo     });
-                 * @todo
-                 * @todo });
-                 * @todo
-                 * @todo describe('exponentialRampToValueAtTime()', () => {
-                 * @todo
-                 * @todo     it('should be chainable', () => {
-                 * @todo         expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
-                 * @todo     });
-                 * @todo
-                 * @todo     it('should throw a RangeError', () => {
-                 * @todo         expect(() => {
-                 * @todo             audioBufferSourceNode.detune.exponentialRampToValueAtTime(0, 1);
-                 * @todo         }).to.throw(RangeError);
-                 * @todo     });
-                 * @todo
-                 * @todo     it('should throw a RangeError', () => {
-                 * @todo         expect(() => {
-                 * @todo             audioBufferSourceNode.detune.exponentialRampToValueAtTime(1, -1);
-                 * @todo         }).to.throw(RangeError);
-                 * @todo     });
-                 * @todo
-                 * @todo });
-                 * @todo
-                 * @todo describe('linearRampToValueAtTime()', () => {
-                 * @todo
-                 * @todo     it('should be chainable', () => {
-                 * @todo         expect(audioBufferSourceNode.detune.linearRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
-                 * @todo     });
-                 * @todo
-                 * @todo });
-                 * @todo
-                 * @todo describe('setTargetAtTime()', () => {
-                 * @todo
-                 * @todo     it('should be chainable', () => {
-                 * @todo         expect(audioBufferSourceNode.detune.setTargetAtTime(1, 0, 0.1)).to.equal(audioBufferSourceNode.detune);
-                 * @todo     });
-                 * @todo
-                 * @todo });
-                 * @todo
-                 * @todo describe('setValueAtTime()', () => {
-                 * @todo
-                 * @todo     it('should be chainable', () => {
-                 * @todo         expect(audioBufferSourceNode.detune.setValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
-                 * @todo     });
-                 * @todo
-                 * @todo });
-                 * @todo
-                 * @todo describe('setValueCurveAtTime()', () => {
-                 * @todo
-                 * @todo     it('should be chainable', () => {
-                 * @todo         expect(audioBufferSourceNode.detune.setValueCurveAtTime(new Float32Array([ 1 ]), 0, 0)).to.equal(audioBufferSourceNode.detune);
-                 * @todo     });
-                 * @todo
-                 * @todo });
-                 * @todo
-                 * @todo describe('automation', () => {
-                 * @todo
-                 * @todo     let renderer;
-                 * @todo
-                 * @todo     beforeEach(function () {
-                 * @todo         this.timeout(10000);
-                 * @todo
-                 * @todo         renderer = createRenderer({
-                 * @todo             context,
-                 * @todo             length: (context.length === undefined) ? 5 : undefined,
-                 * @todo             prepare (destination) {
-                 * @todo                 const audioBufferSourceNode = createAudioBufferSourceNode(context);
-                 * @todo
-                 * @todo                 audioBufferSourceNode
-                 * @todo                     .connect(destination);
-                 * @todo
-                 * @todo                 return { audioBufferSourceNode };
-                 * @todo             }
-                 * @todo         });
-                 * @todo     });
-                 * @todo
-                 * @todo     describe('without any automation', () => {
-                 * @todo
-                 * @todo         it('should not modify the signal', function () {
-                 * @todo             this.timeout(10000);
-                 * @todo
-                 * @todo             return renderer({
-                 * @todo                 start (startTime, { audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.start(startTime);
-                 * @todo                 }
-                 * @todo             })
-                 * @todo                 .then((channelData) => {
-                 * @todo                     expect(Array.from(channelData)).to.deep.equal([ 1, 1, 1, 1, 1 ]);
-                 * @todo                 });
-                 * @todo         });
-                 * @todo
-                 * @todo     });
-                 * @todo
-                 * @todo     describe('with a modified value', () => {
-                 * @todo
-                 * @todo         it('should modify the signal', function () {
-                 * @todo             this.timeout(10000);
-                 * @todo
-                 * @todo             return renderer({
-                 * @todo                 prepare ({ audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.offset.value = 0.5;
-                 * @todo                 },
-                 * @todo                 start (startTime, { audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.start(startTime);
-                 * @todo                 }
-                 * @todo             })
-                 * @todo                 .then((channelData) => {
-                 * @todo                     expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.5, 0.5, 0.5, 0.5 ]);
-                 * @todo                 });
-                 * @todo         });
-                 * @todo
-                 * @todo     });
-                 * @todo
-                 * @todo     describe('with a call to setValueAtTime()', () => {
-                 * @todo
-                 * @todo         it('should modify the signal', function () {
-                 * @todo             this.timeout(10000);
-                 * @todo
-                 * @todo             return renderer({
-                 * @todo                 start (startTime, { audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.offset.setValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 2));
-                 * @todo
-                 * @todo                     audioBufferSourceNode.start(startTime);
-                 * @todo                 }
-                 * @todo             })
-                 * @todo                 .then((channelData) => {
-                 * @todo                     expect(Array.from(channelData)).to.deep.equal([ 1, 1, 0.5, 0.5, 0.5 ]);
-                 * @todo                 });
-                 * @todo         });
-                 * @todo
-                 * @todo     });
-                 * @todo
-                 * @todo     describe('with a call to setValueCurveAtTime()', () => {
-                 * @todo
-                 * @todo         it('should modify the signal', function () {
-                 * @todo             this.timeout(10000);
-                 * @todo
-                 * @todo             return renderer({
-                 * @todo                 start (startTime, { audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNode.offset.setValueCurveAtTime(new Float32Array([ 0, 0.25, 0.5, 0.75, 1 ]), startTime, 6 / context.sampleRate);
-                 * @todo
-                 * @todo                     audioBufferSourceNode.start(startTime);
-                 * @todo                 }
-                 * @todo             })
-                 * @todo                 .then((channelData) => {
-                 * @todo                     // @todo The implementation of Safari is different. Therefore this test only checks if the values have changed.
-                 * @todo                     expect(Array.from(channelData)).to.not.deep.equal([ 1, 1, 1, 1, 1 ]);
-                 * @todo                 });
-                 * @todo         });
-                 * @todo
-                 * @todo     });
-                 * @todo
-                 * @todo     describe('with another AudioNode connected to the AudioParam', () => {
-                 * @todo
-                 * @todo         it('should modify the signal', function () {
-                 * @todo             this.timeout(10000);
-                 * @todo
-                 * @todo             return renderer({
-                 * @todo                 prepare ({ audioBufferSourceNode }) {
-                 * @todo                     const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                 * @todo                     const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
-                 * @todo
-                 * @todo                     audioBuffer.copyToChannel(new Float32Array([ 0.5, 0.25, 0, -0.25, -0.5 ]), 0);
-                 * @todo
-                 * @todo                     audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
-                 * @todo
-                 * @todo                     audioBufferSourceNode.offset.value = 0;
-                 * @todo
-                 * @todo                     audioBufferSourceNodeForAudioParam.connect(audioBufferSourceNode.offset);
-                 * @todo
-                 * @todo                     return { audioBufferSourceNodeForAudioParam };
-                 * @todo                 },
-                 * @todo                 start (startTime, { audioBufferSourceNodeForAudioParam, audioBufferSourceNode }) {
-                 * @todo                     audioBufferSourceNodeForAudioParam.start(startTime);
-                 * @todo                     audioBufferSourceNode.start(startTime);
-                 * @todo                 }
-                 * @todo             })
-                 * @todo                 .then((channelData) => {
-                 * @todo                     expect(Array.from(channelData)).to.deep.equal([ 0.5, 0.25, 0, -0.25, -0.5 ]);
-                 * @todo                 });
-                 * @todo         });
-                 * @todo
-                 * @todo     });
-                 * @todo
-                 * @todo     // @todo Test other automations as well.
-                 * @todo
-                 * @todo });
-                 */
+                let audioBufferSourceNode;
+
+                beforeEach(() => {
+                    audioBufferSourceNode = createAudioBufferSourceNode(context);
+                });
+
+                it('should return an implementation of the AudioParam interface', () => {
+                    expect(audioBufferSourceNode.detune.cancelAndHoldAtTime).to.be.a('function');
+                    expect(audioBufferSourceNode.detune.cancelScheduledValues).to.be.a('function');
+                    expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
+                    expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime).to.be.a('function');
+                    expect(audioBufferSourceNode.detune.linearRampToValueAtTime).to.be.a('function');
+                    expect(audioBufferSourceNode.detune.maxValue).to.equal(3.4028234663852886e38);
+                    expect(audioBufferSourceNode.detune.minValue).to.equal(-3.4028234663852886e38);
+                    expect(audioBufferSourceNode.detune.setTargetAtTime).to.be.a('function');
+                    expect(audioBufferSourceNode.detune.setValueAtTime).to.be.a('function');
+                    expect(audioBufferSourceNode.detune.setValueCurveAtTime).to.be.a('function');
+                    expect(audioBufferSourceNode.detune.value).to.equal(0);
+                });
+
+                it('should be readonly', () => {
+                    expect(() => {
+                        audioBufferSourceNode.detune = 'anything';
+                    }).to.throw(TypeError);
+                });
+
+                describe('cancelAndHoldAtTime()', () => {
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.detune.cancelAndHoldAtTime(0)).to.equal(audioBufferSourceNode.detune);
+                    });
+                });
+
+                describe('cancelScheduledValues()', () => {
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.detune.cancelScheduledValues(0)).to.equal(audioBufferSourceNode.detune);
+                    });
+                });
+
+                describe('exponentialRampToValueAtTime()', () => {
+                    it('should be chainable', () => {
+                        // @todo Firefox can't schedule an exponential ramp when the value is 0.
+                        audioBufferSourceNode.detune.value = 1;
+
+                        expect(audioBufferSourceNode.detune.exponentialRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            audioBufferSourceNode.detune.exponentialRampToValueAtTime(0, 1);
+                        }).to.throw(RangeError);
+                    });
+
+                    it('should throw a RangeError', () => {
+                        expect(() => {
+                            audioBufferSourceNode.detune.exponentialRampToValueAtTime(1, -1);
+                        }).to.throw(RangeError);
+                    });
+                });
+
+                describe('linearRampToValueAtTime()', () => {
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.detune.linearRampToValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
+                    });
+                });
+
+                describe('setTargetAtTime()', () => {
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.detune.setTargetAtTime(1, 0, 0.1)).to.equal(audioBufferSourceNode.detune);
+                    });
+                });
+
+                describe('setValueAtTime()', () => {
+                    it('should be chainable', () => {
+                        expect(audioBufferSourceNode.detune.setValueAtTime(1, 0)).to.equal(audioBufferSourceNode.detune);
+                    });
+                });
+
+                describe('setValueCurveAtTime()', () => {
+                    for (const [arrayType, values] of [
+                        ['regular Array', [1, 0]],
+                        ['Float32Array', new Float32Array([1, 0])]
+                    ]) {
+                        describe(`with a ${arrayType}`, () => {
+                            it('should be chainable', () => {
+                                expect(audioBufferSourceNode.detune.setValueCurveAtTime(values, 0, 1)).to.equal(
+                                    audioBufferSourceNode.detune
+                                );
+                            });
+                        });
+                    }
+                });
             });
 
             describe('loop', () => {
