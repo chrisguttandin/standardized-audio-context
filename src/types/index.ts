@@ -366,5 +366,4 @@ export * from './wrap-audio-buffer-copy-channel-methods-factory';
 export * from './wrap-audio-buffer-copy-channel-methods-function';
 export * from './wrap-audio-buffer-copy-channel-methods-out-of-bounds-factory';
 export * from './wrap-audio-buffer-copy-channel-methods-out-of-bounds-function';
-export * from './wrap-audio-buffer-source-node-start-method-offset-clamping-function';
 export * from './wrap-event-listener-function';

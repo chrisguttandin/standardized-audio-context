@@ -133,6 +133,12 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #153: Safari up to version 13.1 exposed a name property on each AudioParam.
  *
+ * Bug #154: Safari up to version 13.1 threw an error when calling start() of an AudioBufferSourceNode with an offset that was equal or
+ * greater than the duration of the buffer.
+ *
+ * Bug #155: Safari up to version 13.1 ignored the offset when calling start() of an AudioBufferSourceNode with it would have caused the
+ * buffer to be not be played at all.
+ *
  * Bug #160: Safari up to version 13.1 exposed a startRendering() method on an AudioContext.
  *
  * Bug #162: Safari up to version 13.1 threw an error when stop() was called on an AudioBufferSourceNode which had no buffer assigned to it.

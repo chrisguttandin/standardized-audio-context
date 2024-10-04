@@ -8,10 +8,8 @@ import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
 export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceNodeFactoryFactory = (
     addSilentConnection,
     cacheTestResult,
-    testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
-    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
-    wrapAudioBufferSourceNodeStartMethodOffsetClampling
+    testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 ) => {
     return (nativeContext, options) => {
         const nativeAudioBufferSourceNode = nativeContext.createBufferSource();
@@ -27,15 +25,6 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loop');
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopEnd');
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopStart');
-
-        // Bug #154 & #155: Safari does not handle offsets which are equal to or greater than the duration of the buffer.
-        if (
-            !cacheTestResult(testAudioBufferSourceNodeStartMethodOffsetClampingSupport, () =>
-                testAudioBufferSourceNodeStartMethodOffsetClampingSupport(nativeContext)
-            )
-        ) {
-            wrapAudioBufferSourceNodeStartMethodOffsetClampling(nativeAudioBufferSourceNode);
-        }
 
         // Bug #44: Firefox does not throw a RangeError.
         if (
