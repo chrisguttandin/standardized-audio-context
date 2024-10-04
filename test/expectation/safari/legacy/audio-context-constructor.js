@@ -1,5 +1,3 @@
-import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
-
 describe('audioContextConstructor', () => {
     let audioContext;
 
@@ -224,20 +222,6 @@ describe('audioContextConstructor', () => {
                     });
                 });
             }
-        });
-
-        describe('decodeAudioData()', () => {
-            // bug #1
-
-            it('should require the success callback function as a parameter', async function () {
-                this.timeout(10000);
-
-                const arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
-
-                expect(() => {
-                    audioContext.decodeAudioData(arrayBuffer);
-                }).to.throw(TypeError, 'Not enough arguments');
-            });
         });
 
         describe('getOutputTimestamp()', () => {

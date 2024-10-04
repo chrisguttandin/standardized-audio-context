@@ -14,7 +14,7 @@ export const createTestAudioContextDecodeAudioDataMethodTypeErrorSupport: TTestA
 
         const offlineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
 
-        // Bug #21: Safari does not support promises yet.
+        // Bug #21: Safari up to version 13.1 return no promise.
         return new Promise((resolve) => {
             let isPending = true;
 
@@ -29,7 +29,7 @@ export const createTestAudioContextDecodeAudioDataMethodTypeErrorSupport: TTestA
             };
 
             const promise = offlineAudioContext
-                // Bug #1: Safari requires a successCallback.
+                // Bug #1: Safari up to version 13.1 required a successCallback.
                 .decodeAudioData(
                     <any>null,
                     () => {
@@ -38,7 +38,7 @@ export const createTestAudioContextDecodeAudioDataMethodTypeErrorSupport: TTestA
                     resolvePromise
                 );
 
-            // Bug #21: Safari does not support promises yet.
+            // Bug #21: Safari up to version 13.1 return no promise.
             if (promise !== undefined) {
                 // Bug #6: Chrome and Firefox do not call the errorCallback.
                 promise.catch(resolvePromise);

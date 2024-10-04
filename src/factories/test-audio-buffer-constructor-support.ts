@@ -4,6 +4,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #33: Safari up to version 13.1 exposed an AudioBuffer but it couldn't be used as a constructor. It also had a couple more bugs but
  * since this is easy to test it's used here as a placeholder.
  *
+ * Bug #1: Safari up to version 13.1 required a successCallback when calling decodeAudioData().
+ *
  * Bug #5: Safari up to version 13.1 had no implementation for the copyFromChannel() and copyToChannel() methods of an AudioBuffer.
  *
  * Bug #9: Safari up to version 13.1 had no IIRFilterNode implementation.

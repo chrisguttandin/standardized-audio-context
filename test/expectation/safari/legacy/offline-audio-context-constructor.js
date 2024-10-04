@@ -1,4 +1,3 @@
-import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 import { stub } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
@@ -54,20 +53,6 @@ describe('offlineAudioContextConstructor', () => {
                 done();
             };
             offlineAudioContext.startRendering();
-        });
-    });
-
-    describe('decodeAudioData()', () => {
-        // bug #1
-
-        it('should require the success callback function as a parameter', async function () {
-            this.timeout(10000);
-
-            const arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
-
-            expect(() => {
-                offlineAudioContext.decodeAudioData(arrayBuffer);
-            }).to.throw(TypeError, 'Not enough arguments');
         });
     });
 
