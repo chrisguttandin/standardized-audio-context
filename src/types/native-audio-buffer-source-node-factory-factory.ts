@@ -7,7 +7,6 @@ import { TWrapAudioBufferSourceNodeStartMethodOffsetClampingFunction } from './w
 export type TNativeAudioBufferSourceNodeFactoryFactory = (
     addSilentConnection: TAddSilentConnectionFunction,
     cacheTestResult: TCacheTestResultFunction,
-    testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport: (nativeContext: TNativeContext) => boolean,
     testAudioBufferSourceNodeStartMethodOffsetClampingSupport: (nativeContext: TNativeContext) => boolean,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean,

@@ -30,15 +30,6 @@ describe('audioContextConstructor', () => {
             });
 
             describe('start()', () => {
-                // bug #69
-
-                it('should not ignore calls repeated calls to start()', () => {
-                    const audioBufferSourceNode = audioContext.createBufferSource();
-
-                    audioBufferSourceNode.start();
-                    audioBufferSourceNode.start();
-                });
-
                 // bug #154
 
                 it('should throw a DOMException', () => {

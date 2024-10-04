@@ -75,17 +75,6 @@ describe('offlineAudioContextConstructor', () => {
                 offlineAudioContext.startRendering();
             });
         });
-
-        describe('stop()', () => {
-            // bug #69
-
-            it('should not ignore calls repeated calls to start()', () => {
-                const audioBufferSourceNode = offlineAudioContext.createBufferSource();
-
-                audioBufferSourceNode.start();
-                audioBufferSourceNode.start();
-            });
-        });
     });
 
     describe('createScriptProcessor()', () => {

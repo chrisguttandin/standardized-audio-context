@@ -1,7 +1,6 @@
 import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { wrapAudioBufferSourceNodeStartMethodConsecutiveCalls } from '../helpers/wrap-audio-buffer-source-node-start-method-consecutive-calls';
 import { wrapAudioScheduledSourceNodeStartMethodNegativeParameters } from '../helpers/wrap-audio-scheduled-source-node-start-method-negative-parameters';
 import { wrapAudioScheduledSourceNodeStopMethodNegativeParameters } from '../helpers/wrap-audio-scheduled-source-node-stop-method-negative-parameters';
 import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
@@ -9,7 +8,6 @@ import { TNativeAudioBufferSourceNodeFactoryFactory } from '../types';
 export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceNodeFactoryFactory = (
     addSilentConnection,
     cacheTestResult,
-    testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport,
     testAudioBufferSourceNodeStartMethodOffsetClampingSupport,
     testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport,
@@ -29,15 +27,6 @@ export const createNativeAudioBufferSourceNodeFactory: TNativeAudioBufferSourceN
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loop');
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopEnd');
         assignNativeAudioNodeOption(nativeAudioBufferSourceNode, options, 'loopStart');
-
-        // Bug #69: Safari does allow calls to start() of an already scheduled AudioBufferSourceNode.
-        if (
-            !cacheTestResult(testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport, () =>
-                testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport(nativeContext)
-            )
-        ) {
-            wrapAudioBufferSourceNodeStartMethodConsecutiveCalls(nativeAudioBufferSourceNode);
-        }
 
         // Bug #154 & #155: Safari does not handle offsets which are equal to or greater than the duration of the buffer.
         if (
