@@ -7,7 +7,6 @@ export const createStartRendering: TStartRenderingFactory = (
     getUnrenderedAudioWorkletNodes,
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
     return (destination, nativeOfflineAudioContext) =>
@@ -26,11 +25,8 @@ export const createStartRendering: TStartRenderingFactory = (
             )
             .then(() => renderNativeOfflineAudioContext(nativeOfflineAudioContext))
             .then((audioBuffer) => {
-                // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-                if (typeof audioBuffer.copyFromChannel !== 'function') {
-                    wrapAudioBufferCopyChannelMethods(audioBuffer);
-                    // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
-                } else if (
+                // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
+                if (
                     !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
                         testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
                     )

@@ -238,21 +238,6 @@ describe('audioContextConstructor', () => {
                     audioContext.decodeAudioData(arrayBuffer);
                 }).to.throw(TypeError, 'Not enough arguments');
             });
-
-            // bug #5
-
-            it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
-                this.timeout(10000);
-
-                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
-                    audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
-                        expect(audioBuffer.copyFromChannel).to.be.undefined;
-                        expect(audioBuffer.copyToChannel).to.be.undefined;
-
-                        done();
-                    });
-                });
-            });
         });
 
         describe('getOutputTimestamp()', () => {

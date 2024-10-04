@@ -41,14 +41,10 @@ describe('offlineAudioContextConstructor', () => {
             scriptProcessorNode.onaudioprocess = (event) => {
                 numberOfInvocations += 1;
 
-                // Bug #5: Safari does not support copyFromChannel().
-                const channelData = event.outputBuffer.getChannelData(0);
-
-                channelData.fill(1);
+                event.outputBuffer.getChannelData(0).fill(1);
             };
 
             offlineAudioContext.oncomplete = (event) => {
-                // Bug #5: Safari does not support copyFromChannel().
                 const channelData = event.renderedBuffer.getChannelData(0);
 
                 expect(Array.from(channelData)).to.not.contain(1);
@@ -72,21 +68,6 @@ describe('offlineAudioContextConstructor', () => {
             expect(() => {
                 offlineAudioContext.decodeAudioData(arrayBuffer);
             }).to.throw(TypeError, 'Not enough arguments');
-        });
-
-        // bug #5
-
-        it('should return an AudioBuffer without copyFromChannel() and copyToChannel() methods', function (done) {
-            this.timeout(10000);
-
-            loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
-                offlineAudioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
-                    expect(audioBuffer.copyFromChannel).to.be.undefined;
-                    expect(audioBuffer.copyToChannel).to.be.undefined;
-
-                    done();
-                });
-            });
         });
     });
 

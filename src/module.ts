@@ -160,7 +160,6 @@ import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
 import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-node-renderer-factory';
 import { createWindow } from './factories/window';
-import { createWrapAudioBufferCopyChannelMethods } from './factories/wrap-audio-buffer-copy-channel-methods';
 import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
 import {
     AUDIO_NODE_CONNECTIONS_STORE,
@@ -347,13 +346,11 @@ export { analyserNodeConstructor as AnalyserNode };
 const audioBufferStore: TAudioBufferStore = new WeakSet();
 const nativeAudioBufferConstructor = createNativeAudioBufferConstructor(window);
 const convertNumberToUnsignedLong = createConvertNumberToUnsignedLong(new Uint32Array(1));
-const wrapAudioBufferCopyChannelMethods = createWrapAudioBufferCopyChannelMethods(convertNumberToUnsignedLong, createIndexSizeError);
 const wrapAudioBufferCopyChannelMethodsOutOfBounds = createWrapAudioBufferCopyChannelMethodsOutOfBounds(convertNumberToUnsignedLong);
 const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstructor(
     audioBufferStore,
     cacheTestResult,
     nativeAudioBufferConstructor,
-    wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 );
 
@@ -899,7 +896,6 @@ const startRendering = createStartRendering(
     getUnrenderedAudioWorkletNodes,
     renderNativeOfflineAudioContext,
     testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 );
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(

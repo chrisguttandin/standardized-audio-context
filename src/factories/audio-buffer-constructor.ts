@@ -10,7 +10,6 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
     audioBufferStore,
     cacheTestResult,
     nativeAudioBufferConstructor,
-    wrapAudioBufferCopyChannelMethods,
     wrapAudioBufferCopyChannelMethodsOutOfBounds
 ) => {
     return class AudioBuffer implements IAudioBuffer {
@@ -48,11 +47,8 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
              */
             const audioBuffer = new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate });
 
-            // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-            if (typeof audioBuffer.copyFromChannel !== 'function') {
-                wrapAudioBufferCopyChannelMethods(audioBuffer);
-                // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
-            } else if (
+            // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
+            if (
                 !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
                     testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
                 )

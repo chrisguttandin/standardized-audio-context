@@ -15,11 +15,6 @@ export const createTestAudioBufferCopyChannelMethodsSubarraySupport: TTestAudioB
         const nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor(1, 1, 44100);
         const nativeAudioBuffer = nativeOfflineAudioContext.createBuffer(1, 1, 44100);
 
-        // Bug #5: Safari does not support copyFromChannel() and copyToChannel().
-        if (nativeAudioBuffer.copyToChannel === undefined) {
-            return true;
-        }
-
         const source = new Float32Array(2);
 
         try {

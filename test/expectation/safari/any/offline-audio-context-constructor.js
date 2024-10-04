@@ -33,7 +33,6 @@ describe('offlineAudioContextConstructor', () => {
             for (let i = 0; i < 8; i += 1) {
                 eightRandomValues[i] = Math.random() * 2 - 1;
 
-                // Bug #5: Safari does not support copyFromChannel().
                 audioBuffer.getChannelData(0)[i] = eightRandomValues[i];
             }
 
@@ -42,7 +41,6 @@ describe('offlineAudioContextConstructor', () => {
             audioBufferSourceNode.connect(offlineAudioContext.destination);
 
             offlineAudioContext.oncomplete = (event) => {
-                // Bug #5: Safari does not support copyFromChannel().
                 const channelData = event.renderedBuffer.getChannelData(0);
 
                 expect(channelData[0]).to.be.closeTo(eightRandomValues[0], 0.0000001);
@@ -77,7 +75,6 @@ describe('offlineAudioContextConstructor', () => {
             audioBufferSourceNode.start(0);
 
             offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
-                // Bug #5: Safari does not support copyFromChannel().
                 const channelData = renderedBuffer.getChannelData(0);
 
                 for (const sample of channelData) {
@@ -165,7 +162,6 @@ describe('offlineAudioContextConstructor', () => {
                 audioBufferSourceNode.start(0);
 
                 offlineAudioContext.oncomplete = ({ renderedBuffer }) => {
-                    // Bug #5: Safari does not support copyFromChannel().
                     const channelData = renderedBuffer.getChannelData(0);
 
                     expect(channelData[0]).to.equal(1);
