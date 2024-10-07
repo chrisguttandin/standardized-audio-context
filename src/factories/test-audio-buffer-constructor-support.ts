@@ -41,6 +41,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #36: Safari up to version 13.1 did not support getFloatTimeDomainData() of an AnalyserNode.
  *
+ * Bug #38: Safari up to version 13.1 had no getOutputTimestamp() implementation of an AudioContext.
+ *
  * Bug #39: Safari up to version 13.1 did not expose the baseLatency property of an AudioContext.
  *
  * Bug #41: Safari up to version 13.1 threw a SyntaxError when trying to connect an AudioNode with an AudioNode of another AudioContext.
