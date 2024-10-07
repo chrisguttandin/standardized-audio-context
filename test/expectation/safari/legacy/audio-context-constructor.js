@@ -12,56 +12,6 @@ describe('audioContextConstructor', () => {
             // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
             // eslint-disable-next-line no-undef
             if (!process.env.CI) {
-                // bug #165
-
-                it('output silence after being disconnected', function (done) {
-                    this.timeout(10000);
-
-                    const mediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
-                    const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(mediaStreamAudioDestinationNode.stream);
-                    const oscillatorNode = audioContext.createOscillator();
-                    const scriptProcessorNode = audioContext.createScriptProcessor(256, 1, 1);
-
-                    oscillatorNode.connect(mediaStreamAudioDestinationNode);
-                    mediaStreamAudioSourceNode.connect(scriptProcessorNode).connect(audioContext.destination);
-
-                    oscillatorNode.start();
-
-                    setTimeout(() => {
-                        mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
-
-                        setTimeout(() => {
-                            mediaStreamAudioSourceNode.connect(scriptProcessorNode);
-
-                            let numberOfInvocations = 0;
-
-                            scriptProcessorNode.onaudioprocess = (event) => {
-                                numberOfInvocations += 1;
-
-                                const channelData = event.inputBuffer.getChannelData(0);
-
-                                if (Array.prototype.some.call(channelData, (sample) => sample !== 0)) {
-                                    done(new Error('This should never be called.'));
-                                }
-                            };
-
-                            setTimeout(() => {
-                                oscillatorNode.stop();
-
-                                scriptProcessorNode.onaudioprocess = null;
-
-                                oscillatorNode.disconnect(mediaStreamAudioDestinationNode);
-                                mediaStreamAudioSourceNode.disconnect(scriptProcessorNode);
-                                scriptProcessorNode.disconnect(audioContext.destination);
-
-                                expect(numberOfInvocations).to.be.above(0);
-
-                                done();
-                            }, 2000);
-                        }, 2000);
-                    }, 500);
-                });
-
                 describe('with an audio track that gets removed from the mediaStream after construction', () => {
                     let mediaStream;
                     let mediaStreamTracks;

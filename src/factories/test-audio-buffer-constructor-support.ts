@@ -165,6 +165,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #162: Safari up to version 13.1 threw an error when stop() was called on an AudioBufferSourceNode which had no buffer assigned to it.
  *
+ * Bug #165: Safari up to version 13.1 outputed silence if a MediaStreamAudioSourceNode was disconnected for about two seconds.
+ *
  * Bug #169: Safari up to version 13.1 threw an error on each attempt to change the channelCount of an AudioDestinationNode.
  *
  * Bug #171: Safari up to version 13.1 allowed to create a MediaElementAudioSourceNode with an OfflineAudioContext.

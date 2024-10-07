@@ -238,8 +238,6 @@ This is an implementation of the [`createMediaStreamSource()`](https://webaudio.
 
 It does only work with an AudioContext but not with an OfflineAudioContext.
 
-⚠️ <!-- Bug #165 --> Safari outputs silence if the MediaStreamAudioSourceNode is disconnected for about two seconds.
-
 #### createMediaStreamTrackSource() / MediaStreamTrackAudioSourceNode
 
 This is an implementation of the [`createMediaStreamTrackSource()`](https://webaudio.github.io/web-audio-api/#dom-audiocontext-createmediastreamtracksource) factory method. The [`MediaStreamTrackAudioSourceNode`](https://webaudio.github.io/web-audio-api/#mediastreamtrackaudiosourcenode) constructor may be used as an alternative.
