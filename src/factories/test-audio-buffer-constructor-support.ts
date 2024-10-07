@@ -12,6 +12,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #12: Safari up to version 13.1 not allowed to disconnect a specific destination.
  *
+ * Bug #13: Safari up to version 13.1 did not render any output of a ScriptProcessorNode when used with an OfflineAudioContext.
+ *
  * Bug #15: Safari up to version 13.1 exposed the wrong default values for channelCount and channelCountMode of a ChannelMergerNode.
  *
  * Bug #16: Safari up to version 13.1 threw no error when changing the channelCount or channelCountMode of a ChannelMergerNode.
