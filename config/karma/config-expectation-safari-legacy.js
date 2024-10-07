@@ -24,10 +24,10 @@ module.exports = (config) => {
             SafariBrowserStack: {
                 base: 'BrowserStack',
                 browser: 'Safari',
-                browser_version: '12.1', // eslint-disable-line camelcase
+                browser_version: '14.1', // eslint-disable-line camelcase
                 captureTimeout: 300,
                 os: 'OS X',
-                os_version: 'Mojave' // eslint-disable-line camelcase
+                os_version: 'Big Sur' // eslint-disable-line camelcase
             }
         },
 
