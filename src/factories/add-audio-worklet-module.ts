@@ -88,7 +88,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                           const evaluateAudioWorkletGlobalScope = (<TEvaluateAudioWorkletGlobalScopeFunction[]>(<any>window)._AWGS).pop();
 
                           if (evaluateAudioWorkletGlobalScope === undefined) {
-                              // Bug #182 Chrome throws an instance of a SyntaxError instead of a DOMException.
+                              // Bug #182: Chrome throws an instance of a SyntaxError instead of a DOMException.
                               throw new SyntaxError();
                           }
 

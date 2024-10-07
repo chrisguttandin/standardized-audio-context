@@ -22,7 +22,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
         maxValue: null | number = null,
         minValue: null | number = null
     ): IAudioParam => {
-        // Bug #196 Only Safari sets the defaultValue to the initial value.
+        // Bug #196: Only Safari sets the defaultValue to the initial value.
         const defaultValue = nativeAudioParam.value;
         const automationEventList = new AutomationEventList(defaultValue);
         const audioParamRenderer = isAudioParamOfOfflineAudioContext ? createAudioParamRenderer(automationEventList) : null;

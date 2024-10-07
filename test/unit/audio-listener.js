@@ -57,7 +57,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -77,7 +77,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -97,7 +97,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -135,7 +135,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -155,7 +155,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -175,7 +175,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -195,7 +195,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -307,7 +307,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -327,7 +327,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -347,7 +347,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -385,7 +385,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -405,7 +405,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -425,7 +425,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -445,7 +445,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -557,7 +557,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -577,7 +577,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -597,7 +597,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -635,7 +635,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -655,7 +655,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -675,7 +675,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -695,7 +695,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -809,7 +809,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -829,7 +829,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -849,7 +849,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -887,7 +887,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -907,7 +907,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -927,7 +927,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -947,7 +947,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1058,7 +1058,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1078,7 +1078,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1098,7 +1098,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -1136,7 +1136,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1156,7 +1156,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1176,7 +1176,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1196,7 +1196,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1308,7 +1308,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1328,7 +1328,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1348,7 +1348,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -1386,7 +1386,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1406,7 +1406,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1426,7 +1426,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1446,7 +1446,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1558,7 +1558,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1578,7 +1578,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1598,7 +1598,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -1636,7 +1636,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1656,7 +1656,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1676,7 +1676,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1696,7 +1696,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1808,7 +1808,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1828,7 +1828,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1848,7 +1848,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -1886,7 +1886,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1906,7 +1906,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1926,7 +1926,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -1946,7 +1946,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -2060,7 +2060,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelAndHoldAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -2080,7 +2080,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('cancelScheduledValues()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -2100,7 +2100,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('exponentialRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             // @todo Firefox can't schedule an exponential ramp when the value is 0.
@@ -2138,7 +2138,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('linearRampToValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -2158,7 +2158,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setTargetAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -2178,7 +2178,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
@@ -2198,7 +2198,7 @@ describe('AudioListener', () => {
                 });
 
                 describe('setValueCurveAtTime()', () => {
-                    // Bug #117 Firefox does allow any AudioParam automation when using an OfflineAudioContext.
+                    // Bug #117: Firefox does allow any AudioParam automation when using an OfflineAudioContext.
                     if (/Firefox/.test(navigator.userAgent) && description.includes('Offline')) {
                         it('should throw a NotSupportedError', (done) => {
                             try {
