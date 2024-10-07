@@ -55,15 +55,4 @@ describe('offlineAudioContextConstructor', () => {
             offlineAudioContext.startRendering();
         });
     });
-
-    describe('suspend()', () => {
-        it('should throw an InvalidStateError', (done) => {
-            offlineAudioContext.suspend(0.01).catch((err) => {
-                expect(err.code).to.equal(11);
-                expect(err.name).to.equal('InvalidStateError');
-
-                done();
-            });
-        });
-    });
 });
