@@ -1,13 +1,7 @@
 import { deactivateAudioGraph } from '../helpers/deactivate-audio-graph';
 import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
-import {
-    TAudioContextState,
-    TMinimalAudioContextConstructorFactory,
-    TNativeAudioContext,
-    TNativeGainNode,
-    TNativeOscillatorNode
-} from '../types';
+import { TAudioContextState, TMinimalAudioContextConstructorFactory, TNativeAudioContext } from '../types';
 
 export const createMinimalAudioContextConstructor: TMinimalAudioContextConstructorFactory = (
     createInvalidStateError,
@@ -17,10 +11,6 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
 ) => {
     return class MinimalAudioContext extends minimalBaseAudioContextConstructor<IMinimalAudioContext> implements IMinimalAudioContext {
         private _nativeAudioContext: TNativeAudioContext;
-
-        private _nativeGainNode: null | TNativeGainNode;
-
-        private _nativeOscillatorNode: null | TNativeOscillatorNode;
 
         private _state: null | 'suspended';
 
@@ -52,21 +42,6 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
             super(nativeAudioContext, 2);
 
             this._nativeAudioContext = nativeAudioContext;
-
-            // Bug #188: Safari will set the context's state to 'interrupted' in case the user switches tabs.
-            if (nativeAudioContextConstructor.name === 'webkitAudioContext') {
-                this._nativeGainNode = nativeAudioContext.createGain();
-                this._nativeOscillatorNode = nativeAudioContext.createOscillator();
-
-                this._nativeGainNode.gain.value = 1e-37;
-
-                this._nativeOscillatorNode.connect(this._nativeGainNode).connect(nativeAudioContext.destination);
-                this._nativeOscillatorNode.start();
-            } else {
-                this._nativeGainNode = null;
-                this._nativeOscillatorNode = null;
-            }
-
             this._state = null;
 
             /*
@@ -109,16 +84,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 this._state = null;
             }
 
-            return this._nativeAudioContext.close().then(() => {
-                if (this._nativeGainNode !== null && this._nativeOscillatorNode !== null) {
-                    this._nativeOscillatorNode.stop();
-
-                    this._nativeGainNode.disconnect();
-                    this._nativeOscillatorNode.disconnect();
-                }
-
-                deactivateAudioGraph(this);
-            });
+            return this._nativeAudioContext.close().then(() => deactivateAudioGraph(this));
         }
 
         public resume(): Promise<void> {

@@ -8,7 +8,7 @@ import {
     IMediaStreamAudioSourceNode,
     IMediaStreamTrackAudioSourceNode
 } from '../interfaces';
-import { TAudioContextConstructorFactory, TAudioContextState, TNativeAudioContext, TNativeGainNode, TNativeOscillatorNode } from '../types';
+import { TAudioContextConstructorFactory, TAudioContextState, TNativeAudioContext } from '../types';
 
 export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     baseAudioContextConstructor,
@@ -22,10 +22,6 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
 ) => {
     return class AudioContext extends baseAudioContextConstructor<IAudioContext> implements IAudioContext {
         private _nativeAudioContext: TNativeAudioContext;
-
-        private _nativeGainNode: null | TNativeGainNode;
-
-        private _nativeOscillatorNode: null | TNativeOscillatorNode;
 
         private _state: null | 'suspended';
 
@@ -57,21 +53,6 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
             super(nativeAudioContext, 2);
 
             this._nativeAudioContext = nativeAudioContext;
-
-            // Bug #188: Safari will set the context's state to 'interrupted' in case the user switches tabs.
-            if (nativeAudioContextConstructor.name === 'webkitAudioContext') {
-                this._nativeGainNode = nativeAudioContext.createGain();
-                this._nativeOscillatorNode = nativeAudioContext.createOscillator();
-
-                this._nativeGainNode.gain.value = 1e-37;
-
-                this._nativeOscillatorNode.connect(this._nativeGainNode).connect(nativeAudioContext.destination);
-                this._nativeOscillatorNode.start();
-            } else {
-                this._nativeGainNode = null;
-                this._nativeOscillatorNode = null;
-            }
-
             this._state = null;
 
             /*
@@ -114,16 +95,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 this._state = null;
             }
 
-            return this._nativeAudioContext.close().then(() => {
-                if (this._nativeGainNode !== null && this._nativeOscillatorNode !== null) {
-                    this._nativeOscillatorNode.stop();
-
-                    this._nativeGainNode.disconnect();
-                    this._nativeOscillatorNode.disconnect();
-                }
-
-                deactivateAudioGraph(this);
-            });
+            return this._nativeAudioContext.close().then(() => deactivateAudioGraph(this));
         }
 
         public createMediaElementSource(mediaElement: HTMLMediaElement): IMediaElementAudioSourceNode<this> {
