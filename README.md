@@ -275,13 +275,12 @@ This is an implementation of the
 
 ### decodeAudioData()
 
-This is a standalone wrapper which can be used in a similar way as the instance method with the same name. The most notable difference is that it expects an (Offline)AudioContext created with this library as the first parameter. But it can also handle a native (webkit)(Offline)AudioContext. Another difference is that it only returns a promise. It will not call any callbacks.
+This is a standalone wrapper which can be used in a similar way as the instance method with the same name. The most notable difference is that it expects an (Offline)AudioContext created with this library as the first parameter. But it can also handle a native (Offline)AudioContext. Another difference is that it only returns a promise. It will not call any callbacks.
 
 ```js
 import { decodeAudioData } from 'standardized-audio-context';
 
-// Let's imagine you run this in Safari.
-const nativeAudioContext = new webkitAudioContextContext();
+const nativeAudioContext = new AudioContext();
 
 const response = await fetch('/a-super-cool-audio-file');
 const arrayBuffer = await response.arrayBuffer();

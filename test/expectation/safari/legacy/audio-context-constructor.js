@@ -5,11 +5,7 @@ describe('audioContextConstructor', () => {
 
     describe('with a constructed AudioContext', () => {
         beforeEach(() => {
-            audioContext = new webkitAudioContext(); // eslint-disable-line new-cap, no-undef
-        });
-
-        it('should not provide an unprefixed constructor', () => {
-            expect(window.AudioContext).to.be.undefined;
+            audioContext = new AudioContext();
         });
 
         describe('createMediaStreamSource()', () => {

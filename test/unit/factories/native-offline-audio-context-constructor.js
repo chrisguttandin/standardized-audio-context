@@ -15,10 +15,10 @@ describe('createNativeOfflineAudioContextConstructor()', () => {
         expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(null);
     });
 
-    it('should return the prefixed OfflineAudioContext', () => {
+    it('should not return the prefixed OfflineAudioContext', () => {
         const fakeWindow = { webkitOfflineAudioContext };
 
-        expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(webkitOfflineAudioContext);
+        expect(createNativeOfflineAudioContextConstructor(fakeWindow)).to.equal(null);
     });
 
     it('should return the unprefixed OfflineAudioContext', () => {

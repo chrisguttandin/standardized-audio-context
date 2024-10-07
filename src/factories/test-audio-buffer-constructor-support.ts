@@ -178,6 +178,8 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  * Bug #187: Safari up to version 13.1 threw no error when scheduling an exponential ramp with negative endTime.
  *
  * Bug #199: Safari up to version 13.1 threw an InvalidStateError when calling suspend() on an OfflineAudioContext.
+ *
+ * Bug #200: Safari up to version 13.1 only had a prefixed implementation of an AudioContext and an OfflineAudioContext.
  */
 export const createTestAudioBufferConstructorSupport: TTestAudioBufferConstructorSupportFactory = (nativeAudioBufferConstructor) => {
     return () => {

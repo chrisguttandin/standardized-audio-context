@@ -15,10 +15,10 @@ describe('createNativeAudioContextConstructor()', () => {
         expect(createNativeAudioContextConstructor(fakeWindow)).to.equal(null);
     });
 
-    it('should return the prefixed AudioContext', () => {
+    it('should not return the prefixed AudioContext', () => {
         const fakeWindow = { webkitAudioContext };
 
-        expect(createNativeAudioContextConstructor(fakeWindow)).to.equal(webkitAudioContext);
+        expect(createNativeAudioContextConstructor(fakeWindow)).to.equal(null);
     });
 
     it('should return the unprefixed AudioContext', () => {

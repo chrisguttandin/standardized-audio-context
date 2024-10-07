@@ -4,11 +4,7 @@ describe('offlineAudioContextConstructor', () => {
     let offlineAudioContext;
 
     beforeEach(() => {
-        offlineAudioContext = new webkitOfflineAudioContext(1, 25600, 44100); // eslint-disable-line new-cap, no-undef
-    });
-
-    it('should not provide an unprefixed constructor', () => {
-        expect(window.OfflineAudioContext).to.be.undefined;
+        offlineAudioContext = new OfflineAudioContext(1, 25600, 44100);
     });
 
     describe('createScriptProcessor()', () => {

@@ -2,13 +2,11 @@ import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 
 describe('audioContextConstructor', () => {
     let audioContext;
-    let audioContextConstructor;
 
     afterEach(() => audioContext.close());
 
     beforeEach(() => {
-        audioContextConstructor = typeof webkitAudioContext === 'undefined' ? AudioContext : webkitAudioContext; // eslint-disable-line no-undef
-        audioContext = new audioContextConstructor(); // eslint-disable-line new-cap
+        audioContext = new AudioContext();
     });
 
     describe('destination', () => {
