@@ -8,6 +8,9 @@ import { TTestAudioBufferConstructorSupportFactory } from '../types';
  *
  * Bug #5: Safari up to version 13.1 had no implementation for the copyFromChannel() and copyToChannel() methods of an AudioBuffer.
  *
+ * Bug #8: Safari up to version 13.1 did not dispatch every expected 'audioprocess' event when rendering a ScriptProcessorNode on an
+ * OfflineAudioContext.
+ *
  * Bug #9: Safari up to version 13.1 had no IIRFilterNode implementation.
  *
  * Bug #12: Safari up to version 13.1 not allowed to disconnect a specific destination.
