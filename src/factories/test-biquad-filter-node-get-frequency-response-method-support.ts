@@ -2,7 +2,9 @@ import { TNativeOfflineAudioContextConstructor } from '../types';
 
 /*
  * Bug #189: Safari up to version 14.1 threw an InvalidStateError when calling getFrequencyResponse() on a BiquadFilterNode with an empty
- * Float32Array as the frequencyHz parameter.
+ * Float32Array as the frequencyHz parameter. It also had a couple more bugs but since this is easy to test it's used here as a placeholder.
+ *
+ * Bug #61: Safari up to version 14.1 had no AudioWorkletNode implementation.
  */
 export const createTestBiquadFilterNodeGetFrequencyResponseMethodSupport = (
     nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor
