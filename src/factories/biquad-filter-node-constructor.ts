@@ -17,7 +17,6 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
     audioNodeConstructor,
     createAudioParam,
     createBiquadFilterNodeRenderer,
-    createInvalidAccessError,
     createNativeBiquadFilterNode,
     getNativeContext,
     isNativeOfflineAudioContext,
@@ -93,16 +92,7 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
         }
 
         public getFrequencyResponse(frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void {
-            // Bug #189: Safari does throw an InvalidStateError.
-            try {
-                this._nativeBiquadFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
-            } catch (err) {
-                if (err.code === 11) {
-                    throw createInvalidAccessError();
-                }
-
-                throw err;
-            }
+            this._nativeBiquadFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
     };
 };

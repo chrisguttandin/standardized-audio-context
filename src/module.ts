@@ -149,6 +149,7 @@ import { createTestAudioContextOptionsSupport } from './factories/test-audio-con
 import { createTestAudioNodeConnectMethodSupport } from './factories/test-audio-node-connect-method-support';
 import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/test-audio-worklet-processor-no-outputs-support';
 import { createTestAudioWorkletProcessorPostMessageSupport } from './factories/test-audio-worklet-processor-post-message-support';
+import { createTestBiquadFilterNodeGetFrequencyResponseMethodSupport } from './factories/test-biquad-filter-node-get-frequency-response-method-support';
 import { createTestChannelMergerNodeChannelCountSupport } from './factories/test-channel-merger-node-channel-count-support';
 import { createTestConstantSourceNodeAccurateSchedulingSupport } from './factories/test-constant-source-node-accurate-scheduling-support';
 import { createTestConvolverNodeBufferReassignabilitySupport } from './factories/test-convolver-node-buffer-reassignability-support';
@@ -424,7 +425,6 @@ const biquadFilterNodeConstructor: TBiquadFilterNodeConstructor = createBiquadFi
     audioNodeConstructor,
     createAudioParam,
     createBiquadFilterNodeRenderer,
-    createInvalidAccessError,
     createNativeBiquadFilterNode,
     getNativeContext,
     isNativeOfflineAudioContext,
@@ -958,6 +958,7 @@ export const isSupported = () =>
         createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
         createTestAudioNodeConnectMethodSupport(nativeOfflineAudioContextConstructor),
         createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
+        createTestBiquadFilterNodeGetFrequencyResponseMethodSupport(nativeOfflineAudioContextConstructor),
         createTestChannelMergerNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
         createTestConstantSourceNodeAccurateSchedulingSupport(nativeOfflineAudioContextConstructor),
         createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),

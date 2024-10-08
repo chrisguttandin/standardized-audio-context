@@ -8,6 +8,7 @@ import type { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from
 import type { createTestAudioContextOptionsSupport } from './test-audio-context-options-support';
 import type { createTestAudioNodeConnectMethodSupport } from './test-audio-node-connect-method-support';
 import type { createTestAudioWorkletProcessorNoOutputsSupport } from './test-audio-worklet-processor-no-outputs-support';
+import type { createTestBiquadFilterNodeGetFrequencyResponseMethodSupport } from './test-biquad-filter-node-get-frequency-response-method-support';
 import type { createTestChannelMergerNodeChannelCountSupport } from './test-channel-merger-node-channel-count-support';
 import type { createTestConstantSourceNodeAccurateSchedulingSupport } from './test-constant-source-node-accurate-scheduling-support';
 import type { createTestConvolverNodeBufferReassignabilitySupport } from './test-convolver-node-buffer-reassignability-support';
@@ -25,6 +26,7 @@ export const createIsSupportedPromise = async (
     testAudioContextOptionsSupport: ReturnType<typeof createTestAudioContextOptionsSupport>,
     testAudioNodeConnectMethodSupport: ReturnType<typeof createTestAudioNodeConnectMethodSupport>,
     testAudioWorkletProcessorNoOutputsSupport: ReturnType<typeof createTestAudioWorkletProcessorNoOutputsSupport>,
+    testBiquadFilterNodeGetFrequencyResponseMethodSupport: ReturnType<typeof createTestBiquadFilterNodeGetFrequencyResponseMethodSupport>,
     testChannelMergerNodeChannelCountSupport: ReturnType<typeof createTestChannelMergerNodeChannelCountSupport>,
     testConstantSourceNodeAccurateSchedulingSupport: ReturnType<typeof createTestConstantSourceNodeAccurateSchedulingSupport>,
     testConvolverNodeBufferReassignabilitySupport: ReturnType<typeof createTestConvolverNodeBufferReassignabilitySupport>,
@@ -43,6 +45,7 @@ export const createIsSupportedPromise = async (
         cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport) &&
         cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport) &&
         cacheTestResult(testAudioNodeConnectMethodSupport, testAudioNodeConnectMethodSupport) &&
+        cacheTestResult(testBiquadFilterNodeGetFrequencyResponseMethodSupport, testBiquadFilterNodeGetFrequencyResponseMethodSupport) &&
         cacheTestResult(testChannelMergerNodeChannelCountSupport, testChannelMergerNodeChannelCountSupport) &&
         cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport) &&
         cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport) &&
