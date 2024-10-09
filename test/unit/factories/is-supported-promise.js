@@ -538,8 +538,10 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
-    it('should resolve to false if the test for process support of an AudioWorkletProcessor throws', async () => {
-        fakeTestAudioWorkletProcessorNoOutputsSupport = () => Promise.rejcet(new Error('A fake error thrown by the test.'));
+    it('should resolve to false if the test for the channelCount property of a ChannelMergerNode throws', async () => {
+        fakeTestChannelMergerNodeChannelCountSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -760,8 +762,8 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
-    it('should resolve to false if the test for buffer reassignability support of a ConvolverNode throws', async () => {
-        fakeTestConvolverNodeBufferReassignabilitySupport = () => {
+    it('should resolve to false if the test for the DOMException constructor throws', async () => {
+        fakeTestDomExceptionConstructorSupport = () => {
             throw new Error('A fake error thrown by the test.');
         };
 
