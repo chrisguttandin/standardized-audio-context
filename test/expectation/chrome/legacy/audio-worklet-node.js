@@ -23,30 +23,4 @@ describe('AudioWorklet', () => {
             });
         });
     });
-
-    describe('with a failing processor', () => {
-        beforeEach(async function () {
-            this.timeout(10000);
-
-            await offlineAudioContext.audioWorklet.addModule('base/test/fixtures/failing-processor.js');
-        });
-
-        // bug #156
-
-        it('should fire a regular event', function (done) {
-            this.timeout(10000);
-
-            const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'failing-processor');
-
-            audioWorkletNode.onprocessorerror = function (event) {
-                expect(event).to.be.not.an.instanceOf(ErrorEvent);
-
-                done();
-            };
-
-            audioWorkletNode.connect(offlineAudioContext.destination);
-
-            offlineAudioContext.startRendering();
-        });
-    });
 });

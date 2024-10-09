@@ -38,7 +38,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             throw createInvalidStateError();
                         }
                     },
-                    // Bug #156: Chrome does not yet fire an ErrorEvent.
+                    // Bug #178: Chrome dispatches an event of type error.
                     onprocessorerror: {
                         get: () => onprocessorerror,
                         set: (value) => {
@@ -77,11 +77,9 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                                             Object.defineProperties(event, {
                                                 type: { value: 'processorerror' }
                                             });
-
-                                            unpatchedEventListener(event);
-                                        } else {
-                                            unpatchedEventListener(new ErrorEvent(args[0], { ...event }));
                                         }
+
+                                        unpatchedEventListener(event);
                                     };
 
                                     patchedEventListeners.set(unpatchedEventListener, args[1]);

@@ -6,6 +6,9 @@ import { TNativeAudioWorkletNodeConstructor, TNativeOfflineAudioContextConstruct
  *
  * Bug #86: Chrome up to version 83 not invoked the process() function if the corresponding AudioWorkletNode was unconnected but had an
  * output.
+ *
+ * Bug #156: Chrome up to version 83 dispatched a regular Event instead of an ErrorEvent when invoking the processorerror listeners of an
+ * AudioWorkletNode.
  */
 export const createTestAudioWorkletProcessorNoInputsSupport = (
     nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
