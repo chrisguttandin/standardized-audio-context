@@ -6,7 +6,7 @@ import type { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './t
 import type { createTestAudioContextCloseMethodSupport } from './test-audio-context-close-method-support';
 import type { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './test-audio-context-decode-audio-data-method-type-error-support';
 import type { createTestAudioContextOptionsSupport } from './test-audio-context-options-support';
-import type { createTestAudioNodeConnectMethodSupport } from './test-audio-node-connect-method-support';
+import type { createTestAudioNodeConnectMethodChainabilitySupport } from './test-audio-node-connect-method-chainability-support';
 import type { createTestAudioWorkletProcessorNoInputsSupport } from './test-audio-worklet-processor-no-inputs-support';
 import type { createTestAudioWorkletProcessorNoOutputsSupport } from './test-audio-worklet-processor-no-outputs-support';
 import type { createTestBiquadFilterNodeGetFrequencyResponseMethodSupport } from './test-biquad-filter-node-get-frequency-response-method-support';
@@ -25,7 +25,7 @@ export const createIsSupportedPromise = async (
     testAudioContextCloseMethodSupport: ReturnType<typeof createTestAudioContextCloseMethodSupport>,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: ReturnType<typeof createTestAudioContextDecodeAudioDataMethodTypeErrorSupport>,
     testAudioContextOptionsSupport: ReturnType<typeof createTestAudioContextOptionsSupport>,
-    testAudioNodeConnectMethodSupport: ReturnType<typeof createTestAudioNodeConnectMethodSupport>,
+    testAudioNodeConnectMethodChainabilitySupport: ReturnType<typeof createTestAudioNodeConnectMethodChainabilitySupport>,
     testAudioWorkletProcessorNoInputsSupport: ReturnType<typeof createTestAudioWorkletProcessorNoInputsSupport>,
     testAudioWorkletProcessorNoOutputsSupport: ReturnType<typeof createTestAudioWorkletProcessorNoOutputsSupport>,
     testBiquadFilterNodeGetFrequencyResponseMethodSupport: ReturnType<typeof createTestBiquadFilterNodeGetFrequencyResponseMethodSupport>,
@@ -46,7 +46,7 @@ export const createIsSupportedPromise = async (
         cacheTestResult(testAudioBufferCopyChannelMethodsSubarraySupport, testAudioBufferCopyChannelMethodsSubarraySupport) &&
         cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport) &&
         cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport) &&
-        cacheTestResult(testAudioNodeConnectMethodSupport, testAudioNodeConnectMethodSupport) &&
+        cacheTestResult(testAudioNodeConnectMethodChainabilitySupport, testAudioNodeConnectMethodChainabilitySupport) &&
         cacheTestResult(testBiquadFilterNodeGetFrequencyResponseMethodSupport, testBiquadFilterNodeGetFrequencyResponseMethodSupport) &&
         cacheTestResult(testChannelMergerNodeChannelCountSupport, testChannelMergerNodeChannelCountSupport) &&
         cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport) &&

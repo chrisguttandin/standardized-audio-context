@@ -1,7 +1,7 @@
 import { TNativeOfflineAudioContextConstructor } from '../types';
 
 // Safari up to version 12.0 (but not v12.1) didn't return the destination in case it was an AudioNode.
-export const createTestAudioNodeConnectMethodSupport = (
+export const createTestAudioNodeConnectMethodChainabilitySupport = (
     nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor
 ) => {
     return () => {

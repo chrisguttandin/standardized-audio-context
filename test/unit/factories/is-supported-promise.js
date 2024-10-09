@@ -8,7 +8,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestAudioContextCloseMethodSupport;
     let fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport;
     let fakeTestAudioContextOptionsSupport;
-    let fakeTestAudioNodeConnectMethodSupport;
+    let fakeTestAudioNodeConnectMethodChainabilitySupport;
     let fakeTestAudioWorkletProcessorNoInputsSupport;
     let fakeTestAudioWorkletProcessorNoOutputsSupport;
     let fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport;
@@ -29,7 +29,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestAudioContextCloseMethodSupport = () => true;
         fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.resolve(true);
         fakeTestAudioContextOptionsSupport = () => true;
-        fakeTestAudioNodeConnectMethodSupport = () => true;
+        fakeTestAudioNodeConnectMethodChainabilitySupport = () => true;
         fakeTestAudioWorkletProcessorNoInputsSupport = () => Promise.resolve(true);
         fakeTestAudioWorkletProcessorNoOutputsSupport = () => Promise.resolve(true);
         fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport = () => true;
@@ -52,7 +52,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -80,7 +80,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -110,7 +110,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -138,7 +138,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -168,7 +168,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -196,7 +196,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -226,7 +226,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -254,7 +254,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -282,7 +282,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -310,7 +310,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -340,7 +340,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -358,8 +358,8 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
-    it('should resolve to false if the test for connect support of an AudioNode fails', async () => {
-        fakeTestAudioNodeConnectMethodSupport = () => false;
+    it('should resolve to false if the test for chainability support of the connect() method of an AudioNode fails', async () => {
+        fakeTestAudioNodeConnectMethodChainabilitySupport = () => false;
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -368,7 +368,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -386,8 +386,8 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
-    it('should resolve to false if the test for connect support of an AudioNode throws', async () => {
-        fakeTestAudioNodeConnectMethodSupport = () => {
+    it('should resolve to false if the test for chainability support of the connect() method of an AudioNode throws', async () => {
+        fakeTestAudioNodeConnectMethodChainabilitySupport = () => {
             throw new Error('A fake error thrown by the test.');
         };
 
@@ -398,7 +398,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -426,7 +426,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -454,7 +454,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -482,7 +482,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -510,7 +510,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -538,7 +538,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -568,7 +568,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -596,7 +596,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -626,7 +626,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -654,7 +654,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -684,7 +684,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -712,7 +712,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -742,7 +742,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -770,7 +770,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -800,7 +800,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -828,7 +828,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -858,7 +858,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -886,7 +886,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -916,7 +916,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -944,7 +944,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -974,7 +974,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -1002,7 +1002,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -1030,7 +1030,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -1058,7 +1058,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
@@ -1086,7 +1086,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextCloseMethodSupport,
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
-            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
             fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,

@@ -146,7 +146,7 @@ import { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './factor
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method-support';
 import { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './factories/test-audio-context-decode-audio-data-method-type-error-support';
 import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options-support';
-import { createTestAudioNodeConnectMethodSupport } from './factories/test-audio-node-connect-method-support';
+import { createTestAudioNodeConnectMethodChainabilitySupport } from './factories/test-audio-node-connect-method-chainability-support';
 import { createTestAudioWorkletProcessorNoInputsSupport } from './factories/test-audio-worklet-processor-no-inputs-support';
 import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/test-audio-worklet-processor-no-outputs-support';
 import { createTestAudioWorkletProcessorPostMessageSupport } from './factories/test-audio-worklet-processor-post-message-support';
@@ -955,7 +955,7 @@ export const isSupported = () =>
         createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
         createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
         createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
-        createTestAudioNodeConnectMethodSupport(nativeOfflineAudioContextConstructor),
+        createTestAudioNodeConnectMethodChainabilitySupport(nativeOfflineAudioContextConstructor),
         createTestAudioWorkletProcessorNoInputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
         createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
         createTestBiquadFilterNodeGetFrequencyResponseMethodSupport(nativeOfflineAudioContextConstructor),
