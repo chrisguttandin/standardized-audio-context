@@ -7,6 +7,7 @@ import type { createTestAudioContextCloseMethodSupport } from './test-audio-cont
 import type { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './test-audio-context-decode-audio-data-method-type-error-support';
 import type { createTestAudioContextOptionsSupport } from './test-audio-context-options-support';
 import type { createTestAudioNodeConnectMethodChainabilitySupport } from './test-audio-node-connect-method-chainability-support';
+import type { createTestAudioNodeConnectMethodVerificationSupport } from './test-audio-node-connect-method-verification-support';
 import type { createTestAudioWorkletProcessorNoInputsSupport } from './test-audio-worklet-processor-no-inputs-support';
 import type { createTestAudioWorkletProcessorNoOutputsSupport } from './test-audio-worklet-processor-no-outputs-support';
 import type { createTestBiquadFilterNodeGetFrequencyResponseMethodSupport } from './test-biquad-filter-node-get-frequency-response-method-support';
@@ -26,6 +27,7 @@ export const createIsSupportedPromise = async (
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: ReturnType<typeof createTestAudioContextDecodeAudioDataMethodTypeErrorSupport>,
     testAudioContextOptionsSupport: ReturnType<typeof createTestAudioContextOptionsSupport>,
     testAudioNodeConnectMethodChainabilitySupport: ReturnType<typeof createTestAudioNodeConnectMethodChainabilitySupport>,
+    testAudioNodeConnectMethodVerificationSupport: ReturnType<typeof createTestAudioNodeConnectMethodVerificationSupport>,
     testAudioWorkletProcessorNoInputsSupport: ReturnType<typeof createTestAudioWorkletProcessorNoInputsSupport>,
     testAudioWorkletProcessorNoOutputsSupport: ReturnType<typeof createTestAudioWorkletProcessorNoOutputsSupport>,
     testBiquadFilterNodeGetFrequencyResponseMethodSupport: ReturnType<typeof createTestBiquadFilterNodeGetFrequencyResponseMethodSupport>,
@@ -47,6 +49,7 @@ export const createIsSupportedPromise = async (
         cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport) &&
         cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport) &&
         cacheTestResult(testAudioNodeConnectMethodChainabilitySupport, testAudioNodeConnectMethodChainabilitySupport) &&
+        cacheTestResult(testAudioNodeConnectMethodVerificationSupport, testAudioNodeConnectMethodVerificationSupport) &&
         cacheTestResult(testBiquadFilterNodeGetFrequencyResponseMethodSupport, testBiquadFilterNodeGetFrequencyResponseMethodSupport) &&
         cacheTestResult(testChannelMergerNodeChannelCountSupport, testChannelMergerNodeChannelCountSupport) &&
         cacheTestResult(testConstantSourceNodeAccurateSchedulingSupport, testConstantSourceNodeAccurateSchedulingSupport) &&

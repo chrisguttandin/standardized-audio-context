@@ -374,19 +374,10 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
 
             const nativeAudioParam = getNativeAudioParam(destination);
 
-            try {
-                this._nativeAudioNode.connect(nativeAudioParam, output);
+            this._nativeAudioNode.connect(nativeAudioParam, output);
 
-                if (isOffline || isPassiveAudioNode(this)) {
-                    this._nativeAudioNode.disconnect(nativeAudioParam, output);
-                }
-            } catch (err) {
-                // Bug #58: Chrome doesn't throw an InvalidAccessError yet.
-                if (err.code === 12) {
-                    throw createInvalidAccessError();
-                }
-
-                throw err;
+            if (isOffline || isPassiveAudioNode(this)) {
+                this._nativeAudioNode.disconnect(nativeAudioParam, output);
             }
 
             const isNewConnectionToAudioParam = addConnectionToAudioParamOfAudioContext(this, destination, output, isOffline);
