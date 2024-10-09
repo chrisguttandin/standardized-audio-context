@@ -166,8 +166,6 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                           ? 'AudioWorkletProcessor'
                           : 'class extends AudioWorkletProcessor {__b=new WeakSet();constructor(){super();(p=>p.postMessage=(q=>(m,t)=>q.call(p,m,t?t.filter(u=>!this.__b.has(u)):t))(p.postMessage))(this.port)}}';
                       /*
-                       * Bug #170: Chrome calls process() with an array with empty channelData for each input if no input is connected.
-                       *
                        * Bug #179: Firefox does not allow to transfer any buffer which has been passed to the process() method as an argument.
                        *
                        * Bug #190: Safari doesn't throw an error when loading an unparsable module.
@@ -191,7 +189,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                        *             this.__collectBuffers(Object.values(parameters));
                        *
                        *             return super.process(
-                       *                 (inputs.map((input) => input.some((channelData) => channelData.length === 0)) ? [ ] : input),
+                       *                 inputs,
                        *                 outputs,
                        *                 parameters
                        *             );
@@ -214,7 +212,7 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                           ? ''
                           : 'i.forEach(this.__c);o.forEach(this.__c);this.__c(Object.values(p));';
                       const wrappedSource = `${importStatements};((AudioWorkletProcessor,registerProcessor)=>{${sourceWithoutImportStatements}
-})(${patchedAudioWorkletProcessor},(n,p)=>registerProcessor(n,class extends p{${memberDefinition}process(i,o,p){${bufferRegistration}return super.process(i.map(j=>j.some(k=>k.length===0)?[]:j),o,p)}}));registerProcessor('__sac${currentIndex}',class extends AudioWorkletProcessor{process(){return !1}})`;
+})(${patchedAudioWorkletProcessor},(n,p)=>registerProcessor(n,class extends p{${memberDefinition}process(i,o,p){${bufferRegistration}return super.process(i,o,p)}}));registerProcessor('__sac${currentIndex}',class extends AudioWorkletProcessor{process(){return !1}})`;
                       const blob = new Blob([wrappedSource], { type: 'application/javascript; charset=utf-8' });
                       const url = URL.createObjectURL(blob);
 

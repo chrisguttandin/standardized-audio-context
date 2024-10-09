@@ -9,6 +9,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport;
     let fakeTestAudioContextOptionsSupport;
     let fakeTestAudioNodeConnectMethodSupport;
+    let fakeTestAudioWorkletProcessorNoInputsSupport;
     let fakeTestAudioWorkletProcessorNoOutputsSupport;
     let fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport;
     let fakeTestChannelMergerNodeChannelCountSupport;
@@ -29,6 +30,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport = () => Promise.resolve(true);
         fakeTestAudioContextOptionsSupport = () => true;
         fakeTestAudioNodeConnectMethodSupport = () => true;
+        fakeTestAudioWorkletProcessorNoInputsSupport = () => Promise.resolve(true);
         fakeTestAudioWorkletProcessorNoOutputsSupport = () => Promise.resolve(true);
         fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport = () => true;
         fakeTestChannelMergerNodeChannelCountSupport = () => true;
@@ -51,6 +53,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -78,6 +81,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -107,6 +111,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -134,6 +139,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -163,6 +169,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -190,6 +197,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -219,6 +227,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -246,6 +255,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -273,6 +283,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -300,6 +311,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -329,6 +341,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -356,6 +369,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -385,6 +399,63 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionConstructorSupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for the maxValue and minValue support of an AudioParam an AudioWorkletNode fails', async () => {
+        fakeTestAudioWorkletProcessorNoInputsSupport = () => Promise.resolve(false);
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionConstructorSupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for the maxValue and minValue support of an AudioParam of an AudioWorkletNode throws', async () => {
+        fakeTestAudioWorkletProcessorNoInputsSupport = () => Promise.rejcet(new Error('A fake error thrown by the test.'));
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -412,6 +483,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -439,6 +511,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -466,6 +539,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -495,6 +569,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -522,6 +597,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -551,6 +627,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -578,6 +655,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -607,6 +685,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -634,6 +713,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -663,6 +743,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -690,6 +771,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -719,6 +801,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -746,6 +829,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -775,6 +859,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -802,6 +887,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -831,6 +917,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -858,6 +945,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -887,6 +975,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -914,6 +1003,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -941,6 +1031,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -968,6 +1059,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,
@@ -995,6 +1087,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
             fakeTestAudioContextOptionsSupport,
             fakeTestAudioNodeConnectMethodSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
             fakeTestAudioWorkletProcessorNoOutputsSupport,
             fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
             fakeTestChannelMergerNodeChannelCountSupport,

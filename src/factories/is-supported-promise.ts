@@ -7,6 +7,7 @@ import type { createTestAudioContextCloseMethodSupport } from './test-audio-cont
 import type { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './test-audio-context-decode-audio-data-method-type-error-support';
 import type { createTestAudioContextOptionsSupport } from './test-audio-context-options-support';
 import type { createTestAudioNodeConnectMethodSupport } from './test-audio-node-connect-method-support';
+import type { createTestAudioWorkletProcessorNoInputsSupport } from './test-audio-worklet-processor-no-inputs-support';
 import type { createTestAudioWorkletProcessorNoOutputsSupport } from './test-audio-worklet-processor-no-outputs-support';
 import type { createTestBiquadFilterNodeGetFrequencyResponseMethodSupport } from './test-biquad-filter-node-get-frequency-response-method-support';
 import type { createTestChannelMergerNodeChannelCountSupport } from './test-channel-merger-node-channel-count-support';
@@ -25,6 +26,7 @@ export const createIsSupportedPromise = async (
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: ReturnType<typeof createTestAudioContextDecodeAudioDataMethodTypeErrorSupport>,
     testAudioContextOptionsSupport: ReturnType<typeof createTestAudioContextOptionsSupport>,
     testAudioNodeConnectMethodSupport: ReturnType<typeof createTestAudioNodeConnectMethodSupport>,
+    testAudioWorkletProcessorNoInputsSupport: ReturnType<typeof createTestAudioWorkletProcessorNoInputsSupport>,
     testAudioWorkletProcessorNoOutputsSupport: ReturnType<typeof createTestAudioWorkletProcessorNoOutputsSupport>,
     testBiquadFilterNodeGetFrequencyResponseMethodSupport: ReturnType<typeof createTestBiquadFilterNodeGetFrequencyResponseMethodSupport>,
     testChannelMergerNodeChannelCountSupport: ReturnType<typeof createTestChannelMergerNodeChannelCountSupport>,
@@ -59,6 +61,7 @@ export const createIsSupportedPromise = async (
     ) {
         const results = await Promise.all([
             cacheTestResult(testAudioContextDecodeAudioDataMethodTypeErrorSupport, testAudioContextDecodeAudioDataMethodTypeErrorSupport),
+            cacheTestResult(testAudioWorkletProcessorNoInputsSupport, testAudioWorkletProcessorNoInputsSupport),
             cacheTestResult(testAudioWorkletProcessorNoOutputsSupport, testAudioWorkletProcessorNoOutputsSupport),
             cacheTestResult(testStereoPannerNodeDefaultValueSupport, testStereoPannerNodeDefaultValueSupport),
             cacheTestResult(testTransferablesSupport, testTransferablesSupport)

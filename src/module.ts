@@ -147,6 +147,7 @@ import { createTestAudioContextCloseMethodSupport } from './factories/test-audio
 import { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './factories/test-audio-context-decode-audio-data-method-type-error-support';
 import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options-support';
 import { createTestAudioNodeConnectMethodSupport } from './factories/test-audio-node-connect-method-support';
+import { createTestAudioWorkletProcessorNoInputsSupport } from './factories/test-audio-worklet-processor-no-inputs-support';
 import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/test-audio-worklet-processor-no-outputs-support';
 import { createTestAudioWorkletProcessorPostMessageSupport } from './factories/test-audio-worklet-processor-post-message-support';
 import { createTestBiquadFilterNodeGetFrequencyResponseMethodSupport } from './factories/test-biquad-filter-node-get-frequency-response-method-support';
@@ -957,6 +958,7 @@ export const isSupported = () =>
         createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
         createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
         createTestAudioNodeConnectMethodSupport(nativeOfflineAudioContextConstructor),
+        createTestAudioWorkletProcessorNoInputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
         createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
         createTestBiquadFilterNodeGetFrequencyResponseMethodSupport(nativeOfflineAudioContextConstructor),
         createTestChannelMergerNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
