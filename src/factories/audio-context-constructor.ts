@@ -131,14 +131,7 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
                 });
             }
 
-            return this._nativeAudioContext.resume().catch((err) => {
-                // Bug #55: Chrome throws an InvalidAccessError instead of an InvalidStateError.
-                if (err.code === 15) {
-                    throw createInvalidStateError();
-                }
-
-                throw err;
-            });
+            return this._nativeAudioContext.resume();
         }
 
         public suspend(): Promise<void> {

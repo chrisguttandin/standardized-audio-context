@@ -28,24 +28,4 @@ describe('audioContextConstructor', () => {
             });
         });
     });
-
-    describe('resume()', () => {
-        afterEach(() => {
-            // Create a closeable AudioContext to align the behaviour with other tests.
-            audioContext = new AudioContext();
-        });
-
-        beforeEach(() => audioContext.close());
-
-        // bug #55
-
-        it('should throw an InvalidAccessError with a closed AudioContext', (done) => {
-            audioContext.resume().catch((err) => {
-                expect(err.code).to.equal(15);
-                expect(err.name).to.equal('InvalidAccessError');
-
-                done();
-            });
-        });
-    });
 });

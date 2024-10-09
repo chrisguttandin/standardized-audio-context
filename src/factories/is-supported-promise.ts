@@ -6,6 +6,7 @@ import type { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './t
 import type { createTestAudioContextCloseMethodSupport } from './test-audio-context-close-method-support';
 import type { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './test-audio-context-decode-audio-data-method-type-error-support';
 import type { createTestAudioContextOptionsSupport } from './test-audio-context-options-support';
+import type { createTestAudioContextResumeSupport } from './test-audio-context-resume-support';
 import type { createTestAudioNodeConnectMethodChainabilitySupport } from './test-audio-node-connect-method-chainability-support';
 import type { createTestAudioNodeConnectMethodVerificationSupport } from './test-audio-node-connect-method-verification-support';
 import type { createTestAudioWorkletProcessorNoInputsSupport } from './test-audio-worklet-processor-no-inputs-support';
@@ -26,6 +27,7 @@ export const createIsSupportedPromise = async (
     testAudioContextCloseMethodSupport: ReturnType<typeof createTestAudioContextCloseMethodSupport>,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: ReturnType<typeof createTestAudioContextDecodeAudioDataMethodTypeErrorSupport>,
     testAudioContextOptionsSupport: ReturnType<typeof createTestAudioContextOptionsSupport>,
+    testAudioContextResumeSupport: ReturnType<typeof createTestAudioContextResumeSupport>,
     testAudioNodeConnectMethodChainabilitySupport: ReturnType<typeof createTestAudioNodeConnectMethodChainabilitySupport>,
     testAudioNodeConnectMethodVerificationSupport: ReturnType<typeof createTestAudioNodeConnectMethodVerificationSupport>,
     testAudioWorkletProcessorNoInputsSupport: ReturnType<typeof createTestAudioWorkletProcessorNoInputsSupport>,
@@ -64,6 +66,7 @@ export const createIsSupportedPromise = async (
     ) {
         const results = await Promise.all([
             cacheTestResult(testAudioContextDecodeAudioDataMethodTypeErrorSupport, testAudioContextDecodeAudioDataMethodTypeErrorSupport),
+            cacheTestResult(testAudioContextResumeSupport, testAudioContextResumeSupport),
             cacheTestResult(testAudioWorkletProcessorNoInputsSupport, testAudioWorkletProcessorNoInputsSupport),
             cacheTestResult(testAudioWorkletProcessorNoOutputsSupport, testAudioWorkletProcessorNoOutputsSupport),
             cacheTestResult(testStereoPannerNodeDefaultValueSupport, testStereoPannerNodeDefaultValueSupport),
