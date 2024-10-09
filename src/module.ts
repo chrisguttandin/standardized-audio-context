@@ -777,9 +777,7 @@ const createNativeAudioWorkletNodeFaker = createNativeAudioWorkletNodeFakerFacto
 const createNativeAudioWorkletNode = createNativeAudioWorkletNodeFactory(
     createInvalidStateError,
     createNativeAudioWorkletNodeFaker,
-    createNativeGainNode,
-    createNotSupportedError,
-    monitorConnections
+    createNotSupportedError
 );
 const createAudioWorkletNodeRenderer = createAudioWorkletNodeRendererFactory(
     connectAudioParam,

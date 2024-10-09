@@ -1,37 +1,8 @@
-import { spy } from 'sinon';
-
 describe('AudioWorklet', () => {
     let offlineAudioContext;
 
     beforeEach(() => {
         offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
-    });
-
-    describe('without any connected outputs', () => {
-        // bug #86
-
-        it('should not call process()', function (done) {
-            this.timeout(10000);
-
-            offlineAudioContext.audioWorklet.addModule('base/test/fixtures/inspector-processor.js').then(() => {
-                const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'inspector-processor');
-                const constantSourceNode = new ConstantSourceNode(offlineAudioContext);
-                const listener = spy();
-
-                audioWorkletNode.port.onmessage = listener;
-
-                constantSourceNode.connect(audioWorkletNode);
-                constantSourceNode.start();
-
-                setTimeout(() => {
-                    expect(listener).to.have.not.been.called;
-
-                    done();
-                }, 500);
-
-                offlineAudioContext.startRendering();
-            });
-        });
     });
 
     describe('with a processor with parameters', () => {

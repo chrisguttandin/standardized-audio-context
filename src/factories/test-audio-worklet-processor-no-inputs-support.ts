@@ -1,6 +1,12 @@
 import { TNativeAudioWorkletNodeConstructor, TNativeOfflineAudioContextConstructor } from '../types';
 
-// Bug #170: Chrome up to version 83 called process() with an array with empty channelData for each input if no input was connected.
+/*
+ * Bug #170: Chrome up to version 83 called process() with an array with empty channelData for each input if no input was connected. It also
+ * had a couple more bugs but since this is easy to test it's used here as a placeholder.
+ *
+ * Bug #86: Chrome up to version 83 not invoked the process() function if the corresponding AudioWorkletNode was unconnected but had an
+ * output.
+ */
 export const createTestAudioWorkletProcessorNoInputsSupport = (
     nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
     nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor

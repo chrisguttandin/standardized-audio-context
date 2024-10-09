@@ -4,9 +4,7 @@ import { TNativeAudioWorkletNode, TNativeAudioWorkletNodeFactoryFactory, TNative
 export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactoryFactory = (
     createInvalidStateError,
     createNativeAudioWorkletNodeFaker,
-    createNativeGainNode,
-    createNotSupportedError,
-    monitorConnections
+    createNotSupportedError
 ) => {
     return (nativeContext, baseLatency, nativeAudioWorkletNodeConstructor, name, processorConstructor, options) => {
         if (nativeAudioWorkletNodeConstructor !== null) {
@@ -116,27 +114,6 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                         return removeEventListener.call(nativeAudioWorkletNode, args[0], args[1], args[2]);
                     };
                 })(nativeAudioWorkletNode.removeEventListener);
-
-                /*
-                 * Bug #86: Chrome does not invoke the process() function if the corresponding AudioWorkletNode is unconnected but has an
-                 * output.
-                 */
-                if (options.numberOfOutputs !== 0) {
-                    const nativeGainNode = createNativeGainNode(nativeContext, {
-                        channelCount: 1,
-                        channelCountMode: 'explicit',
-                        channelInterpretation: 'discrete',
-                        gain: 0
-                    });
-
-                    nativeAudioWorkletNode.connect(nativeGainNode).connect(nativeContext.destination);
-
-                    const whenConnected = () => nativeGainNode.disconnect();
-                    const whenDisconnected = () => nativeGainNode.connect(nativeContext.destination);
-
-                    // @todo Disconnect the connection when the process() function of the AudioWorkletNode returns false.
-                    return monitorConnections(nativeAudioWorkletNode, whenConnected, whenDisconnected);
-                }
 
                 return nativeAudioWorkletNode;
             } catch (err) {

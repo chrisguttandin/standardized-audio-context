@@ -13,7 +13,7 @@ export const createStartRendering: TStartRenderingFactory = (
         getAudioNodeRenderer(destination)
             .render(destination, nativeOfflineAudioContext)
             /*
-             * Bug #86 & #87: Invoking the renderer of an AudioWorkletNode might be necessary if it has no direct or indirect connection to the
+             * Bug #87: Invoking the renderer of an AudioWorkletNode might be necessary if it has no direct or indirect connection to the
              * destination.
              */
             .then(() =>

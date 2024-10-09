@@ -104,8 +104,8 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
             this._parameters = new ReadOnlyMap(parameters);
 
             /*
-             * Bug #86 & #87: Invoking the renderer of an AudioWorkletNode might be necessary if it has no direct or indirect connection to
-             * the destination.
+             * Bug #87: Invoking the renderer of an AudioWorkletNode might be necessary if it has no direct or indirect connection to the
+             * destination.
              */
             if (isOffline) {
                 addUnrenderedAudioWorkletNode(nativeContext, <IAudioWorkletNode<IMinimalOfflineAudioContext | IOfflineAudioContext>>this);
