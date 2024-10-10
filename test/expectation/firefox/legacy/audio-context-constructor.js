@@ -66,19 +66,6 @@ describe('audioContextConstructor', () => {
         });
     });
 
-    describe('createBufferSource()', () => {
-        describe('buffer', () => {
-            // bug #72
-
-            it('should allow to assign the buffer multiple times', () => {
-                const audioBufferSourceNode = audioContext.createBufferSource();
-
-                audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
-                audioBufferSourceNode.buffer = audioContext.createBuffer(2, 100, 44100);
-            });
-        });
-    });
-
     describe('createOscillator()', () => {
         let oscillatorNode;
 

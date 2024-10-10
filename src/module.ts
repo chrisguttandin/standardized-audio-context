@@ -143,6 +143,7 @@ import { createStereoPannerNodeConstructor } from './factories/stereo-panner-nod
 import { createStereoPannerNodeRendererFactory } from './factories/stereo-panner-node-renderer-factory';
 import { createTestAudioBufferConstructorSupport } from './factories/test-audio-buffer-constructor-support';
 import { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './factories/test-audio-buffer-copy-channel-methods-subarray-support';
+import { createTestAudioBufferSourceNodeBufferReassignmentSupport } from './factories/test-audio-buffer-source-node-buffer-reassignment-support';
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method-support';
 import { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './factories/test-audio-context-decode-audio-data-method-type-error-support';
 import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options-support';
@@ -397,7 +398,6 @@ const audioBufferSourceNodeConstructor: TAudioBufferSourceNodeConstructor = crea
     audioNodeConstructor,
     createAudioBufferSourceNodeRenderer,
     createAudioParam,
-    createInvalidStateError,
     createNativeAudioBufferSourceNode,
     getNativeContext,
     isNativeOfflineAudioContext,
@@ -955,6 +955,7 @@ export const isSupported = () =>
         cacheTestResult,
         createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor),
         createTestAudioBufferCopyChannelMethodsSubarraySupport(nativeOfflineAudioContextConstructor),
+        createTestAudioBufferSourceNodeBufferReassignmentSupport(nativeOfflineAudioContextConstructor),
         createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
         createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
         createTestAudioContextOptionsSupport(nativeAudioContextConstructor),

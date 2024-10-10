@@ -4,6 +4,7 @@ import type { testTransferablesSupport as testTransferablesSupportFunction } fro
 import type { createCacheTestResult } from './cache-test-result';
 import type { createTestAudioBufferConstructorSupport } from './test-audio-buffer-constructor-support';
 import type { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './test-audio-buffer-copy-channel-methods-subarray-support';
+import type { createTestAudioBufferSourceNodeBufferReassignmentSupport } from './test-audio-buffer-source-node-buffer-reassignment-support';
 import type { createTestAudioContextCloseMethodSupport } from './test-audio-context-close-method-support';
 import type { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './test-audio-context-decode-audio-data-method-type-error-support';
 import type { createTestAudioContextOptionsSupport } from './test-audio-context-options-support';
@@ -25,6 +26,7 @@ export const createIsSupportedPromise = async (
     cacheTestResult: ReturnType<typeof createCacheTestResult>,
     testAudioBufferConstructorSupport: ReturnType<typeof createTestAudioBufferConstructorSupport>,
     testAudioBufferCopyChannelMethodsSubarraySupport: ReturnType<typeof createTestAudioBufferCopyChannelMethodsSubarraySupport>,
+    testAudioBufferSourceNodeBufferReassignmentSupport: ReturnType<typeof createTestAudioBufferSourceNodeBufferReassignmentSupport>,
     testAudioContextCloseMethodSupport: ReturnType<typeof createTestAudioContextCloseMethodSupport>,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: ReturnType<typeof createTestAudioContextDecodeAudioDataMethodTypeErrorSupport>,
     testAudioContextOptionsSupport: ReturnType<typeof createTestAudioContextOptionsSupport>,
@@ -50,6 +52,7 @@ export const createIsSupportedPromise = async (
     if (
         cacheTestResult(testAudioBufferConstructorSupport, testAudioBufferConstructorSupport) &&
         cacheTestResult(testAudioBufferCopyChannelMethodsSubarraySupport, testAudioBufferCopyChannelMethodsSubarraySupport) &&
+        cacheTestResult(testAudioBufferSourceNodeBufferReassignmentSupport, testAudioBufferSourceNodeBufferReassignmentSupport) &&
         cacheTestResult(testAudioContextCloseMethodSupport, testAudioContextCloseMethodSupport) &&
         cacheTestResult(testAudioContextOptionsSupport, testAudioContextOptionsSupport) &&
         cacheTestResult(testAudioNodeConnectMethodChainabilitySupport, testAudioNodeConnectMethodChainabilitySupport) &&

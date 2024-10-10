@@ -27,7 +27,6 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
     audioNodeConstructor,
     createAudioBufferSourceNodeRenderer,
     createAudioParam,
-    createInvalidStateError,
     createNativeAudioBufferSourceNode,
     getNativeContext,
     isNativeOfflineAudioContext,
@@ -40,10 +39,6 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         private _audioBufferSourceNodeRenderer: TAudioBufferSourceNodeRenderer<T>;
 
         private _detune: IAudioParam;
-
-        private _isBufferNullified: boolean;
-
-        private _isBufferSet: boolean;
 
         private _nativeAudioBufferSourceNode: TNativeAudioBufferSourceNode;
 
@@ -64,32 +59,17 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
             this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
             this._detune = createAudioParam(this, isOffline, nativeAudioBufferSourceNode.detune);
-            this._isBufferNullified = false;
-            this._isBufferSet = mergedOptions.buffer !== null;
             this._nativeAudioBufferSourceNode = nativeAudioBufferSourceNode;
             this._onended = null;
             this._playbackRate = createAudioParam(this, isOffline, nativeAudioBufferSourceNode.playbackRate);
         }
 
         get buffer(): null | TAnyAudioBuffer {
-            if (this._isBufferNullified) {
-                return null;
-            }
-
             return this._nativeAudioBufferSourceNode.buffer;
         }
 
         set buffer(value) {
             this._nativeAudioBufferSourceNode.buffer = value;
-
-            // Bug #72: Firefox still allows to reassign the buffer.
-            if (value !== null) {
-                if (this._isBufferSet) {
-                    throw createInvalidStateError();
-                }
-
-                this._isBufferSet = true;
-            }
         }
 
         get detune(): IAudioParam {
