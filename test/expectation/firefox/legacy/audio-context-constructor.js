@@ -15,14 +15,6 @@ describe('audioContextConstructor', () => {
         });
     });
 
-    describe('close()', () => {
-        // bug #35
-
-        it('should not throw an error if it was closed before', () => {
-            return audioContext.close().then(() => audioContext.close());
-        });
-    });
-
     describe('createAnalyser()', () => {
         // bug #37
 

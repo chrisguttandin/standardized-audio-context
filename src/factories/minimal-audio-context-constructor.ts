@@ -4,7 +4,6 @@ import { IAudioContextOptions, IMinimalAudioContext } from '../interfaces';
 import { TAudioContextState, TMinimalAudioContextConstructorFactory, TNativeAudioContext } from '../types';
 
 export const createMinimalAudioContextConstructor: TMinimalAudioContextConstructorFactory = (
-    createInvalidStateError,
     createNotSupportedError,
     minimalBaseAudioContextConstructor,
     nativeAudioContextConstructor
@@ -72,13 +71,6 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
         }
 
         public close(): Promise<void> {
-            // Bug #35: Firefox does not throw an error if the AudioContext was closed before.
-            if (this.state === 'closed') {
-                return this._nativeAudioContext.close().then(() => {
-                    throw createInvalidStateError();
-                });
-            }
-
             // Bug #34: If the state was set to suspended before it should be revoked now.
             if (this._state === 'suspended') {
                 this._state = null;
