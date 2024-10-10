@@ -34,21 +34,6 @@ describe('audioContextConstructor', () => {
     });
 
     describe('createBuffer()', () => {
-        // bug #99
-
-        describe('with zero as the numberOfChannels', () => {
-            it('should throw an IndexSizeError', (done) => {
-                try {
-                    audioContext.createBuffer(0, 10, 44100);
-                } catch (err) {
-                    expect(err.code).to.equal(1);
-                    expect(err.name).to.equal('IndexSizeError');
-
-                    done();
-                }
-            });
-        });
-
         // bug #157
 
         describe('copyFromChannel()/copyToChannel()', () => {

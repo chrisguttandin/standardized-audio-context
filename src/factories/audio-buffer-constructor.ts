@@ -41,10 +41,6 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
 
             const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS, ...options };
 
-            /*
-             * Bug #99: Firefox does not throw a NotSupportedError when the numberOfChannels is zero. But it only does it when using the
-             * factory function. But since Firefox also supports the constructor everything should be fine.
-             */
             const audioBuffer = new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate });
 
             // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
