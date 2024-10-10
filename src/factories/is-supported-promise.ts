@@ -1,4 +1,5 @@
 import type { testDomExceptionConstructorSupport as testDomExceptionConstructorSupportFunction } from '../helpers/test-dom-exception-constructor-support';
+import type { testErrorEventErrorPropertySupport as testErrorEventErrorPropertySupportFunction } from '../helpers/test-error-event-error-property-support';
 import type { testTransferablesSupport as testTransferablesSupportFunction } from '../helpers/test-transferables-support';
 import type { createCacheTestResult } from './cache-test-result';
 import type { createTestAudioBufferConstructorSupport } from './test-audio-buffer-constructor-support';
@@ -38,6 +39,7 @@ export const createIsSupportedPromise = async (
     testConvolverNodeBufferReassignabilitySupport: ReturnType<typeof createTestConvolverNodeBufferReassignabilitySupport>,
     testConvolverNodeChannelCountSupport: ReturnType<typeof createTestConvolverNodeChannelCountSupport>,
     testDomExceptionConstructorSupport: typeof testDomExceptionConstructorSupportFunction,
+    testErrorEventErrorPropertySupport: typeof testErrorEventErrorPropertySupportFunction,
     testIsSecureContextSupport: ReturnType<typeof createTestIsSecureContextSupport>,
     testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport: ReturnType<
         typeof createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport
@@ -58,6 +60,7 @@ export const createIsSupportedPromise = async (
         cacheTestResult(testConvolverNodeBufferReassignabilitySupport, testConvolverNodeBufferReassignabilitySupport) &&
         cacheTestResult(testConvolverNodeChannelCountSupport, testConvolverNodeChannelCountSupport) &&
         cacheTestResult(testDomExceptionConstructorSupport, testDomExceptionConstructorSupport) &&
+        cacheTestResult(testErrorEventErrorPropertySupport, testErrorEventErrorPropertySupport) &&
         cacheTestResult(testIsSecureContextSupport, testIsSecureContextSupport) &&
         cacheTestResult(
             testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,

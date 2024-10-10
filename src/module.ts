@@ -197,6 +197,7 @@ import { testAudioScheduledSourceNodeStartMethodNegativeParametersSupport } from
 import { testAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
 import { testAudioWorkletNodeOptionsClonability } from './helpers/test-audio-worklet-node-options-clonability';
 import { testDomExceptionConstructorSupport } from './helpers/test-dom-exception-constructor-support';
+import { testErrorEventErrorPropertySupport } from './helpers/test-error-event-error-property-support';
 import { testTransferablesSupport } from './helpers/test-transferables-support';
 import { wrapEventListener } from './helpers/wrap-event-listener';
 import {
@@ -968,6 +969,7 @@ export const isSupported = () =>
         createTestConvolverNodeBufferReassignabilitySupport(nativeOfflineAudioContextConstructor),
         createTestConvolverNodeChannelCountSupport(nativeOfflineAudioContextConstructor),
         testDomExceptionConstructorSupport,
+        testErrorEventErrorPropertySupport,
         createTestIsSecureContextSupport(window),
         createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport(nativeAudioContextConstructor),
         createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),

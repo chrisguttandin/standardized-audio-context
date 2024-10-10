@@ -73,6 +73,12 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                                 } else {
                                     args[1] = (event: Event) => {
                                         // Bug #178: Chrome dispatches an event of type error.
+                                        if (event instanceof ErrorEvent && event.error === null) {
+                                            Object.defineProperties(event, {
+                                                error: { value: undefined }
+                                            });
+                                        }
+
                                         if (event.type === 'error') {
                                             Object.defineProperties(event, {
                                                 type: { value: 'processorerror' }
