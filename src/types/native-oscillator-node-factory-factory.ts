@@ -6,6 +6,5 @@ import { TNativeOscillatorNodeFactory } from './native-oscillator-node-factory';
 export type TNativeOscillatorNodeFactoryFactory = (
     addSilentConnection: TAddSilentConnectionFunction,
     cacheTestResult: TCacheTestResultFunction,
-    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean
 ) => TNativeOscillatorNodeFactory;

@@ -5,6 +5,9 @@ import { TNativeOfflineAudioContextConstructor } from '../types';
  * channels. It also had two more bugs but since this is easy to test it's used here as a placeholder.
  *
  * Bug #35: Firefox up to version 74 threw no error when calling close() on an already closed AudioContext.
+ *
+ * Bug #44: Firefox up to version 74 threw a NotSupportedError instead of a RangeError when calling start() and stop() of an
+ * AudioScheduledSourceNode with a negative value.
  */
 export const createTestAudioBufferFactoryMethodSupport =
     (nativeOfflineAudioContextConstructor: null | TNativeOfflineAudioContextConstructor) => () => {

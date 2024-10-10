@@ -1,14 +1,12 @@
 import { assignNativeAudioNodeAudioParamValue } from '../helpers/assign-native-audio-node-audio-param-value';
 import { assignNativeAudioNodeOption } from '../helpers/assign-native-audio-node-option';
 import { assignNativeAudioNodeOptions } from '../helpers/assign-native-audio-node-options';
-import { wrapAudioScheduledSourceNodeStartMethodNegativeParameters } from '../helpers/wrap-audio-scheduled-source-node-start-method-negative-parameters';
 import { wrapAudioScheduledSourceNodeStopMethodNegativeParameters } from '../helpers/wrap-audio-scheduled-source-node-stop-method-negative-parameters';
 import { TNativeOscillatorNodeFactoryFactory } from '../types';
 
 export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFactory = (
     addSilentConnection,
     cacheTestResult,
-    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 ) => {
     return (nativeContext, options) => {
@@ -25,16 +23,7 @@ export const createNativeOscillatorNodeFactory: TNativeOscillatorNodeFactoryFact
             assignNativeAudioNodeOption(nativeOscillatorNode, options, 'type');
         }
 
-        // Bug #44: Firefox does not throw a RangeError.
-        if (
-            !cacheTestResult(testAudioScheduledSourceNodeStartMethodNegativeParametersSupport, () =>
-                testAudioScheduledSourceNodeStartMethodNegativeParametersSupport(nativeContext)
-            )
-        ) {
-            wrapAudioScheduledSourceNodeStartMethodNegativeParameters(nativeOscillatorNode);
-        }
-
-        // Bug #44: Only Firefox does not throw a RangeError yet.
+        // Bug #44: Only Firefox throws a RangeError.
         if (
             !cacheTestResult(testAudioScheduledSourceNodeStopMethodNegativeParametersSupport, () =>
                 testAudioScheduledSourceNodeStopMethodNegativeParametersSupport(nativeContext)

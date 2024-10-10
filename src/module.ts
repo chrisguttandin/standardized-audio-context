@@ -195,7 +195,6 @@ import { sanitizeAudioWorkletNodeOptions } from './helpers/sanitize-audio-workle
 import { sanitizeChannelSplitterOptions } from './helpers/sanitize-channel-splitter-options';
 import { sanitizePeriodicWaveOptions } from './helpers/sanitize-periodic-wave-options';
 import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
-import { testAudioScheduledSourceNodeStartMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-start-method-negative-parameters-support';
 import { testAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
 import { testAudioWorkletNodeOptionsClonability } from './helpers/test-audio-worklet-node-options-clonability';
 import { testDomExceptionConstructorSupport } from './helpers/test-dom-exception-constructor-support';
@@ -371,7 +370,6 @@ const connectAudioParam = createConnectAudioParam(renderInputsOfAudioParam);
 const createNativeAudioBufferSourceNode = createNativeAudioBufferSourceNodeFactory(
     addSilentConnection,
     cacheTestResult,
-    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 );
 const renderAutomation = createRenderAutomation(createGetAudioParamRenderer(getAudioParamConnections), renderInputsOfAudioParam);
@@ -464,7 +462,6 @@ const channelSplitterNodeConstructor: TChannelSplitterNodeConstructor = createCh
 const createNativeConstantSourceNode = createNativeConstantSourceNodeFactory(
     addSilentConnection,
     cacheTestResult,
-    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 );
 const createConstantSourceNodeRenderer = createConstantSourceNodeRendererFactory(
@@ -579,7 +576,6 @@ const minimalBaseAudioContextConstructor = createMinimalBaseAudioContextConstruc
 const createNativeOscillatorNode = createNativeOscillatorNodeFactory(
     addSilentConnection,
     cacheTestResult,
-    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport
 );
 const createOscillatorNodeRenderer = createOscillatorNodeRendererFactory(

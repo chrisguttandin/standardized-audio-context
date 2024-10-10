@@ -6,6 +6,5 @@ import { TNativeContext } from './native-context';
 export type TNativeConstantSourceNodeFactoryFactory = (
     addSilentConnection: TAddSilentConnectionFunction,
     cacheTestResult: TCacheTestResultFunction,
-    testAudioScheduledSourceNodeStartMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean,
     testAudioScheduledSourceNodeStopMethodNegativeParametersSupport: (nativeContext: TNativeContext) => boolean
 ) => TNativeConstantSourceNodeFactory;
