@@ -373,7 +373,7 @@ describe('GainNode', () => {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const gainNode = createGainNode(context);
                                         const masterGainNode = new GainNode(context, {

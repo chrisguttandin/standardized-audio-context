@@ -402,7 +402,7 @@ describe('ConstantSourceNode', () => {
                                     length: context.length === undefined ? 5 : undefined,
                                     prepare(destination) {
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const constantSourceNode = createConstantSourceNode(context);
                                         const masterGainNode = new GainNode(context, {
@@ -1233,7 +1233,7 @@ describe('ConstantSourceNode', () => {
                                     length: context.length === undefined ? 5 : undefined,
                                     prepare(destination) {
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const constantSourceNode = createConstantSourceNode(context);
                                         const masterGainNode = new GainNode(context, {
@@ -1297,7 +1297,7 @@ describe('ConstantSourceNode', () => {
                                     length: context.length === undefined ? 5 : undefined,
                                     prepare(destination) {
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const constantSourceNode = createConstantSourceNode(context);
                                         const masterGainNode = new GainNode(context, {

@@ -1084,7 +1084,7 @@ describe('PannerNode', () => {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 2 })
                                             : null;
                                         const masterGainNode = new GainNode(context, {
                                             gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1

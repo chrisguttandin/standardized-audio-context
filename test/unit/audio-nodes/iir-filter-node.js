@@ -181,7 +181,7 @@ describe('IIRFilterNode', () => {
                                                             });
                                                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                                             const audioWorkletNode = withAnAppendedAudioWorklet
-                                                                ? new AudioWorkletNode(context, 'gain-processor')
+                                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                                                 : null;
                                                             const iIRFilterNode = createIIRFilterNode(context, {
                                                                 feedback: [1, -0.5],
@@ -246,7 +246,7 @@ describe('IIRFilterNode', () => {
                                                             });
                                                             const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                                             const audioWorkletNode = withAnAppendedAudioWorklet
-                                                                ? new AudioWorkletNode(context, 'gain-processor')
+                                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                                                 : null;
                                                             const iIRFilterNode = createIIRFilterNode(context, {
                                                                 feedback: [1, 0.5],

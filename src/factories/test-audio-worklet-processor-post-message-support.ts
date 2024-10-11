@@ -6,9 +6,8 @@ export const createTestAudioWorkletProcessorPostMessageSupport: TTestAudioWorkle
     nativeOfflineAudioContextConstructor
 ) => {
     return async () => {
-        // Bug #61: If there is no native AudioWorkletNode it gets faked and therefore it is no problem if the it doesn't exist.
         if (nativeAudioWorkletNodeConstructor === null) {
-            return true;
+            return false;
         }
 
         if (nativeOfflineAudioContextConstructor === null) {

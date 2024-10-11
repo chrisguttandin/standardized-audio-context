@@ -160,11 +160,7 @@ The properties and methods are described in greater detail below.
 
 #### audioWorklet
 
-⚠️ <!-- Bug #59 --> The [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworklet) is accessible as a property of an AudioContext or OfflineAudioContext. It uses the ScriptProcessorNode internally to create an [`AudioWorkletProcessor`](https://webaudio.github.io/web-audio-api/#audioworkletprocessor) in Safari. This means it will only provide the performance improvements that you would normally expect from using an [`AudioWorklet`](https://webaudio.github.io/web-audio-api/#audioworkletnode) in Chrome and Firefox.
-
-⚠️ <!-- Bug #59 --> The fact that the internal implementation relies on a ScriptProcessorNode also implies that the [`channelCountMode`](https://webaudio.github.io/web-audio-api/#dom-audionode-channelcountmode) can only be `'explicit'` for now. It also means that the total number of channels of all inputs plus the number of all parameters can't be larger than six.
-
-⚠️ <!-- Bug #59 --> Another thing to keep in mind is that the fallback will evaluate the `AudioWorkletProcessor` on the global scope. It gets isolated in a basic way to mimic the [`AudioWorkletGlobalScope`](https://webaudio.github.io/web-audio-api/#audioworkletglobalscope) but that can't be done in a way which makes it impossible for an attacker to break out of that sandbox. This should not be a problem unless you load an AudioWorklet from an untrusted source.
+The [`audioworklet`](https://webaudio.github.io/web-audio-api/#dom-baseaudiocontext-audioworklet) property is only available in a [`SecureContext`](https://webidl.spec.whatwg.org/#SecureContext).
 
 #### listener
 

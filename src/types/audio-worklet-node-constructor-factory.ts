@@ -9,7 +9,6 @@ import { TGetNativeContextFunction } from './get-native-context-function';
 import { TIsNativeOfflineAudioContextFunction } from './is-native-offline-audio-context-function';
 import { TNativeAudioWorkletNodeConstructor } from './native-audio-worklet-node-constructor';
 import { TNativeAudioWorkletNodeFactory } from './native-audio-worklet-node-factory';
-import { TSanitizeAudioWorkletNodeOptionsFunction } from './sanitize-audio-worklet-node-options-function';
 import { TSetActiveAudioWorkletNodeInputsFunction } from './set-active-audio-worklet-node-inputs-function';
 import { TTestAudioWorkletNodeOptionsClonabilityFunction } from './test-audio-worklet-node-options-clonability-function';
 import { TWrapEventListenerFunction } from './wrap-event-listener-function';
@@ -25,7 +24,6 @@ export type TAudioWorkletNodeConstructorFactory = (
     getNativeContext: TGetNativeContextFunction,
     isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
     nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
-    sanitizeAudioWorkletNodeOptions: TSanitizeAudioWorkletNodeOptionsFunction,
     setActiveAudioWorkletNodeInputs: TSetActiveAudioWorkletNodeInputsFunction,
     testAudioWorkletNodeOptionsClonability: TTestAudioWorkletNodeOptionsClonabilityFunction,
     wrapEventListener: TWrapEventListenerFunction

@@ -1,13 +1,10 @@
-import { NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS } from '../globals';
 import {
     IAudioParam,
     IAudioWorkletNode,
     IAudioWorkletNodeEventMap,
     IAudioWorkletNodeOptions,
-    IMinimalAudioContext,
     IMinimalOfflineAudioContext,
-    IOfflineAudioContext,
-    IReadOnlyMap
+    IOfflineAudioContext
 } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
@@ -17,14 +14,12 @@ import {
     TContext,
     TErrorEventHandler,
     TNativeAudioContext,
-    TNativeAudioParam,
     TNativeAudioWorkletNode
 } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
-    // Bug #61: The channelCountMode should be 'max' according to the spec but is set to 'explicit' to achieve consistent behavior.
-    channelCountMode: 'explicit',
+    channelCountMode: 'max',
     channelInterpretation: 'speakers',
     numberOfInputs: 1,
     numberOfOutputs: 1,
@@ -43,7 +38,6 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
     getNativeContext,
     isNativeOfflineAudioContext,
     nativeAudioWorkletNodeConstructor,
-    sanitizeAudioWorkletNodeOptions,
     setActiveAudioWorkletNodeInputs,
     testAudioWorkletNodeOptionsClonability,
     wrapEventListener
@@ -56,18 +50,16 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
 
         private _onprocessorerror: null | TErrorEventHandler<this>;
 
-        private _parameters: null | TAudioParamMap;
+        private _parameters: TAudioParamMap;
 
         constructor(context: T, name: string, options?: Partial<IAudioWorkletNodeOptions>) {
             const nativeContext = getNativeContext(context);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const mergedOptions = sanitizeAudioWorkletNodeOptions({ ...DEFAULT_OPTIONS, ...options });
+            const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
 
             // Bug #191: Safari doesn't throw an error if the options aren't clonable.
             testAudioWorkletNodeOptionsClonability(mergedOptions);
 
-            const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
-            const processorConstructor = nodeNameToProcessorConstructorMap?.get(name);
             // Bug #186: Chrome does not allow to create an AudioWorkletNode on a closed AudioContext.
             const nativeContextOrBackupOfflineAudioContext =
                 isOffline || nativeContext.state !== 'closed'
@@ -75,15 +67,11 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                     : (getBackupOfflineAudioContext(<TNativeAudioContext>nativeContext) ?? nativeContext);
             const nativeAudioWorkletNode = createNativeAudioWorkletNode(
                 nativeContextOrBackupOfflineAudioContext,
-                isOffline ? null : (<IMinimalAudioContext>(<any>context)).baseLatency,
                 nativeAudioWorkletNodeConstructor,
                 name,
-                processorConstructor,
                 mergedOptions
             );
-            const audioWorkletNodeRenderer = <TAudioNodeRenderer<T, this>>(
-                (isOffline ? createAudioWorkletNodeRenderer(name, mergedOptions, processorConstructor) : null)
-            );
+            const audioWorkletNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createAudioWorkletNodeRenderer(name) : null);
 
             /*
              * @todo Add a mechanism to switch an AudioWorkletNode to passive once the process() function of the AudioWorkletProcessor
@@ -134,11 +122,6 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
         }
 
         get parameters(): TAudioParamMap {
-            if (this._parameters === null) {
-                // @todo The definition that TypeScript uses of the AudioParamMap is lacking many methods.
-                return <IReadOnlyMap<string, TNativeAudioParam>>this._nativeAudioWorkletNode.parameters;
-            }
-
             return this._parameters;
         }
 

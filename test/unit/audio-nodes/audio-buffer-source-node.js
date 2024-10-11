@@ -343,7 +343,7 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const masterGainNode = new GainNode(context, {
                                             gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
@@ -804,7 +804,7 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const masterGainNode = new GainNode(context, {
                                             gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
@@ -1551,7 +1551,7 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const masterGainNode = new GainNode(context, {
                                             gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
@@ -1641,7 +1641,7 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const masterGainNode = new GainNode(context, {
                                             gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
@@ -1747,7 +1747,7 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const masterGainNode = new GainNode(context, {
                                             gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
@@ -1815,7 +1815,7 @@ describe('AudioBufferSourceNode', () => {
 
                                         const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
                                         const audioWorkletNode = withAnAppendedAudioWorklet
-                                            ? new AudioWorkletNode(context, 'gain-processor')
+                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
                                         const masterGainNode = new GainNode(context, {
                                             gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
