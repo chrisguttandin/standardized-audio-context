@@ -3,13 +3,10 @@ import { TDecodeAudioDataFactory } from '../types';
 
 export const createDecodeAudioData: TDecodeAudioDataFactory = (
     audioBufferStore,
-    cacheTestResult,
     createDataCloneError,
     detachedArrayBuffers,
     getNativeContext,
-    isNativeContext,
-    testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds
+    isNativeContext
 ) => {
     return (anyContext, audioData) => {
         const nativeContext = isNativeContext(anyContext) ? anyContext : getNativeContext(anyContext);
@@ -33,15 +30,6 @@ export const createDecodeAudioData: TDecodeAudioDataFactory = (
             detachArrayBuffer(audioData).catch(() => {
                 // Ignore errors.
             });
-
-            // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
-            if (
-                !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
-                    testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
-                )
-            ) {
-                wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
-            }
 
             audioBufferStore.add(audioBuffer);
 

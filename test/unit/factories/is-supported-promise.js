@@ -4,6 +4,7 @@ import { createIsSupportedPromise } from '../../../src/factories/is-supported-pr
 describe('createIsSupportedPromise()', () => {
     let cacheTestResult;
     let fakeTestAudioBufferConstructorSupport;
+    let fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport;
     let fakeTestAudioBufferCopyChannelMethodsSubarraySupport;
     let fakeTestAudioBufferFactoryMethodSupport;
     let fakeTestAudioBufferSourceNodeBufferReassignmentSupport;
@@ -32,6 +33,7 @@ describe('createIsSupportedPromise()', () => {
     beforeEach(() => {
         cacheTestResult = createCacheTestResult(new Map(), new WeakMap());
         fakeTestAudioBufferConstructorSupport = () => true;
+        fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport = () => true;
         fakeTestAudioBufferCopyChannelMethodsSubarraySupport = () => true;
         fakeTestAudioBufferFactoryMethodSupport = () => true;
         fakeTestAudioBufferSourceNodeBufferReassignmentSupport = () => true;
@@ -62,6 +64,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -97,6 +100,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -134,6 +138,81 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioBufferFactoryMethodSupport,
+            fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioContextResumeSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
+            fakeTestAudioNodeConnectMethodVerificationSupport,
+            fakeTestAudioWorkletNodeConstructorSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionConstructorSupport,
+            fakeTestErrorEventErrorPropertySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for copyFromChannel and copyToChannel methods out-of-bounds support of an AudioBuffer fails', async () => {
+        fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioBufferFactoryMethodSupport,
+            fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioContextResumeSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
+            fakeTestAudioNodeConnectMethodVerificationSupport,
+            fakeTestAudioWorkletNodeConstructorSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionConstructorSupport,
+            fakeTestErrorEventErrorPropertySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for copyFromChannel and copyToChannel methods out-of-bounds support of an AudioBuffer throws', async () => {
+        fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -169,6 +248,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -206,6 +286,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -241,6 +322,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -278,6 +360,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -313,6 +396,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -350,6 +434,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -385,6 +470,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -422,6 +508,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -457,6 +544,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -492,6 +580,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -527,6 +616,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -564,6 +654,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -599,6 +690,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -636,6 +728,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -671,6 +764,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -708,6 +802,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -743,6 +838,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -780,6 +876,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -815,6 +912,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -852,6 +950,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -887,6 +986,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -922,6 +1022,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -957,6 +1058,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -992,6 +1094,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1027,6 +1130,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1064,6 +1168,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1099,6 +1204,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1136,6 +1242,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1171,6 +1278,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1208,6 +1316,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1243,6 +1352,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1280,6 +1390,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1315,6 +1426,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1352,6 +1464,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1387,6 +1500,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1424,6 +1538,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1459,6 +1574,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1496,6 +1612,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1531,6 +1648,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioContextCloseMethodSupport,
@@ -1567,6 +1685,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioContextCloseMethodSupport,
@@ -1601,6 +1720,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1638,6 +1758,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1673,6 +1794,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1710,6 +1832,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1745,6 +1868,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1780,6 +1904,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1815,6 +1940,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
@@ -1850,6 +1976,7 @@ describe('createIsSupportedPromise()', () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsOutOfBoundsSupport,
             fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
             fakeTestAudioBufferFactoryMethodSupport,
             fakeTestAudioBufferSourceNodeBufferReassignmentSupport,

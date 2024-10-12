@@ -1,4 +1,3 @@
-import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from '../helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { IAudioBuffer, IAudioBufferOptions } from '../interfaces';
 import { TAudioBufferConstructorFactory } from '../types';
 
@@ -6,12 +5,7 @@ const DEFAULT_OPTIONS = {
     numberOfChannels: 1
 } as const;
 
-export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
-    audioBufferStore,
-    cacheTestResult,
-    nativeAudioBufferConstructor,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds
-) => {
+export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (audioBufferStore, nativeAudioBufferConstructor) => {
     return class AudioBuffer implements IAudioBuffer {
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public copyFromChannel!: (destination: Float32Array, channelNumber: number, bufferOffset?: number) => void;
@@ -42,15 +36,6 @@ export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (
             const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS, ...options };
 
             const audioBuffer = new nativeAudioBufferConstructor({ length, numberOfChannels, sampleRate });
-
-            // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
-            if (
-                !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
-                    testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
-                )
-            ) {
-                wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
-            }
 
             audioBufferStore.add(audioBuffer);
 

@@ -42,7 +42,6 @@ import { createConnectAudioParam } from './factories/connect-audio-param';
 import { createConnectedNativeAudioBufferSourceNodeFactory } from './factories/connected-native-audio-buffer-source-node-factory';
 import { createConstantSourceNodeConstructor } from './factories/constant-source-node-constructor';
 import { createConstantSourceNodeRendererFactory } from './factories/constant-source-node-renderer-factory';
-import { createConvertNumberToUnsignedLong } from './factories/convert-number-to-unsigned-long';
 import { createConvolverNodeConstructor } from './factories/convolver-node-constructor';
 import { createConvolverNodeRendererFactory } from './factories/convolver-node-renderer-factory';
 import { createCreateNativeOfflineAudioContext } from './factories/create-native-offline-audio-context';
@@ -137,6 +136,7 @@ import { createStartRendering } from './factories/start-rendering';
 import { createStereoPannerNodeConstructor } from './factories/stereo-panner-node-constructor';
 import { createStereoPannerNodeRendererFactory } from './factories/stereo-panner-node-renderer-factory';
 import { createTestAudioBufferConstructorSupport } from './factories/test-audio-buffer-constructor-support';
+import { createTestAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './factories/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './factories/test-audio-buffer-copy-channel-methods-subarray-support';
 import { createTestAudioBufferFactoryMethodSupport } from './factories/test-audio-buffer-factory-method-support';
 import { createTestAudioBufferSourceNodeBufferReassignmentSupport } from './factories/test-audio-buffer-source-node-buffer-reassignment-support';
@@ -163,7 +163,6 @@ import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
 import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-node-renderer-factory';
 import { createWindow } from './factories/window';
-import { createWrapAudioBufferCopyChannelMethodsOutOfBounds } from './factories/wrap-audio-buffer-copy-channel-methods-out-of-bounds';
 import {
     AUDIO_NODE_CONNECTIONS_STORE,
     AUDIO_NODE_STORE,
@@ -190,7 +189,6 @@ import { overwriteAccessors } from './helpers/overwrite-accessors';
 import { pickElementFromSet } from './helpers/pick-element-from-set';
 import { sanitizeChannelSplitterOptions } from './helpers/sanitize-channel-splitter-options';
 import { sanitizePeriodicWaveOptions } from './helpers/sanitize-periodic-wave-options';
-import { testAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './helpers/test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import { testAudioScheduledSourceNodeStopMethodNegativeParametersSupport } from './helpers/test-audio-scheduled-source-node-stop-method-negative-parameters-support';
 import { testAudioWorkletNodeOptionsClonability } from './helpers/test-audio-worklet-node-options-clonability';
 import { testDomExceptionConstructorSupport } from './helpers/test-dom-exception-constructor-support';
@@ -347,14 +345,7 @@ export { analyserNodeConstructor as AnalyserNode };
 
 const audioBufferStore: TAudioBufferStore = new WeakSet();
 const nativeAudioBufferConstructor = createNativeAudioBufferConstructor(window);
-const convertNumberToUnsignedLong = createConvertNumberToUnsignedLong(new Uint32Array(1));
-const wrapAudioBufferCopyChannelMethodsOutOfBounds = createWrapAudioBufferCopyChannelMethodsOutOfBounds(convertNumberToUnsignedLong);
-const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstructor(
-    audioBufferStore,
-    cacheTestResult,
-    nativeAudioBufferConstructor,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds
-);
+const audioBufferConstructor: TAudioBufferConstructor = createAudioBufferConstructor(audioBufferStore, nativeAudioBufferConstructor);
 
 type audioBufferConstructor = IAudioBuffer;
 
@@ -675,13 +666,10 @@ const isNativeContext = createIsNativeContext(isNativeAudioContext, isNativeOffl
 
 export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
     audioBufferStore,
-    cacheTestResult,
     createDataCloneError,
     new WeakSet(),
     getNativeContext,
-    isNativeContext,
-    testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds
+    isNativeContext
 );
 
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
@@ -846,12 +834,9 @@ export { minimalAudioContextConstructor as MinimalAudioContext };
 const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(nativeOfflineAudioContextConstructor);
 const startRendering = createStartRendering(
     audioBufferStore,
-    cacheTestResult,
     getAudioNodeRenderer,
     getUnrenderedAudioWorkletNodes,
-    renderNativeOfflineAudioContext,
-    testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds
+    renderNativeOfflineAudioContext
 );
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     createInvalidStateError,
@@ -907,6 +892,7 @@ export const isSupported = () =>
     createIsSupportedPromise(
         cacheTestResult,
         createTestAudioBufferConstructorSupport(nativeAudioBufferConstructor),
+        createTestAudioBufferCopyChannelMethodsOutOfBoundsSupport(nativeOfflineAudioContextConstructor),
         createTestAudioBufferCopyChannelMethodsSubarraySupport(nativeOfflineAudioContextConstructor),
         createTestAudioBufferSourceNodeBufferReassignmentSupport(nativeOfflineAudioContextConstructor),
         createTestAudioBufferFactoryMethodSupport(nativeOfflineAudioContextConstructor),

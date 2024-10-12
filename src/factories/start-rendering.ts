@@ -2,12 +2,9 @@ import { TStartRenderingFactory } from '../types';
 
 export const createStartRendering: TStartRenderingFactory = (
     audioBufferStore,
-    cacheTestResult,
     getAudioNodeRenderer,
     getUnrenderedAudioWorkletNodes,
-    renderNativeOfflineAudioContext,
-    testAudioBufferCopyChannelMethodsOutOfBoundsSupport,
-    wrapAudioBufferCopyChannelMethodsOutOfBounds
+    renderNativeOfflineAudioContext
 ) => {
     return (destination, nativeOfflineAudioContext) =>
         getAudioNodeRenderer(destination)
@@ -25,15 +22,6 @@ export const createStartRendering: TStartRenderingFactory = (
             )
             .then(() => renderNativeOfflineAudioContext(nativeOfflineAudioContext))
             .then((audioBuffer) => {
-                // Bug #157: Firefox does not allow the bufferOffset to be out-of-bounds.
-                if (
-                    !cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, () =>
-                        testAudioBufferCopyChannelMethodsOutOfBoundsSupport(audioBuffer)
-                    )
-                ) {
-                    wrapAudioBufferCopyChannelMethodsOutOfBounds(audioBuffer);
-                }
-
                 audioBufferStore.add(audioBuffer);
 
                 return audioBuffer;

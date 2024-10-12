@@ -3,6 +3,7 @@ import type { testErrorEventErrorPropertySupport as testErrorEventErrorPropertyS
 import type { testTransferablesSupport as testTransferablesSupportFunction } from '../helpers/test-transferables-support';
 import type { createCacheTestResult } from './cache-test-result';
 import type { createTestAudioBufferConstructorSupport } from './test-audio-buffer-constructor-support';
+import type { createTestAudioBufferCopyChannelMethodsOutOfBoundsSupport } from './test-audio-buffer-copy-channel-methods-out-of-bounds-support';
 import type { createTestAudioBufferCopyChannelMethodsSubarraySupport } from './test-audio-buffer-copy-channel-methods-subarray-support';
 import type { createTestAudioBufferFactoryMethodSupport } from './test-audio-buffer-factory-method-support';
 import type { createTestAudioBufferSourceNodeBufferReassignmentSupport } from './test-audio-buffer-source-node-buffer-reassignment-support';
@@ -28,6 +29,7 @@ import type { createTestStereoPannerNodeDefaultValueSupport } from './test-stere
 export const createIsSupportedPromise = async (
     cacheTestResult: ReturnType<typeof createCacheTestResult>,
     testAudioBufferConstructorSupport: ReturnType<typeof createTestAudioBufferConstructorSupport>,
+    testAudioBufferCopyChannelMethodsOutOfBoundsSupport: ReturnType<typeof createTestAudioBufferCopyChannelMethodsOutOfBoundsSupport>,
     testAudioBufferCopyChannelMethodsSubarraySupport: ReturnType<typeof createTestAudioBufferCopyChannelMethodsSubarraySupport>,
     testAudioBufferFactoryMethodSupport: ReturnType<typeof createTestAudioBufferFactoryMethodSupport>,
     testAudioBufferSourceNodeBufferReassignmentSupport: ReturnType<typeof createTestAudioBufferSourceNodeBufferReassignmentSupport>,
@@ -57,6 +59,7 @@ export const createIsSupportedPromise = async (
 ) => {
     if (
         cacheTestResult(testAudioBufferConstructorSupport, testAudioBufferConstructorSupport) &&
+        cacheTestResult(testAudioBufferCopyChannelMethodsOutOfBoundsSupport, testAudioBufferCopyChannelMethodsOutOfBoundsSupport) &&
         cacheTestResult(testAudioBufferCopyChannelMethodsSubarraySupport, testAudioBufferCopyChannelMethodsSubarraySupport) &&
         cacheTestResult(testAudioBufferFactoryMethodSupport, testAudioBufferFactoryMethodSupport) &&
         cacheTestResult(testAudioBufferSourceNodeBufferReassignmentSupport, testAudioBufferSourceNodeBufferReassignmentSupport) &&
