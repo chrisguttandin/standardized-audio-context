@@ -25,6 +25,7 @@ describe('createIsSupportedPromise()', () => {
     let fakeTestErrorEventErrorPropertySupport;
     let fakeTestIsSecureContextSupport;
     let fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport;
+    let fakeTestPeriodicWaveConstructorSupport;
     let fakeTestStereoPannerNodeDefaultValueSupport;
     let fakeTestTransferablesSupport;
 
@@ -52,6 +53,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestErrorEventErrorPropertySupport = () => true;
         fakeTestIsSecureContextSupport = () => true;
         fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport = () => true;
+        fakeTestPeriodicWaveConstructorSupport = () => true;
         fakeTestStereoPannerNodeDefaultValueSupport = () => Promise.resolve(true);
         fakeTestTransferablesSupport = () => Promise.resolve(true);
     });
@@ -81,6 +83,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -115,6 +118,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -151,6 +155,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -185,6 +190,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -221,6 +227,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -255,6 +262,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -291,6 +299,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -325,6 +334,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -361,6 +371,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -395,6 +406,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -431,6 +443,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -465,6 +478,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -499,6 +513,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -533,6 +548,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -569,6 +585,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -603,6 +620,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -639,6 +657,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -673,6 +692,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -709,6 +729,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -743,6 +764,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -779,6 +801,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -813,6 +836,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -849,6 +873,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -883,6 +908,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -917,6 +943,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -951,6 +978,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -985,6 +1013,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1019,6 +1048,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1055,6 +1085,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1089,6 +1120,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1125,6 +1157,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1159,6 +1192,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1195,6 +1229,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1229,6 +1264,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1265,6 +1301,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1299,6 +1336,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1335,6 +1373,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1369,6 +1408,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1405,6 +1445,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1439,6 +1480,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1475,6 +1517,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1508,6 +1551,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1543,6 +1587,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1577,6 +1622,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1613,6 +1659,79 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for constructor support of a PeriodicWave fails', async () => {
+        fakeTestPeriodicWaveConstructorSupport = () => false;
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioBufferFactoryMethodSupport,
+            fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioContextResumeSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
+            fakeTestAudioNodeConnectMethodVerificationSupport,
+            fakeTestAudioWorkletNodeConstructorSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionConstructorSupport,
+            fakeTestErrorEventErrorPropertySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
+            fakeTestStereoPannerNodeDefaultValueSupport,
+            fakeTestTransferablesSupport
+        );
+
+        expect(isSupported).to.be.false;
+    });
+
+    it('should resolve to false if the test for constructor support of a PeriodicWave throws', async () => {
+        fakeTestPeriodicWaveConstructorSupport = () => {
+            throw new Error('A fake error thrown by the test.');
+        };
+
+        const isSupported = await createIsSupportedPromise(
+            cacheTestResult,
+            fakeTestAudioBufferConstructorSupport,
+            fakeTestAudioBufferCopyChannelMethodsSubarraySupport,
+            fakeTestAudioBufferFactoryMethodSupport,
+            fakeTestAudioBufferSourceNodeBufferReassignmentSupport,
+            fakeTestAudioContextCloseMethodSupport,
+            fakeTestAudioContextDecodeAudioDataMethodTypeErrorSupport,
+            fakeTestAudioContextOptionsSupport,
+            fakeTestAudioContextResumeSupport,
+            fakeTestAudioNodeConnectMethodChainabilitySupport,
+            fakeTestAudioNodeConnectMethodVerificationSupport,
+            fakeTestAudioWorkletNodeConstructorSupport,
+            fakeTestAudioWorkletProcessorNoInputsSupport,
+            fakeTestAudioWorkletProcessorNoOutputsSupport,
+            fakeTestBiquadFilterNodeGetFrequencyResponseMethodSupport,
+            fakeTestChannelMergerNodeChannelCountSupport,
+            fakeTestConstantSourceNodeAccurateSchedulingSupport,
+            fakeTestConvolverNodeBufferReassignabilitySupport,
+            fakeTestConvolverNodeChannelCountSupport,
+            fakeTestDomExceptionConstructorSupport,
+            fakeTestErrorEventErrorPropertySupport,
+            fakeTestIsSecureContextSupport,
+            fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1647,6 +1766,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1681,6 +1801,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1715,6 +1836,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );
@@ -1749,6 +1871,7 @@ describe('createIsSupportedPromise()', () => {
             fakeTestErrorEventErrorPropertySupport,
             fakeTestIsSecureContextSupport,
             fakeTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
+            fakeTestPeriodicWaveConstructorSupport,
             fakeTestStereoPannerNodeDefaultValueSupport,
             fakeTestTransferablesSupport
         );

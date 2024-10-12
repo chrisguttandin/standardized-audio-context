@@ -22,6 +22,7 @@ import type { createTestConvolverNodeBufferReassignabilitySupport } from './test
 import type { createTestConvolverNodeChannelCountSupport } from './test-convolver-node-channel-count-support';
 import type { createTestIsSecureContextSupport } from './test-is-secure-context-support';
 import type { createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport } from './test-media-stream-audio-source-node-media-stream-without-audio-track-support';
+import type { createTestPeriodicWaveConstructorSupport } from './test-periodic-wave-constructor-support';
 import type { createTestStereoPannerNodeDefaultValueSupport } from './test-stereo-panner-node-default-value-support';
 
 export const createIsSupportedPromise = async (
@@ -50,6 +51,7 @@ export const createIsSupportedPromise = async (
     testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport: ReturnType<
         typeof createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport
     >,
+    testPeriodicWaveConstructorSupport: ReturnType<typeof createTestPeriodicWaveConstructorSupport>,
     testStereoPannerNodeDefaultValueSupport: ReturnType<typeof createTestStereoPannerNodeDefaultValueSupport>,
     testTransferablesSupport: typeof testTransferablesSupportFunction
 ) => {
@@ -74,7 +76,8 @@ export const createIsSupportedPromise = async (
         cacheTestResult(
             testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport,
             testMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport
-        )
+        ) &&
+        cacheTestResult(testPeriodicWaveConstructorSupport, testPeriodicWaveConstructorSupport)
     ) {
         const results = await Promise.all([
             cacheTestResult(testAudioContextDecodeAudioDataMethodTypeErrorSupport, testAudioContextDecodeAudioDataMethodTypeErrorSupport),

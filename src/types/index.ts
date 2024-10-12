@@ -274,7 +274,6 @@ export * from './native-panner-node';
 export * from './native-panner-node-factory';
 export * from './native-periodic-wave';
 export * from './native-periodic-wave-factory';
-export * from './native-periodic-wave-factory-factory';
 export * from './native-script-processor-node';
 export * from './native-script-processor-node-factory';
 export * from './native-stereo-panner-node';

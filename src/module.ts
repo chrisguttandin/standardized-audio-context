@@ -115,7 +115,8 @@ import { createNativeMediaStreamTrackAudioSourceNodeFactory } from './factories/
 import { createNativeOfflineAudioContextConstructor } from './factories/native-offline-audio-context-constructor';
 import { createNativeOscillatorNodeFactory } from './factories/native-oscillator-node-factory';
 import { createNativePannerNode } from './factories/native-panner-node';
-import { createNativePeriodicWaveFactory } from './factories/native-periodic-wave-factory';
+import { createNativePeriodicWave } from './factories/native-periodic-wave';
+import { createNativePeriodicWaveConstructor } from './factories/native-periodic-wave-constructor';
 import { createNativeScriptProcessorNode } from './factories/native-script-processor-node';
 import { createNativeStereoPannerNode } from './factories/native-stereo-panner-node';
 import { createNativeWaveShaperNodeFactory } from './factories/native-wave-shaper-node-factory';
@@ -157,6 +158,7 @@ import { createTestConvolverNodeChannelCountSupport } from './factories/test-con
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
 import { createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport } from './factories/test-media-stream-audio-source-node-media-stream-without-audio-track-support';
 import { createTestOfflineAudioContextCurrentTimeSupport } from './factories/test-offline-audio-context-current-time-support';
+import { createTestPeriodicWaveConstructorSupport } from './factories/test-periodic-wave-constructor-support';
 import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
 import { createWaveShaperNodeRendererFactory } from './factories/wave-shaper-node-renderer-factory';
@@ -612,7 +614,6 @@ const pannerNodeConstructor: TPannerNodeConstructor = createPannerNodeConstructo
     isNativeOfflineAudioContext,
     setAudioNodeTailTime
 );
-const createNativePeriodicWave = createNativePeriodicWaveFactory(createIndexSizeError);
 const periodicWaveConstructor: TPeriodicWaveConstructor = createPeriodicWaveConstructor(
     createNativePeriodicWave,
     getNativeContext,
@@ -927,6 +928,7 @@ export const isSupported = () =>
         testErrorEventErrorPropertySupport,
         createTestIsSecureContextSupport(window),
         createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport(nativeAudioContextConstructor),
+        createTestPeriodicWaveConstructorSupport(nativeOfflineAudioContextConstructor, createNativePeriodicWaveConstructor(window)),
         createTestStereoPannerNodeDefaultValueSupport(nativeOfflineAudioContextConstructor),
         testTransferablesSupport
     );
