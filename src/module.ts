@@ -146,6 +146,7 @@ import { createTestAudioContextOptionsSupport } from './factories/test-audio-con
 import { createTestAudioContextResumeSupport } from './factories/test-audio-context-resume-support';
 import { createTestAudioNodeConnectMethodChainabilitySupport } from './factories/test-audio-node-connect-method-chainability-support';
 import { createTestAudioNodeConnectMethodVerificationSupport } from './factories/test-audio-node-connect-method-verification-support';
+import { createTestAudioWorkletAddModuleMethodSupport } from './factories/test-audio-worklet-add-module-method-support';
 import { createTestAudioWorkletNodeConstructorSupport } from './factories/test-audio-worklet-node-constructor-support';
 import { createTestAudioWorkletProcessorNoInputsSupport } from './factories/test-audio-worklet-processor-no-inputs-support';
 import { createTestAudioWorkletProcessorNoOutputsSupport } from './factories/test-audio-worklet-processor-no-outputs-support';
@@ -899,6 +900,7 @@ export const isSupported = () =>
         createTestAudioContextResumeSupport(nativeAudioContextConstructor),
         createTestAudioNodeConnectMethodChainabilitySupport(nativeOfflineAudioContextConstructor),
         createTestAudioNodeConnectMethodVerificationSupport(nativeOfflineAudioContextConstructor),
+        createTestAudioWorkletAddModuleMethodSupport(nativeOfflineAudioContextConstructor),
         createTestAudioWorkletNodeConstructorSupport(isSecureContext, nativeAudioWorkletNodeConstructor),
         createTestAudioWorkletProcessorNoInputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),
         createTestAudioWorkletProcessorNoOutputsSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor),

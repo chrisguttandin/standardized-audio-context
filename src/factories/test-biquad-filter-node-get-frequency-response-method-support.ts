@@ -6,6 +6,9 @@ import { TNativeOfflineAudioContextConstructor } from '../types';
  *
  * Bug #61: Safari up to version 14.1 had no AudioWorkletNode implementation.
  *
+ * Bug #176: Safari up to version 14.1 rejected the promise returned by addModule() with an AbortError if the source code contained an
+ * import statement.
+ *
  * Bug #190: Safari up to version 14.1 threw no error when trying to add an unparsable AudioWorklet module.
  *
  * Bug #192: Safari up to version 14.1 threw a SyntaxError instead of a NotSupportedError when creating an AudioContext with an unsupported
