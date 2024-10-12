@@ -386,7 +386,7 @@ eventually ships a fix. Once that happens the workaround and the backing expecta
 removed. The expectation test however gets recycled and will now be used as part of the browser
 check performed when calling `isSupported()`.
 
-The list of currently supported browsers includes Chrome v105+, Firefox v81+ and Safari v16.4+. Please note that the tests only run in the current and upcoming version of each browser.
+The list of currently supported browsers includes Chrome v105+, Firefox v82+ and Safari v16.4+. Please note that the tests only run in the current and upcoming version of each browser.
 
 Supporting a browser only means that it is supported on the feature level. It is absolutely
 possible that a transpiler like [Babel](https://babeljs.io) is necessary to use this package in
