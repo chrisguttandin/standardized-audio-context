@@ -27,6 +27,14 @@ describe('audioContextConstructor', () => {
         });
     });
 
+    describe('close()', () => {
+        // bug #35
+
+        it('should not throw an error if it was closed before', () => {
+            return audioContext.close().then(() => audioContext.close());
+        });
+    });
+
     describe('createBufferSource()', () => {
         describe('stop()', () => {
             // bug #44

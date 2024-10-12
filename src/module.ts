@@ -727,6 +727,7 @@ const mediaStreamTrackAudioSourceNodeConstructor: TMediaStreamTrackAudioSourceNo
     createMediaStreamTrackAudioSourceNodeConstructor(audioNodeConstructor, createNativeMediaStreamTrackAudioSourceNode, getNativeContext);
 const audioContextConstructor: TAudioContextConstructor = createAudioContextConstructor(
     baseAudioContextConstructor,
+    createInvalidStateError,
     createNotSupportedError,
     mediaElementAudioSourceNodeConstructor,
     mediaStreamAudioDestinationNodeConstructor,
@@ -831,6 +832,7 @@ type mediaStreamTrackAudioSourceNodeConstructor<T extends IAudioContext | IMinim
 export { mediaStreamTrackAudioSourceNodeConstructor as MediaStreamTrackAudioSourceNode };
 
 const minimalAudioContextConstructor: TMinimalAudioContextConstructor = createMinimalAudioContextConstructor(
+    createInvalidStateError,
     createNotSupportedError,
     minimalBaseAudioContextConstructor,
     nativeAudioContextConstructor

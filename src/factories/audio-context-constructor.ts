@@ -12,6 +12,7 @@ import { TAudioContextConstructorFactory, TAudioContextState, TNativeAudioContex
 
 export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     baseAudioContextConstructor,
+    createInvalidStateError,
     createNotSupportedError,
     mediaElementAudioSourceNodeConstructor,
     mediaStreamAudioDestinationNodeConstructor,
@@ -82,6 +83,13 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
         }
 
         public close(): Promise<void> {
+            // Bug #35: Safari throws an error if the AudioContext was closed before.
+            if (this.state === 'closed') {
+                return this._nativeAudioContext.close().then(() => {
+                    throw createInvalidStateError();
+                });
+            }
+
             // Bug #34: If the state was set to suspended before it should be revoked now.
             if (this._state === 'suspended') {
                 this._state = null;
