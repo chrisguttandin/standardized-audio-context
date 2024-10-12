@@ -7,13 +7,10 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
     getNativeContext,
     getOrCreateBackupOfflineAudioContext,
     isNativeOfflineAudioContext,
-    nativeAudioWorkletNodeConstructor,
     ongoingRequests,
     resolvedRequests,
     testAudioWorkletProcessorPostMessageSupport
 ) => {
-    let index = 0;
-
     return (context, moduleURL, options = { credentials: 'omit' }) => {
         const resolvedRequestsOfContext = resolvedRequests.get(context);
 
@@ -37,10 +34,6 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
             fetchSource(moduleURL),
             Promise.resolve(cacheTestResult(testAudioWorkletProcessorPostMessageSupport, testAudioWorkletProcessorPostMessageSupport))
         ]).then(([[source, absoluteUrl], isSupportingPostMessage]) => {
-            const currentIndex = index + 1;
-
-            index = currentIndex;
-
             const [importStatements, sourceWithoutImportStatements] = splitImportStatements(source, absoluteUrl);
             /*
              * Bug #179: Firefox does not allow to transfer any buffer which has been passed to the process() method as an argument.
@@ -74,8 +67,6 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
             /*
              * Bug #179: Firefox does not allow to transfer any buffer which has been passed to the process() method as an argument.
              *
-             * Bug #190: Safari doesn't throw an error when loading an unparsable module.
-             *
              * This is the unminified version of the code used below:
              *
              * ```js
@@ -102,21 +93,13 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
              *         }
              *
              *     })
-             * );
-             *
-             * registerProcessor(`__sac${currentIndex}`, class extends AudioWorkletProcessor{
-             *
-             *     process () {
-             *         return false;
-             *     }
-             *
-             * })`
+             * );`
              * ```
              */
             const memberDefinition = isSupportingPostMessage ? '' : '__c = (a) => a.forEach(e=>this.__b.add(e.buffer));';
             const bufferRegistration = isSupportingPostMessage ? '' : 'i.forEach(this.__c);o.forEach(this.__c);this.__c(Object.values(p));';
             const wrappedSource = `${importStatements};((AudioWorkletProcessor,registerProcessor)=>{${sourceWithoutImportStatements}
-})(${patchedAudioWorkletProcessor},(n,p)=>registerProcessor(n,class extends p{${memberDefinition}process(i,o,p){${bufferRegistration}return super.process(i,o,p)}}));registerProcessor('__sac${currentIndex}',class extends AudioWorkletProcessor{process(){return !1}})`;
+})(${patchedAudioWorkletProcessor},(n,p)=>registerProcessor(n,class extends p{${memberDefinition}process(i,o,p){${bufferRegistration}return super.process(i,o,p)}}))`;
             const blob = new Blob([wrappedSource], { type: 'application/javascript; charset=utf-8' });
             const url = URL.createObjectURL(blob);
 
@@ -124,25 +107,13 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
                 .addModule(url, options)
                 .then(() => {
                     if (isNativeOfflineAudioContext(nativeContext)) {
-                        return nativeContext;
+                        return;
                     }
 
                     // Bug #186: Chrome does not allow to create an AudioWorkletNode on a closed AudioContext.
                     const backupOfflineAudioContext = getOrCreateBackupOfflineAudioContext(nativeContext);
 
-                    return backupOfflineAudioContext.audioWorklet.addModule(url, options).then(() => backupOfflineAudioContext);
-                })
-                .then((nativeContextOrBackupOfflineAudioContext) => {
-                    if (nativeAudioWorkletNodeConstructor === null) {
-                        throw new SyntaxError();
-                    }
-
-                    try {
-                        // Bug #190: Safari doesn't throw an error when loading an unparsable module.
-                        new nativeAudioWorkletNodeConstructor(nativeContextOrBackupOfflineAudioContext, `__sac${currentIndex}`); // tslint:disable-line:no-unused-expression
-                    } catch {
-                        throw new SyntaxError();
-                    }
+                    return backupOfflineAudioContext.audioWorklet.addModule(url, options);
                 })
                 .finally(() => URL.revokeObjectURL(url));
         });

@@ -655,7 +655,6 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
           getNativeContext,
           getOrCreateBackupOfflineAudioContext,
           isNativeOfflineAudioContext,
-          nativeAudioWorkletNodeConstructor,
           new WeakMap(),
           new WeakMap(),
           createTestAudioWorkletProcessorPostMessageSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor)
