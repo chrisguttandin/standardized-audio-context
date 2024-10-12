@@ -54,11 +54,19 @@ describe('audioContextConstructor', () => {
 
                         gainNodes[0].gain.value = 0;
                         mediaStream.addTrack(audioStreamTracks[1]);
+
+                        while (mediaStream.getAudioTracks()[0] !== audioStreamTracks[0]) {
+                            mediaStream = new MediaStream([audioStreamTracks[0], audioStreamTracks[1]]);
+                        }
                     } else {
                         mediaStream = mediaStreamAudioDestinationNodes[1].stream;
 
                         gainNodes[1].gain.value = 0;
                         mediaStream.addTrack(audioStreamTracks[0]);
+
+                        while (mediaStream.getAudioTracks()[0] !== audioStreamTracks[1]) {
+                            mediaStream = new MediaStream([audioStreamTracks[1], audioStreamTracks[0]]);
+                        }
                     }
                 });
 
