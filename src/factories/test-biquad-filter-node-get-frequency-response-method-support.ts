@@ -6,6 +6,9 @@ import { TNativeOfflineAudioContextConstructor } from '../types';
  *
  * Bug #61: Safari up to version 14.1 had no AudioWorkletNode implementation.
  *
+ * Bug #192: Safari up to version 14.1 threw a SyntaxError instead of a NotSupportedError when creating an AudioContext with an unsupported
+ * sampleRate.
+ *
  * Bug #201: Safari up to version 14.1 only allowed to use a MediaStream for a single MediaStreamAudioSourceNode. In any further usage of
  * the same MediaStream resulted in silence.
  */

@@ -5,7 +5,6 @@ import { TAudioContextState, TMinimalAudioContextConstructorFactory, TNativeAudi
 
 export const createMinimalAudioContextConstructor: TMinimalAudioContextConstructorFactory = (
     createInvalidStateError,
-    createNotSupportedError,
     minimalBaseAudioContextConstructor,
     nativeAudioContextConstructor
 ) => {
@@ -19,18 +18,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 throw new Error('Missing the native AudioContext constructor.');
             }
 
-            let nativeAudioContext: TNativeAudioContext;
-
-            try {
-                nativeAudioContext = new nativeAudioContextConstructor(options);
-            } catch (err) {
-                // Bug #192: Safari does throw a SyntaxError if the sampleRate is not supported.
-                if (err.code === 12 && err.message === 'sampleRate is not in range') {
-                    throw createNotSupportedError();
-                }
-
-                throw err;
-            }
+            const nativeAudioContext = new nativeAudioContextConstructor(options);
 
             // Bug #51: Firefox doesn't throw an error if the given latencyHint is invalid.
             if (!isValidLatencyHint(options.latencyHint)) {

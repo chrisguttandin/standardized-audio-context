@@ -6,12 +6,10 @@ import { TMediaStreamAudioDestinationNodeConstructor } from './media-stream-audi
 import { TMediaStreamAudioSourceNodeConstructor } from './media-stream-audio-source-node-constructor';
 import { TMediaStreamTrackAudioSourceNodeConstructor } from './media-stream-track-audio-source-node-constructor';
 import { TNativeAudioContextConstructor } from './native-audio-context-constructor';
-import { TNotSupportedErrorFactory } from './not-supported-error-factory';
 
 export type TAudioContextConstructorFactory = (
     baseAudioContextConstructor: TBaseAudioContextConstructor,
     createInvalidStateError: TInvalidStateErrorFactory,
-    createNotSupportedError: TNotSupportedErrorFactory,
     mediaElementAudioSourceNodeConstructor: TMediaElementAudioSourceNodeConstructor,
     mediaStreamAudioDestinationNodeConstructor: TMediaStreamAudioDestinationNodeConstructor,
     mediaStreamAudioSourceNodeConstructor: TMediaStreamAudioSourceNodeConstructor,
