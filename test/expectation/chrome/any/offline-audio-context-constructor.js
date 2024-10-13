@@ -178,14 +178,4 @@ describe('offlineAudioContextConstructor', () => {
             }, 1000);
         });
     });
-
-    describe('startRendering()', () => {
-        // bug #158
-
-        it('should not advance currentTime', () => {
-            offlineAudioContext.startRendering().then(() => {
-                expect(offlineAudioContext.currentTime).to.equal(0);
-            });
-        });
-    });
 });

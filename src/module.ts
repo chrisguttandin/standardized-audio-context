@@ -129,7 +129,6 @@ import { createPeriodicWaveConstructor } from './factories/periodic-wave-constru
 import { createRenderAutomation } from './factories/render-automation';
 import { createRenderInputsOfAudioNode } from './factories/render-inputs-of-audio-node';
 import { createRenderInputsOfAudioParam } from './factories/render-inputs-of-audio-param';
-import { createRenderNativeOfflineAudioContext } from './factories/render-native-offline-audio-context';
 import { createSetActiveAudioWorkletNodeInputs } from './factories/set-active-audio-worklet-node-inputs';
 import { createSetAudioNodeTailTime } from './factories/set-audio-node-tail-time';
 import { createStartRendering } from './factories/start-rendering';
@@ -158,7 +157,6 @@ import { createTestConvolverNodeBufferReassignabilitySupport } from './factories
 import { createTestConvolverNodeChannelCountSupport } from './factories/test-convolver-node-channel-count-support';
 import { createTestIsSecureContextSupport } from './factories/test-is-secure-context-support';
 import { createTestMediaStreamAudioSourceNodeMediaStreamWithoutAudioTrackSupport } from './factories/test-media-stream-audio-source-node-media-stream-without-audio-track-support';
-import { createTestOfflineAudioContextCurrentTimeSupport } from './factories/test-offline-audio-context-current-time-support';
 import { createTestPeriodicWaveConstructorSupport } from './factories/test-periodic-wave-constructor-support';
 import { createTestStereoPannerNodeDefaultValueSupport } from './factories/test-stereo-panner-node-default-value-support';
 import { createWaveShaperNodeConstructor } from './factories/wave-shaper-node-constructor';
@@ -528,11 +526,6 @@ const gainNodeConstructor: TGainNodeConstructor = createGainNodeConstructor(
     getNativeContext,
     isNativeOfflineAudioContext
 );
-const renderNativeOfflineAudioContext = createRenderNativeOfflineAudioContext(
-    cacheTestResult,
-    createNativeScriptProcessorNode,
-    createTestOfflineAudioContextCurrentTimeSupport(nativeOfflineAudioContextConstructor)
-);
 const createIIRFilterNodeRenderer = createIIRFilterNodeRendererFactory(getNativeAudioNode, renderInputsOfAudioNode);
 const iIRFilterNodeConstructor: TIIRFilterNodeConstructor = createIIRFilterNodeConstructor(
     audioNodeConstructor,
@@ -830,12 +823,7 @@ type minimalAudioContextConstructor = IMinimalAudioContext;
 export { minimalAudioContextConstructor as MinimalAudioContext };
 
 const createNativeOfflineAudioContext = createCreateNativeOfflineAudioContext(nativeOfflineAudioContextConstructor);
-const startRendering = createStartRendering(
-    audioBufferStore,
-    getAudioNodeRenderer,
-    getUnrenderedAudioWorkletNodes,
-    renderNativeOfflineAudioContext
-);
+const startRendering = createStartRendering(audioBufferStore, getAudioNodeRenderer, getUnrenderedAudioWorkletNodes);
 const minimalOfflineAudioContextConstructor: TMinimalOfflineAudioContextConstructor = createMinimalOfflineAudioContextConstructor(
     createInvalidStateError,
     createNativeOfflineAudioContext,
