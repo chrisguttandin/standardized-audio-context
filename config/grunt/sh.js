@@ -20,8 +20,11 @@ module.exports = (grunt) => {
         'test-expectation-chrome-canary': {
             cmd: `karma start config/karma/config-expectation-chrome-canary.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },
-        'test-expectation-chrome-legacy': {
-            cmd: `karma start config/karma/config-expectation-chrome-legacy.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
+        'test-expectation-chrome-penultimate': {
+            cmd: `karma start config/karma/config-expectation-chrome-penultimate.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
+        },
+        'test-expectation-chrome-previous': {
+            cmd: `karma start config/karma/config-expectation-chrome-previous.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },
         'test-expectation-firefox': {
             cmd: `karma start config/karma/config-expectation-firefox.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
@@ -31,14 +34,20 @@ module.exports = (grunt) => {
                 continuous ? '--concurrency Infinity' : '--single-run'
             }`
         },
-        'test-expectation-firefox-legacy': {
-            cmd: `karma start config/karma/config-expectation-firefox-legacy.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
+        'test-expectation-firefox-penultimate': {
+            cmd: `karma start config/karma/config-expectation-firefox-penultimate.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
+        },
+        'test-expectation-firefox-previous': {
+            cmd: `karma start config/karma/config-expectation-firefox-previous.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },
         'test-expectation-safari': {
             cmd: `karma start config/karma/config-expectation-safari.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },
-        'test-expectation-safari-legacy': {
-            cmd: `karma start config/karma/config-expectation-safari-legacy.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
+        'test-expectation-safari-penultimate': {
+            cmd: `karma start config/karma/config-expectation-safari-penultimate.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
+        },
+        'test-expectation-safari-previous': {
+            cmd: `karma start config/karma/config-expectation-safari-previous.js ${continuous ? '--concurrency Infinity' : '--single-run'}`
         },
         'test-integration-browser': {
             cmd: `karma start config/karma/config-integration.js ${continuous ? '--concurrency Infinity' : '--single-run'}`

@@ -9,7 +9,7 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        browsers: ['ChromeBrowserStack'],
+        browsers: ['WebkitHeadless'],
 
         client: {
             mocha: {
@@ -20,16 +20,6 @@ module.exports = (config) => {
 
         concurrency: 1,
 
-        customLaunchers: {
-            ChromeBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'chrome',
-                browser_version: '105', // eslint-disable-line camelcase
-                os: 'Windows',
-                os_version: '10' // eslint-disable-line camelcase
-            }
-        },
-
         files: [
             {
                 included: false,
@@ -37,8 +27,8 @@ module.exports = (config) => {
                 served: true,
                 watched: true
             },
-            'test/expectation/chrome/any/**/*.js',
-            'test/expectation/chrome/legacy/**/*.js'
+            'test/expectation/safari/any/**/*.js',
+            'test/expectation/safari/previous/**/*.js'
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
@@ -48,8 +38,8 @@ module.exports = (config) => {
         },
 
         preprocessors: {
-            'test/expectation/chrome/any/**/*.js': 'webpack',
-            'test/expectation/chrome/legacy/**/*.js': 'webpack'
+            'test/expectation/safari/any/**/*.js': 'webpack',
+            'test/expectation/safari/previous/**/*.js': 'webpack'
         },
 
         reporters: ['dots'],
@@ -75,7 +65,7 @@ module.exports = (config) => {
             plugins: [
                 new DefinePlugin({
                     'process.env': {
-                        CI: JSON.stringify(true)
+                        CI: JSON.stringify(env.CI)
                     }
                 })
             ],
@@ -90,25 +80,5 @@ module.exports = (config) => {
         }
     });
 
-    if (env.CI) {
-        config.set({
-            browserStack: {
-                accessKey: env.BROWSER_STACK_ACCESS_KEY,
-                build: `${env.GITHUB_RUN_ID}/expectation-chrome-legacy`,
-                forceLocal: true,
-                localIdentifier: `${Math.floor(Math.random() * 1000000)}`,
-                project: env.GITHUB_REPOSITORY,
-                username: env.BROWSER_STACK_USERNAME,
-                video: false
-            },
-
-            captureTimeout: 300000
-        });
-    } else {
-        const environment = require('../environment/local.json');
-
-        config.set({
-            browserStack: environment.browserStack
-        });
-    }
+    env.WEBKIT_HEADLESS_BIN = 'webkit-v17-0/pw_run.sh';
 };
