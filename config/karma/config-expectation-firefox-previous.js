@@ -34,7 +34,6 @@ module.exports = (config) => {
                 served: true,
                 watched: true
             },
-            'test/expectation/firefox/any/**/*.js',
             'test/expectation/firefox/previous/**/*.js'
         ],
 
@@ -45,7 +44,6 @@ module.exports = (config) => {
         },
 
         preprocessors: {
-            'test/expectation/firefox/any/**/*.js': 'webpack',
             'test/expectation/firefox/previous/**/*.js': 'webpack'
         },
 

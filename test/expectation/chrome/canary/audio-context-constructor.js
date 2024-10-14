@@ -105,6 +105,20 @@ describe('audioContextConstructor', () => {
         }
     });
 
+    describe('createBufferSource()', () => {
+        describe('stop()', () => {
+            // bug #44
+
+            it('should throw a DOMException', () => {
+                const audioBufferSourceNode = audioContext.createBufferSource();
+
+                expect(() => audioBufferSourceNode.stop(-1))
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidStateError');
+            });
+        });
+    });
+
     describe('createMediaStreamTrackSource()', () => {
         // bug #121
 

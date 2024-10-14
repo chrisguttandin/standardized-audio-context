@@ -34,7 +34,6 @@ module.exports = (config) => {
                 served: true,
                 watched: true
             },
-            'test/expectation/chrome/any/**/*.js',
             'test/expectation/chrome/canary/**/*.js'
         ],
 
@@ -45,7 +44,6 @@ module.exports = (config) => {
         },
 
         preprocessors: {
-            'test/expectation/chrome/any/**/*.js': 'webpack',
             'test/expectation/chrome/canary/**/*.js': 'webpack'
         },
 

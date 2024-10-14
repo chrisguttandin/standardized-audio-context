@@ -27,7 +27,6 @@ module.exports = (config) => {
                 served: true,
                 watched: true
             },
-            'test/expectation/safari/any/**/*.js',
             'test/expectation/safari/previous/**/*.js'
         ],
 
@@ -38,7 +37,6 @@ module.exports = (config) => {
         },
 
         preprocessors: {
-            'test/expectation/safari/any/**/*.js': 'webpack',
             'test/expectation/safari/previous/**/*.js': 'webpack'
         },
 
