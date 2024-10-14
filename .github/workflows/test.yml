@@ -22,9 +22,6 @@ jobs:
                       target: chrome
                       type: integration
                     - node-version: 20.x
-                      target: chrome-legacy
-                      type: expectation
-                    - node-version: 20.x
                       target: chromium
                       type: memory
                     - node-version: 20.x
