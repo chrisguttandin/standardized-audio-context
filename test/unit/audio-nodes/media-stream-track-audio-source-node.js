@@ -467,7 +467,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                     describe('without any parameters', () => {
                         for (const isAudioStreamTrackRemoved of [true, false]) {
-                            describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not' : ''} removed`, () => {
+                            describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not ' : ''}removed`, () => {
                                 let renderer;
 
                                 beforeEach(function () {
@@ -516,7 +516,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                         describe('with a connection from the given output', () => {
                             for (const isAudioStreamTrackRemoved of [true, false]) {
-                                describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not' : ''} removed`, () => {
+                                describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not ' : ''}removed`, () => {
                                     let renderer;
 
                                     beforeEach(function () {
@@ -566,7 +566,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
 
                         describe('with a connection to the given destination', () => {
                             for (const isAudioStreamTrackRemoved of [true, false]) {
-                                describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not' : ''} removed`, () => {
+                                describe(`with an audio track that gets ${isAudioStreamTrackRemoved ? 'not ' : ''}removed`, () => {
                                     let renderer;
 
                                     beforeEach(function () {
