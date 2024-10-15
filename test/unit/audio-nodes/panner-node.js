@@ -1477,7 +1477,9 @@ describe('PannerNode', () => {
 
                         afterEach(() => anotherContext.close?.());
 
-                        beforeEach(() => {
+                        beforeEach(function () {
+                            this.timeout(10000);
+
                             anotherContext = createContext();
 
                             const gainNode = new GainNode(anotherContext);
