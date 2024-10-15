@@ -283,7 +283,7 @@ describe('AudioDestinationNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
 

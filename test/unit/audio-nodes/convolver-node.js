@@ -341,7 +341,7 @@ describe('ConvolverNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = withAnAppendedAudioWorklet
@@ -418,7 +418,7 @@ describe('ConvolverNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = withAnAppendedAudioWorklet
@@ -733,7 +733,7 @@ describe('ConvolverNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const convolverNode = createConvolverNode(context);
                                 const gainNode = new GainNode(context);
@@ -769,7 +769,7 @@ describe('ConvolverNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const convolverNode = createConvolverNode(context, { disableNormalization: true });

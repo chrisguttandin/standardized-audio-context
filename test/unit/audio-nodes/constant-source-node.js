@@ -400,7 +400,7 @@ describe('ConstantSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioWorkletNode = withAnAppendedAudioWorklet
                                             ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
@@ -516,8 +516,7 @@ describe('ConstantSourceNode', () => {
                                             );
 
                                             constantSourceNode.start(startTime);
-                                        },
-                                        verifyChannelData: false
+                                        }
                                     }).then((channelData) => {
                                         expect(channelData[0]).to.be.at.most(1);
                                         expect(channelData[1]).to.be.below(1);
@@ -540,8 +539,7 @@ describe('ConstantSourceNode', () => {
                                             );
 
                                             constantSourceNode.start(startTime);
-                                        },
-                                        verifyChannelData: false
+                                        }
                                     }).then((channelData) => {
                                         expect(channelData[0]).to.be.at.most(1);
                                         expect(channelData[1]).to.be.below(1);
@@ -855,7 +853,7 @@ describe('ConstantSourceNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const anotherGainNode = new GainNode(context);
                                 const constantSourceNode = createConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
@@ -891,7 +889,7 @@ describe('ConstantSourceNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const constantSourceNode = createConstantSourceNode(context);
                                 const firstDummyGainNode = new GainNode(context);
                                 const secondDummyGainNode = new GainNode(context);
@@ -1231,7 +1229,7 @@ describe('ConstantSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioWorkletNode = withAnAppendedAudioWorklet
                                             ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
@@ -1295,7 +1293,7 @@ describe('ConstantSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioWorkletNode = withAnAppendedAudioWorklet
                                             ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;

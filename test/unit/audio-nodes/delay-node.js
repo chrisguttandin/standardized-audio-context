@@ -386,7 +386,7 @@ describe('DelayNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = withAnAppendedAudioWorklet
@@ -737,7 +737,7 @@ describe('DelayNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const delayNode = createDelayNode(context);
                                 const gainNode = new GainNode(context);
@@ -779,7 +779,7 @@ describe('DelayNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const delayNode = createDelayNode(context);

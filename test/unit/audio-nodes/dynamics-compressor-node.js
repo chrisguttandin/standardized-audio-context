@@ -953,7 +953,7 @@ describe('DynamicsCompressorNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context);
                                 const gainNode = new GainNode(context);
@@ -989,7 +989,7 @@ describe('DynamicsCompressorNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const dynamicsCompressorNode = createDynamicsCompressorNode(context);

@@ -1080,7 +1080,7 @@ describe('PannerNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                         const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                         const audioWorkletNode = withAnAppendedAudioWorklet
@@ -1536,7 +1536,7 @@ describe('PannerNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
                                 const pannerNode = createPannerNode(context);
@@ -1572,7 +1572,7 @@ describe('PannerNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const firstDummyGainNode = new GainNode(context);

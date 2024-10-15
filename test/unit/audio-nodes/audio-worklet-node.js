@@ -13,7 +13,6 @@ import { createNativeAudioContext } from '../../helper/create-native-audio-conte
 import { createNativeOfflineAudioContext } from '../../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
-import { isSafari } from '../../helper/is-safari';
 import { roundToSamples } from '../../helper/round-to-samples';
 import { spy } from 'sinon';
 
@@ -892,7 +891,7 @@ describe('AudioWorkletNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { channelCount: 1 });
@@ -952,8 +951,6 @@ describe('AudioWorkletNode', () => {
                             this.timeout(10000);
 
                             return renderer({
-                                // @todo For some reason tests run more reliably in Safari when each iteration starts at the same fraction of a second.
-                                blockSize: isSafari(navigator) ? context.sampleRate : 128,
                                 start(startTime, { audioBufferSourceNode, audioWorkletNode }) {
                                     const gain = audioWorkletNode.parameters.get('gain');
 
@@ -1009,8 +1006,7 @@ describe('AudioWorkletNode', () => {
                                     gain.exponentialRampToValueAtTime(0.5, roundToSamples(startTime, context.sampleRate, 5));
 
                                     audioBufferSourceNode.start(startTime);
-                                },
-                                verifyChannelData: false
+                                }
                             }).then((channelData) => {
                                 expect(channelData[0]).to.be.at.most(1);
                                 expect(channelData[1]).to.be.below(0.5);
@@ -1032,8 +1028,7 @@ describe('AudioWorkletNode', () => {
                                     gain.linearRampToValueAtTime(0, roundToSamples(startTime, context.sampleRate, 5));
 
                                     audioBufferSourceNode.start(startTime);
-                                },
-                                verifyChannelData: false
+                                }
                             }).then((channelData) => {
                                 expect(channelData[0]).to.be.at.most(1);
                                 expect(channelData[1]).to.be.below(0.5);
@@ -1333,7 +1328,7 @@ describe('AudioWorkletNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor');
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
@@ -1369,7 +1364,7 @@ describe('AudioWorkletNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const audioWorkletNode = createAudioWorkletNode(context, 'gain-processor', { channelCount: 1 });

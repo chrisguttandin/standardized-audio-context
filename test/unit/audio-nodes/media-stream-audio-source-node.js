@@ -1,4 +1,4 @@
-import { AudioContext, GainNode, MediaStreamAudioSourceNode } from '../../../src/module';
+import { AnalyserNode, AudioContext, GainNode, MediaStreamAudioSourceNode } from '../../../src/module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createNativeAudioContext } from '../../helper/create-native-audio-context';
@@ -222,7 +222,8 @@ describe('MediaStreamAudioSourceNode', () => {
                                             renderer = createRenderer({
                                                 context,
                                                 length: context.length === undefined ? 5 : undefined,
-                                                prepare(destination) {
+                                                async setup(destination) {
+                                                    const analyserNode = new AnalyserNode(context);
                                                     const firstDummyGainNode = new GainNode(context);
                                                     const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, {
                                                         mediaStream
@@ -233,42 +234,58 @@ describe('MediaStreamAudioSourceNode', () => {
 
                                                     mediaStreamAudioSourceNode.connect(secondDummyGainNode);
 
+                                                    await new Promise((resolve) => {
+                                                        mediaStreamAudioSourceNode.connect(analyserNode);
+
+                                                        const data = new Float32Array(analyserNode.fftSize);
+                                                        const intervalId = setInterval(() => {
+                                                            analyserNode.getFloatTimeDomainData(data);
+
+                                                            if (data.some((sample) => sample !== 0)) {
+                                                                mediaStreamAudioSourceNode.disconnect(analyserNode);
+
+                                                                clearInterval(intervalId);
+                                                                resolve();
+                                                            }
+                                                        });
+                                                    });
+
                                                     return { firstDummyGainNode, mediaStreamAudioSourceNode, secondDummyGainNode };
                                                 }
                                             });
                                         });
 
                                         describe('with a noisy and a silent audio track', () => {
-                                            beforeEach(() => {
-                                                for (const audioStreamTrack of mediaStream.getAudioTracks()) {
-                                                    if (audioStreamTrack.id === audioStreamTrackIds[1]) {
-                                                        audioStreamTrack.stop();
-                                                    }
-                                                }
-                                            });
-
                                             it('should pick the correct audio track', function () {
                                                 this.timeout(10000);
 
-                                                return renderer({ verifyChannelData: false }).then((channelData) => {
+                                                return renderer({
+                                                    prepare() {
+                                                        for (const audioStreamTrack of mediaStream.getAudioTracks()) {
+                                                            if (audioStreamTrack.id === audioStreamTrackIds[1]) {
+                                                                audioStreamTrack.stop();
+                                                            }
+                                                        }
+                                                    }
+                                                }).then((channelData) => {
                                                     expect(Array.from(channelData)).to.not.deep.equal([0, 0, 0, 0, 0]);
                                                 });
                                             });
                                         });
 
                                         describe('with a silent and a noisy audio track', () => {
-                                            beforeEach(() => {
-                                                for (const audioStreamTrack of mediaStream.getAudioTracks()) {
-                                                    if (audioStreamTrack.id === audioStreamTrackIds[0]) {
-                                                        audioStreamTrack.stop();
-                                                    }
-                                                }
-                                            });
-
                                             it('should pick the correct audio track', function () {
                                                 this.timeout(10000);
 
-                                                return renderer({ verifyChannelData: false }).then((channelData) => {
+                                                return renderer({
+                                                    prepare() {
+                                                        for (const audioStreamTrack of mediaStream.getAudioTracks()) {
+                                                            if (audioStreamTrack.id === audioStreamTrackIds[0]) {
+                                                                audioStreamTrack.stop();
+                                                            }
+                                                        }
+                                                    }
+                                                }).then((channelData) => {
                                                     expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                                 });
                                             });
@@ -541,7 +558,8 @@ describe('MediaStreamAudioSourceNode', () => {
                             createRenderer({
                                 context,
                                 length: context.length === undefined ? 5 : undefined,
-                                prepare(destination) {
+                                async setup(destination) {
+                                    const analyserNode = new AnalyserNode(context);
                                     const firstDummyGainNode = new GainNode(context);
                                     const mediaStreamAudioSourceNode = createMediaStreamAudioSourceNode(context, { mediaStream });
                                     const secondDummyGainNode = new GainNode(context);
@@ -555,6 +573,22 @@ describe('MediaStreamAudioSourceNode', () => {
                                     mediaStreamAudioSourceNode.connect(firstDummyGainNode).connect(destination);
 
                                     mediaStreamAudioSourceNode.connect(secondDummyGainNode);
+
+                                    await new Promise((resolve) => {
+                                        mediaStreamAudioSourceNode.connect(analyserNode);
+
+                                        const data = new Float32Array(analyserNode.fftSize);
+                                        const intervalId = setInterval(() => {
+                                            analyserNode.getFloatTimeDomainData(data);
+
+                                            if (data.some((sample) => sample !== 0)) {
+                                                mediaStreamAudioSourceNode.disconnect(analyserNode);
+
+                                                clearInterval(intervalId);
+                                                resolve();
+                                            }
+                                        });
+                                    });
 
                                     return { firstDummyGainNode, mediaStreamAudioSourceNode, secondDummyGainNode };
                                 }
@@ -578,8 +612,7 @@ describe('MediaStreamAudioSourceNode', () => {
                                     return renderer({
                                         prepare({ mediaStreamAudioSourceNode }) {
                                             mediaStreamAudioSourceNode.disconnect();
-                                        },
-                                        verifyChannelData: false
+                                        }
                                     }).then((channelData) => {
                                         expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                     });
@@ -625,8 +658,7 @@ describe('MediaStreamAudioSourceNode', () => {
                                         return renderer({
                                             prepare({ mediaStreamAudioSourceNode }) {
                                                 mediaStreamAudioSourceNode.disconnect(0);
-                                            },
-                                            verifyChannelData: false
+                                            }
                                         }).then((channelData) => {
                                             expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                         });
@@ -673,8 +705,7 @@ describe('MediaStreamAudioSourceNode', () => {
                                         return renderer({
                                             prepare({ firstDummyGainNode, mediaStreamAudioSourceNode }) {
                                                 mediaStreamAudioSourceNode.disconnect(firstDummyGainNode);
-                                            },
-                                            verifyChannelData: false
+                                            }
                                         }).then((channelData) => {
                                             expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                         });
@@ -686,8 +717,7 @@ describe('MediaStreamAudioSourceNode', () => {
                                         return renderer({
                                             prepare({ mediaStreamAudioSourceNode, secondDummyGainNode }) {
                                                 mediaStreamAudioSourceNode.disconnect(secondDummyGainNode);
-                                            },
-                                            verifyChannelData: false
+                                            }
                                         }).then((channelData) => {
                                             /*
                                              * @todo The audioElement will just play a sine wave and Firefox will just capture the signal from

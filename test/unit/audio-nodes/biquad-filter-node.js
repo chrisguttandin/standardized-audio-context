@@ -823,7 +823,7 @@ describe('BiquadFilterNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const biquadFilterNode = createBiquadFilterNode(context);
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
@@ -859,7 +859,7 @@ describe('BiquadFilterNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const biquadFilterNode = createBiquadFilterNode(context, { frequency: context.sampleRate / 2 });

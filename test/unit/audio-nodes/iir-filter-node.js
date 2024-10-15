@@ -173,7 +173,7 @@ describe('IIRFilterNode', () => {
                                                     renderer = createRenderer({
                                                         context,
                                                         length: context.length === undefined ? 5 : undefined,
-                                                        prepare(destination) {
+                                                        setup(destination) {
                                                             const audioBuffer = new AudioBuffer({
                                                                 length: 5,
                                                                 numberOfChannels: 1,
@@ -238,7 +238,7 @@ describe('IIRFilterNode', () => {
                                                     renderer = createRenderer({
                                                         context,
                                                         length: context.length === undefined ? 5 : undefined,
-                                                        prepare(destination) {
+                                                        setup(destination) {
                                                             const audioBuffer = new AudioBuffer({
                                                                 length: 5,
                                                                 numberOfChannels: 1,
@@ -591,7 +591,7 @@ describe('IIRFilterNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
                                 const iIRFilterNode = createIIRFilterNode(context, { feedback, feedforward });
@@ -627,7 +627,7 @@ describe('IIRFilterNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const firstDummyGainNode = new GainNode(context);

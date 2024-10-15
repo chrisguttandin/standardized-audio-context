@@ -1,4 +1,4 @@
-import { AudioContext, GainNode, MediaStreamTrackAudioSourceNode } from '../../../src/module';
+import { AnalyserNode, AudioContext, GainNode, MediaStreamTrackAudioSourceNode } from '../../../src/module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createNativeAudioContext } from '../../helper/create-native-audio-context';
@@ -442,7 +442,8 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                             createRenderer({
                                 context,
                                 length: context.length === undefined ? 5 : undefined,
-                                prepare(destination) {
+                                async setup(destination) {
+                                    const analyserNode = new AnalyserNode(context);
                                     const firstDummyGainNode = new GainNode(context);
                                     const mediaStreamTrack = mediaStream.getAudioTracks()[0];
                                     const mediaStreamTrackAudioSourceNode = createMediaStreamTrackAudioSourceNode(context, {
@@ -459,6 +460,22 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     mediaStreamTrackAudioSourceNode.connect(firstDummyGainNode).connect(destination);
 
                                     mediaStreamTrackAudioSourceNode.connect(secondDummyGainNode);
+
+                                    await new Promise((resolve) => {
+                                        mediaStreamTrackAudioSourceNode.connect(analyserNode);
+
+                                        const data = new Float32Array(analyserNode.fftSize);
+                                        const intervalId = setInterval(() => {
+                                            analyserNode.getFloatTimeDomainData(data);
+
+                                            if (data.some((sample) => sample !== 0)) {
+                                                mediaStreamTrackAudioSourceNode.disconnect(analyserNode);
+
+                                                clearInterval(intervalId);
+                                                resolve();
+                                            }
+                                        });
+                                    });
 
                                     return { firstDummyGainNode, mediaStreamTrackAudioSourceNode, secondDummyGainNode };
                                 }
@@ -482,8 +499,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                     return renderer({
                                         prepare({ mediaStreamTrackAudioSourceNode }) {
                                             mediaStreamTrackAudioSourceNode.disconnect();
-                                        },
-                                        verifyChannelData: false
+                                        }
                                     }).then((channelData) => {
                                         expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                     });
@@ -531,8 +547,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                         return renderer({
                                             prepare({ mediaStreamTrackAudioSourceNode }) {
                                                 mediaStreamTrackAudioSourceNode.disconnect(0);
-                                            },
-                                            verifyChannelData: false
+                                            }
                                         }).then((channelData) => {
                                             expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                         });
@@ -581,8 +596,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                         return renderer({
                                             prepare({ firstDummyGainNode, mediaStreamTrackAudioSourceNode }) {
                                                 mediaStreamTrackAudioSourceNode.disconnect(firstDummyGainNode);
-                                            },
-                                            verifyChannelData: false
+                                            }
                                         }).then((channelData) => {
                                             expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                         });
@@ -594,8 +608,7 @@ describe('MediaStreamTrackAudioSourceNode', () => {
                                         return renderer({
                                             prepare({ mediaStreamTrackAudioSourceNode, secondDummyGainNode }) {
                                                 mediaStreamTrackAudioSourceNode.disconnect(secondDummyGainNode);
-                                            },
-                                            verifyChannelData: false
+                                            }
                                         }).then((channelData) => {
                                             /*
                                              * @todo The audioElement will just play a sine wave and Firefox will just capture the signal from

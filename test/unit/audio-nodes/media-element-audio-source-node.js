@@ -340,7 +340,7 @@ describe('MediaElementAudioSourceNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            async prepare(destination) {
+                            async setup(destination) {
                                 const analyserNode = new AnalyserNode(context);
                                 const firstDummyGainNode = new GainNode(context);
                                 const mediaElementAudioSourceNode = createMediaElementAudioSourceNode(context, { mediaElement });
@@ -353,11 +353,11 @@ describe('MediaElementAudioSourceNode', () => {
                                 await new Promise((resolve) => {
                                     mediaElementAudioSourceNode.connect(analyserNode);
 
-                                    const data = new Uint8Array(analyserNode.fftSize);
+                                    const data = new Float32Array(analyserNode.fftSize);
                                     const intervalId = setInterval(() => {
-                                        analyserNode.getByteTimeDomainData(data);
+                                        analyserNode.getFloatTimeDomainData(data);
 
-                                        if (data.some((sample) => sample !== 128)) {
+                                        if (data.some((sample) => sample !== 0)) {
                                             mediaElementAudioSourceNode.disconnect(analyserNode);
 
                                             clearInterval(intervalId);
@@ -420,8 +420,7 @@ describe('MediaElementAudioSourceNode', () => {
                             return renderer({
                                 prepare({ mediaElementAudioSourceNode }) {
                                     mediaElementAudioSourceNode.disconnect();
-                                },
-                                verifyChannelData: false
+                                }
                             }).then((channelData) => {
                                 expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                             });
@@ -471,8 +470,7 @@ describe('MediaElementAudioSourceNode', () => {
                                 return renderer({
                                     prepare({ mediaElementAudioSourceNode }) {
                                         mediaElementAudioSourceNode.disconnect(0);
-                                    },
-                                    verifyChannelData: false
+                                    }
                                 }).then((channelData) => {
                                     expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                 });
@@ -523,8 +521,7 @@ describe('MediaElementAudioSourceNode', () => {
                                 return renderer({
                                     prepare({ firstDummyGainNode, mediaElementAudioSourceNode }) {
                                         mediaElementAudioSourceNode.disconnect(firstDummyGainNode);
-                                    },
-                                    verifyChannelData: false
+                                    }
                                 }).then((channelData) => {
                                     expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                 });
@@ -536,8 +533,7 @@ describe('MediaElementAudioSourceNode', () => {
                                 return renderer({
                                     prepare({ mediaElementAudioSourceNode, secondDummyGainNode }) {
                                         mediaElementAudioSourceNode.disconnect(secondDummyGainNode);
-                                    },
-                                    verifyChannelData: false
+                                    }
                                 }).then((channelData) => {
                                     /*
                                      * @todo The mediaElement will just play a sine wave. Therefore it is okay to only test for non

@@ -336,7 +336,7 @@ describe('AudioBufferSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
                                         audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
@@ -797,7 +797,7 @@ describe('AudioBufferSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
                                         audioBuffer.copyToChannel(new Float32Array([1, 1, 0, 0, 0]), 0);
@@ -1131,7 +1131,7 @@ describe('AudioBufferSourceNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const anotherGainNode = new GainNode(context);
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = createAudioBufferSourceNode(context);
@@ -1172,7 +1172,7 @@ describe('AudioBufferSourceNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = createAudioBufferSourceNode(context);
                                 const firstDummyGainNode = new GainNode(context);
@@ -1544,7 +1544,7 @@ describe('AudioBufferSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
                                         audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
@@ -1634,7 +1634,7 @@ describe('AudioBufferSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
                                         audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
@@ -1740,7 +1740,7 @@ describe('AudioBufferSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
                                         audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
@@ -1808,7 +1808,7 @@ describe('AudioBufferSourceNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
                                         audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);

@@ -735,7 +735,7 @@ describe('OscillatorNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const anotherGainNode = new GainNode(context);
                                 const gainNode = new GainNode(context);
                                 const oscillatorNode = createOscillatorNode(context);
@@ -771,7 +771,7 @@ describe('OscillatorNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const firstDummyGainNode = new GainNode(context);
                                 const oscillatorNode = createOscillatorNode(context, { frequency: context.sampleRate / 4 });
                                 const secondDummyGainNode = new GainNode(context);
@@ -1127,7 +1127,7 @@ describe('OscillatorNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioWorkletNode = withAnAppendedAudioWorklet
                                             ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;
@@ -1203,7 +1203,7 @@ describe('OscillatorNode', () => {
                                 renderer = createRenderer({
                                     context,
                                     length: context.length === undefined ? 5 : undefined,
-                                    prepare(destination) {
+                                    setup(destination) {
                                         const audioWorkletNode = withAnAppendedAudioWorklet
                                             ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
                                             : null;

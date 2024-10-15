@@ -289,7 +289,7 @@ describe('WaveShaperNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const waveShaperNode = createWaveShaperNode(context, { curve: new Float32Array([1, 1]) });
 
                                 waveShaperNode.connect(destination);
@@ -487,7 +487,7 @@ describe('WaveShaperNode', () => {
                         renderer = createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const constantSourceNode = new ConstantSourceNode(context);
                                 const gainNode = new GainNode(context);
                                 const waveShaperNode = createWaveShaperNode(context);
@@ -523,7 +523,7 @@ describe('WaveShaperNode', () => {
                         createRenderer({
                             context,
                             length: context.length === undefined ? 5 : undefined,
-                            prepare(destination) {
+                            setup(destination) {
                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
                                 const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                 const firstDummyGainNode = new GainNode(context);
