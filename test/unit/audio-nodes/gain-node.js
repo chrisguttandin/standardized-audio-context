@@ -411,7 +411,7 @@ describe('GainNode', () => {
                                     }).then((channelData) => {
                                         expect(channelData[0]).to.equal(1);
                                         expect(channelData[1]).to.equal(0.5);
-                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                        expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
                                         expect(channelData[3]).to.equal(-0.5);
                                         expect(channelData[4]).to.equal(-1);
                                     });

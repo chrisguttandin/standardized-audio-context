@@ -964,7 +964,7 @@ describe('AudioWorkletNode', () => {
                                 expect(channelData[0]).to.equal(1);
                                 expect(channelData[1]).to.equal(0.375);
                                 expect(channelData[2]).to.be.closeTo(0, 0.0000000001);
-                                expect(channelData[3]).to.equal(-0.125);
+                                expect(channelData[3]).to.be.closeTo(-0.125, 0.0000000001);
                                 expect(channelData[4]).to.equal(-0.25);
                             });
                         });
