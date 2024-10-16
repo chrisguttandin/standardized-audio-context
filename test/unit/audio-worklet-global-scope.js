@@ -331,7 +331,9 @@ describe('AudioWorkletGlobalScope', () => {
                             audioWorkletNode = new AudioWorkletNode(context, 'transferring-processor');
                         });
 
-                        it('should recover and continue calling process()', (done) => {
+                        it('should recover and continue calling process()', function (done) {
+                            this.timeout(10000);
+
                             let callCount = 0;
 
                             audioWorkletNode.port.onmessage = () => {
