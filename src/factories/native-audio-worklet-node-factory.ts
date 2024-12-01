@@ -38,7 +38,7 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
             });
 
             nativeAudioWorkletNode.addEventListener = ((addEventListener) => {
-                return (...args: [string, EventListenerOrEventListenerObject, (boolean | AddEventListenerOptions)?]): void => {
+                return (...args: Parameters<TNativeAudioWorkletNode['addEventListener']>) => {
                     if (args[0] === 'processorerror') {
                         const unpatchedEventListener =
                             typeof args[1] === 'function'
@@ -51,9 +51,9 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
                             const patchedEventListener = patchedEventListeners.get(args[1]);
 
                             if (patchedEventListener !== undefined) {
-                                args[1] = patchedEventListener;
+                                args[1] = <typeof unpatchedEventListener>patchedEventListener;
                             } else {
-                                args[1] = (event: Event) => {
+                                args[1] = (event: Parameters<typeof unpatchedEventListener>[0]) => {
                                     // Bug #178: Chrome dispatches an event of type error.
                                     if (event instanceof ErrorEvent && event.error === null) {
                                         Object.defineProperties(event, {
@@ -83,14 +83,14 @@ export const createNativeAudioWorkletNodeFactory: TNativeAudioWorkletNodeFactory
             })(nativeAudioWorkletNode.addEventListener);
 
             nativeAudioWorkletNode.removeEventListener = ((removeEventListener) => {
-                return (...args: any[]): void => {
+                return (...args: Parameters<TNativeAudioWorkletNode['removeEventListener']>) => {
                     if (args[0] === 'processorerror') {
                         const patchedEventListener = patchedEventListeners.get(args[1]);
 
                         if (patchedEventListener !== undefined) {
                             patchedEventListeners.delete(args[1]);
 
-                            args[1] = patchedEventListener;
+                            args[1] = <(typeof args)[1]>patchedEventListener;
                         }
                     }
 
