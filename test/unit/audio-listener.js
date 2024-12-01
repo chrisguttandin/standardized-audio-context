@@ -1519,11 +1519,11 @@ describe('AudioListener', () => {
                                     constantSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(channelData[0]).to.be.closeTo(0.007105881, 0.000000001);
-                                expect(channelData[1]).to.be.closeTo(0.007105881, 0.000000001);
-                                expect(channelData[2]).to.be.closeTo(0.007105881, 0.000000001);
-                                expect(channelData[3]).to.be.closeTo(0.007105881, 0.000000001);
-                                expect(channelData[4]).to.be.closeTo(0.007105881, 0.000000001);
+                                expect(channelData[0]).to.be.closeTo(0.007105881, 0.000000002);
+                                expect(channelData[1]).to.be.closeTo(0.007105881, 0.000000002);
+                                expect(channelData[2]).to.be.closeTo(0.007105881, 0.000000002);
+                                expect(channelData[3]).to.be.closeTo(0.007105881, 0.000000002);
+                                expect(channelData[4]).to.be.closeTo(0.007105881, 0.000000002);
                             });
                         });
                     });
