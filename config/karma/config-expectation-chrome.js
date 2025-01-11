@@ -9,7 +9,7 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        browsers: ['ChromeHeadlessWithNoRequiredUserGesture'],
+        browsers: ['ChromeHeadlessWithFlags'],
 
         client: {
             mocha: {
@@ -21,7 +21,7 @@ module.exports = (config) => {
         concurrency: 1,
 
         customLaunchers: {
-            ChromeHeadlessWithNoRequiredUserGesture: {
+            ChromeHeadlessWithFlags: {
                 base: 'ChromeHeadless',
                 flags: ['--autoplay-policy=no-user-gesture-required']
             }

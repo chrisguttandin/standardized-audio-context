@@ -9,7 +9,7 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        browsers: ['ChromeCanaryHeadlessWithNoRequiredUserGesture'],
+        browsers: ['ChromeCanaryHeadlessWithFlags'],
 
         client: {
             mocha: {
@@ -21,7 +21,7 @@ module.exports = (config) => {
         concurrency: 1,
 
         customLaunchers: {
-            ChromeCanaryHeadlessWithNoRequiredUserGesture: {
+            ChromeCanaryHeadlessWithFlags: {
                 base: 'ChromeCanaryHeadless',
                 flags: ['--autoplay-policy=no-user-gesture-required']
             }

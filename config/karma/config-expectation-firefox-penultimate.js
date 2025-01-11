@@ -9,7 +9,7 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        browsers: ['penultimateFirefoxHeadless'],
+        browsers: ['PenultimateFirefoxHeadless'],
 
         client: {
             mocha: {
@@ -21,7 +21,7 @@ module.exports = (config) => {
         concurrency: 1,
 
         customLaunchers: {
-            penultimateFirefoxHeadless: {
+            PenultimateFirefoxHeadless: {
                 base: 'FirefoxHeadless',
                 command: 'firefox-v132/firefox/Firefox.app/Contents/MacOS/firefox'
             }
