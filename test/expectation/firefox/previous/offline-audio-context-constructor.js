@@ -149,39 +149,6 @@ describe('offlineAudioContextConstructor', () => {
             }).to.throw(Error);
         });
 
-        describe('gain', () => {
-            describe('value', () => {
-                // bug #98
-
-                it('should ignore the value setter while an automation is running', function () {
-                    this.timeout(10000);
-
-                    const constantSourceNode = offlineAudioContext.createConstantSource();
-                    const gainNode = offlineAudioContext.createGain();
-
-                    gainNode.gain.setValueAtTime(-1, 0);
-                    gainNode.gain.linearRampToValueAtTime(1, 0.5);
-
-                    gainNode.gain.value = 100;
-
-                    constantSourceNode.connect(gainNode).connect(offlineAudioContext.destination);
-
-                    constantSourceNode.start();
-
-                    return offlineAudioContext.startRendering().then((renderedBuffer) => {
-                        const channelData = new Float32Array(0.5 * offlineAudioContext.sampleRate);
-
-                        renderedBuffer.copyFromChannel(channelData, 0);
-
-                        for (const sample of channelData) {
-                            expect(sample).to.be.at.least(-1);
-                            expect(sample).to.be.at.most(1);
-                        }
-                    });
-                });
-            });
-        });
-
         describe('cancelAndHoldAtTime()', () => {
             let gainNode;
 
