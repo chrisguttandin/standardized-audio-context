@@ -32,7 +32,7 @@
         "@babel/preset-env": "^7.26.9",
         "@babel/register": "^7.25.9",
         "@commitlint/cli": "^19.7.1",
-        "@commitlint/config-angular": "^19.7.0",
+        "@commitlint/config-angular": "^19.7.1",
         "@rollup/plugin-babel": "^6.0.4",
         "chai": "^4.3.10",
         "commitizen": "^4.3.1",
