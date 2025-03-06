@@ -41,9 +41,6 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
             },
             set value(value) {
                 nativeAudioParam.value = value;
-
-                // Bug #98: Firefox does not yet treat the value setter like a call to setValueAtTime().
-                audioParam.setValueAtTime(value, audioNode.context.currentTime);
             },
             cancelAndHoldAtTime(cancelTime: number): IAudioParam {
                 // Bug #28: Firefox dos not yet implement cancelAndHoldAtTime().
