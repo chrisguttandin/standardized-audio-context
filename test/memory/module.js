@@ -31,6 +31,8 @@ const compileBundle = () => {
     });
 };
 const countObjects = async (page) => {
+    await page.evaluate(() => gc({ execution: 'sync', flavor: 'last-resort', type: 'major' })); // eslint-disable-line no-undef
+
     const prototypeHandle = await page.evaluateHandle(() => Object.prototype);
     const objectsHandle = await page.queryObjects(prototypeHandle);
     const numberOfObjects = await page.evaluate((instances) => instances.length, objectsHandle);
@@ -60,11 +62,13 @@ describe('module', () => {
     beforeEach(async function () {
         this.timeout(10000);
 
-        context = await browser.createIncognitoBrowserContext();
+        context = await browser.createBrowserContext();
         page = await context.newPage();
 
         await page.evaluate(await compileBundle());
         await page.evaluate(async () => {
+            await isSupported(); // eslint-disable-line no-undef
+
             audioContext = new AudioContext(); // eslint-disable-line no-undef
 
             await new Promise((resolve) => {
@@ -75,7 +79,7 @@ describe('module', () => {
                         // eslint-disable-next-line no-undef
                         audioContext.onstatechange = null;
 
-                        setTimeout(resolve, 1000);
+                        resolve();
                     }
                 };
             });
@@ -83,18 +87,6 @@ describe('module', () => {
     });
 
     describe('with a GainNode', () => {
-        beforeEach(async function () {
-            this.timeout(10000);
-
-            await page.evaluate(async () => {
-                new GainNode(audioContext); // eslint-disable-line no-undef
-
-                await isSupported(); // eslint-disable-line no-undef
-            });
-
-            await page.evaluate(() => gc()); // eslint-disable-line no-undef
-        });
-
         describe('with unconnected GainNodes', () => {
             let run;
 
@@ -109,13 +101,12 @@ describe('module', () => {
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
 
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+                // Run the test once because the first run will trigger some memoizations.
+                await page.evaluate(run, 1000);
 
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
@@ -137,13 +128,12 @@ describe('module', () => {
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
 
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+                // Run the test once because the first run will trigger some memoizations.
+                await page.evaluate(run, 1000);
 
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
@@ -166,13 +156,12 @@ describe('module', () => {
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
 
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+                // Run the test once because the first run will trigger some memoizations.
+                await page.evaluate(run, 1000);
 
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
@@ -180,18 +169,6 @@ describe('module', () => {
     });
 
     describe('with an AudioBufferSourceNode', () => {
-        beforeEach(async function () {
-            this.timeout(10000);
-
-            await page.evaluate(async () => {
-                new AudioBufferSourceNode(audioContext); // eslint-disable-line no-undef
-
-                await isSupported(); // eslint-disable-line no-undef
-            });
-
-            await page.evaluate(() => gc()); // eslint-disable-line no-undef
-        });
-
         describe('with unconnected AudioBufferSourceNodes', () => {
             let run;
 
@@ -210,15 +187,11 @@ describe('module', () => {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+                await page.evaluate(run, 1000);
 
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
@@ -244,15 +217,11 @@ describe('module', () => {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+                await page.evaluate(run, 1000);
 
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
@@ -281,15 +250,11 @@ describe('module', () => {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
+                await page.evaluate(run, 1000);
 
                 const numberOfObjects = await countObjects(page);
 
                 await page.evaluate(run, 1000);
-
-                await page.evaluate(() => gc()); // eslint-disable-line no-undef
 
                 expect(await countObjects(page)).to.equal(numberOfObjects);
             });
