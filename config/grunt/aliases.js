@@ -13,14 +13,14 @@ module.exports = {
         ...filter(
             isType('expectation'),
             ...filter(isTarget('chrome'), 'sh:test-expectation-chrome'),
-            ...filter(isTarget(), 'sh:test-expectation-chrome-canary'),
+            ...filter(isTarget('chrome-canary'), 'sh:test-expectation-chrome-canary'),
             ...filter(isTarget('chrome-penultimate'), 'sh:test-expectation-chrome-penultimate'),
             ...filter(isTarget('chrome-previous'), 'sh:test-expectation-chrome-previous'),
             ...filter(isTarget('firefox'), 'sh:test-expectation-firefox'),
-            ...filter(isTarget(), 'sh:test-expectation-firefox-developer'),
+            ...filter(isTarget('firefox-developer'), 'sh:test-expectation-firefox-developer'),
             ...filter(isTarget('firefox-penultimate'), 'sh:test-expectation-firefox-penultimate'),
             ...filter(isTarget('firefox-previous'), 'sh:test-expectation-firefox-previous'),
-            ...filter(isTarget(), 'sh:test-expectation-safari'),
+            ...filter(isTarget('safari'), 'sh:test-expectation-safari'),
             ...filter(isTarget('safari-penultimate'), 'sh:test-expectation-safari-penultimate'),
             ...filter(isTarget('safari-previous'), 'sh:test-expectation-safari-previous')
         ),
