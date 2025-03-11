@@ -97,7 +97,7 @@
         "lint:test": "eslint --config config/eslint/test.json --ext .js --report-unused-disable-directives test/",
         "prepare": "husky",
         "prepublishOnly": "npm run build",
-        "test": "grunt lint && grunt test"
+        "test": "npm run lint && grunt test"
     },
     "types": "build/es2019/module.d.ts",
     "version": "25.3.77"
