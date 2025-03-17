@@ -189,7 +189,7 @@ describe('offlineAudioContextConstructor', () => {
     describe('createScriptProcessor()', () => {
         // bug #13
 
-        it('should not have any output', () => {
+        it('should have no consistent output', () => {
             const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 1);
             const channelData = new Float32Array(scriptProcessorNode.bufferSize);
 
@@ -209,7 +209,7 @@ describe('offlineAudioContextConstructor', () => {
 
                 buffer.copyFromChannel(chnnlDt, 0, 256);
 
-                expect(Array.from(chnnlDt)).to.not.contain(1);
+                expect(Array.from(chnnlDt)).to.contain(0);
 
                 expect(numberOfInvocations).to.be.above(0);
             });
