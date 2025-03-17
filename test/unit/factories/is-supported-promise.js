@@ -723,7 +723,7 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for resume() method support of an AudioContext fails', async () => {
-        fakeTestAudioContextResumeSupport = () => false;
+        fakeTestAudioContextResumeSupport = () => Promise.resolve(false);
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -761,9 +761,7 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for resume() method support of an AudioContext throws', async () => {
-        fakeTestAudioContextResumeSupport = () => {
-            throw new Error('A fake error thrown by the test.');
-        };
+        fakeTestAudioContextResumeSupport = () => Promise.reject(new Error('A fake error thrown by the test.'));
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -1033,7 +1031,7 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for addModule() method support of an AudioWorklet fails', async () => {
-        fakeTestAudioWorkletAddModuleMethodSupport = () => false;
+        fakeTestAudioWorkletAddModuleMethodSupport = () => Promise.resolve(false);
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
@@ -1071,9 +1069,7 @@ describe('createIsSupportedPromise()', () => {
     });
 
     it('should resolve to false if the test for addModule() method support of an AudioWorklet throws', async () => {
-        fakeTestAudioWorkletAddModuleMethodSupport = () => {
-            throw new Error('A fake error thrown by the test.');
-        };
+        fakeTestAudioWorkletAddModuleMethodSupport = () => Promise.rejcet(new Error('A fake error thrown by the test.'));
 
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
