@@ -9,6 +9,16 @@ describe('audioContextConstructor', () => {
         audioContext = new AudioContext();
     });
 
+    describe('audioWorklet', () => {
+        describe('port', () => {
+            // bug #202
+
+            it('should not be implemented', () => {
+                expect(audioContext.audioWorklet.port).to.be.undefined;
+            });
+        });
+    });
+
     describe('destination', () => {
         describe('numberOfOutputs', () => {
             // bug #168

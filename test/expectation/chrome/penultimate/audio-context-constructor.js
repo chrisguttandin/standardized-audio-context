@@ -10,6 +10,14 @@ describe('audioContextConstructor', () => {
     });
 
     describe('audioWorklet', () => {
+        describe('port', () => {
+            // bug #202
+
+            it('should not be implemented', () => {
+                expect(audioContext.audioWorklet.port).to.be.undefined;
+            });
+        });
+
         describe('addModule()', () => {
             describe('with an empty string as name', () => {
                 // bug #134
