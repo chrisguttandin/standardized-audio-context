@@ -64,7 +64,7 @@ describe('createIsSupportedPromise()', () => {
         fakeTestTransferablesSupport = () => Promise.resolve(true);
     });
 
-    it('should resolve to true if all test pass', async () => {
+    it('should resolve to true if all tests pass', async () => {
         const isSupported = await createIsSupportedPromise(
             cacheTestResult,
             fakeTestAudioBufferConstructorSupport,
@@ -1184,7 +1184,7 @@ describe('createIsSupportedPromise()', () => {
         expect(isSupported).to.be.false;
     });
 
-    it('should resolve to false if the test for the maxValue and minValue support of an AudioParam an AudioWorkletNode fails', async () => {
+    it('should resolve to false if the test for the maxValue and minValue support of an AudioParam of an AudioWorkletNode fails', async () => {
         fakeTestAudioWorkletProcessorNoInputsSupport = () => Promise.resolve(false);
 
         const isSupported = await createIsSupportedPromise(
