@@ -1,13 +1,19 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
-import { TChannelMergerNodeRendererFactoryFactory, TNativeAudioNode, TNativeOfflineAudioContext } from '../types';
+import { IAudioNode, IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import {
+    TGetNativeAudioNodeFunction,
+    TNativeAudioNode,
+    TNativeChannelMergerNodeFactory,
+    TNativeOfflineAudioContext,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createChannelMergerNodeRendererFactory: TChannelMergerNodeRendererFactoryFactory = (
-    createNativeChannelMergerNode,
-    getNativeAudioNode,
-    renderInputsOfAudioNode
+export const createChannelMergerNodeRendererFactory = (
+    createNativeChannelMergerNode: TNativeChannelMergerNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IAudioNode<T>> => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioNode>();
 
         const createAudioNode = async (proxy: IAudioNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
