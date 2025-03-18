@@ -1,13 +1,19 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAnalyserNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
-import { TAnalyserNodeRendererFactoryFactory, TNativeAnalyserNode, TNativeOfflineAudioContext } from '../types';
+import { IAnalyserNode, IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import {
+    TGetNativeAudioNodeFunction,
+    TNativeAnalyserNode,
+    TNativeAnalyserNodeFactory,
+    TNativeOfflineAudioContext,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createAnalyserNodeRendererFactory: TAnalyserNodeRendererFactoryFactory = (
-    createNativeAnalyserNode,
-    getNativeAudioNode,
-    renderInputsOfAudioNode
+export const createAnalyserNodeRendererFactory = (
+    createNativeAnalyserNode: TNativeAnalyserNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IAnalyserNode<T>> => {
         const renderedNativeAnalyserNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAnalyserNode>();
 
         const createAnalyserNode = async (proxy: IAnalyserNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {

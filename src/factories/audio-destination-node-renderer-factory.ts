@@ -1,16 +1,9 @@
-import { IAudioDestinationNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
-import {
-    TAudioDestinationNodeRendererFactory,
-    TNativeAudioDestinationNode,
-    TNativeOfflineAudioContext,
-    TRenderInputsOfAudioNodeFunction
-} from '../types';
+import { IAudioDestinationNode, IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { TNativeAudioDestinationNode, TNativeOfflineAudioContext, TRenderInputsOfAudioNodeFunction } from '../types';
 
-export const createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFactory = <
-    T extends IMinimalOfflineAudioContext | IOfflineAudioContext
->(
+export const createAudioDestinationNodeRenderer = <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
     renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
-) => {
+): IAudioNodeRenderer<T, IAudioDestinationNode<T>> => {
     const renderedNativeAudioDestinationNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioDestinationNode>();
 
     const createAudioDestinationNode = async (proxy: IAudioDestinationNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {

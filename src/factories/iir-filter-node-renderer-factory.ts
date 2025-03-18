@@ -1,14 +1,21 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { IAudioNodeRenderer, IIIRFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import {
-    TIIRFilterNodeRendererFactoryFactory,
+    TGetNativeAudioNodeFunction,
     TNativeAudioBufferSourceNode,
     TNativeIIRFilterNode,
-    TNativeOfflineAudioContext
+    TNativeOfflineAudioContext,
+    TRenderInputsOfAudioNodeFunction
 } from '../types';
 
-export const createIIRFilterNodeRendererFactory: TIIRFilterNodeRendererFactoryFactory = (getNativeAudioNode, renderInputsOfAudioNode) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(feedback: Iterable<number>, feedforward: Iterable<number>) => {
+export const createIIRFilterNodeRendererFactory = (
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
+) => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(
+        feedback: Iterable<number>,
+        feedforward: Iterable<number>
+    ): IAudioNodeRenderer<T, IIIRFilterNode<T>> => {
         const renderedNativeAudioNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioBufferSourceNode | TNativeIIRFilterNode>();
 
         const createAudioNode = async (proxy: IIIRFilterNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {

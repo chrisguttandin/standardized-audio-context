@@ -1,15 +1,23 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IConstantSourceNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
-import { TConstantSourceNodeRendererFactoryFactory, TNativeConstantSourceNode, TNativeOfflineAudioContext } from '../types';
+import { IConstantSourceNode, IConstantSourceNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import {
+    TConnectAudioParamFunction,
+    TGetNativeAudioNodeFunction,
+    TNativeConstantSourceNode,
+    TNativeConstantSourceNodeFactory,
+    TNativeOfflineAudioContext,
+    TRenderAutomationFunction,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createConstantSourceNodeRendererFactory: TConstantSourceNodeRendererFactoryFactory = (
-    connectAudioParam,
-    createNativeConstantSourceNode,
-    getNativeAudioNode,
-    renderAutomation,
-    renderInputsOfAudioNode
+export const createConstantSourceNodeRendererFactory = (
+    connectAudioParam: TConnectAudioParamFunction,
+    createNativeConstantSourceNode: TNativeConstantSourceNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderAutomation: TRenderAutomationFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IConstantSourceNodeRenderer<T> => {
         const renderedNativeConstantSourceNodes = new WeakMap<TNativeOfflineAudioContext, TNativeConstantSourceNode>();
 
         let start: null | number = null;

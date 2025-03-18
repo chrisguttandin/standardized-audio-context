@@ -1,15 +1,23 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IBiquadFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
-import { TBiquadFilterNodeRendererFactoryFactory, TNativeBiquadFilterNode, TNativeOfflineAudioContext } from '../types';
+import { IAudioNodeRenderer, IBiquadFilterNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import {
+    TConnectAudioParamFunction,
+    TGetNativeAudioNodeFunction,
+    TNativeBiquadFilterNode,
+    TNativeBiquadFilterNodeFactory,
+    TNativeOfflineAudioContext,
+    TRenderAutomationFunction,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createBiquadFilterNodeRendererFactory: TBiquadFilterNodeRendererFactoryFactory = (
-    connectAudioParam,
-    createNativeBiquadFilterNode,
-    getNativeAudioNode,
-    renderAutomation,
-    renderInputsOfAudioNode
+export const createBiquadFilterNodeRendererFactory = (
+    connectAudioParam: TConnectAudioParamFunction,
+    createNativeBiquadFilterNode: TNativeBiquadFilterNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderAutomation: TRenderAutomationFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IBiquadFilterNode<T>> => {
         const renderedNativeBiquadFilterNodes = new WeakMap<TNativeOfflineAudioContext, TNativeBiquadFilterNode>();
 
         const createBiquadFilterNode = async (proxy: IBiquadFilterNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {

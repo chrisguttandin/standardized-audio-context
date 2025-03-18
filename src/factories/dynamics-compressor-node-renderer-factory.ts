@@ -1,15 +1,23 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IDynamicsCompressorNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
-import { TDynamicsCompressorNodeRendererFactoryFactory, TNativeDynamicsCompressorNode, TNativeOfflineAudioContext } from '../types';
+import { IAudioNodeRenderer, IDynamicsCompressorNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import {
+    TConnectAudioParamFunction,
+    TGetNativeAudioNodeFunction,
+    TNativeDynamicsCompressorNode,
+    TNativeDynamicsCompressorNodeFactory,
+    TNativeOfflineAudioContext,
+    TRenderAutomationFunction,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createDynamicsCompressorNodeRendererFactory: TDynamicsCompressorNodeRendererFactoryFactory = (
-    connectAudioParam,
-    createNativeDynamicsCompressorNode,
-    getNativeAudioNode,
-    renderAutomation,
-    renderInputsOfAudioNode
+export const createDynamicsCompressorNodeRendererFactory = (
+    connectAudioParam: TConnectAudioParamFunction,
+    createNativeDynamicsCompressorNode: TNativeDynamicsCompressorNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderAutomation: TRenderAutomationFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IDynamicsCompressorNode<T>> => {
         const renderedNativeDynamicsCompressorNodes = new WeakMap<TNativeOfflineAudioContext, TNativeDynamicsCompressorNode>();
 
         const createDynamicsCompressorNode = async (

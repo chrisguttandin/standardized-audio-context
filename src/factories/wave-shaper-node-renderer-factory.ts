@@ -1,13 +1,19 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IMinimalOfflineAudioContext, IOfflineAudioContext, IWaveShaperNode } from '../interfaces';
-import { TNativeOfflineAudioContext, TNativeWaveShaperNode, TWaveShaperNodeRendererFactoryFactory } from '../types';
+import { IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext, IWaveShaperNode } from '../interfaces';
+import {
+    TGetNativeAudioNodeFunction,
+    TNativeOfflineAudioContext,
+    TNativeWaveShaperNode,
+    TNativeWaveShaperNodeFactory,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactoryFactory = (
-    createNativeWaveShaperNode,
-    getNativeAudioNode,
-    renderInputsOfAudioNode
+export const createWaveShaperNodeRendererFactory = (
+    createNativeWaveShaperNode: TNativeWaveShaperNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IWaveShaperNode<T>> => {
         const renderedNativeWaveShaperNodes = new WeakMap<TNativeOfflineAudioContext, TNativeWaveShaperNode>();
 
         const createWaveShaperNode = async (proxy: IWaveShaperNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {

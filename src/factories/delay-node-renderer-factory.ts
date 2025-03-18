@@ -1,15 +1,23 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IDelayNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
-import { TDelayNodeRendererFactoryFactory, TNativeDelayNode, TNativeOfflineAudioContext } from '../types';
+import { IAudioNodeRenderer, IDelayNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import {
+    TConnectAudioParamFunction,
+    TGetNativeAudioNodeFunction,
+    TNativeDelayNode,
+    TNativeDelayNodeFactory,
+    TNativeOfflineAudioContext,
+    TRenderAutomationFunction,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createDelayNodeRendererFactory: TDelayNodeRendererFactoryFactory = (
-    connectAudioParam,
-    createNativeDelayNode,
-    getNativeAudioNode,
-    renderAutomation,
-    renderInputsOfAudioNode
+export const createDelayNodeRendererFactory = (
+    connectAudioParam: TConnectAudioParamFunction,
+    createNativeDelayNode: TNativeDelayNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderAutomation: TRenderAutomationFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(maxDelayTime: number) => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(maxDelayTime: number): IAudioNodeRenderer<T, IDelayNode<T>> => {
         const renderedNativeDelayNodes = new WeakMap<TNativeOfflineAudioContext, TNativeDelayNode>();
 
         const createDelayNode = async (proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {

@@ -1,22 +1,27 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IAudioWorkletNode, IMinimalOfflineAudioContext, IOfflineAudioContext, IReadOnlyMap } from '../interfaces';
+import { IAudioNodeRenderer, IAudioWorkletNode, IMinimalOfflineAudioContext, IOfflineAudioContext, IReadOnlyMap } from '../interfaces';
 import {
-    TAudioWorkletNodeRendererFactoryFactory,
+    TConnectAudioParamFunction,
+    TDeleteUnrenderedAudioWorkletNodeFunction,
+    TGetNativeAudioNodeFunction,
     TNativeAudioParam,
     TNativeAudioWorkletNode,
+    TNativeAudioWorkletNodeConstructor,
     TNativeGainNode,
-    TNativeOfflineAudioContext
+    TNativeOfflineAudioContext,
+    TRenderAutomationFunction,
+    TRenderInputsOfAudioNodeFunction
 } from '../types';
 
-export const createAudioWorkletNodeRendererFactory: TAudioWorkletNodeRendererFactoryFactory = (
-    connectAudioParam,
-    deleteUnrenderedAudioWorkletNode,
-    getNativeAudioNode,
-    nativeAudioWorkletNodeConstructor,
-    renderAutomation,
-    renderInputsOfAudioNode
+export const createAudioWorkletNodeRendererFactory = (
+    connectAudioParam: TConnectAudioParamFunction,
+    deleteUnrenderedAudioWorkletNode: TDeleteUnrenderedAudioWorkletNodeFunction,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
+    renderAutomation: TRenderAutomationFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(name: string) => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(name: string): IAudioNodeRenderer<T, IAudioWorkletNode<T>> => {
         if (nativeAudioWorkletNodeConstructor === null) {
             throw new Error('Missing the native AudioWorkletNode constructor.');
         }

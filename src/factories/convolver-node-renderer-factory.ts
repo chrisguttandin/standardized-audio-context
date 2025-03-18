@@ -1,13 +1,19 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IConvolverNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
-import { TConvolverNodeRendererFactoryFactory, TNativeConvolverNode, TNativeOfflineAudioContext } from '../types';
+import { IAudioNodeRenderer, IConvolverNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import {
+    TGetNativeAudioNodeFunction,
+    TNativeConvolverNode,
+    TNativeConvolverNodeFactory,
+    TNativeOfflineAudioContext,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFactory = (
-    createNativeConvolverNode,
-    getNativeAudioNode,
-    renderInputsOfAudioNode
+export const createConvolverNodeRendererFactory = (
+    createNativeConvolverNode: TNativeConvolverNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IConvolverNode<T>> => {
         const renderedNativeConvolverNodes = new WeakMap<TNativeOfflineAudioContext, TNativeConvolverNode>();
 
         const createConvolverNode = async (proxy: IConvolverNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {

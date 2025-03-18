@@ -1,15 +1,23 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IMinimalOfflineAudioContext, IOfflineAudioContext, IOscillatorNode, IPeriodicWave } from '../interfaces';
-import { TNativeOfflineAudioContext, TNativeOscillatorNode, TOscillatorNodeRendererFactoryFactory } from '../types';
+import { IMinimalOfflineAudioContext, IOfflineAudioContext, IOscillatorNode, IOscillatorNodeRenderer, IPeriodicWave } from '../interfaces';
+import {
+    TConnectAudioParamFunction,
+    TGetNativeAudioNodeFunction,
+    TNativeOfflineAudioContext,
+    TNativeOscillatorNode,
+    TNativeOscillatorNodeFactory,
+    TRenderAutomationFunction,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createOscillatorNodeRendererFactory: TOscillatorNodeRendererFactoryFactory = (
-    connectAudioParam,
-    createNativeOscillatorNode,
-    getNativeAudioNode,
-    renderAutomation,
-    renderInputsOfAudioNode
+export const createOscillatorNodeRendererFactory = (
+    connectAudioParam: TConnectAudioParamFunction,
+    createNativeOscillatorNode: TNativeOscillatorNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderAutomation: TRenderAutomationFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IOscillatorNodeRenderer<T> => {
         const renderedNativeOscillatorNodes = new WeakMap<TNativeOfflineAudioContext, TNativeOscillatorNode>();
 
         let periodicWave: null | IPeriodicWave = null;

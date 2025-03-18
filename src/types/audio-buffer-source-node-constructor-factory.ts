@@ -1,5 +1,5 @@
+import type { createAudioBufferSourceNodeRendererFactory } from '../factories/audio-buffer-source-node-renderer-factory';
 import { TAudioBufferSourceNodeConstructor } from './audio-buffer-source-node-constructor';
-import { TAudioBufferSourceNodeRendererFactory } from './audio-buffer-source-node-renderer-factory';
 import { TAudioNodeConstructor } from './audio-node-constructor';
 import { TAudioParamFactory } from './audio-param-factory';
 import { TGetNativeContextFunction } from './get-native-context-function';
@@ -9,7 +9,7 @@ import { TWrapEventListenerFunction } from './wrap-event-listener-function';
 
 export type TAudioBufferSourceNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
-    createAudioBufferSourceNodeRenderer: TAudioBufferSourceNodeRendererFactory,
+    createAudioBufferSourceNodeRenderer: ReturnType<typeof createAudioBufferSourceNodeRendererFactory>,
     createAudioParam: TAudioParamFactory,
     createNativeAudioBufferSourceNode: TNativeAudioBufferSourceNodeFactory,
     getNativeContext: TGetNativeContextFunction,

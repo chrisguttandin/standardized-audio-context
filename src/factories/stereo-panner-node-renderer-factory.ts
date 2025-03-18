@@ -1,15 +1,23 @@
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
-import { IMinimalOfflineAudioContext, IOfflineAudioContext, IStereoPannerNode } from '../interfaces';
-import { TNativeOfflineAudioContext, TNativeStereoPannerNode, TStereoPannerNodeRendererFactoryFactory } from '../types';
+import { IAudioNodeRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext, IStereoPannerNode } from '../interfaces';
+import {
+    TConnectAudioParamFunction,
+    TGetNativeAudioNodeFunction,
+    TNativeOfflineAudioContext,
+    TNativeStereoPannerNode,
+    TNativeStereoPannerNodeFactory,
+    TRenderAutomationFunction,
+    TRenderInputsOfAudioNodeFunction
+} from '../types';
 
-export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFactoryFactory = (
-    connectAudioParam,
-    createNativeStereoPannerNode,
-    getNativeAudioNode,
-    renderAutomation,
-    renderInputsOfAudioNode
+export const createStereoPannerNodeRendererFactory = (
+    connectAudioParam: TConnectAudioParamFunction,
+    createNativeStereoPannerNode: TNativeStereoPannerNodeFactory,
+    getNativeAudioNode: TGetNativeAudioNodeFunction,
+    renderAutomation: TRenderAutomationFunction,
+    renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>() => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IStereoPannerNode<T>> => {
         const renderedNativeStereoPannerNodes = new WeakMap<TNativeOfflineAudioContext, TNativeStereoPannerNode>();
 
         const createStereoPannerNode = async (proxy: IStereoPannerNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {

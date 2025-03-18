@@ -1,5 +1,5 @@
+import type { createAudioDestinationNodeRenderer as createAudioDestinationNodeRendererFunction } from '../factories/audio-destination-node-renderer-factory';
 import { TAudioDestinationNodeConstructor } from './audio-destination-node-constructor';
-import { TAudioDestinationNodeRendererFactory } from './audio-destination-node-renderer-factory';
 import { TAudioNodeConstructor } from './audio-node-constructor';
 import { TGetNativeContextFunction } from './get-native-context-function';
 import { TInvalidStateErrorFactory } from './invalid-state-error-factory';
@@ -9,7 +9,7 @@ import { TRenderInputsOfAudioNodeFunction } from './render-inputs-of-audio-node-
 
 export type TAudioDestinationNodeConstructorFactory = (
     audioNodeConstructor: TAudioNodeConstructor,
-    createAudioDestinationNodeRenderer: TAudioDestinationNodeRendererFactory,
+    createAudioDestinationNodeRenderer: typeof createAudioDestinationNodeRendererFunction,
     createInvalidStateError: TInvalidStateErrorFactory,
     createNativeAudioDestinationNode: TNativeAudioDestinationNodeFactory,
     getNativeContext: TGetNativeContextFunction,
