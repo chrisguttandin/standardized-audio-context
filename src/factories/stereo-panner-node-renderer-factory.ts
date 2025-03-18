@@ -1,4 +1,3 @@
-import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IMinimalOfflineAudioContext, IOfflineAudioContext, IStereoPannerNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeStereoPannerNode, TStereoPannerNodeRendererFactoryFactory } from '../types';
@@ -41,11 +40,7 @@ export const createStereoPannerNodeRendererFactory: TStereoPannerNodeRendererFac
                 await connectAudioParam(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
             }
 
-            if (isNativeAudioNodeFaker(nativeStereoPannerNode)) {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeStereoPannerNode.inputs[0]);
-            } else {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeStereoPannerNode);
-            }
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeStereoPannerNode);
 
             return nativeStereoPannerNode;
         };

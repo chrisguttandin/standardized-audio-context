@@ -1,4 +1,3 @@
-import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IConvolverNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import { TConvolverNodeRendererFactoryFactory, TNativeConvolverNode, TNativeOfflineAudioContext } from '../types';
@@ -31,11 +30,7 @@ export const createConvolverNodeRendererFactory: TConvolverNodeRendererFactoryFa
 
             renderedNativeConvolverNodes.set(nativeOfflineAudioContext, nativeConvolverNode);
 
-            if (isNativeAudioNodeFaker(nativeConvolverNode)) {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode.inputs[0]);
-            } else {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode);
-            }
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeConvolverNode);
 
             return nativeConvolverNode;
         };

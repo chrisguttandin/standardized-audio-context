@@ -22,14 +22,7 @@ import { isPassiveAudioNode } from '../helpers/is-passive-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassiveWhenNecessary } from '../helpers/set-internal-state-to-passive-when-necessary';
 import { visitEachAudioNodeOnce } from '../helpers/visit-each-audio-node-once';
-import {
-    IAudioNode,
-    IAudioNodeRenderer,
-    IAudioParam,
-    IMinimalOfflineAudioContext,
-    INativeAudioNodeFaker,
-    IOfflineAudioContext
-} from '../interfaces';
+import { IAudioNode, IAudioNodeRenderer, IAudioParam, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import {
     TAudioNodeConstructorFactory,
     TChannelCountMode,
@@ -264,12 +257,12 @@ export const createAudioNodeConstructor: TAudioNodeConstructorFactory = (
     {
         private _context: T;
 
-        private _nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode;
+        private _nativeAudioNode: TNativeAudioNode;
 
         constructor(
             context: T,
             isActive: boolean,
-            nativeAudioNode: INativeAudioNodeFaker | TNativeAudioNode,
+            nativeAudioNode: TNativeAudioNode,
             audioNodeRenderer: T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioNodeRenderer<T, IAudioNode<T>> : null
         ) {
             super(nativeAudioNode);

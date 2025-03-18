@@ -1,4 +1,3 @@
-import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IMinimalOfflineAudioContext, IOfflineAudioContext, IWaveShaperNode } from '../interfaces';
 import { TNativeOfflineAudioContext, TNativeWaveShaperNode, TWaveShaperNodeRendererFactoryFactory } from '../types';
@@ -31,11 +30,7 @@ export const createWaveShaperNodeRendererFactory: TWaveShaperNodeRendererFactory
 
             renderedNativeWaveShaperNodes.set(nativeOfflineAudioContext, nativeWaveShaperNode);
 
-            if (isNativeAudioNodeFaker(nativeWaveShaperNode)) {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeWaveShaperNode.inputs[0]);
-            } else {
-                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeWaveShaperNode);
-            }
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeWaveShaperNode);
 
             return nativeWaveShaperNode;
         };

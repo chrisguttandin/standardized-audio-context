@@ -53,7 +53,6 @@ export * from './minimal-audio-context';
 export * from './minimal-base-audio-context';
 export * from './minimal-base-audio-context-event-map';
 export * from './minimal-offline-audio-context';
-export * from './native-audio-node-faker';
 export * from './offline-audio-completion-event';
 export * from './offline-audio-context';
 export * from './offline-audio-context-constructor';

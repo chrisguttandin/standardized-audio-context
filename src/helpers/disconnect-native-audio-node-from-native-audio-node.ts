@@ -1,4 +1,3 @@
-import { isNativeAudioNodeFaker } from '../guards/native-audio-node-faker';
 import { TDisconnectNativeAudioNodeFromNativeAudioNodeFunction } from '../types';
 
 export const disconnectNativeAudioNodeFromNativeAudioNode: TDisconnectNativeAudioNodeFromNativeAudioNodeFunction = (
@@ -7,9 +6,5 @@ export const disconnectNativeAudioNodeFromNativeAudioNode: TDisconnectNativeAudi
     output,
     input
 ) => {
-    if (isNativeAudioNodeFaker(nativeDestinationAudioNode)) {
-        nativeSourceAudioNode.disconnect(nativeDestinationAudioNode.inputs[input], output, 0);
-    } else {
-        nativeSourceAudioNode.disconnect(nativeDestinationAudioNode, output, input);
-    }
+    nativeSourceAudioNode.disconnect(nativeDestinationAudioNode, output, input);
 };
