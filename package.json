@@ -38,7 +38,7 @@
         "commitizen": "^4.3.1",
         "cz-conventional-changelog": "^3.3.0",
         "eslint": "^8.57.0",
-        "eslint-config-holy-grail": "^60.0.26",
+        "eslint-config-holy-grail": "^60.0.27",
         "grunt": "^1.6.1",
         "grunt-cli": "^1.5.0",
         "grunt-sh": "^0.2.1",
