@@ -1,12 +1,11 @@
 import { AutomationEventList } from 'automation-events';
-import { IAudioNode, IAudioParam, IAudioParamRenderer, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
+import { IAudioNode, IAudioParam } from '../interfaces';
 import { TAudioParamFactoryFactory, TContext, TNativeAudioParam } from '../types';
 
 export const createAudioParamFactory: TAudioParamFactoryFactory = (
     addAudioParamConnections,
     audioParamAudioNodeStore,
     audioParamStore,
-    createAudioParamRenderer,
     createCancelAndHoldAutomationEvent,
     createCancelScheduledValuesAutomationEvent,
     createExponentialRampToValueAutomationEvent,
@@ -25,7 +24,6 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
         // Bug #196: Only Safari sets the defaultValue to the initial value.
         const defaultValue = nativeAudioParam.value;
         const automationEventList = new AutomationEventList(defaultValue);
-        const audioParamRenderer = isAudioParamOfOfflineAudioContext ? createAudioParamRenderer(automationEventList) : null;
         const audioParam = {
             get defaultValue(): number {
                 return defaultValue;
@@ -45,7 +43,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
             cancelAndHoldAtTime(cancelTime: number): IAudioParam {
                 // Bug #28: Firefox dos not yet implement cancelAndHoldAtTime().
                 if (typeof nativeAudioParam.cancelAndHoldAtTime === 'function') {
-                    if (audioParamRenderer === null) {
+                    if (!isAudioParamOfOfflineAudioContext) {
                         automationEventList.flush(audioNode.context.currentTime);
                     }
 
@@ -54,7 +52,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 } else {
                     const previousLastEvent = Array.from(automationEventList).pop();
 
-                    if (audioParamRenderer === null) {
+                    if (!isAudioParamOfOfflineAudioContext) {
                         automationEventList.flush(audioNode.context.currentTime);
                     }
 
@@ -84,7 +82,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 return audioParam;
             },
             cancelScheduledValues(cancelTime: number): IAudioParam {
-                if (audioParamRenderer === null) {
+                if (!isAudioParamOfOfflineAudioContext) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
 
@@ -96,7 +94,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
             exponentialRampToValueAtTime(value: number, endTime: number): IAudioParam {
                 const currentTime = audioNode.context.currentTime;
 
-                if (audioParamRenderer === null) {
+                if (!isAudioParamOfOfflineAudioContext) {
                     automationEventList.flush(currentTime);
                 }
 
@@ -114,7 +112,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
             linearRampToValueAtTime(value: number, endTime: number): IAudioParam {
                 const currentTime = audioNode.context.currentTime;
 
-                if (audioParamRenderer === null) {
+                if (!isAudioParamOfOfflineAudioContext) {
                     automationEventList.flush(currentTime);
                 }
 
@@ -130,7 +128,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 return audioParam;
             },
             setTargetAtTime(target: number, startTime: number, timeConstant: number): IAudioParam {
-                if (audioParamRenderer === null) {
+                if (!isAudioParamOfOfflineAudioContext) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
 
@@ -140,7 +138,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 return audioParam;
             },
             setValueAtTime(value: number, startTime: number): IAudioParam {
-                if (audioParamRenderer === null) {
+                if (!isAudioParamOfOfflineAudioContext) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
 
@@ -150,7 +148,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
                 return audioParam;
             },
             setValueCurveAtTime(values: number[] | Float32Array, startTime: number, duration: number): IAudioParam {
-                if (audioParamRenderer === null) {
+                if (!isAudioParamOfOfflineAudioContext) {
                     automationEventList.flush(audioNode.context.currentTime);
                 }
 
@@ -164,10 +162,7 @@ export const createAudioParamFactory: TAudioParamFactoryFactory = (
         audioParamStore.set(audioParam, nativeAudioParam);
         audioParamAudioNodeStore.set(audioParam, audioNode);
 
-        addAudioParamConnections(
-            audioParam,
-            <T extends IMinimalOfflineAudioContext | IOfflineAudioContext ? IAudioParamRenderer : null>audioParamRenderer
-        );
+        addAudioParamConnections(audioParam);
 
         return audioParam;
     };

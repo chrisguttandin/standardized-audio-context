@@ -1,65 +1,36 @@
-import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNodeRenderer, IDelayNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import {
     TConnectAudioParamFunction,
     TGetNativeAudioNodeFunction,
     TNativeDelayNode,
-    TNativeDelayNodeFactory,
     TNativeOfflineAudioContext,
-    TRenderAutomationFunction,
     TRenderInputsOfAudioNodeFunction
 } from '../types';
 
 export const createDelayNodeRendererFactory = (
     connectAudioParam: TConnectAudioParamFunction,
-    createNativeDelayNode: TNativeDelayNodeFactory,
     getNativeAudioNode: TGetNativeAudioNodeFunction,
-    renderAutomation: TRenderAutomationFunction,
     renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
-    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(maxDelayTime: number): IAudioNodeRenderer<T, IDelayNode<T>> => {
+    return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IDelayNode<T>> => {
         const renderedNativeDelayNodes = new WeakMap<TNativeOfflineAudioContext, TNativeDelayNode>();
 
-        const createDelayNode = async (proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeDelayNode = getNativeAudioNode<T, TNativeDelayNode>(proxy);
-
-            // If the initially used nativeDelayNode was not constructed on the same OfflineAudioContext it needs to be created again.
-            const nativeDelayNodeIsOwnedByContext = isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext);
-
-            if (!nativeDelayNodeIsOwnedByContext) {
-                const options = {
-                    channelCount: nativeDelayNode.channelCount,
-                    channelCountMode: nativeDelayNode.channelCountMode,
-                    channelInterpretation: nativeDelayNode.channelInterpretation,
-                    delayTime: nativeDelayNode.delayTime.value,
-                    maxDelayTime
-                };
-
-                nativeDelayNode = createNativeDelayNode(nativeOfflineAudioContext, options);
-            }
-
-            renderedNativeDelayNodes.set(nativeOfflineAudioContext, nativeDelayNode);
-
-            if (!nativeDelayNodeIsOwnedByContext) {
-                await renderAutomation(nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
-            } else {
-                await connectAudioParam(nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
-            }
-
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeDelayNode);
-
-            return nativeDelayNode;
-        };
-
         return {
-            render(proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeDelayNode> {
+            async render(proxy: IDelayNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeDelayNode> {
                 const renderedNativeDelayNode = renderedNativeDelayNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeDelayNode !== undefined) {
-                    return Promise.resolve(renderedNativeDelayNode);
+                    return renderedNativeDelayNode;
                 }
 
-                return createDelayNode(proxy, nativeOfflineAudioContext);
+                const nativeDelayNode = getNativeAudioNode<T, TNativeDelayNode>(proxy);
+
+                renderedNativeDelayNodes.set(nativeOfflineAudioContext, nativeDelayNode);
+
+                await connectAudioParam(nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeDelayNode);
+
+                return nativeDelayNode;
             }
         };
     };

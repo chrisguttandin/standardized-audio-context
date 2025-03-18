@@ -27,9 +27,7 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             const isOffline = isNativeOfflineAudioContext(nativeContext);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeIIRFilterNode = createNativeIIRFilterNode(nativeContext, mergedOptions);
-            const iirFilterNodeRenderer = <TAudioNodeRenderer<T, this>>(
-                (isOffline ? createIIRFilterNodeRenderer(mergedOptions.feedback, mergedOptions.feedforward) : null)
-            );
+            const iirFilterNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createIIRFilterNodeRenderer() : null);
 
             super(context, false, nativeIIRFilterNode, iirFilterNodeRenderer);
 

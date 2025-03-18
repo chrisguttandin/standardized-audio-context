@@ -1,64 +1,36 @@
-import { isOwnedByContext } from '../helpers/is-owned-by-context';
 import { IAudioNodeRenderer, IGainNode, IMinimalOfflineAudioContext, IOfflineAudioContext } from '../interfaces';
 import {
     TConnectAudioParamFunction,
     TGetNativeAudioNodeFunction,
     TNativeGainNode,
-    TNativeGainNodeFactory,
     TNativeOfflineAudioContext,
-    TRenderAutomationFunction,
     TRenderInputsOfAudioNodeFunction
 } from '../types';
 
 export const createGainNodeRendererFactory = (
     connectAudioParam: TConnectAudioParamFunction,
-    createNativeGainNode: TNativeGainNodeFactory,
     getNativeAudioNode: TGetNativeAudioNodeFunction,
-    renderAutomation: TRenderAutomationFunction,
     renderInputsOfAudioNode: TRenderInputsOfAudioNodeFunction
 ) => {
     return <T extends IMinimalOfflineAudioContext | IOfflineAudioContext>(): IAudioNodeRenderer<T, IGainNode<T>> => {
         const renderedNativeGainNodes = new WeakMap<TNativeOfflineAudioContext, TNativeGainNode>();
 
-        const createGainNode = async (proxy: IGainNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-            let nativeGainNode = getNativeAudioNode<T, TNativeGainNode>(proxy);
-
-            // If the initially used nativeGainNode was not constructed on the same OfflineAudioContext it needs to be created again.
-            const nativeGainNodeIsOwnedByContext = isOwnedByContext(nativeGainNode, nativeOfflineAudioContext);
-
-            if (!nativeGainNodeIsOwnedByContext) {
-                const options = {
-                    channelCount: nativeGainNode.channelCount,
-                    channelCountMode: nativeGainNode.channelCountMode,
-                    channelInterpretation: nativeGainNode.channelInterpretation,
-                    gain: nativeGainNode.gain.value
-                };
-
-                nativeGainNode = createNativeGainNode(nativeOfflineAudioContext, options);
-            }
-
-            renderedNativeGainNodes.set(nativeOfflineAudioContext, nativeGainNode);
-
-            if (!nativeGainNodeIsOwnedByContext) {
-                await renderAutomation(nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
-            } else {
-                await connectAudioParam(nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
-            }
-
-            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeGainNode);
-
-            return nativeGainNode;
-        };
-
         return {
-            render(proxy: IGainNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeGainNode> {
+            async render(proxy: IGainNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext): Promise<TNativeGainNode> {
                 const renderedNativeGainNode = renderedNativeGainNodes.get(nativeOfflineAudioContext);
 
                 if (renderedNativeGainNode !== undefined) {
-                    return Promise.resolve(renderedNativeGainNode);
+                    return renderedNativeGainNode;
                 }
 
-                return createGainNode(proxy, nativeOfflineAudioContext);
+                const nativeGainNode = getNativeAudioNode<T, TNativeGainNode>(proxy);
+
+                renderedNativeGainNodes.set(nativeOfflineAudioContext, nativeGainNode);
+
+                await connectAudioParam(nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
+                await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeGainNode);
+
+                return nativeGainNode;
             }
         };
     };

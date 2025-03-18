@@ -71,7 +71,7 @@ export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFact
                 name,
                 mergedOptions
             );
-            const audioWorkletNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createAudioWorkletNodeRenderer(name) : null);
+            const audioWorkletNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createAudioWorkletNodeRenderer() : null);
 
             /*
              * @todo Add a mechanism to switch an AudioWorkletNode to passive once the process() function of the AudioWorkletProcessor

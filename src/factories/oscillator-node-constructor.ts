@@ -1,20 +1,13 @@
 import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
+import { IAudioParam, IAudioScheduledSourceNodeEventMap, IOscillatorNode, IOscillatorOptions } from '../interfaces';
 import {
-    IAudioParam,
-    IAudioScheduledSourceNodeEventMap,
-    IMinimalOfflineAudioContext,
-    IOscillatorNode,
-    IOscillatorNodeRenderer,
-    IOscillatorOptions
-} from '../interfaces';
-import {
+    TAudioNodeRenderer,
     TContext,
     TEventHandler,
     TNativeOscillatorNode,
     TOscillatorNodeConstructorFactory,
-    TOscillatorNodeRenderer,
     TOscillatorType
 } from '../types';
 
@@ -49,14 +42,12 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         private _onended: null | TEventHandler<this>;
 
-        private _oscillatorNodeRenderer: TOscillatorNodeRenderer<T>;
-
         constructor(context: T, options?: Partial<IOscillatorOptions>) {
             const nativeContext = getNativeContext(context);
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeOscillatorNode = createNativeOscillatorNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const oscillatorNodeRenderer = <TOscillatorNodeRenderer<T>>(isOffline ? createOscillatorNodeRenderer() : null);
+            const oscillatorNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createOscillatorNodeRenderer() : null);
 
             super(context, false, nativeOscillatorNode, oscillatorNodeRenderer);
 
@@ -65,12 +56,6 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
             this._frequency = createAudioParam(this, isOffline, nativeOscillatorNode.frequency);
             this._nativeOscillatorNode = nativeOscillatorNode;
             this._onended = null;
-            this._oscillatorNodeRenderer = oscillatorNodeRenderer;
-
-            if (this._oscillatorNodeRenderer !== null && mergedOptions.periodicWave !== undefined) {
-                (<IOscillatorNodeRenderer<IMinimalOfflineAudioContext>>this._oscillatorNodeRenderer).periodicWave =
-                    mergedOptions.periodicWave;
-            }
         }
 
         get detune(): IAudioParam {
@@ -101,26 +86,14 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         set type(value) {
             this._nativeOscillatorNode.type = value;
-
-            if (this._oscillatorNodeRenderer !== null) {
-                this._oscillatorNodeRenderer.periodicWave = null;
-            }
         }
 
         public setPeriodicWave(periodicWave: PeriodicWave): void {
             this._nativeOscillatorNode.setPeriodicWave(periodicWave);
-
-            if (this._oscillatorNodeRenderer !== null) {
-                this._oscillatorNodeRenderer.periodicWave = periodicWave;
-            }
         }
 
         public start(when = 0): void {
             this._nativeOscillatorNode.start(when);
-
-            if (this._oscillatorNodeRenderer !== null) {
-                this._oscillatorNodeRenderer.start = when;
-            }
 
             if (this.context.state !== 'closed') {
                 setInternalStateToActive(this);
@@ -139,10 +112,6 @@ export const createOscillatorNodeConstructor: TOscillatorNodeConstructorFactory 
 
         public stop(when = 0): void {
             this._nativeOscillatorNode.stop(when);
-
-            if (this._oscillatorNodeRenderer !== null) {
-                this._oscillatorNodeRenderer.stop = when;
-            }
         }
     };
 };

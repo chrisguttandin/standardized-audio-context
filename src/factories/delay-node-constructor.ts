@@ -26,7 +26,7 @@ export const createDelayNodeConstructor: TDelayNodeConstructorFactory = (
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeDelayNode = createNativeDelayNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const delayNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createDelayNodeRenderer(mergedOptions.maxDelayTime) : null);
+            const delayNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createDelayNodeRenderer() : null);
 
             super(context, false, nativeDelayNode, delayNodeRenderer);
 

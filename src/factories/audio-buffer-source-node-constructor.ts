@@ -5,7 +5,7 @@ import { IAudioBufferSourceNode, IAudioBufferSourceOptions, IAudioParam, IAudioS
 import {
     TAnyAudioBuffer,
     TAudioBufferSourceNodeConstructorFactory,
-    TAudioBufferSourceNodeRenderer,
+    TAudioNodeRenderer,
     TContext,
     TEventHandler,
     TNativeAudioBufferSourceNode
@@ -36,8 +36,6 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         extends audioNodeConstructor<T, IAudioScheduledSourceNodeEventMap>
         implements IAudioBufferSourceNode<T>
     {
-        private _audioBufferSourceNodeRenderer: TAudioBufferSourceNodeRenderer<T>;
-
         private _detune: IAudioParam;
 
         private _nativeAudioBufferSourceNode: TNativeAudioBufferSourceNode;
@@ -51,13 +49,10 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const audioBufferSourceNodeRenderer = <TAudioBufferSourceNodeRenderer<T>>(
-                (isOffline ? createAudioBufferSourceNodeRenderer() : null)
-            );
+            const audioBufferSourceNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createAudioBufferSourceNodeRenderer() : null);
 
             super(context, false, nativeAudioBufferSourceNode, audioBufferSourceNodeRenderer);
 
-            this._audioBufferSourceNodeRenderer = audioBufferSourceNodeRenderer;
             this._detune = createAudioParam(this, isOffline, nativeAudioBufferSourceNode.detune);
             this._nativeAudioBufferSourceNode = nativeAudioBufferSourceNode;
             this._onended = null;
@@ -121,10 +116,6 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
         public start(when = 0, offset = 0, duration?: number): void {
             this._nativeAudioBufferSourceNode.start(when, offset, duration);
 
-            if (this._audioBufferSourceNodeRenderer !== null) {
-                this._audioBufferSourceNodeRenderer.start = duration === undefined ? [when, offset] : [when, offset, duration];
-            }
-
             if (this.context.state !== 'closed') {
                 setInternalStateToActive(this);
 
@@ -142,10 +133,6 @@ export const createAudioBufferSourceNodeConstructor: TAudioBufferSourceNodeConst
 
         public stop(when = 0): void {
             this._nativeAudioBufferSourceNode.stop(when);
-
-            if (this._audioBufferSourceNodeRenderer !== null) {
-                this._audioBufferSourceNodeRenderer.stop = when;
-            }
         }
     };
 };

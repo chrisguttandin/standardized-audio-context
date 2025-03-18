@@ -2,13 +2,7 @@ import { isActiveAudioNode } from '../helpers/is-active-audio-node';
 import { setInternalStateToActive } from '../helpers/set-internal-state-to-active';
 import { setInternalStateToPassive } from '../helpers/set-internal-state-to-passive';
 import { IAudioParam, IAudioScheduledSourceNodeEventMap, IConstantSourceNode, IConstantSourceOptions } from '../interfaces';
-import {
-    TConstantSourceNodeConstructorFactory,
-    TConstantSourceNodeRenderer,
-    TContext,
-    TEventHandler,
-    TNativeConstantSourceNode
-} from '../types';
+import { TAudioNodeRenderer, TConstantSourceNodeConstructorFactory, TContext, TEventHandler, TNativeConstantSourceNode } from '../types';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -30,8 +24,6 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
         extends audioNodeConstructor<T, IAudioScheduledSourceNodeEventMap>
         implements IConstantSourceNode<T>
     {
-        private _constantSourceNodeRenderer: TConstantSourceNodeRenderer<T>;
-
         private _nativeConstantSourceNode: TNativeConstantSourceNode;
 
         private _offset: IAudioParam;
@@ -43,13 +35,10 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
             const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
             const nativeConstantSourceNode = createNativeConstantSourceNode(nativeContext, mergedOptions);
             const isOffline = isNativeOfflineAudioContext(nativeContext);
-            const constantSourceNodeRenderer = <TConstantSourceNodeRenderer<T>>(
-                (isOffline ? createConstantSourceNodeRendererFactory() : null)
-            );
+            const constantSourceNodeRenderer = <TAudioNodeRenderer<T, this>>(isOffline ? createConstantSourceNodeRendererFactory() : null);
 
             super(context, false, nativeConstantSourceNode, constantSourceNodeRenderer);
 
-            this._constantSourceNodeRenderer = constantSourceNodeRenderer;
             this._nativeConstantSourceNode = nativeConstantSourceNode;
             this._offset = createAudioParam(this, isOffline, nativeConstantSourceNode.offset);
             this._onended = null;
@@ -76,10 +65,6 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
         public start(when = 0): void {
             this._nativeConstantSourceNode.start(when);
 
-            if (this._constantSourceNodeRenderer !== null) {
-                this._constantSourceNodeRenderer.start = when;
-            }
-
             if (this.context.state !== 'closed') {
                 setInternalStateToActive(this);
 
@@ -97,10 +82,6 @@ export const createConstantSourceNodeConstructor: TConstantSourceNodeConstructor
 
         public stop(when = 0): void {
             this._nativeConstantSourceNode.stop(when);
-
-            if (this._constantSourceNodeRenderer !== null) {
-                this._constantSourceNodeRenderer.stop = when;
-            }
         }
     };
 };

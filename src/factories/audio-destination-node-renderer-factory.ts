@@ -6,28 +6,24 @@ export const createAudioDestinationNodeRenderer = <T extends IMinimalOfflineAudi
 ): IAudioNodeRenderer<T, IAudioDestinationNode<T>> => {
     const renderedNativeAudioDestinationNodes = new WeakMap<TNativeOfflineAudioContext, TNativeAudioDestinationNode>();
 
-    const createAudioDestinationNode = async (proxy: IAudioDestinationNode<T>, nativeOfflineAudioContext: TNativeOfflineAudioContext) => {
-        const nativeAudioDestinationNode = nativeOfflineAudioContext.destination;
-
-        renderedNativeAudioDestinationNodes.set(nativeOfflineAudioContext, nativeAudioDestinationNode);
-
-        await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
-
-        return nativeAudioDestinationNode;
-    };
-
     return {
-        render(
+        async render(
             proxy: IAudioDestinationNode<T>,
             nativeOfflineAudioContext: TNativeOfflineAudioContext
         ): Promise<TNativeAudioDestinationNode> {
             const renderedNativeAudioDestinationNode = renderedNativeAudioDestinationNodes.get(nativeOfflineAudioContext);
 
             if (renderedNativeAudioDestinationNode !== undefined) {
-                return Promise.resolve(renderedNativeAudioDestinationNode);
+                return renderedNativeAudioDestinationNode;
             }
 
-            return createAudioDestinationNode(proxy, nativeOfflineAudioContext);
+            const nativeAudioDestinationNode = nativeOfflineAudioContext.destination;
+
+            renderedNativeAudioDestinationNodes.set(nativeOfflineAudioContext, nativeAudioDestinationNode);
+
+            await renderInputsOfAudioNode(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
+
+            return nativeAudioDestinationNode;
         }
     };
 };
