@@ -97,7 +97,22 @@
         "lint:test": "eslint --config config/eslint/test.json --ext .js --report-unused-disable-directives test/",
         "prepare": "husky",
         "prepublishOnly": "npm run build",
-        "test": "npm run lint && grunt test"
+        "test": "npm run lint && grunt test",
+        "test:expectation-chrome": "karma start config/karma/config-expectation-chrome.js --single-run",
+        "test:expectation-chrome-canary": "karma start config/karma/config-expectation-chrome-canary.js --single-run",
+        "test:expectation-chrome-penultimate": "karma start config/karma/config-expectation-chrome-penultimate.js --single-run",
+        "test:expectation-chrome-previous": "karma start config/karma/config-expectation-chrome-previous.js --single-run",
+        "test:expectation-firefox": "karma start config/karma/config-expectation-firefox.js --single-run",
+        "test:expectation-firefox-developer": "karma start config/karma/config-expectation-firefox-developer.js --single-run",
+        "test:expectation-firefox-penultimate": "karma start config/karma/config-expectation-firefox-penultimate.js --single-run",
+        "test:expectation-firefox-previous": "karma start config/karma/config-expectation-firefox-previous.js --single-run",
+        "test:expectation-safari": "karma start config/karma/config-expectation-safari.js --single-run",
+        "test:expectation-safari-penultimate": "karma start config/karma/config-expectation-safari-penultimate.js --single-run",
+        "test:expectation-safari-previous": "karma start config/karma/config-expectation-safari-previous.js --single-run",
+        "test:integration-browser": "karma start config/karma/config-integration.js --single-run",
+        "test:integration-node": "mocha --bail --parallel --recursive --require config/mocha/config-integration.js test/integration",
+        "test:memory": "mocha --bail --parallel --recursive --require config/mocha/config-memory.js test/memory",
+        "test:unit": "karma start config/karma/config-unit.js --single-run"
     },
     "types": "build/es2019/module.d.ts",
     "version": "25.3.77"
