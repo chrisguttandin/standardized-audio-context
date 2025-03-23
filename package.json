@@ -49,7 +49,6 @@
         "karma-webkit-launcher": "^2.6.0",
         "karma-webpack": "^5.0.1",
         "lint-staged": "^15.5.0",
-        "load-grunt-config": "^4.0.1",
         "memory-fs": "^0.5.0",
         "mocha": "^11.1.0",
         "prettier": "^3.5.3",
