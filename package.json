@@ -52,7 +52,7 @@
         "memory-fs": "^0.5.0",
         "mocha": "^11.1.0",
         "prettier": "^3.5.3",
-        "puppeteer": "^24.5.0",
+        "puppeteer": "^24.6.1",
         "rimraf": "^6.0.1",
         "rollup": "^4.38.0",
         "sinon": "^17.0.2",
