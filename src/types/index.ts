@@ -301,4 +301,5 @@ export * from './wave-shaper-node-constructor';
 export * from './wave-shaper-node-constructor-factory';
 export * from './window';
 export * from './window-factory';
+export * from './with-additional-property';
 export * from './wrap-event-listener-function';
