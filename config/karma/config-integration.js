@@ -9,40 +9,7 @@ module.exports = (config) => {
 
         browserNoActivityTimeout: 100000,
 
-        browsers:
-            env.TARGET === 'chrome'
-                ? ['ChromeBrowserStack']
-                : env.TARGET === 'firefox'
-                  ? ['FirefoxBrowserStack']
-                  : env.TARGET === 'safari'
-                    ? ['SafariBrowserStack']
-                    : ['ChromeBrowserStack', 'FirefoxBrowserStack', 'SafariBrowserStack'],
-
         concurrency: 1,
-
-        customLaunchers: {
-            ChromeBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'chrome',
-                browser_version: '80', // eslint-disable-line camelcase
-                os: 'OS X',
-                os_version: 'High Sierra' // eslint-disable-line camelcase
-            },
-            FirefoxBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'firefox',
-                browser_version: '69', // eslint-disable-line camelcase
-                os: 'Windows',
-                os_version: '10' // eslint-disable-line camelcase
-            },
-            SafariBrowserStack: {
-                base: 'BrowserStack',
-                browser: 'safari',
-                browser_version: '11.1', // eslint-disable-line camelcase
-                os: 'OS X',
-                os_version: 'High Sierra' // eslint-disable-line camelcase
-            }
-        },
 
         files: [
             {
@@ -61,6 +28,10 @@ module.exports = (config) => {
         ],
 
         frameworks: ['mocha', 'sinon-chai'],
+
+        mime: {
+            'application/javascript': ['xs']
+        },
 
         preprocessors: {
             'test/integration/**/*.js': 'webpack'
@@ -114,13 +85,69 @@ module.exports = (config) => {
                 project: env.GITHUB_REPOSITORY,
                 username: env.BROWSER_STACK_USERNAME,
                 video: false
+            },
+
+            /*
+             * @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+             * 'ChromeBrowserStack',
+             */
+            browsers: env.TARGET === 'firefox' ? ['FirefoxBrowserStack'] : ['ChromeBrowserStack', 'FirefoxBrowserStack'],
+
+            customLaunchers: {
+                ChromeBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'chrome',
+                    os: 'Windows',
+                    os_version: '10', // eslint-disable-line camelcase
+                    timeout: 1800
+                },
+                FirefoxBrowserStack: {
+                    base: 'BrowserStack',
+                    browser: 'firefox',
+                    os: 'Windows',
+                    os_version: '10', // eslint-disable-line camelcase
+                    timeout: 1800
+                }
             }
         });
     } else {
-        const environment = require('../environment/local.json');
-
         config.set({
-            browserStack: environment.browserStack
+            browsers: [
+                'ChromeCanaryHeadlessWithFlags',
+                'ChromeHeadlessWithFlags',
+                'FirefoxDeveloperHeadlessWithPrefs',
+                'FirefoxHeadlessWithPrefs',
+                'Safari'
+            ],
+
+            concurrency: 1,
+
+            customLaunchers: {
+                ChromeCanaryHeadlessWithFlags: {
+                    base: 'ChromeCanaryHeadless',
+                    flags: ['--autoplay-policy=no-user-gesture-required', '--mute-audio']
+                },
+                ChromeHeadlessWithFlags: {
+                    base: 'ChromeHeadless',
+                    flags: ['--autoplay-policy=no-user-gesture-required', '--mute-audio']
+                },
+                FirefoxDeveloperHeadlessWithPrefs: {
+                    base: 'FirefoxDeveloperHeadless',
+                    prefs: {
+                        'media.autoplay.default': 0,
+                        'media.navigator.permission.disabled': true,
+                        'media.navigator.streams.fake': true
+                    }
+                },
+                FirefoxHeadlessWithPrefs: {
+                    base: 'FirefoxHeadless',
+                    prefs: {
+                        'media.autoplay.default': 0,
+                        'media.navigator.permission.disabled': true,
+                        'media.navigator.streams.fake': true
+                    }
+                }
+            }
         });
     }
 };
