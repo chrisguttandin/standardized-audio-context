@@ -1,3 +1,4 @@
+import { IAudioTimestamp } from './audio-timestamp';
 import { IBaseAudioContext } from './base-audio-context';
 import { ICommonAudioContext } from './common-audio-context';
 import { IMediaElementAudioSourceNode } from './media-element-audio-source-node';
@@ -13,4 +14,6 @@ export interface IAudioContext extends IBaseAudioContext<IAudioContext>, ICommon
     createMediaStreamSource(mediaStream: MediaStream): IMediaStreamAudioSourceNode<this>;
 
     createMediaStreamTrackSource(mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<this>;
+
+    getOutputTimestamp(): IAudioTimestamp;
 }

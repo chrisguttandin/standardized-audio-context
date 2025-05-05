@@ -440,6 +440,15 @@ describe('AudioContext', () => {
             });
         });
 
+        describe('getOutputTimestamp()', () => {
+            it('should return an AudioTimestamp', () => {
+                const audioTimestamp = audioContext.getOutputTimestamp();
+
+                expect(audioTimestamp.contextTime).to.be.a('number');
+                expect(audioTimestamp.performanceTime).to.be.a('number');
+            });
+        });
+
         describe('resume()', () => {
             it('should return a promise', () => {
                 expect(audioContext.resume()).to.be.an.instanceOf(Promise);

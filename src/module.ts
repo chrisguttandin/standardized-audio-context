@@ -138,6 +138,7 @@ import { createTestAudioBufferFactoryMethodSupport } from './factories/test-audi
 import { createTestAudioBufferSourceNodeBufferReassignmentSupport } from './factories/test-audio-buffer-source-node-buffer-reassignment-support';
 import { createTestAudioContextCloseMethodSupport } from './factories/test-audio-context-close-method-support';
 import { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './factories/test-audio-context-decode-audio-data-method-type-error-support';
+import { createTestAudioContextGetOutputTimestampSupport } from './factories/test-audio-context-get-output-timestamp-support';
 import { createTestAudioContextOptionsSupport } from './factories/test-audio-context-options-support';
 import { createTestAudioContextResumeSupport } from './factories/test-audio-context-resume-support';
 import { createTestAudioNodeConnectMethodChainabilitySupport } from './factories/test-audio-node-connect-method-chainability-support';
@@ -829,6 +830,7 @@ export const isSupported = () =>
         createTestAudioBufferFactoryMethodSupport(nativeOfflineAudioContextConstructor),
         createTestAudioContextCloseMethodSupport(nativeAudioContextConstructor),
         createTestAudioContextDecodeAudioDataMethodTypeErrorSupport(nativeOfflineAudioContextConstructor),
+        createTestAudioContextGetOutputTimestampSupport(nativeAudioContextConstructor),
         createTestAudioContextOptionsSupport(nativeAudioContextConstructor),
         createTestAudioContextResumeSupport(nativeAudioContextConstructor),
         createTestAudioNodeConnectMethodChainabilitySupport(nativeOfflineAudioContextConstructor),

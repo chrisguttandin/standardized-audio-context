@@ -14,6 +14,7 @@ export * from './audio-node-renderer';
 export * from './audio-param';
 export * from './audio-scheduled-source-node';
 export * from './audio-scheduled-source-node-event-map';
+export * from './audio-timestamp';
 export * from './audio-worklet';
 export * from './audio-worklet-node';
 export * from './audio-worklet-node-event-map';

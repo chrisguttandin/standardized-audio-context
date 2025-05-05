@@ -9,6 +9,7 @@ import type { createTestAudioBufferFactoryMethodSupport } from './test-audio-buf
 import type { createTestAudioBufferSourceNodeBufferReassignmentSupport } from './test-audio-buffer-source-node-buffer-reassignment-support';
 import type { createTestAudioContextCloseMethodSupport } from './test-audio-context-close-method-support';
 import type { createTestAudioContextDecodeAudioDataMethodTypeErrorSupport } from './test-audio-context-decode-audio-data-method-type-error-support';
+import type { createTestAudioContextGetOutputTimestampSupport } from './test-audio-context-get-output-timestamp-support';
 import type { createTestAudioContextOptionsSupport } from './test-audio-context-options-support';
 import type { createTestAudioContextResumeSupport } from './test-audio-context-resume-support';
 import type { createTestAudioNodeConnectMethodChainabilitySupport } from './test-audio-node-connect-method-chainability-support';
@@ -37,6 +38,7 @@ export const createIsSupportedPromise = async (
     testAudioBufferSourceNodeBufferReassignmentSupport: ReturnType<typeof createTestAudioBufferSourceNodeBufferReassignmentSupport>,
     testAudioContextCloseMethodSupport: ReturnType<typeof createTestAudioContextCloseMethodSupport>,
     testAudioContextDecodeAudioDataMethodTypeErrorSupport: ReturnType<typeof createTestAudioContextDecodeAudioDataMethodTypeErrorSupport>,
+    testAudioContextGetOutputTimestampSupport: ReturnType<typeof createTestAudioContextGetOutputTimestampSupport>,
     testAudioContextOptionsSupport: ReturnType<typeof createTestAudioContextOptionsSupport>,
     testAudioContextResumeSupport: ReturnType<typeof createTestAudioContextResumeSupport>,
     testAudioNodeConnectMethodChainabilitySupport: ReturnType<typeof createTestAudioNodeConnectMethodChainabilitySupport>,
@@ -88,6 +90,7 @@ export const createIsSupportedPromise = async (
     ) {
         const results = await Promise.all([
             cacheTestResult(testAudioContextDecodeAudioDataMethodTypeErrorSupport, testAudioContextDecodeAudioDataMethodTypeErrorSupport),
+            cacheTestResult(testAudioContextGetOutputTimestampSupport, testAudioContextGetOutputTimestampSupport),
             cacheTestResult(testAudioContextResumeSupport, testAudioContextResumeSupport),
             cacheTestResult(testAudioParamValueSetterSupport, testAudioParamValueSetterSupport),
             cacheTestResult(testAudioWorkletAddModuleMethodSupport, testAudioWorkletAddModuleMethodSupport),

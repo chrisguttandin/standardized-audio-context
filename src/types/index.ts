@@ -195,6 +195,7 @@ export * from './native-audio-listener';
 export * from './native-audio-node';
 export * from './native-audio-param';
 export * from './native-audio-param-map';
+export * from './native-audio-timestamp';
 export * from './native-audio-worklet';
 export * from './native-audio-worklet-node';
 export * from './native-audio-worklet-node-constructor';

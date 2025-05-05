@@ -3,12 +3,13 @@ import { isValidLatencyHint } from '../helpers/is-valid-latency-hint';
 import {
     IAudioContext,
     IAudioContextOptions,
+    IAudioTimestamp,
     IMediaElementAudioSourceNode,
     IMediaStreamAudioDestinationNode,
     IMediaStreamAudioSourceNode,
     IMediaStreamTrackAudioSourceNode
 } from '../interfaces';
-import { TAudioContextConstructorFactory, TAudioContextState, TNativeAudioContext } from '../types';
+import { TAudioContextConstructorFactory, TAudioContextState, TNativeAudioContext, TNativeAudioTimestamp } from '../types';
 
 export const createAudioContextConstructor: TAudioContextConstructorFactory = (
     baseAudioContextConstructor,
@@ -100,6 +101,10 @@ export const createAudioContextConstructor: TAudioContextConstructorFactory = (
 
         public createMediaStreamTrackSource(mediaStreamTrack: MediaStreamTrack): IMediaStreamTrackAudioSourceNode<this> {
             return new mediaStreamTrackAudioSourceNodeConstructor(this, { mediaStreamTrack });
+        }
+
+        public getOutputTimestamp(): IAudioTimestamp {
+            return <TNativeAudioTimestamp>this._nativeAudioContext.getOutputTimestamp();
         }
 
         public resume(): Promise<void> {
