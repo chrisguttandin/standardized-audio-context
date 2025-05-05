@@ -78,5 +78,5 @@ module.exports = (config) => {
         }
     });
 
-    env.WEBKIT_HEADLESS_BIN = 'webkit-v17-4/pw_run.sh';
+    env.WEBKIT_HEADLESS_BIN = 'webkit-v18-0/pw_run.sh';
 };
