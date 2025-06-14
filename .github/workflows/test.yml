@@ -60,5 +60,6 @@ jobs:
               name: Run ${{ matrix.type }} tests
               run: |
                   export CHROME_DEVEL_SANDBOX=/opt/google/chrome/chrome-sandbox
+                  sudo chown root /opt/google/chrome/chrome-sandbox
                   sudo chmod 4755 /opt/google/chrome/chrome-sandbox
                   npm test
