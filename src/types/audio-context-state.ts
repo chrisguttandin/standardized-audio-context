@@ -1,1 +1,1 @@
-export type TAudioContextState = 'closed' | 'running' | 'suspended';
+export type TAudioContextState = 'closed' | 'interrupted' | 'running' | 'suspended';
