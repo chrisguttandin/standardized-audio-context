@@ -70,19 +70,19 @@ export const createAnalyserNodeConstructor: TAnalyserNodeConstructorFactory = (
             this._nativeAnalyserNode.smoothingTimeConstant = value;
         }
 
-        public getByteFrequencyData(array: Uint8Array): void {
+        public getByteFrequencyData(array: Uint8Array<ArrayBuffer>): void {
             this._nativeAnalyserNode.getByteFrequencyData(array);
         }
 
-        public getByteTimeDomainData(array: Uint8Array): void {
+        public getByteTimeDomainData(array: Uint8Array<ArrayBuffer>): void {
             this._nativeAnalyserNode.getByteTimeDomainData(array);
         }
 
-        public getFloatFrequencyData(array: Float32Array): void {
+        public getFloatFrequencyData(array: Float32Array<ArrayBuffer>): void {
             this._nativeAnalyserNode.getFloatFrequencyData(array);
         }
 
-        public getFloatTimeDomainData(array: Float32Array): void {
+        public getFloatTimeDomainData(array: Float32Array<ArrayBuffer>): void {
             this._nativeAnalyserNode.getFloatTimeDomainData(array);
         }
     };

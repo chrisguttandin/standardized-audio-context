@@ -41,7 +41,11 @@ export const createIIRFilterNodeConstructor: TIIRFilterNodeConstructorFactory = 
             setAudioNodeTailTime(this, 1);
         }
 
-        public getFrequencyResponse(frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void {
+        public getFrequencyResponse(
+            frequencyHz: Float32Array<ArrayBuffer>,
+            magResponse: Float32Array<ArrayBuffer>,
+            phaseResponse: Float32Array<ArrayBuffer>
+        ): void {
             return this._nativeIIRFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
     };

@@ -8,16 +8,16 @@ const DEFAULT_OPTIONS = {
 export const createAudioBufferConstructor: TAudioBufferConstructorFactory = (audioBufferStore, nativeAudioBufferConstructor) => {
     return class AudioBuffer implements IAudioBuffer {
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-        public copyFromChannel!: (destination: Float32Array, channelNumber: number, bufferOffset?: number) => void;
+        public copyFromChannel!: (destination: Float32Array<ArrayBuffer>, channelNumber: number, bufferOffset?: number) => void;
 
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-        public copyToChannel!: (source: Float32Array, channelNumber: number, bufferOffset?: number) => void;
+        public copyToChannel!: (source: Float32Array<ArrayBuffer>, channelNumber: number, bufferOffset?: number) => void;
 
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public duration!: number;
 
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
-        public getChannelData!: (channel: number) => Float32Array;
+        public getChannelData!: (channel: number) => Float32Array<ArrayBuffer>;
 
         // This field needs to be defined to convince TypeScript that the IAudioBuffer will be implemented.
         public length!: number;

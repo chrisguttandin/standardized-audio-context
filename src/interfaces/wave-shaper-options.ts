@@ -2,7 +2,7 @@ import { TOverSampleType } from '../types';
 import { IAudioNodeOptions } from './audio-node-options';
 
 export interface IWaveShaperOptions extends IAudioNodeOptions {
-    curve: null | Iterable<number>;
+    curve: null | Float32Array<ArrayBuffer>;
 
     oversample: TOverSampleType;
 }

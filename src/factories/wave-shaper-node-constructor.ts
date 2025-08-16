@@ -37,7 +37,7 @@ export const createWaveShaperNodeConstructor: TWaveShaperNodeConstructorFactory 
             setAudioNodeTailTime(this, 1);
         }
 
-        get curve(): null | Float32Array {
+        get curve(): null | Float32Array<ArrayBuffer> {
             return this._nativeWaveShaperNode.curve;
         }
 

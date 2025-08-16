@@ -11,5 +11,5 @@ export interface IAudioBuffer {
 
     copyToChannel(source: Float32Array, channelNumber: number, bufferOffset?: number): void;
 
-    getChannelData(channel: number): Float32Array;
+    getChannelData(channel: number): Float32Array<ArrayBuffer>;
 }

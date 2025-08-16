@@ -91,7 +91,11 @@ export const createBiquadFilterNodeConstructor: TBiquadFilterNodeConstructorFact
             this._nativeBiquadFilterNode.type = value;
         }
 
-        public getFrequencyResponse(frequencyHz: Float32Array, magResponse: Float32Array, phaseResponse: Float32Array): void {
+        public getFrequencyResponse(
+            frequencyHz: Float32Array<ArrayBuffer>,
+            magResponse: Float32Array<ArrayBuffer>,
+            phaseResponse: Float32Array<ArrayBuffer>
+        ): void {
             this._nativeBiquadFilterNode.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
         }
     };
