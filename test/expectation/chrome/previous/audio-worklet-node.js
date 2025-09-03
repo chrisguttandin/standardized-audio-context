@@ -44,11 +44,9 @@ describe('AudioWorklet', () => {
     describe('with a closed context', () => {
         let audioContext;
 
-        beforeEach(() => {
-            audioContext = new AudioContext();
-        });
-
         beforeEach(async () => {
+            audioContext = new AudioContext();
+
             await audioContext.close();
             await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
         });
