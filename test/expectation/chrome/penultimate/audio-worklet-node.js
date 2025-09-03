@@ -112,4 +112,75 @@ describe('AudioWorklet', () => {
             }
         });
     });
+
+    describe('with a suspended and resumed AudioContext', () => {
+        let audioContext;
+
+        afterEach(async () => {
+            await audioContext.close();
+        });
+
+        beforeEach(() => {
+            audioContext = new AudioContext();
+        });
+
+        // bug #204
+
+        it('should increase currentFrame by a value other than 128', async function () {
+            this.timeout(0);
+
+            await audioContext.audioWorklet.addModule('base/test/fixtures/inspector-processor.js');
+
+            while (true) {
+                await audioContext.suspend();
+
+                const constantSourceNode = new ConstantSourceNode(audioContext);
+                const audioWorkletNode = new AudioWorkletNode(audioContext, 'inspector-processor');
+
+                constantSourceNode.connect(audioWorkletNode).connect(audioContext.destination);
+                constantSourceNode.start();
+
+                const [result] = await Promise.all([
+                    new Promise((resolve) => {
+                        let lastCurrentFrame = null;
+                        let numberOfEvents = 0;
+
+                        audioWorkletNode.port.onmessage = ({ data }) => {
+                            const { currentFrame } = data;
+
+                            if (lastCurrentFrame !== null && lastCurrentFrame + 128 !== currentFrame) {
+                                resolve(true);
+                            } else if (numberOfEvents > 5) {
+                                resolve(false);
+                            }
+
+                            lastCurrentFrame = currentFrame;
+                            numberOfEvents += 1;
+                        };
+                    }),
+                    audioContext.resume()
+                ]);
+
+                audioWorkletNode.port.onmessage = null;
+
+                audioWorkletNode.port.close();
+                audioWorkletNode.disconnect(audioContext.destination);
+
+                constantSourceNode.stop();
+                constantSourceNode.disconnect(audioWorkletNode);
+
+                if (result) {
+                    break;
+                }
+
+                if (audioContext.currentTime > 10) {
+                    await audioContext.close();
+
+                    audioContext = new AudioContext();
+
+                    await audioContext.audioWorklet.addModule('base/test/fixtures/inspector-processor.js');
+                }
+            }
+        });
+    });
 });
