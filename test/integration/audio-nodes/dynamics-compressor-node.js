@@ -1,4 +1,12 @@
-import { AudioBuffer, AudioBufferSourceNode, ConstantSourceNode, DynamicsCompressorNode, GainNode } from '../../../src/module';
+import {
+    AudioBuffer,
+    AudioBufferSourceNode,
+    AudioWorkletNode,
+    ConstantSourceNode,
+    DynamicsCompressorNode,
+    GainNode,
+    addAudioWorkletModule
+} from '../../../src/module';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -557,13 +565,9 @@ if (typeof window !== 'undefined') {
                 });
 
                 describe('ratio', () => {
-                    let dynamicsCompressorNode;
-
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
                     it('should return an implementation of the AudioParam interface', () => {
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+
                         expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime).to.be.a('function');
                         expect(dynamicsCompressorNode.ratio.cancelScheduledValues).to.be.a('function');
                         expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
@@ -578,24 +582,44 @@ if (typeof window !== 'undefined') {
                     });
 
                     it('should be readonly', () => {
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+
                         expect(() => {
                             dynamicsCompressorNode.ratio = 'anything';
                         }).to.throw(TypeError);
                     });
 
                     describe('cancelAndHoldAtTime()', () => {
+                        let dynamicsCompressorNode;
+
+                        beforeEach(() => {
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                        });
+
                         it('should be chainable', () => {
                             expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.ratio);
                         });
                     });
 
                     describe('cancelScheduledValues()', () => {
+                        let dynamicsCompressorNode;
+
+                        beforeEach(() => {
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                        });
+
                         it('should be chainable', () => {
                             expect(dynamicsCompressorNode.ratio.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.ratio);
                         });
                     });
 
                     describe('exponentialRampToValueAtTime()', () => {
+                        let dynamicsCompressorNode;
+
+                        beforeEach(() => {
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                        });
+
                         it('should be chainable', () => {
                             expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
                         });
@@ -614,24 +638,48 @@ if (typeof window !== 'undefined') {
                     });
 
                     describe('linearRampToValueAtTime()', () => {
+                        let dynamicsCompressorNode;
+
+                        beforeEach(() => {
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                        });
+
                         it('should be chainable', () => {
                             expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
                         });
                     });
 
                     describe('setTargetAtTime()', () => {
+                        let dynamicsCompressorNode;
+
+                        beforeEach(() => {
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                        });
+
                         it('should be chainable', () => {
                             expect(dynamicsCompressorNode.ratio.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.ratio);
                         });
                     });
 
                     describe('setValueAtTime()', () => {
+                        let dynamicsCompressorNode;
+
+                        beforeEach(() => {
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                        });
+
                         it('should be chainable', () => {
                             expect(dynamicsCompressorNode.ratio.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
                         });
                     });
 
                     describe('setValueCurveAtTime()', () => {
+                        let dynamicsCompressorNode;
+
+                        beforeEach(() => {
+                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                        });
+
                         for (const [arrayType, values] of [
                             ['regular Array', [1, 0]],
                             ['Float32Array', new Float32Array([1, 0])]
@@ -646,7 +694,89 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    // @todo automation
+                    describe('automation', () => {
+                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                            ? [
+                                  [true, true],
+                                  [true, false],
+                                  [false, true]
+                              ]
+                            : [[true, false]]) {
+                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                withAnAppendedAudioWorklet ? 'with' : 'without'
+                            } an appended AudioWorklet`, () => {
+                                let renderer;
+                                let values;
+
+                                beforeEach(async function () {
+                                    this.timeout(10000);
+
+                                    values = [1, 0.5, 0, -0.5, -1];
+
+                                    if (withAnAppendedAudioWorklet) {
+                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                    }
+
+                                    renderer = createRenderer({
+                                        context,
+                                        length: context.length === undefined ? lookAhead + 5 : undefined,
+                                        setup(destination) {
+                                            // Bug #112: Firefox pauses the DynamicsCompressorNode without waiting for the tail time.
+                                            const audioBuffer = new AudioBuffer({ length: lookAhead + 5, sampleRate: context.sampleRate });
+                                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                            const audioWorkletNode = withAnAppendedAudioWorklet
+                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                : null;
+                                            const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                                            const masterGainNode = new GainNode(context, {
+                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                            });
+
+                                            audioBuffer.copyToChannel(new Float32Array(values), 0);
+
+                                            audioBufferSourceNode.buffer = audioBuffer;
+
+                                            audioBufferSourceNode.connect(dynamicsCompressorNode);
+
+                                            if (withADirectConnection) {
+                                                dynamicsCompressorNode.connect(masterGainNode);
+                                            }
+
+                                            if (withAnAppendedAudioWorklet) {
+                                                dynamicsCompressorNode.connect(audioWorkletNode).connect(masterGainNode);
+                                            }
+
+                                            masterGainNode.connect(destination);
+
+                                            return { audioBufferSourceNode };
+                                        }
+                                    });
+                                });
+
+                                describe('without any automation', () => {
+                                    it('should not modify the signal', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime);
+                                            }
+                                        }).then((channelData) => {
+                                            for (let i = 0; i < lookAhead; i += 1) {
+                                                expect(channelData[i]).to.equal(0);
+                                            }
+
+                                            expect(channelData[lookAhead]).to.be.closeTo(0.304, 0.004);
+                                            expect(channelData[lookAhead + 1]).to.be.closeTo(0.152, 0.003);
+                                            expect(channelData[lookAhead + 2]).to.be.closeTo(0, 0.0001);
+                                            expect(channelData[lookAhead + 3]).to.be.closeTo(-0.152, 0.003);
+                                            expect(channelData[lookAhead + 4]).to.be.closeTo(-0.304, 0.004);
+                                        });
+                                    });
+                                });
+                            });
+                        }
+                    });
                 });
 
                 // @todo reduction
