@@ -223,7 +223,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -269,11 +270,13 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[1]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[2]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[3]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[4]).to.be.closeTo(0.00651345, 0.00000001);
+                                    const offset = channelData.length === 5 ? 0 : 768;
+
+                                    expect(channelData[offset + 0]).to.be.closeTo(0.00651345, 0.00000001);
+                                    expect(channelData[offset + 1]).to.be.closeTo(0.00651345, 0.00000001);
+                                    expect(channelData[offset + 2]).to.be.closeTo(0.00651345, 0.00000001);
+                                    expect(channelData[offset + 3]).to.be.closeTo(0.00651345, 0.00000001);
+                                    expect(channelData[offset + 4]).to.be.closeTo(0.00651345, 0.00000001);
                                 });
                             });
                         });
@@ -473,7 +476,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -519,11 +523,13 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007035482, 0.00000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007035482, 0.00000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007035482, 0.00000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007035482, 0.00000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007035482, 0.00000001);
+                                    const offset = channelData.length === 5 ? 0 : 768;
+
+                                    expect(channelData[offset + 0]).to.be.closeTo(0.007035482, 0.00000001);
+                                    expect(channelData[offset + 1]).to.be.closeTo(0.007035482, 0.00000001);
+                                    expect(channelData[offset + 2]).to.be.closeTo(0.007035482, 0.00000001);
+                                    expect(channelData[offset + 3]).to.be.closeTo(0.007035482, 0.00000001);
+                                    expect(channelData[offset + 4]).to.be.closeTo(0.007035482, 0.00000001);
                                 });
                             });
                         });
@@ -723,7 +729,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -751,11 +758,13 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[1]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[2]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[3]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[4]).to.be.closeTo(0.00651345, 0.00000001);
+                                    const offset = channelData.length === 5 ? 0 : 768;
+
+                                    expect(channelData[offset + 0]).to.be.closeTo(0.00651345, 0.00000001);
+                                    expect(channelData[offset + 1]).to.be.closeTo(0.00651345, 0.00000001);
+                                    expect(channelData[offset + 2]).to.be.closeTo(0.00651345, 0.00000001);
+                                    expect(channelData[offset + 3]).to.be.closeTo(0.00651345, 0.00000001);
+                                    expect(channelData[offset + 4]).to.be.closeTo(0.00651345, 0.00000001);
                                 });
                             });
                         });
@@ -772,7 +781,7 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([
+                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
                                         0.0064865294843912125, 0.0064865294843912125, 0.0064865294843912125, 0.0064865294843912125,
                                         0.0064865294843912125
                                     ]);
@@ -975,7 +984,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -1021,7 +1031,7 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([
+                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
                                         0.007035974878817797, 0.007035974878817797, 0.007035974878817797, 0.007035974878817797,
                                         0.007035974878817797
                                     ]);
@@ -1224,7 +1234,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -1270,11 +1281,13 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007042165, 0.000000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007042165, 0.000000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007042165, 0.000000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007042165, 0.000000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007042165, 0.000000001);
+                                    const offset = channelData.length === 5 ? 0 : 768;
+
+                                    expect(channelData[offset + 0]).to.be.closeTo(0.007042165, 0.000000001);
+                                    expect(channelData[offset + 1]).to.be.closeTo(0.007042165, 0.000000001);
+                                    expect(channelData[offset + 2]).to.be.closeTo(0.007042165, 0.000000001);
+                                    expect(channelData[offset + 3]).to.be.closeTo(0.007042165, 0.000000001);
+                                    expect(channelData[offset + 4]).to.be.closeTo(0.007042165, 0.000000001);
                                 });
                             });
                         });
@@ -1474,7 +1487,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -1520,11 +1534,13 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007105881, 0.000000002);
-                                    expect(channelData[1]).to.be.closeTo(0.007105881, 0.000000002);
-                                    expect(channelData[2]).to.be.closeTo(0.007105881, 0.000000002);
-                                    expect(channelData[3]).to.be.closeTo(0.007105881, 0.000000002);
-                                    expect(channelData[4]).to.be.closeTo(0.007105881, 0.000000002);
+                                    const offset = channelData.length === 5 ? 0 : 768;
+
+                                    expect(channelData[offset + 0]).to.be.closeTo(0.007105881, 0.000000002);
+                                    expect(channelData[offset + 1]).to.be.closeTo(0.007105881, 0.000000002);
+                                    expect(channelData[offset + 2]).to.be.closeTo(0.007105881, 0.000000002);
+                                    expect(channelData[offset + 3]).to.be.closeTo(0.007105881, 0.000000002);
+                                    expect(channelData[offset + 4]).to.be.closeTo(0.007105881, 0.000000002);
                                 });
                             });
                         });
@@ -1724,7 +1740,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -1770,11 +1787,13 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007032075, 0.000000001);
+                                    const offset = channelData.length === 5 ? 0 : 768;
+
+                                    expect(channelData[offset + 0]).to.be.closeTo(0.007032075, 0.000000001);
+                                    expect(channelData[offset + 1]).to.be.closeTo(0.007032075, 0.000000001);
+                                    expect(channelData[offset + 2]).to.be.closeTo(0.007032075, 0.000000001);
+                                    expect(channelData[offset + 3]).to.be.closeTo(0.007032075, 0.000000001);
+                                    expect(channelData[offset + 4]).to.be.closeTo(0.007032075, 0.000000001);
                                 });
                             });
                         });
@@ -1974,7 +1993,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -2002,11 +2022,13 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007032075, 0.000000001);
+                                    const offset = channelData.length === 5 ? 0 : 768;
+
+                                    expect(channelData[offset + 0]).to.be.closeTo(0.007032075, 0.000000001);
+                                    expect(channelData[offset + 1]).to.be.closeTo(0.007032075, 0.000000001);
+                                    expect(channelData[offset + 2]).to.be.closeTo(0.007032075, 0.000000001);
+                                    expect(channelData[offset + 3]).to.be.closeTo(0.007032075, 0.000000001);
+                                    expect(channelData[offset + 4]).to.be.closeTo(0.007032075, 0.000000001);
                                 });
                             });
                         });
@@ -2023,7 +2045,7 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([
+                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
                                         0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
                                         0.007035556249320507
                                     ]);
@@ -2226,7 +2248,8 @@ if (typeof window !== 'undefined') {
 
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                // Bug #117: Firefox has AudioParam implementation so far.
+                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const pannerNode = new PannerNode(context, {
@@ -2255,7 +2278,7 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([
+                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
                                         0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
                                         0.007035556249320507
                                     ]);
@@ -2275,7 +2298,7 @@ if (typeof window !== 'undefined') {
                                         constantSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([
+                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
                                         0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
                                         0.007035556249320507
                                     ]);
