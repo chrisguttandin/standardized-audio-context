@@ -71,30 +71,70 @@ if (typeof window !== 'undefined') {
                     beforeEach(async function () {
                         this.timeout(10000);
 
-                        const audioElement = new Audio();
+                        context = createContext();
 
-                        if (typeof audioElement.captureStream === 'function') {
-                            audioElement.src = 'base/test/fixtures/1000-hertz-for-ten-seconds.wav';
+                        if (typeof MediaStreamTrackGenerator !== 'undefined') {
+                            const { sampleRate } = context;
+                            const numberOfFrames = sampleRate / 20;
+                            const data = new Float32Array(numberOfFrames);
 
-                            const playPromise = audioElement.play();
+                            data.fill(1);
 
-                            mediaStream = audioElement.captureStream();
+                            // eslint-disable-next-line no-undef
+                            const trackGenerator = new MediaStreamTrackGenerator({ kind: 'audio' });
+                            const writer = trackGenerator.writable.getWriter();
 
-                            await Promise.all([
-                                playPromise,
-                                new Promise((resolve, reject) => {
-                                    audioElement.oncanplaythrough = resolve;
-                                    audioElement.onerror = () => reject(audioElement.error);
-                                }),
-                                playPromise
-                            ]);
+                            let timestamp = 0;
 
-                            teardownMediaStream = () =>
-                                new Promise((resolve, reject) => {
-                                    audioElement.onerror = () => reject(audioElement.error);
-                                    audioElement.onpause = resolve;
-                                    audioElement.pause();
-                                });
+                            await writer.write(
+                                // eslint-disable-next-line no-undef
+                                new AudioData({
+                                    data,
+                                    format: 'f32',
+                                    numberOfChannels: 1,
+                                    numberOfFrames,
+                                    sampleRate,
+                                    timestamp
+                                })
+                            );
+
+                            const duration = (numberOfFrames / sampleRate) * 1000000;
+
+                            timestamp += duration;
+
+                            await writer.write(
+                                // eslint-disable-next-line no-undef
+                                new AudioData({
+                                    data,
+                                    format: 'f32',
+                                    numberOfChannels: 1,
+                                    numberOfFrames,
+                                    sampleRate,
+                                    timestamp
+                                })
+                            );
+
+                            const intervalId = setInterval(() => {
+                                timestamp += duration;
+
+                                writer.write(
+                                    // eslint-disable-next-line no-undef
+                                    new AudioData({
+                                        data,
+                                        format: 'f32',
+                                        numberOfChannels: 1,
+                                        numberOfFrames,
+                                        sampleRate,
+                                        timestamp
+                                    })
+                                );
+                            }, duration / 1000);
+
+                            mediaStream = new MediaStream([trackGenerator]);
+                            teardownMediaStream = () => {
+                                clearInterval(intervalId);
+                                writer.close();
+                            };
                         } else if (isSafari(navigator)) {
                             const audioContext = new AudioContext();
                             const oscillatorNode = audioContext.createOscillator();
@@ -121,8 +161,6 @@ if (typeof window !== 'undefined') {
                             });
                             teardownMediaStream = null;
                         }
-
-                        context = createContext();
                     });
 
                     describe('constructor()', () => {
