@@ -83,10 +83,18 @@ if (typeof window !== 'undefined') {
         for (const [description, { createDynamicsCompressorNode, createContext }] of Object.entries(testCases)) {
             describe(`with the ${description}`, () => {
                 let context;
+                let lookAhead;
 
                 afterEach(() => context.close?.());
 
-                beforeEach(() => (context = createContext()));
+                beforeEach(() => {
+                    context = createContext();
+                    lookAhead = Math.floor(0.006 * context.sampleRate);
+
+                    if (description.includes('Offline')) {
+                        context = createContext({ length: lookAhead + 5 });
+                    }
+                });
 
                 describe('constructor()', () => {
                     for (const audioContextState of ['closed', 'running']) {
@@ -961,7 +969,7 @@ if (typeof window !== 'undefined') {
                         beforeEach(() => {
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                length: context.length === undefined ? lookAhead + 5 : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const dynamicsCompressorNode = createDynamicsCompressorNode(context);
@@ -984,7 +992,7 @@ if (typeof window !== 'undefined') {
                                     constantSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                expect(Array.from(channelData).slice(lookAhead)).to.deep.equal([0, 0, 0, 0, 0]);
                             });
                         });
                     });
@@ -997,9 +1005,10 @@ if (typeof window !== 'undefined') {
                         createPredefinedRenderer = (values) =>
                             createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                length: context.length === undefined ? lookAhead + 5 : undefined,
                                 setup(destination) {
-                                    const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                    // Bug #112: Firefox pauses the DynamicsCompressorNode without waiting for the tail time.
+                                    const audioBuffer = new AudioBuffer({ length: lookAhead + 5, sampleRate: context.sampleRate });
                                     const audioBufferSourceNode = new AudioBufferSourceNode(context);
                                     const dynamicsCompressorNode = createDynamicsCompressorNode(context);
                                     const firstDummyGainNode = new GainNode(context);
@@ -1038,11 +1047,12 @@ if (typeof window !== 'undefined') {
                                     dynamicsCompressorNode.disconnect();
                                 },
                                 start(startTime, { audioBufferSourceNode }) {
-                                    // @todo Add the ability to render a buffer at on offset with an OfflineAudioContext as well.
-                                    audioBufferSourceNode.start(startTime === 0 ? startTime : startTime - 264 / 44100);
+                                    audioBufferSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                for (let i = 0; i < lookAhead + 5; i += 1) {
+                                    expect(channelData[i]).to.equal(0);
+                                }
                             });
                         });
                     });
@@ -1087,11 +1097,12 @@ if (typeof window !== 'undefined') {
                                         dynamicsCompressorNode.disconnect(0);
                                     },
                                     start(startTime, { audioBufferSourceNode }) {
-                                        // @todo Add the ability to render a buffer at on offset with an OfflineAudioContext as well.
-                                        audioBufferSourceNode.start(startTime === 0 ? startTime : startTime - 264 / 44100);
+                                        audioBufferSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    for (let i = 0; i < lookAhead + 5; i += 1) {
+                                        expect(channelData[i]).to.equal(0);
+                                    }
                                 });
                             });
                         });
@@ -1137,33 +1148,37 @@ if (typeof window !== 'undefined') {
                                         dynamicsCompressorNode.disconnect(firstDummyGainNode);
                                     },
                                     start(startTime, { audioBufferSourceNode }) {
-                                        // @todo Add the ability to render a buffer at on offset with an OfflineAudioContext as well.
-                                        audioBufferSourceNode.start(startTime === 0 ? startTime : startTime - 264 / 44100);
+                                        audioBufferSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    for (let i = 0; i < lookAhead + 5; i += 1) {
+                                        expect(channelData[i]).to.equal(0);
+                                    }
                                 });
                             });
 
-                            /*
-                             * Bug #112: Firefox does not have a tail-time.
-                             * it('should disconnect another destination in isolation', function () {
-                             *     this.timeout(10000);
-                             *
-                             *     return renderer({
-                             *         prepare ({ dynamicsCompressorNode, secondDummyGainNode }) {
-                             *             dynamicsCompressorNode.disconnect(secondDummyGainNode);
-                             *         },
-                             *         start (startTime, { audioBufferSourceNode }) {
-                             *             // @todo Add the ability to render a buffer at on offset with an OfflineAudioContext as well.
-                             *             audioBufferSourceNode.start((startTime === 0) ? startTime : startTime - (264 / 44100));
-                             *         }
-                             *     })
-                             *         .then((channelData) => {
-                             *             expect(Array.from(channelData)).to.deep.equal(values);
-                             *         });
-                             * });
-                             */
+                            it('should disconnect another destination in isolation', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    prepare({ dynamicsCompressorNode, secondDummyGainNode }) {
+                                        dynamicsCompressorNode.disconnect(secondDummyGainNode);
+                                    },
+                                    start(startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    for (let i = 0; i < lookAhead; i += 1) {
+                                        expect(channelData[i]).to.equal(0);
+                                    }
+
+                                    expect(channelData[lookAhead]).to.be.closeTo(0.307, 0.003);
+                                    expect(channelData[lookAhead + 1]).to.be.closeTo(0.307, 0.003);
+                                    expect(channelData[lookAhead + 2]).to.be.closeTo(0.307, 0.003);
+                                    expect(channelData[lookAhead + 3]).to.be.closeTo(0.307, 0.003);
+                                    expect(channelData[lookAhead + 4]).to.be.closeTo(0.307, 0.003);
+                                });
+                            });
                         });
                     });
 
