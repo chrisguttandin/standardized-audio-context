@@ -482,7 +482,19 @@ if (typeof window !== 'undefined') {
                             createPredefinedRenderer = (isAudioStreamTrackRemoved) =>
                                 createRenderer({
                                     context,
-                                    length: context.length === undefined ? 5 : undefined,
+                                    /*
+                                     * Bug #207 & #208: It's necessary to pipe the stream through the AudioContext once more in Chrome and
+                                     * Safari. There will be an additional delay to account for. It's not necessarily a bug but still something
+                                     * that needs to be tracked.
+                                     */
+                                    length:
+                                        context.length === undefined
+                                            ? isSafari(navigator)
+                                                ? 2437
+                                                : /Chrome/.test(navigator.userAgent)
+                                                  ? 1477
+                                                  : 5
+                                            : undefined,
                                     async setup(destination) {
                                         const analyserNode = new AnalyserNode(context);
                                         const firstDummyGainNode = new GainNode(context);
@@ -542,7 +554,11 @@ if (typeof window !== 'undefined') {
                                                 mediaStreamTrackAudioSourceNode.disconnect();
                                             }
                                         }).then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                            expect(
+                                                Array.from(channelData).slice(
+                                                    isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
+                                                )
+                                            ).to.deep.equal([0, 0, 0, 0, 0]);
                                         });
                                     });
                                 });
@@ -590,7 +606,11 @@ if (typeof window !== 'undefined') {
                                                     mediaStreamTrackAudioSourceNode.disconnect(0);
                                                 }
                                             }).then((channelData) => {
-                                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                                expect(
+                                                    Array.from(channelData).slice(
+                                                        isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
+                                                    )
+                                                ).to.deep.equal([0, 0, 0, 0, 0]);
                                             });
                                         });
                                     });
@@ -639,7 +659,11 @@ if (typeof window !== 'undefined') {
                                                     mediaStreamTrackAudioSourceNode.disconnect(firstDummyGainNode);
                                                 }
                                             }).then((channelData) => {
-                                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                                expect(
+                                                    Array.from(channelData).slice(
+                                                        isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
+                                                    )
+                                                ).to.deep.equal([0, 0, 0, 0, 0]);
                                             });
                                         });
 
@@ -651,11 +675,11 @@ if (typeof window !== 'undefined') {
                                                     mediaStreamTrackAudioSourceNode.disconnect(secondDummyGainNode);
                                                 }
                                             }).then((channelData) => {
-                                                /*
-                                                 * @todo The audioElement will just play a sine wave and Firefox will just capture the signal from
-                                                 * the microphone. Therefore it is okay to only test for non zero values.
-                                                 */
-                                                expect(Array.from(channelData)).to.not.deep.equal([0, 0, 0, 0, 0]);
+                                                expect(
+                                                    Array.from(channelData).slice(
+                                                        isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
+                                                    )
+                                                ).to.not.deep.equal([0, 0, 0, 0, 0]);
                                             });
                                         });
                                     });
