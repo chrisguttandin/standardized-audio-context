@@ -732,12 +732,19 @@ if (typeof window !== 'undefined') {
                     }
 
                     describe('with a cycle', () => {
+                        let delay;
                         let renderer;
 
                         beforeEach(() => {
+                            delay = 128;
+
+                            if (description.includes('Offline')) {
+                                context = createContext({ length: delay + 5 });
+                            }
+
                             renderer = createRenderer({
                                 context,
-                                length: context.length === undefined ? 5 : undefined,
+                                length: context.length === undefined ? delay + 5 : undefined,
                                 setup(destination) {
                                     const constantSourceNode = new ConstantSourceNode(context);
                                     const delayNode = createDelayNode(context);
@@ -747,7 +754,7 @@ if (typeof window !== 'undefined') {
                                      * Bug #164: Only Firefox detects cycles and therefore is the only browser which clamps the delayTime to
                                      * the minimum amount.
                                      */
-                                    delayNode.delayTime.value = 128 / context.sampleRate;
+                                    delayNode.delayTime.value = delay / context.sampleRate;
 
                                     constantSourceNode.connect(delayNode).connect(destination);
 
@@ -758,7 +765,7 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        it('should render silence', function () {
+                        it('should render a delayed signal', function () {
                             this.timeout(10000);
 
                             return renderer({
@@ -766,7 +773,11 @@ if (typeof window !== 'undefined') {
                                     constantSourceNode.start(startTime);
                                 }
                             }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                for (let i = 0; i < delay; i += 1) {
+                                    expect(channelData[i]).to.be.closeTo(0, 0.000003);
+                                }
+
+                                expect(Array.from(channelData).slice(delay)).to.deep.equal([1, 1, 1, 1, 1]);
                             });
                         });
                     });
