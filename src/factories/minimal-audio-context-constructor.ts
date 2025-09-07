@@ -27,7 +27,7 @@ export const createMinimalAudioContextConstructor: TMinimalAudioContextConstruct
                 );
             }
 
-            super(nativeAudioContext, 2);
+            super(nativeAudioContext, nativeAudioContext.destination.channelCount);
 
             this._nativeAudioContext = nativeAudioContext;
             this._state = null;
