@@ -694,89 +694,96 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                let renderer;
-                                let values;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    let renderer;
+                                    let values;
 
-                                beforeEach(async function () {
-                                    this.timeout(10000);
-
-                                    values = [1, 0.5, 0, -0.5, -1];
-
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                    }
-
-                                    renderer = createRenderer({
-                                        context,
-                                        length: context.length === undefined ? lookAhead + 5 : undefined,
-                                        setup(destination) {
-                                            // Bug #112: Firefox pauses the DynamicsCompressorNode without waiting for the tail time.
-                                            const audioBuffer = new AudioBuffer({ length: lookAhead + 5, sampleRate: context.sampleRate });
-                                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                            const audioWorkletNode = withAnAppendedAudioWorklet
-                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                : null;
-                                            const dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                                            const masterGainNode = new GainNode(context, {
-                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                            });
-
-                                            audioBuffer.copyToChannel(new Float32Array(values), 0);
-
-                                            audioBufferSourceNode.buffer = audioBuffer;
-
-                                            audioBufferSourceNode.connect(dynamicsCompressorNode);
-
-                                            if (withADirectConnection) {
-                                                dynamicsCompressorNode.connect(masterGainNode);
-                                            }
-
-                                            if (withAnAppendedAudioWorklet) {
-                                                dynamicsCompressorNode.connect(audioWorkletNode).connect(masterGainNode);
-                                            }
-
-                                            masterGainNode.connect(destination);
-
-                                            return { audioBufferSourceNode };
-                                        }
-                                    });
-                                });
-
-                                describe('without any automation', () => {
-                                    it('should not modify the signal', function () {
+                                    beforeEach(async function () {
                                         this.timeout(10000);
 
-                                        return renderer({
-                                            start(startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        }).then((channelData) => {
-                                            for (let i = 0; i < lookAhead; i += 1) {
-                                                expect(channelData[i]).to.equal(0);
-                                            }
+                                        values = [1, 0.5, 0, -0.5, -1];
 
-                                            expect(channelData[lookAhead]).to.be.closeTo(0.304, 0.004);
-                                            expect(channelData[lookAhead + 1]).to.be.closeTo(0.152, 0.003);
-                                            expect(channelData[lookAhead + 2]).to.be.closeTo(0, 0.0001);
-                                            expect(channelData[lookAhead + 3]).to.be.closeTo(-0.152, 0.003);
-                                            expect(channelData[lookAhead + 4]).to.be.closeTo(-0.304, 0.004);
+                                        if (withAnAppendedAudioWorklet) {
+                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                        }
+
+                                        renderer = createRenderer({
+                                            context,
+                                            length: context.length === undefined ? lookAhead + 5 : undefined,
+                                            setup(destination) {
+                                                // Bug #112: Firefox pauses the DynamicsCompressorNode without waiting for the tail time.
+                                                const audioBuffer = new AudioBuffer({
+                                                    length: lookAhead + 5,
+                                                    sampleRate: context.sampleRate
+                                                });
+                                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                    : null;
+                                                const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
+
+                                                audioBuffer.copyToChannel(new Float32Array(values), 0);
+
+                                                audioBufferSourceNode.buffer = audioBuffer;
+
+                                                audioBufferSourceNode.connect(dynamicsCompressorNode);
+
+                                                if (withADirectConnection) {
+                                                    dynamicsCompressorNode.connect(masterGainNode);
+                                                }
+
+                                                if (withAnAppendedAudioWorklet) {
+                                                    dynamicsCompressorNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                }
+
+                                                masterGainNode.connect(destination);
+
+                                                return { audioBufferSourceNode };
+                                            }
+                                        });
+                                    });
+
+                                    describe('without any automation', () => {
+                                        it('should not modify the signal', function () {
+                                            this.timeout(10000);
+
+                                            return renderer({
+                                                start(startTime, { audioBufferSourceNode }) {
+                                                    audioBufferSourceNode.start(startTime);
+                                                }
+                                            }).then((channelData) => {
+                                                for (let i = 0; i < lookAhead; i += 1) {
+                                                    expect(channelData[i]).to.equal(0);
+                                                }
+
+                                                expect(channelData[lookAhead]).to.be.closeTo(0.304, 0.004);
+                                                expect(channelData[lookAhead + 1]).to.be.closeTo(0.152, 0.003);
+                                                expect(channelData[lookAhead + 2]).to.be.closeTo(0, 0.0001);
+                                                expect(channelData[lookAhead + 3]).to.be.closeTo(-0.152, 0.003);
+                                                expect(channelData[lookAhead + 4]).to.be.closeTo(-0.304, 0.004);
+                                            });
                                         });
                                     });
                                 });
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
                 });
 
                 // @todo reduction
@@ -1093,39 +1100,43 @@ if (typeof window !== 'undefined') {
                         });
                     }
 
-                    describe('with a cycle', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a cycle', () => {
+                            let renderer;
 
-                        beforeEach(() => {
-                            renderer = createRenderer({
-                                context,
-                                length: context.length === undefined ? lookAhead + 5 : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                                    const gainNode = new GainNode(context);
+                            beforeEach(() => {
+                                renderer = createRenderer({
+                                    context,
+                                    length: context.length === undefined ? lookAhead + 5 : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                                        const gainNode = new GainNode(context);
 
-                                    constantSourceNode.connect(dynamicsCompressorNode).connect(destination);
+                                        constantSourceNode.connect(dynamicsCompressorNode).connect(destination);
 
-                                    dynamicsCompressorNode.connect(gainNode).connect(dynamicsCompressorNode);
+                                        dynamicsCompressorNode.connect(gainNode).connect(dynamicsCompressorNode);
 
-                                    return { constantSourceNode, dynamicsCompressorNode, gainNode };
-                                }
+                                        return { constantSourceNode, dynamicsCompressorNode, gainNode };
+                                    }
+                                });
+                            });
+
+                            it('should render silence', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    start(startTime, { constantSourceNode }) {
+                                        constantSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData).slice(lookAhead)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
                         });
-
-                        it('should render silence', function () {
-                            this.timeout(10000);
-
-                            return renderer({
-                                start(startTime, { constantSourceNode }) {
-                                    constantSourceNode.start(startTime);
-                                }
-                            }).then((channelData) => {
-                                expect(Array.from(channelData).slice(lookAhead)).to.deep.equal([0, 0, 0, 0, 0]);
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('disconnect()', () => {
@@ -1157,35 +1168,39 @@ if (typeof window !== 'undefined') {
                             });
                     });
 
-                    describe('without any parameters', () => {
-                        let renderer;
-                        let values;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('without any parameters', () => {
+                            let renderer;
+                            let values;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            values = [1, 1, 1, 1, 1];
+                                values = [1, 1, 1, 1, 1];
 
-                            renderer = createPredefinedRenderer(values);
-                        });
+                                renderer = createPredefinedRenderer(values);
+                            });
 
-                        it('should disconnect all destinations', function () {
-                            this.timeout(10000);
+                            it('should disconnect all destinations', function () {
+                                this.timeout(10000);
 
-                            return renderer({
-                                prepare({ dynamicsCompressorNode }) {
-                                    dynamicsCompressorNode.disconnect();
-                                },
-                                start(startTime, { audioBufferSourceNode }) {
-                                    audioBufferSourceNode.start(startTime);
-                                }
-                            }).then((channelData) => {
-                                for (let i = 0; i < lookAhead + 5; i += 1) {
-                                    expect(channelData[i]).to.equal(0);
-                                }
+                                return renderer({
+                                    prepare({ dynamicsCompressorNode }) {
+                                        dynamicsCompressorNode.disconnect();
+                                    },
+                                    start(startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    for (let i = 0; i < lookAhead + 5; i += 1) {
+                                        expect(channelData[i]).to.equal(0);
+                                    }
+                                });
                             });
                         });
-                    });
+                    }
 
                     describe('with an output', () => {
                         describe('with a value which is out-of-bound', () => {
@@ -1207,35 +1222,39 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection from the given output', () => {
-                            let renderer;
-                            let values;
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI || description.includes('Offline')) {
+                            describe('with a connection from the given output', () => {
+                                let renderer;
+                                let values;
 
-                            beforeEach(function () {
-                                this.timeout(10000);
+                                beforeEach(function () {
+                                    this.timeout(10000);
 
-                                values = [1, 1, 1, 1, 1];
+                                    values = [1, 1, 1, 1, 1];
 
-                                renderer = createPredefinedRenderer(values);
-                            });
+                                    renderer = createPredefinedRenderer(values);
+                                });
 
-                            it('should disconnect all destinations from the given output', function () {
-                                this.timeout(10000);
+                                it('should disconnect all destinations from the given output', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    prepare({ dynamicsCompressorNode }) {
-                                        dynamicsCompressorNode.disconnect(0);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    for (let i = 0; i < lookAhead + 5; i += 1) {
-                                        expect(channelData[i]).to.equal(0);
-                                    }
+                                    return renderer({
+                                        prepare({ dynamicsCompressorNode }) {
+                                            dynamicsCompressorNode.disconnect(0);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        for (let i = 0; i < lookAhead + 5; i += 1) {
+                                            expect(channelData[i]).to.equal(0);
+                                        }
+                                    });
                                 });
                             });
-                        });
+                        }
                     });
 
                     describe('with a destination', () => {
@@ -1258,58 +1277,62 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection to the given destination', () => {
-                            let renderer;
-                            let values;
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI || description.includes('Offline')) {
+                            describe('with a connection to the given destination', () => {
+                                let renderer;
+                                let values;
 
-                            beforeEach(function () {
-                                this.timeout(10000);
+                                beforeEach(function () {
+                                    this.timeout(10000);
 
-                                values = [1, 1, 1, 1, 1];
+                                    values = [1, 1, 1, 1, 1];
 
-                                renderer = createPredefinedRenderer(values);
-                            });
+                                    renderer = createPredefinedRenderer(values);
+                                });
 
-                            it('should disconnect the destination', function () {
-                                this.timeout(10000);
+                                it('should disconnect the destination', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    prepare({ dynamicsCompressorNode, firstDummyGainNode }) {
-                                        dynamicsCompressorNode.disconnect(firstDummyGainNode);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    for (let i = 0; i < lookAhead + 5; i += 1) {
-                                        expect(channelData[i]).to.equal(0);
-                                    }
+                                    return renderer({
+                                        prepare({ dynamicsCompressorNode, firstDummyGainNode }) {
+                                            dynamicsCompressorNode.disconnect(firstDummyGainNode);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        for (let i = 0; i < lookAhead + 5; i += 1) {
+                                            expect(channelData[i]).to.equal(0);
+                                        }
+                                    });
+                                });
+
+                                it('should disconnect another destination in isolation', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        prepare({ dynamicsCompressorNode, secondDummyGainNode }) {
+                                            dynamicsCompressorNode.disconnect(secondDummyGainNode);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        for (let i = 0; i < lookAhead; i += 1) {
+                                            expect(channelData[i]).to.equal(0);
+                                        }
+
+                                        expect(channelData[lookAhead]).to.be.closeTo(0.307, 0.003);
+                                        expect(channelData[lookAhead + 1]).to.be.closeTo(0.307, 0.003);
+                                        expect(channelData[lookAhead + 2]).to.be.closeTo(0.307, 0.003);
+                                        expect(channelData[lookAhead + 3]).to.be.closeTo(0.307, 0.003);
+                                        expect(channelData[lookAhead + 4]).to.be.closeTo(0.307, 0.003);
+                                    });
                                 });
                             });
-
-                            it('should disconnect another destination in isolation', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare({ dynamicsCompressorNode, secondDummyGainNode }) {
-                                        dynamicsCompressorNode.disconnect(secondDummyGainNode);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    for (let i = 0; i < lookAhead; i += 1) {
-                                        expect(channelData[i]).to.equal(0);
-                                    }
-
-                                    expect(channelData[lookAhead]).to.be.closeTo(0.307, 0.003);
-                                    expect(channelData[lookAhead + 1]).to.be.closeTo(0.307, 0.003);
-                                    expect(channelData[lookAhead + 2]).to.be.closeTo(0.307, 0.003);
-                                    expect(channelData[lookAhead + 3]).to.be.closeTo(0.307, 0.003);
-                                    expect(channelData[lookAhead + 4]).to.be.closeTo(0.307, 0.003);
-                                });
-                            });
-                        });
+                        }
                     });
 
                     describe('with a destination and an output', () => {

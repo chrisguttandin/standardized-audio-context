@@ -361,226 +361,232 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                let renderer;
-                                let values;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    let renderer;
+                                    let values;
 
-                                beforeEach(async function () {
-                                    this.timeout(10000);
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
 
-                                    values = [1, 0.5, 0, -0.5, -1];
+                                        values = [1, 0.5, 0, -0.5, -1];
 
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                    }
-
-                                    renderer = createRenderer({
-                                        context,
-                                        length: context.length === undefined ? 5 : undefined,
-                                        setup(destination) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                            const audioWorkletNode = withAnAppendedAudioWorklet
-                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                : null;
-                                            const delayNode = createDelayNode(context);
-                                            const masterGainNode = new GainNode(context, {
-                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                            });
-
-                                            audioBuffer.copyToChannel(new Float32Array(values), 0);
-
-                                            audioBufferSourceNode.buffer = audioBuffer;
-
-                                            audioBufferSourceNode.connect(delayNode);
-
-                                            if (withADirectConnection) {
-                                                delayNode.connect(masterGainNode);
-                                            }
-
-                                            if (withAnAppendedAudioWorklet) {
-                                                delayNode.connect(audioWorkletNode).connect(masterGainNode);
-                                            }
-
-                                            masterGainNode.connect(destination);
-
-                                            return { audioBufferSourceNode, delayNode };
+                                        if (withAnAppendedAudioWorklet) {
+                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                         }
-                                    });
-                                });
 
-                                describe('without any automation', () => {
-                                    it('should not modify the signal', function () {
-                                        this.timeout(10000);
+                                        renderer = createRenderer({
+                                            context,
+                                            length: context.length === undefined ? 5 : undefined,
+                                            setup(destination) {
+                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                    : null;
+                                                const delayNode = createDelayNode(context);
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
 
-                                        return renderer({
-                                            start(startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        }).then((channelData) => {
-                                            expect(channelData[0]).to.equal(1);
-                                            expect(channelData[1]).to.equal(0.5);
-                                            expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
-                                            expect(channelData[3]).to.equal(-0.5);
-                                            expect(channelData[4]).to.equal(-1);
-                                        });
-                                    });
-                                });
+                                                audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                                // Bug #185: Chrome adds an extra sample to the delay.
-                                if (!/Chrome/.test(navigator.userAgent)) {
-                                    describe('with a modified value', () => {
-                                        it('should modify the signal', function () {
-                                            this.timeout(10000);
+                                                audioBufferSourceNode.buffer = audioBuffer;
 
-                                            return renderer({
-                                                prepare({ delayNode }) {
-                                                    delayNode.delayTime.value = 3 / context.sampleRate;
-                                                },
-                                                start(startTime, { audioBufferSourceNode }) {
-                                                    audioBufferSourceNode.start(startTime);
+                                                audioBufferSourceNode.connect(delayNode);
+
+                                                if (withADirectConnection) {
+                                                    delayNode.connect(masterGainNode);
                                                 }
-                                            }).then((channelData) => {
-                                                expect(channelData[0]).to.equal(0);
-                                                expect(channelData[1]).to.equal(0);
-                                                expect(channelData[2]).to.equal(0);
-                                                expect(channelData[3]).to.be.closeTo(1, 0.000001);
-                                                expect(channelData[4]).to.be.closeTo(0.5, 0.000001);
-                                            });
-                                        });
-                                    });
-                                }
 
-                                describe('with a call to cancelAndHoldAtTime()', () => {
-                                    // @todo
-                                });
+                                                if (withAnAppendedAudioWorklet) {
+                                                    delayNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                }
 
-                                describe('with a call to cancelScheduledValues()', () => {
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
+                                                masterGainNode.connect(destination);
 
-                                        return renderer({
-                                            start(startTime, { audioBufferSourceNode, delayNode }) {
-                                                delayNode.delayTime.setValueAtTime(3 / context.sampleRate, startTime);
-                                                delayNode.delayTime.setValueAtTime(0, roundToSamples(startTime, context.sampleRate, 2));
-                                                delayNode.delayTime.linearRampToValueAtTime(
-                                                    1,
-                                                    roundToSamples(startTime, context.sampleRate, 5)
-                                                );
-                                                delayNode.delayTime.cancelScheduledValues(roundToSamples(startTime, context.sampleRate, 3));
-
-                                                audioBufferSourceNode.start(startTime);
+                                                return { audioBufferSourceNode, delayNode };
                                             }
-                                        }).then((channelData) => {
-                                            expect(channelData[0]).to.equal(0);
-                                            expect(channelData[1]).to.equal(0);
-                                            expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
-                                            expect(channelData[3]).to.equal(-0.5);
-                                            expect(channelData[4]).to.equal(-1);
                                         });
                                     });
-                                });
 
-                                describe('with a call to setValueAtTime()', () => {
-                                    // Bug #185: Chrome adds an extra sample to the delay.
-                                    if (!/Chrome/.test(navigator.userAgent)) {
-                                        it('should modify the signal', function () {
+                                    describe('without any automation', () => {
+                                        it('should not modify the signal', function () {
                                             this.timeout(10000);
 
                                             return renderer({
-                                                start(startTime, { audioBufferSourceNode, delayNode }) {
-                                                    delayNode.delayTime.setValueAtTime(
-                                                        3 / context.sampleRate,
-                                                        roundToSamples(startTime, context.sampleRate, 2)
-                                                    );
-
+                                                start(startTime, { audioBufferSourceNode }) {
                                                     audioBufferSourceNode.start(startTime);
                                                 }
                                             }).then((channelData) => {
                                                 expect(channelData[0]).to.equal(1);
                                                 expect(channelData[1]).to.equal(0.5);
-                                                expect(channelData[2]).to.equal(0);
-                                                expect(channelData[3]).to.be.closeTo(1, 0.000001);
-                                                expect(channelData[4]).to.be.closeTo(0.5, 0.000001);
+                                                expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
+                                                expect(channelData[3]).to.equal(-0.5);
+                                                expect(channelData[4]).to.equal(-1);
+                                            });
+                                        });
+                                    });
+
+                                    // Bug #185: Chrome adds an extra sample to the delay.
+                                    if (!/Chrome/.test(navigator.userAgent)) {
+                                        describe('with a modified value', () => {
+                                            it('should modify the signal', function () {
+                                                this.timeout(10000);
+
+                                                return renderer({
+                                                    prepare({ delayNode }) {
+                                                        delayNode.delayTime.value = 3 / context.sampleRate;
+                                                    },
+                                                    start(startTime, { audioBufferSourceNode }) {
+                                                        audioBufferSourceNode.start(startTime);
+                                                    }
+                                                }).then((channelData) => {
+                                                    expect(channelData[0]).to.equal(0);
+                                                    expect(channelData[1]).to.equal(0);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(1, 0.000001);
+                                                    expect(channelData[4]).to.be.closeTo(0.5, 0.000001);
+                                                });
                                             });
                                         });
                                     }
-                                });
 
-                                describe('with a call to setValueCurveAtTime()', () => {
-                                    // Bug #185: Chrome adds an extra sample to the delay.
-                                    if (!/Chrome/.test(navigator.userAgent)) {
+                                    describe('with a call to cancelAndHoldAtTime()', () => {
+                                        // @todo
+                                    });
+
+                                    describe('with a call to cancelScheduledValues()', () => {
                                         it('should modify the signal', function () {
                                             this.timeout(10000);
 
                                             return renderer({
                                                 start(startTime, { audioBufferSourceNode, delayNode }) {
-                                                    delayNode.delayTime.setValueCurveAtTime(
-                                                        new Float32Array([0, 0.25, 0.5, 0.75, 1]),
-                                                        roundToSamples(startTime, context.sampleRate),
-                                                        6 / context.sampleRate
+                                                    delayNode.delayTime.setValueAtTime(3 / context.sampleRate, startTime);
+                                                    delayNode.delayTime.setValueAtTime(0, roundToSamples(startTime, context.sampleRate, 2));
+                                                    delayNode.delayTime.linearRampToValueAtTime(
+                                                        1,
+                                                        roundToSamples(startTime, context.sampleRate, 5)
+                                                    );
+                                                    delayNode.delayTime.cancelScheduledValues(
+                                                        roundToSamples(startTime, context.sampleRate, 3)
                                                     );
 
                                                     audioBufferSourceNode.start(startTime);
                                                 }
                                             }).then((channelData) => {
-                                                expect(Array.from(channelData)).to.deep.equal([1, 0, 0, 0, 0]);
-                                            });
-                                        });
-                                    }
-                                });
-
-                                describe('with another AudioNode connected to the AudioParam', () => {
-                                    // Bug #185: Chrome adds an extra sample to the delay.
-                                    if (!/Chrome/.test(navigator.userAgent)) {
-                                        it('should modify the signal', function () {
-                                            this.timeout(10000);
-
-                                            return renderer({
-                                                prepare({ delayNode }) {
-                                                    const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                                                    const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
-                                                    const value = 3 / context.sampleRate;
-
-                                                    audioBuffer.copyToChannel(new Float32Array([value, value, value, value, value]), 0);
-
-                                                    audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
-
-                                                    delayNode.delayTime.value = 0;
-
-                                                    audioBufferSourceNodeForAudioParam.connect(delayNode.delayTime);
-
-                                                    return { audioBufferSourceNodeForAudioParam };
-                                                },
-                                                start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
-                                                    audioBufferSourceNode.start(startTime);
-                                                    audioBufferSourceNodeForAudioParam.start(startTime);
-                                                }
-                                            }).then((channelData) => {
                                                 expect(channelData[0]).to.equal(0);
                                                 expect(channelData[1]).to.equal(0);
-                                                expect(channelData[2]).to.equal(0);
-                                                expect(channelData[3]).to.be.closeTo(1, 0.000001);
-                                                expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                                expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
+                                                expect(channelData[3]).to.equal(-0.5);
+                                                expect(channelData[4]).to.equal(-1);
                                             });
                                         });
-                                    }
-                                });
+                                    });
 
-                                // @todo Test other automations as well.
-                            });
-                        }
-                    });
+                                    describe('with a call to setValueAtTime()', () => {
+                                        // Bug #185: Chrome adds an extra sample to the delay.
+                                        if (!/Chrome/.test(navigator.userAgent)) {
+                                            it('should modify the signal', function () {
+                                                this.timeout(10000);
+
+                                                return renderer({
+                                                    start(startTime, { audioBufferSourceNode, delayNode }) {
+                                                        delayNode.delayTime.setValueAtTime(
+                                                            3 / context.sampleRate,
+                                                            roundToSamples(startTime, context.sampleRate, 2)
+                                                        );
+
+                                                        audioBufferSourceNode.start(startTime);
+                                                    }
+                                                }).then((channelData) => {
+                                                    expect(channelData[0]).to.equal(1);
+                                                    expect(channelData[1]).to.equal(0.5);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(1, 0.000001);
+                                                    expect(channelData[4]).to.be.closeTo(0.5, 0.000001);
+                                                });
+                                            });
+                                        }
+                                    });
+
+                                    describe('with a call to setValueCurveAtTime()', () => {
+                                        // Bug #185: Chrome adds an extra sample to the delay.
+                                        if (!/Chrome/.test(navigator.userAgent)) {
+                                            it('should modify the signal', function () {
+                                                this.timeout(10000);
+
+                                                return renderer({
+                                                    start(startTime, { audioBufferSourceNode, delayNode }) {
+                                                        delayNode.delayTime.setValueCurveAtTime(
+                                                            new Float32Array([0, 0.25, 0.5, 0.75, 1]),
+                                                            roundToSamples(startTime, context.sampleRate),
+                                                            6 / context.sampleRate
+                                                        );
+
+                                                        audioBufferSourceNode.start(startTime);
+                                                    }
+                                                }).then((channelData) => {
+                                                    expect(Array.from(channelData)).to.deep.equal([1, 0, 0, 0, 0]);
+                                                });
+                                            });
+                                        }
+                                    });
+
+                                    describe('with another AudioNode connected to the AudioParam', () => {
+                                        // Bug #185: Chrome adds an extra sample to the delay.
+                                        if (!/Chrome/.test(navigator.userAgent)) {
+                                            it('should modify the signal', function () {
+                                                this.timeout(10000);
+
+                                                return renderer({
+                                                    prepare({ delayNode }) {
+                                                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                                        const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+                                                        const value = 3 / context.sampleRate;
+
+                                                        audioBuffer.copyToChannel(new Float32Array([value, value, value, value, value]), 0);
+
+                                                        audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+
+                                                        delayNode.delayTime.value = 0;
+
+                                                        audioBufferSourceNodeForAudioParam.connect(delayNode.delayTime);
+
+                                                        return { audioBufferSourceNodeForAudioParam };
+                                                    },
+                                                    start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                                        audioBufferSourceNode.start(startTime);
+                                                        audioBufferSourceNodeForAudioParam.start(startTime);
+                                                    }
+                                                }).then((channelData) => {
+                                                    expect(channelData[0]).to.equal(0);
+                                                    expect(channelData[1]).to.equal(0);
+                                                    expect(channelData[2]).to.equal(0);
+                                                    expect(channelData[3]).to.be.closeTo(1, 0.000001);
+                                                    expect(channelData[4]).to.be.closeTo(0.5, 0.00001);
+                                                });
+                                            });
+                                        }
+                                    });
+
+                                    // @todo Test other automations as well.
+                                });
+                            }
+                        });
+                    }
                 });
 
                 describe('numberOfInputs', () => {
@@ -731,56 +737,60 @@ if (typeof window !== 'undefined') {
                         });
                     }
 
-                    describe('with a cycle', () => {
-                        let delay;
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a cycle', () => {
+                            let delay;
+                            let renderer;
 
-                        beforeEach(() => {
-                            delay = 128;
+                            beforeEach(() => {
+                                delay = 128;
 
-                            if (description.includes('Offline')) {
-                                context = createContext({ length: delay + 5 });
-                            }
-
-                            renderer = createRenderer({
-                                context,
-                                length: context.length === undefined ? delay + 5 : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const delayNode = createDelayNode(context);
-                                    const gainNode = new GainNode(context);
-
-                                    /*
-                                     * Bug #164: Only Firefox detects cycles and therefore is the only browser which clamps the delayTime to
-                                     * the minimum amount.
-                                     */
-                                    delayNode.delayTime.value = delay / context.sampleRate;
-
-                                    constantSourceNode.connect(delayNode).connect(destination);
-
-                                    delayNode.connect(gainNode).connect(delayNode);
-
-                                    return { constantSourceNode, delayNode, gainNode };
+                                if (description.includes('Offline')) {
+                                    context = createContext({ length: delay + 5 });
                                 }
+
+                                renderer = createRenderer({
+                                    context,
+                                    length: context.length === undefined ? delay + 5 : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const delayNode = createDelayNode(context);
+                                        const gainNode = new GainNode(context);
+
+                                        /*
+                                         * Bug #164: Only Firefox detects cycles and therefore is the only browser which clamps the delayTime to
+                                         * the minimum amount.
+                                         */
+                                        delayNode.delayTime.value = delay / context.sampleRate;
+
+                                        constantSourceNode.connect(delayNode).connect(destination);
+
+                                        delayNode.connect(gainNode).connect(delayNode);
+
+                                        return { constantSourceNode, delayNode, gainNode };
+                                    }
+                                });
+                            });
+
+                            it('should render a delayed signal', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    start(startTime, { constantSourceNode }) {
+                                        constantSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    for (let i = 0; i < delay; i += 1) {
+                                        expect(channelData[i]).to.be.closeTo(0, 0.000003);
+                                    }
+
+                                    expect(Array.from(channelData).slice(delay)).to.deep.equal([1, 1, 1, 1, 1]);
+                                });
                             });
                         });
-
-                        it('should render a delayed signal', function () {
-                            this.timeout(10000);
-
-                            return renderer({
-                                start(startTime, { constantSourceNode }) {
-                                    constantSourceNode.start(startTime);
-                                }
-                            }).then((channelData) => {
-                                for (let i = 0; i < delay; i += 1) {
-                                    expect(channelData[i]).to.be.closeTo(0, 0.000003);
-                                }
-
-                                expect(Array.from(channelData).slice(delay)).to.deep.equal([1, 1, 1, 1, 1]);
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('disconnect()', () => {
@@ -811,33 +821,37 @@ if (typeof window !== 'undefined') {
                             });
                     });
 
-                    describe('without any parameters', () => {
-                        let renderer;
-                        let values;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('without any parameters', () => {
+                            let renderer;
+                            let values;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            values = [1, 1, 1, 1, 1];
+                                values = [1, 1, 1, 1, 1];
 
-                            renderer = createPredefinedRenderer(values);
-                        });
+                                renderer = createPredefinedRenderer(values);
+                            });
 
-                        it('should disconnect all destinations', function () {
-                            this.timeout(10000);
+                            it('should disconnect all destinations', function () {
+                                this.timeout(10000);
 
-                            return renderer({
-                                prepare({ delayNode }) {
-                                    delayNode.disconnect();
-                                },
-                                start(startTime, { audioBufferSourceNode }) {
-                                    audioBufferSourceNode.start(startTime);
-                                }
-                            }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                return renderer({
+                                    prepare({ delayNode }) {
+                                        delayNode.disconnect();
+                                    },
+                                    start(startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
                         });
-                    });
+                    }
 
                     describe('with an output', () => {
                         describe('with a value which is out-of-bound', () => {
@@ -859,33 +873,37 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection from the given output', () => {
-                            let renderer;
-                            let values;
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI || description.includes('Offline')) {
+                            describe('with a connection from the given output', () => {
+                                let renderer;
+                                let values;
 
-                            beforeEach(function () {
-                                this.timeout(10000);
+                                beforeEach(function () {
+                                    this.timeout(10000);
 
-                                values = [1, 1, 1, 1, 1];
+                                    values = [1, 1, 1, 1, 1];
 
-                                renderer = createPredefinedRenderer(values);
-                            });
+                                    renderer = createPredefinedRenderer(values);
+                                });
 
-                            it('should disconnect all destinations from the given output', function () {
-                                this.timeout(10000);
+                                it('should disconnect all destinations from the given output', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    prepare({ delayNode }) {
-                                        delayNode.disconnect(0);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    return renderer({
+                                        prepare({ delayNode }) {
+                                            delayNode.disconnect(0);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    });
                                 });
                             });
-                        });
+                        }
                     });
 
                     describe('with a destination', () => {
@@ -908,48 +926,52 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection to the given destination', () => {
-                            let renderer;
-                            let values;
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI || description.includes('Offline')) {
+                            describe('with a connection to the given destination', () => {
+                                let renderer;
+                                let values;
 
-                            beforeEach(function () {
-                                this.timeout(10000);
+                                beforeEach(function () {
+                                    this.timeout(10000);
 
-                                values = [1, 1, 1, 1, 1];
+                                    values = [1, 1, 1, 1, 1];
 
-                                renderer = createPredefinedRenderer(values);
-                            });
+                                    renderer = createPredefinedRenderer(values);
+                                });
 
-                            it('should disconnect the destination', function () {
-                                this.timeout(10000);
+                                it('should disconnect the destination', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    prepare({ delayNode, firstDummyGainNode }) {
-                                        delayNode.disconnect(firstDummyGainNode);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    return renderer({
+                                        prepare({ delayNode, firstDummyGainNode }) {
+                                            delayNode.disconnect(firstDummyGainNode);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    });
+                                });
+
+                                it('should disconnect another destination in isolation', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        prepare({ delayNode, secondDummyGainNode }) {
+                                            delayNode.disconnect(secondDummyGainNode);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal(values);
+                                    });
                                 });
                             });
-
-                            it('should disconnect another destination in isolation', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare({ delayNode, secondDummyGainNode }) {
-                                        delayNode.disconnect(secondDummyGainNode);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal(values);
-                                });
-                            });
-                        });
+                        }
                     });
 
                     describe('with a destination and an output', () => {

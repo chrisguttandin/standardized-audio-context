@@ -314,73 +314,77 @@ if (typeof window !== 'undefined') {
                         });
                     });
 
-                    describe('with a nullified AudioBuffer', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a nullified AudioBuffer', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    let renderer;
 
-                                beforeEach(async function () {
-                                    this.timeout(10000);
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
 
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                    }
-
-                                    renderer = createRenderer({
-                                        context,
-                                        length: context.length === undefined ? 5 : undefined,
-                                        setup(destination) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-
-                                            audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
-
-                                            const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-                                            const audioWorkletNode = withAnAppendedAudioWorklet
-                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                : null;
-                                            const masterGainNode = new GainNode(context, {
-                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                            });
-
-                                            audioBufferSourceNode.buffer = null;
-
-                                            if (withADirectConnection) {
-                                                audioBufferSourceNode.connect(masterGainNode);
-                                            }
-
-                                            if (withAnAppendedAudioWorklet) {
-                                                audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
-                                            }
-
-                                            masterGainNode.connect(destination);
-
-                                            return { audioBufferSourceNode };
+                                        if (withAnAppendedAudioWorklet) {
+                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                         }
+
+                                        renderer = createRenderer({
+                                            context,
+                                            length: context.length === undefined ? 5 : undefined,
+                                            setup(destination) {
+                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+
+                                                audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
+
+                                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                    : null;
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
+
+                                                audioBufferSourceNode.buffer = null;
+
+                                                if (withADirectConnection) {
+                                                    audioBufferSourceNode.connect(masterGainNode);
+                                                }
+
+                                                if (withAnAppendedAudioWorklet) {
+                                                    audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                }
+
+                                                masterGainNode.connect(destination);
+
+                                                return { audioBufferSourceNode };
+                                            }
+                                        });
+                                    });
+
+                                    it('should render silence', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime);
+                                            }
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                        });
                                     });
                                 });
-
-                                it('should render silence', function () {
-                                    this.timeout(10000);
-
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
-                                    });
-                                });
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
                 });
 
                 describe('channelCount', () => {
@@ -779,208 +783,212 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    let renderer;
 
-                                beforeEach(async function () {
-                                    this.timeout(10000);
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
 
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                    }
-
-                                    renderer = createRenderer({
-                                        context,
-                                        length: context.length === undefined ? 5 : undefined,
-                                        setup(destination) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-
-                                            audioBuffer.copyToChannel(new Float32Array([1, 1, 0, 0, 0]), 0);
-
-                                            const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-                                            const audioWorkletNode = withAnAppendedAudioWorklet
-                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                : null;
-                                            const masterGainNode = new GainNode(context, {
-                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                            });
-
-                                            if (withADirectConnection) {
-                                                audioBufferSourceNode.connect(masterGainNode);
-                                            }
-
-                                            if (withAnAppendedAudioWorklet) {
-                                                audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
-                                            }
-
-                                            masterGainNode.connect(destination);
-
-                                            return { audioBufferSourceNode };
+                                        if (withAnAppendedAudioWorklet) {
+                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                         }
-                                    });
-                                });
 
-                                describe('without any automation', () => {
-                                    it('should not modify the signal', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            start(startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        }).then((channelData) => {
-                                            expect(Array.from(channelData)).to.deep.equal([1, 1, 0, 0, 0]);
-                                        });
-                                    });
-                                });
-
-                                describe('with a modified value', () => {
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            prepare({ audioBufferSourceNode }) {
-                                                audioBufferSourceNode.playbackRate.value = 0.5;
-                                            },
-                                            start(startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        }).then((channelData) => {
-                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
-                                        });
-                                    });
-                                });
-
-                                describe('with a call to cancelAndHoldAtTime()', () => {
-                                    // @todo
-                                });
-
-                                describe('with a call to cancelScheduledValues()', () => {
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            start(startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.playbackRate.setValueAtTime(0.5, startTime);
-                                                audioBufferSourceNode.playbackRate.setValueAtTime(
-                                                    1,
-                                                    roundToSamples(startTime, context.sampleRate, 2)
-                                                );
-                                                audioBufferSourceNode.playbackRate.linearRampToValueAtTime(
-                                                    0,
-                                                    roundToSamples(startTime, context.sampleRate, 5)
-                                                );
-                                                audioBufferSourceNode.playbackRate.cancelScheduledValues(
-                                                    roundToSamples(startTime, context.sampleRate, 3)
-                                                );
-
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        }).then((channelData) => {
-                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
-                                        });
-                                    });
-                                });
-
-                                describe('with a call to setValueAtTime()', () => {
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            start(startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.playbackRate.setValueAtTime(0.5, startTime);
-
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        }).then((channelData) => {
-                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
-                                        });
-                                    });
-                                });
-
-                                describe('with a call to setValueCurveAtTime()', () => {
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            start(startTime, { audioBufferSourceNode }) {
-                                                audioBufferSourceNode.playbackRate.setValueCurveAtTime(
-                                                    new Float32Array([0.5, 0.375, 0.25, 0.125, 0]),
-                                                    startTime,
-                                                    6 / context.sampleRate
-                                                );
-
-                                                audioBufferSourceNode.start(startTime);
-                                            }
-                                        }).then((channelData) => {
-                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
-                                        });
-                                    });
-                                });
-
-                                describe('with another AudioNode connected to the AudioParam', () => {
-                                    it('should modify the signal', function () {
-                                        this.timeout(10000);
-
-                                        return renderer({
-                                            prepare({ audioBufferSourceNode }) {
+                                        renderer = createRenderer({
+                                            context,
+                                            length: context.length === undefined ? 5 : undefined,
+                                            setup(destination) {
                                                 const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                                                const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
 
-                                                audioBuffer.copyToChannel(new Float32Array([0.5, 0.5, 0.5, 0.5, 0.5]), 0);
+                                                audioBuffer.copyToChannel(new Float32Array([1, 1, 0, 0, 0]), 0);
 
-                                                audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+                                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                    : null;
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
 
-                                                audioBufferSourceNode.playbackRate.value = 0;
+                                                if (withADirectConnection) {
+                                                    audioBufferSourceNode.connect(masterGainNode);
+                                                }
 
-                                                audioBufferSourceNodeForAudioParam.connect(audioBufferSourceNode.playbackRate);
+                                                if (withAnAppendedAudioWorklet) {
+                                                    audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                }
 
-                                                return { audioBufferSourceNodeForAudioParam };
-                                            },
-                                            start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
-                                                audioBufferSourceNode.start(startTime);
-                                                audioBufferSourceNodeForAudioParam.start(startTime);
+                                                masterGainNode.connect(destination);
+
+                                                return { audioBufferSourceNode };
                                             }
-                                        }).then((channelData) => {
-                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
-                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
-                                            expect(channelData[3]).to.be.closeTo(0.5, 0.1);
-                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
                                         });
                                     });
-                                });
 
-                                // @todo Test other automations as well.
-                            });
-                        }
-                    });
+                                    describe('without any automation', () => {
+                                        it('should not modify the signal', function () {
+                                            this.timeout(10000);
+
+                                            return renderer({
+                                                start(startTime, { audioBufferSourceNode }) {
+                                                    audioBufferSourceNode.start(startTime);
+                                                }
+                                            }).then((channelData) => {
+                                                expect(Array.from(channelData)).to.deep.equal([1, 1, 0, 0, 0]);
+                                            });
+                                        });
+                                    });
+
+                                    describe('with a modified value', () => {
+                                        it('should modify the signal', function () {
+                                            this.timeout(10000);
+
+                                            return renderer({
+                                                prepare({ audioBufferSourceNode }) {
+                                                    audioBufferSourceNode.playbackRate.value = 0.5;
+                                                },
+                                                start(startTime, { audioBufferSourceNode }) {
+                                                    audioBufferSourceNode.start(startTime);
+                                                }
+                                            }).then((channelData) => {
+                                                expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                                expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                                expect(channelData[4]).to.be.closeTo(0, 0.1);
+                                            });
+                                        });
+                                    });
+
+                                    describe('with a call to cancelAndHoldAtTime()', () => {
+                                        // @todo
+                                    });
+
+                                    describe('with a call to cancelScheduledValues()', () => {
+                                        it('should modify the signal', function () {
+                                            this.timeout(10000);
+
+                                            return renderer({
+                                                start(startTime, { audioBufferSourceNode }) {
+                                                    audioBufferSourceNode.playbackRate.setValueAtTime(0.5, startTime);
+                                                    audioBufferSourceNode.playbackRate.setValueAtTime(
+                                                        1,
+                                                        roundToSamples(startTime, context.sampleRate, 2)
+                                                    );
+                                                    audioBufferSourceNode.playbackRate.linearRampToValueAtTime(
+                                                        0,
+                                                        roundToSamples(startTime, context.sampleRate, 5)
+                                                    );
+                                                    audioBufferSourceNode.playbackRate.cancelScheduledValues(
+                                                        roundToSamples(startTime, context.sampleRate, 3)
+                                                    );
+
+                                                    audioBufferSourceNode.start(startTime);
+                                                }
+                                            }).then((channelData) => {
+                                                expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                                expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                                expect(channelData[4]).to.be.closeTo(0, 0.1);
+                                            });
+                                        });
+                                    });
+
+                                    describe('with a call to setValueAtTime()', () => {
+                                        it('should modify the signal', function () {
+                                            this.timeout(10000);
+
+                                            return renderer({
+                                                start(startTime, { audioBufferSourceNode }) {
+                                                    audioBufferSourceNode.playbackRate.setValueAtTime(0.5, startTime);
+
+                                                    audioBufferSourceNode.start(startTime);
+                                                }
+                                            }).then((channelData) => {
+                                                expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                                expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                                expect(channelData[4]).to.be.closeTo(0, 0.1);
+                                            });
+                                        });
+                                    });
+
+                                    describe('with a call to setValueCurveAtTime()', () => {
+                                        it('should modify the signal', function () {
+                                            this.timeout(10000);
+
+                                            return renderer({
+                                                start(startTime, { audioBufferSourceNode }) {
+                                                    audioBufferSourceNode.playbackRate.setValueCurveAtTime(
+                                                        new Float32Array([0.5, 0.375, 0.25, 0.125, 0]),
+                                                        startTime,
+                                                        6 / context.sampleRate
+                                                    );
+
+                                                    audioBufferSourceNode.start(startTime);
+                                                }
+                                            }).then((channelData) => {
+                                                expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                                expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                                expect(channelData[4]).to.be.closeTo(0, 0.1);
+                                            });
+                                        });
+                                    });
+
+                                    describe('with another AudioNode connected to the AudioParam', () => {
+                                        it('should modify the signal', function () {
+                                            this.timeout(10000);
+
+                                            return renderer({
+                                                prepare({ audioBufferSourceNode }) {
+                                                    const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                                    const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+
+                                                    audioBuffer.copyToChannel(new Float32Array([0.5, 0.5, 0.5, 0.5, 0.5]), 0);
+
+                                                    audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+
+                                                    audioBufferSourceNode.playbackRate.value = 0;
+
+                                                    audioBufferSourceNodeForAudioParam.connect(audioBufferSourceNode.playbackRate);
+
+                                                    return { audioBufferSourceNodeForAudioParam };
+                                                },
+                                                start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                                    audioBufferSourceNode.start(startTime);
+                                                    audioBufferSourceNodeForAudioParam.start(startTime);
+                                                }
+                                            }).then((channelData) => {
+                                                expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                                expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                                expect(channelData[3]).to.be.closeTo(0.5, 0.1);
+                                                expect(channelData[4]).to.be.closeTo(0, 0.1);
+                                            });
+                                        });
+                                    });
+
+                                    // @todo Test other automations as well.
+                                });
+                            }
+                        });
+                    }
                 });
 
                 describe('addEventListener()', () => {
@@ -1129,44 +1137,48 @@ if (typeof window !== 'undefined') {
                         });
                     }
 
-                    describe('with a cycle', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a cycle', () => {
+                            let renderer;
 
-                        beforeEach(() => {
-                            renderer = createRenderer({
-                                context,
-                                length: context.length === undefined ? 5 : undefined,
-                                setup(destination) {
-                                    const anotherGainNode = new GainNode(context);
-                                    const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                                    const audioBufferSourceNode = createAudioBufferSourceNode(context);
-                                    const gainNode = new GainNode(context);
+                            beforeEach(() => {
+                                renderer = createRenderer({
+                                    context,
+                                    length: context.length === undefined ? 5 : undefined,
+                                    setup(destination) {
+                                        const anotherGainNode = new GainNode(context);
+                                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                        const audioBufferSourceNode = createAudioBufferSourceNode(context);
+                                        const gainNode = new GainNode(context);
 
-                                    audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
+                                        audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
 
-                                    audioBufferSourceNode.buffer = audioBuffer;
+                                        audioBufferSourceNode.buffer = audioBuffer;
 
-                                    audioBufferSourceNode.connect(gainNode).connect(destination);
+                                        audioBufferSourceNode.connect(gainNode).connect(destination);
 
-                                    gainNode.connect(anotherGainNode).connect(gainNode);
+                                        gainNode.connect(anotherGainNode).connect(gainNode);
 
-                                    return { anotherGainNode, audioBufferSourceNode, gainNode };
-                                }
+                                        return { anotherGainNode, audioBufferSourceNode, gainNode };
+                                    }
+                                });
+                            });
+
+                            it('should render silence', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    start(startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
                         });
-
-                        it('should render silence', function () {
-                            this.timeout(10000);
-
-                            return renderer({
-                                start(startTime, { audioBufferSourceNode }) {
-                                    audioBufferSourceNode.start(startTime);
-                                }
-                            }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('disconnect()', () => {
@@ -1196,33 +1208,37 @@ if (typeof window !== 'undefined') {
                             });
                     });
 
-                    describe('without any parameters', () => {
-                        let renderer;
-                        let values;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('without any parameters', () => {
+                            let renderer;
+                            let values;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            values = [1, 1, 1, 1, 1];
+                                values = [1, 1, 1, 1, 1];
 
-                            renderer = createPredefinedRenderer(values);
-                        });
+                                renderer = createPredefinedRenderer(values);
+                            });
 
-                        it('should disconnect all destinations', function () {
-                            this.timeout(10000);
+                            it('should disconnect all destinations', function () {
+                                this.timeout(10000);
 
-                            return renderer({
-                                prepare({ audioBufferSourceNode }) {
-                                    audioBufferSourceNode.disconnect();
-                                },
-                                start(startTime, { audioBufferSourceNode }) {
-                                    audioBufferSourceNode.start(startTime);
-                                }
-                            }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                return renderer({
+                                    prepare({ audioBufferSourceNode }) {
+                                        audioBufferSourceNode.disconnect();
+                                    },
+                                    start(startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
                         });
-                    });
+                    }
 
                     describe('with an output', () => {
                         describe('with a value which is out-of-bound', () => {
@@ -1244,33 +1260,37 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection from the given output', () => {
-                            let renderer;
-                            let values;
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI || description.includes('Offline')) {
+                            describe('with a connection from the given output', () => {
+                                let renderer;
+                                let values;
 
-                            beforeEach(function () {
-                                this.timeout(10000);
+                                beforeEach(function () {
+                                    this.timeout(10000);
 
-                                values = [1, 1, 1, 1, 1];
+                                    values = [1, 1, 1, 1, 1];
 
-                                renderer = createPredefinedRenderer(values);
-                            });
+                                    renderer = createPredefinedRenderer(values);
+                                });
 
-                            it('should disconnect all destinations from the given output', function () {
-                                this.timeout(10000);
+                                it('should disconnect all destinations from the given output', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    prepare({ audioBufferSourceNode }) {
-                                        audioBufferSourceNode.disconnect(0);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    return renderer({
+                                        prepare({ audioBufferSourceNode }) {
+                                            audioBufferSourceNode.disconnect(0);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    });
                                 });
                             });
-                        });
+                        }
                     });
 
                     describe('with a destination', () => {
@@ -1293,48 +1313,52 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection to the given destination', () => {
-                            let renderer;
-                            let values;
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI || description.includes('Offline')) {
+                            describe('with a connection to the given destination', () => {
+                                let renderer;
+                                let values;
 
-                            beforeEach(function () {
-                                this.timeout(10000);
+                                beforeEach(function () {
+                                    this.timeout(10000);
 
-                                values = [1, 1, 1, 1, 1];
+                                    values = [1, 1, 1, 1, 1];
 
-                                renderer = createPredefinedRenderer(values);
-                            });
+                                    renderer = createPredefinedRenderer(values);
+                                });
 
-                            it('should disconnect the destination', function () {
-                                this.timeout(10000);
+                                it('should disconnect the destination', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    prepare({ audioBufferSourceNode, firstDummyGainNode }) {
-                                        audioBufferSourceNode.disconnect(firstDummyGainNode);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    return renderer({
+                                        prepare({ audioBufferSourceNode, firstDummyGainNode }) {
+                                            audioBufferSourceNode.disconnect(firstDummyGainNode);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    });
+                                });
+
+                                it('should disconnect another destination in isolation', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        prepare({ audioBufferSourceNode, secondDummyGainNode }) {
+                                            audioBufferSourceNode.disconnect(secondDummyGainNode);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal(values);
+                                    });
                                 });
                             });
-
-                            it('should disconnect another destination in isolation', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare({ audioBufferSourceNode, secondDummyGainNode }) {
-                                        audioBufferSourceNode.disconnect(secondDummyGainNode);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal(values);
-                                });
-                            });
-                        });
+                        }
                     });
 
                     describe('with a destination and an output', () => {
@@ -1526,180 +1550,188 @@ if (typeof window !== 'undefined') {
                         });
                     });
 
-                    describe('with a set offset parameter', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a set offset parameter', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    let renderer;
 
-                                beforeEach(async function () {
-                                    this.timeout(10000);
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
 
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                    }
+                                        if (withAnAppendedAudioWorklet) {
+                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
+                                        }
 
-                                    renderer = createRenderer({
-                                        context,
-                                        length: context.length === undefined ? 5 : undefined,
-                                        setup(destination) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                        renderer = createRenderer({
+                                            context,
+                                            length: context.length === undefined ? 5 : undefined,
+                                            setup(destination) {
+                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
-                                            audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
+                                                audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
 
-                                            const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-                                            const audioWorkletNode = withAnAppendedAudioWorklet
-                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                : null;
-                                            const masterGainNode = new GainNode(context, {
-                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                            });
+                                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                    : null;
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
 
-                                            if (withADirectConnection) {
-                                                audioBufferSourceNode.connect(masterGainNode);
+                                                if (withADirectConnection) {
+                                                    audioBufferSourceNode.connect(masterGainNode);
+                                                }
+
+                                                if (withAnAppendedAudioWorklet) {
+                                                    audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                }
+
+                                                masterGainNode.connect(destination);
+
+                                                return { audioBufferSourceNode };
                                             }
+                                        });
+                                    });
 
-                                            if (withAnAppendedAudioWorklet) {
-                                                audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                    it('should apply an offset', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime, 2 / context.sampleRate);
                                             }
-
-                                            masterGainNode.connect(destination);
-
-                                            return { audioBufferSourceNode };
-                                        }
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([1, 1, 1, 0, 0]);
+                                        });
                                     });
-                                });
 
-                                it('should apply an offset', function () {
-                                    this.timeout(10000);
+                                    it('should handle an offset which equals the duration', function () {
+                                        this.timeout(10000);
 
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime, 2 / context.sampleRate);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([1, 1, 1, 0, 0]);
-                                    });
-                                });
-
-                                it('should handle an offset which equals the duration', function () {
-                                    this.timeout(10000);
-
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime, audioBufferSourceNode.buffer.duration);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
-                                    });
-                                });
-
-                                it('should clamp the given offset to the duration', function () {
-                                    this.timeout(10000);
-
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime, audioBufferSourceNode.buffer.duration + 1);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
-                                    });
-                                });
-                            });
-                        }
-                    });
-
-                    describe('with a set duration parameter', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                let renderer;
-
-                                beforeEach(async function () {
-                                    this.timeout(10000);
-
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                    }
-
-                                    renderer = createRenderer({
-                                        context,
-                                        length: context.length === undefined ? 5 : undefined,
-                                        setup(destination) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-
-                                            audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
-
-                                            const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-                                            const audioWorkletNode = withAnAppendedAudioWorklet
-                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                : null;
-                                            const masterGainNode = new GainNode(context, {
-                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                            });
-
-                                            if (withADirectConnection) {
-                                                audioBufferSourceNode.connect(masterGainNode);
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime, audioBufferSourceNode.buffer.duration);
                                             }
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                        });
+                                    });
 
-                                            if (withAnAppendedAudioWorklet) {
-                                                audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                    it('should clamp the given offset to the duration', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime, audioBufferSourceNode.buffer.duration + 1);
                                             }
-
-                                            masterGainNode.connect(destination);
-
-                                            return { audioBufferSourceNode };
-                                        }
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                        });
                                     });
                                 });
+                            }
+                        });
+                    }
 
-                                it('should play the buffer only for the given duration', function () {
-                                    this.timeout(10000);
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a set duration parameter', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    let renderer;
 
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime, 0, 2 / context.sampleRate);
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                         }
-                                    }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([1, 1, 0, 0, 0]);
+
+                                        renderer = createRenderer({
+                                            context,
+                                            length: context.length === undefined ? 5 : undefined,
+                                            setup(destination) {
+                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+
+                                                audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
+
+                                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                    : null;
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
+
+                                                if (withADirectConnection) {
+                                                    audioBufferSourceNode.connect(masterGainNode);
+                                                }
+
+                                                if (withAnAppendedAudioWorklet) {
+                                                    audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                }
+
+                                                masterGainNode.connect(destination);
+
+                                                return { audioBufferSourceNode };
+                                            }
+                                        });
+                                    });
+
+                                    it('should play the buffer only for the given duration', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime, 0, 2 / context.sampleRate);
+                                            }
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([1, 1, 0, 0, 0]);
+                                        });
+                                    });
+
+                                    it('should compute the duration in buffer time', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            prepare({ audioBufferSourceNode }) {
+                                                audioBufferSourceNode.playbackRate.value = 0.5;
+                                            },
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime, 0, 2 / context.sampleRate);
+                                            }
+                                        }).then((channelData) => {
+                                            expect(channelData[0]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[1]).to.be.closeTo(1, 0.2);
+                                            expect(channelData[2]).to.be.closeTo(1, 0.1);
+                                            expect(channelData[3]).to.be.closeTo(0.5, 0.5);
+                                            expect(channelData[4]).to.be.closeTo(0, 0.1);
+                                        });
                                     });
                                 });
-
-                                it('should compute the duration in buffer time', function () {
-                                    this.timeout(10000);
-
-                                    return renderer({
-                                        prepare({ audioBufferSourceNode }) {
-                                            audioBufferSourceNode.playbackRate.value = 0.5;
-                                        },
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime, 0, 2 / context.sampleRate);
-                                        }
-                                    }).then((channelData) => {
-                                        expect(channelData[0]).to.be.closeTo(1, 0.1);
-                                        expect(channelData[1]).to.be.closeTo(1, 0.2);
-                                        expect(channelData[2]).to.be.closeTo(1, 0.1);
-                                        expect(channelData[3]).to.be.closeTo(0.5, 0.5);
-                                        expect(channelData[4]).to.be.closeTo(0, 0.1);
-                                    });
-                                });
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
                 });
 
                 describe('stop()', () => {
@@ -1722,140 +1754,148 @@ if (typeof window !== 'undefined') {
                         });
                     });
 
-                    describe('with a previous call to stop()', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a previous call to stop()', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    let renderer;
 
-                                beforeEach(async function () {
-                                    this.timeout(10000);
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
 
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                    }
-
-                                    renderer = createRenderer({
-                                        context,
-                                        length: context.length === undefined ? 5 : undefined,
-                                        setup(destination) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-
-                                            audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
-
-                                            const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-                                            const audioWorkletNode = withAnAppendedAudioWorklet
-                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                : null;
-                                            const masterGainNode = new GainNode(context, {
-                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                            });
-
-                                            if (withADirectConnection) {
-                                                audioBufferSourceNode.connect(masterGainNode);
-                                            }
-
-                                            if (withAnAppendedAudioWorklet) {
-                                                audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
-                                            }
-
-                                            masterGainNode.connect(destination);
-
-                                            return { audioBufferSourceNode };
+                                        if (withAnAppendedAudioWorklet) {
+                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                         }
+
+                                        renderer = createRenderer({
+                                            context,
+                                            length: context.length === undefined ? 5 : undefined,
+                                            setup(destination) {
+                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+
+                                                audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
+
+                                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                    : null;
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
+
+                                                if (withADirectConnection) {
+                                                    audioBufferSourceNode.connect(masterGainNode);
+                                                }
+
+                                                if (withAnAppendedAudioWorklet) {
+                                                    audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                }
+
+                                                masterGainNode.connect(destination);
+
+                                                return { audioBufferSourceNode };
+                                            }
+                                        });
+                                    });
+
+                                    it('should apply the values from the last invocation', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(startTime);
+                                                audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 5));
+                                                audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 3));
+                                            }
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([1, 1, 1, 0, 0]);
+                                        });
                                     });
                                 });
+                            }
+                        });
+                    }
 
-                                it('should apply the values from the last invocation', function () {
-                                    this.timeout(10000);
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a stop time reached prior to the start time', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    let renderer;
 
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime);
-                                            audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 5));
-                                            audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 3));
+                                    beforeEach(async function () {
+                                        this.timeout(10000);
+
+                                        if (withAnAppendedAudioWorklet) {
+                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                         }
-                                    }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([1, 1, 1, 0, 0]);
-                                    });
-                                });
-                            });
-                        }
-                    });
 
-                    describe('with a stop time reached prior to the start time', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                let renderer;
+                                        renderer = createRenderer({
+                                            context,
+                                            length: context.length === undefined ? 5 : undefined,
+                                            setup(destination) {
+                                                const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
 
-                                beforeEach(async function () {
-                                    this.timeout(10000);
+                                                audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
 
-                                    if (withAnAppendedAudioWorklet) {
-                                        await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                    }
+                                                const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
+                                                const audioWorkletNode = withAnAppendedAudioWorklet
+                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                                    : null;
+                                                const masterGainNode = new GainNode(context, {
+                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                });
 
-                                    renderer = createRenderer({
-                                        context,
-                                        length: context.length === undefined ? 5 : undefined,
-                                        setup(destination) {
-                                            const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
+                                                if (withADirectConnection) {
+                                                    audioBufferSourceNode.connect(masterGainNode);
+                                                }
 
-                                            audioBuffer.copyToChannel(new Float32Array([1, 1, 1, 1, 1]), 0);
+                                                if (withAnAppendedAudioWorklet) {
+                                                    audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                }
 
-                                            const audioBufferSourceNode = createAudioBufferSourceNode(context, { buffer: audioBuffer });
-                                            const audioWorkletNode = withAnAppendedAudioWorklet
-                                                ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                : null;
-                                            const masterGainNode = new GainNode(context, {
-                                                gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                            });
+                                                masterGainNode.connect(destination);
 
-                                            if (withADirectConnection) {
-                                                audioBufferSourceNode.connect(masterGainNode);
+                                                return { audioBufferSourceNode };
                                             }
+                                        });
+                                    });
 
-                                            if (withAnAppendedAudioWorklet) {
-                                                audioBufferSourceNode.connect(audioWorkletNode).connect(masterGainNode);
+                                    it('should not play anything', function () {
+                                        this.timeout(10000);
+
+                                        return renderer({
+                                            start(startTime, { audioBufferSourceNode }) {
+                                                audioBufferSourceNode.start(roundToSamples(startTime, context.sampleRate, 3));
+                                                audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 1));
                                             }
-
-                                            masterGainNode.connect(destination);
-
-                                            return { audioBufferSourceNode };
-                                        }
+                                        }).then((channelData) => {
+                                            expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                        });
                                     });
                                 });
-
-                                it('should not play anything', function () {
-                                    this.timeout(10000);
-
-                                    return renderer({
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(roundToSamples(startTime, context.sampleRate, 3));
-                                            audioBufferSourceNode.stop(roundToSamples(startTime, context.sampleRate, 1));
-                                        }
-                                    }).then((channelData) => {
-                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
-                                    });
-                                });
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
 
                     describe('with an emitted ended event', () => {
                         let audioBufferSourceNode;

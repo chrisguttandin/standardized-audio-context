@@ -215,72 +215,76 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.closeTo(0.007035539, 0.00000001);
+                                        expect(channelData[1]).to.be.closeTo(0.007035539, 0.00000001);
+                                        expect(channelData[2]).to.be.closeTo(0.007035539, 0.00000001);
+                                        expect(channelData[3]).to.be.closeTo(0.007035539, 0.00000001);
+                                        expect(channelData[4]).to.be.closeTo(0.007035539, 0.00000001);
                                     });
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007035539, 0.00000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007035539, 0.00000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007035539, 0.00000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007035539, 0.00000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007035539, 0.00000001);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.forwardX.value = -1;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        const offset = channelData.length === 5 ? 0 : 768;
+
+                                        expect(channelData[offset + 0]).to.be.closeTo(0.00651345, 0.00000001);
+                                        expect(channelData[offset + 1]).to.be.closeTo(0.00651345, 0.00000001);
+                                        expect(channelData[offset + 2]).to.be.closeTo(0.00651345, 0.00000001);
+                                        expect(channelData[offset + 3]).to.be.closeTo(0.00651345, 0.00000001);
+                                        expect(channelData[offset + 4]).to.be.closeTo(0.00651345, 0.00000001);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.forwardX.value = -1;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    const offset = channelData.length === 5 ? 0 : 768;
-
-                                    expect(channelData[offset + 0]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[offset + 1]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[offset + 2]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[offset + 3]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[offset + 4]).to.be.closeTo(0.00651345, 0.00000001);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('forwardY', () => {
@@ -468,72 +472,76 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.closeTo(0.007035539, 0.00000001);
+                                        expect(channelData[1]).to.be.closeTo(0.007035539, 0.00000001);
+                                        expect(channelData[2]).to.be.closeTo(0.007035539, 0.00000001);
+                                        expect(channelData[3]).to.be.closeTo(0.007035539, 0.00000001);
+                                        expect(channelData[4]).to.be.closeTo(0.007035539, 0.00000001);
                                     });
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007035539, 0.00000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007035539, 0.00000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007035539, 0.00000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007035539, 0.00000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007035539, 0.00000001);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.forwardY.value = -1;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        const offset = channelData.length === 5 ? 0 : 768;
+
+                                        expect(channelData[offset + 0]).to.be.closeTo(0.007035482, 0.00000001);
+                                        expect(channelData[offset + 1]).to.be.closeTo(0.007035482, 0.00000001);
+                                        expect(channelData[offset + 2]).to.be.closeTo(0.007035482, 0.00000001);
+                                        expect(channelData[offset + 3]).to.be.closeTo(0.007035482, 0.00000001);
+                                        expect(channelData[offset + 4]).to.be.closeTo(0.007035482, 0.00000001);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.forwardY.value = -1;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    const offset = channelData.length === 5 ? 0 : 768;
-
-                                    expect(channelData[offset + 0]).to.be.closeTo(0.007035482, 0.00000001);
-                                    expect(channelData[offset + 1]).to.be.closeTo(0.007035482, 0.00000001);
-                                    expect(channelData[offset + 2]).to.be.closeTo(0.007035482, 0.00000001);
-                                    expect(channelData[offset + 3]).to.be.closeTo(0.007035482, 0.00000001);
-                                    expect(channelData[offset + 4]).to.be.closeTo(0.007035482, 0.00000001);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('forwardZ', () => {
@@ -721,74 +729,78 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        // Changing only the forwardZ AudioParam while keeping the value of forwardX at 0 doesn't have an effect.
+                                        context.listener.forwardX.value = -1;
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        const offset = channelData.length === 5 ? 0 : 768;
+
+                                        expect(channelData[offset + 0]).to.be.closeTo(0.00651345, 0.00000001);
+                                        expect(channelData[offset + 1]).to.be.closeTo(0.00651345, 0.00000001);
+                                        expect(channelData[offset + 2]).to.be.closeTo(0.00651345, 0.00000001);
+                                        expect(channelData[offset + 3]).to.be.closeTo(0.00651345, 0.00000001);
+                                        expect(channelData[offset + 4]).to.be.closeTo(0.00651345, 0.00000001);
                                     });
-
-                                    // Changing only the forwardZ AudioParam while keeping the value of forwardX at 0 doesn't have an effect.
-                                    context.listener.forwardX.value = -1;
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    const offset = channelData.length === 5 ? 0 : 768;
-
-                                    expect(channelData[offset + 0]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[offset + 1]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[offset + 2]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[offset + 3]).to.be.closeTo(0.00651345, 0.00000001);
-                                    expect(channelData[offset + 4]).to.be.closeTo(0.00651345, 0.00000001);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.forwardZ.value = 1;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
+                                            0.0064865294843912125, 0.0064865294843912125, 0.0064865294843912125, 0.0064865294843912125,
+                                            0.0064865294843912125
+                                        ]);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.forwardZ.value = 1;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
-                                        0.0064865294843912125, 0.0064865294843912125, 0.0064865294843912125, 0.0064865294843912125,
-                                        0.0064865294843912125
-                                    ]);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('positionX', () => {
@@ -976,69 +988,73 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
                                     });
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.positionX.value = 1;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
+                                            0.007035974878817797, 0.007035974878817797, 0.007035974878817797, 0.007035974878817797,
+                                            0.007035974878817797
+                                        ]);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.positionX.value = 1;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
-                                        0.007035974878817797, 0.007035974878817797, 0.007035974878817797, 0.007035974878817797,
-                                        0.007035974878817797
-                                    ]);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('positionY', () => {
@@ -1226,72 +1242,76 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
                                     });
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.positionY.value = 1;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        const offset = channelData.length === 5 ? 0 : 768;
+
+                                        expect(channelData[offset + 0]).to.be.closeTo(0.007042165, 0.000000001);
+                                        expect(channelData[offset + 1]).to.be.closeTo(0.007042165, 0.000000001);
+                                        expect(channelData[offset + 2]).to.be.closeTo(0.007042165, 0.000000001);
+                                        expect(channelData[offset + 3]).to.be.closeTo(0.007042165, 0.000000001);
+                                        expect(channelData[offset + 4]).to.be.closeTo(0.007042165, 0.000000001);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.positionY.value = 1;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    const offset = channelData.length === 5 ? 0 : 768;
-
-                                    expect(channelData[offset + 0]).to.be.closeTo(0.007042165, 0.000000001);
-                                    expect(channelData[offset + 1]).to.be.closeTo(0.007042165, 0.000000001);
-                                    expect(channelData[offset + 2]).to.be.closeTo(0.007042165, 0.000000001);
-                                    expect(channelData[offset + 3]).to.be.closeTo(0.007042165, 0.000000001);
-                                    expect(channelData[offset + 4]).to.be.closeTo(0.007042165, 0.000000001);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('positionZ', () => {
@@ -1479,72 +1499,76 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
                                     });
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.positionZ.value = 1;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        const offset = channelData.length === 5 ? 0 : 768;
+
+                                        expect(channelData[offset + 0]).to.be.closeTo(0.007105881, 0.000000002);
+                                        expect(channelData[offset + 1]).to.be.closeTo(0.007105881, 0.000000002);
+                                        expect(channelData[offset + 2]).to.be.closeTo(0.007105881, 0.000000002);
+                                        expect(channelData[offset + 3]).to.be.closeTo(0.007105881, 0.000000002);
+                                        expect(channelData[offset + 4]).to.be.closeTo(0.007105881, 0.000000002);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.positionZ.value = 1;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    const offset = channelData.length === 5 ? 0 : 768;
-
-                                    expect(channelData[offset + 0]).to.be.closeTo(0.007105881, 0.000000002);
-                                    expect(channelData[offset + 1]).to.be.closeTo(0.007105881, 0.000000002);
-                                    expect(channelData[offset + 2]).to.be.closeTo(0.007105881, 0.000000002);
-                                    expect(channelData[offset + 3]).to.be.closeTo(0.007105881, 0.000000002);
-                                    expect(channelData[offset + 4]).to.be.closeTo(0.007105881, 0.000000002);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('upX', () => {
@@ -1732,72 +1756,76 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
+                                        expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
                                     });
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(channelData[0]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[1]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[2]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[3]).to.be.closeTo(0.007035539, 0.000000001);
-                                    expect(channelData[4]).to.be.closeTo(0.007035539, 0.000000001);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.upX.value = 1;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        const offset = channelData.length === 5 ? 0 : 768;
+
+                                        expect(channelData[offset + 0]).to.be.closeTo(0.007032075, 0.000000001);
+                                        expect(channelData[offset + 1]).to.be.closeTo(0.007032075, 0.000000001);
+                                        expect(channelData[offset + 2]).to.be.closeTo(0.007032075, 0.000000001);
+                                        expect(channelData[offset + 3]).to.be.closeTo(0.007032075, 0.000000001);
+                                        expect(channelData[offset + 4]).to.be.closeTo(0.007032075, 0.000000001);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.upX.value = 1;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    const offset = channelData.length === 5 ? 0 : 768;
-
-                                    expect(channelData[offset + 0]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[offset + 1]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[offset + 2]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[offset + 3]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[offset + 4]).to.be.closeTo(0.007032075, 0.000000001);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('upY', () => {
@@ -1985,74 +2013,78 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        // Changing only the upY AudioParam while keeping the value of upX at 0 doesn't have an effect.
+                                        context.listener.upX.value = 1;
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        const offset = channelData.length === 5 ? 0 : 768;
+
+                                        expect(channelData[offset + 0]).to.be.closeTo(0.007032075, 0.000000001);
+                                        expect(channelData[offset + 1]).to.be.closeTo(0.007032075, 0.000000001);
+                                        expect(channelData[offset + 2]).to.be.closeTo(0.007032075, 0.000000001);
+                                        expect(channelData[offset + 3]).to.be.closeTo(0.007032075, 0.000000001);
+                                        expect(channelData[offset + 4]).to.be.closeTo(0.007032075, 0.000000001);
                                     });
-
-                                    // Changing only the upY AudioParam while keeping the value of upX at 0 doesn't have an effect.
-                                    context.listener.upX.value = 1;
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    const offset = channelData.length === 5 ? 0 : 768;
-
-                                    expect(channelData[offset + 0]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[offset + 1]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[offset + 2]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[offset + 3]).to.be.closeTo(0.007032075, 0.000000001);
-                                    expect(channelData[offset + 4]).to.be.closeTo(0.007032075, 0.000000001);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.upY.value = 100;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
+                                            0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
+                                            0.007035556249320507
+                                        ]);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.upY.value = 100;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
-                                        0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
-                                        0.007035556249320507
-                                    ]);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('upZ', () => {
@@ -2240,72 +2272,76 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            let renderer;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            renderer = createRenderer({
-                                context,
-                                // Bug #117: Firefox has AudioParam implementation so far.
-                                length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const pannerNode = new PannerNode(context, {
-                                        positionX: 1,
-                                        positionY: 10,
-                                        positionZ: 100
+                                renderer = createRenderer({
+                                    context,
+                                    // Bug #117: Firefox has AudioParam implementation so far.
+                                    length: context.length === undefined ? (/Firefox/.test(navigator.userAgent) ? 773 : 5) : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const pannerNode = new PannerNode(context, {
+                                            positionX: 1,
+                                            positionY: 10,
+                                            positionZ: 100
+                                        });
+
+                                        // Changing only the upZ AudioParam while keeping the value of upX and upY at 0 doesn't have an effect.
+                                        context.listener.upX.value = 1;
+                                        context.listener.upY.value = 100;
+
+                                        constantSourceNode.connect(pannerNode).connect(destination);
+
+                                        return { constantSourceNode, pannerNode };
+                                    }
+                                });
+                            });
+
+                            describe('without any automation', () => {
+                                it('should not modify the signal', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
+                                            0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
+                                            0.007035556249320507
+                                        ]);
                                     });
-
-                                    // Changing only the upZ AudioParam while keeping the value of upX and upY at 0 doesn't have an effect.
-                                    context.listener.upX.value = 1;
-                                    context.listener.upY.value = 100;
-
-                                    constantSourceNode.connect(pannerNode).connect(destination);
-
-                                    return { constantSourceNode, pannerNode };
-                                }
+                                });
                             });
-                        });
 
-                        describe('without any automation', () => {
-                            it('should not modify the signal', function () {
-                                this.timeout(10000);
+                            describe('with a modified value', () => {
+                                it('should modify the signal', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
-                                        0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
-                                        0.007035556249320507
-                                    ]);
+                                    return renderer({
+                                        prepare() {
+                                            context.listener.upZ.value = 1;
+                                        },
+                                        start(startTime, { constantSourceNode }) {
+                                            constantSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
+                                            0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
+                                            0.007035556249320507
+                                        ]);
+                                    });
                                 });
                             });
                         });
-
-                        describe('with a modified value', () => {
-                            it('should modify the signal', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare() {
-                                        context.listener.upZ.value = 1;
-                                    },
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData).slice(channelData.length === 5 ? 0 : 768)).to.deep.equal([
-                                        0.007035556249320507, 0.007035556249320507, 0.007035556249320507, 0.007035556249320507,
-                                        0.007035556249320507
-                                    ]);
-                                });
-                            });
-                        });
-                    });
+                    }
                 });
             });
         }

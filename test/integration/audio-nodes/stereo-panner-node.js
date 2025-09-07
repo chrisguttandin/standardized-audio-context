@@ -427,287 +427,294 @@ if (typeof window !== 'undefined') {
                         }
                     });
 
-                    describe('automation', () => {
-                        for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                            ? [
-                                  [true, true],
-                                  [true, false],
-                                  [false, true]
-                              ]
-                            : [[true, false]]) {
-                            describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                withAnAppendedAudioWorklet ? 'with' : 'without'
-                            } an appended AudioWorklet`, () => {
-                                for (const channelLayout of ['mono', 'stereo']) {
-                                    describe(`with a channel layout of '${channelLayout}'`, () => {
-                                        let renderer;
-                                        let values;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('automation', () => {
+                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                                ? [
+                                      [true, true],
+                                      [true, false],
+                                      [false, true]
+                                  ]
+                                : [[true, false]]) {
+                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                                    withAnAppendedAudioWorklet ? 'with' : 'without'
+                                } an appended AudioWorklet`, () => {
+                                    for (const channelLayout of ['mono', 'stereo']) {
+                                        describe(`with a channel layout of '${channelLayout}'`, () => {
+                                            let renderer;
+                                            let values;
 
-                                        beforeEach(async function () {
-                                            this.timeout(10000);
+                                            beforeEach(async function () {
+                                                this.timeout(10000);
 
-                                            values = [1, 0.5, 0, -0.5, -1];
+                                                values = [1, 0.5, 0, -0.5, -1];
 
-                                            if (withAnAppendedAudioWorklet) {
-                                                await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                            }
-
-                                            renderer = createRenderer({
-                                                context,
-                                                length: context.length === undefined ? 5 : undefined,
-                                                setup(destination) {
-                                                    const audioBuffer = new AudioBuffer({
-                                                        length: 5,
-                                                        numberOfChannels: channelLayout === 'mono' ? 1 : 2,
-                                                        sampleRate: context.sampleRate
-                                                    });
-                                                    const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                                    const audioWorkletNode = withAnAppendedAudioWorklet
-                                                        ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 2 })
-                                                        : null;
-                                                    const masterGainNode = new GainNode(context, {
-                                                        gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                                    });
-                                                    const stereoPannerNode = createStereoPannerNode(context, {
-                                                        channelCount: channelLayout === 'mono' ? 1 : 2
-                                                    });
-
-                                                    audioBuffer.copyToChannel(new Float32Array(values), 0);
-
-                                                    if (channelLayout === 'stereo') {
-                                                        audioBuffer.copyToChannel(
-                                                            new Float32Array(values.map((value) => value / 2).reverse()),
-                                                            1
-                                                        );
-                                                    }
-
-                                                    audioBufferSourceNode.buffer = audioBuffer;
-
-                                                    audioBufferSourceNode.connect(stereoPannerNode);
-
-                                                    if (withADirectConnection) {
-                                                        stereoPannerNode.connect(masterGainNode);
-                                                    }
-
-                                                    if (withAnAppendedAudioWorklet) {
-                                                        stereoPannerNode.connect(audioWorkletNode).connect(masterGainNode);
-                                                    }
-
-                                                    masterGainNode.connect(destination);
-
-                                                    return { audioBufferSourceNode, stereoPannerNode };
+                                                if (withAnAppendedAudioWorklet) {
+                                                    await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
                                                 }
-                                            });
-                                        });
 
-                                        describe('without any automation', () => {
-                                            it(`should ${channelLayout === 'mono' ? 'modify' : 'not modify'} the signal`, function () {
-                                                this.timeout(10000);
+                                                renderer = createRenderer({
+                                                    context,
+                                                    length: context.length === undefined ? 5 : undefined,
+                                                    setup(destination) {
+                                                        const audioBuffer = new AudioBuffer({
+                                                            length: 5,
+                                                            numberOfChannels: channelLayout === 'mono' ? 1 : 2,
+                                                            sampleRate: context.sampleRate
+                                                        });
+                                                        const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                                        const audioWorkletNode = withAnAppendedAudioWorklet
+                                                            ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 2 })
+                                                            : null;
+                                                        const masterGainNode = new GainNode(context, {
+                                                            gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                                        });
+                                                        const stereoPannerNode = createStereoPannerNode(context, {
+                                                            channelCount: channelLayout === 'mono' ? 1 : 2
+                                                        });
 
-                                                return renderer({
-                                                    start(startTime, { audioBufferSourceNode }) {
-                                                        audioBufferSourceNode.start(startTime);
-                                                    }
-                                                }).then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.equal(0.7071067690849304);
-                                                        expect(channelData[1]).to.equal(0.3535533845424652);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
-                                                        expect(channelData[3]).to.equal(-0.3535533845424652);
-                                                        expect(channelData[4]).to.equal(-0.7071067690849304);
-                                                    } else {
-                                                        expect(channelData[0]).to.equal(0.25);
-                                                        expect(channelData[1]).to.equal(0.125);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.125);
-                                                        expect(channelData[4]).to.equal(-0.25);
-                                                    }
-                                                });
-                                            });
-                                        });
+                                                        audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                                        describe('with a modified value', () => {
-                                            it('should modify the signal', function () {
-                                                this.timeout(10000);
+                                                        if (channelLayout === 'stereo') {
+                                                            audioBuffer.copyToChannel(
+                                                                new Float32Array(values.map((value) => value / 2).reverse()),
+                                                                1
+                                                            );
+                                                        }
 
-                                                return renderer({
-                                                    prepare({ stereoPannerNode }) {
-                                                        stereoPannerNode.pan.value = 0.5;
-                                                    },
-                                                    start(startTime, { audioBufferSourceNode }) {
-                                                        audioBufferSourceNode.start(startTime);
-                                                    }
-                                                }).then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.equal(0.6532814502716064);
-                                                        expect(channelData[1]).to.equal(0.3266407251358032);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.3266407251358032);
-                                                        expect(channelData[4]).to.equal(-0.6532814502716064);
-                                                    } else {
-                                                        expect(channelData[0]).to.equal(0.4571067690849304);
-                                                        expect(channelData[1]).to.equal(0.2285533845424652);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.2285533845424652);
-                                                        expect(channelData[4]).to.equal(-0.4571067690849304);
+                                                        audioBufferSourceNode.buffer = audioBuffer;
+
+                                                        audioBufferSourceNode.connect(stereoPannerNode);
+
+                                                        if (withADirectConnection) {
+                                                            stereoPannerNode.connect(masterGainNode);
+                                                        }
+
+                                                        if (withAnAppendedAudioWorklet) {
+                                                            stereoPannerNode.connect(audioWorkletNode).connect(masterGainNode);
+                                                        }
+
+                                                        masterGainNode.connect(destination);
+
+                                                        return { audioBufferSourceNode, stereoPannerNode };
                                                     }
                                                 });
                                             });
-                                        });
 
-                                        describe('with a call to cancelAndHoldAtTime()', () => {
-                                            // @todo
-                                        });
+                                            describe('without any automation', () => {
+                                                it(`should ${channelLayout === 'mono' ? 'modify' : 'not modify'} the signal`, function () {
+                                                    this.timeout(10000);
 
-                                        describe('with a call to cancelScheduledValues()', () => {
-                                            it('should modify the signal', function () {
-                                                this.timeout(10000);
-
-                                                return renderer({
-                                                    start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                        stereoPannerNode.pan.setValueAtTime(0.5, startTime);
-                                                        stereoPannerNode.pan.setValueAtTime(
-                                                            0,
-                                                            roundToSamples(startTime, context.sampleRate, 2)
-                                                        );
-                                                        stereoPannerNode.pan.linearRampToValueAtTime(
-                                                            1,
-                                                            roundToSamples(startTime, context.sampleRate, 5)
-                                                        );
-                                                        stereoPannerNode.pan.cancelScheduledValues(
-                                                            roundToSamples(startTime, context.sampleRate, 3)
-                                                        );
-
-                                                        audioBufferSourceNode.start(startTime);
-                                                    }
-                                                }).then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.equal(0.6532814502716064);
-                                                        expect(channelData[1]).to.equal(0.3266407251358032);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
-                                                        expect(channelData[3]).to.equal(-0.3535533845424652);
-                                                        expect(channelData[4]).to.equal(-0.7071067690849304);
-                                                    } else {
-                                                        expect(channelData[0]).to.equal(0.4571067690849304);
-                                                        expect(channelData[1]).to.equal(0.2285533845424652);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.125);
-                                                        expect(channelData[4]).to.equal(-0.25);
-                                                    }
+                                                    return renderer({
+                                                        start(startTime, { audioBufferSourceNode }) {
+                                                            audioBufferSourceNode.start(startTime);
+                                                        }
+                                                    }).then((channelData) => {
+                                                        if (channelLayout === 'mono') {
+                                                            expect(channelData[0]).to.equal(0.7071067690849304);
+                                                            expect(channelData[1]).to.equal(0.3535533845424652);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
+                                                            expect(channelData[3]).to.equal(-0.3535533845424652);
+                                                            expect(channelData[4]).to.equal(-0.7071067690849304);
+                                                        } else {
+                                                            expect(channelData[0]).to.equal(0.25);
+                                                            expect(channelData[1]).to.equal(0.125);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.125);
+                                                            expect(channelData[4]).to.equal(-0.25);
+                                                        }
+                                                    });
                                                 });
                                             });
-                                        });
 
-                                        describe('with a call to setValueAtTime()', () => {
-                                            it('should modify the signal', function () {
-                                                this.timeout(10000);
+                                            describe('with a modified value', () => {
+                                                it('should modify the signal', function () {
+                                                    this.timeout(10000);
 
-                                                return renderer({
-                                                    start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                        stereoPannerNode.pan.setValueAtTime(
-                                                            0.5,
-                                                            roundToSamples(startTime, context.sampleRate, 2)
-                                                        );
-
-                                                        audioBufferSourceNode.start(startTime);
-                                                    }
-                                                }).then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.equal(0.7071067690849304);
-                                                        expect(channelData[1]).to.equal(0.3535533845424652);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.3266407251358032);
-                                                        expect(channelData[4]).to.equal(-0.6532814502716064);
-                                                    } else {
-                                                        expect(channelData[0]).to.equal(0.25);
-                                                        expect(channelData[1]).to.equal(0.125);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.2285533845424652);
-                                                        expect(channelData[4]).to.equal(-0.4571067690849304);
-                                                    }
+                                                    return renderer({
+                                                        prepare({ stereoPannerNode }) {
+                                                            stereoPannerNode.pan.value = 0.5;
+                                                        },
+                                                        start(startTime, { audioBufferSourceNode }) {
+                                                            audioBufferSourceNode.start(startTime);
+                                                        }
+                                                    }).then((channelData) => {
+                                                        if (channelLayout === 'mono') {
+                                                            expect(channelData[0]).to.equal(0.6532814502716064);
+                                                            expect(channelData[1]).to.equal(0.3266407251358032);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                            expect(channelData[4]).to.equal(-0.6532814502716064);
+                                                        } else {
+                                                            expect(channelData[0]).to.equal(0.4571067690849304);
+                                                            expect(channelData[1]).to.equal(0.2285533845424652);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.2285533845424652);
+                                                            expect(channelData[4]).to.equal(-0.4571067690849304);
+                                                        }
+                                                    });
                                                 });
                                             });
-                                        });
 
-                                        describe('with a call to setValueCurveAtTime()', () => {
-                                            it('should modify the signal', function () {
-                                                this.timeout(10000);
+                                            describe('with a call to cancelAndHoldAtTime()', () => {
+                                                // @todo
+                                            });
 
-                                                return renderer({
-                                                    start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
-                                                        stereoPannerNode.pan.setValueCurveAtTime(
-                                                            new Float32Array([0, 0.25, 0.5, 0.75, 1]),
-                                                            roundToSamples(startTime, context.sampleRate),
-                                                            6 / context.sampleRate
-                                                        );
+                                            describe('with a call to cancelScheduledValues()', () => {
+                                                it('should modify the signal', function () {
+                                                    this.timeout(10000);
 
-                                                        audioBufferSourceNode.start(startTime);
-                                                    }
-                                                }).then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.equal(0.7071067690849304);
-                                                        expect(channelData[1]).to.equal(0.35052868723869324);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.3266407251358032);
-                                                        expect(channelData[4]).to.equal(-0.6123723983764648);
-                                                    } else {
-                                                        expect(channelData[0]).to.equal(0.25);
-                                                        expect(channelData[1]).to.equal(0.18118621408939362);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.2285533845424652);
-                                                        expect(channelData[4]).to.be.closeTo(-0.4330127, 0.0000001);
-                                                    }
+                                                    return renderer({
+                                                        start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
+                                                            stereoPannerNode.pan.setValueAtTime(0.5, startTime);
+                                                            stereoPannerNode.pan.setValueAtTime(
+                                                                0,
+                                                                roundToSamples(startTime, context.sampleRate, 2)
+                                                            );
+                                                            stereoPannerNode.pan.linearRampToValueAtTime(
+                                                                1,
+                                                                roundToSamples(startTime, context.sampleRate, 5)
+                                                            );
+                                                            stereoPannerNode.pan.cancelScheduledValues(
+                                                                roundToSamples(startTime, context.sampleRate, 3)
+                                                            );
+
+                                                            audioBufferSourceNode.start(startTime);
+                                                        }
+                                                    }).then((channelData) => {
+                                                        if (channelLayout === 'mono') {
+                                                            expect(channelData[0]).to.equal(0.6532814502716064);
+                                                            expect(channelData[1]).to.equal(0.3266407251358032);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.00000000001);
+                                                            expect(channelData[3]).to.equal(-0.3535533845424652);
+                                                            expect(channelData[4]).to.equal(-0.7071067690849304);
+                                                        } else {
+                                                            expect(channelData[0]).to.equal(0.4571067690849304);
+                                                            expect(channelData[1]).to.equal(0.2285533845424652);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.125);
+                                                            expect(channelData[4]).to.equal(-0.25);
+                                                        }
+                                                    });
                                                 });
                                             });
-                                        });
 
-                                        describe('with another AudioNode connected to the AudioParam', () => {
-                                            it('should modify the signal', function () {
-                                                this.timeout(10000);
+                                            describe('with a call to setValueAtTime()', () => {
+                                                it('should modify the signal', function () {
+                                                    this.timeout(10000);
 
-                                                return renderer({
-                                                    prepare({ stereoPannerNode }) {
-                                                        const audioBuffer = new AudioBuffer({ length: 5, sampleRate: context.sampleRate });
-                                                        const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+                                                    return renderer({
+                                                        start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
+                                                            stereoPannerNode.pan.setValueAtTime(
+                                                                0.5,
+                                                                roundToSamples(startTime, context.sampleRate, 2)
+                                                            );
 
-                                                        audioBuffer.copyToChannel(new Float32Array([0.5, 0.5, 0.5, 0.5, 0.5]), 0);
-
-                                                        audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
-
-                                                        stereoPannerNode.pan.value = 0;
-
-                                                        audioBufferSourceNodeForAudioParam.connect(stereoPannerNode.pan);
-
-                                                        return { audioBufferSourceNodeForAudioParam };
-                                                    },
-                                                    start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
-                                                        audioBufferSourceNode.start(startTime);
-                                                        audioBufferSourceNodeForAudioParam.start(startTime);
-                                                    }
-                                                }).then((channelData) => {
-                                                    if (channelLayout === 'mono') {
-                                                        expect(channelData[0]).to.equal(0.6532814502716064);
-                                                        expect(channelData[1]).to.equal(0.3266407251358032);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.3266407251358032);
-                                                        expect(channelData[4]).to.equal(-0.6532814502716064);
-                                                    } else {
-                                                        expect(channelData[0]).to.equal(0.4571067690849304);
-                                                        expect(channelData[1]).to.equal(0.2285533845424652);
-                                                        expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
-                                                        expect(channelData[3]).to.equal(-0.2285533845424652);
-                                                        expect(channelData[4]).to.equal(-0.4571067690849304);
-                                                    }
+                                                            audioBufferSourceNode.start(startTime);
+                                                        }
+                                                    }).then((channelData) => {
+                                                        if (channelLayout === 'mono') {
+                                                            expect(channelData[0]).to.equal(0.7071067690849304);
+                                                            expect(channelData[1]).to.equal(0.3535533845424652);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                            expect(channelData[4]).to.equal(-0.6532814502716064);
+                                                        } else {
+                                                            expect(channelData[0]).to.equal(0.25);
+                                                            expect(channelData[1]).to.equal(0.125);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.2285533845424652);
+                                                            expect(channelData[4]).to.equal(-0.4571067690849304);
+                                                        }
+                                                    });
                                                 });
                                             });
-                                        });
 
-                                        // @todo Test other automations as well.
-                                    });
-                                }
-                            });
-                        }
-                    });
+                                            describe('with a call to setValueCurveAtTime()', () => {
+                                                it('should modify the signal', function () {
+                                                    this.timeout(10000);
+
+                                                    return renderer({
+                                                        start(startTime, { audioBufferSourceNode, stereoPannerNode }) {
+                                                            stereoPannerNode.pan.setValueCurveAtTime(
+                                                                new Float32Array([0, 0.25, 0.5, 0.75, 1]),
+                                                                roundToSamples(startTime, context.sampleRate),
+                                                                6 / context.sampleRate
+                                                            );
+
+                                                            audioBufferSourceNode.start(startTime);
+                                                        }
+                                                    }).then((channelData) => {
+                                                        if (channelLayout === 'mono') {
+                                                            expect(channelData[0]).to.equal(0.7071067690849304);
+                                                            expect(channelData[1]).to.equal(0.35052868723869324);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                            expect(channelData[4]).to.equal(-0.6123723983764648);
+                                                        } else {
+                                                            expect(channelData[0]).to.equal(0.25);
+                                                            expect(channelData[1]).to.equal(0.18118621408939362);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.2285533845424652);
+                                                            expect(channelData[4]).to.be.closeTo(-0.4330127, 0.0000001);
+                                                        }
+                                                    });
+                                                });
+                                            });
+
+                                            describe('with another AudioNode connected to the AudioParam', () => {
+                                                it('should modify the signal', function () {
+                                                    this.timeout(10000);
+
+                                                    return renderer({
+                                                        prepare({ stereoPannerNode }) {
+                                                            const audioBuffer = new AudioBuffer({
+                                                                length: 5,
+                                                                sampleRate: context.sampleRate
+                                                            });
+                                                            const audioBufferSourceNodeForAudioParam = new AudioBufferSourceNode(context);
+
+                                                            audioBuffer.copyToChannel(new Float32Array([0.5, 0.5, 0.5, 0.5, 0.5]), 0);
+
+                                                            audioBufferSourceNodeForAudioParam.buffer = audioBuffer;
+
+                                                            stereoPannerNode.pan.value = 0;
+
+                                                            audioBufferSourceNodeForAudioParam.connect(stereoPannerNode.pan);
+
+                                                            return { audioBufferSourceNodeForAudioParam };
+                                                        },
+                                                        start(startTime, { audioBufferSourceNode, audioBufferSourceNodeForAudioParam }) {
+                                                            audioBufferSourceNode.start(startTime);
+                                                            audioBufferSourceNodeForAudioParam.start(startTime);
+                                                        }
+                                                    }).then((channelData) => {
+                                                        if (channelLayout === 'mono') {
+                                                            expect(channelData[0]).to.equal(0.6532814502716064);
+                                                            expect(channelData[1]).to.equal(0.3266407251358032);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.3266407251358032);
+                                                            expect(channelData[4]).to.equal(-0.6532814502716064);
+                                                        } else {
+                                                            expect(channelData[0]).to.equal(0.4571067690849304);
+                                                            expect(channelData[1]).to.equal(0.2285533845424652);
+                                                            expect(channelData[2]).to.be.closeTo(0, 0.000000000001);
+                                                            expect(channelData[3]).to.equal(-0.2285533845424652);
+                                                            expect(channelData[4]).to.equal(-0.4571067690849304);
+                                                        }
+                                                    });
+                                                });
+                                            });
+
+                                            // @todo Test other automations as well.
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
 
                 describe('connect()', () => {
@@ -830,39 +837,43 @@ if (typeof window !== 'undefined') {
                         });
                     }
 
-                    describe('with a cycle', () => {
-                        let renderer;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('with a cycle', () => {
+                            let renderer;
 
-                        beforeEach(() => {
-                            renderer = createRenderer({
-                                context,
-                                length: context.length === undefined ? 5 : undefined,
-                                setup(destination) {
-                                    const constantSourceNode = new ConstantSourceNode(context);
-                                    const gainNode = new GainNode(context);
-                                    const stereoPannerNode = createStereoPannerNode(context);
+                            beforeEach(() => {
+                                renderer = createRenderer({
+                                    context,
+                                    length: context.length === undefined ? 5 : undefined,
+                                    setup(destination) {
+                                        const constantSourceNode = new ConstantSourceNode(context);
+                                        const gainNode = new GainNode(context);
+                                        const stereoPannerNode = createStereoPannerNode(context);
 
-                                    constantSourceNode.connect(stereoPannerNode).connect(destination);
+                                        constantSourceNode.connect(stereoPannerNode).connect(destination);
 
-                                    stereoPannerNode.connect(gainNode).connect(stereoPannerNode);
+                                        stereoPannerNode.connect(gainNode).connect(stereoPannerNode);
 
-                                    return { constantSourceNode, gainNode, stereoPannerNode };
-                                }
+                                        return { constantSourceNode, gainNode, stereoPannerNode };
+                                    }
+                                });
+                            });
+
+                            it('should render silence', function () {
+                                this.timeout(10000);
+
+                                return renderer({
+                                    start(startTime, { constantSourceNode }) {
+                                        constantSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
                         });
-
-                        it('should render silence', function () {
-                            this.timeout(10000);
-
-                            return renderer({
-                                start(startTime, { constantSourceNode }) {
-                                    constantSourceNode.start(startTime);
-                                }
-                            }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
-                            });
-                        });
-                    });
+                    }
                 });
 
                 describe('disconnect()', () => {
@@ -893,33 +904,37 @@ if (typeof window !== 'undefined') {
                             });
                     });
 
-                    describe('without any parameters', () => {
-                        let renderer;
-                        let values;
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI || description.includes('Offline')) {
+                        describe('without any parameters', () => {
+                            let renderer;
+                            let values;
 
-                        beforeEach(function () {
-                            this.timeout(10000);
+                            beforeEach(function () {
+                                this.timeout(10000);
 
-                            values = [1, 1, 1, 1, 1];
+                                values = [1, 1, 1, 1, 1];
 
-                            renderer = createPredefinedRenderer(values);
-                        });
+                                renderer = createPredefinedRenderer(values);
+                            });
 
-                        it('should disconnect all destinations', function () {
-                            this.timeout(10000);
+                            it('should disconnect all destinations', function () {
+                                this.timeout(10000);
 
-                            return renderer({
-                                prepare({ stereoPannerNode }) {
-                                    stereoPannerNode.disconnect();
-                                },
-                                start(startTime, { audioBufferSourceNode }) {
-                                    audioBufferSourceNode.start(startTime);
-                                }
-                            }).then((channelData) => {
-                                expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                return renderer({
+                                    prepare({ stereoPannerNode }) {
+                                        stereoPannerNode.disconnect();
+                                    },
+                                    start(startTime, { audioBufferSourceNode }) {
+                                        audioBufferSourceNode.start(startTime);
+                                    }
+                                }).then((channelData) => {
+                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                });
                             });
                         });
-                    });
+                    }
 
                     describe('with an output', () => {
                         describe('with a value which is out-of-bound', () => {
@@ -941,33 +956,37 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection from the given output', () => {
-                            let renderer;
-                            let values;
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI || description.includes('Offline')) {
+                            describe('with a connection from the given output', () => {
+                                let renderer;
+                                let values;
 
-                            beforeEach(function () {
-                                this.timeout(10000);
+                                beforeEach(function () {
+                                    this.timeout(10000);
 
-                                values = [1, 1, 1, 1, 1];
+                                    values = [1, 1, 1, 1, 1];
 
-                                renderer = createPredefinedRenderer(values);
-                            });
+                                    renderer = createPredefinedRenderer(values);
+                                });
 
-                            it('should disconnect all destinations from the given output', function () {
-                                this.timeout(10000);
+                                it('should disconnect all destinations from the given output', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    prepare({ stereoPannerNode }) {
-                                        stereoPannerNode.disconnect(0);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    return renderer({
+                                        prepare({ stereoPannerNode }) {
+                                            stereoPannerNode.disconnect(0);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    });
                                 });
                             });
-                        });
+                        }
                     });
 
                     describe('with a destination', () => {
@@ -990,50 +1009,55 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection to the given destination', () => {
-                            let renderer;
-                            let values;
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI || description.includes('Offline')) {
+                            describe('with a connection to the given destination', () => {
+                                let renderer;
+                                let values;
 
-                            beforeEach(function () {
-                                this.timeout(10000);
+                                beforeEach(function () {
+                                    this.timeout(10000);
 
-                                values = [1, 1, 1, 1, 1];
+                                    values = [1, 1, 1, 1, 1];
 
-                                renderer = createPredefinedRenderer(values);
-                            });
+                                    renderer = createPredefinedRenderer(values);
+                                });
 
-                            it('should disconnect the destination', function () {
-                                this.timeout(10000);
+                                it('should disconnect the destination', function () {
+                                    this.timeout(10000);
 
-                                return renderer({
-                                    prepare({ firstDummyGainNode, stereoPannerNode }) {
-                                        stereoPannerNode.disconnect(firstDummyGainNode);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    return renderer({
+                                        prepare({ firstDummyGainNode, stereoPannerNode }) {
+                                            stereoPannerNode.disconnect(firstDummyGainNode);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
+                                    });
+                                });
+
+                                it('should disconnect another destination in isolation', function () {
+                                    this.timeout(10000);
+
+                                    return renderer({
+                                        prepare({ secondDummyGainNode, stereoPannerNode }) {
+                                            stereoPannerNode.disconnect(secondDummyGainNode);
+                                        },
+                                        start(startTime, { audioBufferSourceNode }) {
+                                            audioBufferSourceNode.start(startTime);
+                                        }
+                                    }).then((channelData) => {
+                                        expect(Array.from(channelData)).to.deep.equal([
+                                            0.7071067690849304, 0.7071067690849304, 0.7071067690849304, 0.7071067690849304,
+                                            0.7071067690849304
+                                        ]);
+                                    });
                                 });
                             });
-
-                            it('should disconnect another destination in isolation', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    prepare({ secondDummyGainNode, stereoPannerNode }) {
-                                        stereoPannerNode.disconnect(secondDummyGainNode);
-                                    },
-                                    start(startTime, { audioBufferSourceNode }) {
-                                        audioBufferSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData)).to.deep.equal([
-                                        0.7071067690849304, 0.7071067690849304, 0.7071067690849304, 0.7071067690849304, 0.7071067690849304
-                                    ]);
-                                });
-                            });
-                        });
+                        }
                     });
 
                     describe('with a destination and an output', () => {

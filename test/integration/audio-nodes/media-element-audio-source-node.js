@@ -399,10 +399,10 @@ if (typeof window !== 'undefined') {
                         };
                     });
 
-                    describe('without any parameters', () => {
-                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                        // eslint-disable-next-line no-undef
-                        if (!process.env.CI) {
+                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                    // eslint-disable-next-line no-undef
+                    if (!process.env.CI) {
+                        describe('without any parameters', () => {
                             let renderer;
 
                             afterEach(() => pauseMediaElement());
@@ -426,8 +426,8 @@ if (typeof window !== 'undefined') {
                                     expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                 });
                             });
-                        }
-                    });
+                        });
+                    }
 
                     describe('with an output', () => {
                         describe('with a value which is out-of-bound', () => {
@@ -449,10 +449,10 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection from the given output', () => {
-                            // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                            // eslint-disable-next-line no-undef
-                            if (!process.env.CI) {
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI) {
+                            describe('with a connection from the given output', () => {
                                 let renderer;
 
                                 afterEach(() => pauseMediaElement());
@@ -476,8 +476,8 @@ if (typeof window !== 'undefined') {
                                         expect(Array.from(channelData)).to.deep.equal([0, 0, 0, 0, 0]);
                                     });
                                 });
-                            }
-                        });
+                            });
+                        }
                     });
 
                     describe('with a destination', () => {
@@ -500,10 +500,10 @@ if (typeof window !== 'undefined') {
                             });
                         });
 
-                        describe('with a connection to the given destination', () => {
-                            // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                            // eslint-disable-next-line no-undef
-                            if (!process.env.CI) {
+                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
+                        // eslint-disable-next-line no-undef
+                        if (!process.env.CI) {
+                            describe('with a connection to the given destination', () => {
                                 let renderer;
 
                                 afterEach(() => pauseMediaElement());
@@ -543,8 +543,8 @@ if (typeof window !== 'undefined') {
                                         expect(Array.from(channelData)).to.not.deep.equal([0, 0, 0, 0, 0]);
                                     });
                                 });
-                            }
-                        });
+                            });
+                        }
                     });
 
                     describe('with a destination and an output', () => {
