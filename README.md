@@ -122,7 +122,6 @@ It implements the following TypeScript interface.
 ```typescript
 interface IOfflineAudioContext extends EventTarget {
     readonly audioWorklet?: IAudioWorklet;
-    readonly baseLatency: number;
     readonly currentTime: number;
     readonly destination: IAudioDestinationNode<IOfflineAudioContext>;
     readonly length: number;
