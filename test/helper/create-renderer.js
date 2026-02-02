@@ -14,7 +14,7 @@ export const createRenderer = ({ context, length, setup }) => {
         }
 
         return async ({ prepare, start }) => {
-            await addAudioWorkletModule(context, 'base/test/fixtures/render-processor.js');
+            await addAudioWorkletModule(context, 'test/fixtures/render-processor.js');
 
             while (true) {
                 const audioNodes = await setup(destination);

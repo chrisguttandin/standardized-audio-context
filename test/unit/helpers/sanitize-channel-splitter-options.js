@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { sanitizeChannelSplitterOptions } from '../../../src/helpers/sanitize-channel-splitter-options';
 
 describe('sanitizeChannelSplitterOptions()', () => {

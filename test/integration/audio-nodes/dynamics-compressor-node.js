@@ -7,6 +7,7 @@ import {
     GainNode,
     addAudioWorkletModule
 } from '../../../src/module';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -86,1327 +87,1180 @@ const testCases = {
     }
 };
 
-if (typeof window !== 'undefined') {
-    describe('DynamicsCompressorNode', () => {
-        for (const [description, { createDynamicsCompressorNode, createContext }] of Object.entries(testCases)) {
-            describe(`with the ${description}`, () => {
-                let context;
-                let lookAhead;
+describe('DynamicsCompressorNode', { skip: typeof window === 'undefined' }, () => {
+    describe.for(Object.entries(testCases))('with the %s', ([description, { createContext, createDynamicsCompressorNode }]) => {
+        let context;
+        let lookAhead;
 
-                afterEach(() => context.close?.());
+        afterEach(() => context.close?.());
+
+        beforeEach(() => {
+            context = createContext();
+            lookAhead = Math.floor(0.006 * context.sampleRate);
+
+            if (description.includes('Offline')) {
+                context = createContext({ length: lookAhead + 5 });
+            }
+        });
+
+        describe('constructor()', () => {
+            describe.for(['closed', 'running'])('with an audioContextState of "%s"', (audioContextState) => {
+                afterEach(() => {
+                    if (audioContextState === 'closed') {
+                        context.close = undefined;
+                    }
+                });
 
                 beforeEach(() => {
-                    context = createContext();
-                    lookAhead = Math.floor(0.006 * context.sampleRate);
-
-                    if (description.includes('Offline')) {
-                        context = createContext({ length: lookAhead + 5 });
+                    if (audioContextState === 'closed') {
+                        return context.close?.() ?? context.startRendering?.();
                     }
                 });
 
-                describe('constructor()', () => {
-                    for (const audioContextState of ['closed', 'running']) {
-                        describe(`with an audioContextState of "${audioContextState}"`, () => {
-                            afterEach(() => {
-                                if (audioContextState === 'closed') {
-                                    context.close = undefined;
-                                }
-                            });
-
-                            beforeEach(() => {
-                                if (audioContextState === 'closed') {
-                                    return context.close?.() ?? context.startRendering?.();
-                                }
-                            });
-
-                            describe('without any options', () => {
-                                let dynamicsCompressorNode;
-
-                                beforeEach(() => {
-                                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                                });
-
-                                it('should return an instance of the DynamicsCompressorNode constructor', () => {
-                                    expect(dynamicsCompressorNode).to.be.an.instanceOf(DynamicsCompressorNode);
-                                });
-
-                                it('should return an implementation of the EventTarget interface', () => {
-                                    expect(dynamicsCompressorNode.addEventListener).to.be.a('function');
-                                    expect(dynamicsCompressorNode.dispatchEvent).to.be.a('function');
-                                    expect(dynamicsCompressorNode.removeEventListener).to.be.a('function');
-                                });
-
-                                it('should return an implementation of the AudioNode interface', () => {
-                                    expect(dynamicsCompressorNode.channelCount).to.equal(2);
-                                    expect(dynamicsCompressorNode.channelCountMode).to.equal('clamped-max');
-                                    expect(dynamicsCompressorNode.channelInterpretation).to.equal('speakers');
-                                    expect(dynamicsCompressorNode.connect).to.be.a('function');
-                                    expect(dynamicsCompressorNode.context).to.be.an.instanceOf(context.constructor);
-                                    expect(dynamicsCompressorNode.disconnect).to.be.a('function');
-                                    expect(dynamicsCompressorNode.numberOfInputs).to.equal(1);
-                                    expect(dynamicsCompressorNode.numberOfOutputs).to.equal(1);
-                                });
-
-                                it('should return an implementation of the DynamicsCompressorNode interface', () => {
-                                    expect(dynamicsCompressorNode.attack).not.to.be.undefined;
-                                    expect(dynamicsCompressorNode.knee).not.to.be.undefined;
-                                    expect(dynamicsCompressorNode.ratio).not.to.be.undefined;
-                                    expect(dynamicsCompressorNode.reduction).to.equal(0);
-                                    expect(dynamicsCompressorNode.release).not.to.be.undefined;
-                                    expect(dynamicsCompressorNode.threshold).not.to.be.undefined;
-                                });
-                            });
-
-                            describe('with valid options', () => {
-                                it('should return an instance with the given initial value for attack', () => {
-                                    const attack = 0.5;
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context, { attack });
-
-                                    if (description.startsWith('constructor')) {
-                                        expect(dynamicsCompressorNode.attack.defaultValue).to.equal(attack);
-                                    } else {
-                                        expect(dynamicsCompressorNode.attack.defaultValue).to.equal(Math.fround(0.003));
-                                    }
-
-                                    expect(dynamicsCompressorNode.attack.value).to.equal(attack);
-                                });
-
-                                it('should return an instance with the given channelCount', () => {
-                                    const channelCount = 1;
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context, { channelCount });
-
-                                    expect(dynamicsCompressorNode.channelCount).to.equal(channelCount);
-                                });
-
-                                it('should return an instance with the given channelCountMode', () => {
-                                    const channelCountMode = 'explicit';
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context, { channelCountMode });
-
-                                    expect(dynamicsCompressorNode.channelCountMode).to.equal(channelCountMode);
-                                });
-
-                                it('should return an instance with the given channelInterpretation', () => {
-                                    const channelInterpretation = 'discrete';
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context, { channelInterpretation });
-
-                                    expect(dynamicsCompressorNode.channelInterpretation).to.equal(channelInterpretation);
-                                });
-
-                                it('should return an instance with the given initial value for knee', () => {
-                                    const knee = 20;
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context, { knee });
-
-                                    if (description.startsWith('constructor')) {
-                                        expect(dynamicsCompressorNode.knee.defaultValue).to.equal(knee);
-                                    } else {
-                                        expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
-                                    }
-
-                                    expect(dynamicsCompressorNode.knee.value).to.equal(knee);
-                                });
-
-                                it('should return an instance with the given initial value for ratio', () => {
-                                    const ratio = 10;
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context, { ratio });
-
-                                    if (description.startsWith('constructor')) {
-                                        expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(ratio);
-                                    } else {
-                                        expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
-                                    }
-
-                                    expect(dynamicsCompressorNode.ratio.value).to.equal(ratio);
-                                });
-
-                                it('should return an instance with the given initial value for release', () => {
-                                    const release = 0.5;
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context, { release });
-
-                                    if (description.startsWith('constructor')) {
-                                        expect(dynamicsCompressorNode.release.defaultValue).to.equal(release);
-                                    } else {
-                                        expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
-                                    }
-
-                                    expect(dynamicsCompressorNode.release.value).to.equal(release);
-                                });
-
-                                it('should return an instance with the given initial value for threshold', () => {
-                                    const threshold = -50;
-                                    const dynamicsCompressorNode = createDynamicsCompressorNode(context, { threshold });
-
-                                    if (description.startsWith('constructor')) {
-                                        expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(threshold);
-                                    } else {
-                                        expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);
-                                    }
-
-                                    expect(dynamicsCompressorNode.threshold.value).to.equal(threshold);
-                                });
-                            });
-
-                            describe('with invalid options', () => {
-                                describe('with a channelCount greater than 2', () => {
-                                    it('should throw a NotSupportedError', (done) => {
-                                        try {
-                                            createDynamicsCompressorNode(context, { channelCount: 4 });
-                                        } catch (err) {
-                                            expect(err.code).to.equal(9);
-                                            expect(err.name).to.equal('NotSupportedError');
-
-                                            done();
-                                        }
-                                    });
-                                });
-
-                                describe("with a channelCountMode of 'max'", () => {
-                                    it('should throw a NotSupportedError', (done) => {
-                                        try {
-                                            createDynamicsCompressorNode(context, { channelCountMode: 'max' });
-                                        } catch (err) {
-                                            expect(err.code).to.equal(9);
-                                            expect(err.name).to.equal('NotSupportedError');
-
-                                            done();
-                                        }
-                                    });
-                                });
-                            });
-                        });
-                    }
-                });
-
-                describe('attack', () => {
+                describe('without any options', () => {
                     let dynamicsCompressorNode;
 
                     beforeEach(() => {
                         dynamicsCompressorNode = createDynamicsCompressorNode(context);
                     });
 
-                    it('should return an implementation of the AudioParam interface', () => {
-                        expect(dynamicsCompressorNode.attack.cancelAndHoldAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.attack.cancelScheduledValues).to.be.a('function');
-                        expect(dynamicsCompressorNode.attack.defaultValue).to.equal(Math.fround(0.003));
-                        expect(dynamicsCompressorNode.attack.exponentialRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.attack.linearRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.attack.maxValue).to.equal(1);
-                        expect(dynamicsCompressorNode.attack.minValue).to.equal(0);
-                        expect(dynamicsCompressorNode.attack.setTargetAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.attack.setValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.attack.setValueCurveAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.attack.value).to.equal(Math.fround(0.003));
+                    it('should return an instance of the DynamicsCompressorNode constructor', () => {
+                        expect(dynamicsCompressorNode).to.be.an.instanceOf(DynamicsCompressorNode);
                     });
 
-                    it('should be readonly', () => {
-                        expect(() => {
-                            dynamicsCompressorNode.attack = 'anything';
-                        }).to.throw(TypeError);
+                    it('should return an implementation of the EventTarget interface', () => {
+                        expect(dynamicsCompressorNode.addEventListener).to.be.a('function');
+                        expect(dynamicsCompressorNode.dispatchEvent).to.be.a('function');
+                        expect(dynamicsCompressorNode.removeEventListener).to.be.a('function');
                     });
 
-                    describe('cancelAndHoldAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.attack.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.attack);
-                        });
+                    it('should return an implementation of the AudioNode interface', () => {
+                        expect(dynamicsCompressorNode.channelCount).to.equal(2);
+                        expect(dynamicsCompressorNode.channelCountMode).to.equal('clamped-max');
+                        expect(dynamicsCompressorNode.channelInterpretation).to.equal('speakers');
+                        expect(dynamicsCompressorNode.connect).to.be.a('function');
+                        expect(dynamicsCompressorNode.context).to.be.an.instanceOf(context.constructor);
+                        expect(dynamicsCompressorNode.disconnect).to.be.a('function');
+                        expect(dynamicsCompressorNode.numberOfInputs).to.equal(1);
+                        expect(dynamicsCompressorNode.numberOfOutputs).to.equal(1);
                     });
 
-                    describe('cancelScheduledValues()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.attack.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.attack);
-                        });
+                    it('should return an implementation of the DynamicsCompressorNode interface', () => {
+                        expect(dynamicsCompressorNode.attack).not.to.be.undefined;
+                        expect(dynamicsCompressorNode.knee).not.to.be.undefined;
+                        expect(dynamicsCompressorNode.ratio).not.to.be.undefined;
+                        expect(dynamicsCompressorNode.reduction).to.equal(0);
+                        expect(dynamicsCompressorNode.release).not.to.be.undefined;
+                        expect(dynamicsCompressorNode.threshold).not.to.be.undefined;
                     });
+                });
 
-                    describe('exponentialRampToValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.attack.exponentialRampToValueAtTime(1, 0)).to.equal(
-                                dynamicsCompressorNode.attack
-                            );
-                        });
+                describe('with valid options', () => {
+                    it('should return an instance with the given initial value for attack', () => {
+                        const attack = 0.5;
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context, { attack });
 
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.attack.exponentialRampToValueAtTime(0, 1);
-                            }).to.throw(RangeError);
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.attack.exponentialRampToValueAtTime(1, -1);
-                            }).to.throw(RangeError);
-                        });
-                    });
-
-                    describe('linearRampToValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.attack.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
-                        });
-                    });
-
-                    describe('setTargetAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.attack.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.attack);
-                        });
-                    });
-
-                    describe('setValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.attack.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
-                        });
-                    });
-
-                    describe('setValueCurveAtTime()', () => {
-                        for (const [arrayType, values] of [
-                            ['regular Array', [1, 0]],
-                            ['Float32Array', new Float32Array([1, 0])]
-                        ]) {
-                            describe(`with a ${arrayType}`, () => {
-                                it('should be chainable', () => {
-                                    expect(dynamicsCompressorNode.attack.setValueCurveAtTime(values, 0, 1)).to.equal(
-                                        dynamicsCompressorNode.attack
-                                    );
-                                });
-                            });
+                        if (description.startsWith('constructor')) {
+                            expect(dynamicsCompressorNode.attack.defaultValue).to.equal(attack);
+                        } else {
+                            expect(dynamicsCompressorNode.attack.defaultValue).to.equal(Math.fround(0.003));
                         }
+
+                        expect(dynamicsCompressorNode.attack.value).to.equal(attack);
                     });
 
-                    // @todo automation
-                });
-
-                describe('channelCount', () => {
-                    let dynamicsCompressorNode;
-
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
-                    it('should be assignable to a value smaller than 3', () => {
+                    it('should return an instance with the given channelCount', () => {
                         const channelCount = 1;
-
-                        dynamicsCompressorNode.channelCount = channelCount;
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context, { channelCount });
 
                         expect(dynamicsCompressorNode.channelCount).to.equal(channelCount);
                     });
 
-                    it('should not be assignable to a value larger than 2', (done) => {
-                        const channelCount = 4;
-
-                        try {
-                            dynamicsCompressorNode.channelCount = channelCount;
-                        } catch (err) {
-                            expect(err.code).to.equal(9);
-                            expect(err.name).to.equal('NotSupportedError');
-
-                            done();
-                        }
-                    });
-                });
-
-                describe('channelCountMode', () => {
-                    let dynamicsCompressorNode;
-
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
-                    it("should be assignable to 'explicit'", () => {
+                    it('should return an instance with the given channelCountMode', () => {
                         const channelCountMode = 'explicit';
-
-                        dynamicsCompressorNode.channelCountMode = channelCountMode;
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context, { channelCountMode });
 
                         expect(dynamicsCompressorNode.channelCountMode).to.equal(channelCountMode);
                     });
 
-                    it("should not be assignable to 'max'", (done) => {
-                        try {
-                            dynamicsCompressorNode.channelCountMode = 'max';
-                        } catch (err) {
-                            expect(err.code).to.equal(9);
-                            expect(err.name).to.equal('NotSupportedError');
-
-                            done();
-                        }
-                    });
-                });
-
-                describe('channelInterpretation', () => {
-                    let dynamicsCompressorNode;
-
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
-                    it('should be assignable to another value', () => {
+                    it('should return an instance with the given channelInterpretation', () => {
                         const channelInterpretation = 'discrete';
-
-                        dynamicsCompressorNode.channelInterpretation = channelInterpretation;
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context, { channelInterpretation });
 
                         expect(dynamicsCompressorNode.channelInterpretation).to.equal(channelInterpretation);
                     });
-                });
 
-                describe('knee', () => {
-                    let dynamicsCompressorNode;
+                    it('should return an instance with the given initial value for knee', () => {
+                        const knee = 20;
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context, { knee });
 
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
-                    it('should return an implementation of the AudioParam interface', () => {
-                        expect(dynamicsCompressorNode.knee.cancelAndHoldAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.knee.cancelScheduledValues).to.be.a('function');
-                        expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
-                        expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.knee.linearRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.knee.maxValue).to.equal(40);
-                        expect(dynamicsCompressorNode.knee.minValue).to.equal(0);
-                        expect(dynamicsCompressorNode.knee.setTargetAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.knee.setValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.knee.setValueCurveAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.knee.value).to.equal(30);
-                    });
-
-                    it('should be readonly', () => {
-                        expect(() => {
-                            dynamicsCompressorNode.knee = 'anything';
-                        }).to.throw(TypeError);
-                    });
-
-                    describe('cancelAndHoldAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.knee.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.knee);
-                        });
-                    });
-
-                    describe('cancelScheduledValues()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.knee.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.knee);
-                        });
-                    });
-
-                    describe('exponentialRampToValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.knee.exponentialRampToValueAtTime(0, 1);
-                            }).to.throw(RangeError);
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, -1);
-                            }).to.throw(RangeError);
-                        });
-                    });
-
-                    describe('linearRampToValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.knee.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
-                        });
-                    });
-
-                    describe('setTargetAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.knee.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.knee);
-                        });
-                    });
-
-                    describe('setValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.knee.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
-                        });
-                    });
-
-                    describe('setValueCurveAtTime()', () => {
-                        for (const [arrayType, values] of [
-                            ['regular Array', [1, 0]],
-                            ['Float32Array', new Float32Array([1, 0])]
-                        ]) {
-                            describe(`with a ${arrayType}`, () => {
-                                it('should be chainable', () => {
-                                    expect(dynamicsCompressorNode.knee.setValueCurveAtTime(values, 0, 1)).to.equal(
-                                        dynamicsCompressorNode.knee
-                                    );
-                                });
-                            });
+                        if (description.startsWith('constructor')) {
+                            expect(dynamicsCompressorNode.knee.defaultValue).to.equal(knee);
+                        } else {
+                            expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
                         }
+
+                        expect(dynamicsCompressorNode.knee.value).to.equal(knee);
                     });
 
-                    // @todo automation
-                });
+                    it('should return an instance with the given initial value for ratio', () => {
+                        const ratio = 10;
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context, { ratio });
 
-                describe('numberOfInputs', () => {
-                    let dynamicsCompressorNode;
-
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
-                    it('should be readonly', () => {
-                        expect(() => {
-                            dynamicsCompressorNode.numberOfInputs = 2;
-                        }).to.throw(TypeError);
-                    });
-                });
-
-                describe('numberOfOutputs', () => {
-                    let dynamicsCompressorNode;
-
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
-                    it('should be readonly', () => {
-                        expect(() => {
-                            dynamicsCompressorNode.numberOfOutputs = 2;
-                        }).to.throw(TypeError);
-                    });
-                });
-
-                describe('ratio', () => {
-                    it('should return an implementation of the AudioParam interface', () => {
-                        const dynamicsCompressorNode = createDynamicsCompressorNode(context);
-
-                        expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.ratio.cancelScheduledValues).to.be.a('function');
-                        expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
-                        expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.ratio.maxValue).to.equal(20);
-                        expect(dynamicsCompressorNode.ratio.minValue).to.equal(1);
-                        expect(dynamicsCompressorNode.ratio.setTargetAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.ratio.setValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.ratio.setValueCurveAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.ratio.value).to.equal(12);
-                    });
-
-                    it('should be readonly', () => {
-                        const dynamicsCompressorNode = createDynamicsCompressorNode(context);
-
-                        expect(() => {
-                            dynamicsCompressorNode.ratio = 'anything';
-                        }).to.throw(TypeError);
-                    });
-
-                    describe('cancelAndHoldAtTime()', () => {
-                        let dynamicsCompressorNode;
-
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
-
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.ratio);
-                        });
-                    });
-
-                    describe('cancelScheduledValues()', () => {
-                        let dynamicsCompressorNode;
-
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
-
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.ratio.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.ratio);
-                        });
-                    });
-
-                    describe('exponentialRampToValueAtTime()', () => {
-                        let dynamicsCompressorNode;
-
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
-
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(0, 1);
-                            }).to.throw(RangeError);
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, -1);
-                            }).to.throw(RangeError);
-                        });
-                    });
-
-                    describe('linearRampToValueAtTime()', () => {
-                        let dynamicsCompressorNode;
-
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
-
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
-                        });
-                    });
-
-                    describe('setTargetAtTime()', () => {
-                        let dynamicsCompressorNode;
-
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
-
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.ratio.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.ratio);
-                        });
-                    });
-
-                    describe('setValueAtTime()', () => {
-                        let dynamicsCompressorNode;
-
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
-
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.ratio.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
-                        });
-                    });
-
-                    describe('setValueCurveAtTime()', () => {
-                        let dynamicsCompressorNode;
-
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
-
-                        for (const [arrayType, values] of [
-                            ['regular Array', [1, 0]],
-                            ['Float32Array', new Float32Array([1, 0])]
-                        ]) {
-                            describe(`with a ${arrayType}`, () => {
-                                it('should be chainable', () => {
-                                    expect(dynamicsCompressorNode.ratio.setValueCurveAtTime(values, 0, 1)).to.equal(
-                                        dynamicsCompressorNode.ratio
-                                    );
-                                });
-                            });
+                        if (description.startsWith('constructor')) {
+                            expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(ratio);
+                        } else {
+                            expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
                         }
+
+                        expect(dynamicsCompressorNode.ratio.value).to.equal(ratio);
                     });
 
-                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                    // eslint-disable-next-line no-undef
-                    if (!process.env.CI || description.includes('Offline')) {
-                        describe('automation', () => {
-                            for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
-                                ? [
-                                      [true, true],
-                                      [true, false],
-                                      [false, true]
-                                  ]
-                                : [[true, false]]) {
-                                describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
-                                    withAnAppendedAudioWorklet ? 'with' : 'without'
-                                } an appended AudioWorklet`, () => {
-                                    let renderer;
-                                    let values;
+                    it('should return an instance with the given initial value for release', () => {
+                        const release = 0.5;
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context, { release });
 
-                                    beforeEach(async function () {
-                                        this.timeout(10000);
-
-                                        values = [1, 0.5, 0, -0.5, -1];
-
-                                        if (withAnAppendedAudioWorklet) {
-                                            await addAudioWorkletModule(context, 'base/test/fixtures/gain-processor.js');
-                                        }
-
-                                        renderer = createRenderer({
-                                            context,
-                                            length: context.length === undefined ? lookAhead + 5 : undefined,
-                                            setup(destination) {
-                                                // Bug #112: Firefox pauses the DynamicsCompressorNode without waiting for the tail time.
-                                                const audioBuffer = new AudioBuffer({
-                                                    length: lookAhead + 5,
-                                                    sampleRate: context.sampleRate
-                                                });
-                                                const audioBufferSourceNode = new AudioBufferSourceNode(context);
-                                                const audioWorkletNode = withAnAppendedAudioWorklet
-                                                    ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
-                                                    : null;
-                                                const dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                                                const masterGainNode = new GainNode(context, {
-                                                    gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
-                                                });
-
-                                                audioBuffer.copyToChannel(new Float32Array(values), 0);
-
-                                                audioBufferSourceNode.buffer = audioBuffer;
-
-                                                audioBufferSourceNode.connect(dynamicsCompressorNode);
-
-                                                if (withADirectConnection) {
-                                                    dynamicsCompressorNode.connect(masterGainNode);
-                                                }
-
-                                                if (withAnAppendedAudioWorklet) {
-                                                    dynamicsCompressorNode.connect(audioWorkletNode).connect(masterGainNode);
-                                                }
-
-                                                masterGainNode.connect(destination);
-
-                                                return { audioBufferSourceNode };
-                                            }
-                                        });
-                                    });
-
-                                    describe('without any automation', () => {
-                                        it('should not modify the signal', function () {
-                                            this.timeout(10000);
-
-                                            return renderer({
-                                                start(startTime, { audioBufferSourceNode }) {
-                                                    audioBufferSourceNode.start(startTime);
-                                                }
-                                            }).then((channelData) => {
-                                                for (let i = 0; i < lookAhead; i += 1) {
-                                                    expect(channelData[i]).to.equal(0);
-                                                }
-
-                                                expect(channelData[lookAhead]).to.be.closeTo(0.304, 0.004);
-                                                expect(channelData[lookAhead + 1]).to.be.closeTo(0.152, 0.003);
-                                                expect(channelData[lookAhead + 2]).to.be.closeTo(0, 0.0001);
-                                                expect(channelData[lookAhead + 3]).to.be.closeTo(-0.152, 0.003);
-                                                expect(channelData[lookAhead + 4]).to.be.closeTo(-0.304, 0.004);
-                                            });
-                                        });
-                                    });
-                                });
-                            }
-                        });
-                    }
-                });
-
-                // @todo reduction
-
-                describe('release', () => {
-                    let dynamicsCompressorNode;
-
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
-                    it('should return an implementation of the AudioParam interface', () => {
-                        expect(dynamicsCompressorNode.release.cancelAndHoldAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.release.cancelScheduledValues).to.be.a('function');
-                        expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
-                        expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.release.linearRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.release.maxValue).to.equal(1);
-                        expect(dynamicsCompressorNode.release.minValue).to.equal(0);
-                        expect(dynamicsCompressorNode.release.setTargetAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.release.setValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.release.setValueCurveAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.release.value).to.equal(0.25);
-                    });
-
-                    it('should be readonly', () => {
-                        expect(() => {
-                            dynamicsCompressorNode.release = 'anything';
-                        }).to.throw(TypeError);
-                    });
-
-                    describe('cancelAndHoldAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.release.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.release);
-                        });
-                    });
-
-                    describe('cancelScheduledValues()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.release.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.release);
-                        });
-                    });
-
-                    describe('exponentialRampToValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, 0)).to.equal(
-                                dynamicsCompressorNode.release
-                            );
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.release.exponentialRampToValueAtTime(0, 1);
-                            }).to.throw(RangeError);
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, -1);
-                            }).to.throw(RangeError);
-                        });
-                    });
-
-                    describe('linearRampToValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.release.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
-                        });
-                    });
-
-                    describe('setTargetAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.release.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.release);
-                        });
-                    });
-
-                    describe('setValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.release.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
-                        });
-                    });
-
-                    describe('setValueCurveAtTime()', () => {
-                        for (const [arrayType, values] of [
-                            ['regular Array', [1, 0]],
-                            ['Float32Array', new Float32Array([1, 0])]
-                        ]) {
-                            describe(`with a ${arrayType}`, () => {
-                                it('should be chainable', () => {
-                                    expect(dynamicsCompressorNode.release.setValueCurveAtTime(values, 0, 1)).to.equal(
-                                        dynamicsCompressorNode.release
-                                    );
-                                });
-                            });
+                        if (description.startsWith('constructor')) {
+                            expect(dynamicsCompressorNode.release.defaultValue).to.equal(release);
+                        } else {
+                            expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
                         }
+
+                        expect(dynamicsCompressorNode.release.value).to.equal(release);
                     });
 
-                    // @todo automation
-                });
+                    it('should return an instance with the given initial value for threshold', () => {
+                        const threshold = -50;
+                        const dynamicsCompressorNode = createDynamicsCompressorNode(context, { threshold });
 
-                describe('threshold', () => {
-                    let dynamicsCompressorNode;
-
-                    beforeEach(() => {
-                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                    });
-
-                    it('should return an implementation of the AudioParam interface', () => {
-                        expect(dynamicsCompressorNode.threshold.cancelAndHoldAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.threshold.cancelScheduledValues).to.be.a('function');
-                        expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);
-                        expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.threshold.maxValue).to.equal(0);
-                        expect(dynamicsCompressorNode.threshold.minValue).to.equal(-100);
-                        expect(dynamicsCompressorNode.threshold.setTargetAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.threshold.setValueAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.threshold.setValueCurveAtTime).to.be.a('function');
-                        expect(dynamicsCompressorNode.threshold.value).to.equal(-24);
-                    });
-
-                    it('should be readonly', () => {
-                        expect(() => {
-                            dynamicsCompressorNode.threshold = 'anything';
-                        }).to.throw(TypeError);
-                    });
-
-                    describe('cancelAndHoldAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.threshold.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.threshold);
-                        });
-                    });
-
-                    describe('cancelScheduledValues()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.threshold.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.threshold);
-                        });
-                    });
-
-                    describe('exponentialRampToValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            // @todo expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(0, 1);
-                            }).to.throw(RangeError);
-                        });
-
-                        it('should throw a RangeError', () => {
-                            expect(() => {
-                                dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(1, -1);
-                            }).to.throw(RangeError);
-                        });
-                    });
-
-                    describe('linearRampToValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime(-1, 0)).to.equal(
-                                dynamicsCompressorNode.threshold
-                            );
-                        });
-                    });
-
-                    describe('setTargetAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.threshold.setTargetAtTime(-1, 0, 0.1)).to.equal(dynamicsCompressorNode.threshold);
-                        });
-                    });
-
-                    describe('setValueAtTime()', () => {
-                        it('should be chainable', () => {
-                            expect(dynamicsCompressorNode.threshold.setValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
-                        });
-                    });
-
-                    describe('setValueCurveAtTime()', () => {
-                        for (const [arrayType, values] of [
-                            ['regular Array', [-1, 0]],
-                            ['Float32Array', new Float32Array([-1, 0])]
-                        ]) {
-                            describe(`with a ${arrayType}`, () => {
-                                it('should be chainable', () => {
-                                    expect(dynamicsCompressorNode.threshold.setValueCurveAtTime(values, 0, 1)).to.equal(
-                                        dynamicsCompressorNode.threshold
-                                    );
-                                });
-                            });
+                        if (description.startsWith('constructor')) {
+                            expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(threshold);
+                        } else {
+                            expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);
                         }
-                    });
 
-                    // @todo automation
+                        expect(dynamicsCompressorNode.threshold.value).to.equal(threshold);
+                    });
                 });
 
-                describe('connect()', () => {
-                    for (const type of ['AudioNode', 'AudioParam']) {
-                        describe(`with an ${type}`, () => {
-                            let audioNodeOrAudioParam;
-                            let dynamicsCompressorNode;
+                describe('with invalid options', () => {
+                    describe('with a channelCount greater than 2', () => {
+                        it('should throw a NotSupportedError', () => {
+                            expect(() => createDynamicsCompressorNode(context, { channelCount: 4 }))
+                                .to.throw(DOMException)
+                                .to.include({ code: 9, name: 'NotSupportedError' });
+                        });
+                    });
 
-                            beforeEach(() => {
-                                const gainNode = new GainNode(context);
+                    describe("with a channelCountMode of 'max'", () => {
+                        it('should throw a NotSupportedError', () => {
+                            expect(() => createDynamicsCompressorNode(context, { channelCountMode: 'max' }))
+                                .to.throw(DOMException)
+                                .to.include({ code: 9, name: 'NotSupportedError' });
+                        });
+                    });
+                });
+            });
+        });
 
-                                audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
-                                dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                            });
+        describe('attack', () => {
+            let dynamicsCompressorNode;
 
-                            if (type === 'AudioNode') {
-                                it('should be chainable', () => {
-                                    expect(dynamicsCompressorNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
-                                });
-                            } else {
-                                it('should not be chainable', () => {
-                                    expect(dynamicsCompressorNode.connect(audioNodeOrAudioParam)).to.be.undefined;
-                                });
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
+
+            it('should return an implementation of the AudioParam interface', () => {
+                expect(dynamicsCompressorNode.attack.cancelAndHoldAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.attack.cancelScheduledValues).to.be.a('function');
+                expect(dynamicsCompressorNode.attack.defaultValue).to.equal(Math.fround(0.003));
+                expect(dynamicsCompressorNode.attack.exponentialRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.attack.linearRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.attack.maxValue).to.equal(1);
+                expect(dynamicsCompressorNode.attack.minValue).to.equal(0);
+                expect(dynamicsCompressorNode.attack.setTargetAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.attack.setValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.attack.setValueCurveAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.attack.value).to.equal(Math.fround(0.003));
+            });
+
+            it('should be readonly', () => {
+                expect(() => {
+                    dynamicsCompressorNode.attack = 'anything';
+                }).to.throw(TypeError);
+            });
+
+            describe('cancelAndHoldAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.attack.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.attack);
+                });
+            });
+
+            describe('cancelScheduledValues()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.attack.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.attack);
+                });
+            });
+
+            describe('exponentialRampToValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.attack.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
+                });
+
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.attack.exponentialRampToValueAtTime(0, 1);
+                    }).to.throw(RangeError);
+                });
+
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.attack.exponentialRampToValueAtTime(1, -1);
+                    }).to.throw(RangeError);
+                });
+            });
+
+            describe('linearRampToValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.attack.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
+                });
+            });
+
+            describe('setTargetAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.attack.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.attack);
+                });
+            });
+
+            describe('setValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.attack.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.attack);
+                });
+            });
+
+            describe('setValueCurveAtTime()', () => {
+                describe.for([
+                    ['regular Array', [1, 0]],
+                    ['Float32Array', new Float32Array([1, 0])]
+                ])('with a %s', ([, values]) => {
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.attack.setValueCurveAtTime(values, 0, 1)).to.equal(dynamicsCompressorNode.attack);
+                    });
+                });
+            });
+
+            // @todo automation
+        });
+
+        describe('channelCount', () => {
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
+
+            it('should be assignable to a value smaller than 3', () => {
+                const channelCount = 1;
+
+                dynamicsCompressorNode.channelCount = channelCount;
+
+                expect(dynamicsCompressorNode.channelCount).to.equal(channelCount);
+            });
+
+            it('should not be assignable to a value larger than 2', () => {
+                const channelCount = 4;
+
+                expect(() => {
+                    dynamicsCompressorNode.channelCount = channelCount;
+                })
+                    .to.throw(DOMException)
+                    .to.include({ code: 9, name: 'NotSupportedError' });
+            });
+        });
+
+        describe('channelCountMode', () => {
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
+
+            it("should be assignable to 'explicit'", () => {
+                const channelCountMode = 'explicit';
+
+                dynamicsCompressorNode.channelCountMode = channelCountMode;
+
+                expect(dynamicsCompressorNode.channelCountMode).to.equal(channelCountMode);
+            });
+
+            it("should not be assignable to 'max'", () => {
+                expect(() => {
+                    dynamicsCompressorNode.channelCountMode = 'max';
+                })
+                    .to.throw(DOMException)
+                    .to.include({ code: 9, name: 'NotSupportedError' });
+            });
+        });
+
+        describe('channelInterpretation', () => {
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
+
+            it('should be assignable to another value', () => {
+                const channelInterpretation = 'discrete';
+
+                dynamicsCompressorNode.channelInterpretation = channelInterpretation;
+
+                expect(dynamicsCompressorNode.channelInterpretation).to.equal(channelInterpretation);
+            });
+        });
+
+        describe('knee', () => {
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
+
+            it('should return an implementation of the AudioParam interface', () => {
+                expect(dynamicsCompressorNode.knee.cancelAndHoldAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.knee.cancelScheduledValues).to.be.a('function');
+                expect(dynamicsCompressorNode.knee.defaultValue).to.equal(30);
+                expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.knee.linearRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.knee.maxValue).to.equal(40);
+                expect(dynamicsCompressorNode.knee.minValue).to.equal(0);
+                expect(dynamicsCompressorNode.knee.setTargetAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.knee.setValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.knee.setValueCurveAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.knee.value).to.equal(30);
+            });
+
+            it('should be readonly', () => {
+                expect(() => {
+                    dynamicsCompressorNode.knee = 'anything';
+                }).to.throw(TypeError);
+            });
+
+            describe('cancelAndHoldAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.knee.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.knee);
+                });
+            });
+
+            describe('cancelScheduledValues()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.knee.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.knee);
+                });
+            });
+
+            describe('exponentialRampToValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
+                });
+
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.knee.exponentialRampToValueAtTime(0, 1);
+                    }).to.throw(RangeError);
+                });
+
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.knee.exponentialRampToValueAtTime(1, -1);
+                    }).to.throw(RangeError);
+                });
+            });
+
+            describe('linearRampToValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.knee.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
+                });
+            });
+
+            describe('setTargetAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.knee.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.knee);
+                });
+            });
+
+            describe('setValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.knee.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.knee);
+                });
+            });
+
+            describe('setValueCurveAtTime()', () => {
+                describe.for([
+                    ['regular Array', [1, 0]],
+                    ['Float32Array', new Float32Array([1, 0])]
+                ])('with a %s', ([, values]) => {
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.knee.setValueCurveAtTime(values, 0, 1)).to.equal(dynamicsCompressorNode.knee);
+                    });
+                });
+            });
+
+            // @todo automation
+        });
+
+        describe('numberOfInputs', () => {
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
+
+            it('should be readonly', () => {
+                expect(() => {
+                    dynamicsCompressorNode.numberOfInputs = 2;
+                }).to.throw(TypeError);
+            });
+        });
+
+        describe('numberOfOutputs', () => {
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
+
+            it('should be readonly', () => {
+                expect(() => {
+                    dynamicsCompressorNode.numberOfOutputs = 2;
+                }).to.throw(TypeError);
+            });
+        });
+
+        describe('ratio', () => {
+            it('should return an implementation of the AudioParam interface', () => {
+                const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+
+                expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.ratio.cancelScheduledValues).to.be.a('function');
+                expect(dynamicsCompressorNode.ratio.defaultValue).to.equal(12);
+                expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.ratio.maxValue).to.equal(20);
+                expect(dynamicsCompressorNode.ratio.minValue).to.equal(1);
+                expect(dynamicsCompressorNode.ratio.setTargetAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.ratio.setValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.ratio.setValueCurveAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.ratio.value).to.equal(12);
+            });
+
+            it('should be readonly', () => {
+                const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+
+                expect(() => {
+                    dynamicsCompressorNode.ratio = 'anything';
+                }).to.throw(TypeError);
+            });
+
+            describe('cancelAndHoldAtTime()', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.ratio.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.ratio);
+                });
+            });
+
+            describe('cancelScheduledValues()', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.ratio.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.ratio);
+                });
+            });
+
+            describe('exponentialRampToValueAtTime()', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
+                });
+
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(0, 1);
+                    }).to.throw(RangeError);
+                });
+
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.ratio.exponentialRampToValueAtTime(1, -1);
+                    }).to.throw(RangeError);
+                });
+            });
+
+            describe('linearRampToValueAtTime()', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.ratio.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
+                });
+            });
+
+            describe('setTargetAtTime()', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.ratio.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.ratio);
+                });
+            });
+
+            describe('setValueAtTime()', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.ratio.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.ratio);
+                });
+            });
+
+            describe('setValueCurveAtTime()', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                describe.for([
+                    ['regular Array', [1, 0]],
+                    ['Float32Array', new Float32Array([1, 0])]
+                ])('with a %s', ([, values]) => {
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.ratio.setValueCurveAtTime(values, 0, 1)).to.equal(dynamicsCompressorNode.ratio);
+                    });
+                });
+            });
+
+            describe('automation', () => {
+                for (const [withADirectConnection, withAnAppendedAudioWorklet] of description.includes('Offline')
+                    ? [
+                          [true, true],
+                          [true, false],
+                          [false, true]
+                      ]
+                    : [[true, false]]) {
+                    describe(`${withADirectConnection ? 'with' : 'without'} a direct connection and ${
+                        withAnAppendedAudioWorklet ? 'with' : 'without'
+                    } an appended AudioWorklet`, () => {
+                        let renderer;
+                        let values;
+
+                        beforeEach(async () => {
+                            values = [1, 0.5, 0, -0.5, -1];
+
+                            if (withAnAppendedAudioWorklet) {
+                                await addAudioWorkletModule(context, 'test/fixtures/gain-processor.js');
                             }
 
-                            it('should accept duplicate connections', () => {
-                                dynamicsCompressorNode.connect(audioNodeOrAudioParam);
-                                dynamicsCompressorNode.connect(audioNodeOrAudioParam);
-                            });
-
-                            it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
-                                try {
-                                    dynamicsCompressorNode.connect(audioNodeOrAudioParam, -1);
-                                } catch (err) {
-                                    expect(err.code).to.equal(1);
-                                    expect(err.name).to.equal('IndexSizeError');
-
-                                    done();
-                                }
-                            });
-
-                            if (type === 'AudioNode') {
-                                it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
-                                    try {
-                                        dynamicsCompressorNode.connect(audioNodeOrAudioParam, 0, -1);
-                                    } catch (err) {
-                                        expect(err.code).to.equal(1);
-                                        expect(err.name).to.equal('IndexSizeError');
-
-                                        done();
-                                    }
-                                });
-
-                                it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
-                                    audioNodeOrAudioParam.connect(dynamicsCompressorNode).connect(audioNodeOrAudioParam);
-                                });
-
-                                it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
-                                    audioNodeOrAudioParam.connect(dynamicsCompressorNode).connect(audioNodeOrAudioParam.gain);
-                                });
-                            }
-                        });
-
-                        describe(`with an ${type} of another context`, () => {
-                            let anotherContext;
-                            let audioNodeOrAudioParam;
-                            let dynamicsCompressorNode;
-
-                            afterEach(() => anotherContext.close?.());
-
-                            beforeEach(function () {
-                                this.timeout(10000);
-
-                                anotherContext = createContext();
-
-                                const gainNode = new GainNode(anotherContext);
-
-                                audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
-                                dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                            });
-
-                            it('should throw an InvalidAccessError', (done) => {
-                                try {
-                                    dynamicsCompressorNode.connect(audioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(15);
-                                    expect(err.name).to.equal('InvalidAccessError');
-
-                                    done();
-                                }
-                            });
-                        });
-
-                        describe(`with an ${type} of a native context`, () => {
-                            let dynamicsCompressorNode;
-                            let nativeAudioNodeOrAudioParam;
-                            let nativeContext;
-
-                            afterEach(() => nativeContext.close?.());
-
-                            beforeEach(() => {
-                                dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                                nativeContext = description.includes('Offline')
-                                    ? createNativeOfflineAudioContext()
-                                    : createNativeAudioContext();
-
-                                const nativeGainNode = nativeContext.createGain();
-
-                                nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
-                            });
-
-                            it('should throw an InvalidAccessError', (done) => {
-                                try {
-                                    dynamicsCompressorNode.connect(nativeAudioNodeOrAudioParam);
-                                } catch (err) {
-                                    expect(err.code).to.equal(15);
-                                    expect(err.name).to.equal('InvalidAccessError');
-
-                                    done();
-                                }
-                            });
-                        });
-                    }
-
-                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                    // eslint-disable-next-line no-undef
-                    if (!process.env.CI || description.includes('Offline')) {
-                        describe('with a cycle', () => {
-                            let renderer;
-
-                            beforeEach(() => {
-                                renderer = createRenderer({
-                                    context,
-                                    length: context.length === undefined ? lookAhead + 5 : undefined,
-                                    setup(destination) {
-                                        const constantSourceNode = new ConstantSourceNode(context);
-                                        const dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                                        const gainNode = new GainNode(context);
-
-                                        constantSourceNode.connect(dynamicsCompressorNode).connect(destination);
-
-                                        dynamicsCompressorNode.connect(gainNode).connect(dynamicsCompressorNode);
-
-                                        return { constantSourceNode, dynamicsCompressorNode, gainNode };
-                                    }
-                                });
-                            });
-
-                            it('should render silence', function () {
-                                this.timeout(10000);
-
-                                return renderer({
-                                    start(startTime, { constantSourceNode }) {
-                                        constantSourceNode.start(startTime);
-                                    }
-                                }).then((channelData) => {
-                                    expect(Array.from(channelData).slice(lookAhead)).to.deep.equal([0, 0, 0, 0, 0]);
-                                });
-                            });
-                        });
-                    }
-                });
-
-                describe('disconnect()', () => {
-                    let createPredefinedRenderer;
-
-                    beforeEach(() => {
-                        createPredefinedRenderer = (values) =>
-                            createRenderer({
+                            renderer = createRenderer({
                                 context,
                                 length: context.length === undefined ? lookAhead + 5 : undefined,
                                 setup(destination) {
                                     // Bug #112: Firefox pauses the DynamicsCompressorNode without waiting for the tail time.
-                                    const audioBuffer = new AudioBuffer({ length: lookAhead + 5, sampleRate: context.sampleRate });
+                                    const audioBuffer = new AudioBuffer({
+                                        length: lookAhead + 5,
+                                        sampleRate: context.sampleRate
+                                    });
                                     const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                                    const audioWorkletNode = withAnAppendedAudioWorklet
+                                        ? new AudioWorkletNode(context, 'gain-processor', { channelCount: 1 })
+                                        : null;
                                     const dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                                    const firstDummyGainNode = new GainNode(context);
-                                    const secondDummyGainNode = new GainNode(context);
+                                    const masterGainNode = new GainNode(context, {
+                                        gain: withADirectConnection && withAnAppendedAudioWorklet ? 0.5 : 1
+                                    });
 
                                     audioBuffer.copyToChannel(new Float32Array(values), 0);
 
                                     audioBufferSourceNode.buffer = audioBuffer;
 
-                                    audioBufferSourceNode.connect(dynamicsCompressorNode).connect(firstDummyGainNode).connect(destination);
+                                    audioBufferSourceNode.connect(dynamicsCompressorNode);
 
-                                    dynamicsCompressorNode.connect(secondDummyGainNode);
+                                    if (withADirectConnection) {
+                                        dynamicsCompressorNode.connect(masterGainNode);
+                                    }
 
-                                    return { audioBufferSourceNode, dynamicsCompressorNode, firstDummyGainNode, secondDummyGainNode };
+                                    if (withAnAppendedAudioWorklet) {
+                                        dynamicsCompressorNode.connect(audioWorkletNode).connect(masterGainNode);
+                                    }
+
+                                    masterGainNode.connect(destination);
+
+                                    return { audioBufferSourceNode };
                                 }
                             });
-                    });
+                        });
 
-                    // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                    // eslint-disable-next-line no-undef
-                    if (!process.env.CI || description.includes('Offline')) {
-                        describe('without any parameters', () => {
-                            let renderer;
-                            let values;
-
-                            beforeEach(function () {
-                                this.timeout(10000);
-
-                                values = [1, 1, 1, 1, 1];
-
-                                renderer = createPredefinedRenderer(values);
-                            });
-
-                            it('should disconnect all destinations', function () {
-                                this.timeout(10000);
-
+                        describe('without any automation', () => {
+                            it('should not modify the signal', () => {
                                 return renderer({
-                                    prepare({ dynamicsCompressorNode }) {
-                                        dynamicsCompressorNode.disconnect();
-                                    },
                                     start(startTime, { audioBufferSourceNode }) {
                                         audioBufferSourceNode.start(startTime);
                                     }
                                 }).then((channelData) => {
-                                    for (let i = 0; i < lookAhead + 5; i += 1) {
+                                    for (let i = 0; i < lookAhead; i += 1) {
                                         expect(channelData[i]).to.equal(0);
                                     }
+
+                                    expect(channelData[lookAhead]).to.be.closeTo(0.304, 0.004);
+                                    expect(channelData[lookAhead + 1]).to.be.closeTo(0.152, 0.003);
+                                    expect(channelData[lookAhead + 2]).to.be.closeTo(0, 0.0001);
+                                    expect(channelData[lookAhead + 3]).to.be.closeTo(-0.152, 0.003);
+                                    expect(channelData[lookAhead + 4]).to.be.closeTo(-0.304, 0.004);
                                 });
                             });
                         });
-                    }
+                    });
+                }
+            });
+        });
 
-                    describe('with an output', () => {
-                        describe('with a value which is out-of-bound', () => {
-                            let dynamicsCompressorNode;
+        // @todo reduction
 
-                            beforeEach(() => {
-                                dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                            });
+        describe('release', () => {
+            let dynamicsCompressorNode;
 
-                            it('should throw an IndexSizeError', (done) => {
-                                try {
-                                    dynamicsCompressorNode.disconnect(-1);
-                                } catch (err) {
-                                    expect(err.code).to.equal(1);
-                                    expect(err.name).to.equal('IndexSizeError');
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
 
-                                    done();
-                                }
-                            });
-                        });
+            it('should return an implementation of the AudioParam interface', () => {
+                expect(dynamicsCompressorNode.release.cancelAndHoldAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.release.cancelScheduledValues).to.be.a('function');
+                expect(dynamicsCompressorNode.release.defaultValue).to.equal(0.25);
+                expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.release.linearRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.release.maxValue).to.equal(1);
+                expect(dynamicsCompressorNode.release.minValue).to.equal(0);
+                expect(dynamicsCompressorNode.release.setTargetAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.release.setValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.release.setValueCurveAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.release.value).to.equal(0.25);
+            });
 
-                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                        // eslint-disable-next-line no-undef
-                        if (!process.env.CI || description.includes('Offline')) {
-                            describe('with a connection from the given output', () => {
-                                let renderer;
-                                let values;
+            it('should be readonly', () => {
+                expect(() => {
+                    dynamicsCompressorNode.release = 'anything';
+                }).to.throw(TypeError);
+            });
 
-                                beforeEach(function () {
-                                    this.timeout(10000);
+            describe('cancelAndHoldAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.release.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.release);
+                });
+            });
 
-                                    values = [1, 1, 1, 1, 1];
+            describe('cancelScheduledValues()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.release.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.release);
+                });
+            });
 
-                                    renderer = createPredefinedRenderer(values);
-                                });
+            describe('exponentialRampToValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
+                });
 
-                                it('should disconnect all destinations from the given output', function () {
-                                    this.timeout(10000);
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.release.exponentialRampToValueAtTime(0, 1);
+                    }).to.throw(RangeError);
+                });
 
-                                    return renderer({
-                                        prepare({ dynamicsCompressorNode }) {
-                                            dynamicsCompressorNode.disconnect(0);
-                                        },
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime);
-                                        }
-                                    }).then((channelData) => {
-                                        for (let i = 0; i < lookAhead + 5; i += 1) {
-                                            expect(channelData[i]).to.equal(0);
-                                        }
-                                    });
-                                });
-                            });
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.release.exponentialRampToValueAtTime(1, -1);
+                    }).to.throw(RangeError);
+                });
+            });
+
+            describe('linearRampToValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.release.linearRampToValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
+                });
+            });
+
+            describe('setTargetAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.release.setTargetAtTime(1, 0, 0.1)).to.equal(dynamicsCompressorNode.release);
+                });
+            });
+
+            describe('setValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.release.setValueAtTime(1, 0)).to.equal(dynamicsCompressorNode.release);
+                });
+            });
+
+            describe('setValueCurveAtTime()', () => {
+                describe.for([
+                    ['regular Array', [1, 0]],
+                    ['Float32Array', new Float32Array([1, 0])]
+                ])('with a %s', ([, values]) => {
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.release.setValueCurveAtTime(values, 0, 1)).to.equal(dynamicsCompressorNode.release);
+                    });
+                });
+            });
+
+            // @todo automation
+        });
+
+        describe('threshold', () => {
+            let dynamicsCompressorNode;
+
+            beforeEach(() => {
+                dynamicsCompressorNode = createDynamicsCompressorNode(context);
+            });
+
+            it('should return an implementation of the AudioParam interface', () => {
+                expect(dynamicsCompressorNode.threshold.cancelAndHoldAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.threshold.cancelScheduledValues).to.be.a('function');
+                expect(dynamicsCompressorNode.threshold.defaultValue).to.equal(-24);
+                expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.threshold.maxValue).to.equal(0);
+                expect(dynamicsCompressorNode.threshold.minValue).to.equal(-100);
+                expect(dynamicsCompressorNode.threshold.setTargetAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.threshold.setValueAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.threshold.setValueCurveAtTime).to.be.a('function');
+                expect(dynamicsCompressorNode.threshold.value).to.equal(-24);
+            });
+
+            it('should be readonly', () => {
+                expect(() => {
+                    dynamicsCompressorNode.threshold = 'anything';
+                }).to.throw(TypeError);
+            });
+
+            describe('cancelAndHoldAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.threshold.cancelAndHoldAtTime(0)).to.equal(dynamicsCompressorNode.threshold);
+                });
+            });
+
+            describe('cancelScheduledValues()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.threshold.cancelScheduledValues(0)).to.equal(dynamicsCompressorNode.threshold);
+                });
+            });
+
+            describe('exponentialRampToValueAtTime()', () => {
+                it('should be chainable', () => {
+                    // @todo expect(dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
+                });
+
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(0, 1);
+                    }).to.throw(RangeError);
+                });
+
+                it('should throw a RangeError', () => {
+                    expect(() => {
+                        dynamicsCompressorNode.threshold.exponentialRampToValueAtTime(1, -1);
+                    }).to.throw(RangeError);
+                });
+            });
+
+            describe('linearRampToValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.threshold.linearRampToValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
+                });
+            });
+
+            describe('setTargetAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.threshold.setTargetAtTime(-1, 0, 0.1)).to.equal(dynamicsCompressorNode.threshold);
+                });
+            });
+
+            describe('setValueAtTime()', () => {
+                it('should be chainable', () => {
+                    expect(dynamicsCompressorNode.threshold.setValueAtTime(-1, 0)).to.equal(dynamicsCompressorNode.threshold);
+                });
+            });
+
+            describe('setValueCurveAtTime()', () => {
+                describe.for([
+                    ['regular Array', [1, 0]],
+                    ['Float32Array', new Float32Array([1, 0])]
+                ])('with a %s', ([, values]) => {
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.threshold.setValueCurveAtTime(values, 0, 1)).to.equal(
+                            dynamicsCompressorNode.threshold
+                        );
+                    });
+                });
+            });
+
+            // @todo automation
+        });
+
+        describe('connect()', () => {
+            describe.for(['AudioNode', 'AudioParam'])('with an %s', (type) => {
+                let audioNodeOrAudioParam;
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    const gainNode = new GainNode(context);
+
+                    audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                if (type === 'AudioNode') {
+                    it('should be chainable', () => {
+                        expect(dynamicsCompressorNode.connect(audioNodeOrAudioParam)).to.equal(audioNodeOrAudioParam);
+                    });
+                } else {
+                    it('should not be chainable', () => {
+                        expect(dynamicsCompressorNode.connect(audioNodeOrAudioParam)).to.be.undefined;
+                    });
+                }
+
+                it('should accept duplicate connections', () => {
+                    dynamicsCompressorNode.connect(audioNodeOrAudioParam);
+                    dynamicsCompressorNode.connect(audioNodeOrAudioParam);
+                });
+
+                it('should throw an IndexSizeError if the output is out-of-bound', () => {
+                    expect(() => dynamicsCompressorNode.connect(audioNodeOrAudioParam, -1))
+                        .to.throw(DOMException)
+                        .to.include({ code: 1, name: 'IndexSizeError' });
+                });
+
+                if (type === 'AudioNode') {
+                    it('should throw an IndexSizeError if the input is out-of-bound', () => {
+                        expect(() => dynamicsCompressorNode.connect(audioNodeOrAudioParam, 0, -1))
+                            .to.throw(DOMException)
+                            .to.include({ code: 1, name: 'IndexSizeError' });
+                    });
+
+                    it('should not throw an error if the connection creates a cycle by connecting to the source', () => {
+                        audioNodeOrAudioParam.connect(dynamicsCompressorNode).connect(audioNodeOrAudioParam);
+                    });
+
+                    it('should not throw an error if the connection creates a cycle by connecting to an AudioParam of the source', () => {
+                        audioNodeOrAudioParam.connect(dynamicsCompressorNode).connect(audioNodeOrAudioParam.gain);
+                    });
+                }
+            });
+
+            describe.for(['AudioNode', 'AudioParam'])('with an %s of another context', (type) => {
+                let anotherContext;
+                let audioNodeOrAudioParam;
+                let dynamicsCompressorNode;
+
+                afterEach(() => anotherContext.close?.());
+
+                beforeEach(() => {
+                    anotherContext = createContext();
+
+                    const gainNode = new GainNode(anotherContext);
+
+                    audioNodeOrAudioParam = type === 'AudioNode' ? gainNode : gainNode.gain;
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should throw an InvalidAccessError', () => {
+                    expect(() => dynamicsCompressorNode.connect(audioNodeOrAudioParam))
+                        .to.throw(DOMException)
+                        .to.include({ code: 15, name: 'InvalidAccessError' });
+                });
+            });
+
+            describe.for(['AudioNode', 'AudioParam'])('with an %s of a native context', (type) => {
+                let dynamicsCompressorNode;
+                let nativeAudioNodeOrAudioParam;
+                let nativeContext;
+
+                afterEach(() => nativeContext.close?.());
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                    nativeContext = description.includes('Offline') ? createNativeOfflineAudioContext() : createNativeAudioContext();
+
+                    const nativeGainNode = nativeContext.createGain();
+
+                    nativeAudioNodeOrAudioParam = type === 'AudioNode' ? nativeGainNode : nativeGainNode.gain;
+                });
+
+                it('should throw an InvalidAccessError', () => {
+                    expect(() => dynamicsCompressorNode.connect(nativeAudioNodeOrAudioParam))
+                        .to.throw(DOMException)
+                        .to.include({ code: 15, name: 'InvalidAccessError' });
+                });
+            });
+
+            describe('with a cycle', () => {
+                let renderer;
+
+                beforeEach(() => {
+                    renderer = createRenderer({
+                        context,
+                        length: context.length === undefined ? lookAhead + 5 : undefined,
+                        setup(destination) {
+                            const constantSourceNode = new ConstantSourceNode(context);
+                            const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                            const gainNode = new GainNode(context);
+
+                            constantSourceNode.connect(dynamicsCompressorNode).connect(destination);
+
+                            dynamicsCompressorNode.connect(gainNode).connect(dynamicsCompressorNode);
+
+                            return { constantSourceNode, dynamicsCompressorNode, gainNode };
                         }
                     });
+                });
 
-                    describe('with a destination', () => {
-                        describe('without a connection to the given destination', () => {
-                            let dynamicsCompressorNode;
+                it('should render silence', () => {
+                    return renderer({
+                        start(startTime, { constantSourceNode }) {
+                            constantSourceNode.start(startTime);
+                        }
+                    }).then((channelData) => {
+                        expect(Array.from(channelData).slice(lookAhead)).to.deep.equal([0, 0, 0, 0, 0]);
+                    });
+                });
+            });
+        });
 
-                            beforeEach(() => {
-                                dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                            });
+        describe('disconnect()', () => {
+            let createPredefinedRenderer;
 
-                            it('should throw an InvalidAccessError', (done) => {
-                                try {
-                                    dynamicsCompressorNode.disconnect(new GainNode(context));
-                                } catch (err) {
-                                    expect(err.code).to.equal(15);
-                                    expect(err.name).to.equal('InvalidAccessError');
+            beforeEach(() => {
+                createPredefinedRenderer = (values) =>
+                    createRenderer({
+                        context,
+                        length: context.length === undefined ? lookAhead + 5 : undefined,
+                        setup(destination) {
+                            // Bug #112: Firefox pauses the DynamicsCompressorNode without waiting for the tail time.
+                            const audioBuffer = new AudioBuffer({ length: lookAhead + 5, sampleRate: context.sampleRate });
+                            const audioBufferSourceNode = new AudioBufferSourceNode(context);
+                            const dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                            const firstDummyGainNode = new GainNode(context);
+                            const secondDummyGainNode = new GainNode(context);
 
-                                    done();
-                                }
-                            });
-                        });
+                            audioBuffer.copyToChannel(new Float32Array(values), 0);
 
-                        // @todo There is currently no way to disable the autoplay policy on BrowserStack or Sauce Labs.
-                        // eslint-disable-next-line no-undef
-                        if (!process.env.CI || description.includes('Offline')) {
-                            describe('with a connection to the given destination', () => {
-                                let renderer;
-                                let values;
+                            audioBufferSourceNode.buffer = audioBuffer;
 
-                                beforeEach(function () {
-                                    this.timeout(10000);
+                            audioBufferSourceNode.connect(dynamicsCompressorNode).connect(firstDummyGainNode).connect(destination);
 
-                                    values = [1, 1, 1, 1, 1];
+                            dynamicsCompressorNode.connect(secondDummyGainNode);
 
-                                    renderer = createPredefinedRenderer(values);
-                                });
-
-                                it('should disconnect the destination', function () {
-                                    this.timeout(10000);
-
-                                    return renderer({
-                                        prepare({ dynamicsCompressorNode, firstDummyGainNode }) {
-                                            dynamicsCompressorNode.disconnect(firstDummyGainNode);
-                                        },
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime);
-                                        }
-                                    }).then((channelData) => {
-                                        for (let i = 0; i < lookAhead + 5; i += 1) {
-                                            expect(channelData[i]).to.equal(0);
-                                        }
-                                    });
-                                });
-
-                                it('should disconnect another destination in isolation', function () {
-                                    this.timeout(10000);
-
-                                    return renderer({
-                                        prepare({ dynamicsCompressorNode, secondDummyGainNode }) {
-                                            dynamicsCompressorNode.disconnect(secondDummyGainNode);
-                                        },
-                                        start(startTime, { audioBufferSourceNode }) {
-                                            audioBufferSourceNode.start(startTime);
-                                        }
-                                    }).then((channelData) => {
-                                        for (let i = 0; i < lookAhead; i += 1) {
-                                            expect(channelData[i]).to.equal(0);
-                                        }
-
-                                        expect(channelData[lookAhead]).to.be.closeTo(0.307, 0.003);
-                                        expect(channelData[lookAhead + 1]).to.be.closeTo(0.307, 0.003);
-                                        expect(channelData[lookAhead + 2]).to.be.closeTo(0.307, 0.003);
-                                        expect(channelData[lookAhead + 3]).to.be.closeTo(0.307, 0.003);
-                                        expect(channelData[lookAhead + 4]).to.be.closeTo(0.307, 0.003);
-                                    });
-                                });
-                            });
+                            return { audioBufferSourceNode, dynamicsCompressorNode, firstDummyGainNode, secondDummyGainNode };
                         }
                     });
+            });
 
-                    describe('with a destination and an output', () => {
-                        let dynamicsCompressorNode;
+            describe('without any parameters', () => {
+                let renderer;
+                let values;
 
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
+                beforeEach(() => {
+                    values = [1, 1, 1, 1, 1];
 
-                        it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
-                            try {
-                                dynamicsCompressorNode.disconnect(new GainNode(context), -1);
-                            } catch (err) {
-                                expect(err.code).to.equal(1);
-                                expect(err.name).to.equal('IndexSizeError');
+                    renderer = createPredefinedRenderer(values);
+                });
 
-                                done();
-                            }
-                        });
+                it('should disconnect all destinations', () => {
+                    return renderer({
+                        prepare({ dynamicsCompressorNode }) {
+                            dynamicsCompressorNode.disconnect();
+                        },
+                        start(startTime, { audioBufferSourceNode }) {
+                            audioBufferSourceNode.start(startTime);
+                        }
+                    }).then((channelData) => {
+                        for (let i = 0; i < lookAhead + 5; i += 1) {
+                            expect(channelData[i]).to.equal(0);
+                        }
+                    });
+                });
+            });
 
-                        it('should throw an InvalidAccessError if there is no similar connection', (done) => {
-                            try {
-                                dynamicsCompressorNode.disconnect(new GainNode(context), 0);
-                            } catch (err) {
-                                expect(err.code).to.equal(15);
-                                expect(err.name).to.equal('InvalidAccessError');
+            describe('with an output', () => {
+                describe('with a value which is out-of-bound', () => {
+                    let dynamicsCompressorNode;
 
-                                done();
-                            }
-                        });
+                    beforeEach(() => {
+                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
                     });
 
-                    describe('with a destination, an output and an input', () => {
-                        let dynamicsCompressorNode;
+                    it('should throw an IndexSizeError', () => {
+                        expect(() => dynamicsCompressorNode.disconnect(-1))
+                            .to.throw(DOMException)
+                            .to.include({ code: 1, name: 'IndexSizeError' });
+                    });
+                });
 
-                        beforeEach(() => {
-                            dynamicsCompressorNode = createDynamicsCompressorNode(context);
-                        });
+                describe('with a connection from the given output', () => {
+                    let renderer;
+                    let values;
 
-                        it('should throw an IndexSizeError if the output is out-of-bound', (done) => {
-                            try {
-                                dynamicsCompressorNode.disconnect(new GainNode(context), -1, 0);
-                            } catch (err) {
-                                expect(err.code).to.equal(1);
-                                expect(err.name).to.equal('IndexSizeError');
+                    beforeEach(() => {
+                        values = [1, 1, 1, 1, 1];
 
-                                done();
+                        renderer = createPredefinedRenderer(values);
+                    });
+
+                    it('should disconnect all destinations from the given output', () => {
+                        return renderer({
+                            prepare({ dynamicsCompressorNode }) {
+                                dynamicsCompressorNode.disconnect(0);
+                            },
+                            start(startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
                             }
-                        });
-
-                        it('should throw an IndexSizeError if the input is out-of-bound', (done) => {
-                            try {
-                                dynamicsCompressorNode.disconnect(new GainNode(context), 0, -1);
-                            } catch (err) {
-                                expect(err.code).to.equal(1);
-                                expect(err.name).to.equal('IndexSizeError');
-
-                                done();
-                            }
-                        });
-
-                        it('should throw an InvalidAccessError if there is no similar connection', (done) => {
-                            try {
-                                dynamicsCompressorNode.disconnect(new GainNode(context), 0, 0);
-                            } catch (err) {
-                                expect(err.code).to.equal(15);
-                                expect(err.name).to.equal('InvalidAccessError');
-
-                                done();
+                        }).then((channelData) => {
+                            for (let i = 0; i < lookAhead + 5; i += 1) {
+                                expect(channelData[i]).to.equal(0);
                             }
                         });
                     });
                 });
             });
-        }
+
+            describe('with a destination', () => {
+                describe('without a connection to the given destination', () => {
+                    let dynamicsCompressorNode;
+
+                    beforeEach(() => {
+                        dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                    });
+
+                    it('should throw an InvalidAccessError', () => {
+                        expect(() => dynamicsCompressorNode.disconnect(new GainNode(context)))
+                            .to.throw(DOMException)
+                            .to.include({ code: 15, name: 'InvalidAccessError' });
+                    });
+                });
+
+                describe('with a connection to the given destination', () => {
+                    let renderer;
+                    let values;
+
+                    beforeEach(() => {
+                        values = [1, 1, 1, 1, 1];
+
+                        renderer = createPredefinedRenderer(values);
+                    });
+
+                    it('should disconnect the destination', () => {
+                        return renderer({
+                            prepare({ dynamicsCompressorNode, firstDummyGainNode }) {
+                                dynamicsCompressorNode.disconnect(firstDummyGainNode);
+                            },
+                            start(startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
+                            }
+                        }).then((channelData) => {
+                            for (let i = 0; i < lookAhead + 5; i += 1) {
+                                expect(channelData[i]).to.equal(0);
+                            }
+                        });
+                    });
+
+                    it('should disconnect another destination in isolation', () => {
+                        return renderer({
+                            prepare({ dynamicsCompressorNode, secondDummyGainNode }) {
+                                dynamicsCompressorNode.disconnect(secondDummyGainNode);
+                            },
+                            start(startTime, { audioBufferSourceNode }) {
+                                audioBufferSourceNode.start(startTime);
+                            }
+                        }).then((channelData) => {
+                            for (let i = 0; i < lookAhead; i += 1) {
+                                expect(channelData[i]).to.equal(0);
+                            }
+
+                            expect(channelData[lookAhead]).to.be.closeTo(0.307, 0.003);
+                            expect(channelData[lookAhead + 1]).to.be.closeTo(0.307, 0.003);
+                            expect(channelData[lookAhead + 2]).to.be.closeTo(0.307, 0.003);
+                            expect(channelData[lookAhead + 3]).to.be.closeTo(0.307, 0.003);
+                            expect(channelData[lookAhead + 4]).to.be.closeTo(0.307, 0.003);
+                        });
+                    });
+                });
+            });
+
+            describe('with a destination and an output', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should throw an IndexSizeError if the output is out-of-bound', () => {
+                    expect(() => dynamicsCompressorNode.disconnect(new GainNode(context), -1))
+                        .to.throw(DOMException)
+                        .to.include({ code: 1, name: 'IndexSizeError' });
+                });
+
+                it('should throw an InvalidAccessError if there is no similar connection', () => {
+                    expect(() => dynamicsCompressorNode.disconnect(new GainNode(context), 0))
+                        .to.throw(DOMException)
+                        .to.include({ code: 15, name: 'InvalidAccessError' });
+                });
+            });
+
+            describe('with a destination, an output and an input', () => {
+                let dynamicsCompressorNode;
+
+                beforeEach(() => {
+                    dynamicsCompressorNode = createDynamicsCompressorNode(context);
+                });
+
+                it('should throw an IndexSizeError if the output is out-of-bound', () => {
+                    expect(() => dynamicsCompressorNode.disconnect(new GainNode(context), -1, 0))
+                        .to.throw(DOMException)
+                        .to.include({ code: 1, name: 'IndexSizeError' });
+                });
+
+                it('should throw an IndexSizeError if the input is out-of-bound', () => {
+                    expect(() => dynamicsCompressorNode.disconnect(new GainNode(context), 0, -1))
+                        .to.throw(DOMException)
+                        .to.include({ code: 1, name: 'IndexSizeError' });
+                });
+
+                it('should throw an InvalidAccessError if there is no similar connection', () => {
+                    expect(() => dynamicsCompressorNode.disconnect(new GainNode(context), 0, 0))
+                        .to.throw(DOMException)
+                        .to.include({ code: 15, name: 'InvalidAccessError' });
+                });
+            });
+        });
     });
-}
+});

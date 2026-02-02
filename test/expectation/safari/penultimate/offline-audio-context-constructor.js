@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 
@@ -25,7 +26,8 @@ describe('offlineAudioContextConstructor', () => {
     describe('createBufferSource()', () => {
         // bug #14
 
-        it('should not resample an oversampled AudioBuffer', (done) => {
+        it('should not resample an oversampled AudioBuffer', () => {
+            const { promise, resolve } = Promise.withResolvers();
             const audioBuffer = offlineAudioContext.createBuffer(1, 8, 88200);
             const audioBufferSourceNode = offlineAudioContext.createBufferSource();
             const eightRandomValues = [];
@@ -48,16 +50,17 @@ describe('offlineAudioContextConstructor', () => {
                 expect(channelData[2]).to.be.closeTo(eightRandomValues[4], 0.0000001);
                 expect(channelData[3]).to.be.closeTo(eightRandomValues[6], 0.0000001);
 
-                done();
+                resolve();
             };
             offlineAudioContext.startRendering();
+
+            return promise;
         });
 
         // bug #164
 
-        it('should not mute cycles', function (done) {
-            this.timeout(10000);
-
+        it('should not mute cycles', () => {
+            const { promise, resolve } = Promise.withResolvers();
             const audioBuffer = offlineAudioContext.createBuffer(1, 25600, offlineAudioContext.sampleRate);
             const audioBufferSourceNode = offlineAudioContext.createBufferSource();
             const gainNode = offlineAudioContext.createGain();
@@ -81,15 +84,18 @@ describe('offlineAudioContextConstructor', () => {
                     expect(sample).to.not.equal(0);
                 }
 
-                done();
+                resolve();
             };
             offlineAudioContext.startRendering();
+
+            return promise;
         });
 
         describe('onended', () => {
             // bug #175
 
-            it('should not fire an ended event listener', (done) => {
+            it('should not fire an ended event listener', () => {
+                const { promise, resolve } = Promise.withResolvers();
                 const audioBuffer = offlineAudioContext.createBuffer(1, 2, 44100);
                 const audioBufferSourceNode = offlineAudioContext.createBufferSource();
 
@@ -103,10 +109,12 @@ describe('offlineAudioContextConstructor', () => {
                 setTimeout(() => {
                     expect(listener).to.have.not.been.called;
 
-                    done();
+                    resolve();
                 }, 500);
 
                 offlineAudioContext.startRendering();
+
+                return promise;
             });
         });
 
@@ -156,8 +164,8 @@ describe('offlineAudioContextConstructor', () => {
 
             // bug #163
 
-            it('should have a minimum delayTime of 256 samples', function (done) {
-                this.timeout(10000);
+            it('should have a minimum delayTime of 256 samples', () => {
+                const { promise, resolve } = Promise.withResolvers();
 
                 audioBufferSourceNode.start(0);
 
@@ -168,9 +176,11 @@ describe('offlineAudioContextConstructor', () => {
                     expect(channelData[256]).to.be.above(0.49);
                     expect(channelData[256]).to.be.below(0.51);
 
-                    done();
+                    resolve();
                 };
                 offlineAudioContext.startRendering();
+
+                return promise;
             });
         });
     });
@@ -179,7 +189,8 @@ describe('offlineAudioContextConstructor', () => {
         describe('without any output channels', () => {
             // bug #87
 
-            it('should not fire any AudioProcessingEvent', (done) => {
+            it('should not fire any AudioProcessingEvent', () => {
+                const { promise, resolve } = Promise.withResolvers();
                 const listener = spy();
                 const oscillatorNode = offlineAudioContext.createOscillator();
                 const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 0);
@@ -192,9 +203,11 @@ describe('offlineAudioContextConstructor', () => {
                 offlineAudioContext.oncomplete = () => {
                     expect(listener).to.have.not.been.called;
 
-                    done();
+                    resolve();
                 };
                 offlineAudioContext.startRendering();
+
+                return promise;
             });
         });
     });
@@ -202,33 +215,43 @@ describe('offlineAudioContextConstructor', () => {
     describe('decodeAudioData()', () => {
         // bug #4
 
-        it('should throw null when asked to decode an unsupported file', function (done) {
-            this.timeout(10000);
+        it('should throw null when asked to decode an unsupported file', () => {
+            const { promise, reject, resolve } = Promise.withResolvers();
 
             // PNG files are not supported by any browser :-)
             loadFixtureAsArrayBuffer('one-pixel-of-transparency.png').then((arrayBuffer) => {
-                offlineAudioContext.decodeAudioData(
-                    arrayBuffer,
-                    () => {},
-                    (err) => {
-                        expect(err).to.be.null;
+                offlineAudioContext
+                    .decodeAudioData(
+                        arrayBuffer,
+                        () => {
+                            reject(new Error('This should never be called.'));
+                        },
+                        (err) => {
+                            expect(err).to.be.null;
 
-                        done();
-                    }
-                );
+                            resolve();
+                        }
+                    )
+                    .catch(() => {
+                        // Ignore the rejected error.
+                    });
             });
+
+            return promise;
         });
 
         // bug #43
 
-        it('should not throw a DataCloneError', function (done) {
-            this.timeout(10000);
+        it('should not throw a DataCloneError', () => {
+            const { promise, resolve } = Promise.withResolvers();
 
             loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
                 offlineAudioContext.decodeAudioData(arrayBuffer, () => {
-                    offlineAudioContext.decodeAudioData(arrayBuffer, () => done());
+                    offlineAudioContext.decodeAudioData(arrayBuffer, () => resolve());
                 });
             });
+
+            return promise;
         });
     });
 });

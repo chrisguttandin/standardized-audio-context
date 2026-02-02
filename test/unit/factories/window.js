@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createWindow } from '../../../src/factories/window';
 
 describe('createWindow()', () => {

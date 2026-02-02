@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 describe('MediaStreamAudioSourceNode', () => {
     let mediaStreamAudioDestinationNode;
 

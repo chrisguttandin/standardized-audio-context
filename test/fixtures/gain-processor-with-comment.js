@@ -33,5 +33,4 @@ GainProcessor.parameterDescriptors = [
 
 registerProcessor('gain-processor', GainProcessor);
 
-// @todo The filename is .xs instead of .js to prevent prettier from adding a final line break.
 // This is a comment which is meant to be the last line of the file with no following line break.

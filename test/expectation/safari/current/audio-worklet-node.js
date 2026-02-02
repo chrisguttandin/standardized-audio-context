@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { spy } from 'sinon';
 
 describe('AudioWorklet', () => {
@@ -10,10 +11,8 @@ describe('AudioWorklet', () => {
     describe('with processorOptions with an unclonable value', () => {
         // bug #191
 
-        it('should not throw an error', async function () {
-            this.timeout(10000);
-
-            await offlineAudioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+        it('should not throw an error', async () => {
+            await offlineAudioContext.audioWorklet.addModule('test/fixtures/gain-processor.js');
 
             new AudioWorkletNode(offlineAudioContext, 'gain-processor', { processorOptions: { fn: () => {} } });
         });
@@ -22,17 +21,16 @@ describe('AudioWorklet', () => {
     describe('with a processor which transfers the arguments', () => {
         let audioWorkletNode;
 
-        beforeEach(async function () {
-            this.timeout(10000);
-
-            await offlineAudioContext.audioWorklet.addModule('base/test/fixtures/transferring-processor.js');
+        beforeEach(async () => {
+            await offlineAudioContext.audioWorklet.addModule('test/fixtures/transferring-processor.js');
 
             audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'transferring-processor');
         });
 
         // bug #197
 
-        it('should not deliver the messages before the promise returned by startRendering() resolves', (done) => {
+        it('should not deliver the messages before the promise returned by startRendering() resolves', () => {
+            const { promise, resolve } = Promise.withResolvers();
             const onmessage = spy();
 
             audioWorkletNode.port.onmessage = onmessage;
@@ -43,9 +41,11 @@ describe('AudioWorklet', () => {
                 setTimeout(() => {
                     expect(onmessage).to.have.been.calledTwice;
 
-                    done();
+                    resolve();
                 });
             });
+
+            return promise;
         });
     });
 });

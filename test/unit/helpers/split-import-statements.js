@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { splitImportStatements } from '../../../src/helpers/split-import-statements';
 
 describe('splitImportStatements()', () => {

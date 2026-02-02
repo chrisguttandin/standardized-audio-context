@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { spy, stub } from 'sinon';
 import { createCacheTestResult } from '../../../src/factories/cache-test-result';
 

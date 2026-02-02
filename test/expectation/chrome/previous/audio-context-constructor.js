@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { spy } from 'sinon';
 
 describe('audioContextConstructor', () => {
@@ -22,70 +23,63 @@ describe('audioContextConstructor', () => {
             describe('with an empty string as name', () => {
                 // bug #134
 
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/empty-string-processor.js');
-                });
+                it('should not throw an error', () => audioContext.audioWorklet.addModule('test/fixtures/empty-string-processor.js'));
             });
 
             describe('with a duplicate name', () => {
-                beforeEach(function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
-                });
+                beforeEach(() => audioContext.audioWorklet.addModule('test/fixtures/gain-processor.js'));
 
                 // bug #135
 
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/duplicate-gain-processor.js');
-                });
+                it('should not throw an error', () => audioContext.audioWorklet.addModule('test/fixtures/duplicate-gain-processor.js'));
             });
 
             describe('with a processor without a valid constructor', () => {
                 // bug #136
 
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/unconstructible-processor.js');
-                });
+                it('should not throw an error', () => audioContext.audioWorklet.addModule('test/fixtures/unconstructible-processor.js'));
             });
 
             describe('with a processor without a prototype', () => {
                 // Bug #137
 
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/prototypeless-processor.js');
-                });
+                it('should not throw an error', () => audioContext.audioWorklet.addModule('test/fixtures/prototypeless-processor.js'));
             });
 
             describe('with a processor with an invalid parameterDescriptors property', () => {
                 // Bug #139
 
-                it('should not throw an error', function () {
-                    this.timeout(10000);
-
-                    return audioContext.audioWorklet.addModule('base/test/fixtures/invalid-parameter-descriptors-property-processor.js');
-                });
+                it('should not throw an error', () =>
+                    audioContext.audioWorklet.addModule('test/fixtures/invalid-parameter-descriptors-property-processor.js'));
             });
 
             describe('with an unparsable module', () => {
+                let url;
+
+                afterEach(() => {
+                    URL.revokeObjectURL(url);
+                });
+
+                beforeEach(async () => {
+                    url = URL.createObjectURL(
+                        await fetch(new URL('../../../fixtures/unparsable-processor.js', import.meta.url))
+                            .then((response) => response.text())
+                            .then((text) => text.replace("// some 'unparsable' syntax ()", "some 'unparsable' syntax ()"))
+                            .then((text) => new Blob([text], { type: 'application/javascript; charset=utf-8' }))
+                    );
+                });
+
                 // bug #182
 
-                it('should return a promise which rejects a SyntaxError', function (done) {
-                    this.timeout(10000);
-
-                    audioContext.audioWorklet.addModule('base/test/fixtures/unparsable-processor.xs').catch((err) => {
-                        expect(err).to.be.an.instanceOf(SyntaxError);
-
-                        done();
-                    });
+                it('should return a promise which rejects a SyntaxError', () => {
+                    return audioContext.audioWorklet.addModule(url).then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        (err) => {
+                            expect(err).to.be.an.instanceOf(SyntaxError);
+                        }
+                    );
                 });
             });
         });
@@ -110,15 +104,11 @@ describe('audioContextConstructor', () => {
     });
 
     describe('state', () => {
-        // @todo For some reason this test does currently not pass when running on BrowserStack.
-        // eslint-disable-next-line no-undef
-        if (!process.env.CI) {
-            // bug #34
+        // bug #34
 
-            it('should be set to running right away', () => {
-                expect(audioContext.state).to.equal('running');
-            });
-        }
+        it('should be set to running right away', () => {
+            expect(audioContext.state).to.equal('running');
+        });
     });
 
     describe('createBufferSource()', () => {
@@ -147,17 +137,14 @@ describe('audioContextConstructor', () => {
         describe('curve', () => {
             // bug #104
 
-            it('should throw an InvalidAccessError when assigning a curve with less than two samples', (done) => {
+            it('should throw an InvalidAccessError when assigning a curve with less than two samples', () => {
                 const waveShaperNode = audioContext.createWaveShaper();
 
-                try {
+                expect(() => {
                     waveShaperNode.curve = new Float32Array([1]);
-                } catch (err) {
-                    expect(err.code).to.equal(15);
-                    expect(err.name).to.equal('InvalidAccessError');
-
-                    done();
-                }
+                })
+                    .to.throw(DOMException)
+                    .with.property('name', 'InvalidAccessError');
             });
         });
     });
@@ -165,16 +152,22 @@ describe('audioContextConstructor', () => {
     describe('decodeAudioData()', () => {
         // bug #6
 
-        it('should not call the errorCallback at all', (done) => {
+        it('should not call the errorCallback at all', () => {
             const errorCallback = spy();
 
-            audioContext.decodeAudioData(null, () => {}, errorCallback);
+            audioContext
+                .decodeAudioData(null, () => {}, errorCallback)
+                .catch(() => {
+                    // Ignore the rejected error.
+                });
 
-            setTimeout(() => {
-                expect(errorCallback).to.have.not.been.called;
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    expect(errorCallback).to.have.not.been.called;
 
-                done();
-            }, 1000);
+                    resolve();
+                }, 1000);
+            });
         });
     });
 });

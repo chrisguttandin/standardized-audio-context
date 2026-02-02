@@ -1,3 +1,5 @@
+import { describe, it } from 'vitest';
+
 describe('MediaStreamAudioSourceNode', () => {
     // bug #208
 
@@ -5,7 +7,7 @@ describe('MediaStreamAudioSourceNode', () => {
         while (true) {
             const audioContext = new AudioContext();
 
-            await audioContext.audioWorklet.addModule('base/test/fixtures/delayed-frames-detector-processor.js');
+            await audioContext.audioWorklet.addModule('test/fixtures/delayed-frames-detector-processor.js');
             await audioContext.suspend();
 
             const audioWorkletNode = new AudioWorkletNode(audioContext, 'delayed-frames-detector-processor');

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { createDetectCycles } from '../../../src/factories/detect-cycles';
 import { stub } from 'sinon';
 

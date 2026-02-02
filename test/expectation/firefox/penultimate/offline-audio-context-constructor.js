@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 
@@ -11,15 +12,12 @@ describe('offlineAudioContextConstructor', () => {
     describe('destination', () => {
         // bug #54
 
-        it('should throw an IndexSizeError', (done) => {
-            try {
+        it('should throw an IndexSizeError', () => {
+            expect(() => {
                 offlineAudioContext.destination.channelCount = 2;
-            } catch (err) {
-                expect(err.code).to.equal(1);
-                expect(err.name).to.equal('IndexSizeError');
-
-                done();
-            }
+            })
+                .to.throw(DOMException)
+                .with.property('name', 'IndexSizeError');
         });
 
         // bug #53
@@ -219,33 +217,40 @@ describe('offlineAudioContextConstructor', () => {
     describe('decodeAudioData()', () => {
         // bug #6
 
-        it('should not call the errorCallback at all', (done) => {
+        it('should not call the errorCallback at all', () => {
             const errorCallback = spy();
 
-            offlineAudioContext.decodeAudioData(null, () => {}, errorCallback);
+            offlineAudioContext
+                .decodeAudioData(null, () => {}, errorCallback)
+                .catch(() => {
+                    // Ignore the rejected error.
+                });
 
-            setTimeout(() => {
-                expect(errorCallback).to.have.not.been.called;
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    expect(errorCallback).to.have.not.been.called;
 
-                done();
-            }, 1000);
+                    resolve();
+                }, 1000);
+            });
         });
 
         // bug #43
 
-        it('should not throw a DataCloneError', function (done) {
-            this.timeout(10000);
-
-            loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+        it('should not throw a DataCloneError', () => {
+            return loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
                 offlineAudioContext
                     .decodeAudioData(arrayBuffer)
                     .then(() => offlineAudioContext.decodeAudioData(arrayBuffer))
-                    .catch((err) => {
-                        expect(err.code).to.not.equal(25);
-                        expect(err.name).to.not.equal('DataCloneError');
-
-                        done();
-                    });
+                    .then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        (err) => {
+                            expect(err.code).to.not.equal(25);
+                            expect(err.name).to.not.equal('DataCloneError');
+                        }
+                    );
             });
         });
     });

@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 describe('DynamicsCompressorNode', () => {
     // bug #205
 

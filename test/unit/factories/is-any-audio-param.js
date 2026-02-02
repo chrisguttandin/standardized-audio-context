@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { createIsAnyAudioParam } from '../../../src/factories/is-any-audio-param';
 import { stub } from 'sinon';
 

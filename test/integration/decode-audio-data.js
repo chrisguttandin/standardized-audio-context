@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
@@ -49,201 +50,196 @@ const testCases = {
     }
 };
 
-if (typeof window !== 'undefined') {
-    describe('decodeAudioData()', () => {
-        for (const [description, { createContext, decodeAudioData }] of Object.entries(testCases)) {
-            describe(`with the ${description}`, () => {
-                let context;
+describe('decodeAudioData()', { skip: typeof window === 'undefined' }, () => {
+    describe.for(Object.entries(testCases))('with the %s', ([description, { createContext, decodeAudioData }]) => {
+        let context;
 
-                afterEach(() => context.close?.());
+        afterEach(() => context.close?.());
 
-                beforeEach(() => (context = createContext()));
+        beforeEach(() => (context = createContext()));
 
-                it('should return a promise', () => {
-                    const promise = decodeAudioData(context);
+        it('should return a promise', () => {
+            const promise = decodeAudioData(context);
 
-                    promise.catch(() => {
+            promise.catch(() => {
+                // Ignore the error.
+            });
+
+            expect(promise).to.be.an.instanceOf(Promise);
+        });
+
+        describe('without a valid arrayBuffer', () => {
+            it('should throw an error', () => {
+                return decodeAudioData(context, null).then(
+                    () => {
+                        throw new Error('This should never be called.');
+                    },
+                    (err) => {
+                        expect(err).to.be.an.instanceOf(TypeError);
+                    }
+                );
+            });
+
+            if (!description.includes('standalone')) {
+                it('should call the errorCallback with a TypeError', () => {
+                    const { promise, resolve } = Promise.withResolvers();
+
+                    decodeAudioData(
+                        context,
+                        null,
+                        () => {},
+                        (err) => {
+                            expect(err).to.be.an.instanceOf(TypeError);
+
+                            resolve();
+                        }
+                    ).catch(() => {
                         // Ignore the error.
                     });
 
-                    expect(promise).to.be.an.instanceOf(Promise);
+                    return promise;
                 });
 
-                describe('without a valid arrayBuffer', () => {
-                    it('should throw an error', function (done) {
-                        this.timeout(10000);
+                // The promise is rejected before but the errorCallback gets called synchronously.
+                it('should call the errorCallback before the promise gets rejected', () => {
+                    const errorCallback = spy();
 
-                        decodeAudioData(context, null).catch((err) => {
-                            expect(err).to.be.an.instanceOf(TypeError);
+                    return decodeAudioData(context, null, () => {}, errorCallback).then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        () => {
+                            expect(errorCallback).to.have.been.calledOnce;
+                        }
+                    );
+                });
+            }
+        });
 
-                            done();
-                        });
-                    });
+        describe('with an arrayBuffer of an unsupported file', () => {
+            let arrayBuffer;
 
-                    if (!description.includes('standalone')) {
-                        it('should call the errorCallback with a TypeError', function (done) {
-                            this.timeout(10000);
+            beforeEach(async () => {
+                // PNG files are not supported by any browser :-)
+                arrayBuffer = await loadFixtureAsArrayBuffer('one-pixel-of-transparency.png');
+            });
 
-                            decodeAudioData(
-                                context,
-                                null,
-                                () => {},
-                                (err) => {
-                                    expect(err).to.be.an.instanceOf(TypeError);
-
-                                    done();
-                                }
-                            ).catch(() => {
-                                // Ignore the error.
-                            });
-                        });
-
-                        // The promise is rejected before but the errorCallback gets called synchronously.
-                        it('should call the errorCallback before the promise gets rejected', function (done) {
-                            this.timeout(10000);
-
-                            const errorCallback = spy();
-
-                            decodeAudioData(context, null, () => {}, errorCallback).catch(() => {
-                                expect(errorCallback).to.have.been.calledOnce;
-
-                                done();
-                            });
-                        });
+            it('should throw an error', () => {
+                return decodeAudioData(context, arrayBuffer).then(
+                    () => {
+                        throw new Error('This should never be called.');
+                    },
+                    (err) => {
+                        expect(err.code).to.equal(0);
+                        expect(err.name).to.equal('EncodingError');
                     }
-                });
+                );
+            });
 
-                describe('with an arrayBuffer of an unsupported file', () => {
-                    let arrayBuffer;
+            if (!description.includes('standalone')) {
+                it('should call the errorCallback with an error', () => {
+                    const { promise, resolve } = Promise.withResolvers();
 
-                    beforeEach(async function () {
-                        this.timeout(10000);
-
-                        // PNG files are not supported by any browser :-)
-                        arrayBuffer = await loadFixtureAsArrayBuffer('one-pixel-of-transparency.png');
-                    });
-
-                    it('should throw an error', function (done) {
-                        this.timeout(10000);
-
-                        decodeAudioData(context, arrayBuffer).catch((err) => {
+                    decodeAudioData(
+                        context,
+                        arrayBuffer,
+                        () => {},
+                        (err) => {
                             expect(err.code).to.equal(0);
                             expect(err.name).to.equal('EncodingError');
 
-                            done();
-                        });
-                    });
-
-                    if (!description.includes('standalone')) {
-                        it('should call the errorCallback with an error', function (done) {
-                            this.timeout(10000);
-
-                            decodeAudioData(
-                                context,
-                                arrayBuffer,
-                                () => {},
-                                (err) => {
-                                    expect(err.code).to.equal(0);
-                                    expect(err.name).to.equal('EncodingError');
-
-                                    done();
-                                }
-                            ).catch(() => {
-                                // Ignore the error.
-                            });
-                        });
-
-                        // The promise is rejected before but the errorCallback gets called synchronously.
-                        it('should call the errorCallback before the promise gets rejected', function (done) {
-                            this.timeout(10000);
-
-                            const errorCallback = spy();
-
-                            decodeAudioData(context, arrayBuffer, () => {}, errorCallback).catch(() => {
-                                expect(errorCallback).to.have.been.calledOnce;
-
-                                done();
-                            });
-                        });
-                    }
-                });
-
-                describe('with an arrayBuffer of a supported file', () => {
-                    let arrayBuffer;
-
-                    beforeEach(async function () {
-                        this.timeout(10000);
-
-                        arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
-                    });
-
-                    it('should resolve to the promise', function () {
-                        this.timeout(10000);
-
-                        return decodeAudioData(context, arrayBuffer);
-                    });
-
-                    if (!description.includes('standalone')) {
-                        it('should call the successCallback', function (done) {
-                            this.timeout(10000);
-
-                            decodeAudioData(context, arrayBuffer, () => {
-                                done();
-                            });
-                        });
-
-                        // The promise is resolved before but the successCallback gets called synchronously.
-                        it('should call the successCallback before the promise gets resolved', function () {
-                            this.timeout(10000);
-
-                            const successCallback = spy();
-
-                            return decodeAudioData(context, arrayBuffer, successCallback).then(() => {
-                                expect(successCallback).to.have.been.calledOnce;
-                            });
-                        });
-                    }
-
-                    it('should throw a DataCloneError', function (done) {
-                        this.timeout(10000);
-
-                        decodeAudioData(context, arrayBuffer)
-                            .then(() => decodeAudioData(context, arrayBuffer))
-                            .catch((err) => {
-                                expect(err.code).to.equal(25);
-                                expect(err.name).to.equal('DataCloneError');
-
-                                done();
-                            });
-                    });
-
-                    it('should neuter the arrayBuffer', async function () {
-                        this.timeout(10000);
-
-                        await decodeAudioData(context, arrayBuffer);
-
-                        expect(() => {
-                            // Firefox will throw an error when using a neutered ArrayBuffer.
-                            const uint8Array = new Uint8Array(arrayBuffer);
-
-                            // Chrome and Safari will throw an error when trying to convert a typed array with a neutered ArrayBuffer.
-                            Array.from(uint8Array);
-                        }).to.throw(Error);
-                    });
-
-                    it('should allow to encode various arrayBuffers in parallel', function () {
-                        this.timeout(10000);
-
-                        const arrayBufferCopies = [];
-
-                        for (let i = 1; i < 100; i += 1) {
-                            arrayBufferCopies.push(arrayBuffer.slice(0));
+                            resolve();
                         }
+                    ).catch(() => {
+                        // Ignore the error.
+                    });
 
-                        return Promise.all(arrayBufferCopies.map((rrBffr) => decodeAudioData(context, rrBffr)));
+                    return promise;
+                });
+
+                // The promise is rejected before but the errorCallback gets called synchronously.
+                it('should call the errorCallback before the promise gets rejected', () => {
+                    const errorCallback = spy();
+
+                    return decodeAudioData(context, arrayBuffer, () => {}, errorCallback).then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        () => {
+                            expect(errorCallback).to.have.been.calledOnce;
+                        }
+                    );
+                });
+            }
+        });
+
+        describe('with an arrayBuffer of a supported file', () => {
+            let arrayBuffer;
+
+            beforeEach(async () => {
+                arrayBuffer = await loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav');
+            });
+
+            it('should resolve to the promise', () => {
+                return decodeAudioData(context, arrayBuffer);
+            });
+
+            if (!description.includes('standalone')) {
+                it('should call the successCallback', () => {
+                    const { promise, resolve } = Promise.withResolvers();
+
+                    decodeAudioData(context, arrayBuffer, () => {
+                        resolve();
+                    });
+
+                    return promise;
+                });
+
+                // The promise is resolved before but the successCallback gets called synchronously.
+                it('should call the successCallback before the promise gets resolved', () => {
+                    const successCallback = spy();
+
+                    return decodeAudioData(context, arrayBuffer, successCallback).then(() => {
+                        expect(successCallback).to.have.been.calledOnce;
                     });
                 });
+            }
+
+            it('should throw a DataCloneError', () => {
+                return decodeAudioData(context, arrayBuffer)
+                    .then(() => decodeAudioData(context, arrayBuffer))
+                    .then(
+                        () => {
+                            throw new Error('This should never be called.');
+                        },
+                        (err) => {
+                            expect(err.code).to.equal(25);
+                            expect(err.name).to.equal('DataCloneError');
+                        }
+                    );
             });
-        }
+
+            it('should neuter the arrayBuffer', async () => {
+                await decodeAudioData(context, arrayBuffer);
+
+                expect(() => {
+                    // Firefox will throw an error when using a neutered ArrayBuffer.
+                    const uint8Array = new Uint8Array(arrayBuffer);
+
+                    // Chrome and Safari will throw an error when trying to convert a typed array with a neutered ArrayBuffer.
+                    Array.from(uint8Array);
+                }).to.throw(Error);
+            });
+
+            it('should allow to encode various arrayBuffers in parallel', () => {
+                const arrayBufferCopies = [];
+
+                for (let i = 1; i < 100; i += 1) {
+                    arrayBufferCopies.push(arrayBuffer.slice(0));
+                }
+
+                return Promise.all(arrayBufferCopies.map((rrBffr) => decodeAudioData(context, rrBffr)));
+            });
+        });
     });
-}
+});

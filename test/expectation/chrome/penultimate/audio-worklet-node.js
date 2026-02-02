@@ -1,43 +1,32 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 describe('AudioWorklet', () => {
-    describe('with a processor with parameters', () => {
-        let offlineAudioContext;
-
-        beforeEach(async function () {
-            this.timeout(10000);
-
-            offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
-
-            await offlineAudioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
-        });
-    });
-
     describe('with a failing processor', () => {
         let offlineAudioContext;
 
-        beforeEach(async function () {
-            this.timeout(10000);
-
+        beforeEach(async () => {
             offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
 
-            await offlineAudioContext.audioWorklet.addModule('base/test/fixtures/failing-processor.js');
+            await offlineAudioContext.audioWorklet.addModule('test/fixtures/failing-processor.js');
         });
 
         // bug #178
 
-        it('should fire an error event', function (done) {
-            this.timeout(10000);
-
+        it('should fire an error event', () => {
+            const { promise, resolve } = Promise.withResolvers();
             const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'failing-processor');
 
-            audioWorkletNode.onprocessorerror = function (event) {
+            audioWorkletNode.onprocessorerror = (event) => {
                 expect(event.type).to.equal('error');
 
-                done();
+                resolve();
             };
 
             audioWorkletNode.connect(offlineAudioContext.destination);
 
             offlineAudioContext.startRendering();
+
+            return promise;
         });
     });
 
@@ -48,7 +37,7 @@ describe('AudioWorklet', () => {
             audioContext = new AudioContext();
 
             await audioContext.close();
-            await audioContext.audioWorklet.addModule('base/test/fixtures/gain-processor.js');
+            await audioContext.audioWorklet.addModule('test/fixtures/gain-processor.js');
         });
 
         // bug #186
@@ -66,18 +55,17 @@ describe('AudioWorklet', () => {
     describe('with a module depending on another module', () => {
         let offlineAudioContext;
 
-        beforeEach(async function () {
-            this.timeout(10000);
-
+        beforeEach(async () => {
             offlineAudioContext = new OfflineAudioContext(1, 256000, 44100);
 
-            await offlineAudioContext.audioWorklet.addModule('base/test/fixtures/library.js');
-            await offlineAudioContext.audioWorklet.addModule('base/test/fixtures/dependent-processor.js');
+            await offlineAudioContext.audioWorklet.addModule('test/fixtures/library.js');
+            await offlineAudioContext.audioWorklet.addModule('test/fixtures/dependent-processor.js');
         });
 
         // bug #91
 
-        it('should not persist the scope across calls to addModule()', (done) => {
+        it('should not persist the scope across calls to addModule()', () => {
+            const { promise, resolve } = Promise.withResolvers();
             const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'dependent-processor');
 
             audioWorkletNode.port.onmessage = ({ data }) => {
@@ -85,10 +73,12 @@ describe('AudioWorklet', () => {
 
                 expect(data.typeOfLibrary).to.equal('undefined');
 
-                done();
+                resolve();
             };
 
             audioWorkletNode.port.postMessage(null);
+
+            return promise;
         });
     });
 
@@ -101,15 +91,10 @@ describe('AudioWorklet', () => {
 
         // bug #60
 
-        it('should throw an InvalidStateError', (done) => {
-            try {
-                new AudioWorkletNode(offlineAudioContext, 'unknown-processor');
-            } catch (err) {
-                expect(err.code).to.equal(11);
-                expect(err.name).to.equal('InvalidStateError');
-
-                done();
-            }
+        it('should throw an InvalidStateError', () => {
+            expect(() => new AudioWorkletNode(offlineAudioContext, 'unknown-processor'))
+                .to.throw(DOMException)
+                .with.property('name', 'InvalidStateError');
         });
     });
 
@@ -126,10 +111,8 @@ describe('AudioWorklet', () => {
 
         // bug #204
 
-        it('should increase currentFrame by a value other than 128', async function () {
-            this.timeout(0);
-
-            await audioContext.audioWorklet.addModule('base/test/fixtures/inspector-processor.js');
+        it('should increase currentFrame by a value other than 128', async () => {
+            await audioContext.audioWorklet.addModule('test/fixtures/inspector-processor.js');
 
             while (true) {
                 await audioContext.suspend();
@@ -178,7 +161,7 @@ describe('AudioWorklet', () => {
 
                     audioContext = new AudioContext();
 
-                    await audioContext.audioWorklet.addModule('base/test/fixtures/inspector-processor.js');
+                    await audioContext.audioWorklet.addModule('test/fixtures/inspector-processor.js');
                 }
             }
         });

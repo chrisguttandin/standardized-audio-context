@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { sanitizePeriodicWaveOptions } from '../../../src/helpers/sanitize-periodic-wave-options';
 
 describe('sanitizePeriodicWaveOptions()', () => {

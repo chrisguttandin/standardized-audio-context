@@ -1,54 +1,52 @@
+import { describe, it } from 'vitest';
+
 describe('MediaStreamAudioSourceNode', () => {
-    // @todo For some reason this test does currently not pass when running on BrowserStack.
-    // eslint-disable-next-line no-undef
-    if (!process.env.CI) {
-        // bug #207
+    // bug #207
 
-        it('should have a maximum delay of 1472 samples', async () => {
-            while (true) {
-                const audioContext = new AudioContext();
+    it('should have a maximum delay of 1472 samples', async () => {
+        while (true) {
+            const audioContext = new AudioContext();
 
-                await audioContext.audioWorklet.addModule('base/test/fixtures/delayed-frames-detector-processor.js');
-                await audioContext.suspend();
+            await audioContext.audioWorklet.addModule('test/fixtures/delayed-frames-detector-processor.js');
+            await audioContext.suspend();
 
-                const audioWorkletNode = new AudioWorkletNode(audioContext, 'delayed-frames-detector-processor');
-                const constantSourceNode = new ConstantSourceNode(audioContext);
-                const mediaStreamAudioDestinationNode = new MediaStreamAudioDestinationNode(audioContext);
-                const mediaStreamAudioSourceNode = new MediaStreamAudioSourceNode(audioContext, {
-                    mediaStream: mediaStreamAudioDestinationNode.stream
-                });
+            const audioWorkletNode = new AudioWorkletNode(audioContext, 'delayed-frames-detector-processor');
+            const constantSourceNode = new ConstantSourceNode(audioContext);
+            const mediaStreamAudioDestinationNode = new MediaStreamAudioDestinationNode(audioContext);
+            const mediaStreamAudioSourceNode = new MediaStreamAudioSourceNode(audioContext, {
+                mediaStream: mediaStreamAudioDestinationNode.stream
+            });
 
-                constantSourceNode.connect(audioWorkletNode);
-                constantSourceNode.connect(mediaStreamAudioDestinationNode);
-                constantSourceNode.start();
-                mediaStreamAudioSourceNode.connect(audioWorkletNode);
+            constantSourceNode.connect(audioWorkletNode);
+            constantSourceNode.connect(mediaStreamAudioDestinationNode);
+            constantSourceNode.start();
+            mediaStreamAudioSourceNode.connect(audioWorkletNode);
 
-                const [delay] = await Promise.all([
-                    new Promise((resolve) => {
-                        audioWorkletNode.port.onmessage = ({ data }) => {
-                            audioWorkletNode.port.onmessage = null;
+            const [delay] = await Promise.all([
+                new Promise((resolve) => {
+                    audioWorkletNode.port.onmessage = ({ data }) => {
+                        audioWorkletNode.port.onmessage = null;
 
-                            audioWorkletNode.port.close();
-                            constantSourceNode.disconnect(audioWorkletNode);
-                            constantSourceNode.disconnect(mediaStreamAudioDestinationNode);
-                            constantSourceNode.stop();
-                            mediaStreamAudioSourceNode.disconnect(audioWorkletNode);
-                            resolve(data);
-                        };
-                    }),
-                    audioContext.resume()
-                ]);
+                        audioWorkletNode.port.close();
+                        constantSourceNode.disconnect(audioWorkletNode);
+                        constantSourceNode.disconnect(mediaStreamAudioDestinationNode);
+                        constantSourceNode.stop();
+                        mediaStreamAudioSourceNode.disconnect(audioWorkletNode);
+                        resolve(data);
+                    };
+                }),
+                audioContext.resume()
+            ]);
 
-                await audioContext.close();
+            await audioContext.close();
 
-                if (delay === 1472) {
-                    return;
-                }
-
-                if (delay > 1472) {
-                    throw new Error(`The delay should have been a maximum of 1472 samples, but was ${delay} instead.`);
-                }
+            if (delay === 1472) {
+                return;
             }
-        });
-    }
+
+            if (delay > 1472) {
+                throw new Error(`The delay should have been a maximum of 1472 samples, but was ${delay} instead.`);
+            }
+        }
+    });
 });

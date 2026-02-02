@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { isSupported } from '../../src/module';
 
 describe('isSupported', () => {

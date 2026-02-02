@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { createIsNativeAudioContext } from '../../../src/factories/is-native-audio-context';
 
 describe('isNativeAudioContext()', () => {

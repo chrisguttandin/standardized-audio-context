@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { createNativeOfflineAudioContextConstructor } from '../../../src/factories/native-offline-audio-context-constructor';
 
 describe('createNativeOfflineAudioContextConstructor()', () => {

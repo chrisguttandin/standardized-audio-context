@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
 import { spy } from 'sinon';
 
@@ -22,16 +23,32 @@ describe('audioContextConstructor', () => {
         describe('audioWorklet', () => {
             describe('addModule()', () => {
                 describe('with an unparsable module', () => {
+                    let url;
+
+                    afterEach(() => {
+                        URL.revokeObjectURL(url);
+                    });
+
+                    beforeEach(async () => {
+                        url = URL.createObjectURL(
+                            await fetch(new URL('../../../fixtures/unparsable-processor.js', import.meta.url))
+                                .then((response) => response.text())
+                                .then((text) => text.replace("// some 'unparsable' syntax ()", "some 'unparsable' syntax ()"))
+                                .then((text) => new Blob([text], { type: 'application/javascript; charset=utf-8' }))
+                        );
+                    });
+
                     // bug #182
 
-                    it('should return a promise which rejects a SyntaxError', function (done) {
-                        this.timeout(10000);
-
-                        audioContext.audioWorklet.addModule('base/test/fixtures/unparsable-processor.xs').catch((err) => {
-                            expect(err).to.be.an.instanceOf(SyntaxError);
-
-                            done();
-                        });
+                    it('should return a promise which rejects a SyntaxError', () => {
+                        return audioContext.audioWorklet.addModule(url).then(
+                            () => {
+                                throw new Error('This should never be called.');
+                            },
+                            (err) => {
+                                expect(err).to.be.an.instanceOf(SyntaxError);
+                            }
+                        );
                     });
                 });
             });
@@ -208,33 +225,40 @@ describe('audioContextConstructor', () => {
         describe('decodeAudioData()', () => {
             // bug #6
 
-            it('should not call the errorCallback at all', (done) => {
+            it('should not call the errorCallback at all', () => {
                 const errorCallback = spy();
 
-                audioContext.decodeAudioData(null, () => {}, errorCallback);
+                audioContext
+                    .decodeAudioData(null, () => {}, errorCallback)
+                    .catch(() => {
+                        // Ignore the rejected error.
+                    });
 
-                setTimeout(() => {
-                    expect(errorCallback).to.have.not.been.called;
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        expect(errorCallback).to.have.not.been.called;
 
-                    done();
-                }, 1000);
+                        resolve();
+                    }, 1000);
+                });
             });
 
             // bug #43
 
-            it('should not throw a DataCloneError', function (done) {
-                this.timeout(10000);
-
-                loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
+            it('should not throw a DataCloneError', () => {
+                return loadFixtureAsArrayBuffer('1000-frames-of-noise-stereo.wav').then((arrayBuffer) => {
                     audioContext
                         .decodeAudioData(arrayBuffer)
                         .then(() => audioContext.decodeAudioData(arrayBuffer))
-                        .catch((err) => {
-                            expect(err.code).to.not.equal(25);
-                            expect(err.name).to.not.equal('DataCloneError');
-
-                            done();
-                        });
+                        .then(
+                            () => {
+                                throw new Error('This should never be called.');
+                            },
+                            (err) => {
+                                expect(err.code).to.not.equal(25);
+                                expect(err.name).to.not.equal('DataCloneError');
+                            }
+                        );
                 });
             });
         });
