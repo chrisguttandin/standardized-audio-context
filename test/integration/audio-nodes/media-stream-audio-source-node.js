@@ -211,7 +211,8 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                             let renderer;
 
                             beforeEach(() => {
-                                if (/Chrome/.test(navigator.userAgent) || isSafari(navigator)) {
+                                // Bug #214 Safari can't stop a MediaStream coming from a MediaStreamAudioDestinationNode.
+                                if (isSafari(navigator)) {
                                     const gainNodes = [context._nativeContext.createGain(), context._nativeContext.createGain()];
                                     const mediaStreamAudioDestinationNodes = [
                                         context._nativeContext.createMediaStreamDestination(),
