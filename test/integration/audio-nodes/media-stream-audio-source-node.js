@@ -249,14 +249,12 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                                      * Bug #207 & #208: It's necessary to pipe the stream through the AudioContext once more
                                      * in Chrome and Safari. There will be an additional delay to account for. It's not
                                      * necessarily a bug but still something that needs to be tracked.
+                                     *
+                                     * Bug #215: Chrome also needs a few frames to stop a MediaStreamTrack.
                                      */
                                     length:
                                         context.length === undefined
-                                            ? isSafari(navigator)
-                                                ? 2437
-                                                : /Chrome/.test(navigator.userAgent)
-                                                  ? 1477
-                                                  : 5
+                                            ? (isSafari(navigator) || /Chrome/.test(navigator.userAgent) ? 16384 : 0) + 5
                                             : undefined,
                                     async setup(destination) {
                                         const analyserNode = new AnalyserNode(context);
@@ -304,7 +302,7 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                                     }).then((channelData) => {
                                         expect(
                                             Array.from(channelData).slice(
-                                                isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
+                                                isSafari(navigator) || /Chrome/.test(navigator.userAgent) ? 16384 : 0
                                             )
                                         ).to.not.deep.equal([0, 0, 0, 0, 0]);
                                     });
@@ -324,7 +322,7 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                                     }).then((channelData) => {
                                         expect(
                                             Array.from(channelData).slice(
-                                                isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
+                                                isSafari(navigator) || /Chrome/.test(navigator.userAgent) ? 16384 : 0
                                             )
                                         ).to.deep.equal([0, 0, 0, 0, 0]);
                                     });
@@ -573,14 +571,12 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                          * Bug #207 & #208: It's necessary to pipe the stream through the AudioContext once more in Chrome and
                          * Safari. There will be an additional delay to account for. It's not necessarily a bug but still something
                          * that needs to be tracked.
+                         *
+                         * Bug #215: Chrome also needs a few frames to stop a MediaStreamTrack.
                          */
                         length:
                             context.length === undefined
-                                ? isSafari(navigator)
-                                    ? 2437
-                                    : /Chrome/.test(navigator.userAgent)
-                                      ? 1477
-                                      : 5
+                                ? (isSafari(navigator) || /Chrome/.test(navigator.userAgent) ? 16384 : 0) + 5
                                 : undefined,
                         async setup(destination) {
                             const analyserNode = new AnalyserNode(context);
@@ -635,9 +631,7 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                                 }
                             }).then((channelData) => {
                                 expect(
-                                    Array.from(channelData).slice(
-                                        isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
-                                    )
+                                    Array.from(channelData).slice(isSafari(navigator) || /Chrome/.test(navigator.userAgent) ? 16384 : 0)
                                 ).to.deep.equal([0, 0, 0, 0, 0]);
                             });
                         });
@@ -676,9 +670,7 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                                     }
                                 }).then((channelData) => {
                                     expect(
-                                        Array.from(channelData).slice(
-                                            isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
-                                        )
+                                        Array.from(channelData).slice(isSafari(navigator) || /Chrome/.test(navigator.userAgent) ? 16384 : 0)
                                     ).to.deep.equal([0, 0, 0, 0, 0]);
                                 });
                             });
@@ -718,9 +710,7 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                                     }
                                 }).then((channelData) => {
                                     expect(
-                                        Array.from(channelData).slice(
-                                            isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
-                                        )
+                                        Array.from(channelData).slice(isSafari(navigator) || /Chrome/.test(navigator.userAgent) ? 16384 : 0)
                                     ).to.deep.equal([0, 0, 0, 0, 0]);
                                 });
                             });
@@ -732,9 +722,7 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                                     }
                                 }).then((channelData) => {
                                     expect(
-                                        Array.from(channelData).slice(
-                                            isSafari(navigator) ? 2432 : /Chrome/.test(navigator.userAgent) ? 1472 : 0
-                                        )
+                                        Array.from(channelData).slice(isSafari(navigator) || /Chrome/.test(navigator.userAgent) ? 16384 : 0)
                                     ).to.not.deep.equal([0, 0, 0, 0, 0]);
                                 });
                             });
