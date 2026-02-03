@@ -125,15 +125,20 @@ export const createAddAudioWorkletModule: TAddAudioWorkletModuleFactory = (
         }
 
         promise
-            .then(() => {
-                const updatedResolvedRequestsOfContext = resolvedRequests.get(context);
+            .then(
+                () => {
+                    const updatedResolvedRequestsOfContext = resolvedRequests.get(context);
 
-                if (updatedResolvedRequestsOfContext === undefined) {
-                    resolvedRequests.set(context, new Set([moduleURL]));
-                } else {
-                    updatedResolvedRequestsOfContext.add(moduleURL);
+                    if (updatedResolvedRequestsOfContext === undefined) {
+                        resolvedRequests.set(context, new Set([moduleURL]));
+                    } else {
+                        updatedResolvedRequestsOfContext.add(moduleURL);
+                    }
+                },
+                () => {
+                    // Ignore errors.
                 }
-            })
+            )
             .finally(() => {
                 const updatedOngoingRequestsOfContext = ongoingRequests.get(context);
 
