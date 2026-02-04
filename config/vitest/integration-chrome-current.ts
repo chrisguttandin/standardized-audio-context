@@ -1,4 +1,3 @@
-import { env } from 'node:process';
 import { webdriverio } from '@vitest/browser-webdriverio';
 import { defineConfig } from 'vitest/config';
 
@@ -10,7 +9,7 @@ export default defineConfig({
             instances: [
                 {
                     browser: 'chrome',
-                    headless: env.CI !== 'true',
+                    headless: true,
                     name: 'Chrome',
                     provider: webdriverio({
                         capabilities: { 'goog:chromeOptions': { args: ['--autoplay-policy=no-user-gesture-required', '--mute-audio'] } }
