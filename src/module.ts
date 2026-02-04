@@ -223,7 +223,6 @@ import {
 } from './interfaces';
 import {
     TActiveAudioWorkletNodeInputsStore,
-    TAddAudioWorkletModuleFunction,
     TAnalyserNodeConstructor,
     TAudioBufferConstructor,
     TAudioBufferSourceNodeConstructor,
@@ -238,7 +237,6 @@ import {
     TConstantSourceNodeConstructor,
     TContext,
     TConvolverNodeConstructor,
-    TDecodeAudioDataFunction,
     TDelayNodeConstructor,
     TDynamicsCompressorNodeConstructor,
     TGainNodeConstructor,
@@ -587,9 +585,7 @@ const getOrCreateBackupOfflineAudioContext = createGetOrCreateBackupOfflineAudio
     backupOfflineAudioContextStore,
     nativeOfflineAudioContextConstructor
 );
-
-// The addAudioWorkletModule() function is only available in a SecureContext.
-export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction = isSecureContext
+const addAudioWorkletModule = isSecureContext
     ? createAddAudioWorkletModule(
           cacheTestResult,
           createFetchSource(createAbortError),
@@ -601,17 +597,8 @@ export const addAudioWorkletModule: undefined | TAddAudioWorkletModuleFunction =
           createTestAudioWorkletProcessorPostMessageSupport(nativeAudioWorkletNodeConstructor, nativeOfflineAudioContextConstructor)
       )
     : undefined;
-
 const isNativeContext = createIsNativeContext(isNativeAudioContext, isNativeOfflineAudioContext);
-
-export const decodeAudioData: TDecodeAudioDataFunction = createDecodeAudioData(
-    audioBufferStore,
-    createDataCloneError,
-    new WeakSet(),
-    getNativeContext,
-    isNativeContext
-);
-
+const decodeAudioData = createDecodeAudioData(audioBufferStore, createDataCloneError, new WeakSet(), getNativeContext, isNativeContext);
 const baseAudioContextConstructor = createBaseAudioContextConstructor(
     addAudioWorkletModule,
     analyserNodeConstructor,
@@ -720,11 +707,11 @@ export { channelSplitterNodeConstructor as ChannelSplitterNode };
 
 type constantSourceNodeConstructor<T extends TContext> = IConstantSourceNode<T>;
 
-export { convolverNodeConstructor as ConvolverNode };
+export { constantSourceNodeConstructor as ConstantSourceNode };
 
 type convolverNodeConstructor<T extends TContext> = IConvolverNode<T>;
 
-export { constantSourceNodeConstructor as ConstantSourceNode };
+export { convolverNodeConstructor as ConvolverNode };
 
 type delayNodeConstructor<T extends TContext> = IDelayNode<T>;
 
@@ -811,6 +798,10 @@ export { stereoPannerNodeConstructor as StereoPannerNode };
 type waveShaperNodeConstructor<T extends TContext> = IWaveShaperNode<T>;
 
 export { waveShaperNodeConstructor as WaveShaperNode };
+
+export { addAudioWorkletModule };
+
+export { decodeAudioData };
 
 export const isAnyAudioContext = createIsAnyAudioContext(CONTEXT_STORE, isNativeAudioContext);
 
