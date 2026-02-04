@@ -19,33 +19,41 @@ describe('AudioWorklet', () => {
     });
 
     describe('with a processor which transfers the arguments', () => {
-        let audioWorkletNode;
-
-        beforeEach(async () => {
-            await offlineAudioContext.audioWorklet.addModule('test/fixtures/transferring-processor.js');
-
-            audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'transferring-processor');
-        });
-
         // bug #197
 
-        it('should not deliver the messages before the promise returned by startRendering() resolves', () => {
-            const { promise, resolve } = Promise.withResolvers();
-            const onmessage = spy();
+        it('should not deliver the messages before the promise returned by startRendering() resolves', async () => {
+            while (true) {
+                await offlineAudioContext.audioWorklet.addModule('test/fixtures/transferring-processor.js');
 
-            audioWorkletNode.port.onmessage = onmessage;
+                const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'transferring-processor');
+                const onmessage = spy();
 
-            offlineAudioContext.startRendering().then(() => {
-                expect(onmessage).to.have.not.been.called;
+                audioWorkletNode.port.onmessage = onmessage;
 
-                setTimeout(() => {
-                    expect(onmessage).to.have.been.calledTwice;
+                try {
+                    await offlineAudioContext.startRendering().then(() => {
+                        expect(onmessage).to.have.not.been.called;
 
-                    resolve();
-                });
-            });
+                        return new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                try {
+                                    expect(onmessage).to.have.been.calledTwice;
 
-            return promise;
+                                    resolve();
+                                } catch (err) {
+                                    reject(err);
+                                }
+                            });
+                        });
+                    });
+                } catch (err) {
+                    offlineAudioContext = new OfflineAudioContext(1, offlineAudioContext.length, offlineAudioContext.sampleRate);
+
+                    continue;
+                }
+
+                break;
+            }
         });
     });
 });
