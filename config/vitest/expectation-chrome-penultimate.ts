@@ -15,7 +15,7 @@ export default defineConfig({
                         capabilities: {
                             'goog:chromeOptions': {
                                 args: ['--autoplay-policy=no-user-gesture-required'],
-                                binary: 'chromium-v142/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
+                                binary: 'chrome-v143/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
                             }
                         }
                     })
