@@ -47,6 +47,10 @@ const countObjects = async (page) => {
         }
 
         previousNumberOfObjects = numberOfObjects;
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 100);
+        });
     }
 };
 
