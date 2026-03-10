@@ -31,15 +31,23 @@ const compileBundle = () => {
     });
 };
 const countObjects = async (page) => {
-    await page.evaluate(() => gc({ execution: 'sync', flavor: 'last-resort', type: 'major' })); // eslint-disable-line no-undef
+    let previousNumberOfObjects = null;
 
-    const prototypeHandle = await page.evaluateHandle(() => Object.prototype);
-    const objectsHandle = await page.queryObjects(prototypeHandle);
-    const numberOfObjects = await page.evaluate((instances) => instances.length, objectsHandle);
+    while (true) {
+        await page.evaluate(() => gc({ execution: 'sync', flavor: 'last-resort', type: 'major' })); // eslint-disable-line no-undef
 
-    await Promise.all([prototypeHandle.dispose(), objectsHandle.dispose()]);
+        const prototypeHandle = await page.evaluateHandle(() => Object.prototype);
+        const objectsHandle = await page.queryObjects(prototypeHandle);
+        const numberOfObjects = await page.evaluate((instances) => instances.length, objectsHandle);
 
-    return numberOfObjects;
+        await Promise.all([prototypeHandle.dispose(), objectsHandle.dispose()]);
+
+        if (numberOfObjects === previousNumberOfObjects) {
+            return numberOfObjects;
+        }
+
+        previousNumberOfObjects = numberOfObjects;
+    }
 };
 
 describe('module', () => {
