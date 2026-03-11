@@ -12,7 +12,7 @@ const compileBundle = () => {
             entry: {
                 bundle: './build/es2019/module.js'
             },
-            mode: 'development',
+            mode: 'production',
             output: {
                 filename: '[name].js',
                 libraryTarget: 'umd',
