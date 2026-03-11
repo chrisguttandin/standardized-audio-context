@@ -122,26 +122,27 @@ describe('module', () => {
 
     describe('with a GainNode', () => {
         describe('with unconnected GainNodes', () => {
-            let run;
-
-            beforeEach(() => {
-                run = (numberOfIterations) => {
-                    for (let i = 0; i < numberOfIterations; i += 1) {
-                        new GainNode(audioContext); // eslint-disable-line no-undef
-                    }
-                };
+            beforeEach(async () => {
+                await page.evaluate(() => {
+                    // eslint-disable-next-line no-global-assign
+                    run = (numberOfIterations) => {
+                        for (let i = 0; i < numberOfIterations; i += 1) {
+                            new GainNode(audioContext); // eslint-disable-line no-undef
+                        }
+                    };
+                });
             });
 
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
                 const heapSnapshot = await takeHeapSnapshot(page);
 
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 try {
                     expect(await countObjects(page)).to.equal(numberOfObjects);
@@ -155,28 +156,29 @@ describe('module', () => {
         });
 
         describe('with connected GainNodes', () => {
-            let run;
+            beforeEach(async () => {
+                await page.evaluate(() => {
+                    // eslint-disable-next-line no-global-assign
+                    run = (numberOfIterations) => {
+                        for (let i = 0; i < numberOfIterations; i += 1) {
+                            const gainNode = new GainNode(audioContext); // eslint-disable-line no-undef
 
-            beforeEach(() => {
-                run = (numberOfIterations) => {
-                    for (let i = 0; i < numberOfIterations; i += 1) {
-                        const gainNode = new GainNode(audioContext); // eslint-disable-line no-undef
-
-                        gainNode.connect(audioContext.destination); // eslint-disable-line no-undef
-                    }
-                };
+                            gainNode.connect(audioContext.destination); // eslint-disable-line no-undef
+                        }
+                    };
+                });
             });
 
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
                 const heapSnapshot = await takeHeapSnapshot(page);
 
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 try {
                     expect(await countObjects(page)).to.equal(numberOfObjects);
@@ -190,29 +192,30 @@ describe('module', () => {
         });
 
         describe('with disconnected GainNodes', () => {
-            let run;
+            beforeEach(async () => {
+                await page.evaluate(() => {
+                    // eslint-disable-next-line no-global-assign
+                    run = (numberOfIterations) => {
+                        for (let i = 0; i < numberOfIterations; i += 1) {
+                            const gainNode = new GainNode(audioContext); // eslint-disable-line no-undef
 
-            beforeEach(() => {
-                run = (numberOfIterations) => {
-                    for (let i = 0; i < numberOfIterations; i += 1) {
-                        const gainNode = new GainNode(audioContext); // eslint-disable-line no-undef
-
-                        gainNode.connect(audioContext.destination); // eslint-disable-line no-undef
-                        gainNode.disconnect(audioContext.destination); // eslint-disable-line no-undef
-                    }
-                };
+                            gainNode.connect(audioContext.destination); // eslint-disable-line no-undef
+                            gainNode.disconnect(audioContext.destination); // eslint-disable-line no-undef
+                        }
+                    };
+                });
             });
 
             it('should collect all GainNodes', async function () {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
                 const heapSnapshot = await takeHeapSnapshot(page);
 
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 try {
                     expect(await countObjects(page)).to.equal(numberOfObjects);
@@ -228,66 +231,69 @@ describe('module', () => {
 
     describe('with an AudioBufferSourceNode', () => {
         describe('with unconnected AudioBufferSourceNodes', () => {
-            let run;
-
-            beforeEach(() => {
-                run = (numberOfIterations) => {
-                    for (let i = 0; i < numberOfIterations; i += 1) {
-                        new AudioBufferSourceNode(
-                            audioContext, // eslint-disable-line no-undef
-                            { buffer: new AudioBuffer({ length: 1, sampleRate: audioContext.sampleRate }) } // eslint-disable-line no-undef
-                        );
-                    }
-                };
+            beforeEach(async () => {
+                await page.evaluate(() => {
+                    // eslint-disable-next-line no-global-assign
+                    run = (numberOfIterations) => {
+                        for (let i = 0; i < numberOfIterations; i += 1) {
+                            new AudioBufferSourceNode(
+                                audioContext, // eslint-disable-line no-undef
+                                { buffer: new AudioBuffer({ length: 1, sampleRate: audioContext.sampleRate }) } // eslint-disable-line no-undef
+                            );
+                        }
+                    };
+                });
             });
 
             it('should collect all AudioBufferSourceNodes', async function () {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
                 const heapSnapshot = await takeHeapSnapshot(page);
 
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 try {
                     expect(await countObjects(page)).to.equal(numberOfObjects);
                 } catch (err) {
                     await saveHeapSnapshot(heapSnapshot, 'expected');
                     await saveHeapSnapshot(await takeHeapSnapshot(page), 'actual');
+
                     throw err;
                 }
             });
         });
 
         describe('with connected AudioBufferSourceNodes', () => {
-            let run;
+            beforeEach(async () => {
+                await page.evaluate(() => {
+                    // eslint-disable-next-line no-global-assign
+                    run = (numberOfIterations) => {
+                        for (let i = 0; i < numberOfIterations; i += 1) {
+                            const audioBufferSourceNode = new AudioBufferSourceNode(
+                                audioContext, // eslint-disable-line no-undef
+                                { buffer: new AudioBuffer({ length: 1, sampleRate: audioContext.sampleRate }) } // eslint-disable-line no-undef
+                            );
 
-            beforeEach(() => {
-                run = (numberOfIterations) => {
-                    for (let i = 0; i < numberOfIterations; i += 1) {
-                        const audioBufferSourceNode = new AudioBufferSourceNode(
-                            audioContext, // eslint-disable-line no-undef
-                            { buffer: new AudioBuffer({ length: 1, sampleRate: audioContext.sampleRate }) } // eslint-disable-line no-undef
-                        );
-
-                        audioBufferSourceNode.connect(audioContext.destination); // eslint-disable-line no-undef
-                    }
-                };
+                            audioBufferSourceNode.connect(audioContext.destination); // eslint-disable-line no-undef
+                        }
+                    };
+                });
             });
 
             it('should collect all AudioBufferSourceNodes', async function () {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
                 const heapSnapshot = await takeHeapSnapshot(page);
 
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 try {
                     expect(await countObjects(page)).to.equal(numberOfObjects);
@@ -303,32 +309,33 @@ describe('module', () => {
         // @todo Run a test with started AudioBufferSourceNodes.
 
         describe('with disconnected AudioBufferSourceNodes', () => {
-            let run;
+            beforeEach(async () => {
+                await page.evaluate(() => {
+                    // eslint-disable-next-line no-global-assign
+                    run = (numberOfIterations) => {
+                        for (let i = 0; i < numberOfIterations; i += 1) {
+                            const audioBufferSourceNode = new AudioBufferSourceNode(
+                                audioContext, // eslint-disable-line no-undef
+                                { buffer: new AudioBuffer({ length: 1, sampleRate: audioContext.sampleRate }) } // eslint-disable-line no-undef
+                            );
 
-            beforeEach(() => {
-                run = (numberOfIterations) => {
-                    for (let i = 0; i < numberOfIterations; i += 1) {
-                        const audioBufferSourceNode = new AudioBufferSourceNode(
-                            audioContext, // eslint-disable-line no-undef
-                            { buffer: new AudioBuffer({ length: 1, sampleRate: audioContext.sampleRate }) } // eslint-disable-line no-undef
-                        );
-
-                        audioBufferSourceNode.connect(audioContext.destination); // eslint-disable-line no-undef
-                        audioBufferSourceNode.disconnect(audioContext.destination); // eslint-disable-line no-undef
-                    }
-                };
+                            audioBufferSourceNode.connect(audioContext.destination); // eslint-disable-line no-undef
+                            audioBufferSourceNode.disconnect(audioContext.destination); // eslint-disable-line no-undef
+                        }
+                    };
+                });
             });
 
             it('should collect all AudioBufferSourceNodes', async function () {
                 this.timeout(10000);
 
                 // Run the test once because the first run will trigger some memoizations.
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
                 const heapSnapshot = await takeHeapSnapshot(page);
 
-                await page.evaluate(run, 1000);
+                await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 try {
                     expect(await countObjects(page)).to.equal(numberOfObjects);
