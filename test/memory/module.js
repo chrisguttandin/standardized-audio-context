@@ -1,3 +1,5 @@
+const { join } = require('path'); // eslint-disable-line no-undef
+const { createWriteStream } = require('fs'); // eslint-disable-line no-undef
 const MemoryFileSystem = require('memory-fs'); // eslint-disable-line no-undef
 const puppeteer = require('puppeteer'); // eslint-disable-line no-undef
 const webpack = require('webpack'); // eslint-disable-line no-undef
@@ -52,6 +54,24 @@ const countObjects = async (page) => {
             setTimeout(resolve, 100);
         });
     }
+};
+const takeHeapSnapshot = async (page) => {
+    const client = await page.target().createCDPSession();
+
+    await client.send('HeapProfiler.enable');
+
+    // eslint-disable-next-line no-undef
+    const heapSnapshotStream = createWriteStream(join(__dirname, 'test.heapsnapshot'), { encoding: 'utf8' });
+
+    client.on('HeapProfiler.addHeapSnapshotChunk', ({ chunk }) => {
+        heapSnapshotStream.write(chunk);
+    });
+
+    await client.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false });
+    await new Promise((resolve) => {
+        heapSnapshotStream.end(() => resolve());
+    });
+    await client.send('HeapProfiler.disable');
 };
 
 describe('module', () => {
@@ -120,7 +140,13 @@ describe('module', () => {
 
                 await page.evaluate(run, 1000);
 
-                expect(await countObjects(page)).to.equal(numberOfObjects);
+                try {
+                    expect(await countObjects(page)).to.equal(numberOfObjects);
+                } catch (err) {
+                    await takeHeapSnapshot(page);
+
+                    throw err;
+                }
             });
         });
 
@@ -147,7 +173,13 @@ describe('module', () => {
 
                 await page.evaluate(run, 1000);
 
-                expect(await countObjects(page)).to.equal(numberOfObjects);
+                try {
+                    expect(await countObjects(page)).to.equal(numberOfObjects);
+                } catch (err) {
+                    await takeHeapSnapshot(page);
+
+                    throw err;
+                }
             });
         });
 
@@ -175,7 +207,13 @@ describe('module', () => {
 
                 await page.evaluate(run, 1000);
 
-                expect(await countObjects(page)).to.equal(numberOfObjects);
+                try {
+                    expect(await countObjects(page)).to.equal(numberOfObjects);
+                } catch (err) {
+                    await takeHeapSnapshot(page);
+
+                    throw err;
+                }
             });
         });
     });
@@ -205,7 +243,13 @@ describe('module', () => {
 
                 await page.evaluate(run, 1000);
 
-                expect(await countObjects(page)).to.equal(numberOfObjects);
+                try {
+                    expect(await countObjects(page)).to.equal(numberOfObjects);
+                } catch (err) {
+                    await takeHeapSnapshot(page);
+
+                    throw err;
+                }
             });
         });
 
@@ -235,7 +279,13 @@ describe('module', () => {
 
                 await page.evaluate(run, 1000);
 
-                expect(await countObjects(page)).to.equal(numberOfObjects);
+                try {
+                    expect(await countObjects(page)).to.equal(numberOfObjects);
+                } catch (err) {
+                    await takeHeapSnapshot(page);
+
+                    throw err;
+                }
             });
         });
 
@@ -268,7 +318,13 @@ describe('module', () => {
 
                 await page.evaluate(run, 1000);
 
-                expect(await countObjects(page)).to.equal(numberOfObjects);
+                try {
+                    expect(await countObjects(page)).to.equal(numberOfObjects);
+                } catch (err) {
+                    await takeHeapSnapshot(page);
+
+                    throw err;
+                }
             });
         });
     });
