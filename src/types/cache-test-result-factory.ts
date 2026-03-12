@@ -1,6 +1,6 @@
 import { TCacheTestResultFunction } from './cache-test-result-function';
 
 export type TCacheTestResultFactory = (
-    ongoingTests: Map<object, Promise<boolean>>,
+    ongoingTests: WeakMap<object, Promise<boolean>>,
     testResults: WeakMap<object, boolean>
 ) => TCacheTestResultFunction;
