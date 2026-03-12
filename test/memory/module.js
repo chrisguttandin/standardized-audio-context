@@ -1,5 +1,3 @@
-const { join } = require('path'); // eslint-disable-line no-undef
-const { writeFile } = require('fs/promises'); // eslint-disable-line no-undef
 const MemoryFileSystem = require('memory-fs'); // eslint-disable-line no-undef
 const puppeteer = require('puppeteer'); // eslint-disable-line no-undef
 const webpack = require('webpack'); // eslint-disable-line no-undef
@@ -54,26 +52,6 @@ const countObjects = async (page) => {
             setTimeout(resolve, 100);
         });
     }
-};
-const saveHeapSnapshot = async (buffer, name) => {
-    // eslint-disable-next-line no-undef
-    await writeFile(join(__dirname, `${name}.heapsnapshot`), buffer, { encoding: 'utf8' });
-};
-const takeHeapSnapshot = async (page) => {
-    const client = await page.target().createCDPSession();
-
-    await client.send('HeapProfiler.enable');
-
-    let heapSnapshot = '';
-
-    client.on('HeapProfiler.addHeapSnapshotChunk', ({ chunk }) => {
-        heapSnapshot += chunk;
-    });
-
-    await client.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false });
-    await client.send('HeapProfiler.disable');
-
-    return heapSnapshot;
 };
 
 describe('module', () => {
@@ -140,18 +118,10 @@ describe('module', () => {
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
-                const heapSnapshot = await takeHeapSnapshot(page);
 
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
-                try {
-                    expect(await countObjects(page)).to.equal(numberOfObjects);
-                } catch (err) {
-                    await saveHeapSnapshot(heapSnapshot, 'expected');
-                    await saveHeapSnapshot(await takeHeapSnapshot(page), 'actual');
-
-                    throw err;
-                }
+                expect(await countObjects(page)).to.equal(numberOfObjects);
             });
         });
 
@@ -176,18 +146,10 @@ describe('module', () => {
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
-                const heapSnapshot = await takeHeapSnapshot(page);
 
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
-                try {
-                    expect(await countObjects(page)).to.equal(numberOfObjects);
-                } catch (err) {
-                    await saveHeapSnapshot(heapSnapshot, 'expected');
-                    await saveHeapSnapshot(await takeHeapSnapshot(page), 'actual');
-
-                    throw err;
-                }
+                expect(await countObjects(page)).to.equal(numberOfObjects);
             });
         });
 
@@ -213,18 +175,10 @@ describe('module', () => {
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
-                const heapSnapshot = await takeHeapSnapshot(page);
 
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
-                try {
-                    expect(await countObjects(page)).to.equal(numberOfObjects);
-                } catch (err) {
-                    await saveHeapSnapshot(heapSnapshot, 'expected');
-                    await saveHeapSnapshot(await takeHeapSnapshot(page), 'actual');
-
-                    throw err;
-                }
+                expect(await countObjects(page)).to.equal(numberOfObjects);
             });
         });
     });
@@ -252,18 +206,10 @@ describe('module', () => {
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
-                const heapSnapshot = await takeHeapSnapshot(page);
 
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
-                try {
-                    expect(await countObjects(page)).to.equal(numberOfObjects);
-                } catch (err) {
-                    await saveHeapSnapshot(heapSnapshot, 'expected');
-                    await saveHeapSnapshot(await takeHeapSnapshot(page), 'actual');
-
-                    throw err;
-                }
+                expect(await countObjects(page)).to.equal(numberOfObjects);
             });
         });
 
@@ -291,18 +237,10 @@ describe('module', () => {
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
-                const heapSnapshot = await takeHeapSnapshot(page);
 
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
-                try {
-                    expect(await countObjects(page)).to.equal(numberOfObjects);
-                } catch (err) {
-                    await saveHeapSnapshot(heapSnapshot, 'expected');
-                    await saveHeapSnapshot(await takeHeapSnapshot(page), 'actual');
-
-                    throw err;
-                }
+                expect(await countObjects(page)).to.equal(numberOfObjects);
             });
         });
 
@@ -333,18 +271,10 @@ describe('module', () => {
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
                 const numberOfObjects = await countObjects(page);
-                const heapSnapshot = await takeHeapSnapshot(page);
 
                 await page.evaluate((numberOfIterations) => run(numberOfIterations), 1000);
 
-                try {
-                    expect(await countObjects(page)).to.equal(numberOfObjects);
-                } catch (err) {
-                    await saveHeapSnapshot(heapSnapshot, 'expected');
-                    await saveHeapSnapshot(await takeHeapSnapshot(page), 'actual');
-
-                    throw err;
-                }
+                expect(await countObjects(page)).to.equal(numberOfObjects);
             });
         });
     });
