@@ -4,6 +4,13 @@ export const testTransferablesSupport = () =>
         const arrayBuffer = new ArrayBuffer(0);
         const { port1, port2 } = new MessageChannel();
 
-        port1.onmessage = ({ data }) => resolve(data !== null);
+        port1.onmessage = ({ data }) => {
+            port1.onmessage = null;
+
+            port1.close();
+            port2.close();
+
+            resolve(data !== null);
+        };
         port2.postMessage(arrayBuffer, [arrayBuffer]);
     });
