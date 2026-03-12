@@ -60,11 +60,3 @@ jobs:
                   sudo chown root /opt/google/chrome/chrome-sandbox
                   sudo chmod 4755 /opt/google/chrome/chrome-sandbox
                   npm test
-
-            - if: failure()
-              name: Upload snapshots
-              uses: actions/upload-artifact@v6
-              with:
-                  name: heap-snapshots
-                  path: |
-                      test/memory/
