@@ -40,7 +40,7 @@ describe('createCacheTestResult()', () => {
                 fakeOngoingTest = 'fake ongoing test';
                 fakeTest = spy();
 
-                testResults.set(fakeTest, fakeOngoingTest);
+                ongoingTests.set(fakeTest, fakeOngoingTest);
             });
 
             it('should return the ongoing test', () => {
