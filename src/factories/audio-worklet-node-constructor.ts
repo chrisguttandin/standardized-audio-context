@@ -8,14 +8,27 @@ import {
 } from '../interfaces';
 import { ReadOnlyMap } from '../read-only-map';
 import {
+    TAddUnrenderedAudioWorkletNodeFunction,
+    TAudioNodeConstructor,
     TAudioNodeRenderer,
+    TAudioParamFactory,
     TAudioParamMap,
-    TAudioWorkletNodeConstructorFactory,
+    TAudioWorkletNodeConstructor,
     TContext,
     TErrorEventHandler,
+    TGetAudioNodeConnectionsFunction,
+    TGetBackupOfflineAudioContextFunction,
+    TGetNativeContextFunction,
+    TIsNativeOfflineAudioContextFunction,
     TNativeAudioContext,
-    TNativeAudioWorkletNode
+    TNativeAudioWorkletNode,
+    TNativeAudioWorkletNodeConstructor,
+    TNativeAudioWorkletNodeFactory,
+    TSetActiveAudioWorkletNodeInputsFunction,
+    TTestAudioWorkletNodeOptionsClonabilityFunction,
+    TWrapEventListenerFunction
 } from '../types';
+import type { createAudioWorkletNodeRendererFactory } from './audio-worklet-node-renderer-factory';
 
 const DEFAULT_OPTIONS = {
     channelCount: 2,
@@ -27,21 +40,21 @@ const DEFAULT_OPTIONS = {
     processorOptions: {}
 } as const;
 
-export const createAudioWorkletNodeConstructor: TAudioWorkletNodeConstructorFactory = (
-    addUnrenderedAudioWorkletNode,
-    audioNodeConstructor,
-    createAudioParam,
-    createAudioWorkletNodeRenderer,
-    createNativeAudioWorkletNode,
-    getAudioNodeConnections,
-    getBackupOfflineAudioContext,
-    getNativeContext,
-    isNativeOfflineAudioContext,
-    nativeAudioWorkletNodeConstructor,
-    setActiveAudioWorkletNodeInputs,
-    testAudioWorkletNodeOptionsClonability,
-    wrapEventListener
-) => {
+export const createAudioWorkletNodeConstructor = (
+    addUnrenderedAudioWorkletNode: TAddUnrenderedAudioWorkletNodeFunction,
+    audioNodeConstructor: TAudioNodeConstructor,
+    createAudioParam: TAudioParamFactory,
+    createAudioWorkletNodeRenderer: ReturnType<typeof createAudioWorkletNodeRendererFactory>,
+    createNativeAudioWorkletNode: TNativeAudioWorkletNodeFactory,
+    getAudioNodeConnections: TGetAudioNodeConnectionsFunction,
+    getBackupOfflineAudioContext: TGetBackupOfflineAudioContextFunction,
+    getNativeContext: TGetNativeContextFunction,
+    isNativeOfflineAudioContext: TIsNativeOfflineAudioContextFunction,
+    nativeAudioWorkletNodeConstructor: null | TNativeAudioWorkletNodeConstructor,
+    setActiveAudioWorkletNodeInputs: TSetActiveAudioWorkletNodeInputsFunction,
+    testAudioWorkletNodeOptionsClonability: TTestAudioWorkletNodeOptionsClonabilityFunction,
+    wrapEventListener: TWrapEventListenerFunction
+): TAudioWorkletNodeConstructor => {
     return class AudioWorkletNode<T extends TContext>
         extends audioNodeConstructor<T, IAudioWorkletNodeEventMap>
         implements IAudioWorkletNode<T>

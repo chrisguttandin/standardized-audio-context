@@ -51,7 +51,6 @@ export * from './audio-param-map';
 export * from './audio-param-output-connection';
 export * from './audio-param-store';
 export * from './audio-worklet-node-constructor';
-export * from './audio-worklet-node-constructor-factory';
 export * from './backup-offline-audio-context-store';
 export * from './base-audio-context-constructor';
 export * from './base-audio-context-constructor-factory';
