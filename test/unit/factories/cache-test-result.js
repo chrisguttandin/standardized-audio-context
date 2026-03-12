@@ -64,6 +64,14 @@ describe('createCacheTestResult()', () => {
 
                 it('should return the test result', () => {
                     expect(cacheTestResult(fakeTest, () => fakeTest())).to.equal(fakeSynchronousTestResult);
+                });
+
+                it('should cache the test result', () => {
+                    cacheTestResult(fakeTest, () => fakeTest());
+
+                    expect(fakeTest).to.have.been.calledOnce;
+
+                    cacheTestResult(fakeTest, () => fakeTest());
 
                     expect(fakeTest).to.have.been.calledOnce;
                 });
@@ -80,6 +88,14 @@ describe('createCacheTestResult()', () => {
 
                 it('should return the test result', () => {
                     expect(cacheTestResult(fakeTest, () => fakeTest())).to.be.false;
+                });
+
+                it('should cache the test result', () => {
+                    cacheTestResult(fakeTest, () => fakeTest());
+
+                    expect(fakeTest).to.have.been.calledOnce;
+
+                    cacheTestResult(fakeTest, () => fakeTest());
 
                     expect(fakeTest).to.have.been.calledOnce;
                 });
@@ -101,6 +117,26 @@ describe('createCacheTestResult()', () => {
 
                     expect(testResult).to.be.an.instanceOf(Promise);
                     expect(await testResult).to.equal(fakeAsynchronousTestResult);
+                });
+
+                it('should cache the ongoing result', () => {
+                    const testResult = cacheTestResult(fakeTest, () => fakeTest());
+
+                    expect(fakeTest).to.have.been.calledOnce;
+
+                    expect(cacheTestResult(fakeTest, () => fakeTest())).to.equal(testResult);
+
+                    expect(fakeTest).to.have.been.calledOnce;
+                });
+
+                it('should cache the test result', async () => {
+                    const testResult = cacheTestResult(fakeTest, () => fakeTest());
+
+                    expect(fakeTest).to.have.been.calledOnce;
+
+                    await testResult;
+
+                    expect(cacheTestResult(fakeTest, () => fakeTest())).to.equal(fakeAsynchronousTestResult);
 
                     expect(fakeTest).to.have.been.calledOnce;
                 });
@@ -120,6 +156,26 @@ describe('createCacheTestResult()', () => {
 
                     expect(testResult).to.be.an.instanceOf(Promise);
                     expect(await testResult).to.be.false;
+                });
+
+                it('should cache the ongoing result', () => {
+                    const testResult = cacheTestResult(fakeTest, () => fakeTest());
+
+                    expect(fakeTest).to.have.been.calledOnce;
+
+                    expect(cacheTestResult(fakeTest, () => fakeTest())).to.equal(testResult);
+
+                    expect(fakeTest).to.have.been.calledOnce;
+                });
+
+                it('should cache the test result', async () => {
+                    const testResult = cacheTestResult(fakeTest, () => fakeTest());
+
+                    expect(fakeTest).to.have.been.calledOnce;
+
+                    await testResult;
+
+                    expect(cacheTestResult(fakeTest, () => fakeTest())).to.be.false;
 
                     expect(fakeTest).to.have.been.calledOnce;
                 });

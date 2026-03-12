@@ -18,16 +18,16 @@ export const createCacheTestResult: TCacheTestResultFactory = (ongoingTests, tes
             const synchronousTestResult = test();
 
             if (synchronousTestResult instanceof Promise) {
-                ongoingTests.set(tester, synchronousTestResult);
+                const promise = synchronousTestResult.catch(() => false);
 
-                return synchronousTestResult
-                    .catch(() => false)
-                    .then((finalTestResult) => {
-                        ongoingTests.delete(tester);
-                        testResults.set(tester, finalTestResult);
+                ongoingTests.set(tester, promise);
 
-                        return finalTestResult;
-                    });
+                promise.then((asynchronousTestResult) => {
+                    ongoingTests.delete(tester);
+                    testResults.set(tester, asynchronousTestResult);
+                });
+
+                return promise;
             }
 
             testResults.set(tester, synchronousTestResult);
