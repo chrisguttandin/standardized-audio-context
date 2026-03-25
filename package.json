@@ -43,7 +43,6 @@
         "eslint": "^8.57.0",
         "eslint-config-holy-grail": "^61.0.12",
         "husky": "^9.1.7",
-        "karma": "^6.4.4",
         "karma-browserstack-launcher": "^1.6.0",
         "karma-chrome-launcher": "^3.2.0",
         "karma-firefox-launcher": "^2.1.3",
