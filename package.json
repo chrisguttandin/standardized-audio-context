@@ -43,7 +43,6 @@
         "eslint": "^8.57.0",
         "eslint-config-holy-grail": "^61.0.12",
         "husky": "^9.1.7",
-        "karma-webpack": "^5.0.1",
         "lint-staged": "^16.4.0",
         "memory-fs": "^0.5.0",
         "mocha": "^11.7.5",
