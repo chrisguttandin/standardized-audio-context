@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { OfflineAudioContext } from '../../../src/module';
-import { spy } from 'sinon';
 
 describe('OfflineAudioContext', { skip: typeof window === 'undefined' }, () => {
     describe('constructor()', () => {
@@ -308,7 +307,7 @@ describe('OfflineAudioContext', { skip: typeof window === 'undefined' }, () => {
         });
 
         it('should register an independent event listener', () => {
-            const onstatechange = spy();
+            const onstatechange = vi.fn();
 
             offlineAudioContext.onstatechange = onstatechange;
             offlineAudioContext.addEventListener('statechange', onstatechange);

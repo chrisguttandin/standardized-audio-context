@@ -17,7 +17,6 @@ export default defineConfig({
         },
         dir: 'test/expectation/safari/penultimate/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/expectation-safari-penultimate-setup.ts'],
         watch: false
     }
 });

@@ -1,5 +1,5 @@
 import { AudioWorkletNode, GainNode, OscillatorNode, PeriodicWave, addAudioWorkletModule } from '../../../src/module';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createAudioContext } from '../../helper/create-audio-context';
 import { createMinimalAudioContext } from '../../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../../helper/create-minimal-offline-audio-context';
@@ -8,7 +8,6 @@ import { createNativeOfflineAudioContext } from '../../helper/create-native-offl
 import { createOfflineAudioContext } from '../../helper/create-offline-audio-context';
 import { createRenderer } from '../../helper/create-renderer';
 import { roundToSamples } from '../../helper/round-to-samples';
-import { spy } from 'sinon';
 
 const createOscillatorNodeWithConstructor = (context, options = null) => {
     if (options === null) {
@@ -506,7 +505,7 @@ describe('OscillatorNode', { skip: typeof window === 'undefined' }, () => {
             });
 
             it('should register an independent event listener', () => {
-                const onended = spy();
+                const onended = vi.fn();
 
                 oscillatorNode.onended = onended;
                 oscillatorNode.addEventListener('ended', onended);
@@ -932,7 +931,7 @@ describe('OscillatorNode', { skip: typeof window === 'undefined' }, () => {
             });
 
             it('should not fire a removed ended event listener', () => {
-                const listener = spy();
+                const listener = vi.fn();
 
                 oscillatorNode.addEventListener('ended', listener);
                 oscillatorNode.removeEventListener('ended', listener);

@@ -1,6 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
-import { spy } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
     let offlineAudioContext;
@@ -101,7 +100,7 @@ describe('offlineAudioContextConstructor', () => {
 
                 audioBufferSourceNode.buffer = audioBuffer;
 
-                const listener = spy();
+                const listener = vi.fn();
 
                 audioBufferSourceNode.addEventListener('ended', listener);
                 audioBufferSourceNode.start();
@@ -191,7 +190,7 @@ describe('offlineAudioContextConstructor', () => {
 
             it('should not fire any AudioProcessingEvent', () => {
                 const { promise, resolve } = Promise.withResolvers();
-                const listener = spy();
+                const listener = vi.fn();
                 const oscillatorNode = offlineAudioContext.createOscillator();
                 const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 0);
 

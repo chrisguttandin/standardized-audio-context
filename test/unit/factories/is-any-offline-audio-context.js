@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createIsAnyOfflineAudioContext } from '../../../src/factories/is-any-offline-audio-context';
-import { stub } from 'sinon';
 
 describe('isAnyOfflineAudioContext()', () => {
     let contextStore;
@@ -9,7 +8,7 @@ describe('isAnyOfflineAudioContext()', () => {
 
     beforeEach(() => {
         contextStore = new WeakMap();
-        isNativeOfflineAudioContext = stub();
+        isNativeOfflineAudioContext = vi.fn();
 
         isAnyOfflineAudioContext = createIsAnyOfflineAudioContext(contextStore, isNativeOfflineAudioContext);
     });
@@ -21,7 +20,11 @@ describe('isAnyOfflineAudioContext()', () => {
             beforeEach(() => {
                 anything = { any: 'object' };
 
-                isNativeOfflineAudioContext.withArgs(anything).returns(false);
+                isNativeOfflineAudioContext.mockImplementation((arg) => {
+                    if (arg === anything) {
+                        return false;
+                    }
+                });
             });
 
             it('should return false', () => {
@@ -35,7 +38,11 @@ describe('isAnyOfflineAudioContext()', () => {
             beforeEach(() => {
                 nativeOfflineAudioContext = { a: 'fake native OfflineAudioContext' };
 
-                isNativeOfflineAudioContext.withArgs(nativeOfflineAudioContext).returns(true);
+                isNativeOfflineAudioContext.mockImplementation((arg) => {
+                    if (arg === nativeOfflineAudioContext) {
+                        return true;
+                    }
+                });
             });
 
             it('should return true', () => {
@@ -57,8 +64,15 @@ describe('isAnyOfflineAudioContext()', () => {
 
                 contextStore.set(offlineAudioContext, anything);
 
-                isNativeOfflineAudioContext.withArgs(anything).returns(false);
-                isNativeOfflineAudioContext.withArgs(offlineAudioContext).returns(false);
+                isNativeOfflineAudioContext.mockImplementation((arg) => {
+                    if (arg === anything) {
+                        return false;
+                    }
+
+                    if (arg === offlineAudioContext) {
+                        return false;
+                    }
+                });
             });
 
             it('should return false', () => {
@@ -72,7 +86,11 @@ describe('isAnyOfflineAudioContext()', () => {
 
                 contextStore.set(offlineAudioContext, nativeOfflineAudioContext);
 
-                isNativeOfflineAudioContext.withArgs(nativeOfflineAudioContext).returns(true);
+                isNativeOfflineAudioContext.mockImplementation((arg) => {
+                    if (arg === nativeOfflineAudioContext) {
+                        return true;
+                    }
+                });
             });
 
             it('should return true', () => {

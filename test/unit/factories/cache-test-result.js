@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { spy, stub } from 'sinon';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createCacheTestResult } from '../../../src/factories/cache-test-result';
 
 describe('createCacheTestResult()', () => {
@@ -18,7 +17,7 @@ describe('createCacheTestResult()', () => {
         let fakeTestResult;
 
         beforeEach(() => {
-            fakeTest = spy();
+            fakeTest = vi.fn();
             fakeTestResult = 'fake test result';
 
             testResults.set(fakeTest, fakeTestResult);
@@ -38,7 +37,7 @@ describe('createCacheTestResult()', () => {
 
             beforeEach(() => {
                 fakeOngoingTest = 'fake ongoing test';
-                fakeTest = spy();
+                fakeTest = vi.fn();
 
                 ongoingTests.set(fakeTest, fakeOngoingTest);
             });
@@ -57,9 +56,9 @@ describe('createCacheTestResult()', () => {
 
                 beforeEach(() => {
                     fakeSynchronousTestResult = 'fake synchronous test result';
-                    fakeTest = stub();
+                    fakeTest = vi.fn();
 
-                    fakeTest.returns(fakeSynchronousTestResult);
+                    fakeTest.mockReturnValue(fakeSynchronousTestResult);
                 });
 
                 it('should return the test result', () => {
@@ -81,9 +80,9 @@ describe('createCacheTestResult()', () => {
                 let fakeTest;
 
                 beforeEach(() => {
-                    fakeTest = stub();
+                    fakeTest = vi.fn();
 
-                    fakeTest.throws(new Error('a fake error'));
+                    fakeTest.mockThrow(new Error('a fake error'));
                 });
 
                 it('should return the test result', () => {
@@ -107,9 +106,9 @@ describe('createCacheTestResult()', () => {
 
                 beforeEach(() => {
                     fakeAsynchronousTestResult = 'fake asynchronous test result';
-                    fakeTest = stub();
+                    fakeTest = vi.fn();
 
-                    fakeTest.resolves(fakeAsynchronousTestResult);
+                    fakeTest.mockResolvedValue(fakeAsynchronousTestResult);
                 });
 
                 it('should return a promise which resolves to the test result', async () => {
@@ -146,9 +145,9 @@ describe('createCacheTestResult()', () => {
                 let fakeTest;
 
                 beforeEach(() => {
-                    fakeTest = stub();
+                    fakeTest = vi.fn();
 
-                    fakeTest.rejects(new Error('a fake error'));
+                    fakeTest.mockRejectedValue(new Error('a fake error'));
                 });
 
                 it('should return false', async () => {

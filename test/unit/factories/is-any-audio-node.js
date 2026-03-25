@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createIsAnyAudioNode } from '../../../src/factories/is-any-audio-node';
-import { stub } from 'sinon';
 
 describe('isAnyAudioNode()', () => {
     let audioNodeStore;
@@ -9,14 +8,14 @@ describe('isAnyAudioNode()', () => {
 
     beforeEach(() => {
         audioNodeStore = new WeakMap();
-        isNativeAudioNode = stub();
+        isNativeAudioNode = vi.fn();
 
         isAnyAudioNode = createIsAnyAudioNode(audioNodeStore, isNativeAudioNode);
     });
 
     describe('without any AudioNode in the store', () => {
         beforeEach(() => {
-            isNativeAudioNode.returns(false);
+            isNativeAudioNode.mockReturnValue(false);
         });
 
         it('should not identify any AudioNode', () => {
@@ -31,7 +30,8 @@ describe('isAnyAudioNode()', () => {
             audioNode = { a: 'fake AudioNode' };
 
             audioNodeStore.set(audioNode, { a: 'fake native AudioNode' });
-            isNativeAudioNode.returns(false);
+
+            isNativeAudioNode.mockReturnValue(false);
         });
 
         it('should identify the stored AudioNode', () => {
@@ -45,7 +45,7 @@ describe('isAnyAudioNode()', () => {
 
     describe('with an AudioNode which gets identified as native', () => {
         beforeEach(() => {
-            isNativeAudioNode.returns(true);
+            isNativeAudioNode.mockReturnValue(true);
         });
 
         it('should identify a native AudioNode', () => {

@@ -17,7 +17,6 @@ export default defineConfig({
         },
         dir: 'test/expectation/firefox/current/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/expectation-firefox-current-setup.ts'],
         watch: false
     }
 });

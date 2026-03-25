@@ -1,5 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { spy } from 'sinon';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('audioContextConstructor', () => {
     let audioContext;
@@ -153,7 +152,7 @@ describe('audioContextConstructor', () => {
         // bug #6
 
         it('should not call the errorCallback at all', () => {
-            const errorCallback = spy();
+            const errorCallback = vi.fn();
 
             audioContext
                 .decodeAudioData(null, () => {}, errorCallback)

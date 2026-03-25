@@ -17,7 +17,6 @@ export default defineConfig({
         },
         dir: 'test/expectation/safari/previous/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/expectation-safari-previous-setup.ts'],
         watch: false
     }
 });

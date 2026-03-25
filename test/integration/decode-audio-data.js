@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createAudioContext } from '../helper/create-audio-context';
 import { createMinimalAudioContext } from '../helper/create-minimal-audio-context';
 import { createMinimalOfflineAudioContext } from '../helper/create-minimal-offline-audio-context';
@@ -6,7 +6,6 @@ import { createNativeAudioContext } from '../helper/create-native-audio-context'
 import { createNativeOfflineAudioContext } from '../helper/create-native-offline-audio-context';
 import { createOfflineAudioContext } from '../helper/create-offline-audio-context';
 import { loadFixtureAsArrayBuffer } from '../helper/load-fixture';
-import { spy } from 'sinon';
 import { decodeAudioData as standaloneDecodeAudioData } from '../../src/module';
 
 const decodeAudioDataOfContext = (context, arrayBuffer, successCallback, errorCallback) => {
@@ -102,7 +101,7 @@ describe('decodeAudioData()', { skip: typeof window === 'undefined' }, () => {
 
                 // The promise is rejected before but the errorCallback gets called synchronously.
                 it('should call the errorCallback before the promise gets rejected', () => {
-                    const errorCallback = spy();
+                    const errorCallback = vi.fn();
 
                     return decodeAudioData(context, null, () => {}, errorCallback).then(
                         () => {
@@ -159,7 +158,7 @@ describe('decodeAudioData()', { skip: typeof window === 'undefined' }, () => {
 
                 // The promise is rejected before but the errorCallback gets called synchronously.
                 it('should call the errorCallback before the promise gets rejected', () => {
-                    const errorCallback = spy();
+                    const errorCallback = vi.fn();
 
                     return decodeAudioData(context, arrayBuffer, () => {}, errorCallback).then(
                         () => {
@@ -197,7 +196,7 @@ describe('decodeAudioData()', { skip: typeof window === 'undefined' }, () => {
 
                 // The promise is resolved before but the successCallback gets called synchronously.
                 it('should call the successCallback before the promise gets resolved', () => {
-                    const successCallback = spy();
+                    const successCallback = vi.fn();
 
                     return decodeAudioData(context, arrayBuffer, successCallback).then(() => {
                         expect(successCallback).to.have.been.calledOnce;

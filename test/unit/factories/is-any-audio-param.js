@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createIsAnyAudioParam } from '../../../src/factories/is-any-audio-param';
-import { stub } from 'sinon';
 
 describe('isAnyAudioParam()', () => {
     let audioParamStore;
@@ -9,14 +8,14 @@ describe('isAnyAudioParam()', () => {
 
     beforeEach(() => {
         audioParamStore = new WeakMap();
-        isNativeAudioParam = stub();
+        isNativeAudioParam = vi.fn();
 
         isAnyAudioParam = createIsAnyAudioParam(audioParamStore, isNativeAudioParam);
     });
 
     describe('without any AudioParam in the store', () => {
         beforeEach(() => {
-            isNativeAudioParam.returns(false);
+            isNativeAudioParam.mockReturnValue(false);
         });
 
         it('should not identify any AudioParam', () => {
@@ -31,7 +30,8 @@ describe('isAnyAudioParam()', () => {
             audioParam = { a: 'fake AudioParam' };
 
             audioParamStore.set(audioParam, { a: 'fake native AudioParam' });
-            isNativeAudioParam.returns(false);
+
+            isNativeAudioParam.mockReturnValue(false);
         });
 
         it('should identify the stored AudioParam', () => {
@@ -45,7 +45,7 @@ describe('isAnyAudioParam()', () => {
 
     describe('with an AudioParam which gets identified as native', () => {
         beforeEach(() => {
-            isNativeAudioParam.returns(true);
+            isNativeAudioParam.mockReturnValue(true);
         });
 
         it('should identify a native AudioParam', () => {

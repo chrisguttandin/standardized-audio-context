@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createIsAnyAudioContext } from '../../../src/factories/is-any-audio-context';
-import { stub } from 'sinon';
 
 describe('isAnyAudioContext()', () => {
     let contextStore;
@@ -9,7 +8,7 @@ describe('isAnyAudioContext()', () => {
 
     beforeEach(() => {
         contextStore = new WeakMap();
-        isNativeAudioContext = stub();
+        isNativeAudioContext = vi.fn();
 
         isAnyAudioContext = createIsAnyAudioContext(contextStore, isNativeAudioContext);
     });
@@ -21,7 +20,11 @@ describe('isAnyAudioContext()', () => {
             beforeEach(() => {
                 anything = { any: 'object' };
 
-                isNativeAudioContext.withArgs(anything).returns(false);
+                isNativeAudioContext.mockImplementation((arg) => {
+                    if (arg === anything) {
+                        return false;
+                    }
+                });
             });
 
             it('should return false', () => {
@@ -35,7 +38,11 @@ describe('isAnyAudioContext()', () => {
             beforeEach(() => {
                 nativeAudioContext = { a: 'fake native AudioContext' };
 
-                isNativeAudioContext.withArgs(nativeAudioContext).returns(true);
+                isNativeAudioContext.mockImplementation((arg) => {
+                    if (arg === nativeAudioContext) {
+                        return true;
+                    }
+                });
             });
 
             it('should return true', () => {
@@ -57,8 +64,15 @@ describe('isAnyAudioContext()', () => {
 
                 contextStore.set(audioContext, anything);
 
-                isNativeAudioContext.withArgs(anything).returns(false);
-                isNativeAudioContext.withArgs(audioContext).returns(false);
+                isNativeAudioContext.mockImplementation((arg) => {
+                    if (arg === anything) {
+                        return false;
+                    }
+
+                    if (arg === audioContext) {
+                        return false;
+                    }
+                });
             });
 
             it('should return false', () => {
@@ -72,7 +86,11 @@ describe('isAnyAudioContext()', () => {
 
                 contextStore.set(audioContext, nativeAudioContext);
 
-                isNativeAudioContext.withArgs(nativeAudioContext).returns(true);
+                isNativeAudioContext.mockImplementation((arg) => {
+                    if (arg === nativeAudioContext) {
+                        return true;
+                    }
+                });
             });
 
             it('should return true', () => {

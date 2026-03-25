@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDetectCycles } from '../../../src/factories/detect-cycles';
-import { stub } from 'sinon';
 
 describe('detectCycles()', () => {
     let audioParamAudioNodeStore;
@@ -10,7 +9,7 @@ describe('detectCycles()', () => {
 
     beforeEach(() => {
         audioParamAudioNodeStore = new WeakMap();
-        getAudioNodeConnections = stub();
+        getAudioNodeConnections = vi.fn();
         getValueForKey = () => {};
 
         detectCycles = createDetectCycles(audioParamAudioNodeStore, getAudioNodeConnections, getValueForKey);
@@ -20,7 +19,7 @@ describe('detectCycles()', () => {
         beforeEach(() => {
             const outputs = new Set();
 
-            getAudioNodeConnections.returns({ outputs });
+            getAudioNodeConnections.mockReturnValue({ outputs });
         });
 
         describe('with two different AudioNodes', () => {
@@ -52,7 +51,7 @@ describe('detectCycles()', () => {
 
             const outputs = new Set([[audioNode, 1, 1]]);
 
-            getAudioNodeConnections.returns({ outputs });
+            getAudioNodeConnections.mockReturnValue({ outputs });
         });
 
         it('should detect a cycle', () => {
@@ -70,7 +69,7 @@ describe('detectCycles()', () => {
 
             const outputs = new Set([[delayNode, 1, 1]]);
 
-            getAudioNodeConnections.returns({ outputs });
+            getAudioNodeConnections.mockReturnValue({ outputs });
         });
 
         it('should detect no cycle', () => {
@@ -88,7 +87,7 @@ describe('detectCycles()', () => {
 
             const outputs = new Set([[audioNode, 1, 1]]);
 
-            getAudioNodeConnections.returns({ outputs });
+            getAudioNodeConnections.mockReturnValue({ outputs });
         });
 
         it('should detect no cycle', () => {
@@ -112,8 +111,15 @@ describe('detectCycles()', () => {
             ]);
             const outputsOfYetAnotherAudioNode = new Set([[audioNode, 1, 1]]);
 
-            getAudioNodeConnections.withArgs(anotherAudioNode).returns({ outputs: outputsOfAnotherAudioNode });
-            getAudioNodeConnections.withArgs(yetAnotherAudioNode).returns({ outputs: outputsOfYetAnotherAudioNode });
+            getAudioNodeConnections.mockImplementation((arg) => {
+                if (arg === anotherAudioNode) {
+                    return { outputs: outputsOfAnotherAudioNode };
+                }
+
+                if (arg === yetAnotherAudioNode) {
+                    return { outputs: outputsOfYetAnotherAudioNode };
+                }
+            });
         });
 
         it('should detect two cycles', () => {
@@ -137,8 +143,15 @@ describe('detectCycles()', () => {
             const outputsOfAnotherAudioNode = new Set([[yetAnotherAudioNode, 1, 1]]);
             const outputsOfYetAnotherAudioNode = new Set([[anotherAudioNode, 1, 1]]);
 
-            getAudioNodeConnections.withArgs(anotherAudioNode).returns({ outputs: outputsOfAnotherAudioNode });
-            getAudioNodeConnections.withArgs(yetAnotherAudioNode).returns({ outputs: outputsOfYetAnotherAudioNode });
+            getAudioNodeConnections.mockImplementation((arg) => {
+                if (arg === anotherAudioNode) {
+                    return { outputs: outputsOfAnotherAudioNode };
+                }
+
+                if (arg === yetAnotherAudioNode) {
+                    return { outputs: outputsOfYetAnotherAudioNode };
+                }
+            });
         });
 
         it('should detect no cycle', () => {

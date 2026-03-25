@@ -24,7 +24,6 @@ export default defineConfig({
         },
         dir: 'test/expectation/firefox/penultimate/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/expectation-firefox-penultimate-setup.ts'],
         watch: false
     }
 });

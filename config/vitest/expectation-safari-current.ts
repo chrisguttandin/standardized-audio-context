@@ -13,7 +13,6 @@ export default defineConfig({
         },
         dir: 'test/expectation/safari/current/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/expectation-safari-current-setup.ts'],
         watch: false
     }
 });

@@ -1,5 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { spy } from 'sinon';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('offlineAudioContextConstructor', () => {
     let offlineAudioContext;
@@ -143,7 +142,7 @@ describe('offlineAudioContextConstructor', () => {
             // bug #87
 
             it('should not fire any AudioProcessingEvent', () => {
-                const listener = spy();
+                const listener = vi.fn();
                 const oscillatorNode = offlineAudioContext.createOscillator();
                 const scriptProcessorNode = offlineAudioContext.createScriptProcessor(256, 1, 0);
 
@@ -163,7 +162,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #6
 
         it('should not call the errorCallback at all', () => {
-            const errorCallback = spy();
+            const errorCallback = vi.fn();
 
             offlineAudioContext
                 .decodeAudioData(null, () => {}, errorCallback)

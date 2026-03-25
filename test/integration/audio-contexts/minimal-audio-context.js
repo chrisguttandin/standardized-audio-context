@@ -1,6 +1,5 @@
 import { GainNode, MinimalAudioContext } from '../../../src/module';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { spy } from 'sinon';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('MinimalAudioContext', { skip: typeof window === 'undefined' }, () => {
     let minimalAudioContext;
@@ -179,7 +178,7 @@ describe('MinimalAudioContext', { skip: typeof window === 'undefined' }, () => {
             });
 
             it('should register an independent event listener', () => {
-                const onstatechange = spy();
+                const onstatechange = vi.fn();
 
                 minimalAudioContext.onstatechange = onstatechange;
                 minimalAudioContext.addEventListener('statechange', onstatechange);

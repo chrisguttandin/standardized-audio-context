@@ -1,6 +1,5 @@
 import { AudioBuffer, AudioBufferSourceNode, MinimalOfflineAudioContext } from '../../../src/module';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { spy } from 'sinon';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('MinimalOfflineAudioContext', { skip: typeof window === 'undefined' }, () => {
     describe('constructor()', () => {
@@ -253,7 +252,7 @@ describe('MinimalOfflineAudioContext', { skip: typeof window === 'undefined' }, 
         });
 
         it('should register an independent event listener', () => {
-            const onstatechange = spy();
+            const onstatechange = vi.fn();
 
             minimalOfflineAudioContext.onstatechange = onstatechange;
             minimalOfflineAudioContext.addEventListener('statechange', onstatechange);

@@ -27,7 +27,6 @@ export default defineConfig({
         },
         dir: 'test/integration/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/integration-setup.ts'],
         watch: false
     }
 });

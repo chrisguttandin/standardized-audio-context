@@ -19,7 +19,6 @@ export default defineConfig({
         },
         dir: 'test/expectation/chrome/current/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/expectation-chrome-current-setup.ts'],
         watch: false
     }
 });

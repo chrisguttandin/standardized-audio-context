@@ -24,7 +24,6 @@ export default defineConfig({
         },
         dir: 'test/expectation/chrome/penultimate/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/expectation-chrome-penultimate-setup.ts'],
         watch: false
     }
 });

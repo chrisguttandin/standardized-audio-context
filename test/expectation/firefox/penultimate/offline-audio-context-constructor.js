@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { loadFixtureAsArrayBuffer } from '../../../helper/load-fixture';
-import { spy } from 'sinon';
 
 describe('offlineAudioContextConstructor', () => {
     let offlineAudioContext;
@@ -218,7 +217,7 @@ describe('offlineAudioContextConstructor', () => {
         // bug #6
 
         it('should not call the errorCallback at all', () => {
-            const errorCallback = spy();
+            const errorCallback = vi.fn();
 
             offlineAudioContext
                 .decodeAudioData(null, () => {}, errorCallback)

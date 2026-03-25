@@ -24,7 +24,6 @@ export default defineConfig({
         },
         dir: 'test/expectation/chrome/canary/',
         include: ['**/*.js'],
-        setupFiles: ['config/vitest/expectation-chrome-canary-setup.ts'],
         watch: false
     }
 });

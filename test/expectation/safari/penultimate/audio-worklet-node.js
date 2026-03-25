@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { spy } from 'sinon';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('AudioWorklet', () => {
     let offlineAudioContext;
@@ -26,7 +25,7 @@ describe('AudioWorklet', () => {
                 await offlineAudioContext.audioWorklet.addModule('test/fixtures/transferring-processor.js');
 
                 const audioWorkletNode = new AudioWorkletNode(offlineAudioContext, 'transferring-processor');
-                const onmessage = spy();
+                const onmessage = vi.fn();
 
                 audioWorkletNode.port.onmessage = onmessage;
 
