@@ -50,8 +50,6 @@ jobs:
               run: npm ci
 
             - env:
-                  BROWSER_STACK_ACCESS_KEY: ${{ secrets.BROWSER_STACK_ACCESS_KEY }}
-                  BROWSER_STACK_USERNAME: ${{ secrets.BROWSER_STACK_USERNAME }}
                   TARGET: ${{ matrix.target }}
                   TYPE: ${{ matrix.type }}
               name: Run ${{ matrix.type }} tests
