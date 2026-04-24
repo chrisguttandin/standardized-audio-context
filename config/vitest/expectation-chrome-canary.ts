@@ -14,7 +14,7 @@ export default defineConfig({
                     provider: webdriverio({
                         capabilities: {
                             'goog:chromeOptions': {
-                                args: ['--autoplay-policy=no-user-gesture-required'],
+                                args: ['--autoplay-policy=no-user-gesture-required', '--mute-audio'],
                                 binary: '/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary'
                             }
                         }

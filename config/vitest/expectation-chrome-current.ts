@@ -12,7 +12,7 @@ export default defineConfig({
                     headless: true,
                     name: 'Chrome',
                     provider: webdriverio({
-                        capabilities: { 'goog:chromeOptions': { args: ['--autoplay-policy=no-user-gesture-required'] } }
+                        capabilities: { 'goog:chromeOptions': { args: ['--autoplay-policy=no-user-gesture-required', '--mute-audio'] } }
                     })
                 }
             ]

@@ -1,4 +1,3 @@
-import { env } from 'node:process';
 import { webdriverio } from '@vitest/browser-webdriverio';
 import { defineConfig } from 'vitest/config';
 
@@ -10,7 +9,7 @@ export default defineConfig({
             instances: [
                 {
                     browser: 'firefox',
-                    headless: env.CI !== 'true',
+                    headless: true,
                     name: 'Firefox',
                     provider: webdriverio({
                         capabilities: {
