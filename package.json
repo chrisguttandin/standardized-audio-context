@@ -42,7 +42,7 @@
         "eslint": "^8.57.0",
         "eslint-config-holy-grail": "^62.0.0",
         "husky": "^9.1.7",
-        "lint-staged": "^16.4.0",
+        "lint-staged": "^17.0.4",
         "memory-fs": "^0.5.0",
         "mocha": "^11.7.5",
         "prettier": "^3.8.3",
