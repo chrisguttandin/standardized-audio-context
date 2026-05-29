@@ -30,11 +30,11 @@ describe('audioContextConstructor', () => {
         });
     });
 
-    describe('playoutStats', () => {
+    describe('playbackStats', () => {
         // bug #203
 
         it('should not be implemented', () => {
-            expect(audioContext.playoutStats).to.be.undefined;
+            expect(audioContext.playbackStats).to.be.undefined;
         });
     });
 
