@@ -87,6 +87,14 @@ describe('audioContextConstructor', () => {
             });
         });
 
+        describe('renderQuantumSize', () => {
+            // bug #216
+
+            it('should not be implemented', () => {
+                expect(audioContext.renderQuantumSize).to.be.undefined;
+            });
+        });
+
         describe('createBiquadFilter()', () => {
             let biquadFilterNode;
 
