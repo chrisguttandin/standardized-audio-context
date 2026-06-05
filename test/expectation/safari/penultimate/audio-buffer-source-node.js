@@ -7,18 +7,6 @@ describe('AudioBufferSourceNode', () => {
 
     beforeEach(() => (audioContext = new AudioContext()));
 
-    describe('detune', () => {
-        describe('defaultValue', () => {
-            // bug #196
-
-            it('should not reflect the initial value', () => {
-                const audioBufferSourceNode = new AudioBufferSourceNode(audioContext, { detune: 3 });
-
-                expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
-            });
-        });
-    });
-
     describe('disconnect', () => {
         // bug #217
 

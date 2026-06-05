@@ -1,22 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { resumeAudioContext } from '../../../helper/resume-audio-context';
 
 describe('AudioBufferSourceNode', () => {
     let audioContext;
 
     afterEach(() => audioContext.close());
 
-    beforeEach(() => (audioContext = new AudioContext()));
+    beforeEach(async () => {
+        audioContext = new AudioContext();
 
-    describe('detune', () => {
-        describe('defaultValue', () => {
-            // bug #196
-
-            it('should not reflect the initial value', () => {
-                const audioBufferSourceNode = new AudioBufferSourceNode(audioContext, { detune: 3 });
-
-                expect(audioBufferSourceNode.detune.defaultValue).to.equal(0);
-            });
-        });
+        await resumeAudioContext(audioContext);
     });
 
     describe('disconnect', () => {
