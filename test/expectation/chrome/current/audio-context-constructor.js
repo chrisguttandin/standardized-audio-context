@@ -94,14 +94,6 @@ describe('audioContextConstructor', () => {
         });
     });
 
-    describe('playbackStats', () => {
-        // bug #203
-
-        it('should not be implemented', () => {
-            expect(audioContext.playbackStats).to.be.undefined;
-        });
-    });
-
     describe('renderQuantumSize', () => {
         // bug #216
 
