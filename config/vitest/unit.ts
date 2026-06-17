@@ -2,6 +2,7 @@ import { env } from 'node:process';
 import { webdriverio } from '@vitest/browser-webdriverio';
 import { defineConfig } from 'vitest/config';
 
+// eslint-disable-next-line import/no-default-export
 export default defineConfig({
     test: {
         bail: 1,
@@ -22,7 +23,7 @@ export default defineConfig({
                           provider: webdriverio({
                               capabilities: {
                                   'goog:chromeOptions': {
-                                      binary: '/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary'
+                                      binary: '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
                                   }
                               }
                           })
@@ -33,7 +34,7 @@ export default defineConfig({
                           name: 'Firefox Developer',
                           provider: webdriverio({
                               capabilities: {
-                                  'moz:firefoxOptions': { binary: '/Applications/Firefox\ Developer\ Edition.app/Contents/MacOS/firefox' }
+                                  'moz:firefoxOptions': { binary: '/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox' }
                               }
                           })
                       },

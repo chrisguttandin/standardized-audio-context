@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 class InvalidParameterDescriptorsPropertyProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
@@ -11,4 +12,5 @@ class InvalidParameterDescriptorsPropertyProcessor extends AudioWorkletProcessor
 
 InvalidParameterDescriptorsPropertyProcessor.parameterDescriptors = null;
 
+// eslint-disable-next-line no-undef
 registerProcessor('invalid-parameter-descriptors-property-processor', InvalidParameterDescriptorsPropertyProcessor);

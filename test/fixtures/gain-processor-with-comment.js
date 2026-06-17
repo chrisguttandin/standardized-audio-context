@@ -1,5 +1,6 @@
 // This example is copied from this article: https://developers.google.com/web/updates/2017/12/audio-worklet
 
+// eslint-disable-next-line no-undef
 class GainProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
@@ -31,6 +32,7 @@ GainProcessor.parameterDescriptors = [
     }
 ];
 
+// eslint-disable-next-line no-undef
 registerProcessor('gain-processor', GainProcessor);
 
 // This is a comment which is meant to be the last line of the file with no following line break.

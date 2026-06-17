@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 class GainProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
@@ -9,4 +10,5 @@ class GainProcessor extends AudioWorkletProcessor {
     }
 }
 
+// eslint-disable-next-line no-undef
 registerProcessor('gain-processor', GainProcessor);

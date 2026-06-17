@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 class RenderProcessor extends AudioWorkletProcessor {
     constructor({ processorOptions: { length } }) {
         super();
@@ -47,4 +48,5 @@ class RenderProcessor extends AudioWorkletProcessor {
     }
 }
 
+// eslint-disable-next-line no-undef
 registerProcessor('render-processor', RenderProcessor);

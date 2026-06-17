@@ -1,5 +1,6 @@
 import { constant } from './constant.js';
 
+// eslint-disable-next-line no-undef
 class GibberishProcessor extends AudioWorkletProcessor {
     // eslint-disable-next-line class-methods-use-this
     process(inputs, outputs) {
@@ -15,4 +16,5 @@ class GibberishProcessor extends AudioWorkletProcessor {
     }
 }
 
+// eslint-disable-next-line no-undef
 registerProcessor('gibberish-processor', GibberishProcessor);

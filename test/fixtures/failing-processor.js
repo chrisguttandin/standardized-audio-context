@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 class FailingProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
@@ -11,4 +12,5 @@ class FailingProcessor extends AudioWorkletProcessor {
     }
 }
 
+// eslint-disable-next-line no-undef
 registerProcessor('failing-processor', FailingProcessor);

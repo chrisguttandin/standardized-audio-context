@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 class InspectorProcessor extends AudioWorkletProcessor {
     constructor(options) {
         super();
@@ -25,4 +26,5 @@ InspectorProcessor.parameterDescriptors = [
     }
 ];
 
+// eslint-disable-next-line no-undef
 registerProcessor('inspector-processor', InspectorProcessor);

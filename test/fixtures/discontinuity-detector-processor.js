@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 class DiscontinuityDetectorProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
@@ -36,4 +37,5 @@ class DiscontinuityDetectorProcessor extends AudioWorkletProcessor {
     }
 }
 
+// eslint-disable-next-line no-undef
 registerProcessor('discontinuity-detector-processor', DiscontinuityDetectorProcessor);

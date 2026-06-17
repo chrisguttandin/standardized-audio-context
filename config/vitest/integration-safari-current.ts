@@ -1,6 +1,7 @@
 import { webdriverio } from '@vitest/browser-webdriverio';
 import { defineConfig } from 'vitest/config';
 
+// eslint-disable-next-line import/no-default-export
 export default defineConfig({
     test: {
         bail: 1,
@@ -11,7 +12,7 @@ export default defineConfig({
                     browser: 'safari',
                     headless: false,
                     name: 'Safari',
-                    // @ts-expect-error
+                    // @ts-expect-error "webkit:alwaysAllowAutoplay" is not a known property.
                     provider: webdriverio({ capabilities: { 'webkit:alwaysAllowAutoplay': true } })
                 }
             ]

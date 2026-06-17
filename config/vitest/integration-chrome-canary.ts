@@ -1,6 +1,7 @@
 import { webdriverio } from '@vitest/browser-webdriverio';
 import { defineConfig } from 'vitest/config';
 
+// eslint-disable-next-line import/no-default-export
 export default defineConfig({
     test: {
         bail: 1,
@@ -15,7 +16,7 @@ export default defineConfig({
                         capabilities: {
                             'goog:chromeOptions': {
                                 args: ['--autoplay-policy=no-user-gesture-required', '--mute-audio'],
-                                binary: '/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary'
+                                binary: '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
                             }
                         }
                     })

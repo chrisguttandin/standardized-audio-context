@@ -45,7 +45,7 @@ describe('AudioWorklet', () => {
                             });
                         });
                     });
-                } catch (err) {
+                } catch {
                     offlineAudioContext = new OfflineAudioContext(1, offlineAudioContext.length, offlineAudioContext.sampleRate);
 
                     continue;

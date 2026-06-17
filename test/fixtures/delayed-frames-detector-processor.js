@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 class DelayedFramesDetectorProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
@@ -36,4 +37,5 @@ class DelayedFramesDetectorProcessor extends AudioWorkletProcessor {
     }
 }
 
+// eslint-disable-next-line no-undef
 registerProcessor('delayed-frames-detector-processor', DelayedFramesDetectorProcessor);

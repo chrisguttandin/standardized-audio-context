@@ -74,14 +74,12 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
 
                 data.fill(1);
 
-                // eslint-disable-next-line no-undef
                 const trackGenerator = new MediaStreamTrackGenerator({ kind: 'audio' });
                 const writer = trackGenerator.writable.getWriter();
 
                 let timestamp = 0;
 
                 await writer.write(
-                    // eslint-disable-next-line no-undef
                     new AudioData({
                         data,
                         format: 'f32',
@@ -97,7 +95,6 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                 timestamp += duration;
 
                 await writer.write(
-                    // eslint-disable-next-line no-undef
                     new AudioData({
                         data,
                         format: 'f32',
@@ -112,7 +109,6 @@ describe('MediaStreamAudioSourceNode', { skip: typeof window === 'undefined' }, 
                     timestamp += duration;
 
                     writer.write(
-                        // eslint-disable-next-line no-undef
                         new AudioData({
                             data,
                             format: 'f32',

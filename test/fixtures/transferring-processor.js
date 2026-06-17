@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 class TransferringProcessor extends AudioWorkletProcessor {
     process(inputs, outputs, parameters) {
         this.port.postMessage({ inputs, outputs, parameters }, [
@@ -10,4 +11,5 @@ class TransferringProcessor extends AudioWorkletProcessor {
     }
 }
 
+// eslint-disable-next-line no-undef
 registerProcessor('transferring-processor', TransferringProcessor);

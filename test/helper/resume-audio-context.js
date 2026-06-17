@@ -12,7 +12,7 @@ export const resumeAudioContext = async (audioContext) => {
         if (audioContext.state === 'running') {
             audioContext.onstatechange = null;
 
-            document.body.removeChild(button);
+            button.remove();
             resolve();
         }
     };
