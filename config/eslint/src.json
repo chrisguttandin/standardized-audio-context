@@ -1,6 +1,0 @@
-{
-    "env": {
-        "browser": true
-    },
-    "extends": "eslint-config-holy-grail"
-}
