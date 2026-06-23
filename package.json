@@ -40,7 +40,7 @@
         "commitizen": "^4.3.2",
         "cz-conventional-changelog": "^3.3.0",
         "eslint": "^9.39.4",
-        "eslint-config-holy-grail": "^63.0.3",
+        "eslint-config-holy-grail": "^63.0.5",
         "globals": "^17.6.0",
         "husky": "^9.1.7",
         "lint-staged": "^17.0.7",
