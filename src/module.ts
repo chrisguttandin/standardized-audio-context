@@ -169,6 +169,16 @@ import {
     CONTEXT_STORE,
     CYCLE_COUNTERS
 } from './globals';
+export { isAudioBufferSourceNode } from './guards/audio-buffer-source-node';
+export { isAudioNodeOutputConnection } from './guards/audio-node-output-connection';
+export { isAudioNode } from './guards/audio-node';
+export { isAudioWorkletNode } from './guards/audio-worklet-node';
+export { isBiquadFilterNode } from './guards/biquad-filter-node';
+export { isConstantSourceNode } from './guards/constant-source-node';
+export { isDelayNode } from './guards/delay-node';
+export { isGainNode } from './guards/gain-node';
+export { isOscillatorNode } from './guards/oscillator-node';
+export { isStereoPannerNode } from './guards/stereo-panner-node';
 import { connectNativeAudioNodeToNativeAudioNode } from './helpers/connect-native-audio-node-to-native-audio-node';
 import { disconnectNativeAudioNodeFromNativeAudioNode } from './helpers/disconnect-native-audio-node-from-native-audio-node';
 import { getAudioNodeConnections } from './helpers/get-audio-node-connections';
