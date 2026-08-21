@@ -17,7 +17,7 @@ export default defineConfig({
                             'goog:chromeOptions': {
                                 args: ['--autoplay-policy=no-user-gesture-required', '--mute-audio'],
                                 // eslint-disable-next-line max-len
-                                binary: 'chrome-v148/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
+                                binary: 'chrome-v149/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
                             }
                         }
                     })
