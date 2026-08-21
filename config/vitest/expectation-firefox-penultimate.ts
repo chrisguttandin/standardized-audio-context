@@ -15,7 +15,7 @@ export default defineConfig({
                     provider: webdriverio({
                         capabilities: {
                             'moz:firefoxOptions': {
-                                binary: 'firefox-v151/firefox/Firefox.app/Contents/MacOS/firefox',
+                                binary: 'firefox-v152/firefox/Firefox.app/Contents/MacOS/firefox',
                                 prefs: { 'media.autoplay.default': 0 }
                             }
                         }
