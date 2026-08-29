@@ -34,7 +34,7 @@
         "@commitlint/cli": "^21.2.2",
         "@commitlint/config-angular": "^21.2.2",
         "@rollup/plugin-babel": "^7.1.0",
-        "@vitest/browser-playwright": "^4.1.10",
+        "@vitest/browser-playwright": "^4.1.11",
         "@vitest/browser-webdriverio": "^4.1.10",
         "chai": "^6.2.2",
         "commitizen": "^4.3.2",
