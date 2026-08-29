@@ -54,6 +54,9 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Install Chrome
+              run: npx puppeteer browsers install chrome
+
             - env:
                   TARGET: ${{ matrix.target }}
                   TYPE: ${{ matrix.type }}
