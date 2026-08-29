@@ -40,7 +40,7 @@ jobs:
 
             - name: Update npm
               run: |
-                  npm install --global npm@11
+                  npm install --global npm@12
                   npm --version
 
             - name: Cache node modules
